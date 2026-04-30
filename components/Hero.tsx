@@ -208,7 +208,7 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
                   gachaSwitchOn ? "text-textSecondary/75" : "text-textSecondary/50 group-hover:text-textSecondary"
                 }`}
               >
-                Omikuji · Draw a Project
+                Omikuji · Draw a Project Randomly
               </span>
             </button>
           </motion.div>
