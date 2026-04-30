@@ -1,0 +1,124 @@
+<style>
+html,body{margin:0;height:100%;overflow:hidden;background:transparent}
+*{margin:0;padding:0;box-sizing:border-box}
+#wrap{background:transparent;display:flex;justify-content:center;align-items:center;padding:10px 14px;min-height:100%}
+canvas{display:block;cursor:crosshair;max-width:100%;height:auto}
+</style>
+<div id="wrap"><canvas id="c"></canvas></div>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const wrap = document.getElementById('wrap');
+const W = 620, H = 260;
+const dpr = Math.min(2, window.devicePixelRatio||1);
+canvas.width = W*dpr; canvas.height = H*dpr;
+ctx.setTransform(dpr,0,0,dpr,0,0);
+
+function resizeCanvas(){
+  const r = wrap.getBoundingClientRect();
+  const displayW = Math.min(W, Math.max(220, r.width - 48));
+  const displayH = displayW * (H / W);
+  canvas.style.width = displayW + 'px';
+  canvas.style.height = displayH + 'px';
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+const STEP = 4;
+const COLS = Math.floor(W/STEP);
+const ROWS = Math.floor(H/STEP);
+
+let mouseX = -9999, mouseY = -9999;
+
+function buildMask(){
+  const off = document.createElement('canvas');
+  off.width = W; off.height = H;
+  const c = off.getContext('2d');
+  c.fillStyle = '#000';
+  c.fillRect(0,0,W,H);
+  c.fillStyle = '#fff';
+  c.textAlign = 'center';
+  c.textBaseline = 'middle';
+  const fs = H * 0.75;
+  c.font = `800 ${fs}px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace`;
+  c.fillText('NLT', W/2, H/2);
+
+  const blurOff = document.createElement('canvas');
+  blurOff.width = W; blurOff.height = H;
+  const bc = blurOff.getContext('2d');
+  bc.filter = 'blur(5px)';
+  bc.drawImage(off,0,0);
+  const blurred = bc.getImageData(0,0,W,H).data;
+
+  const sdf = new Float32Array(COLS*ROWS);
+  for(let row=0;row<ROWS;row++){
+    for(let col=0;col<COLS;col++){
+      const px = Math.floor(col*STEP+STEP/2);
+      const py = Math.floor(row*STEP+STEP/2);
+      const p  = (py*W+px)*4;
+      sdf[row*COLS+col] = (blurred[p]+blurred[p+1]+blurred[p+2])/(3*255);
+    }
+  }
+  return sdf;
+}
+
+const sdf = buildMask();
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  for(let row=0;row<ROWS;row++){
+    for(let col=0;col<COLS;col++){
+      const s = sdf[row*COLS+col];
+      if(s < 0.03) continue;
+
+      const cx = col*STEP + STEP/2;
+      const cy = row*STEP + STEP/2;
+
+      const vertFactor = Math.pow(row / (ROWS - 1), 0.55);
+
+      const dist = Math.hypot(cx - mouseX, cy - mouseY);
+      const hov  = Math.max(0, 1 - dist / 75);
+
+      const edgeFactor = Math.pow(s, 0.45);
+      const maxR = STEP * 0.48;
+      const minR = STEP * 0.02;
+
+      const vertScale = 0.02 + vertFactor * 0.98;
+      let r = (minR + (maxR - minR) * edgeFactor) * vertScale;
+      r = Math.max(0.3, r * (1 + hov * 0.9));
+
+      let fillStyle;
+      if(hov > 0.04){
+        const t = Math.min(1, hov * 1.5);
+        const dr = Math.round(15 * (1-t) + 202 * t);
+        const dg = Math.round(15 * (1-t) + 255 * t);
+        const db = Math.round(15 * (1-t) +  71 * t);
+        fillStyle = `rgb(${dr},${dg},${db})`;
+      } else {
+        const bottomBlack = Math.round(5 + (1 - vertFactor) * 30);
+        const topLight = Math.round(bottomBlack + (1 - edgeFactor) * 30);
+        const darkness = Math.round(bottomBlack * (1 - vertFactor*0.15));
+        const v = Math.min(180, Math.round(darkness + (1-edgeFactor)*25 + (1-vertFactor)*20));
+        fillStyle = `rgb(${v},${v},${v})`;
+      }
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI*2);
+      ctx.fillStyle = fillStyle;
+      ctx.fill();
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+canvas.addEventListener('mousemove', e => {
+  const r = canvas.getBoundingClientRect();
+  mouseX = (e.clientX - r.left) * (W / r.width);
+  mouseY = (e.clientY - r.top)  * (H / r.height);
+});
+canvas.addEventListener('mouseleave', () => { mouseX = -9999; mouseY = -9999; });
+
+draw();
+</script>

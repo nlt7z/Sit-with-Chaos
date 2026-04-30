@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Gradient Ambient</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Inter, sans-serif;
+      background: #ffffff;
+      color: #0f172a;
+      padding: 14px;
+    }
+    #stage {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      overflow: hidden;
+      cursor: crosshair;
+      position: relative;
+      border: 1px solid rgba(0, 0, 0, 0.08);
+      background: #ffffff;
+    }
+    canvas { display: block; width: 100%; height: 100%; }
+    #hint {
+      position: absolute;
+      bottom: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0, 0, 0, 0.35);
+      color: #fff;
+      font-size: 12px;
+      padding: 5px 14px;
+      border-radius: 99px;
+      pointer-events: none;
+      transition: opacity .5s;
+    }
+    #controls {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-top: 14px;
+      padding: 2px 2px 0;
+    }
+    #controls label { font-size: 13px; color: #4b5563; }
+    #controls input[type=range] { flex: 1; min-width: 80px; }
+    .row { display: flex; gap: 8px; align-items: center; flex: 1; min-width: 160px; }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <canvas id="c"></canvas>
+    <div id="hint">move cursor to flow colors</div>
+  </div>
+
+  <div id="controls">
+    <div class="row">
+      <label>speed</label>
+      <input type="range" id="spd" min="1" max="10" value="4" step="1">
+    </div>
+    <div class="row">
+      <label>blur</label>
+      <input type="range" id="blr" min="20" max="120" value="70" step="1">
+    </div>
+    <div class="row">
+      <label>size</label>
+      <input type="range" id="sz" min="20" max="100" value="55" step="1">
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("c");
+    const ctx = canvas.getContext("2d");
+    const stage = document.getElementById("stage");
+    const hint = document.getElementById("hint");
+
+    let W, H;
+    function resize() {
+      const r = stage.getBoundingClientRect();
+      W = canvas.width = r.width;
+      H = canvas.height = r.height;
+    }
+    resize();
+    window.addEventListener("resize", resize);
+
+    let mx = 0.5, my = 0.5, tx = 0.5, ty = 0.5;
+    let hovered = false;
+    let hintTimer;
+
+    stage.addEventListener("mousemove", (e) => {
+      const r = stage.getBoundingClientRect();
+      tx = (e.clientX - r.left) / r.width;
+      ty = (e.clientY - r.top) / r.height;
+      if (!hovered) {
+        hovered = true;
+        hint.style.opacity = "0";
+      }
+      clearTimeout(hintTimer);
+      hintTimer = setTimeout(() => {
+        hint.style.opacity = "1";
+        hovered = false;
+      }, 2000);
+    });
+
+    stage.addEventListener("mouseleave", () => {
+      tx = 0.5;
+      ty = 0.5;
+    });
+
+    stage.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      const r = stage.getBoundingClientRect();
+      const t = e.touches[0];
+      tx = (t.clientX - r.left) / r.width;
+      ty = (t.clientY - r.top) / r.height;
+    }, { passive: false });
+
+    const blobs = [
+      { color: "#f97316", ox: 0.25, oy: 0.35 },
+      { color: "#a855f7", ox: 0.65, oy: 0.25 },
+      { color: "#22c55e", ox: 0.45, oy: 0.70 },
+      { color: "#3b82f6", ox: 0.75, oy: 0.65 },
+      { color: "#ec4899", ox: 0.15, oy: 0.75 },
+      { color: "#f59e0b", ox: 0.55, oy: 0.45 },
+    ];
+
+    let t = 0;
+    function draw() {
+      const spd = parseFloat(document.getElementById("spd").value);
+      const blrVal = parseFloat(document.getElementById("blr").value);
+      const szVal = parseFloat(document.getElementById("sz").value) / 100;
+
+      mx += (tx - mx) * 0.04;
+      my += (ty - my) * 0.04;
+      t += 0.005 * spd;
+
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, W, H);
+      ctx.filter = `blur(${blrVal}px)`;
+
+      blobs.forEach((b, i) => {
+        const angle = t * (0.7 + i * 0.13) + i * 1.1;
+        const drift = 0.22 + i * 0.04;
+        const x = b.ox + Math.sin(angle) * drift + (mx - 0.5) * 0.35 * (i % 2 === 0 ? 1 : -0.7);
+        const y = b.oy + Math.cos(angle * 0.8) * drift * 0.7 + (my - 0.5) * 0.35 * (i % 2 === 0 ? -0.7 : 1);
+        const r = Math.min(W, H) * szVal * (0.55 + i * 0.07);
+        const gx = x * W;
+        const gy = y * H;
+
+        const grad = ctx.createRadialGradient(gx, gy, 0, gx, gy, r);
+        grad.addColorStop(0, b.color + "dd");
+        grad.addColorStop(0.5, b.color + "88");
+        grad.addColorStop(1, b.color + "00");
+        ctx.beginPath();
+        ctx.arc(gx, gy, r, 0, Math.PI * 2);
+        ctx.fillStyle = grad;
+        ctx.fill();
+      });
+
+      ctx.filter = "none";
+      const vx = ctx.createRadialGradient(W / 2, H / 2, H * 0.3, W / 2, H / 2, H * 0.85);
+      vx.addColorStop(0, "rgba(255,255,255,0)");
+      vx.addColorStop(1, "rgba(255,255,255,0.35)");
+      ctx.fillStyle = vx;
+      ctx.fillRect(0, 0, W, H);
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500&display=swap');
+  *{box-sizing:border-box;margin:0;padding:0}
+  .root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica Neue",sans-serif;padding:40px 32px 48px;color:var(--color-text-primary)}
+  .eyebrow{font-size:11px;font-weight:500;letter-spacing:.08em;color:var(--color-text-tertiary);text-transform:uppercase;margin-bottom:6px}
+  .section-title{font-size:22px;font-weight:300;margin-bottom:28px;letter-spacing:-.3px}
+  .row{display:flex;align-items:center;gap:0;width:100%;margin-bottom:12px;position:relative}
+  .node{display:flex;flex-direction:column;align-items:center;justify-content:center;height:64px;border-radius:14px;flex:1;padding:0 10px;position:relative;transition:opacity .15s}
+  .node-label{font-size:13px;font-weight:500;text-align:center;letter-spacing:-.1px}
+  .node-sub{font-size:11px;text-align:center;margin-top:3px;opacity:.65;letter-spacing:.01em}
+  .arrow{display:flex;align-items:center;justify-content:center;width:28px;flex-shrink:0}
+  .arrow svg{width:18px;height:18px}
+  .before-node{background:rgba(216,90,48,.09);border:0.5px solid rgba(216,90,48,.25)}
+  .before-label{color:#712B13}
+  .before-sub{color:#993C1D}
+  .after-node{background:rgba(29,158,117,.09);border:0.5px solid rgba(29,158,117,.25)}
+  .after-label{color:#085041}
+  .after-sub{color:#0F6E56}
+  .start-node{background:var(--color-background-secondary);border:0.5px solid var(--color-border-secondary)}
+  .start-label{color:var(--color-text-primary)}
+  .start-sub{color:var(--color-text-tertiary)}
+  .checkpoint{display:flex;align-items:center;justify-content:center;width:28px;flex-shrink:0}
+  .cp-dot{width:20px;height:20px;border-radius:50%;background:rgba(29,158,117,.15);border:0.5px solid rgba(29,158,117,.4);display:flex;align-items:center;justify-content:center}
+  .cp-tick{width:7px;height:5px;border-left:1.5px solid #0F6E56;border-bottom:1.5px solid #0F6E56;transform:rotate(-45deg) translate(1px,-1px)}
+  .big-node{flex:3.5}
+  .outcome{margin-top:4px;border-radius:14px;padding:16px 20px;display:flex;justify-content:space-between;align-items:center}
+  .outcome-before{background:rgba(216,90,48,.07);border:0.5px solid rgba(216,90,48,.2)}
+  .outcome-after{background:rgba(29,158,117,.07);border:0.5px solid rgba(29,158,117,.2)}
+  .outcome-label{font-size:13px;font-weight:500}
+  .outcome-desc{font-size:12px;margin-top:2px;opacity:.7}
+  .tag{font-size:11px;font-weight:500;padding:4px 10px;border-radius:20px;letter-spacing:.02em;flex-shrink:0}
+  .tag-bad{background:rgba(216,90,48,.12);color:#712B13}
+  .tag-good{background:rgba(29,158,117,.12);color:#085041}
+  .divider{width:0.5px;background:var(--color-border-tertiary);height:40px;margin:4px auto}
+  .section-gap{height:36px;display:flex;align-items:center;justify-content:center}
+  .sep-line{width:100%;height:0.5px;background:var(--color-border-tertiary)}
+  .before-arrow svg path{stroke:rgba(216,90,48,.5)}
+  .after-arrow svg path{stroke:rgba(29,158,117,.55)}
+  .neutral-arrow svg path{stroke:var(--color-border-secondary)}
+  .leap-container{display:flex;flex:1;position:relative;align-items:center}
+  .leap-line{height:2px;flex:1;border-top:2px dashed rgba(216,90,48,.35);position:relative}
+  .leap-badge{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);white-space:nowrap;font-size:11px;font-weight:500;background:var(--color-background-primary);border:0.5px solid rgba(216,90,48,.3);color:#993C1D;padding:3px 10px;border-radius:20px;letter-spacing:.02em}
+</style>
+
+<div class="root">
+  <p class="eyebrow">Workflow comparison</p>
+  <p class="section-title">Before vs after</p>
+
+  <p class="eyebrow" style="margin-bottom:14px">Before — one giant leap</p>
+  <div class="row">
+    <div class="node start-node" style="flex:1.1">
+      <span class="node-label start-label">Prompt</span>
+    </div>
+    <div class="arrow before-arrow">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="leap-container" style="flex:3.5;position:relative">
+      <div style="width:100%;position:relative">
+        <div class="node before-node big-node" style="width:100%">
+          <span class="node-label before-label">Script + visuals + shots</span>
+          <span class="node-sub before-sub">generated in a single pass</span>
+        </div>
+        <div style="position:absolute;top:-13px;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;font-weight:500;background:var(--color-background-primary);border:0.5px solid rgba(216,90,48,.3);color:#993C1D;padding:2px 9px;border-radius:20px;letter-spacing:.03em">no checkpoints</div>
+      </div>
+    </div>
+    <div class="arrow before-arrow">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="node start-node" style="flex:1.1">
+      <span class="node-label start-label">Output</span>
+    </div>
+  </div>
+
+  <div class="outcome outcome-before" style="margin-bottom:32px">
+    <div>
+      <p class="outcome-label" style="color:#712B13">Errors compound silently</p>
+      <p class="outcome-desc" style="color:#993C1D">Nothing to catch a wrong direction before it propagates</p>
+    </div>
+    <span class="tag tag-bad">high rework risk</span>
+  </div>
+
+  <div class="sep-line" style="margin-bottom:32px"></div>
+
+  <p class="eyebrow" style="margin-bottom:14px">After — staged with checkpoints</p>
+  <div class="row">
+    <div class="node start-node" style="flex:1.1">
+      <span class="node-label start-label">Prompt</span>
+    </div>
+    <div class="arrow after-arrow">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="node after-node">
+      <span class="node-label after-label">Basics</span>
+      <span class="node-sub after-sub">tone, goal, audience</span>
+    </div>
+    <div class="checkpoint"><div class="cp-dot"><div class="cp-tick"></div></div></div>
+    <div class="node after-node">
+      <span class="node-label after-label">Outline</span>
+      <span class="node-sub after-sub">structure, beats</span>
+    </div>
+    <div class="checkpoint"><div class="cp-dot"><div class="cp-tick"></div></div></div>
+    <div class="node after-node">
+      <span class="node-label after-label">Script</span>
+      <span class="node-sub after-sub">dialogue, narration</span>
+    </div>
+    <div class="checkpoint"><div class="cp-dot"><div class="cp-tick"></div></div></div>
+    <div class="node after-node">
+      <span class="node-label after-label">Visuals</span>
+      <span class="node-sub after-sub">shots, scenes</span>
+    </div>
+    <div class="arrow after-arrow">
+      <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="node start-node" style="flex:1.1">
+      <span class="node-label start-label">Output</span>
+    </div>
+  </div>
+
+  <div class="outcome outcome-after">
+    <div>
+      <p class="outcome-label" style="color:#085041">Issues caught at every gate</p>
+      <p class="outcome-desc" style="color:#0F6E56">Each stage builds only on what's been approved</p>
+    </div>
+    <span class="tag tag-good">controlled quality</span>
+  </div>
+</div>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:transparent;display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:0;font-family:ui-monospace,monospace}
+#wrap{background:transparent;border-radius:16px;padding:40px 24px 28px}
+canvas{display:block;cursor:crosshair;margin:0 auto}
+#controls{display:flex;gap:16px;flex-wrap:wrap;margin-top:20px;justify-content:center}
+.row{display:flex;align-items:center;gap:8px}
+.row label{font-size:12px;color:#888;min-width:80px;text-align:right}
+.row input{width:120px}
+.row span{font-size:12px;color:#555;min-width:32px}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <canvas id="c"></canvas>
+  <div id="controls">
+    <div class="row"><label>gradient start</label><input type="range" id="gstart" min="0.1" max="0.9" step="0.01" value="0.30"><span id="gstart-v">0.30</span></div>
+    <div class="row"><label>curve steepness</label><input type="range" id="gcurve" min="0.2" max="3.0" step="0.05" value="0.6"><span id="gcurve-v">0.60</span></div>
+    <div class="row"><label>top fade</label><input type="range" id="tfade" min="0.0" max="1.0" step="0.01" value="0.12"><span id="tfade-v">0.12</span></div>
+    <div class="row"><label>bottom black</label><input type="range" id="bblack" min="1" max="40" step="1" value="4"><span id="bblack-v">4</span></div>
+  </div>
+</div>
+<script>
+const canvas=document.getElementById('c');
+const ctx=canvas.getContext('2d');
+const W=580,H=240;
+const dpr=Math.min(2,window.devicePixelRatio||1);
+canvas.width=W*dpr;canvas.height=H*dpr;
+canvas.style.width=W+'px';canvas.style.height=H+'px';
+ctx.setTransform(dpr,0,0,dpr,0,0);
+
+const STEP=4;
+const COLS=Math.floor(W/STEP);
+const ROWS=Math.floor(H/STEP);
+let mouseX=-9999,mouseY=-9999;
+
+function buildMask(){
+  const off=document.createElement('canvas');
+  off.width=W;off.height=H;
+  const c=off.getContext('2d');
+  c.fillStyle='#000';c.fillRect(0,0,W,H);
+  c.fillStyle='#fff';c.textAlign='center';c.textBaseline='middle';
+  c.font=`800 ${H*0.75}px ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace`;
+  c.fillText('NLT',W/2,H/2);
+  const blurOff=document.createElement('canvas');
+  blurOff.width=W;blurOff.height=H;
+  const bc=blurOff.getContext('2d');
+  bc.filter='blur(5px)';bc.drawImage(off,0,0);
+  const d=bc.getImageData(0,0,W,H).data;
+  const sdf=new Float32Array(COLS*ROWS);
+  for(let row=0;row<ROWS;row++){
+    for(let col=0;col<COLS;col++){
+      const px=Math.floor(col*STEP+STEP/2);
+      const py=Math.floor(row*STEP+STEP/2);
+      const p=(py*W+px)*4;
+      sdf[row*COLS+col]=(d[p]+d[p+1]+d[p+2])/(3*255);
+    }
+  }
+  return sdf;
+}
+const sdf=buildMask();
+
+function getParam(id){return parseFloat(document.getElementById(id).value);}
+['gstart','gcurve','tfade','bblack'].forEach(id=>{
+  const el=document.getElementById(id);
+  const out=document.getElementById(id+'-v');
+  el.addEventListener('input',()=>{out.textContent=parseFloat(el.value).toFixed(2).replace(/\.?0+$/,'');});
+});
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+
+  const gstart=getParam('gstart');
+  const gcurve=getParam('gcurve');
+  const tfade=getParam('tfade');
+  const bblack=getParam('bblack');
+
+  for(let row=0;row<ROWS;row++){
+    for(let col=0;col<COLS;col++){
+      const s=sdf[row*COLS+col];
+      if(s<0.03) continue;
+
+      const cx=col*STEP+STEP/2;
+      const cy=row*STEP+STEP/2;
+
+      const rawV=row/(ROWS-1);
+      const mapped=Math.max(0,(rawV-(1-gstart))/gstart);
+      const vertFactor=Math.pow(mapped,gcurve);
+      const topAlpha=Math.min(1,vertFactor/Math.max(0.01,tfade+0.01));
+      if(topAlpha<0.02) continue;
+
+      const dist=Math.hypot(cx-mouseX,cy-mouseY);
+      const hov=Math.max(0,1-dist/75);
+
+      const edgeFactor=Math.pow(s,0.45);
+      const maxR=STEP*0.48;
+      const minR=STEP*0.02;
+      const vertScale=0.02+vertFactor*0.98;
+      let r=(minR+(maxR-minR)*edgeFactor)*vertScale;
+      r=Math.max(0.3,r*(1+hov*0.9));
+
+      let fillStyle;
+      if(hov>0.04){
+        const t=Math.min(1,hov*1.5);
+        fillStyle=`rgb(${Math.round(15*(1-t)+202*t)},${Math.round(15*(1-t)+255*t)},${Math.round(15*(1-t)+71*t)})`;
+      } else {
+        const v=Math.round(bblack+(170-bblack)*(1-vertFactor));
+        const edgeBoost=Math.round((1-edgeFactor)*20);
+        const final=Math.min(190,v+edgeBoost);
+        fillStyle=`rgb(${final},${final},${final})`;
+      }
+
+      ctx.globalAlpha=topAlpha;
+      ctx.beginPath();
+      ctx.arc(cx,cy,r,0,Math.PI*2);
+      ctx.fillStyle=fillStyle;
+      ctx.fill();
+      ctx.globalAlpha=1;
+    }
+  }
+  requestAnimationFrame(draw);
+}
+
+canvas.addEventListener('mousemove',e=>{
+  const r=canvas.getBoundingClientRect();
+  mouseX=(e.clientX-r.left)*(W/r.width);
+  mouseY=(e.clientY-r.top)*(H/r.height);
+});
+canvas.addEventListener('mouseleave',()=>{mouseX=-9999;mouseY=-9999;});
+
+draw();
+</script>
+</body>
+</html>
