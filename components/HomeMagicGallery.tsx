@@ -57,11 +57,11 @@ export function HomeMagicGallery() {
 
   const desktopCardPoses = useMemo(
     () => ({
-      "-2": { x: "-58%", y: "7%", rotate: -18, scale: 0.82, z: 8, opacity: 0.5 },
-      "-1": { x: "-30%", y: "3%", rotate: -10, scale: 0.92, z: 18, opacity: 0.82 },
+      "-2": { x: "-68%", y: "7%", rotate: -18, scale: 0.82, z: 8, opacity: 0.5 },
+      "-1": { x: "-36%", y: "3%", rotate: -10, scale: 0.92, z: 18, opacity: 0.82 },
       "0": { x: "0%", y: "0%", rotate: 0, scale: 1.02, z: 36, opacity: 1 },
-      "1": { x: "30%", y: "3%", rotate: 10, scale: 0.92, z: 18, opacity: 0.82 },
-      "2": { x: "58%", y: "7%", rotate: 18, scale: 0.82, z: 8, opacity: 0.5 },
+      "1": { x: "36%", y: "3%", rotate: 10, scale: 0.92, z: 18, opacity: 0.82 },
+      "2": { x: "68%", y: "7%", rotate: 18, scale: 0.82, z: 8, opacity: 0.5 },
     }),
     [],
   );
@@ -167,13 +167,13 @@ export function HomeMagicGallery() {
 
         {/* Desktop: transparent 3D coverflow, full panorama previews. */}
         <motion.div
-          className="relative mt-3 hidden lg:block"
+          className="relative mt-2 hidden lg:block"
           initial={prefersReducedMotion ? false : { opacity: 0, y: 28 }}
           animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.72, delay: prefersReducedMotion ? 0 : 0.08, ease: easePortfolio }}
         >
           <div
-            className="relative mr-auto h-[520px] w-full max-w-[1060px] overflow-visible"
+            className="relative mr-auto h-[470px] w-full max-w-[1060px] overflow-visible"
             onMouseMove={(e) => {
               const rect = e.currentTarget.getBoundingClientRect();
               const progress = (e.clientX - rect.left) / rect.width;
@@ -190,7 +190,7 @@ export function HomeMagicGallery() {
                 return (
                   <motion.div
                     key={`coverflow-${item.category}`}
-                    className="absolute left-1/2 top-[47%] h-[66%] w-[31%] min-w-[236px] max-w-[340px] -translate-x-1/2 -translate-y-1/2"
+                    className="absolute left-1/2 top-[42%] h-[66%] w-[31%] min-w-[236px] max-w-[340px] -translate-x-1/2 -translate-y-1/2"
                     style={{ zIndex: pose.z }}
                     animate={
                       prefersReducedMotion
@@ -232,9 +232,6 @@ export function HomeMagicGallery() {
           </div>
         </motion.div>
 
-        <p className="mt-8 font-mono text-[11px] leading-relaxed text-textSecondary/70 md:mt-10">
-          Click any card to open the full interactive prototype.
-        </p>
       </div>
     </section>
   );

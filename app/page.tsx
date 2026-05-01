@@ -9,10 +9,42 @@ import { HomeMagicGallery } from "@/components/HomeMagicGallery";
 import { Nav } from "@/components/Nav";
 import { Work } from "@/components/Work";
 import { AnimatePresence, motion } from "framer-motion";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
+
+const HOME_MODE_KEY = "home-entry-mode";
 
 export default function Home() {
+  const searchParams = useSearchParams();
+  const forceMainPage = searchParams.get("view") === "main";
   const [mode, setMode] = useState<"browse" | "gacha">("browse");
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const navEntry = performance.getEntriesByType("navigation")[0] as
+      | PerformanceNavigationTiming
+      | undefined;
+    if (navEntry?.type === "reload") {
+      sessionStorage.removeItem(HOME_MODE_KEY);
+    }
+
+    if (forceMainPage) {
+      sessionStorage.setItem(HOME_MODE_KEY, "browse");
+      setMode("browse");
+      return;
+    }
+
+    const savedMode = sessionStorage.getItem(HOME_MODE_KEY);
+    setMode(savedMode === "gacha" ? "gacha" : "browse");
+  }, [forceMainPage]);
+
+  const lockToMainPage = useCallback(() => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem(HOME_MODE_KEY, "browse");
+    }
+    setMode("browse");
+  }, []);
 
   return (
     <AnimatePresence mode="wait">
@@ -24,7 +56,7 @@ export default function Home() {
           exit={{ opacity: 0, y: -16 }}
           transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
         >
-          <GachaCabinet onExit={() => setMode("browse")} />
+          <GachaCabinet onExit={lockToMainPage} onNavigateMain={lockToMainPage} />
         </motion.div>
       ) : (
         <motion.div

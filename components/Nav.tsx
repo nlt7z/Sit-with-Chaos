@@ -5,9 +5,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const navLinks = [
-  { label: "Work", href: "/#work" },
+  { label: "Work", href: "/?view=main#work" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/#contact" },
+  { label: "Contact", href: "/?view=main#contact" },
 ] as const;
 
 export function Nav() {
@@ -52,7 +52,7 @@ export function Nav() {
           aria-label="Main"
         >
           <Link
-            href="/"
+            href="/?view=main"
             className="font-mono text-sm font-medium tracking-tight text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
           >
             YF

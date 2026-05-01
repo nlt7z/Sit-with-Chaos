@@ -41,12 +41,12 @@ const storyBeats: StoryBeat[] = [
     title: "That led me to UX.",
     body: "My first UX project was a Design-a-thon: helping local artists sell their work. On-site interviews with small businesses, an AR platform that let them try artworks for free. For the first time, the thing I was designing was shaped entirely by listening. I wanted more of that.",
     image: "/assets/about/journey/artus11.gif",
-    visualGallery: visualExperimentImages,
     period: "First UX project",
   },
   {
     title: "So I followed it to Seattle.",
     body: "I graduated with four years on the president's list, moved from New York to LA to Seattle, and enrolled at UW HCDE — building the vocabulary to do this work precisely: qualitative research, usability testing, accessibility, service design, visual communication.",
+    visualGallery: visualExperimentImages,
     period: "UW HCDE, Seattle",
     hideImage: true,
   },
@@ -309,15 +309,15 @@ export default function AboutPage() {
               <h2 className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl">How I work</h2>
             </SectionReveal>
 
-            <div className="mt-14 grid gap-5 md:grid-cols-3 md:gap-6 md:items-stretch">
+            <div className="mt-14 grid gap-5 md:grid-cols-3 md:items-stretch md:gap-6">
               {workPrinciples.map((p, i) => (
                 <SectionReveal key={p.number} delay={rm ? 0 : i * 0.08}>
-                  <article className="flex h-full min-h-[220px] flex-col rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:min-h-[240px] md:p-7">
+                  <article className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:p-7">
                     <h3 className="font-display text-lg font-light leading-snug text-textPrimary md:text-xl">
                       {p.title}
                     </h3>
 
-                    <p className="mt-4 flex-1 text-pretty text-[15px] leading-[1.62] text-textSecondary md:text-[15px]">
+                    <p className="mt-4 text-pretty text-[15px] leading-[1.62] text-textSecondary md:text-[15px]">
                       {p.body}
                     </p>
                   </article>

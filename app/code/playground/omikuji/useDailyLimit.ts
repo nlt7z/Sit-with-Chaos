@@ -2,46 +2,46 @@
 
 import { useCallback, useEffect, useState } from "react";
 
-const KEY_DATE = "omikuji_cabinet_last_date";
-const KEY_ID = "omikuji_cabinet_last_fortune_id";
-const KEY_DRAWER = "omikuji_cabinet_last_drawer";
+const KEY_DATE = "omikuji_cabinet_date";
+const KEY_IDS  = "omikuji_cabinet_ids";   // JSON string[]
+const KEY_IDXS = "omikuji_cabinet_idxs";  // JSON number[]
 
-function todayStr() {
-  return new Date().toDateString();
-}
+export const MAX_DAILY = 3;
+
+function today() { return new Date().toDateString(); }
 
 export function useDailyLimit() {
-  const [alreadyDrawn, setAlreadyDrawn] = useState(false);
-  const [lastFortuneId, setLastFortuneId] = useState<string | null>(null);
-  const [lastDrawerIndex, setLastDrawerIndex] = useState<number | null>(null);
+  const [drawnIds,  setDrawnIds]  = useState<string[]>([]);
+  const [drawnIdxs, setDrawnIdxs] = useState<number[]>([]);
 
   useEffect(() => {
     try {
-      const d = localStorage.getItem(KEY_DATE);
-      const id = localStorage.getItem(KEY_ID);
-      const dr = localStorage.getItem(KEY_DRAWER);
-      if (d === todayStr() && id) {
-        setAlreadyDrawn(true);
-        setLastFortuneId(id);
-        setLastDrawerIndex(dr != null ? Number.parseInt(dr, 10) : null);
+      if (localStorage.getItem(KEY_DATE) === today()) {
+        setDrawnIds( JSON.parse(localStorage.getItem(KEY_IDS)  ?? "[]") as string[]);
+        setDrawnIdxs(JSON.parse(localStorage.getItem(KEY_IDXS) ?? "[]") as number[]);
       }
-    } catch {
-      /* private mode */
-    }
+    } catch { /* private mode */ }
   }, []);
 
-  const markAsDrawn = useCallback((fortuneId: string, drawerIndex: number) => {
-    try {
-      localStorage.setItem(KEY_DATE, todayStr());
-      localStorage.setItem(KEY_ID, fortuneId);
-      localStorage.setItem(KEY_DRAWER, String(drawerIndex));
-    } catch {
-      /* */
-    }
-    setAlreadyDrawn(true);
-    setLastFortuneId(fortuneId);
-    setLastDrawerIndex(drawerIndex);
+  const markAsDrawn = useCallback((id: string, idx: number) => {
+    setDrawnIds((prev) => {
+      const next = [...prev, id];
+      try {
+        localStorage.setItem(KEY_DATE, today());
+        localStorage.setItem(KEY_IDS,  JSON.stringify(next));
+      } catch { /* */ }
+      return next;
+    });
+    setDrawnIdxs((prev) => {
+      const next = [...prev, idx];
+      try { localStorage.setItem(KEY_IDXS, JSON.stringify(next)); } catch { /* */ }
+      return next;
+    });
   }, []);
 
-  return { alreadyDrawn, lastFortuneId, lastDrawerIndex, markAsDrawn };
+  const drawCount   = drawnIds.length;
+  const remaining   = Math.max(0, MAX_DAILY - drawCount);
+  const limitReached = drawCount >= MAX_DAILY;
+
+  return { drawCount, remaining, limitReached, drawnIds, drawnIdxs, markAsDrawn };
 }
