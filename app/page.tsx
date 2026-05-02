@@ -12,7 +12,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 
-const HOME_MODE_KEY = "home-entry-mode";
+/** Once set, `/` always opens the main page; gacha only on the visitor’s first landing. */
+const GACHA_INTRO_SEEN_KEY = "home-gacha-intro-seen";
 
 function HomeContent() {
   // #region agent log
@@ -53,33 +54,34 @@ function HomeContent() {
   }).catch(() => {});
   // #endregion
   const forceMainPage = searchParams.get("view") === "main";
-  const [mode, setMode] = useState<"browse" | "gacha">("browse");
+  const [mode, setMode] = useState<"browse" | "gacha" | null>(null);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const navEntry = performance.getEntriesByType("navigation")[0] as
-      | PerformanceNavigationTiming
-      | undefined;
-    if (navEntry?.type === "reload") {
-      sessionStorage.removeItem(HOME_MODE_KEY);
-    }
-
     if (forceMainPage) {
-      sessionStorage.setItem(HOME_MODE_KEY, "browse");
+      localStorage.setItem(GACHA_INTRO_SEEN_KEY, "1");
       setMode("browse");
       return;
     }
 
-    const savedMode = sessionStorage.getItem(HOME_MODE_KEY);
-    setMode(savedMode === "gacha" ? "gacha" : "browse");
+    if (localStorage.getItem(GACHA_INTRO_SEEN_KEY) === "1") {
+      setMode("browse");
+      return;
+    }
+
+    setMode("gacha");
   }, [forceMainPage]);
 
   const lockToMainPage = useCallback(() => {
     if (typeof window !== "undefined") {
-      sessionStorage.setItem(HOME_MODE_KEY, "browse");
+      localStorage.setItem(GACHA_INTRO_SEEN_KEY, "1");
     }
     setMode("browse");
+  }, []);
+
+  const openGachaFromHero = useCallback(() => {
+    setMode("gacha");
   }, []);
 
   // #region agent log
@@ -100,6 +102,10 @@ function HomeContent() {
     }),
   }).catch(() => {});
   // #endregion
+
+  if (mode === null) {
+    return <div className="min-h-screen bg-[#070605]" aria-hidden />;
+  }
 
   return (
     <AnimatePresence mode="wait">
@@ -123,7 +129,7 @@ function HomeContent() {
         >
           <Nav />
           <main>
-            <Hero onGachaToggle={() => setMode("gacha")} />
+            <Hero onGachaToggle={openGachaFromHero} />
             <Work />
             <About />
             <HomeMagicGallery />

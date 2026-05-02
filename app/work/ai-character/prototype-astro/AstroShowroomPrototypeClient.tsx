@@ -921,7 +921,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
         transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-[760px] overflow-hidden rounded-3xl"
         style={{ background:"rgba(255,248,250,0.42)", backdropFilter:"blur(18px)", border:`1px solid rgba(255,255,255,0.48)`, boxShadow:"0 28px 80px -30px rgba(180,100,140,0.24), 0 2px 0 rgba(255,255,255,0.55) inset" }}>
-        <div className="flex items-center justify-between px-6 py-3" style={{ borderBottom:"0.5px solid rgba(160,122,184,0.1)" }}>
+        <div className="px-6 py-3">
           <div className="leading-none">
             <p className="text-[9px] tracking-[.14em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
             <p className={`flex items-center gap-1.5 text-[14px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
@@ -929,7 +929,6 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
               Tao Baibai
             </p>
           </div>
-          <CelestialTopBand/>
         </div>
         <style>{`
           @keyframes orbit1 { from { transform: rotate(0deg) translateX(52px) rotate(0deg); } to { transform: rotate(360deg) translateX(52px) rotate(-360deg); } }
@@ -1107,7 +1106,6 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
             </div>
           </div>
         </div>
-        <div className="px-6 pb-3 pt-0"><OrnamentalDivider/></div>
       </motion.section>
     </form>
   );

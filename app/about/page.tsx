@@ -123,28 +123,28 @@ const showrooms = [
 
 const showroomStyle = {
   astro: {
-    card: "border-[#ece7d6] bg-[linear-gradient(156deg,#fffdf8_0%,#fff7f3_34%,#f7f8ef_66%,#fff8e9_100%)] ring-1 ring-[#d8d19a]/22",
+    card: "border-black/[0.08] bg-[linear-gradient(156deg,#fffdf8_0%,#fff7f3_34%,#f7f8ef_66%,#fff8e9_100%)] ring-1 ring-black/[0.05]",
     tabOn: "bg-[#7f6e42] border-transparent text-white shadow-md shadow-[#7f6e42]/24",
     tabOff: "border-[#e6ddbc] bg-white/90 text-[#796a44] hover:border-[#d5ca9d] hover:bg-white hover:text-[#5f5130]",
     eyebrow: "text-[#8a7a52]",
     link: "text-[#7b6a3f] hover:text-[#5f5130]",
-    iframeBorder: "border-[#e4dbb9]",
+    iframeBorder: "border-black/[0.08]",
   },
   therapy: {
-    card: "border-[#d8e8f6] bg-[linear-gradient(158deg,#f7fbff_0%,#eff7ff_42%,#e9f4ff_100%)] ring-1 ring-[#73b7ee]/16",
+    card: "border-black/[0.08] bg-[linear-gradient(158deg,#f7fbff_0%,#eff7ff_42%,#e9f4ff_100%)] ring-1 ring-black/[0.05]",
     tabOn: "bg-[#10679f] border-transparent text-white shadow-md shadow-[#10679f]/24",
     tabOff: "border-[#c9deef] bg-white/88 text-[#3b6d90] hover:border-[#9fc9e5] hover:bg-white hover:text-[#1f5a84]",
     eyebrow: "text-[#2f75aa]",
     link: "text-[#1f6ea8] hover:text-[#18557f]",
-    iframeBorder: "border-[#cbe0ef]",
+    iframeBorder: "border-black/[0.08]",
   },
   romance: {
-    card: "border-[#dfe3ea] bg-[linear-gradient(160deg,#fafbfc_0%,#f3f5f8_40%,#eceff4_100%)] ring-1 ring-[#a7b0be]/18",
+    card: "border-black/[0.08] bg-[linear-gradient(160deg,#fafbfc_0%,#f3f5f8_40%,#eceff4_100%)] ring-1 ring-black/[0.05]",
     tabOn: "bg-[#1f2937] border-transparent text-white shadow-[0_8px_20px_-10px_rgba(31,41,55,0.45)] ring-1 ring-[#475467]/40",
     tabOff: "border-[#d0d5dd] bg-white/88 text-[#475467] hover:border-[#98a2b3] hover:bg-white hover:text-[#1d2939]",
     eyebrow: "text-[#667085]",
     link: "text-[#344054] hover:text-[#1d2939]",
-    iframeBorder: "border-[#c8d0da]",
+    iframeBorder: "border-black/[0.08]",
   },
 };
 

@@ -5,6 +5,7 @@ import {
   motion,
   useReducedMotion,
 } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import React, { useCallback, useEffect, useRef, useState, type MouseEvent } from "react";
 
@@ -178,12 +179,18 @@ const RC: Record<
 
 const SCENE_BG_URL = "/assets/magic/gacha-scene-bg.png";
 
-/** Intrinsic pixels of gacha-scene-bg.png — keep in sync with file; display caps so we don’t upscale past native resolution. */
+/** Intrinsic pixels of gacha-scene-bg.png — keep in sync with file. Display scales with viewport (may upscale slightly on large screens). */
 const SCENE_IMG_W = 1024;
 const SCENE_IMG_H = 723;
+const SCENE_ASPECT = SCENE_IMG_W / SCENE_IMG_H;
 
 /** Omikuji frame art — background for the revealed card only, not the gacha scene. */
 const CARD_FRAME_BG_URL = "/assets/magic/gacha-omikuji-frame.png";
+
+/** CTA control on the omikuji face — replaces text link (intrinsic 4608×1398). */
+const CARD_CTA_BUTTON_SRC = "/assets/3d/button.png";
+const CARD_CTA_BUTTON_W = 4608;
+const CARD_CTA_BUTTON_H = 1398;
 
 /** Fortune slip chrome: black field + gold type (no white). */
 const OM_GOLD = {
@@ -479,7 +486,12 @@ function ProjectCardFace({
             {project.rarity}&nbsp;{cfg.pill}
           </span>
 
-          <h2 className="line-clamp-3 w-full max-w-full text-balance font-serif text-[1.02rem] font-semibold leading-snug tracking-tight text-textPrimary sm:text-[1.14rem] md:text-[1.22rem]">
+          <h2
+            className="line-clamp-3 w-full max-w-full text-balance font-display text-[1.02rem] font-semibold leading-snug tracking-tight text-[#14110d] sm:text-[1.14rem] md:text-[1.22rem]"
+            style={{
+              textShadow: "0 1px 14px rgba(251, 191, 36, 0.22), 0 0 1px rgba(255, 250, 235, 0.35)",
+            }}
+          >
             {project.title}
           </h2>
           <p
@@ -499,9 +511,17 @@ function ProjectCardFace({
             href={project.href}
             scroll
             onClick={() => onBeforeNavigate?.()}
-            className="mt-2 inline-flex w-full max-w-full shrink-0 items-center justify-center px-1 py-1.5 font-sans text-[11px] font-medium leading-snug tracking-[0.02em] text-textPrimary underline decoration-black/[0.22] underline-offset-[6px] transition-colors hover:text-textPrimary hover:decoration-black/40 active:scale-[0.99] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black/25 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:text-[12px]"
+            aria-label={ctaLabel}
+            className="mt-3 inline-flex w-full max-w-full shrink-0 items-center justify-center px-1 py-1 transition-[opacity,transform] hover:opacity-92 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-500/45 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent sm:hover:scale-[1.02]"
           >
-            <span className="line-clamp-2 w-full text-center">{ctaLabel}</span>
+            <Image
+              src={CARD_CTA_BUTTON_SRC}
+              alt=""
+              width={CARD_CTA_BUTTON_W}
+              height={CARD_CTA_BUTTON_H}
+              className="pointer-events-none h-auto w-full max-w-[min(100%,13rem)] select-none object-contain object-center sm:max-w-[min(100%,15rem)]"
+              sizes="(max-width: 640px) 42vw, 240px"
+            />
           </Link>
         </div>
       </div>
@@ -607,9 +627,9 @@ function GenieLamp({
       ref={lampRef}
       className="pointer-events-auto fixed left-1/2 z-[25] -translate-x-1/2 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-amber-400/55 focus-visible:ring-offset-2 focus-visible:ring-offset-black/40"
       style={{
-        bottom: "clamp(46px, 10vh, 110px)",
-        width: "min(300px, 52vw)",
-        height: "min(260px, 40vw)",
+        bottom: "clamp(100px, 12vh, 180px)",
+        width: "clamp(220px, min(52vw, calc(42vh * 1.15)), 560px)",
+        height: "clamp(190px, min(44vw, 38vh), 480px)",
       }}
       role="button"
       tabIndex={0}
@@ -844,8 +864,8 @@ export function GachaCabinet({
             draggable={false}
             className="h-auto w-auto select-none"
             style={{
-              maxWidth: `min(80vw, ${SCENE_IMG_W}px)`,
-              maxHeight: "90vh",
+              maxWidth: `min(96vw, calc(88vh * ${SCENE_ASPECT}))`,
+              maxHeight: `min(88vh, calc(96vw / ${SCENE_ASPECT}))`,
               objectFit: "contain",
               objectPosition: "center",
             }}
@@ -854,7 +874,7 @@ export function GachaCabinet({
 
         <GenieLamp reducedMotion={reduced} onDraw={drawOmikuji} lampRef={lampRef} />
 
-        <div className="fixed bottom-4 right-5 z-30">
+        <div className="fixed bottom-5 left-1/2 z-30 -translate-x-1/2">
           <button
             type="button"
             role="switch"

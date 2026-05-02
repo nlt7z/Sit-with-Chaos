@@ -185,6 +185,8 @@ type ShowcaseVideoProps = {
   autoPlay?: boolean;
   /** Play while in viewport; pause when scrolled away (muted until user unmutes — required for autoplay). Ignored when autoPlay is true. */
   playWhenInView?: boolean;
+  /** Default metadata — use auto for long MP4s or odd paths so the first frame buffers reliably. */
+  preload?: "none" | "metadata" | "auto";
 };
 
 function ShowcaseVideo({
@@ -195,6 +197,7 @@ function ShowcaseVideo({
   className = "",
   autoPlay = false,
   playWhenInView = true,
+  preload = "metadata",
 }: ShowcaseVideoProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -232,7 +235,7 @@ function ShowcaseVideo({
           className={`h-auto w-full object-contain ${mediaRound}`}
           controls
           playsInline
-          preload="metadata"
+          preload={preload}
           poster={poster}
           autoPlay={autoPlay}
           loop={autoPlay}
@@ -668,81 +671,59 @@ const vibeIframeBg: Record<(typeof vibeCodingShowrooms)[number]["id"], string> =
 };
 
 function VibeCodingPrototypeGallery() {
-  const [activeId, setActiveId] = useState<(typeof vibeCodingShowrooms)[number]["id"]>("romance");
-  const active = vibeCodingShowrooms.find((item) => item.id === activeId) ?? vibeCodingShowrooms[0];
-
   return (
-    <div className="w-full pt-2">
-      <p className="max-w-reading font-sans text-[15px] leading-relaxed text-textSecondary">
-        Three vibe-coded showrooms rebuilt in English with Claude Code + Cursor. Pick one room to preview the live experience.
-        For the best visual fidelity, open the full page version — the embedded ratio is only a compact preview.
-      </p>
-
-      <div className="mt-7 flex flex-wrap gap-2.5 border-b border-black/[0.06] pb-4" role="tablist" aria-label="Vibe coding showroom gallery">
-        {vibeCodingShowrooms.map((item) => {
-          const isActive = item.id === activeId;
-          return (
-            <button
-              key={item.id}
-              type="button"
-              role="tab"
-              id={`vibe-tab-${item.id}`}
-              aria-selected={isActive}
-              aria-controls={`vibe-panel-${item.id}`}
-              tabIndex={isActive ? 0 : -1}
-              onClick={() => setActiveId(item.id)}
-              className={`${roomTab.base} ${isActive ? roomTab.on : roomTab.off}`}
-            >
-              {item.tab}
-            </button>
-          );
-        })}
-      </div>
-
-      <div id={`vibe-panel-${active.id}`} role="tabpanel" aria-labelledby={`vibe-tab-${active.id}`} className="pt-9">
-        <div
-          className={`overflow-hidden border shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-out ${vibeGalleryChrome[active.id]} ${mediaRound}`}
+    <div className="w-full space-y-12 pt-6 md:space-y-14 md:pt-8">
+      {vibeCodingShowrooms.map((item) => (
+        <section
+          key={item.id}
+          aria-labelledby={`vibe-showroom-${item.id}-title`}
+          className="scroll-mt-28"
         >
           <div
-            className={`flex items-center justify-between border-b px-4 py-3 md:px-6 ${
-              active.id === "romance" ? "border-white/[0.1]" : "border-black/[0.07]"
-            }`}
+            className={`overflow-hidden border shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-out ${vibeGalleryChrome[item.id]} ${mediaRound}`}
           >
-            <div>
-              <p
-                className={`font-sans text-[11px] font-semibold uppercase tracking-[0.16em] ${
-                  active.id === "romance" ? "text-stone-500" : "text-textSecondary"
-                }`}
-              >
-                {active.label}
-              </p>
-              <p
-                className={`mt-1.5 font-sans text-[13px] font-medium ${
-                  active.id === "romance" ? "text-stone-100" : "text-textPrimary"
-                }`}
-              >
-                {active.caption}
-              </p>
-            </div>
-            <Link
-              href={active.href}
-              className={`shrink-0 font-sans text-[12px] font-medium tracking-wide underline underline-offset-[5px] transition-colors duration-300 ${
-                active.id === "romance"
-                  ? "text-amber-200/90 decoration-amber-200/35 hover:text-amber-100 hover:decoration-amber-100/55"
-                  : "text-textSecondary decoration-black/[0.12] hover:text-textPrimary hover:decoration-textPrimary/35"
+            <div
+              className={`flex flex-wrap items-start justify-between gap-3 border-b px-4 py-3 md:px-6 ${
+                item.id === "romance" ? "border-white/[0.1]" : "border-black/[0.07]"
               }`}
             >
-              Open full page
-            </Link>
+              <div className="min-w-0">
+                <p
+                  id={`vibe-showroom-${item.id}-title`}
+                  className={`font-sans text-[11px] font-semibold uppercase tracking-[0.16em] ${
+                    item.id === "romance" ? "text-stone-500" : "text-textSecondary"
+                  }`}
+                >
+                  {item.label}
+                </p>
+                <p
+                  className={`mt-1.5 font-sans text-[13px] font-medium ${
+                    item.id === "romance" ? "text-stone-100" : "text-textPrimary"
+                  }`}
+                >
+                  {item.caption}
+                </p>
+              </div>
+              <Link
+                href={item.href}
+                className={`shrink-0 font-sans text-[12px] font-medium tracking-wide underline underline-offset-[5px] transition-colors duration-300 ${
+                  item.id === "romance"
+                    ? "text-amber-200/90 decoration-amber-200/35 hover:text-amber-100 hover:decoration-amber-100/55"
+                    : "text-textSecondary decoration-black/[0.12] hover:text-textPrimary hover:decoration-textPrimary/35"
+                }`}
+              >
+                Open full page
+              </Link>
+            </div>
+            <iframe
+              title={item.title}
+              src={item.src}
+              className={`h-[min(72vh,820px)] min-h-[480px] w-full md:min-h-[560px] ${vibeIframeBg[item.id]}`}
+              loading="lazy"
+            />
           </div>
-          <iframe
-            title={active.title}
-            src={active.src}
-            className={`h-[min(82vh,900px)] min-h-[540px] w-full md:min-h-[640px] ${vibeIframeBg[active.id]}`}
-            loading="lazy"
-          />
-        </div>
-      </div>
+        </section>
+      ))}
     </div>
   );
 }
@@ -1078,7 +1059,6 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 loop
                 playsInline
                 preload="metadata"
-                poster="/assets/ai-character/showcase.jpg"
                 aria-label="Qwen AI Character experience overview"
               >
                 <source src="/assets/ai-character/figma.mp4" type="video/mp4" />
@@ -1211,8 +1191,11 @@ export default function CaseStudyContent() {
             title="Three showrooms, designed and built end-to-end."
           >
             <p>
-              Each showroom was designed, prototyped, and shipped by me — from user research through production code. Pick a room to preview the live experience.
-              Open the full-page version for the best fidelity.
+              Each showroom was designed, prototyped, and shipped by me — from user research through production code.
+            </p>
+            <p>
+              Three vibe-coded showrooms rebuilt in English with Claude Code + Cursor. All three live previews are embedded
+              below — compact ratio on this page; open any room&apos;s full-page version for the best fidelity.
             </p>
             <VibeCodingPrototypeGallery />
           </Section>
@@ -1386,9 +1369,10 @@ export default function CaseStudyContent() {
 
           <ShowcaseVideo
             label="Experience loop — inspiration and continue response in flow"
-            src="/assets/ai-character/inspire+continue%20response/inspire+continue%20response-1.mp4"
+            src="/assets/ai-character/inspire-continue-response/inspire-continue-response-1.mp4"
             caption="Screen recording: inspiration reply options and continue response in the romance showroom"
             className="mt-10"
+            preload="auto"
           />
 
           <RevealLine className="mt-12" />

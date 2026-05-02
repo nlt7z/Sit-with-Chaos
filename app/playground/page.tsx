@@ -35,11 +35,11 @@ const showroomTab = {
 
 const showroomCardGradients = {
   astro:
-    "border-[#ece7d6] bg-[linear-gradient(156deg,#fffdf8_0%,#fff7f3_34%,#f7f8ef_66%,#fff8e9_100%)] shadow-[0_20px_50px_-30px_rgba(148,130,92,0.2)] ring-1 ring-[#d8d19a]/22",
+    "border-black/[0.08] bg-[linear-gradient(156deg,#fffdf8_0%,#fff7f3_34%,#f7f8ef_66%,#fff8e9_100%)] shadow-[0_20px_50px_-30px_rgba(148,130,92,0.2)] ring-1 ring-black/[0.05]",
   therapy:
-    "border-[#d8e8f6] bg-[linear-gradient(158deg,#f7fbff_0%,#eff7ff_42%,#e9f4ff_100%)] shadow-[0_20px_50px_-30px_rgba(46,116,170,0.2)] ring-1 ring-[#73b7ee]/16",
+    "border-black/[0.08] bg-[linear-gradient(158deg,#f7fbff_0%,#eff7ff_42%,#e9f4ff_100%)] shadow-[0_20px_50px_-30px_rgba(46,116,170,0.2)] ring-1 ring-black/[0.05]",
   romance:
-    "border-[#dfe3ea] bg-[linear-gradient(160deg,#fafbfc_0%,#f3f5f8_40%,#eceff4_100%)] shadow-[0_20px_50px_-30px_rgba(66,76,96,0.2)] ring-1 ring-[#a7b0be]/18",
+    "border-black/[0.08] bg-[linear-gradient(160deg,#fafbfc_0%,#f3f5f8_40%,#eceff4_100%)] shadow-[0_20px_50px_-30px_rgba(66,76,96,0.2)] ring-1 ring-black/[0.05]",
 } as const;
 
 /** Copy + accents per showroom palette (against page white + gradient shells). */
@@ -257,10 +257,10 @@ function PlaygroundAiShowroomGallery({ reduceMotion }: { reduceMotion: boolean }
 
   const iframeChrome =
     s.variant === "romance"
-      ? "relative isolate overflow-hidden border-t border-[#c8d0da] bg-[#f2f4f7] shadow-[0_12px_32px_rgba(2,8,20,0.08),inset_0_0_0_1px_rgba(255,255,255,0.7)]"
+      ? "relative isolate overflow-hidden border-t border-black/[0.08] bg-[#f2f4f7] shadow-[0_12px_32px_rgba(2,8,20,0.08),inset_0_0_0_1px_rgba(255,255,255,0.7)]"
       : s.variant === "astro"
-        ? "border-t border-[#e4dbb9] bg-[#fffdf6]"
-        : "border-t border-[#cbe0ef] bg-[#f5f9fd]";
+        ? "border-t border-black/[0.08] bg-[#fffdf6]"
+        : "border-t border-black/[0.08] bg-[#f5f9fd]";
 
   return (
     <motion.section

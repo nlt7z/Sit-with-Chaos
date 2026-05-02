@@ -56,6 +56,18 @@ const config: Config = {
           "0%, 100%": { transform: "translate3d(5%, -3%, 0)" },
           "50%": { transform: "translate3d(-6%, 4%, 0)" },
         },
+        /** Gacha omikuji — CTA background gradient drift */
+        "gacha-cta-shimmer": {
+          "0%, 100%": { backgroundPosition: "0% 50%" },
+          "50%": { backgroundPosition: "100% 50%" },
+        },
+        /** Gacha omikuji — specular sweep across CTA */
+        "gacha-cta-glint": {
+          "0%": { transform: "translateX(-140%) skewX(-18deg)", opacity: "0" },
+          "12%": { opacity: "0.95" },
+          "35%": { transform: "translateX(220%) skewX(-18deg)", opacity: "0" },
+          "100%": { opacity: "0" },
+        },
       },
       animation: {
         "spell-prism-a": "spell-prism-a 36s ease-in-out infinite alternate",
@@ -63,6 +75,8 @@ const config: Config = {
         "spell-prism-c": "spell-prism-c 44s ease-in-out infinite alternate",
         "spell-silver-a": "spell-silver-a 48s ease-in-out infinite alternate",
         "spell-silver-b": "spell-silver-b 54s ease-in-out infinite alternate",
+        "gacha-cta-shimmer": "gacha-cta-shimmer 3.8s ease-in-out infinite",
+        "gacha-cta-glint": "gacha-cta-glint 2.8s ease-in-out infinite",
       },
     },
   },
