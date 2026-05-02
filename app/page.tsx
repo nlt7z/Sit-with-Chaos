@@ -10,12 +10,48 @@ import { Nav } from "@/components/Nav";
 import { Work } from "@/components/Work";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 
 const HOME_MODE_KEY = "home-entry-mode";
 
-export default function Home() {
+function HomeContent() {
+  // #region agent log
+  fetch("http://127.0.0.1:7434/ingest/ab7b4951-6649-467a-92da-e89e00c6a2c0", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "afa6c4",
+    },
+    body: JSON.stringify({
+      sessionId: "afa6c4",
+      runId: "pre-fix",
+      hypothesisId: "H3",
+      location: "app/page.tsx:18",
+      message: "Home render entry",
+      data: { hasWindow: typeof window !== "undefined" },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
   const searchParams = useSearchParams();
+  // #region agent log
+  fetch("http://127.0.0.1:7434/ingest/ab7b4951-6649-467a-92da-e89e00c6a2c0", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "afa6c4",
+    },
+    body: JSON.stringify({
+      sessionId: "afa6c4",
+      runId: "pre-fix",
+      hypothesisId: "H1",
+      location: "app/page.tsx:33",
+      message: "useSearchParams read",
+      data: { hasSearchParams: !!searchParams, view: searchParams.get("view") },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
   const forceMainPage = searchParams.get("view") === "main";
   const [mode, setMode] = useState<"browse" | "gacha">("browse");
 
@@ -45,6 +81,25 @@ export default function Home() {
     }
     setMode("browse");
   }, []);
+
+  // #region agent log
+  fetch("http://127.0.0.1:7434/ingest/ab7b4951-6649-467a-92da-e89e00c6a2c0", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-Debug-Session-Id": "afa6c4",
+    },
+    body: JSON.stringify({
+      sessionId: "afa6c4",
+      runId: "pre-fix",
+      hypothesisId: "H2",
+      location: "app/page.tsx:71",
+      message: "Render branch decision",
+      data: { mode, forceMainPage },
+      timestamp: Date.now(),
+    }),
+  }).catch(() => {});
+  // #endregion
 
   return (
     <AnimatePresence mode="wait">
@@ -78,5 +133,13 @@ export default function Home() {
         </motion.div>
       )}
     </AnimatePresence>
+  );
+}
+
+export default function Home() {
+  return (
+    <Suspense fallback={null}>
+      <HomeContent />
+    </Suspense>
   );
 }

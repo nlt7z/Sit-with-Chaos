@@ -13,7 +13,7 @@ const aiCharacter: Project = {
     "Turned invisible model capabilities into emotionally legible product moments through reusable showrooms.",
   media: {
     src: "/assets/ai-character/figma.mp4",
-    alt: "Alibaba AI Character product experience preview",
+    alt: "Alibaba Qwen AI Character product experience preview",
     type: "video",
   },
 };

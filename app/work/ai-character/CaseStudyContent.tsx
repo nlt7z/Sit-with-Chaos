@@ -1065,7 +1065,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
             {reduced ? (
               <img
                 src="/assets/ai-character/showcase.jpg"
-                alt="AI Character product showcase preview"
+                alt="Qwen AI Character product showcase preview"
                 className="h-full w-full object-cover"
                 loading="eager"
                 decoding="async"
@@ -1079,7 +1079,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 playsInline
                 preload="metadata"
                 poster="/assets/ai-character/showcase.jpg"
-                aria-label="AI Character experience overview"
+                aria-label="Qwen AI Character experience overview"
               >
                 <source src="/assets/ai-character/figma.mp4" type="video/mp4" />
               </video>

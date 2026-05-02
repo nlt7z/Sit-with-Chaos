@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const projects: Record<string, string> = {
   "liner-scholar": "Liner AI Scholar — Collaborative Deep-Research Workflow",
-  "ai-character": "New Experience for Alibaba AI Character",
+  "ai-character": "New Experience for Qwen AI Character",
   "apsara-conference": "Apsara Conference — Alibaba AI on Cloud",
   qoder: "Agentic Coding Platform for Real Software",
   "meituan-im": "Expert Analysis and Multi-round Quotation for IM System",

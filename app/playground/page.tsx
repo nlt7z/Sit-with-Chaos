@@ -269,11 +269,11 @@ function PlaygroundAiShowroomGallery({ reduceMotion }: { reduceMotion: boolean }
       viewport={{ once: true, margin: "-8% 0px" }}
       transition={{ duration: 0.65, ease: easePortfolio }}
       className="mt-10"
-      aria-label="AI Character showroom gallery"
+      aria-label="Qwen AI Character showroom gallery"
     >
       <div className="mb-5 max-w-3xl transition-colors duration-500">
         <p className={`font-mono text-xs uppercase tracking-widest transition-colors duration-500 ${t.sectionEyebrow}`}>
-          AI Character
+          Qwen AI Character
         </p>
         <h3 className={`mt-2 font-display text-2xl font-light md:text-3xl transition-colors duration-500 ${t.sectionTitle}`}>
           Showroom prototypes
