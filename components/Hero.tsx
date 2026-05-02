@@ -15,7 +15,9 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
   const reduced = !!prefersReducedMotion;
   const ref = useRef<HTMLElement | null>(null);
   const [halftoneMounted, setHalftoneMounted] = useState(false);
+  const [halftoneHovered, setHalftoneHovered] = useState(false);
   const [gachaSwitchOn, setGachaSwitchOn] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: -9999, y: -9999 });
   const gachaOpenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -82,6 +84,11 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
       ref={ref}
       className="relative overflow-hidden bg-white pt-14 md:pt-16"
       aria-labelledby="hero-heading"
+      onMouseMove={(e) => {
+        const rect = ref.current?.getBoundingClientRect();
+        if (rect) setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+      }}
+      onMouseLeave={() => setMousePos({ x: -9999, y: -9999 })}
     >
       {/* Soft vignette — keeps the hero from feeling flat */}
       <div
@@ -89,36 +96,100 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
         aria-hidden
       />
 
-      {/* ── NLT Halftone — cropped center, no iframe scroll, flush to headline ───── */}
+      {/* Orbital orb — dim base always visible */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
+        initial={reduced ? false : { opacity: 0, scale: 1.08 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+      >
+        <img
+          src="/assets/hero-orb.png"
+          alt=""
+          draggable={false}
+          className="select-none"
+          style={{
+            width: "clamp(480px, 72vw, 920px)",
+            opacity: 0.18,
+            mixBlendMode: "multiply",
+            transform: "translateY(-4%)",
+          }}
+        />
+      </motion.div>
+
+      {/* Orbital orb — spotlight layer, follows cursor */}
+      {!reduced && (
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
+          style={{
+            WebkitMaskImage: `radial-gradient(circle 260px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 78%)`,
+            maskImage: `radial-gradient(circle 260px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 78%)`,
+          }}
+        >
+          <img
+            src="/assets/hero-orb.png"
+            alt=""
+            draggable={false}
+            className="select-none"
+            style={{
+              width: "clamp(480px, 72vw, 920px)",
+              opacity: 0.62,
+              mixBlendMode: "multiply",
+              transform: "translateY(-4%)",
+            }}
+          />
+        </div>
+      )}
+
+      {/* ── NLT Halftone — hover to reveal ────────────────────────────────────── */}
       <motion.div
         aria-hidden
         className="relative w-full overflow-hidden"
         style={{ y: halftoneY }}
       >
         <div className="flex justify-center px-5 pt-3 md:px-10 md:pt-4">
-          <BlurReveal duration={1} delay={0} className="w-full max-w-[min(42rem,92vw)]">
+          <div className="w-full max-w-[min(32rem,72vw)]">
             {/* Canvas logical ratio 620×260 — clip edges so only the letterform band shows */}
-            <div className="relative mx-auto aspect-[620/260] w-full overflow-hidden bg-transparent">
-              {!reduced && halftoneMounted ? (
-                <iframe
-                  src={heroHalftoneSrc}
-                  title="NLT Halftone — interactive"
-                  loading="eager"
-                  scrolling="no"
-                  className="pointer-events-auto absolute left-1/2 top-[52%] h-[145%] w-[118%] max-w-none -translate-x-1/2 -translate-y-1/2 border-0 md:h-[138%] md:w-[112%]"
-                />
-              ) : (
-                <div
-                  className="absolute inset-0 bg-[#f0f0f3]"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.06) 1px, transparent 0)",
-                    backgroundSize: "14px 14px",
-                  }}
-                />
-              )}
+            <div
+              className="relative mx-auto aspect-[620/260] w-full overflow-hidden bg-transparent"
+              onMouseEnter={() => setHalftoneHovered(true)}
+              onMouseLeave={() => setHalftoneHovered(false)}
+            >
+              <motion.div
+                className="absolute inset-0"
+                animate={
+                  reduced
+                    ? { opacity: 1, filter: "blur(0px)" }
+                    : {
+                        opacity: halftoneHovered ? 1 : 0,
+                        filter: halftoneHovered ? "blur(0px)" : "blur(12px)",
+                      }
+                }
+                transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {!reduced && halftoneMounted ? (
+                  <iframe
+                    src={heroHalftoneSrc}
+                    title="NLT Halftone — interactive"
+                    loading="eager"
+                    scrolling="no"
+                    className="pointer-events-auto absolute left-1/2 top-[52%] h-[145%] w-[118%] max-w-none -translate-x-1/2 -translate-y-1/2 border-0 md:h-[138%] md:w-[112%]"
+                  />
+                ) : (
+                  <div
+                    className="absolute inset-0 bg-[#f0f0f3]"
+                    style={{
+                      backgroundImage:
+                        "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.06) 1px, transparent 0)",
+                      backgroundSize: "14px 14px",
+                    }}
+                  />
+                )}
+              </motion.div>
             </div>
-          </BlurReveal>
+          </div>
         </div>
       </motion.div>
 
@@ -128,12 +199,15 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
         className="relative z-10 px-6 pb-20 pt-3 text-center md:pb-28 md:pt-4"
       >
         <BlurReveal className="flex flex-col items-center text-center" delay={0.12} duration={0.9}>
-          <h1
+          <motion.h1
             id="hero-heading"
-            className="mx-auto max-w-4xl font-display text-4xl font-light leading-tight text-textPrimary md:text-6xl lg:text-7xl"
+            className="mx-auto max-w-4xl cursor-default font-display text-4xl font-light leading-tight text-textPrimary md:text-6xl lg:text-7xl"
+            whileHover={reduced ? undefined : { scale: 1.03, y: -3 }}
+            transition={{ type: "spring", stiffness: 320, damping: 22 }}
+            style={{ originX: 0.5, originY: 0.5 }}
           >
             {heading}
-          </h1>
+          </motion.h1>
 
           <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-textSecondary md:mt-5 md:text-xl">
             {subheading}

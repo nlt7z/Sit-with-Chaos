@@ -716,15 +716,16 @@ function KbEditorModal({ onClose }: { onClose: () => void }) {
 function PsychSplashScreen({ onEnter }: { onEnter: () => void }) {
   return (
     <motion.div
-      className="fixed inset-0 z-[100] flex items-stretch overflow-hidden"
+      className="fixed inset-0 z-[100] flex items-center justify-center overflow-y-auto overflow-x-hidden px-7 py-12 sm:px-10 sm:py-14 md:px-16 md:py-16 lg:px-24 lg:py-[4.5rem] xl:px-32"
       style={{ background: "linear-gradient(160deg, #f5faff 0%, #eaf3f9 50%, #e3eef8 100%)" }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0, scale: 0.98 }}
       transition={{ duration: 0.38, ease: [0.25, 0.1, 0.25, 1] }}
     >
+      <div className="flex w-full max-w-[1180px] flex-col items-center md:flex-row md:items-stretch md:justify-between gap-12 md:gap-14 lg:gap-20">
       {/* Left: text content */}
-      <div className="relative z-10 flex w-full flex-col justify-center px-10 py-14 md:w-[52%] md:px-16 lg:px-20">
+      <div className="relative z-10 flex w-full flex-col justify-center md:w-[52%] md:min-w-0">
         {/* Badge */}
         <motion.div
           className="mb-8 flex items-center gap-2"
@@ -807,8 +808,8 @@ function PsychSplashScreen({ onEnter }: { onEnter: () => void }) {
         </motion.button>
       </div>
 
-      {/* Right: animation */}
-      <div className="hidden md:flex md:w-[48%] items-center justify-center relative overflow-hidden">
+      {/* Right: animation — stretch with left column so scale()/rings aren’t clipped */}
+      <div className="relative hidden md:flex md:w-[48%] md:min-w-0 md:flex-col items-center justify-center overflow-visible">
         {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0"
           style={{
@@ -818,19 +819,23 @@ function PsychSplashScreen({ onEnter }: { onEnter: () => void }) {
             ].join(","),
           }}
         />
-        {/* Decorative rings */}
-        <motion.div
-          className="absolute rounded-full"
-          style={{ width: 320, height: 320, border: "1px solid rgba(132,180,222,0.14)" }}
-          animate={{ scale: [1, 1.04, 1], opacity: [0.6, 1, 0.6] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        />
-        <motion.div
-          className="absolute rounded-full"
-          style={{ width: 220, height: 220, border: "1px solid rgba(132,180,222,0.22)" }}
-          animate={{ scale: [1, 1.06, 1], opacity: [0.5, 0.9, 0.5] }}
-          transition={{ duration: 4, delay: 0.6, repeat: Infinity, ease: "easeInOut" }}
-        />
+        {/* Decorative rings — centered; scale on inner node avoids fighting translate */}
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <motion.div
+            className="rounded-full"
+            style={{ width: 320, height: 320, border: "1px solid rgba(132,180,222,0.14)" }}
+            animate={{ scale: [1, 1.04, 1], opacity: [0.6, 1, 0.6] }}
+            transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
+        <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+          <motion.div
+            className="rounded-full"
+            style={{ width: 220, height: 220, border: "1px solid rgba(132,180,222,0.22)" }}
+            animate={{ scale: [1, 1.06, 1], opacity: [0.5, 0.9, 0.5] }}
+            transition={{ duration: 4, delay: 0.6, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </div>
         {/* Central animation — scaled up */}
         <motion.div
           initial={{ opacity: 0, scale: 0.84 }}
@@ -840,6 +845,7 @@ function PsychSplashScreen({ onEnter }: { onEnter: () => void }) {
         >
           <OpeningCosmicHug/>
         </motion.div>
+      </div>
       </div>
     </motion.div>
   );

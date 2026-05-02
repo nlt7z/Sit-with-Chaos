@@ -921,7 +921,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
         transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-[760px] overflow-hidden rounded-3xl"
         style={{ background:"rgba(255,248,250,0.42)", backdropFilter:"blur(18px)", border:`1px solid rgba(255,255,255,0.48)`, boxShadow:"0 28px 80px -30px rgba(180,100,140,0.24), 0 2px 0 rgba(255,255,255,0.55) inset" }}>
-        <div className="px-6 py-3">
+        <div className="px-6 py-4">
           <div className="leading-none">
             <p className="text-[9px] tracking-[.14em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
             <p className={`flex items-center gap-1.5 text-[14px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
@@ -935,7 +935,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
           @keyframes orbit2 { from { transform: rotate(120deg) translateX(62px) rotate(-120deg); } to { transform: rotate(480deg) translateX(62px) rotate(-480deg); } }
           @keyframes orbit3 { from { transform: rotate(240deg) translateX(46px) rotate(-240deg); } to { transform: rotate(600deg) translateX(46px) rotate(-600deg); } }
         `}</style>
-        <div className="grid items-center gap-8 px-7 py-6 md:grid-cols-[160px_1fr]">
+        <div className="grid items-center gap-8 px-7 py-8 md:grid-cols-[160px_1fr]">
           <div className="flex justify-center md:justify-start">
             <div className="relative flex h-[140px] w-[140px] items-center justify-center">
               <svg className="absolute inset-0 h-full w-full" viewBox="0 0 140 140" fill="none">
@@ -993,7 +993,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
 
             <div className="mt-5 rounded-2xl overflow-hidden"
               style={{ background:"rgba(255,252,250,0.52)", backdropFilter:"blur(10px)", border:"0.5px solid rgba(255,255,255,0.56)", boxShadow:"0 4px 20px -10px rgba(180,100,140,0.1), 0 1px 0 rgba(255,255,255,0.5) inset" }}>
-              <div className="grid gap-3 px-4 py-3.5 sm:grid-cols-2">
+              <div className="grid gap-3 px-4 py-5 sm:grid-cols-2">
                 <label className="block">
                   <span className="mb-2 block text-[9px] uppercase tracking-[.18em]" style={{ color:C.txt3 }}>Your name</span>
                   <div className="flex h-12 items-center gap-2.5 rounded-xl px-3.5"
@@ -1036,9 +1036,9 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                 </label>
               </div>
 
-              <div className="border-t border-[rgba(160,122,184,0.1)] px-4 pt-1 pb-1">
-                <p className="pt-2 text-[8px] uppercase tracking-[.16em]" style={{ color:C.txt3 }}>Them (optional)</p>
-                <div className="grid gap-3 py-2 sm:grid-cols-2">
+              <div className="border-t border-[rgba(160,122,184,0.1)] px-4 pt-4 pb-3">
+                <p className="mb-2 text-[8px] uppercase tracking-[.16em]" style={{ color:C.txt3 }}>Them (optional)</p>
+                <div className="grid gap-3 py-3 sm:grid-cols-2">
                   <label className="block">
                     <span className="mb-2 block text-[9px] uppercase tracking-[.18em]" style={{ color:C.txt3 }}>Their name</span>
                     <div className="flex h-11 items-center gap-2.5 rounded-xl px-3"
@@ -1086,7 +1086,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                 )}
               </div>
 
-              <div className="flex items-center justify-between gap-4 px-4 pb-4 pt-1">
+              <div className="flex items-center justify-between gap-4 px-4 pb-5 pt-4">
                 <p className="text-[10.5px] leading-[1.55]" style={{ color:C.txt3 }}>
                   Not fortune telling. A soft emotional chat shaped by zodiac language.
                 </p>
@@ -1479,8 +1479,8 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                       border:"1px solid rgba(200,147,158,0.2)",
                       boxShadow:"0 16px 48px -20px rgba(180,100,140,0.28), 0 1px 0 rgba(255,255,255,0.65) inset",
                     }}>
-                    <div className="px-7 pt-3 pb-0"><CelestialTopBand/></div>
-                    <div className="flex items-start gap-6 px-7 py-3">
+                    <div className="px-7 pt-4 pb-0"><CelestialTopBand/></div>
+                    <div className="flex items-start gap-6 px-7 py-5">
                       <AvatarTagCard/>
                       <div className="flex-1 pt-1">
                         <p className={`text-[9px] tracking-[.22em] uppercase mb-2 ${displayFont.className}`}
@@ -1495,7 +1495,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         </p>
                       </div>
                     </div>
-                    <div className="px-7 pb-3 pt-0"><OrnamentalDivider/></div>
+                    <div className="px-7 pb-5 pt-0"><OrnamentalDivider/></div>
                   </div>
                 )}
 

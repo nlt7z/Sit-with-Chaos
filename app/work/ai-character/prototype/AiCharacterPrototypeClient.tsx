@@ -18,6 +18,8 @@ const SCENE_VIDEO_ALTERNATE = "/assets/ai-character/newworld.mp4" as const;
 const PORTRAIT_VIDEO_PLAYLIST = [SCENE_VIDEO_DEFAULT] as const;
 const VIDEO_PLAYBACK_SLOW = 0.42;
 const BG_MUSIC = "/assets/ai-character/background.MP3";
+/** Splash CTA — designed asset (text baked into image) */
+const ENTER_HIS_WORLD_BUTTON = "/assets/ai-character/prototype/enter-his-world-button.png";
 
 const T = {
   bg: { void: "#050507", deep: "#08080d", card: "#0d0d16" },
@@ -1509,80 +1511,44 @@ function Particles({ topInset = 0 }: { topInset?: number }) {
 }
 
 /* ─── Start Button ───────────────────────────────────────────────────────── */
-function GothicStar({ size = 7, color = "currentColor" }: { size?: number; color?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 10 10" fill="none" aria-hidden>
-      <path d="M5 0L5.8 4.2L10 5L5.8 5.8L5 10L4.2 5.8L0 5L4.2 4.2Z" fill={color} />
-    </svg>
-  );
-}
-
 function FancyStartButton({ onClick }: { onClick: () => void }) {
   const [hov, setHov] = useState(false);
-  const c = hov ? T.gold.l : T.gold.p;
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-      <div
-        style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 10, justifyContent: "flex-start" }}
+    <div style={{ width: "auto", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
+      <button
+        type="button"
+        onClick={onClick}
+        aria-label="Enter his world"
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
+        style={{
+          background: "none",
+          border: "none",
+          padding: 0,
+          margin: 0,
+          cursor: "pointer",
+          display: "block",
+          lineHeight: 0,
+          opacity: hov ? 0.94 : 1,
+          filter: hov ? "brightness(1.06)" : "none",
+          transition: "opacity 0.25s ease, filter 0.25s ease",
+        }}
       >
-        {/* Text first: same left edge as name / blurb; ornaments only to the right */}
-        <button
-          type="button"
-          onClick={onClick}
-          aria-label="Enter the story"
+        {/* Decorative PNG includes baked-in label; aria-label on button covers a11y */}
+        <img
+          src={ENTER_HIS_WORLD_BUTTON}
+          alt=""
+          width={1024}
+          height={682}
+          decoding="async"
+          fetchPriority="high"
           style={{
-            background: "none",
-            border: "none",
-            padding: "8px 0",
-            margin: 0,
-            cursor: "pointer",
-            fontFamily: F.display,
-            fontSize: 15,
-            letterSpacing: 4.5,
-            textTransform: "uppercase",
-            color: c,
-            textAlign: "left",
-            textShadow: hov ? "0 0 22px rgba(212,168,83,0.5)" : "0 0 10px rgba(212,168,83,0.1)",
-            transition: "color 0.3s ease, text-shadow 0.3s ease",
-          }}
-        >
-          Enter his world
-        </button>
-        <div
-          style={{
-            height: 1,
-            width: 28,
-            background: `linear-gradient(90deg, ${c}30, ${c}55)`,
-            borderRadius: 1,
-            opacity: 0.75,
-            flexShrink: 0,
+            display: "block",
+            width: "min(380px, calc(100vw - 56px))",
+            height: "auto",
           }}
         />
-        <GothicStar size={6} color={c} />
-        <div style={{ fontSize: 6, color: c, letterSpacing: 1.5, opacity: 0.5 }}>✦</div>
-        <div
-          style={{
-            height: 1,
-            width: 20,
-            background: `linear-gradient(90deg, ${c}25, ${c}40, ${c}25)`,
-            opacity: 0.6,
-            flexShrink: 0,
-          }}
-        />
-        <GothicStar size={6} color={c} />
-        <div
-          style={{
-            height: 1,
-            width: 36,
-            background: `linear-gradient(90deg, transparent, ${c}28, ${c}50)`,
-            borderRadius: 1,
-            opacity: 0.9,
-            flexShrink: 0,
-          }}
-        />
-      </div>
+      </button>
     </div>
   );
 }
