@@ -2,11 +2,12 @@
 
 import { BlurReveal } from "@/registry/spell-ui/blur-reveal";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 const heading = "Hello, I'm Yuan Fang.";
 const subheading =
-  "A Product Designer using AI as a core capability.";
+  "A Product Designer using AI crafting AI-native workflows.";
 const supporting = "MS @ UW HCDE  ·  UX Designer @ Alibaba";
 const heroHalftoneSrc = "/assets/Playground/nlt_halftone_dense_v3.html";
 
@@ -198,23 +199,35 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
         style={{ y: textY }}
         className="relative z-10 px-6 pb-20 pt-3 text-center md:pb-28 md:pt-4"
       >
-        <BlurReveal className="flex flex-col items-center text-center" delay={0.12} duration={0.9}>
+        <div className="flex flex-col items-center text-center">
           <motion.h1
             id="hero-heading"
-            className="mx-auto max-w-4xl cursor-default font-display text-4xl font-light leading-tight text-textPrimary md:text-6xl lg:text-7xl"
-            whileHover={reduced ? undefined : { scale: 1.03, y: -3 }}
-            transition={{ type: "spring", stiffness: 320, damping: 22 }}
-            style={{ originX: 0.5, originY: 0.5 }}
+            className="mx-auto max-w-4xl cursor-default touch-manipulation font-display text-4xl font-light leading-tight text-textPrimary md:text-6xl lg:text-7xl"
+            initial={reduced ? false : { opacity: 0, y: 44 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={
+              reduced
+                ? { duration: 0 }
+                : {
+                    type: "spring",
+                    stiffness: 380,
+                    damping: 15,
+                    mass: 0.62,
+                    delay: 0.06,
+                  }
+            }
           >
             {heading}
           </motion.h1>
 
-          <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-textSecondary md:mt-5 md:text-xl">
-            {subheading}
-          </p>
+          <BlurReveal className="flex flex-col items-center text-center" delay={0.2} duration={0.72}>
+            <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-textSecondary md:mt-5 md:text-xl">
+              {subheading}
+            </p>
 
-          <p className="mt-3 font-mono text-sm text-textSecondary md:mt-4">{supporting}</p>
-        </BlurReveal>
+            <p className="mt-3 font-mono text-sm text-textSecondary md:mt-4">{supporting}</p>
+          </BlurReveal>
+        </div>
 
         <motion.div
           initial={reduced ? false : { opacity: 0, y: 18 }}
@@ -228,22 +241,26 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
         >
           <motion.a
             href="#work"
-            whileHover={reduced ? undefined : { scale: 1.03, y: -2 }}
-            whileTap={reduced ? undefined : { scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 420, damping: 26 }}
+            whileHover={reduced ? undefined : { y: -2 }}
+            whileTap={reduced ? undefined : { y: 1 }}
+            transition={{ type: "spring", stiffness: 480, damping: 28 }}
             className="rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
           >
-            View Work
+            Explore Work
           </motion.a>
-          <motion.a
-            href="#contact"
-            whileHover={reduced ? undefined : { scale: 1.03, y: -2 }}
-            whileTap={reduced ? undefined : { scale: 0.98 }}
-            transition={{ type: "spring", stiffness: 420, damping: 26 }}
-            className="rounded-full border border-[rgba(0,0,0,0.1)] bg-white/95 px-8 py-3 text-sm font-medium text-textPrimary shadow-[0_10px_26px_-18px_rgba(0,0,0,0.22)] backdrop-blur-[2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+          <motion.div
+            whileHover={reduced ? undefined : { y: -2 }}
+            whileTap={reduced ? undefined : { y: 1 }}
+            transition={{ type: "spring", stiffness: 480, damping: 28 }}
+            className="inline-block"
           >
-            Get in Touch
-          </motion.a>
+            <Link
+              href="/resume"
+              className="inline-flex rounded-full border border-[rgba(0,0,0,0.1)] bg-white/95 px-8 py-3 text-sm font-medium text-textPrimary shadow-[0_10px_26px_-18px_rgba(0,0,0,0.22)] backdrop-blur-[2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+            >
+              Resume
+            </Link>
+          </motion.div>
         </motion.div>
 
         {onGachaToggle && (

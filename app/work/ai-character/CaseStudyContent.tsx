@@ -2,13 +2,14 @@
 
 import { CaseStudyMeta } from "@/components/CaseStudyMeta";
 import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
-import { AnimatePresence, motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const mediaRound = "rounded-xl";
+const EMSK = [0.76, 0, 0.24, 1] as const;
 
-/** Room tabs only — compact control, not repeated as “chips” across the page */
+/** Room tabs only — compact control, not repeated as "chips" across the page */
 const roomTab = {
   base: "inline-flex items-center justify-center rounded-full border px-4 py-2 font-sans text-[12px] font-semibold tracking-[0.02em] transition-all duration-300 ease-out",
   on: "border-transparent bg-textPrimary text-white shadow-sm",
@@ -581,8 +582,7 @@ const heroItem = {
 };
 
 const heroLinks = [
-  { href: "/work/ai-character/deck-present", label: "Presentation Deck" },
-  { href: "/work/ai-character/deck-en", label: "Claude Deck" },
+  { href: "/work/ai-character/deck-present", label: "View Presentation Deck" },
   { href: "/work/ai-character/prototype", label: "Interactive prototype" },
 ] as const;
 

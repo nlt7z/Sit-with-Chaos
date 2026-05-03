@@ -10,36 +10,39 @@ const aiCharacter: Project = {
   slug: "ai-character",
   title: "Alibaba Qwen Character Platform - Interactive Character Showrooms Design",
   description:
-    "Turned invisible model capabilities into emotionally legible product moments through reusable showrooms.",
+    "Turned static cloud documentation into interactive LLM-powered product experiences, reducing onboarding from 60+ minutes to under 2 minutes.",
   media: {
     src: "/assets/ai-character/figma.mp4",
     alt: "Alibaba Qwen AI Character product experience preview",
     type: "video",
   },
+  flowSteps: ["prompt", "response", "deploy"],
 };
 
 const studioEngine: Project = {
   slug: "studio-engine",
   title: "StudioEngine.ai - GenAI Text-to-Video Platform Redesign",
   description:
-    "Redesigned the creation flow for long-form AI filmmaking, reducing operational friction from prompt to shot planning, generation, and iteration.",
+    "Reorganized a one-step generation flow into a 4-stage creative pipeline: basics, outline, script, and visuals — helping users co-create with AI instead of waiting for output.",
   media: {
     src: "/assets/work/vp-genie.jpg",
     alt: "Preview image for Studio Engine.ai project",
     type: "image",
   },
+  flowSteps: ["basics", "outline", "script", "visuals"],
 };
 
 const meituanIm: Project = {
   slug: "meituan-im",
   title: "Meituan In Message Quotation System - Three-Step Consultation Design",
   description:
-    "Structured messy merchant-user chats into a clear three-step consultation and quotation flow, improving price transparency and purchase confidence.",
+    "Designed a multi-round quotation experience inside chat, improving pricing clarity and supporting a 5%+ conversion lift through iteration and testing.",
   media: {
     src: "/assets/work/meituan.mp4",
     alt: "Preview video for IM System project",
     type: "video",
   },
+  flowSteps: ["chat quote", "compare", "confirm"],
 };
 
 const apsaraConference: Project = {

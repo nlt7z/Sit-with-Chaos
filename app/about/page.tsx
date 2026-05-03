@@ -8,9 +8,20 @@ import { visualExperimentImages, type VisualExperimentImage } from "@/lib/visual
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
+
+const aboutNavItems = [
+  { id: "about-identity", label: "Identity" },
+  { id: "about-workflow", label: "How I work" },
+  { id: "about-story", label: "Design journey" },
+  { id: "about-playground", label: "Playground" },
+  { id: "about-archive", label: "Artwork" },
+  { id: "about-path", label: "Path" },
+  { id: "about-education", label: "Education" },
+  { id: "about-next", label: "Next" },
+] as const;
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -150,6 +161,68 @@ const showroomStyle = {
 
 // ── Shared utility ────────────────────────────────────────────────────────────
 
+function AboutSectionNav() {
+  const [active, setActive] = useState("about-identity");
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
+    if (hash && aboutNavItems.some((i) => i.id === hash)) setActive(hash);
+  }, []);
+
+  useEffect(() => {
+    const els = aboutNavItems.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
+    const obs = new IntersectionObserver(
+      (entries) => {
+        const hit = entries
+          .filter((e) => e.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (hit?.target.id) setActive(hit.target.id);
+      },
+      { rootMargin: "-36% 0px -36% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
+    );
+    els.forEach((el) => obs.observe(el));
+    return () => obs.disconnect();
+  }, []);
+
+  return (
+    <nav
+      aria-label="About page sections"
+      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-full w-[11rem] lg:block"
+    >
+      <div className="pointer-events-auto sticky top-[calc(50vh-10rem)] px-6 pt-40">
+        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">
+          On this page
+        </p>
+        <ul className="mt-5 max-h-[min(60vh,28rem)] space-y-0 overflow-y-auto overscroll-contain pr-1">
+          {aboutNavItems.map(({ id, label }) => (
+            <li key={id}>
+              <a
+                href={`#${id}`}
+                onClick={(e) => {
+                  e.preventDefault();
+                  document.getElementById(id)?.scrollIntoView({
+                    behavior: prefersReducedMotion ? "auto" : "smooth",
+                    block: "start",
+                  });
+                  setActive(id);
+                }}
+                className={`block border-l border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
+                  active === id
+                    ? "border-textPrimary font-medium text-textPrimary"
+                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-black/[0.18] hover:text-textPrimary"
+                }`}
+              >
+                {label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+  );
+}
+
 function SectionReveal({
   children,
   className = "",
@@ -261,27 +334,30 @@ export default function AboutPage() {
   return (
     <>
       <Nav />
-      <main className="bg-white">
+      <AboutSectionNav />
+      <main className="bg-white lg:pl-36">
 
         {/* ── 1. Identity ─────────────────────────────────────────────────── */}
-        <section className="border-b border-[rgba(0,0,0,0.08)] px-6 py-24 md:py-32">
+        <section
+          id="about-identity"
+          className="scroll-mt-24 border-b border-[rgba(0,0,0,0.08)] px-6 py-24 md:scroll-mt-28 md:py-32"
+        >
           <div className="mx-auto grid max-w-content gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
               <SectionReveal>
                 <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Identity</p>
-                <h1 className="mt-4 font-display text-4xl font-light leading-tight text-textPrimary md:text-5xl lg:text-6xl">
+                <h1 className="mt-4 font-display text-4xl font-light leading-snug text-textPrimary md:text-5xl lg:text-6xl">
                   Designer, thinker, craftsperson.
                 </h1>
-                <p className="mt-8 max-w-2xl text-lg leading-relaxed text-textSecondary md:text-xl">
-                  I&apos;m Yuan Fang, a UX designer focused on AI-native workflows, rapid iteration, and turning
-                  ambiguous problems into coherent product direction.
+                <p className="mt-8 max-w-2xl text-lg leading-[1.72] text-textSecondary md:mt-9 md:text-xl md:leading-[1.7]">
+                  I&apos;m Yuan Fang, a UX designer shaped by over 10 years of fine arts training, bringing strong visual judgment and taste to AI-native workflows, rapid iteration, and the translation of ambiguity into clear product direction.
                 </p>
-                <p className="mt-5 max-w-2xl text-base leading-relaxed text-textSecondary">
+                <p className="mt-6 max-w-2xl text-base leading-[1.72] text-textSecondary md:leading-[1.7]">
                   My name literally means &ldquo;Square and Circle.&rdquo; In Chinese culture it represents balance —
                   the square is logic, systems, and structure; the circle is empathy, flow, and the human experience.
                   I bridge the gap between rigid technology and soft human needs.
                 </p>
-                <p className="mt-6 font-mono text-sm text-textSecondary">
+                <p className="mt-7 font-mono text-sm leading-relaxed text-textSecondary">
                   MS @ UW HCDE &nbsp;·&nbsp; UX Designer @ Alibaba
                 </p>
               </SectionReveal>
@@ -302,7 +378,10 @@ export default function AboutPage() {
         </section>
 
         {/* ── 2. How I Work ───────────────────────────────────────────────── */}
-        <section className="bg-surfaceAlt px-6 py-24 md:py-32">
+        <section
+          id="about-workflow"
+          className="scroll-mt-24 bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
+        >
           <div className="mx-auto max-w-content">
             <SectionReveal>
               <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Workflow</p>
@@ -328,7 +407,11 @@ export default function AboutPage() {
         </section>
 
         {/* ── 3. Design Journey ───────────────────────────────────────────── */}
-        <section ref={storyRef} className="px-6 py-24 md:py-32">
+        <section
+          id="about-story"
+          ref={storyRef}
+          className="scroll-mt-24 px-6 py-24 md:scroll-mt-28 md:py-32"
+        >
           <div className="mx-auto max-w-content">
             <SectionReveal>
               <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Story</p>
@@ -420,7 +503,7 @@ export default function AboutPage() {
         {/* ── 4. Current Playground ───────────────────────────────────────── */}
         <section
           id="about-playground"
-          className="border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:py-32"
+          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
         >
           <div className="mx-auto max-w-content">
             <SectionReveal>
@@ -503,7 +586,7 @@ export default function AboutPage() {
         </section>
 
         {/* ── 5. Previous Artwork ─────────────────────────────────────────── */}
-        <section className="px-6 pt-24 md:pt-32">
+        <section id="about-archive" className="scroll-mt-24 px-6 pt-24 md:scroll-mt-28 md:pt-32">
           <div className="mx-auto max-w-content">
             <SectionReveal>
               <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Archive</p>
@@ -522,8 +605,9 @@ export default function AboutPage() {
 
         {/* ── 6. Path ─────────────────────────────────────────────────────── */}
         <section
+          id="about-path"
           ref={expRef}
-          className="border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:py-32"
+          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
           aria-labelledby="about-path-heading"
         >
           <div className="mx-auto max-w-content">
@@ -577,8 +661,9 @@ export default function AboutPage() {
 
         {/* ── 7. Education (timeline — matches Path, no cards) ───────────── */}
         <section
+          id="about-education"
           ref={eduRef}
-          className="border-t border-[rgba(0,0,0,0.08)] px-6 py-24 md:py-32"
+          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] px-6 py-24 md:scroll-mt-28 md:py-32"
           aria-labelledby="about-education-heading"
         >
           <div className="mx-auto max-w-content">
@@ -628,7 +713,10 @@ export default function AboutPage() {
         </section>
 
         {/* ── CTA ─────────────────────────────────────────────────────────── */}
-        <section className="border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:py-32">
+        <section
+          id="about-next"
+          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
+        >
           <div className="mx-auto max-w-content text-center">
             <SectionReveal>
               <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Next</p>

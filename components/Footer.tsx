@@ -6,9 +6,11 @@ import { useEffect, useRef, useState } from "react";
 type FooterProps = {
   variant?: "light" | "dark";
   showTopBorder?: boolean;
+  /** No solid footer fill — page background continues behind (e.g. resume art). */
+  blendBackground?: boolean;
 };
 
-export function Footer({ variant = "light", showTopBorder = true }: FooterProps) {
+export function Footer({ variant = "light", showTopBorder = true, blendBackground = false }: FooterProps) {
   const isDark = variant === "dark";
   const footerRef = useRef<HTMLElement>(null);
   const [patternMounted, setPatternMounted] = useState(false);
@@ -43,15 +45,16 @@ export function Footer({ variant = "light", showTopBorder = true }: FooterProps)
     };
   }, []);
 
+  const lightShell = blendBackground
+    ? `${showTopBorder ? "border-t border-[rgba(0,0,0,0.06)]" : ""} relative z-10 bg-transparent`
+    : `${showTopBorder ? "border-t border-[rgba(0,0,0,0.08)]" : ""} bg-white`;
+
+  const darkShell = blendBackground
+    ? `${showTopBorder ? "border-t border-white/[0.08]" : ""} relative z-10 bg-transparent`
+    : `${showTopBorder ? "border-t border-white/[0.08]" : ""} bg-[#060608]`;
+
   return (
-    <footer
-      ref={footerRef}
-      className={
-        isDark
-          ? `${showTopBorder ? "border-t border-white/[0.08]" : ""} bg-[#060608]`
-          : `${showTopBorder ? "border-t border-[rgba(0,0,0,0.08)]" : ""} bg-white`
-      }
-    >
+    <footer ref={footerRef} className={isDark ? darkShell : lightShell}>
       <div className="mx-auto max-w-content px-6 py-12 md:py-16">
         <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-12">
           {/* Left — interactive NLT grid, then copyright */}

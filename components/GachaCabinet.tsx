@@ -818,7 +818,10 @@ function CenterCardOverlay({
 const GENIE_LAMP_SRC =
   "/assets/3d/genie_lamp__magic_aladdin-style_golden_lamp.glb";
 
-const LAMP_BOTTOM_CSS = "clamp(80px, 10vh, 160px)";
+/** ElevenLabs voice line — plays once when the lamp is hovered (gacha view). */
+const LAMP_HOVER_AUDIO_SRC = "/assets/audio/gacha-lamp-hover.mp3";
+
+const LAMP_BOTTOM_CSS = "calc(clamp(80px, 10vh, 160px) + 5vh)";
 
 function GenieLamp({
   reducedMotion,
@@ -831,6 +834,19 @@ function GenieLamp({
 }) {
   const ModelViewer: any = "model-viewer";
   const [hovered, setHovered] = useState(false);
+  const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
+  /** Hover line plays at most twice per gacha session (refund on failed `play()`). */
+  const lampHoverPlaysRef = useRef(0);
+
+  useEffect(() => {
+    const el = new Audio(LAMP_HOVER_AUDIO_SRC);
+    el.preload = "auto";
+    hoverAudioRef.current = el;
+    return () => {
+      el.pause();
+      hoverAudioRef.current = null;
+    };
+  }, []);
 
   return (
     <motion.div
@@ -854,7 +870,17 @@ function GenieLamp({
         opacity: { duration: 2.35, delay: 0.4, ease: [0.16, 1, 0.3, 1] },
         filter:  { duration: 2.55, delay: 0.35, ease: [0.16, 1, 0.3, 1] },
       }}
-      onPointerEnter={() => setHovered(true)}
+      onPointerEnter={() => {
+        setHovered(true);
+        if (lampHoverPlaysRef.current >= 2) return;
+        const a = hoverAudioRef.current;
+        if (!a) return;
+        lampHoverPlaysRef.current += 1;
+        a.currentTime = 0;
+        void a.play().catch(() => {
+          lampHoverPlaysRef.current -= 1;
+        });
+      }}
       onPointerLeave={() => setHovered(false)}
       onClick={onDraw}
       onKeyDown={(e) => {

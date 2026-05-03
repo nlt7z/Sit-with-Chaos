@@ -24,6 +24,8 @@ export type Project = {
   mediaAspect?: string;
   /** Featured = full-width hero row; default = grid pairs with matched heights. */
   layout?: "featured" | "default";
+  /** Optional hover micro-demo: pipeline steps over the media. */
+  flowSteps?: readonly string[];
 };
 
 function VideoCardMedia({ src, poster, alt }: { src: string; poster?: string; alt: string }) {
@@ -135,6 +137,32 @@ export function ProjectCard({ project }: { project: Project }) {
               />
             )}
           </motion.div>
+
+          {project.flowSteps && project.flowSteps.length > 0 ? (
+            <div
+              className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/55 via-black/25 to-transparent px-3 pb-3 pt-10 md:px-4 md:pb-3.5 md:pt-12 ${
+                prefersReducedMotion
+                  ? "opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
+                  : "translate-y-1 opacity-0 transition-[opacity,transform] duration-500 ease-portfolio group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100"
+              }`}
+              aria-hidden
+            >
+              <div className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1.5 font-mono text-[9px] font-medium uppercase tracking-[0.12em] text-white/95 md:text-[10px] md:tracking-[0.14em]">
+                {project.flowSteps.map((step, i) => (
+                  <span key={`${step}-${i}`} className="flex items-center gap-x-1">
+                    {i > 0 ? (
+                      <span className="select-none text-white/45" aria-hidden>
+                        →
+                      </span>
+                    ) : null}
+                    <span className="rounded-md bg-white/12 px-1.5 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-[2px] md:px-2 md:py-1">
+                      {step}
+                    </span>
+                  </span>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </div>
 
         <div className="mt-5 flex min-h-0 flex-1 flex-col md:mt-6">
