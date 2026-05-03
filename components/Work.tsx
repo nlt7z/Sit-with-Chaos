@@ -49,10 +49,9 @@ const apsaraConference: Project = {
   slug: "apsara-conference",
   title: "Apsara Conference — Alibaba AI on Cloud",
   description:
-    "Crafted a cohesive visual system for Alibaba Cloud’s flagship AI summit across keynote storytelling, event touchpoints, and digital assets.",
+    "Crafted a cohesive visual system for Alibaba Cloud's flagship AI summit across keynote storytelling, event touchpoints, and digital assets.",
   media: {
     src: "/assets/work/apsara.mp4",
-    
     alt: "Preview video for Apsara Conference — Alibaba AI on Cloud",
     type: "video",
   },

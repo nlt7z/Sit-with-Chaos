@@ -4,7 +4,7 @@ import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
 
 const PlaygroundPageContent = dynamic(
-  () => import("@/app/playground/page").then((mod) => ({ default: mod.PlaygroundPageContent })),
+  () => import("@/app/vibe-coding/VibeCodingPageContent").then((mod) => ({ default: mod.VibeCodingPageContent })),
   {
     ssr: false,
     loading: () => null,
@@ -12,7 +12,7 @@ const PlaygroundPageContent = dynamic(
 );
 
 /**
- * Code-splits playground chunk and loads it only when the section approaches the viewport.
+ * Code-splits vibe coding page chunk when the section approaches the viewport.
  */
 export function AboutPlaygroundSection() {
   const sentinelRef = useRef<HTMLElement>(null);

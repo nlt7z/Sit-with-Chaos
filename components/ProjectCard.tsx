@@ -85,7 +85,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const featured = project.layout === "featured";
   const hover = prefersReducedMotion
     ? {}
-    : { y: -4, scale: 1.008, transition: { duration: 0.5, ease: easePortfolio } };
+    : { y: -4, scale: 1.012, transition: { duration: 0.45, ease: easePortfolio } };
 
   const mediaAspect =
     project.mediaAspect ??
@@ -102,7 +102,7 @@ export function ProjectCard({ project }: { project: Project }) {
     >
       <Link
         href={`/work/${project.slug}`}
-        className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-portfolio hover:border-black/[0.1] hover:shadow-[0_16px_48px_-28px_rgba(0,0,0,0.14)] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 md:rounded-[1.35rem] md:p-6"
+        className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-portfolio hover:border-black/[0.11] hover:shadow-[0_20px_56px_-22px_rgba(0,0,0,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 md:rounded-[1.35rem] md:p-6"
       >
         <div className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-black/[0.04]">
           <motion.div
@@ -110,7 +110,7 @@ export function ProjectCard({ project }: { project: Project }) {
             whileHover={
               prefersReducedMotion
                 ? {}
-                : { scale: 1.02, transition: { duration: 0.55, ease: easePortfolio } }
+                : { scale: 1.02, transition: { duration: 0.42, ease: easePortfolio } }
             }
           >
             {project.media.type === "video" ? (
@@ -176,9 +176,9 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.description}
           </p>
 
-          <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+          <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-30 transition-[opacity,color] duration-400 group-hover:opacity-100 group-focus-within:opacity-100">
             Case study
-            <span aria-hidden className="translate-x-0 transition-transform duration-500 group-hover:translate-x-0.5">
+            <span aria-hidden className="translate-x-0 transition-transform duration-400 group-hover:translate-x-1 group-focus-within:translate-x-1">
               →
             </span>
           </span>

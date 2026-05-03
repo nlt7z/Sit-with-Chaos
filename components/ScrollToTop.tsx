@@ -6,7 +6,7 @@ import { useEffect, useLayoutEffect } from "react";
 /**
  * On client navigation, align the main document to the start of the page.
  * When the URL has a hash, scrolls to that id instead of y=0.
- * A late pass runs without hash so late iframe focus (e.g. /playground embeds) does
+ * A late pass runs without hash so late iframe focus (e.g. /vibe-coding embeds) does
  * not leave the parent window scrolled away from the top.
  */
 export function ScrollToTop() {

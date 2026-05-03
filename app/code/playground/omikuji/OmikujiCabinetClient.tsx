@@ -587,9 +587,9 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
       {/* ── Nav bar ─────────────────────────────────────────────────────────── */}
       <div className="flex-none flex items-center justify-between px-6 py-3"
         style={{ borderBottom: `1px solid ${C.gold}14` }}>
-        <Link href="/playground" className={`${shippori.className} text-[10px] tracking-[0.22em]`}
+        <Link href="/vibe-coding" className={`${shippori.className} text-[10px] tracking-[0.22em]`}
           style={{ color: `${C.goldLight}70`, textDecoration: "none" }}>
-          ← Playground
+          ← Vibe coding
         </Link>
         <DrawsRemaining remaining={remaining} />
       </div>

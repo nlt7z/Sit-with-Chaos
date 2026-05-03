@@ -1,10 +1,13 @@
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async redirects() {
+    return [{ source: "/playground", destination: "/vibe-coding", permanent: true }];
+  },
   experimental: {
     optimizePackageImports: ["framer-motion"],
   },

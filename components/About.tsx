@@ -4,8 +4,6 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
 
-const keywords = ["Curious", "Empathetic", "Driven"];
-
 const capabilities = [
   {
     title: "AI-native Product Thinking",
@@ -37,47 +35,40 @@ export function About() {
       aria-labelledby="about-heading"
     >
       <div className="mx-auto max-w-content px-6">
-        <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">About</p>
+        <p className="font-mono text-xs font-normal uppercase tracking-widest text-textSecondary">About</p>
+        <h2
+          id="about-heading"
+          className="mt-4 max-w-[22ch] font-display text-2xl font-light leading-snug text-textPrimary md:mt-5 md:text-3xl lg:max-w-[28ch]"
+        >
+          Fine arts roots. AI-native practice.
+        </h2>
 
-        {/* Top row: copy + portrait — shorter than stacking everything in one column */}
-        <div className="mt-8 grid gap-8 lg:mt-10 lg:grid-cols-12 lg:items-start lg:gap-10">
+        {/* Top row: copy + portrait — narrower measure + shorter portrait, vertically balanced */}
+        <div className="mt-8 grid gap-8 lg:mt-10 lg:grid-cols-12 lg:items-center lg:gap-x-10 lg:gap-y-10 xl:gap-x-12">
           <motion.div
-            className="lg:col-span-6"
+            className="min-w-0 lg:col-span-7 lg:max-w-[min(100%,36rem)] lg:justify-self-start"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            <h2
-              id="about-heading"
-              className="font-display text-2xl font-light leading-snug text-textPrimary md:text-3xl lg:max-w-[22ch]"
-            >
-              Designing AI-native products that feel clear, alive, and trustworthy.
-            </h2>
-            <p className="mt-4 text-base leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
-              
+            <p className="text-base font-normal leading-relaxed text-textPrimary md:text-[17px] md:leading-relaxed">
+              Yuan Fang is a product designer with roots in fine arts. Over ten years across painting, spatial design,
+              and digital products, she developed something that formal training rarely gives: the ability to look
+              at a messy system and see what it wants to become.
             </p>
-            <p className="mt-4 text-base leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
-              Yuan Fang is a UX designer shaped by over 10 years of fine arts training, bringing strong visual
-              judgment and taste to AI-native workflows, rapid iteration, and the translation of ambiguity into clear
-              product direction.
+            <p className="mt-4 text-base font-normal leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
+              She works in the space where complex technology meets human behavior — where something powerful needs to
+              become understandable, trustworthy, and worth returning to. Her process combines research, product thinking,
+              and code, with AI as a core part of how she thinks, not just how she builds.
             </p>
-            <p className="mt-4 text-base leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
-            I’m interested in the space between systems and humans — where complex technology needs to become understandable, trustworthy, and emotionally usable. My work blends research, product thinking, motion, and code to make AI experiences feel less like tools and more like guided workflows.
+            <p className="mt-4 text-base font-normal leading-relaxed text-textPrimary md:mt-5 md:text-[17px] md:leading-relaxed">
+              The goal is always the same: make the experience feel less like operating a tool, and more like being
+              guided through something.
             </p>
-            <div className="mt-5 flex flex-wrap gap-2 md:mt-6">
-              {keywords.map((kw) => (
-                <span
-                  key={kw}
-                  className="rounded-full border border-[rgba(0,0,0,0.08)] px-2.5 py-0.5 text-xs text-textSecondary md:px-3 md:py-1 md:text-sm"
-                >
-                  {kw}
-                </span>
-              ))}
-            </div>
           </motion.div>
 
           <motion.div
-            className="lg:col-span-6"
+            className="flex min-w-0 justify-center lg:col-span-5 lg:justify-end"
             initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
             animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
             transition={{
@@ -86,32 +77,61 @@ export function About() {
               ease: [0.25, 0.1, 0.25, 1],
             }}
           >
-            <div className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] bg-neutral-100 shadow-sm sm:max-w-lg lg:ml-auto lg:aspect-[5/6] lg:max-w-md">
-              <Image
-                src="/assets/about/profile.jpg"
-                alt="Portrait of Yuan Fang"
-                fill
-                sizes="(min-width: 1024px) 36rem, (min-width: 640px) 28rem, 90vw"
-                className="object-cover"
-                loading="lazy"
-              />
-            </div>
+            <motion.div
+              className="w-full max-w-[min(100%,20rem)] sm:max-w-[22rem] lg:mx-0 lg:max-w-[min(100%,19rem)] xl:max-w-[min(100%,20.5rem)]"
+              style={{ transformOrigin: "50% 55%" }}
+              whileHover={
+                prefersReducedMotion
+                  ? undefined
+                  : {
+                      rotate: [0, -2.2, 2.2, -1.3, 1.3, 0],
+                      transition: { duration: 0.58, ease: [0.33, 1, 0.68, 1] },
+                    }
+              }
+              transition={{ type: "spring", stiffness: 320, damping: 26 }}
+            >
+              <div className="relative aspect-[4/5] w-full overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] bg-neutral-100 shadow-sm">
+                <Image
+                  src="/assets/about/profile.jpg"
+                  alt="Portrait of Yuan Fang"
+                  fill
+                  sizes="(min-width: 1280px) 21rem, (min-width: 1024px) 19rem, (min-width: 640px) 22rem, 90vw"
+                  className="object-cover"
+                  loading="lazy"
+                />
+              </div>
+            </motion.div>
           </motion.div>
         </div>
 
-        {/* Capabilities: one row on md+ to cut vertical scroll */}
+        {/* Capabilities: stagger each item into view */}
         <motion.ul
           className="mt-10 grid gap-8 border-t border-[rgba(0,0,0,0.06)] pt-10 sm:grid-cols-2 sm:gap-x-8 sm:gap-y-8 md:mt-12 md:grid-cols-3 md:gap-6 md:pt-10 lg:mt-11 lg:gap-8"
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-          animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
-          transition={{
-            duration: 0.5,
-            delay: prefersReducedMotion ? 0 : 0.1,
-            ease: [0.25, 0.1, 0.25, 1],
+          variants={{
+            hidden: {},
+            show: {
+              transition: {
+                staggerChildren: prefersReducedMotion ? 0 : 0.1,
+                delayChildren: prefersReducedMotion ? 0 : 0.05,
+              },
+            },
           }}
+          initial={prefersReducedMotion ? false : "hidden"}
+          animate={inView ? "show" : prefersReducedMotion ? "show" : "hidden"}
         >
           {capabilities.map((item, index) => (
-            <li key={item.title} className="min-w-0">
+            <motion.li
+              key={item.title}
+              className="min-w-0"
+              variants={{
+                hidden: { opacity: 0, y: 18 },
+                show: {
+                  opacity: 1,
+                  y: 0,
+                  transition: { duration: 0.48, ease: [0.25, 0.1, 0.25, 1] },
+                },
+              }}
+            >
               <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary md:text-xs">
                 {String(index + 1).padStart(2, "0")}
               </p>
@@ -121,7 +141,7 @@ export function About() {
               <p className="mt-2 text-sm leading-relaxed text-textSecondary md:text-[15px] md:leading-relaxed">
                 {item.description}
               </p>
-            </li>
+            </motion.li>
           ))}
         </motion.ul>
       </div>

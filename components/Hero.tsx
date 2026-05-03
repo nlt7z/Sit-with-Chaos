@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 
 const heading = "Hello, I'm Yuan Fang.";
 const subheading =
-  "A Product Designer using AI crafting AI-native workflows.";
+  "Designing AI-native products with AI — from research to shipped code.";
 const supporting = "MS @ UW HCDE  ·  UX Designer @ Alibaba";
 const heroHalftoneSrc = "/assets/Playground/nlt_halftone_dense_v3.html";
 
@@ -103,7 +103,7 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
         className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
         initial={reduced ? false : { opacity: 0, scale: 1.08 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 1.8, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
       >
         <img
           src="/assets/hero-orb.png"
@@ -168,7 +168,7 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
                         filter: halftoneHovered ? "blur(0px)" : "blur(12px)",
                       }
                 }
-                transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
               >
                 {!reduced && halftoneMounted ? (
                   <iframe
@@ -210,9 +210,9 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
                 ? { duration: 0 }
                 : {
                     type: "spring",
-                    stiffness: 380,
-                    damping: 15,
-                    mass: 0.62,
+                    stiffness: 220,
+                    damping: 26,
+                    mass: 0.75,
                     delay: 0.06,
                   }
             }
@@ -262,6 +262,35 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
             </Link>
           </motion.div>
         </motion.div>
+
+        {!reduced && (
+          <motion.a
+            href="#work"
+            aria-label="Scroll to work"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.7, delay: 1.9, ease: [0.25, 0.1, 0.25, 1] }}
+            className="mt-10 flex flex-col items-center gap-2 text-textSecondary/30 transition-colors hover:text-textSecondary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+          >
+            <motion.svg
+              animate={{ y: [0, 4, 0] }}
+              transition={{ duration: 2.2, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
+              width="16"
+              height="16"
+              viewBox="0 0 16 16"
+              fill="none"
+              aria-hidden
+            >
+              <path
+                d="M2 5.5L8 11l6-5.5"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </motion.svg>
+          </motion.a>
+        )}
 
         {onGachaToggle && (
           <motion.div

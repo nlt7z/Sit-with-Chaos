@@ -16,43 +16,7 @@ import { Suspense, useCallback, useEffect, useState } from "react";
 const GACHA_INTRO_SEEN_KEY = "home-gacha-intro-seen";
 
 function HomeContent() {
-  // #region agent log
-  fetch("http://127.0.0.1:7434/ingest/ab7b4951-6649-467a-92da-e89e00c6a2c0", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "afa6c4",
-    },
-    body: JSON.stringify({
-      sessionId: "afa6c4",
-      runId: "pre-fix",
-      hypothesisId: "H3",
-      location: "app/page.tsx:18",
-      message: "Home render entry",
-      data: { hasWindow: typeof window !== "undefined" },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
   const searchParams = useSearchParams();
-  // #region agent log
-  fetch("http://127.0.0.1:7434/ingest/ab7b4951-6649-467a-92da-e89e00c6a2c0", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "afa6c4",
-    },
-    body: JSON.stringify({
-      sessionId: "afa6c4",
-      runId: "pre-fix",
-      hypothesisId: "H1",
-      location: "app/page.tsx:33",
-      message: "useSearchParams read",
-      data: { hasSearchParams: !!searchParams, view: searchParams.get("view") },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
   const forceMainPage = searchParams.get("view") === "main";
   const [mode, setMode] = useState<"browse" | "gacha" | null>(null);
 
@@ -83,25 +47,6 @@ function HomeContent() {
   const openGachaFromHero = useCallback(() => {
     setMode("gacha");
   }, []);
-
-  // #region agent log
-  fetch("http://127.0.0.1:7434/ingest/ab7b4951-6649-467a-92da-e89e00c6a2c0", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "X-Debug-Session-Id": "afa6c4",
-    },
-    body: JSON.stringify({
-      sessionId: "afa6c4",
-      runId: "pre-fix",
-      hypothesisId: "H2",
-      location: "app/page.tsx:71",
-      message: "Render branch decision",
-      data: { mode, forceMainPage },
-      timestamp: Date.now(),
-    }),
-  }).catch(() => {});
-  // #endregion
 
   if (mode === null) {
     return <div className="min-h-screen bg-[#070605]" aria-hidden />;

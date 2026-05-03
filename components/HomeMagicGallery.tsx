@@ -13,10 +13,11 @@ const magicPreviews = [
     href: "/code/playground/omikuji",
     category: "御神籤",
     summary: "おみくじ",
-    panelBg: "bg-[#100e10]",
-    kind: "image-jp" as const,
-    mediaSrc: "/assets/Playground/omikuji-temple-hero.png",
+    panelBg: "bg-[#f4e2e8]",
+    kind: "image" as const,
+    mediaSrc: "/assets/magic/omikuji-home-preview.jpg",
     mediaAlt: "Omikuji temple backdrop",
+    mediaClassName: "object-cover object-center",
   },
   {
     href: "/work/ai-character/prototype",
@@ -70,25 +71,6 @@ export function HomeMagicGallery() {
         />
       );
     }
-    if (item.kind === "image-jp") {
-      return (
-        <>
-          <Image
-            src={item.mediaSrc}
-            alt={item.mediaAlt}
-            fill
-            sizes="(min-width: 1280px) 22vw, (min-width: 640px) 45vw, 100vw"
-            className="object-cover"
-          />
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/48 via-black/12 to-transparent" />
-          <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-            <p className="font-serif text-[1.55rem] tracking-[0.14em] text-[#f0ddb8] [text-shadow:0_2px_20px_rgba(0,0,0,0.45)] md:text-[1.75rem]">
-              御神籤
-            </p>
-          </div>
-        </>
-      );
-    }
     return (
       <Image
         src={item.mediaSrc}
@@ -116,13 +98,13 @@ export function HomeMagicGallery() {
           <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Magic</p>
           <h2
             id="magic-heading"
-            className="mt-3 max-w-xl font-display text-2xl font-light leading-snug text-textPrimary md:text-3xl"
+            className="mt-3 max-w-xl font-display text-2xl font-light lowercase leading-snug tracking-[-0.02em] text-textPrimary md:text-3xl"
           >
-            Engineering-heavy vibe coding.
+            Vibe coding stuff
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-textSecondary md:text-[15px]">
             Cursor-led prototyping, AI-native flows, and production-aware polish — I iterate fast without sanding away the
-            story. These clips run live here; the full shelf sits on About.
+            story. 
           </p>
         </motion.div>
 
@@ -132,7 +114,7 @@ export function HomeMagicGallery() {
           animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: prefersReducedMotion ? 0 : 0.06, ease: easePortfolio }}
           role="list"
-          aria-label="Magic preview gallery"
+          aria-label="Vibe coding preview gallery"
         >
           {magicPreviews.map((item, index) => (
             <div

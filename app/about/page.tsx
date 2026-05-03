@@ -8,20 +8,9 @@ import { visualExperimentImages, type VisualExperimentImage } from "@/lib/visual
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { type ReactNode, useEffect, useRef, useState } from "react";
+import { type ReactNode, useRef } from "react";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
-
-const aboutNavItems = [
-  { id: "about-identity", label: "Identity" },
-  { id: "about-workflow", label: "How I work" },
-  { id: "about-story", label: "Design journey" },
-  { id: "about-playground", label: "Playground" },
-  { id: "about-archive", label: "Artwork" },
-  { id: "about-path", label: "Path" },
-  { id: "about-education", label: "Education" },
-  { id: "about-next", label: "Next" },
-] as const;
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
@@ -31,7 +20,7 @@ type StoryBeat = {
   period: string;
   image?: string;
   hideImage?: boolean;
-  /** Playground-style visual carousel (e.g. under Pratt / NY chapter) */
+  /** Visual experiments carousel (e.g. under Pratt / NY chapter) */
   visualGallery?: readonly VisualExperimentImage[];
 };
 
@@ -99,129 +88,7 @@ const workPrinciples = [
   },
 ];
 
-const showrooms = [
-  {
-    id: "astro" as const,
-    label: "Astrology",
-    title: "Astro Showroom · Tao Baibai",
-    tagline: "Constellation profile updates live while you chat.",
-    href: "/work/ai-character/prototype-astro",
-    src: "/work/ai-character/prototype-astro?embed=1",
-    iframeTitle: "Zodiac Showroom interactive prototype",
-    iframeBg: "bg-[#fdfaf5]",
-  },
-  {
-    id: "therapy" as const,
-    label: "Therapy",
-    title: "Therapy Room · Therapy Space",
-    tagline: "Analysis rail beside the thread — what the model understood, visible.",
-    href: "/work/ai-character/prototype-psych",
-    src: "/work/ai-character/prototype-psych?embed=1",
-    iframeTitle: "Therapy Room interactive prototype",
-    iframeBg: "bg-[#f8fcff]",
-  },
-  {
-    id: "romance" as const,
-    label: "Romance",
-    title: "Meet with Lucien",
-    tagline: "Long-term memory and emotional pacing in one flow.",
-    href: "/work/ai-character/prototype",
-    src: "/work/ai-character/prototype?muted=1",
-    iframeTitle: "Romance Showroom interactive prototype",
-    iframeBg: "bg-[#060608]",
-  },
-];
-
-const showroomStyle = {
-  astro: {
-    card: "border-black/[0.08] bg-[linear-gradient(156deg,#fffdf8_0%,#fff7f3_34%,#f7f8ef_66%,#fff8e9_100%)] ring-1 ring-black/[0.05]",
-    tabOn: "bg-[#7f6e42] border-transparent text-white shadow-md shadow-[#7f6e42]/24",
-    tabOff: "border-[#e6ddbc] bg-white/90 text-[#796a44] hover:border-[#d5ca9d] hover:bg-white hover:text-[#5f5130]",
-    eyebrow: "text-[#8a7a52]",
-    link: "text-[#7b6a3f] hover:text-[#5f5130]",
-    iframeBorder: "border-black/[0.08]",
-  },
-  therapy: {
-    card: "border-black/[0.08] bg-[linear-gradient(158deg,#f7fbff_0%,#eff7ff_42%,#e9f4ff_100%)] ring-1 ring-black/[0.05]",
-    tabOn: "bg-[#10679f] border-transparent text-white shadow-md shadow-[#10679f]/24",
-    tabOff: "border-[#c9deef] bg-white/88 text-[#3b6d90] hover:border-[#9fc9e5] hover:bg-white hover:text-[#1f5a84]",
-    eyebrow: "text-[#2f75aa]",
-    link: "text-[#1f6ea8] hover:text-[#18557f]",
-    iframeBorder: "border-black/[0.08]",
-  },
-  romance: {
-    card: "border-black/[0.08] bg-[linear-gradient(160deg,#fafbfc_0%,#f3f5f8_40%,#eceff4_100%)] ring-1 ring-black/[0.05]",
-    tabOn: "bg-[#1f2937] border-transparent text-white shadow-[0_8px_20px_-10px_rgba(31,41,55,0.45)] ring-1 ring-[#475467]/40",
-    tabOff: "border-[#d0d5dd] bg-white/88 text-[#475467] hover:border-[#98a2b3] hover:bg-white hover:text-[#1d2939]",
-    eyebrow: "text-[#667085]",
-    link: "text-[#344054] hover:text-[#1d2939]",
-    iframeBorder: "border-black/[0.08]",
-  },
-};
-
 // ── Shared utility ────────────────────────────────────────────────────────────
-
-function AboutSectionNav() {
-  const [active, setActive] = useState("about-identity");
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
-    if (hash && aboutNavItems.some((i) => i.id === hash)) setActive(hash);
-  }, []);
-
-  useEffect(() => {
-    const els = aboutNavItems.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const hit = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (hit?.target.id) setActive(hit.target.id);
-      },
-      { rootMargin: "-36% 0px -36% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <nav
-      aria-label="About page sections"
-      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-full w-[11rem] lg:block"
-    >
-      <div className="pointer-events-auto sticky top-[calc(50vh-10rem)] px-6 pt-40">
-        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">
-          On this page
-        </p>
-        <ul className="mt-5 max-h-[min(60vh,28rem)] space-y-0 overflow-y-auto overscroll-contain pr-1">
-          {aboutNavItems.map(({ id, label }) => (
-            <li key={id}>
-              <a
-                href={`#${id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById(id)?.scrollIntoView({
-                    behavior: prefersReducedMotion ? "auto" : "smooth",
-                    block: "start",
-                  });
-                  setActive(id);
-                }}
-                className={`block border-l border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
-                  active === id
-                    ? "border-textPrimary font-medium text-textPrimary"
-                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-black/[0.18] hover:text-textPrimary"
-                }`}
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
-  );
-}
 
 function SectionReveal({
   children,
@@ -248,78 +115,6 @@ function SectionReveal({
   );
 }
 
-// ── Showroom stack (one per scroll) ──────────────────────────────────────────
-
-function AboutShowrooms({ rm }: { rm: boolean }) {
-  return (
-    <div className="flex flex-col gap-8">{showrooms.map((s, i) => {
-      const st = showroomStyle[s.id];
-      return (
-        <motion.div
-          key={s.id}
-          initial={rm ? false : { opacity: 0, y: 28 }}
-          whileInView={rm ? undefined : { opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-8% 0px" }}
-          transition={{ duration: 0.65, ease: easePortfolio, delay: rm ? 0 : i * 0.06 }}
-          className={`overflow-hidden rounded-3xl border ${st.card}`}
-        >
-          {/* Chrome header */}
-          <div className="border-b border-black/[0.08] px-5 py-5 md:px-6 md:py-6">
-            {/* Authorship badge */}
-            <div className="flex flex-wrap items-center gap-2">
-              <span className={`font-mono text-[10px] uppercase tracking-[0.2em] ${st.eyebrow}`}>
-                {String(i + 1).padStart(2, "0")} / 03
-              </span>
-              <span className="rounded-full border border-black/[0.08] bg-white/80 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary">
-                End-to-End Design · Prototype
-              </span>
-            </div>
-
-            <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
-              <div className="min-w-0 flex-1">
-                <p className={`font-display text-xl font-light leading-snug text-[#111827] md:text-[1.35rem]`}>
-                  {s.title}
-                </p>
-                <p className="mt-2 max-w-xl text-[14px] leading-relaxed text-[#475467]">
-                  {s.tagline}
-                </p>
-              </div>
-              <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 md:justify-end">
-                <Link
-                  href={s.href}
-                  className={`text-[13px] font-medium underline underline-offset-4 transition-opacity hover:opacity-70 ${st.link}`}
-                >
-                  Open prototype
-                </Link>
-                {s.id === "romance" && (
-                  <Link
-                    href="/work/ai-character"
-                    className="text-[13px] font-medium text-[#344054] underline underline-offset-4 transition-opacity hover:opacity-70"
-                  >
-                    Case study
-                  </Link>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Iframe */}
-          <div className={`border-t ${st.iframeBorder}`}>
-            <iframe
-              key={s.src}
-              title={s.iframeTitle}
-              src={s.src}
-              className={`block h-[min(72vh,780px)] min-h-[480px] w-full md:min-h-[560px] ${s.iframeBg}`}
-              loading="lazy"
-            />
-          </div>
-        </motion.div>
-      );
-    })}
-    </div>
-  );
-}
-
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
@@ -334,8 +129,7 @@ export default function AboutPage() {
   return (
     <>
       <Nav />
-      <AboutSectionNav />
-      <main className="bg-white lg:pl-36">
+      <main className="bg-white">
 
         {/* ── 1. Identity ─────────────────────────────────────────────────── */}
         <section
@@ -454,7 +248,7 @@ export default function AboutPage() {
                             </p>
                             <div
                               className="grid grid-cols-4 gap-2 sm:grid-cols-5 lg:grid-cols-7"
-                              aria-label="Visual experiment thumbnails"
+                              aria-label="Visual experiments thumbnails"
                             >
                               {beat.visualGallery.map((image, thumbI) => (
                                 <div
@@ -500,92 +294,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── 4. Current Playground ───────────────────────────────────────── */}
-        <section
-          id="about-playground"
-          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
-        >
-          <div className="mx-auto max-w-content">
-            <SectionReveal>
-              <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">
-                experiments
-              </p>
-              <h2 className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl">
-                Current Playground
-              </h2>
-              <p className="mt-4 max-w-2xl text-textSecondary">
-                Interactive prototypes and coded experiments — the things I build to think.
-              </p>
-            </SectionReveal>
-
-            {/* Showrooms */}
-            <div className="mt-14">
-              <AboutShowrooms rm={!!rm} />
-            </div>
-
-            {/* Omikuji Cabinet */}
-            <motion.div
-              initial={rm ? false : { opacity: 0, y: 20 }}
-              whileInView={rm ? undefined : { opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-8% 0px" }}
-              transition={{ duration: 0.85, ease: [0.22, 1, 0.36, 1] }}
-              className="relative isolate mt-8 overflow-hidden rounded-3xl border border-[#c9a030]/45 shadow-[0_20px_64px_-20px_rgba(0,0,0,0.42)] ring-1 ring-[#d4af37]/20"
-            >
-              <div
-                className="pointer-events-none absolute inset-0 -z-10"
-                style={{
-                  background:
-                    "radial-gradient(ellipse 55% 50% at 15% 85%, rgba(201,160,48,0.14) 0%, transparent 55%), radial-gradient(ellipse 45% 45% at 90% 10%, rgba(60,45,30,0.4) 0%, transparent 55%), linear-gradient(170deg, #121a22 0%, #0f1410 45%, #1a1510 100%)",
-                }}
-                aria-hidden
-              />
-              <div className="p-6 md:p-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#c9a030]/75">御神籤</p>
-                <h3 className="mt-2.5 font-display text-2xl font-light leading-tight text-[#f0ddb8] md:text-3xl">
-                  Omikuji Cabinet
-                </h3>
-                <div className="mt-5">
-                  <Link
-                    href="/code/playground/omikuji"
-                    className="inline-flex items-center justify-center rounded-xl border border-[#c9a030]/55 bg-[#261e18] px-5 py-2 text-[13px] font-medium text-[#e8c84a] shadow-[0_4px_20px_rgba(0,0,0,0.3)] transition duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] hover:border-[#e8c84a]/90 hover:bg-[#32261c] hover:text-[#fdf6e8]"
-                  >
-                    Open Omikuji
-                  </Link>
-                </div>
-                <div className="mt-7 overflow-hidden rounded-2xl border border-[#c9a030]/50 bg-[#141210] shadow-[0_12px_40px_rgba(0,0,0,0.45),inset_0_0_0_1px_rgba(232,200,74,0.08)]">
-                  <div className="flex items-center justify-between border-b border-[#c9a030]/35 px-4 py-3 md:px-6">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#c9a030]/75">
-                      Interactive prototype
-                    </p>
-                    <Link
-                      href="/code/playground/omikuji"
-                      className="font-mono text-[11px] uppercase tracking-[0.14em] text-[#f0ddb8]/80 underline decoration-[#c9a030]/35 underline-offset-[4px] transition-colors hover:text-[#fdf6e8] hover:decoration-[#e8c84a]/55"
-                    >
-                      Open full page
-                    </Link>
-                  </div>
-                  <iframe
-                    title="Omikuji Cabinet interactive preview"
-                    src="/code/playground/omikuji?embed=1"
-                    className="h-[min(66vh,720px)] min-h-[420px] w-full bg-[#060608] md:min-h-[500px]"
-                    loading="lazy"
-                  />
-                </div>
-              </div>
-            </motion.div>
-
-            <div className="mt-8 flex justify-end">
-              <Link
-                href="/playground"
-                className="font-mono text-xs uppercase tracking-widest text-textSecondary underline decoration-[rgba(0,0,0,0.2)] underline-offset-4 transition-opacity hover:opacity-60"
-              >
-                View full playground →
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 5. Previous Artwork ─────────────────────────────────────────── */}
+        {/* ── 4. Previous Artwork ─────────────────────────────────────────── */}
         <section id="about-archive" className="scroll-mt-24 px-6 pt-24 md:scroll-mt-28 md:pt-32">
           <div className="mx-auto max-w-content">
             <SectionReveal>
@@ -603,7 +312,7 @@ export default function AboutPage() {
         {/* Gallery carousel (includes Alessa Design slides) */}
         <AboutArtGallery noTopBorder noHeading />
 
-        {/* ── 6. Path ─────────────────────────────────────────────────────── */}
+        {/* ── 5. Path ─────────────────────────────────────────────────────── */}
         <section
           id="about-path"
           ref={expRef}
@@ -659,7 +368,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── 7. Education (timeline — matches Path, no cards) ───────────── */}
+        {/* ── 6. Education (timeline — matches Path, no cards) ───────────── */}
         <section
           id="about-education"
           ref={eduRef}

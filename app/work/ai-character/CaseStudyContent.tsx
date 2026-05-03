@@ -76,7 +76,7 @@ function RevealLine({ className = "" }: { className?: string }) {
 
 const caseNavItems = [
   { id: "intro", label: "Introduction" },
-  { id: "vibe-prototype", label: "Live Prototypes" },
+  { id: "my-ownership", label: "My Ownership" },
   { id: "problem", label: "Problem" },
   { id: "strategy", label: "Product strategy" },
   { id: "research", label: "Research" },
@@ -84,7 +84,9 @@ const caseNavItems = [
   { id: "innovations", label: "Interactions" },
   { id: "experience-loop", label: "Experience Loop" },
   { id: "process", label: "Visual Process" },
+  { id: "decisions", label: "Design Decisions" },
   { id: "backend", label: "Backend" },
+  { id: "vibe-prototype", label: "Live Prototypes" },
   { id: "outcome", label: "Outcome" },
   { id: "takeaway", label: "Takeaway" },
 ] as const;
@@ -168,11 +170,11 @@ type PlaceholderProps = { label: string; src: string; className?: string };
 function ImagePlaceholder({ label, src, className = "" }: PlaceholderProps) {
   return (
     <div
-      className={`relative overflow-hidden bg-black/[0.02] shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] ${mediaRound} ${className}`}
+      className={`group relative overflow-hidden bg-black/[0.02] shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] ${mediaRound} ${className}`}
       role="img"
       aria-label={label}
     >
-      <img src={src} alt={label} className={`h-auto w-full object-contain ${mediaRound}`} loading="lazy" />
+      <img src={src} alt={label} className={`h-auto w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03] ${mediaRound}`} loading="lazy" />
     </div>
   );
 }
@@ -229,7 +231,7 @@ function ShowcaseVideo({
   }, [src, startMuted]);
 
   return (
-    <figure className={`overflow-hidden bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.08] ${mediaRound} ${className}`}>
+    <figure className={`overflow-hidden bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.08] transition-shadow duration-700 ease-out hover:shadow-[0_20px_60px_-24px_rgba(0,0,0,0.13)] ${mediaRound} ${className}`}>
       <div className={`bg-black ${mediaRound}`}>
         <video
           ref={videoRef}
@@ -616,6 +618,11 @@ const sectionPiece = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.92, ease: easePremium } },
 };
 
+const sectionHeadInner = {
+  hidden: { y: "105%" },
+  visible: { y: "0%", transition: { duration: 0.88, ease: EMSK } },
+};
+
 const metaFields = [
   { label: "Company", value: "Alibaba Cloud" },
   { label: "Role", value: "UX Designer — End-to-End, research to production code" },
@@ -728,6 +735,32 @@ function VibeCodingPrototypeGallery() {
   );
 }
 
+function CountUpStat({ value }: { value: string }) {
+  const match = value.match(/^([+]?)(\d+)(.*)$/);
+  if (!match) return <>{value}</>;
+  const [, prefix, num, suffix] = match;
+  const to = parseInt(num, 10);
+  const ref = useRef<HTMLSpanElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-10% 0px" });
+  const [n, setN] = useState(0);
+
+  useEffect(() => {
+    if (!inView) return;
+    let frame: number;
+    const dur = 900;
+    const start = performance.now();
+    const tick = (ts: number) => {
+      const t = Math.min((ts - start) / dur, 1);
+      setN(Math.round((1 - Math.pow(1 - t, 3)) * to));
+      if (t < 1) frame = requestAnimationFrame(tick);
+    };
+    frame = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frame);
+  }, [inView, to]);
+
+  return <span ref={ref}>{prefix}{n}{suffix}</span>;
+}
+
 function Section({
   id,
   eyebrow,
@@ -760,12 +793,14 @@ function Section({
         >
           {eyebrow}
         </motion.p>
-        <motion.h2
-          className="mt-5 max-w-reading font-display text-[1.55rem] font-light leading-[1.14] tracking-[-0.02em] text-textPrimary md:mt-6 md:text-[1.85rem] md:leading-[1.12]"
-          variants={reduced ? undefined : sectionPiece}
-        >
-          {title}
-        </motion.h2>
+        <div className="mt-5 overflow-hidden md:mt-6">
+          <motion.h2
+            className="max-w-reading font-display text-[1.55rem] font-light leading-[1.14] tracking-[-0.02em] text-textPrimary md:text-[1.85rem] md:leading-[1.12]"
+            variants={reduced ? undefined : sectionHeadInner}
+          >
+            {title}
+          </motion.h2>
+        </div>
         <motion.div
           className="mt-12 space-y-9 font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:mt-14 md:space-y-10 md:text-[1.0625rem] md:leading-[1.76] [&>blockquote]:mx-auto [&>blockquote]:max-w-reading [&>blockquote]:font-display [&>blockquote]:text-textPrimary [&>h3]:max-w-reading [&>h4]:max-w-reading [&>ol]:max-w-reading [&>p]:max-w-reading [&>ul]:max-w-reading"
           variants={reduced ? undefined : sectionPiece}
@@ -1033,7 +1068,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
     <section
       id="intro"
       ref={heroRef}
-      className="relative scroll-mt-24 overflow-hidden pb-32 pt-16 md:scroll-mt-28 md:pb-40 md:pt-24"
+      className="relative scroll-mt-24 overflow-x-hidden pb-32 pt-16 md:scroll-mt-28 md:pb-40 md:pt-24"
     >
       <div className="relative w-full">
         <motion.div
@@ -1086,12 +1121,14 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 />
               </motion.div>
 
-              <motion.h1
-                className="mt-7 font-display text-[2.2rem] font-light leading-[1.05] tracking-[-0.038em] text-textPrimary md:mt-8 md:text-[clamp(2.35rem,4.5vw,2.85rem)] md:leading-[1.04]"
-                variants={reduced ? undefined : heroItem}
-              >
-                Designing the AI That Feels Alive
-              </motion.h1>
+              <div className="mt-7 overflow-hidden py-[0.18em] md:mt-8">
+                <motion.h1
+                  className="text-pretty font-display text-[2.2rem] font-light leading-[1.12] tracking-[-0.038em] text-textPrimary md:text-[clamp(2.35rem,4.5vw,2.85rem)] md:leading-[1.1]"
+                  variants={reduced ? undefined : { hidden: { y: "106%" }, visible: { y: "0%", transition: { duration: 0.92, ease: EMSK } } }}
+                >
+                  Designing the AI That Feels Alive
+                </motion.h1>
+              </div>
 
               <motion.p
                 className="mt-6 max-w-[36rem] font-sans text-[1.0625rem] font-normal leading-[1.68] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.125rem] md:leading-[1.66]"
@@ -1104,29 +1141,34 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
               <motion.nav
                 aria-label="Case study links"
                 variants={reduced ? undefined : heroItem}
-                className="mt-9 flex flex-wrap items-baseline gap-y-2 md:mt-11"
+                className="mt-9 flex flex-wrap items-center gap-4 md:mt-11"
               >
-                {heroLinks.map((item, i) => (
-                  <span key={item.href} className="inline-flex items-center">
-                    {i > 0 ? (
-                      <span className="mx-3 select-none font-sans text-[13px] text-black/[0.12] md:mx-4" aria-hidden>
-                        ·
-                      </span>
-                    ) : null}
-                    <Link
-                      href={item.href}
-                      className="group inline-flex items-center font-sans text-[13px] font-medium tracking-[-0.01em] text-textSecondary/95 transition-colors duration-500 ease-out hover:text-textPrimary"
-                    >
-                      {item.label}
-                      <span
-                        className="ml-1 inline-block text-textSecondary/35 transition-[transform,color] duration-500 ease-out group-hover:translate-x-0.5 group-hover:text-textSecondary/55"
-                        aria-hidden
-                      >
-                        →
-                      </span>
-                    </Link>
-                  </span>
-                ))}
+                <motion.div
+                  whileHover={reduced ? undefined : { y: -2 }}
+                  whileTap={reduced ? undefined : { y: 1 }}
+                  transition={{ type: "spring", stiffness: 480, damping: 28 }}
+                  className="inline-block"
+                >
+                  <Link
+                    href={heroLinks[0].href}
+                    className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                  >
+                    {heroLinks[0].label}
+                  </Link>
+                </motion.div>
+                <motion.div
+                  whileHover={reduced ? undefined : { y: -2 }}
+                  whileTap={reduced ? undefined : { y: 1 }}
+                  transition={{ type: "spring", stiffness: 480, damping: 28 }}
+                  className="inline-block"
+                >
+                  <Link
+                    href={heroLinks[1].href}
+                    className="inline-flex rounded-full border border-[rgba(0,0,0,0.1)] bg-white/95 px-8 py-3 text-sm font-medium text-textPrimary shadow-[0_10px_26px_-18px_rgba(0,0,0,0.22)] backdrop-blur-[2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                  >
+                    {heroLinks[1].label}
+                  </Link>
+                </motion.div>
               </motion.nav>
             </div>
           </motion.div>
@@ -1167,6 +1209,38 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 </motion.div>
               ))}
             </motion.dl>
+
+            <motion.div
+              id="my-ownership"
+              className="scroll-mt-24 mt-12 border-t border-black/[0.07] pt-10 md:mt-14 md:scroll-mt-28 md:pt-12"
+              variants={reduced ? undefined : introBlockItem}
+            >
+              <p className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-textSecondary/60">My ownership</p>
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {[
+                  { icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z", label: "UX Strategy", text: "Led showroom strategy · 4 interaction patterns" },
+                  { icon: "M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z", label: "Showroom Design", text: "3 rooms end-to-end · romance, astrology, therapy" },
+                  { icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4", label: "Production Code", text: "English prototypes in code · Claude Code + Cursor" },
+                  { icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z", label: "Console Redesign", text: "4 B2B pages · Knowledge Base, API Center, Homepage" },
+                  { icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", label: "Delivery", text: "Research → production in 4 weeks" },
+                  { icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z", label: "Stakeholders", text: "PM + engineering · P0–P3 scoped in 24 h" },
+                ].map((item) => (
+                  <motion.div
+                    key={item.label}
+                    variants={reduced ? undefined : introMetaRow}
+                    className="flex items-start gap-3 rounded-xl bg-surfaceAlt/30 px-4 py-4 ring-1 ring-black/[0.05]"
+                  >
+                    <svg className="mt-0.5 h-4 w-4 shrink-0 text-textSecondary/45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                    </svg>
+                    <div>
+                      <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-textSecondary/55">{item.label}</p>
+                      <p className="mt-1 font-sans text-[13.5px] leading-snug text-textPrimary">{item.text}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+            </motion.div>
           </motion.div>
         </motion.div>
       </div>
@@ -1184,22 +1258,6 @@ export default function CaseStudyContent() {
         <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-0 md:px-12 md:pb-24 lg:pl-36 lg:pr-14">
           <HeroSection reduced={reduced} />
 
-          {/* LIVE PROTOTYPES */}
-          <Section
-            id="vibe-prototype"
-            eyebrow="Live Interactive Prototypes"
-            title="Three showrooms, designed and built end-to-end."
-          >
-            <p>
-              Each showroom was designed, prototyped, and shipped by me — from user research through production code.
-            </p>
-            <p>
-              Three vibe-coded showrooms rebuilt in English with Claude Code + Cursor. All three live previews are embedded
-              below — compact ratio on this page; open any room&apos;s full-page version for the best fidelity.
-            </p>
-            <VibeCodingPrototypeGallery />
-          </Section>
-
         {/* PROBLEM */}
         <Section
           id="problem"
@@ -1207,7 +1265,7 @@ export default function CaseStudyContent() {
           title="High capability. Low conversion. The product was invisible."
         >
           <p>
-            The model could remember users across sessions, evolve relationships, and personalize at depth — but none of this
+            Qwen character model could remember users across sessions, evolve relationships, and personalize at depth — but none of this
             was <Em>visible</Em>. Trial users churned before they felt the difference.
           </p>
           <p>
@@ -1294,6 +1352,42 @@ export default function CaseStudyContent() {
             src="/assets/ai-character/research-character-ai-screenshot.png"
             className="mx-auto max-w-5xl"
           />
+
+          <div className="mt-14 overflow-hidden rounded-xl ring-1 ring-black/[0.07]">
+            <div className="border-b border-black/[0.07] bg-surfaceAlt/40 px-6 py-5">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-textSecondary">Research → Insight → Design Principle</p>
+            </div>
+            <div className="hidden grid-cols-3 gap-4 bg-surfaceAlt/20 px-6 py-3 md:grid">
+              {["Finding", "Evidence", "Design response"].map((h) => (
+                <p key={h} className="font-mono text-[10px] font-semibold uppercase tracking-[0.16em] text-textSecondary/60">{h}</p>
+              ))}
+            </div>
+            <div className="divide-y divide-black/[0.06]">
+              {[
+                {
+                  finding: "Users hit a chatbot ceiling",
+                  evidence: "6 products · 40+ reviews → scripted, repetitive, shallow",
+                  response: "Memory-based story unlock",
+                },
+                {
+                  finding: "Users need proof fast",
+                  evidence: "Trial churn before value appears",
+                  response: "1 capability · 1 proof moment · < 60 s",
+                },
+                {
+                  finding: "Enterprise can't imagine building on it",
+                  evidence: "Slides can't de-risk a build decision",
+                  response: "Cloneable showroom + code drawer",
+                },
+              ].map((row, i) => (
+                <div key={i} className="grid grid-cols-1 gap-1.5 px-6 py-5 md:grid-cols-3 md:gap-6">
+                  <p className="font-sans text-[13.5px] font-semibold leading-snug text-textPrimary">{row.finding}</p>
+                  <p className="font-sans text-[13px] leading-snug text-textSecondary">{row.evidence}</p>
+                  <p className="font-sans text-[13px] font-medium leading-snug text-textPrimary/80">{row.response}</p>
+                </div>
+              ))}
+            </div>
+          </div>
         </Section>
 
         {/* UX STRATEGY */}
@@ -1423,6 +1517,90 @@ export default function CaseStudyContent() {
           </p>
         </Section>
 
+        {/* KEY DESIGN DECISIONS */}
+        <Section
+          id="decisions"
+          eyebrow="Design Decisions"
+          title="Why not the obvious path?"
+        >
+          <div className="space-y-0 pt-2">
+            {[
+              {
+                n: "01",
+                decision: "Showroom over optimizing chat window",
+                angle: "Product strategy",
+                rejected: "Better chat window",
+                chosen: "Pre-seeded showroom — memory, arc, proof from msg 1",
+                tradeoff: "Constrained entry · guaranteed first impression",
+              },
+              {
+                n: "02",
+                decision: "Romance · astrology · therapy",
+                angle: "Market fit",
+                rejected: "Generic demo scenarios",
+                chosen: "Top 3 B2C verticals · each exercises a distinct capability",
+                tradeoff: "Narrower scope · stronger market signal",
+              },
+              {
+                n: "03",
+                decision: "One capability → one proof moment",
+                angle: "Research insight",
+                rejected: "Multi-feature tour",
+                chosen: "Single model strength · legible in < 60 s, no instructions",
+                tradeoff: "Depth over breadth · faster conversion",
+              },
+              {
+                n: "04",
+                decision: "AI video loop over 3D avatar",
+                angle: "Production stability",
+                rejected: "3D avatar (crashed mid-demo in webview)",
+                chosen: "AI-generated loop — blink, nod, smile · 1/10th load time",
+                tradeoff: "Less interactivity · higher reliability + warmer feel",
+              },
+              {
+                n: "05",
+                decision: "Code drawer in side panel",
+                angle: "Sales context",
+                rejected: "Separate developer console",
+                chosen: "Slide-out drawer beside live demo · no tab switch",
+                tradeoff: "Shallower panel · coherent demo-to-review flow",
+              },
+              {
+                n: "06",
+                decision: "Features cut",
+                angle: "Scope trade-off",
+                rejected: "Voice lip-sync · relationship graphs · character creator",
+                chosen: "Shipped 4 showrooms on time",
+                tradeoff: "Parked, not abandoned · 4-week constraint",
+              },
+            ].map((item) => (
+              <div key={item.n} className="grid grid-cols-1 gap-4 border-t border-black/[0.06] py-6 first:border-t-0 first:pt-0 md:grid-cols-[1fr_1.6fr]">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-[10px] font-medium text-textSecondary/40">{item.n}</span>
+                    <span className="rounded-full border border-black/[0.09] bg-surfaceAlt/60 px-2.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/65">{item.angle}</span>
+                  </div>
+                  <p className="mt-2 font-display text-[1.02rem] font-light leading-snug tracking-tight text-textPrimary md:text-[1.08rem]">{item.decision}</p>
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-px shrink-0 font-mono text-[11px] font-semibold text-red-400/60">×</span>
+                    <p className="font-sans text-[13px] leading-snug text-textSecondary">{item.rejected}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-px shrink-0 font-mono text-[11px] font-semibold text-emerald-600/60">✓</span>
+                    <p className="font-sans text-[13px] leading-snug text-textPrimary/80">{item.chosen}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5 pt-1">
+                    <span className="mt-px shrink-0 font-mono text-[11px] text-textSecondary/35">→</span>
+                    <p className="font-sans text-[12px] italic leading-snug text-textSecondary/65">{item.tradeoff}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
         {/* BACKEND */}
         <Section
           id="backend"
@@ -1439,6 +1617,22 @@ export default function CaseStudyContent() {
             <ImagePlaceholder label="Extended Capability console redesign" src="/assets/ai-character/updateddesign2.jpg" />
             <ImagePlaceholder label="Knowledge base detail redesign" src="/assets/ai-character/updatedesign3.jpg" />
           </div>
+        </Section>
+
+        {/* LIVE PROTOTYPES */}
+        <Section
+          id="vibe-prototype"
+          eyebrow="Live Interactive Prototypes"
+          title="Three showrooms, designed and built end-to-end."
+        >
+          <p>
+            Each showroom was designed, prototyped, and shipped by me — from user research through production code.
+          </p>
+          <p>
+            Three vibe-coded showrooms rebuilt in English with Claude Code + Cursor. All three live previews are embedded
+            below — compact ratio on this page; open any room&apos;s full-page version for the best fidelity.
+          </p>
+          <VibeCodingPrototypeGallery />
         </Section>
 
         {/* OUTCOME */}
@@ -1462,11 +1656,63 @@ export default function CaseStudyContent() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.75, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
               >
-                <p className="font-display text-[2.5rem] font-light leading-none tracking-tight text-textPrimary md:text-[2.75rem]">{stat.n}</p>
+                <p className="font-display text-[2.5rem] font-light leading-none tracking-tight text-textPrimary md:text-[2.75rem]"><CountUpStat value={stat.n} /></p>
                 <p className="mt-3 font-sans text-[12px] font-semibold uppercase tracking-[0.12em] text-textPrimary/65">{stat.label}</p>
                 <p className="mt-2 font-sans text-[14px] leading-snug text-textSecondary">{stat.detail}</p>
               </motion.div>
             ))}
+          </div>
+
+          <div className="mt-14 overflow-hidden rounded-xl ring-1 ring-black/[0.07] md:mt-16">
+            <div className="border-b border-black/[0.07] bg-surfaceAlt/40 px-5 py-4">
+              <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.18em] text-textSecondary">How the numbers are defined</p>
+            </div>
+            <div className="hidden grid-cols-[6rem_1fr_1fr_1fr] gap-x-6 bg-surfaceAlt/20 px-5 py-3 md:grid">
+              {["Metric", "Baseline", "Result", "Note"].map((h) => (
+                <p key={h} className="font-mono text-[10px] font-semibold uppercase tracking-[0.14em] text-textSecondary/55">{h}</p>
+              ))}
+            </div>
+            <div className="divide-y divide-black/[0.06]">
+              {[
+                {
+                  stat: "+200%",
+                  label: "Model calls",
+                  before: "Pre-launch avg (generic chat)",
+                  after: "Showroom flow",
+                  note: "4-week window · team-level",
+                },
+                {
+                  stat: "87%",
+                  label: "Fewer steps",
+                  before: "~7 steps (config + prompt + session)",
+                  after: "1 click · pre-seeded context",
+                  note: "Onboarding friction only",
+                },
+                {
+                  stat: "60%",
+                  label: "Faster delivery",
+                  before: "Spec-only handoff",
+                  after: "Code + spec together",
+                  note: "Engineering estimate",
+                },
+              ].map((row) => (
+                <div key={row.stat} className="grid grid-cols-1 gap-1 px-5 py-4 md:grid-cols-[6rem_1fr_1fr_1fr] md:items-center md:gap-x-6">
+                  <div className="flex items-baseline gap-2 md:block">
+                    <p className="font-display text-[1.4rem] font-light tracking-tight text-textPrimary">{row.stat}</p>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/60 md:mt-0.5">{row.label}</p>
+                  </div>
+                  <div className="flex items-center gap-2 md:block">
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-textSecondary/50 md:hidden">Before</p>
+                    <p className="font-sans text-[13px] leading-snug text-textSecondary">{row.before}</p>
+                  </div>
+                  <div className="flex items-center gap-2 md:block">
+                    <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-textSecondary/50 md:hidden">After</p>
+                    <p className="font-sans text-[13px] font-medium leading-snug text-textPrimary/80">{row.after}</p>
+                  </div>
+                  <p className="font-sans text-[12px] italic leading-snug text-textSecondary/60">{row.note}</p>
+                </div>
+              ))}
+            </div>
           </div>
 
           <h3 className="mt-14 font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.25rem]">
@@ -1520,6 +1766,44 @@ export default function CaseStudyContent() {
             <p>
               <Em>The strongest demo is future-self proof.</Em> Show a working version of their own future product — then let them clone it.
             </p>
+          </div>
+
+          <h3 className="mt-14 font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.28rem]">
+            AI Trust &amp; Safety
+          </h3>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            {[
+              {
+                icon: "M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
+                label: "Memory transparency",
+                note: "Constellation file makes memory readable · not a silent black box",
+              },
+              {
+                icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
+                label: "Analysis visibility",
+                note: "Therapy rail shows what the model understood · not just what it said",
+              },
+              {
+                icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
+                label: "Developer inspectability",
+                note: "YAML + prompt exposed in code drawer · inspect before you build",
+              },
+              {
+                icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
+                label: "Emotional boundary",
+                note: "Therapy room = analysis demo · no clinical claims implied",
+              },
+            ].map((item) => (
+              <div key={item.label} className="flex items-start gap-3 rounded-xl bg-surfaceAlt/35 px-4 py-4 ring-1 ring-black/[0.05]">
+                <svg className="mt-0.5 h-4 w-4 shrink-0 text-textSecondary/45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                </svg>
+                <div>
+                  <p className="font-mono text-[10px] font-semibold uppercase tracking-[0.15em] text-textSecondary/60">{item.label}</p>
+                  <p className="mt-1 font-sans text-[13px] leading-snug text-textSecondary">{item.note}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </Section>
         </article>

@@ -1,5 +1,5 @@
 /**
- * Playground “visual experiments” — shared between /playground and About Design Journey.
+ * Visual experiments — shared between /vibe-coding and About Design Journey.
  */
 export type VisualExperimentImage = {
   src: string;

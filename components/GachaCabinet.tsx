@@ -85,12 +85,12 @@ const PROJECTS: Record<string, GachaProject> = {
     linkLabel: "Open résumé →",
   },
   playground: {
-    title: "Playground",
+    title: "Vibe coding",
     company: "Experiments",
     domain: "Interactive demos · visual experiments",
     rarity: "R",
-    href: "/playground",
-    linkLabel: "Open playground →",
+    href: "/vibe-coding",
+    linkLabel: "Open vibe coding →",
   },
 };
 
