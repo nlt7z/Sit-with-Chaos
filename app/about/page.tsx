@@ -12,6 +12,9 @@ import { type ReactNode, useRef } from "react";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
+const credentialLinkClass =
+  "underline decoration-black/[0.18] underline-offset-[3px] transition-[color,text-decoration-color] hover:text-textPrimary hover:decoration-black/[0.35] focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2";
+
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 type StoryBeat = {
@@ -152,7 +155,24 @@ export default function AboutPage() {
                   I bridge the gap between rigid technology and soft human needs.
                 </p>
                 <p className="mt-7 font-mono text-sm leading-relaxed text-textSecondary">
-                  MS @ UW HCDE &nbsp;·&nbsp; UX Designer @ Alibaba
+                  MS @{" "}
+                  <a
+                    href="https://www.hcde.washington.edu/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={credentialLinkClass}
+                  >
+                    UW HCDE
+                  </a>
+                  &nbsp;·&nbsp; UX Designer @{" "}
+                  <a
+                    href="https://www.alibabacloud.com/en?_p_lc=5&utm_content=se_1016865603&gclid=Cj0KCQjwh-HPBhCIARIsAC0p3cdFPZetcbRsE45aW3HtGIhQErVmw69gjQ65dhIasOASijh7Pp-WmckaAjc6EALw_wcB"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={credentialLinkClass}
+                  >
+                    Alibaba
+                  </a>
                 </p>
               </SectionReveal>
             </div>

@@ -79,10 +79,12 @@ intents: [love, career, self-worth, chart, casual]
 tools: [chart_lookup, transit_check, card_draw, memory_read]`;
 
 // SVG icons for cards (gold strokes)
-function CardSymbolIcon({ symbol, size = 42 }: { symbol: string; size?: number }) {
+function CardSymbolIcon({ symbol, size = 42, className }: { symbol: string; size?: number; className?: string }) {
   const gold = "#c9a962";
   const goldLt = "rgba(201,169,98,0.6)";
-  const common = { width: size, height: size, viewBox: "0 0 42 42", fill: "none" };
+  const common = className
+    ? { viewBox: "0 0 42 42", fill: "none" as const, width: "100%" as const, height: "100%" as const, className }
+    : { width: size, height: size, viewBox: "0 0 42 42", fill: "none" as const };
   switch (symbol) {
     case "star":
       return (
@@ -477,32 +479,39 @@ function ProfileHoverCard({ memory }: { memory: MemoryItem[] }) {
 
 function AvatarTagCard() {
   return (
-    <div className="shrink-0 self-start">
-      <div className="relative flex h-[136px] w-[104px] items-center justify-center">
+    <div
+      className="shrink-0 self-start"
+      style={{ ["--avw" as string]: "min(6.75rem, min(32vw, 104px))" }}
+    >
+      <div className="relative flex aspect-square w-[var(--avw)] items-center justify-center">
         <span className="opening-orbit-star opening-orbit-a" style={{ color: "rgba(200,147,158,0.82)" }}>
-          <span style={{ transform: "translateX(56px)" }}>
+          <span style={{ transform: "translateX(calc(var(--avw) * 56 / 104))" }}>
             <FourPointStar size={8} color="currentColor"/>
           </span>
         </span>
         <span className="opening-orbit-star opening-orbit-b" style={{ color: "rgba(160,122,184,0.82)" }}>
-          <span style={{ transform: "translateX(52px)" }}>
+          <span style={{ transform: "translateX(calc(var(--avw) * 52 / 104))" }}>
             <FourPointStar size={7} color="currentColor"/>
           </span>
         </span>
-        <span className="opening-orbit-star" style={{ color: "rgba(204,176,224,0.75)", transform: "translate(-50%, -50%) translateX(-50px) translateY(20px)" }}>
+        <span
+          className="opening-orbit-star"
+          style={{
+            color: "rgba(204,176,224,0.75)",
+            transform: "translate(-50%, -50%) translateX(calc(var(--avw) * -50 / 104)) translateY(calc(var(--avw) * 20 / 104))",
+          }}
+        >
           <FourPointStar size={6} color="currentColor"/>
         </span>
 
         <motion.div
           whileHover={{ scale: 1.04 }}
           transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-          className="overflow-hidden"
+          className="relative z-10 h-full w-full overflow-hidden rounded-full"
           style={{
-            width:104,
-            height:136,
-            borderRadius:12,
-            boxShadow:"0 4px 22px -10px rgba(80,50,130,0.14)",
-          }}>
+            boxShadow: "0 4px 22px -10px rgba(80,50,130,0.14)",
+          }}
+        >
           <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
         </motion.div>
       </div>
@@ -527,7 +536,7 @@ function AstroShareModal({ onClose }: { onClose: () => void }) {
         className="fixed inset-0 z-50"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
-        style={{ background: "rgba(18,10,36,0.32)", backdropFilter: "blur(6px)" }}
+        style={{ background: "rgba(30,20,50,0.18)", backdropFilter: "blur(4px)" }}
         onClick={onClose}
       />
       <motion.div
@@ -538,39 +547,39 @@ function AstroShareModal({ onClose }: { onClose: () => void }) {
         transition={{ type: "spring", stiffness: 300, damping: 26, mass: 0.85 }}
         style={{
           left: "50%", top: "50%", x: "-50%", y: "-50%",
-          background: "linear-gradient(160deg, rgba(44,28,72,0.97) 0%, rgba(30,18,55,0.99) 100%)",
-          border: "1px solid rgba(178,152,205,0.22)",
-          boxShadow: "0 32px 72px -24px rgba(80,40,160,0.55)",
+          background: "linear-gradient(158deg, rgba(255,253,252,0.99) 0%, rgba(253,248,251,0.98) 100%)",
+          border: "1px solid rgba(210,195,220,0.28)",
+          boxShadow: "0 24px 60px -20px rgba(80,50,110,0.16), 0 1px 0 rgba(255,255,255,0.7) inset",
         }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(178,152,205,0.12)" }}>
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(215,200,225,0.28)" }}>
           <div className="flex items-center gap-2.5">
-            <div className="flex h-6 w-6 items-center justify-center rounded-full" style={{ background: "rgba(160,122,184,0.16)", border: "1px solid rgba(160,122,184,0.28)" }}>
+            <div className="flex h-6 w-6 items-center justify-center rounded-full" style={{ background: "rgba(160,122,184,0.1)", border: "1px solid rgba(160,122,184,0.2)" }}>
               <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/>
                 <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
               </svg>
             </div>
-            <span className="text-[12px] font-medium" style={{ color: "rgba(220,200,240,0.9)" }}>Share this experience</span>
+            <span className="text-[12px] font-medium" style={{ color: C.txt }}>Share this experience</span>
           </div>
-          <button type="button" onClick={onClose} className="flex h-6 w-6 items-center justify-center rounded-full opacity-40 hover:opacity-80 transition-opacity" style={{ color: "rgba(200,180,220,0.8)" }}>
+          <button type="button" onClick={onClose} className="flex h-6 w-6 items-center justify-center rounded-full opacity-40 hover:opacity-70 transition-opacity" style={{ color: C.txt2 }}>
             <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg>
           </button>
         </div>
 
         <div className="px-5 py-5">
-          <p className="mb-3 text-[11px]" style={{ color: "rgba(180,160,200,0.65)" }}>Copy this link and share with anyone</p>
+          <p className="mb-3 text-[11px]" style={{ color: C.txt3 }}>Copy this link and share with anyone</p>
           <div className="mb-4 rounded-xl px-3.5 py-3 font-mono text-[10.5px] break-all leading-[1.55]"
-            style={{ background: "rgba(0,0,0,0.28)", border: "1px solid rgba(160,122,184,0.18)", color: "rgba(200,180,220,0.72)" }}>
+            style={{ background: "rgba(245,241,248,0.7)", border: "1px solid rgba(210,195,225,0.3)", color: C.txt2 }}>
             {link}
           </div>
           <motion.button
             type="button"
             onClick={() => void copy()}
             className="w-full rounded-xl py-2.5 text-[12.5px] font-semibold text-white"
-            style={{ background: copied ? "linear-gradient(135deg,#6b9e5e,#4a8a42)" : `linear-gradient(135deg,${C.accent},#c390dc)`, boxShadow: "0 6px 20px -8px rgba(160,122,184,0.5)", transition: "background 0.3s ease" }}
-            whileHover={{ filter: "brightness(1.08)" }}
+            style={{ background: copied ? "linear-gradient(135deg,#6b9e5e,#4a8a42)" : `linear-gradient(135deg,${C.accent},#c390dc)`, boxShadow: "0 6px 20px -8px rgba(160,122,184,0.38)", transition: "background 0.3s ease" }}
+            whileHover={{ filter: "brightness(1.06)" }}
             whileTap={{ scale: 0.97 }}
           >
             {copied ? "✓ Copied!" : "Copy Link"}
@@ -920,7 +929,14 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
         className="w-full max-w-[760px] overflow-hidden rounded-3xl"
-        style={{ background:"rgba(255,248,250,0.42)", backdropFilter:"blur(18px)", border:`1px solid rgba(255,255,255,0.48)`, boxShadow:"0 28px 80px -30px rgba(180,100,140,0.24), 0 2px 0 rgba(255,255,255,0.55) inset" }}>
+        style={{
+          background: "rgba(255,248,250,0.42)",
+          backdropFilter: "blur(18px)",
+          border: `1px solid rgba(255,255,255,0.48)`,
+          boxShadow: "0 28px 80px -30px rgba(180,100,140,0.24), 0 2px 0 rgba(255,255,255,0.55) inset",
+          ["--ob" as string]: "min(40vmin, 8.75rem)",
+        }}
+      >
         <div className="px-6 py-4">
           <div className="leading-none">
             <p className="text-[9px] tracking-[.14em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
@@ -931,14 +947,14 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
           </div>
         </div>
         <style>{`
-          @keyframes orbit1 { from { transform: rotate(0deg) translateX(52px) rotate(0deg); } to { transform: rotate(360deg) translateX(52px) rotate(-360deg); } }
-          @keyframes orbit2 { from { transform: rotate(120deg) translateX(62px) rotate(-120deg); } to { transform: rotate(480deg) translateX(62px) rotate(-480deg); } }
-          @keyframes orbit3 { from { transform: rotate(240deg) translateX(46px) rotate(-240deg); } to { transform: rotate(600deg) translateX(46px) rotate(-600deg); } }
+          @keyframes orbit1 { from { transform: rotate(0deg) translateX(calc(var(--ob, 140px) * 52 / 140)) rotate(0deg); } to { transform: rotate(360deg) translateX(calc(var(--ob, 140px) * 52 / 140)) rotate(-360deg); } }
+          @keyframes orbit2 { from { transform: rotate(120deg) translateX(calc(var(--ob, 140px) * 62 / 140)) rotate(-120deg); } to { transform: rotate(480deg) translateX(calc(var(--ob, 140px) * 62 / 140)) rotate(-480deg); } }
+          @keyframes orbit3 { from { transform: rotate(240deg) translateX(calc(var(--ob, 140px) * 46 / 140)) rotate(-240deg); } to { transform: rotate(600deg) translateX(calc(var(--ob, 140px) * 46 / 140)) rotate(-600deg); } }
         `}</style>
-        <div className="grid items-center gap-8 px-7 py-8 md:grid-cols-[160px_1fr]">
+        <div className="grid items-center gap-8 px-7 py-8 md:grid-cols-[minmax(0,min(28vw,10rem))_1fr]">
           <div className="flex justify-center md:justify-start">
-            <div className="relative flex h-[140px] w-[140px] items-center justify-center">
-              <svg className="absolute inset-0 h-full w-full" viewBox="0 0 140 140" fill="none">
+            <div className="relative flex aspect-square w-[var(--ob)] max-w-full items-center justify-center">
+              <svg className="absolute inset-0 h-full w-full max-w-full" viewBox="0 0 140 140" fill="none" preserveAspectRatio="xMidYMid meet">
                 <ellipse cx="70" cy="70" rx="52" ry="52" stroke="rgba(160,122,184,0.1)" strokeWidth="0.4"/>
                 <ellipse cx="70" cy="70" rx="62" ry="38" stroke="rgba(160,122,184,0.08)" strokeWidth="0.4" transform="rotate(-20 70 70)"/>
                 <ellipse cx="70" cy="70" rx="46" ry="28" stroke="rgba(160,122,184,0.08)" strokeWidth="0.4" transform="rotate(35 70 70)"/>
@@ -971,10 +987,23 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                 className="absolute"
                 animate={{ scale: [1, 1.08, 1], opacity: [0.6, 0.9, 0.6] }}
                 transition={{ duration: 3, ease: "easeInOut", repeat: Infinity }}
-                style={{ width: 104, height: 104, borderRadius: "50%", border: "0.5px solid rgba(160,122,184,0.15)" }}
+                style={{
+                  width: "calc(var(--ob) * 104 / 140)",
+                  height: "calc(var(--ob) * 104 / 140)",
+                  borderRadius: "50%",
+                  border: "0.5px solid rgba(160,122,184,0.15)",
+                }}
               />
-              <div className="relative z-10 h-[82px] w-[82px] overflow-hidden rounded-full"
-                style={{ border:"1.5px solid rgba(255,255,255,0.85)", background:"rgba(255,255,255,0.94)", boxShadow:"0 16px 38px -20px rgba(160,122,184,0.4)" }}>
+              <div
+                className="relative z-10 overflow-hidden rounded-full"
+                style={{
+                  width: "calc(var(--ob) * 82 / 140)",
+                  height: "calc(var(--ob) * 82 / 140)",
+                  border: "1.5px solid rgba(255,255,255,0.85)",
+                  background: "rgba(255,255,255,0.94)",
+                  boxShadow: "0 16px 38px -20px rgba(160,122,184,0.4)",
+                }}
+              >
                 <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
               </div>
             </div>
@@ -1131,7 +1160,8 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
   const [cloneCopied, setCloneCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
 
-  const chatEndRef  = useRef<HTMLDivElement>(null);
+  /** Scroll the chat column only — avoid scrollIntoView (it can scroll the parent page when embedded in an iframe). */
+  const chatScrollRef = useRef<HTMLDivElement>(null);
 
   const latestCue = useMemo(() => {
     const last = [...messages].reverse().find(m => m.role==="assistant" && m.cue);
@@ -1148,10 +1178,11 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
     window.scrollTo(0, 0);
   }, [embed]);
 
-  // Scroll to bottom (rAF + cheaper motion mode when requested)
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      chatEndRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+      const el = chatScrollRef.current;
+      if (!el) return;
+      el.scrollTop = el.scrollHeight;
     });
     return () => cancelAnimationFrame(id);
   }, [messages, typing, reduceMotion]);
@@ -1456,6 +1487,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
 
       {/* ══ Chat ══ */}
       <div
+        ref={chatScrollRef}
         className="relative z-10 flex-1 overflow-y-auto"
         style={{
           scrollbarWidth:"thin",
@@ -1479,8 +1511,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                       border:"1px solid rgba(200,147,158,0.2)",
                       boxShadow:"0 16px 48px -20px rgba(180,100,140,0.28), 0 1px 0 rgba(255,255,255,0.65) inset",
                     }}>
-                    <div className="px-7 pt-4 pb-0"><CelestialTopBand/></div>
-                    <div className="flex items-start gap-6 px-7 py-5">
+                    <div className="flex items-center gap-6 px-7 py-6">
                       <AvatarTagCard/>
                       <div className="flex-1 pt-1">
                         <p className={`text-[9px] tracking-[.22em] uppercase mb-2 ${displayFont.className}`}
@@ -1495,35 +1526,35 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         </p>
                       </div>
                     </div>
-                    <div className="px-7 pb-5 pt-0"><OrnamentalDivider/></div>
                   </div>
                 )}
 
                 {/* Drawing animation */}
                 {m.isDrawing && (
                   <div className="flex justify-center">
-                    <div className="relative flex items-center justify-center overflow-hidden"
+                    <div
+                      className="relative flex aspect-[170/93] w-[clamp(260px,60vw,480px)] max-w-full items-center justify-center overflow-hidden"
                       style={{
-                        width: 340,
-                        height: 186,
+                        ["--draw-orbit" as string]: "min(3.375rem, min(15.88vw, 54px))",
                         background: "linear-gradient(168deg, rgba(255,253,253,0.95) 0%, rgba(255,246,250,0.88) 58%, rgba(251,244,254,0.88) 100%)",
                         borderRadius: 18,
                         border: "1px solid rgba(200,147,158,0.22)",
                         boxShadow: "0 12px 28px -18px rgba(180,100,140,0.28)",
-                      }}>
+                      }}
+                    >
                       <div className="absolute inset-0 flex items-center justify-center"
                         style={{ animation:"orbit-ring 6.2s linear infinite", transformOrigin:"center" }}>
                         {ORBIT_ANGLES.map(angle => (
                           <div key={angle} className="absolute" style={{
                             top:"50%", left:"50%",
-                            transform:`rotate(${angle}deg) translateX(54px) translateY(-50%)`,
+                            transform:`rotate(${angle}deg) translateX(var(--draw-orbit)) translateY(-50%)`,
                             opacity:.65,
                           }}>
                             <FourPointStar size={8} color={C.accentLt}/>
                           </div>
                         ))}
                       </div>
-                      <p className={`relative z-10 text-[14px] ${serifFont.className}`} style={{ color:C.txt3 }}>
+                      <p className={`relative z-10 px-3 text-center text-[clamp(12px,3.2vw,14px)] ${serifFont.className}`} style={{ color:C.txt3 }}>
                         Consulting the stars…
                       </p>
                     </div>
@@ -1537,36 +1568,38 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                       initial={reduceMotion ? { opacity: 0 } : { rotateY: 90, scale: 0.96, opacity: 0 }}
                       animate={reduceMotion ? { opacity: 1 } : { rotateY: 0, scale: 1, opacity: 1 }}
                       transition={{ duration: reduceMotion ? 0.12 : 0.45, ease: [0.22, 1, 0.36, 1] }}
-                      className="relative"
+                      className="relative aspect-[170/93] w-[clamp(260px,60vw,480px)] max-w-full"
                       style={{
-                        width: 340,
-                        minHeight: 186,
                         background: "linear-gradient(168deg, rgba(255,253,253,0.97) 0%, rgba(255,246,250,0.9) 58%, rgba(251,244,254,0.9) 100%)",
                         borderRadius: 18,
                         boxShadow: "0 24px 56px -14px rgba(180,100,140,0.24), 0 1px 0 rgba(255,255,255,0.72) inset",
-                      }}>
+                      }}
+                    >
                       <GoldCardFrame/>
-                      <div className="relative z-10 flex h-full items-center gap-5 px-5 py-4">
+                      <div className="relative z-10 flex min-h-0 flex-col items-stretch gap-4 px-[clamp(0.875rem,3vw,1.25rem)] py-[clamp(0.875rem,2.5vw,1rem)] sm:flex-row sm:items-center sm:gap-[clamp(0.75rem,2.5vw,1.25rem)]">
                         {/* Left: Icon */}
-                        <div className="flex flex-col items-center shrink-0">
+                        <div className="flex flex-row items-center gap-3 sm:flex-col sm:gap-0">
                           <motion.div
+                            className="flex h-[clamp(2.5rem,10vmin,3rem)] w-[clamp(2.5rem,10vmin,3rem)] shrink-0 items-center justify-center"
                             initial={reduceMotion ? { opacity: 0 } : { scale: 0.88, opacity: 0 }}
                             animate={reduceMotion ? { opacity: 1 } : { scale: 1, opacity: 1 }}
-                            transition={{ delay: reduceMotion ? 0 : 0.1, duration: reduceMotion ? 0.12 : 0.36, ease: [0.22, 1, 0.36, 1] }}>
-                            <CardSymbolIcon symbol={m.cardDraw.symbol} size={48}/>
+                            transition={{ delay: reduceMotion ? 0 : 0.1, duration: reduceMotion ? 0.12 : 0.36, ease: [0.22, 1, 0.36, 1] }}
+                          >
+                            <CardSymbolIcon symbol={m.cardDraw.symbol} className="max-h-full max-w-full" />
                           </motion.div>
-                          <p className="mt-2 text-[8px] uppercase tracking-[.2em]" style={{ color: "rgba(160,140,100,0.6)" }}>
+                          <p className="mt-0 text-[clamp(7px,1.8vw,8px)] uppercase tracking-[.2em] sm:mt-2 sm:text-center" style={{ color: "rgba(160,140,100,0.6)" }}>
                             {m.cardDraw.suit}
                           </p>
                         </div>
                         {/* Vertical divider */}
-                        <div className="self-stretch" style={{ width: 1, background: "linear-gradient(180deg, transparent 0%, rgba(201,169,98,0.3) 20%, rgba(201,169,98,0.3) 80%, transparent 100%)" }}/>
+                        <div className="hidden self-stretch sm:block" style={{ width: 1, background: "linear-gradient(180deg, transparent 0%, rgba(201,169,98,0.3) 20%, rgba(201,169,98,0.3) 80%, transparent 100%)" }}/>
+                        <div className="h-px w-full shrink-0 sm:hidden" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(201,169,98,0.3) 20%, rgba(201,169,98,0.3) 80%, transparent 100%)" }}/>
                         {/* Right: Text */}
-                        <div className="flex-1 text-left">
-                          <p className={`text-[17px] font-semibold leading-tight ${serifFont.className}`} style={{ color: "#36283e" }}>
+                        <div className="min-w-0 flex-1 text-left">
+                          <p className={`text-[clamp(0.95rem,3.6vw,1.0625rem)] font-semibold leading-tight ${serifFont.className}`} style={{ color: "#36283e" }}>
                             {m.cardDraw.name}
                           </p>
-                          <p className={`mt-2.5 text-[13.5px] leading-[1.75] ${serifFont.className}`} style={{ color: "#4a4050" }}>
+                          <p className={`mt-2.5 text-[clamp(0.75rem,2.8vw,0.84rem)] leading-[1.75] ${serifFont.className}`} style={{ color: "#4a4050" }}>
                             {m.cardDraw.meaning}
                           </p>
                         </div>
@@ -1577,27 +1610,27 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
 
                 {/* Regular assistant */}
                 {!m.isOpening && !m.isDrawing && !m.cardDraw && m.role==="assistant" && (
-                  <div className="flex items-start gap-3.5">
-                    <div className="mt-1 h-7 w-7 shrink-0 overflow-hidden rounded-full"
-                      style={{ border:"1.5px solid rgba(178,152,205,0.28)", boxShadow:"0 2px 10px -3px rgba(80,50,120,0.18)" }}>
-                      <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
-                    </div>
-                    <div className="flex flex-col gap-2 max-w-[90%]">
-                      {m.mode && (
-                        <div className="flex items-center gap-1.5">
-                          <span className="rounded-full px-2.5 py-0.5 text-[8.5px] tracking-[.12em] uppercase"
-                            style={m.mode==="Astrology Consult"
-                              ? { background:"rgba(160,122,184,0.09)", border:"1px solid rgba(160,122,184,0.18)", color:C.accent }
-                              : { background:"rgba(200,147,158,0.09)", border:"1px solid rgba(200,147,158,0.18)", color:C.rose }}>
-                            {m.mode==="Astrology Consult" ? "Chart" : "Casual"}
+                  <div className="flex flex-col gap-2 max-w-[90%]">
+                    {m.mode && (
+                      <div className="flex items-center gap-1.5 pl-[2.375rem]">
+                        <span className="rounded-full px-2.5 py-0.5 text-[8.5px] tracking-[.12em] uppercase"
+                          style={m.mode==="Astrology Consult"
+                            ? { background:"rgba(160,122,184,0.09)", border:"1px solid rgba(160,122,184,0.18)", color:C.accent }
+                            : { background:"rgba(200,147,158,0.09)", border:"1px solid rgba(200,147,158,0.18)", color:C.rose }}>
+                          {m.mode==="Astrology Consult" ? "Chart" : "Casual"}
+                        </span>
+                        {m.sourceDb && (
+                          <span className="text-[9px]" style={{ color:C.txt3 }}>
+                            {m.sourceDb==="zodiac_memory_db" ? "zodiac db" : "chat db"}
                           </span>
-                          {m.sourceDb && (
-                            <span className="text-[9px]" style={{ color:C.txt3 }}>
-                              {m.sourceDb==="zodiac_memory_db" ? "zodiac db" : "chat db"}
-                            </span>
-                          )}
-                        </div>
-                      )}
+                        )}
+                      </div>
+                    )}
+                    <div className="flex items-center gap-3.5">
+                      <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full"
+                        style={{ border:"1.5px solid rgba(178,152,205,0.28)", boxShadow:"0 2px 10px -3px rgba(80,50,120,0.18)" }}>
+                        <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
+                      </div>
                       <div className="rounded-2xl rounded-tl-sm px-5 py-4"
                         style={{
                           background:"linear-gradient(158deg, rgba(255,253,253,0.92) 0%, rgba(255,246,250,0.85) 58%, rgba(251,243,254,0.85) 100%)",
@@ -1608,8 +1641,9 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                           {m.text}
                         </p>
                       </div>
-                      {/* Action icons row */}
-                      <div className="flex items-center gap-1 pl-1">
+                    </div>
+                    {/* Action icons row */}
+                    <div className="flex items-center gap-1 pl-[2.375rem]">
                         <button type="button" className="flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150"
                           style={{ color: C.txt3 }}
                           onMouseEnter={e => { e.currentTarget.style.background = "rgba(160,122,184,0.1)"; e.currentTarget.style.color = C.accent; }}
@@ -1636,7 +1670,6 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         </p>
                       )}
                     </div>
-                  </div>
                 )}
 
                 {/* User */}
@@ -1684,7 +1717,6 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
               </motion.div>
             )}
           </AnimatePresence>
-          <div ref={chatEndRef}/>
         </div>
       </div>
 

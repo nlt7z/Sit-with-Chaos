@@ -2,7 +2,6 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Noto_Serif_JP, Shippori_Mincho } from "next/font/google";
-import Link from "next/link";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { drawerKanjiFromIndex, FORTUNES, shuffleDrawerOrder, type Fortune, type ParticleKind } from "./fortunes";
 import { ParticleCanvas } from "./ParticleCanvas";
@@ -11,14 +10,14 @@ import { MAX_DAILY, useDailyLimit } from "./useDailyLimit";
 const notoSerif = Noto_Serif_JP({ subsets: ["latin"], weight: ["300", "400", "700"], display: "swap" });
 const shippori  = Shippori_Mincho({ subsets: ["latin"], weight: ["400", "700", "800"], display: "swap" });
 
-// ── Palette ────────────────────────────────────────────────────────────────────
+// ── Palette (black lacquer + gold) ────────────────────────────────────────────
 const C = {
-  bg:          "#060302",
-  cabinet:     "#1e1008",
-  cabinetFace: "#281608",
-  drawer:      "#3e2212",  // lighter so visible
-  drawerLit:   "#52301a",  // top highlight
-  drawerShadow:"#1c0e06",
+  bg:          "#050505",
+  cabinet:     "#0c0c0c",      // deep black lacquer
+  cabinetFace: "#141414",      // dark charcoal
+  drawer:      "#191714",      // near-black with faint warmth
+  drawerLit:   "#222018",      // top highlight — slightly lifted
+  drawerShadow:"#060504",      // very dark recess shadow
   gold:        "#c8a23a",
   goldLight:   "#e0b84a",
   goldBright:  "#f0cc5a",
@@ -32,21 +31,14 @@ const C = {
   vermillion:  "#c41800",
 } as const;
 
-// ── Seigaiha tiling background ─────────────────────────────────────────────────
-const seigaihaSvg = `<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'>
-  <defs>
-    <clipPath id='a'><rect width='64' height='32'/></clipPath>
-    <clipPath id='b'><rect y='32' width='64' height='32'/></clipPath>
-  </defs>
-  <g clip-path='url(#a)' fill='none' stroke='rgba(200,162,58,0.10)' stroke-width='0.8'>
-    <circle cx='0'  cy='32' r='32'/><circle cx='0'  cy='32' r='21'/><circle cx='0'  cy='32' r='10'/>
-    <circle cx='64' cy='32' r='32'/><circle cx='64' cy='32' r='21'/><circle cx='64' cy='32' r='10'/>
-  </g>
-  <g clip-path='url(#b)' fill='none' stroke='rgba(200,162,58,0.10)' stroke-width='0.8'>
-    <circle cx='32' cy='64' r='32'/><circle cx='32' cy='64' r='21'/><circle cx='32' cy='64' r='10'/>
-  </g>
-</svg>`;
-const seigaihaUrl = `url("data:image/svg+xml,${encodeURIComponent(seigaihaSvg)}")`;
+const SHRINE_BG = "/assets/Playground/omikuji-shrine-bg.png";
+
+const shrineBgStyle = {
+  backgroundImage: `url("${SHRINE_BG}")`,
+  backgroundSize: "cover" as const,
+  backgroundPosition: "center center",
+  backgroundRepeat: "no-repeat" as const,
+};
 
 // ── Level → kanji + color ──────────────────────────────────────────────────────
 const LEVEL_MAP: Record<string, { kanji: string; color: string }> = {
@@ -58,7 +50,7 @@ const LEVEL_MAP: Record<string, { kanji: string; color: string }> = {
   "GREAT CAUTION":  { kanji: "大凶", color: "#383060" },
 };
 
-// ── Kamon (家紋) ornament ──────────────────────────────────────────────────────
+// ── Kamon ornament ─────────────────────────────────────────────────────────────
 function Kamon({ size = 40 }: { size?: number }) {
   const cx = size / 2, r1 = size * 0.46, r2 = size * 0.32;
   return (
@@ -99,7 +91,6 @@ function SlipBorderH() {
         <rect key={i} x={x-2} y={y-2} width="4" height="4"
           transform={`rotate(45 ${x} ${y})`} fill={C.gold} opacity="0.32" />
       ))}
-      {/* left panel divider */}
       <line x1="144" y1="12" x2="144" y2="208" stroke={C.gold} strokeWidth="0.5" opacity="0.28" />
       <rect x="141" y="107" width="6" height="6" transform="rotate(45 144 110)" fill={C.gold} opacity="0.38" />
     </svg>
@@ -131,7 +122,6 @@ const FortuneSlip = memo(function FortuneSlip({
         className="relative z-10 select-none"
         style={{ width: 480, maxWidth: "calc(100vw - 32px)" }}
       >
-        {/* Paper body */}
         <div className="relative overflow-hidden" style={{
           borderRadius: 3,
           background: [
@@ -147,10 +137,7 @@ const FortuneSlip = memo(function FortuneSlip({
         }}>
           <SlipBorderH />
 
-          {/* Content row */}
           <div style={{ display: "flex", height: 180, padding: "14px 16px" }}>
-
-            {/* LEFT — fortune level */}
             <div style={{
               width: 112, flexShrink: 0,
               display: "flex", flexDirection: "column",
@@ -158,7 +145,6 @@ const FortuneSlip = memo(function FortuneSlip({
               paddingRight: 12,
             }}>
               <Kamon size={28} />
-
               <div style={{ textAlign: "center" }}>
                 <p id="slip-title" className={shippori.className} style={{
                   fontSize: 58, fontWeight: 800, lineHeight: 1,
@@ -174,8 +160,6 @@ const FortuneSlip = memo(function FortuneSlip({
                   御 神 籤
                 </p>
               </div>
-
-              {/* Seal stamp */}
               <div className={`${shippori.className} flex items-center justify-center rounded-full`}
                 style={{
                   width: 32, height: 32,
@@ -187,17 +171,13 @@ const FortuneSlip = memo(function FortuneSlip({
               </div>
             </div>
 
-            {/* Divider */}
             <div style={{
               width: 1, flexShrink: 0,
               background: `linear-gradient(180deg, transparent, ${C.gold}50, transparent)`,
               margin: "4px 0",
             }} />
 
-            {/* RIGHT — poem + info */}
             <div style={{ flex: 1, paddingLeft: 16, display: "flex", flexDirection: "column" }}>
-
-              {/* Horizontal poem */}
               <div className={notoSerif.className} style={{
                 flex: 1,
                 display: "flex", flexDirection: "column",
@@ -216,10 +196,8 @@ const FortuneSlip = memo(function FortuneSlip({
                 ))}
               </div>
 
-              {/* Divider */}
               <div style={{ height: 1, background: `linear-gradient(90deg, ${C.gold}40, transparent)`, margin: "8px 0 7px" }} />
 
-              {/* Lucky / unlucky */}
               <div className={notoSerif.className} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
                 <div style={{ fontSize: 9, color: C.inkMid, display: "flex", gap: 6, alignItems: "baseline" }}>
                   <span className={shippori.className} style={{ color: C.goldDim, fontSize: 8, letterSpacing: "0.1em", flexShrink: 0 }}>吉</span>
@@ -233,7 +211,6 @@ const FortuneSlip = memo(function FortuneSlip({
             </div>
           </div>
 
-          {/* Action bar */}
           <div style={{
             display: "flex", alignItems: "center", justifyContent: "center", gap: 12,
             borderTop: `1px solid ${C.gold}24`,
@@ -248,9 +225,7 @@ const FortuneSlip = memo(function FortuneSlip({
                   background: `rgba(200,162,58,0.09)`, color: C.goldDim, cursor: "pointer",
                 }}>
                 <span style={{ display: "block", lineHeight: 1.2 }}>し ま う</span>
-                <span style={{ display: "block", fontSize: 7, letterSpacing: "0.08em", opacity: 0.82, marginTop: 1 }}>
-                  Keep
-                </span>
+                <span style={{ display: "block", fontSize: 7, letterSpacing: "0.08em", opacity: 0.82, marginTop: 1 }}>Keep</span>
               </button>
             )}
             <button type="button" onClick={onClose} className={shippori.className}
@@ -260,9 +235,7 @@ const FortuneSlip = memo(function FortuneSlip({
                 background: "rgba(0,0,0,0.03)", color: C.inkMid, cursor: "pointer",
               }}>
               <span style={{ display: "block", lineHeight: 1.2 }}>閉 じ る</span>
-              <span style={{ display: "block", fontSize: 7, letterSpacing: "0.08em", opacity: 0.82, marginTop: 1 }}>
-                Close
-              </span>
+              <span style={{ display: "block", fontSize: 7, letterSpacing: "0.08em", opacity: 0.82, marginTop: 1 }}>Close</span>
             </button>
           </div>
         </div>
@@ -271,7 +244,7 @@ const FortuneSlip = memo(function FortuneSlip({
   );
 });
 
-// ── Single drawer (5×5 cabinet) ────────────────────────────────────────────────
+// ── Single drawer (5×5 cabinet) — black lacquer + gold ────────────────────────
 function Drawer({ label, disabled, isOpen, onClick }: {
   label: string; disabled: boolean; isOpen: boolean; onClick: () => void;
 }) {
@@ -280,7 +253,7 @@ function Drawer({ label, disabled, isOpen, onClick }: {
       {/* Recess */}
       <div style={{
         position: "absolute", inset: 0, borderRadius: 2,
-        background: "#020101",
+        background: "#010101",
         boxShadow: "inset 0 4px 14px rgba(0,0,0,0.99), inset 1px 1px 6px rgba(0,0,0,0.9)",
       }}>
         <AnimatePresence>
@@ -300,7 +273,7 @@ function Drawer({ label, disabled, isOpen, onClick }: {
         </AnimatePresence>
       </div>
 
-      {/* Drawer face */}
+      {/* Drawer face — black lacquer */}
       <motion.button
         type="button" disabled={disabled} onClick={onClick}
         aria-label={`引き出し ${label}${isOpen ? "（開）" : ""}${disabled ? "（使用不可）" : ""}`}
@@ -314,37 +287,36 @@ function Drawer({ label, disabled, isOpen, onClick }: {
         style={{
           position: "absolute", inset: 0, borderRadius: 2,
           transformOrigin: "50% 84%",
-          // Lighter gradient = more visible
           background: [
             `linear-gradient(170deg,`,
             `${C.drawerLit} 0%,`,
             `${C.drawer} 45%,`,
             `${C.drawerShadow} 100%)`,
           ].join(" "),
-          border: `1px solid ${C.gold}38`,
+          border: `1px solid ${C.gold}3a`,
           boxShadow: [
             `inset 0 1px 0 ${C.goldFaint}`,
-            "inset 0 -2px 5px rgba(0,0,0,0.55)",
-            `0 1px 0 rgba(0,0,0,0.7)`,
-            `0 2px 5px rgba(0,0,0,0.45)`,
+            "inset 0 -2px 5px rgba(0,0,0,0.7)",
+            `0 1px 0 rgba(0,0,0,0.8)`,
+            `0 2px 6px rgba(0,0,0,0.5)`,
           ].join(", "),
           cursor: disabled ? "not-allowed" : "pointer",
         }}
       >
-        {/* Label — larger and brighter */}
+        {/* Label */}
         <span className={shippori.className} style={{
           position: "absolute", top: 5, left: 0, right: 0, textAlign: "center",
           fontSize: 8.5, letterSpacing: "0.08em",
-          color: isOpen ? `${C.goldLight}aa` : `${C.goldLight}88`,
+          color: isOpen ? `${C.goldLight}aa` : `${C.gold}77`,
           pointerEvents: "none",
         }}>
           {label}
         </span>
 
-        {/* Top gold bevel stripe */}
+        {/* Gold bevel stripe */}
         <div style={{
           position: "absolute", top: 0, left: 0, right: 0, height: 2,
-          background: `linear-gradient(90deg, transparent, ${C.gold}28 30%, ${C.gold}44 50%, ${C.gold}28 70%, transparent)`,
+          background: `linear-gradient(90deg, transparent, ${C.gold}22 30%, ${C.gold}40 50%, ${C.gold}22 70%, transparent)`,
           borderRadius: "2px 2px 0 0",
         }} />
 
@@ -352,22 +324,22 @@ function Drawer({ label, disabled, isOpen, onClick }: {
         <div style={{
           position: "absolute", bottom: "30%", left: "50%", transform: "translateX(-50%)",
           width: 20, height: 6, borderRadius: 3,
-          background: `linear-gradient(180deg, ${C.goldDim} 0%, #3e2406 100%)`,
-          boxShadow: `0 2px 4px rgba(0,0,0,0.7), inset 0 1px 0 ${C.gold}44`,
+          background: `linear-gradient(180deg, ${C.gold}66 0%, #0e0e0e 100%)`,
+          boxShadow: `0 2px 5px rgba(0,0,0,0.85), inset 0 1px 0 ${C.gold}55`,
         }} />
         {/* Knob ring */}
         <div style={{
           position: "absolute", bottom: "22%", left: "50%", transform: "translateX(-50%)",
           width: 13, height: 7, borderRadius: "7px 7px 0 0",
-          border: `1.5px solid ${C.goldDim}cc`, borderBottom: "none",
-          boxShadow: `0 1px 4px rgba(0,0,0,0.6), inset 0 1px 0 ${C.gold}22`,
+          border: `1.5px solid ${C.gold}99`, borderBottom: "none",
+          boxShadow: `0 1px 4px rgba(0,0,0,0.7), inset 0 1px 0 ${C.gold}22`,
         }} />
 
-        {/* Subtle grain lines */}
+        {/* Subtle lacquer grain lines */}
         {[42, 60].map((p) => (
           <div key={p} style={{
             position: "absolute", top: `${p}%`, left: "12%", right: "12%",
-            height: 1, background: "rgba(0,0,0,0.14)", borderRadius: 1,
+            height: 1, background: "rgba(255,255,255,0.04)", borderRadius: 1,
           }} />
         ))}
       </motion.button>
@@ -375,21 +347,17 @@ function Drawer({ label, disabled, isOpen, onClick }: {
   );
 }
 
-// ── Decorative center slot (25th) ──────────────────────────────────────────────
+// ── Decorative center slot ─────────────────────────────────────────────────────
 function CabinetCrest() {
   return (
     <div style={{
       position: "relative", width: "100%", height: "100%", borderRadius: 2,
-      background: `linear-gradient(155deg, #241408, #160a04)`,
+      background: `linear-gradient(155deg, #1a1a1a, #080808)`,
       border: `1px solid ${C.gold}44`,
-      boxShadow: `inset 0 0 12px rgba(0,0,0,0.8), inset 0 0 0 1px ${C.gold}14`,
+      boxShadow: `inset 0 0 14px rgba(0,0,0,0.9), inset 0 0 0 1px ${C.gold}10`,
       display: "flex", alignItems: "center", justifyContent: "center",
     }}>
-      {/* Outer gold border inset */}
-      <div style={{
-        position: "absolute", inset: 3, borderRadius: 1,
-        border: `1px solid ${C.gold}28`,
-      }} />
+      <div style={{ position: "absolute", inset: 3, borderRadius: 1, border: `1px solid ${C.gold}28` }} />
       <Kamon size={36} />
     </div>
   );
@@ -409,9 +377,9 @@ function KujiTube({ count }: { count: number }) {
       <div style={{ position: "relative", width: 26, height: 48 }}>
         <div style={{
           position: "absolute", inset: 0, borderRadius: "13px 13px 3px 3px",
-          background: `linear-gradient(155deg, ${C.drawerLit}, ${C.drawer}, #110800)`,
-          border: `1px solid ${C.goldDim}55`,
-          boxShadow: "2px 4px 10px rgba(0,0,0,0.7), inset 1px 0 0 rgba(255,255,255,0.05)",
+          background: `linear-gradient(155deg, ${C.drawerLit}, ${C.drawer}, #080808)`,
+          border: `1px solid ${C.gold}44`,
+          boxShadow: "2px 4px 10px rgba(0,0,0,0.7), inset 1px 0 0 rgba(255,255,255,0.03)",
         }} />
         <div style={{
           position: "absolute", top: -3, left: -2, right: -2, height: 6, borderRadius: "50%",
@@ -469,16 +437,206 @@ function DrawsRemaining({ remaining }: { remaining: number }) {
   );
 }
 
+// ── Shrine hotspot — pulsing glow + hover ripple waves ────────────────────────
+const RIPPLE_DELAYS = [0, 0.32, 0.64] as const;
+
+// ── Orbiting stars around a center point ──────────────────────────────────────
+// The parent motion.div rotates continuously; each star is a static div at
+// its orbital position with a motion.span inside for twinkling — no transform
+// conflicts because positioning (parent) and twinkling (child) are separate.
+function OrbitStars({
+  radius,
+  items,
+  duration,
+  reverse = false,
+  hovered,
+}: {
+  radius: number;
+  items: { char: string; size: number; color: string }[];
+  duration: number;
+  reverse?: boolean;
+  hovered: boolean;
+}) {
+  return (
+    <motion.div
+      style={{
+        position: "absolute",
+        left: "50%",
+        top: "74%",
+        width: 0,
+        height: 0,
+        pointerEvents: "none",
+      }}
+      animate={{ rotate: reverse ? [0, -360] : [0, 360] }}
+      transition={{ duration, repeat: Infinity, ease: "linear", repeatType: "loop" as const }}
+    >
+      {items.map(({ char, size, color }, i) => {
+        // Evenly distribute; start from top (−π/2 offset)
+        const angle = (i / items.length) * Math.PI * 2 - Math.PI / 2;
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        return (
+          // Static div — handles x/y position without framer-motion transform clash
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              left: x,
+              top: y,
+              transform: "translate(-50%, -50%)",
+            }}
+          >
+            <motion.span
+              style={{ display: "block", fontSize: size, color, lineHeight: 1, userSelect: "none" }}
+              animate={{
+                opacity: hovered ? [0.7, 1, 0.7] : [0.22, 0.72, 0.22],
+                scale:   hovered ? [0.9, 1.5, 0.9] : [0.7, 1.15, 0.7],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: (i / items.length) * 2,
+              }}
+            >
+              {char}
+            </motion.span>
+          </div>
+        );
+      })}
+    </motion.div>
+  );
+}
+
+// calc()-based centering — no CSS transform means no framer-motion scale conflict
+const ringAt = (size: number): React.CSSProperties => ({
+  position: "absolute",
+  left:  `calc(50% - ${size / 2}px)`,
+  top:   `calc(74% - ${size / 2}px)`,
+  width: size,
+  height: size,
+  borderRadius: "50%",
+  pointerEvents: "none",
+});
+
+function ShrineHotspot({ onEnter }: { onEnter: () => void }) {
+  const [hovered, setHovered] = useState(false);
+
+  // Inner orbit: 6 small gold stars CW
+  const innerStars = [
+    { char: "✦", size: 7,  color: C.goldBright },
+    { char: "✧", size: 6,  color: C.gold       },
+    { char: "✦", size: 7,  color: C.goldLight  },
+    { char: "✧", size: 5,  color: C.gold       },
+    { char: "✦", size: 7,  color: C.goldBright },
+    { char: "✧", size: 6,  color: C.goldLight  },
+  ];
+
+  // Outer orbit: 4 floral stars CCW — larger, more feminine
+  const outerStars = [
+    { char: "✿", size: 10, color: C.goldLight  },
+    { char: "✦", size: 7,  color: C.gold       },
+    { char: "✿", size: 9,  color: C.goldBright },
+    { char: "✦", size: 6,  color: C.gold       },
+  ];
+
+  return (
+    <>
+      {/* ── Hover ripple waves ── */}
+      {RIPPLE_DELAYS.map((delay, i) => (
+        <motion.div
+          key={i}
+          style={{ ...ringAt(52), border: `1.5px solid ${C.goldLight}` }}
+          animate={hovered ? { scale: [1, 3.5], opacity: [0.85, 0] } : { scale: 1, opacity: 0 }}
+          transition={hovered
+            ? { duration: 1.1, delay, repeat: Infinity, ease: "easeOut" }
+            : { duration: 0.25 }
+          }
+        />
+      ))}
+
+      {/* ── Outer breathe ring (fades on hover) ── */}
+      <motion.div
+        style={{ ...ringAt(92), border: `1px solid ${C.gold}66` }}
+        animate={hovered
+          ? { opacity: 0.12 }
+          : { scale: [0.88, 1.46, 0.88], opacity: [0.5, 0, 0.5] }
+        }
+        transition={hovered ? { duration: 0.3 } : { duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ── Inner ring — glows on hover ── */}
+      <motion.div
+        style={{ ...ringAt(52), border: `2px solid ${C.gold}` }}
+        animate={hovered
+          ? { scale: 1.15, opacity: 1, boxShadow: `0 0 32px 12px ${C.gold}55, 0 0 64px 20px ${C.gold}22` }
+          : { scale: [1, 1.1, 1], opacity: [0.85, 0.48, 0.85], boxShadow: `0 0 14px 4px ${C.gold}33` }
+        }
+        transition={hovered ? { duration: 0.35 } : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ── Orbiting stars ── */}
+      <OrbitStars radius={35} items={innerStars} duration={15} hovered={hovered} />
+      <OrbitStars radius={58} items={outerStars} duration={22} reverse hovered={hovered} />
+
+      {/* ── Center dot ── */}
+      <motion.div
+        style={{ ...ringAt(12), background: C.goldBright }}
+        animate={hovered
+          ? { scale: 1.55, opacity: 1, boxShadow: `0 0 26px 9px ${C.gold}88, 0 0 52px 18px ${C.gold}44` }
+          : { scale: [0.9, 1.12, 0.9], opacity: [0.75, 1, 0.75], boxShadow: `0 0 12px 4px ${C.gold}66` }
+        }
+        transition={hovered ? { duration: 0.28 } : { duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* Invisible clickable / hover zone */}
+      <button
+        type="button"
+        onClick={onEnter}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        aria-label="Click the shrine to draw your fortune"
+        style={{
+          position: "absolute",
+          left: "18%", right: "18%",
+          top: "6%", bottom: "4%",
+          cursor: "pointer",
+          background: "transparent",
+          border: "none",
+          zIndex: 15,
+        }}
+      />
+
+      {/* Hint text */}
+      <motion.p
+        className={`${notoSerif.className} pointer-events-none absolute bottom-5 left-0 right-0 text-center`}
+        style={{
+          fontSize: 8.5,
+          letterSpacing: "0.28em",
+          color: "rgba(245,228,200,0.82)",
+          textShadow: "0 2px 20px rgba(0,0,0,0.95)",
+          zIndex: 16,
+        }}
+        animate={{ opacity: [0.4, 0.9, 0.4] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: "easeInOut" }}
+      >
+        click the shrine · draw your fortune
+      </motion.p>
+    </>
+  );
+}
+
 // ── Main component ─────────────────────────────────────────────────────────────
 export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
   const { remaining, limitReached, drawnIds, drawnIdxs, markAsDrawn } = useDailyLimit();
-  const [drawerOrder,    setDrawerOrder]    = useState<number[] | null>(null);
-  const [selectedFortune,setSelectedFortune]= useState<Fortune | null>(null);
-  const [showSlip,       setShowSlip]       = useState(false);
-  const [particleType,   setParticleType]   = useState<ParticleKind | null>(null);
-  const [particleDense,  setParticleDense]  = useState(false);
-  const [particleKey,    setParticleKey]    = useState(0);
-  const [collectedCount, setCollectedCount] = useState(0);
+  const [drawerOrder,     setDrawerOrder]     = useState<number[] | null>(null);
+  const [selectedFortune, setSelectedFortune] = useState<Fortune | null>(null);
+  const [showSlip,        setShowSlip]        = useState(false);
+  const [particleType,    setParticleType]    = useState<ParticleKind | null>(null);
+  const [particleDense,   setParticleDense]   = useState(false);
+  const [particleKey,     setParticleKey]     = useState(0);
+  const [collectedCount,  setCollectedCount]  = useState(0);
+  const [cabinetVisible,  setCabinetVisible]  = useState(false);
   const slipTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -489,9 +647,13 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
     } catch { /* */ }
   }, []);
 
-  useEffect(() => () => { if (slipTimer.current) clearTimeout(slipTimer.current); }, []);
+  useEffect(() => () => {
+    if (slipTimer.current) clearTimeout(slipTimer.current);
+  }, []);
 
-  // Map drawerIdx → fortune it holds today
+  const openCabinet  = useCallback(() => setCabinetVisible(true),  []);
+  const closeCabinet = useCallback(() => setCabinetVisible(false), []);
+
   const fortuneAtDrawer = useCallback(
     (drawerIdx: number): Fortune | null => {
       if (!drawerOrder) return null;
@@ -500,7 +662,6 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
     [drawerOrder],
   );
 
-  // Fortune already drawn at this drawer (if any)
   const drawnFortuneAtDrawer = useCallback(
     (drawerIdx: number): Fortune | null => {
       const pos = drawnIdxs.indexOf(drawerIdx);
@@ -517,7 +678,6 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
     (drawerIdx: number) => {
       if (!drawerOrder) return;
 
-      // Re-open already-drawn drawer
       const alreadyDrawnFortune = drawnFortuneAtDrawer(drawerIdx);
       if (alreadyDrawnFortune) {
         setSelectedFortune(alreadyDrawnFortune);
@@ -527,7 +687,6 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
 
       if (limitReached) return;
 
-      // New draw
       const fortune = fortuneAtDrawer(drawerIdx);
       if (!fortune) return;
 
@@ -543,7 +702,7 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
     [drawerOrder, drawnFortuneAtDrawer, fortuneAtDrawer, limitReached, markAsDrawn],
   );
 
-  const closeSlip    = useCallback(() => setShowSlip(false), []);
+  const closeSlip     = useCallback(() => setShowSlip(false), []);
   const handleCollect = useCallback(() => {
     const next = collectedCount + 1;
     setCollectedCount(next);
@@ -551,85 +710,162 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
     setShowSlip(false);
   }, [collectedCount]);
 
-  // ── Render ─────────────────────────────────────────────────────────────────
-  const bgStyle = useMemo(() => ({
-    backgroundColor: C.bg,
-    backgroundImage: [seigaihaUrl, "radial-gradient(ellipse 70% 50% at 50% 0%, rgba(200,162,58,0.07), transparent 60%)"].join(", "),
-    backgroundSize: "64px 64px, auto",
-    color: C.washi,
-  }), []);
+  const pageInk = { color: C.washi } as const;
 
-  if (embed) {
-    return (
-      <div className={notoSerif.className} style={{ ...bgStyle, padding: 10 }}>
-        <CabinetBox
-          drawerOrder={drawerOrder}
-          limitReached={limitReached}
-          drawnIdxs={drawnIdxs}
-          handleDrawerClick={handleDrawerClick}
-          isEmbed
+  // ── Shared render body ─────────────────────────────────────────────────────
+  const content = (
+    <>
+      {/* Solid dark backdrop */}
+      <div className="pointer-events-none absolute inset-0 z-0" style={{ background: C.bg }} />
+
+      {/* Centered shrine image — ~80% of screen, 4:3, with vignette fade */}
+      <div
+        className="absolute z-[1]"
+        style={{
+          left: "50%",
+          top: "50%",
+          transform: "translate(-50%, -50%)",
+          // Width-constrained on mobile, height-constrained on desktop landscape
+          width: "min(82vw, calc(76vh * 4 / 3))",
+          aspectRatio: "4 / 3",
+          borderRadius: 10,
+          overflow: "hidden",
+          boxShadow: [
+            `0 0 0 1px ${C.gold}14`,
+            "0 12px 80px 28px rgba(0,0,0,0.88)",
+            "0 0 120px 40px rgba(0,0,0,0.6)",
+          ].join(", "),
+        }}
+      >
+        {/* Image fill */}
+        <div className="pointer-events-none absolute inset-0" style={shrineBgStyle} />
+
+        {/* Vignette: dark fade from edges inward */}
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{
+            zIndex: 2,
+            background: [
+              "radial-gradient(ellipse 66% 60% at 50% 50%, transparent 28%, rgba(5,5,5,0.52) 62%, rgba(5,5,5,0.90) 100%)",
+              // extra dark strip at very bottom so hint text reads clearly
+              "linear-gradient(180deg, transparent 70%, rgba(5,5,5,0.72) 100%)",
+            ].join(", "),
+          }}
         />
-        {particleType && <ParticleCanvas key={particleKey} type={particleType} dense={particleDense} onComplete={onParticleComplete} />}
+
+        {/* Shrine hotspot lives inside the image so it's always aligned */}
         <AnimatePresence>
-          {showSlip && selectedFortune && (
-            <FortuneSlip fortune={selectedFortune} onClose={closeSlip} onCollect={handleCollect} collected={false} />
+          {!cabinetVisible && (
+            <motion.div
+              key="shrine-hotspot"
+              className="absolute inset-0"
+              style={{ zIndex: 3 }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.4 }}
+            >
+              <ShrineHotspot onEnter={openCabinet} />
+            </motion.div>
           )}
         </AnimatePresence>
-        {collectedCount > 0 && <KujiTube count={collectedCount} />}
-      </div>
-    );
-  }
-
-  return (
-    <div className={`flex flex-col ${notoSerif.className}`}
-      style={{ height: "100dvh", overflow: "hidden", ...bgStyle }}>
-
-      {/* ── Nav bar ─────────────────────────────────────────────────────────── */}
-      <div className="flex-none flex items-center justify-between px-6 py-3"
-        style={{ borderBottom: `1px solid ${C.gold}14` }}>
-        <Link href="/vibe-coding" className={`${shippori.className} text-[10px] tracking-[0.22em]`}
-          style={{ color: `${C.goldLight}70`, textDecoration: "none" }}>
-          ← Vibe coding
-        </Link>
-        <DrawsRemaining remaining={remaining} />
       </div>
 
-      {/* ── Content area ────────────────────────────────────────────────────── */}
-      <div className="flex-1 flex flex-col items-center justify-center overflow-hidden px-4 py-3" style={{ gap: 14 }}>
+      {/* Cabinet modal — floats in from below */}
+      <AnimatePresence>
+        {cabinetVisible && (
+          <motion.div
+            key="cabinet-overlay"
+            className="absolute inset-0 z-[20] flex flex-col items-center justify-center"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.38 }}
+            style={{
+              // Dark tint preserves the shrine image underneath — not pure black
+              background: "rgba(3,5,8,0.58)",
+              backdropFilter: "blur(5px) brightness(0.65)",
+            }}
+          >
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={closeCabinet}
+              className={`${shippori.className} absolute`}
+              style={{
+                top: embed ? 12 : 16,
+                right: embed ? 14 : 20,
+                fontSize: 9,
+                letterSpacing: "0.26em",
+                color: `${C.gold}66`,
+                background: "transparent",
+                border: "none",
+                cursor: "pointer",
+                zIndex: 5,
+              }}
+            >
+              ← 返 回
+            </button>
 
-        {/* Title — between nav and cabinet */}
-        <div className="flex flex-col items-center" style={{ gap: 4 }}>
-          <h1 className={shippori.className} style={{
-            fontSize: 22, fontWeight: 800,
-            letterSpacing: "0.5em", color: C.goldLight,
-            lineHeight: 1, textAlign: "center",
-          }}>
-            御　神　籤　箱
-          </h1>
-          <p className={notoSerif.className} style={{
-            fontSize: 8, letterSpacing: "0.32em",
-            color: `${C.gold}60`, textAlign: "center",
-          }}>
-            OMIKUJI CABINET
-          </p>
-          {limitReached && (
-            <p className={shippori.className} style={{
-              fontSize: 8.5, letterSpacing: "0.2em",
-              color: `${C.goldLight}60`, marginTop: 2,
-            }}>
-              本日の御神籤は引き終えました　·　同じ引き出しを再度開けると再読できます
-            </p>
-          )}
-        </div>
+            {/* Floating cabinet */}
+            <motion.div
+              initial={{ opacity: 0, y: 55, scale: 0.91 }}
+              animate={{ opacity: 1, y: 0,  scale: 1 }}
+              exit={{ opacity: 0, y: 35, scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 210, damping: 28, mass: 0.85 }}
+              className="flex flex-col items-center"
+              style={{ gap: 10 }}
+            >
+              {/* Title */}
+              <div className="flex flex-col items-center" style={{ gap: 3 }}>
+                <h1
+                  className={shippori.className}
+                  style={{
+                    fontSize: embed ? 17 : 21,
+                    fontWeight: 800,
+                    letterSpacing: "0.5em",
+                    color: C.goldLight,
+                    lineHeight: 1,
+                    textAlign: "center",
+                    textShadow: "0 2px 28px rgba(0,0,0,0.8), 0 0 48px rgba(0,0,0,0.5)",
+                  }}
+                >
+                  御　神　籤　箱
+                </h1>
+                <p
+                  className={notoSerif.className}
+                  style={{
+                    fontSize: 7.5,
+                    letterSpacing: "0.32em",
+                    color: `${C.gold}77`,
+                    textAlign: "center",
+                  }}
+                >
+                  OMIKUJI CABINET
+                </p>
+                {limitReached && (
+                  <p className={shippori.className} style={{
+                    fontSize: 8.5, letterSpacing: "0.2em",
+                    color: `${C.goldLight}55`, marginTop: 2, textAlign: "center",
+                  }}>
+                    本日の御神籤は引き終えました　·　同じ引き出しを再度開けると再読できます
+                  </p>
+                )}
+              </div>
 
-        {/* Cabinet */}
-        <CabinetBox
-          drawerOrder={drawerOrder}
-          limitReached={limitReached}
-          drawnIdxs={drawnIdxs}
-          handleDrawerClick={handleDrawerClick}
-        />
-      </div>
+              <DrawsRemaining remaining={remaining} />
+
+              <CabinetBox
+                drawerOrder={drawerOrder}
+                limitReached={limitReached}
+                drawnIdxs={drawnIdxs}
+                handleDrawerClick={handleDrawerClick}
+                isEmbed={embed}
+              />
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Particles */}
       {particleType && (
@@ -639,21 +875,57 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
       {/* Fortune slip */}
       <AnimatePresence>
         {showSlip && selectedFortune && (
-          <FortuneSlip
-            fortune={selectedFortune}
-            onClose={closeSlip}
-            onCollect={handleCollect}
-            collected={false}
-          />
+          <FortuneSlip fortune={selectedFortune} onClose={closeSlip} onCollect={handleCollect} collected={false} />
         )}
       </AnimatePresence>
 
       {collectedCount > 0 && <KujiTube count={collectedCount} />}
+    </>
+  );
+
+  if (embed) {
+    return (
+      <div
+        className={`relative ${notoSerif.className}`}
+        style={{
+          boxSizing: "border-box",
+          minHeight: "100dvh",
+          width: "100%",
+          backgroundColor: "#050505",
+          ...pageInk,
+        }}
+      >
+        {content}
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`relative flex flex-col overflow-hidden ${notoSerif.className}`}
+      style={{ height: "100dvh", backgroundColor: "#050505", ...pageInk }}
+    >
+      {/* Nav bar */}
+      <div
+        className="relative z-[40] flex flex-none items-center justify-end px-6 py-3"
+        style={{
+          borderBottom: `1px solid ${C.gold}10`,
+          background: "linear-gradient(180deg, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 100%)",
+          backdropFilter: "blur(8px)",
+        }}
+      >
+        <DrawsRemaining remaining={remaining} />
+      </div>
+
+      {/* Main area */}
+      <div className="relative z-[5] flex min-h-0 flex-1 overflow-hidden">
+        {content}
+      </div>
     </div>
   );
 }
 
-// ── Cabinet box (shared between embed + full page) ─────────────────────────────
+// ── Cabinet box ────────────────────────────────────────────────────────────────
 function CabinetBox({
   drawerOrder, limitReached, drawnIdxs, handleDrawerClick, isEmbed = false,
 }: {
@@ -663,10 +935,8 @@ function CabinetBox({
   handleDrawerClick: (i: number) => void;
   isEmbed?: boolean;
 }) {
-  // 5 cols × 5 rows = 25 slots; slot 12 (center) = decorative crest
-  const CREST_SLOT = 12;
+  const CREST_SLOT  = 12;
   const TOTAL_SLOTS = 25;
-  // Map slot → drawerIdx (skip crest slot)
   const slotToDrawer = useMemo(() => {
     const map: (number | null)[] = [];
     let drawerIdx = 0;
@@ -679,38 +949,38 @@ function CabinetBox({
 
   return (
     <div style={{
-      width: "min(90vw, 560px)",
+      width: "min(90vw, 520px)",
       background: `linear-gradient(170deg, ${C.cabinetFace} 0%, ${C.cabinet} 100%)`,
-      border: `2px solid ${C.gold}40`,
+      border: `2px solid ${C.gold}3c`,
       borderRadius: 6,
-      padding: isEmbed ? 10 : 14,
+      padding: isEmbed ? 10 : 13,
       boxShadow: [
         `0 0 0 3px ${C.bg}`,
-        `0 0 0 4px ${C.gold}1c`,
-        "0 28px 70px -8px rgba(0,0,0,0.95)",
-        `inset 0 1px 0 ${C.gold}1c`,
-        "inset 0 -1px 0 rgba(0,0,0,0.55)",
+        `0 0 0 4px ${C.gold}18`,
+        "0 32px 80px -8px rgba(0,0,0,0.98)",
+        `inset 0 1px 0 ${C.gold}18`,
+        "inset 0 -1px 0 rgba(0,0,0,0.6)",
       ].join(", "),
     }}>
-      {/* Top highlight */}
-      <div style={{ height: 1, marginBottom: 10, background: `linear-gradient(90deg, transparent, ${C.gold}48 50%, transparent)` }} />
+      {/* Top gold highlight */}
+      <div style={{ height: 1, marginBottom: 10, background: `linear-gradient(90deg, transparent, ${C.gold}44 50%, transparent)` }} />
 
       {/* Nameplate */}
       <div className="flex items-center justify-center" style={{
         marginBottom: 10, padding: "6px 20px",
         background: `linear-gradient(180deg, ${C.cabinetFace}, ${C.cabinet})`,
-        border: `1px solid ${C.gold}48`,
+        border: `1px solid ${C.gold}44`,
         borderRadius: 2,
-        boxShadow: `inset 0 1px 0 ${C.gold}14`,
+        boxShadow: `inset 0 1px 0 ${C.gold}10`,
       }}>
-        <div style={{ height: 1, width: 20, background: `linear-gradient(90deg, transparent, ${C.gold}55)`, marginRight: 10 }} />
+        <div style={{ height: 1, width: 20, background: `linear-gradient(90deg, transparent, ${C.gold}50)`, marginRight: 10 }} />
         <p className={shippori.className} style={{
           fontSize: isEmbed ? 11 : 13,
           letterSpacing: "0.55em", color: C.goldLight, fontWeight: 700,
         }}>
           御　神　籤　箱
         </p>
-        <div style={{ height: 1, width: 20, background: `linear-gradient(90deg, ${C.gold}55, transparent)`, marginLeft: 10 }} />
+        <div style={{ height: 1, width: 20, background: `linear-gradient(90deg, ${C.gold}50, transparent)`, marginLeft: 10 }} />
       </div>
 
       {/* 5×5 drawer grid */}
@@ -723,14 +993,14 @@ function CabinetBox({
           display: "grid",
           gridTemplateColumns: "repeat(5, 1fr)",
           gridTemplateRows: "repeat(5, 1fr)",
-          gap: isEmbed ? 5 : 7,
+          gap: isEmbed ? 5 : 6,
           aspectRatio: "1 / 1",
         }}>
           {Array.from({ length: TOTAL_SLOTS }, (_, slotIdx) => {
             const drawerIdx = slotToDrawer[slotIdx];
             if (drawerIdx === null) return <CabinetCrest key="crest" />;
-            const isOpen    = drawnIdxs.includes(drawerIdx);
-            const disabled  = limitReached && !isOpen;
+            const isOpen   = drawnIdxs.includes(drawerIdx);
+            const disabled = limitReached && !isOpen;
             return (
               <Drawer
                 key={drawerIdx}
@@ -745,12 +1015,9 @@ function CabinetBox({
       )}
 
       {/* Bottom shadow strip */}
-      <div style={{ height: 1, marginTop: 10, background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.5) 50%, transparent)" }} />
+      <div style={{ height: 1, marginTop: 10, background: "linear-gradient(90deg, transparent, rgba(0,0,0,0.6) 50%, transparent)" }} />
     </div>
   );
 }
-
-// Need useMemo in CabinetBox — add it to imports check
-// (useMemo is already imported at the top)
 
 export default OmikujiCabinetClient;

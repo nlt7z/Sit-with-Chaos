@@ -8,7 +8,8 @@ import { useEffect, useRef, useState } from "react";
 const heading = "Hello, I'm Yuan Fang.";
 const subheading =
   "Designing AI-native products with AI — from research to shipped code.";
-const supporting = "MS @ UW HCDE  ·  UX Designer @ Alibaba";
+const credentialLinkClass =
+  "underline decoration-black/[0.18] underline-offset-[3px] transition-[color,text-decoration-color] hover:text-textPrimary hover:decoration-black/[0.35] focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2";
 const heroHalftoneSrc = "/assets/Playground/nlt_halftone_dense_v3.html";
 
 export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
@@ -225,7 +226,26 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
               {subheading}
             </p>
 
-            <p className="mt-3 font-mono text-sm text-textSecondary md:mt-4">{supporting}</p>
+            <p className="mt-3 font-mono text-sm text-textSecondary md:mt-4">
+              MS @{" "}
+              <a
+                href="https://www.hcde.washington.edu/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={credentialLinkClass}
+              >
+                UW HCDE
+              </a>
+              {"  ·  "}UX Designer @{" "}
+              <a
+                href="https://www.alibabacloud.com/en?_p_lc=5&utm_content=se_1016865603&gclid=Cj0KCQjwh-HPBhCIARIsAC0p3cdFPZetcbRsE45aW3HtGIhQErVmw69gjQ65dhIasOASijh7Pp-WmckaAjc6EALw_wcB"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={credentialLinkClass}
+              >
+                Alibaba
+              </a>
+            </p>
           </BlurReveal>
         </div>
 

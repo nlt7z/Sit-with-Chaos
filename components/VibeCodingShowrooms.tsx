@@ -2,8 +2,12 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
+
+/** All embedded previews use the same 16:9 stage; width scales from a height cap. */
+const PREVIEW_16_9 = { aspectW: 16, aspectH: 9, maxVh: 78, maxPx: 860 } as const;
 
 const showrooms = [
   {
@@ -75,6 +79,28 @@ const showroomStyle = {
   },
 } as const;
 
+function PrototypeFrame({
+  className,
+  children,
+}: {
+  className?: string;
+  children: ReactNode;
+}) {
+  const { aspectW, aspectH, maxVh, maxPx } = PREVIEW_16_9;
+  const ratio = aspectW / aspectH;
+  return (
+    <div
+      className={className}
+      style={{
+        aspectRatio: `${aspectW} / ${aspectH}`,
+        width: `min(100%, calc(min(${maxVh}vh, ${maxPx}px) * ${ratio}))`,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 /** Full-height showroom stack (moved from About). */
 export function VibeCodingShowrooms() {
   const rm = useReducedMotion();
@@ -143,14 +169,16 @@ export function VibeCodingShowrooms() {
               </div>
             </div>
 
-            <div className={`border-t ${st.iframeBorder}`}>
-              <iframe
-                key={s.src}
-                title={s.iframeTitle}
-                src={s.src}
-                className={`block h-[min(72vh,780px)] min-h-[480px] w-full md:min-h-[560px] ${s.iframeBg}`}
-                loading="lazy"
-              />
+            <div className={`flex justify-center border-t ${st.iframeBorder}`}>
+              <PrototypeFrame className="relative w-full overflow-hidden">
+                <iframe
+                  key={s.src}
+                  title={s.iframeTitle}
+                  src={s.src}
+                  className={`absolute inset-0 block h-full w-full border-0 ${s.iframeBg}`}
+                  loading="lazy"
+                />
+              </PrototypeFrame>
             </div>
           </motion.div>
         );

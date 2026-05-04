@@ -1499,17 +1499,19 @@ export default function PsychShowroomPrototypeClient({ embed = false }: { embed?
   const [cfgTopP,   setCfgTopP]   = useState(0.95);
   const [cloneCopied, setCloneCopied] = useState(false);
 
-  const chatEnd    = useRef<HTMLDivElement>(null);
+  /** Chat column scroll — avoid scrollIntoView so parent /work/ai-character does not jump when this runs inside an iframe. */
+  const chatScrollRef = useRef<HTMLDivElement>(null);
   const timersRef  = useRef<ReturnType<typeof setTimeout>[]>([]);
   const guideInputFocusRef = useRef<(() => void) | null>(null);
 
   // Cleanup timers
   useEffect(() => () => timersRef.current.forEach(clearTimeout), []);
 
-  // Auto-scroll
   useEffect(() => {
     const id = requestAnimationFrame(() => {
-      chatEnd.current?.scrollIntoView({ behavior: rm ? "auto" : "smooth" });
+      const el = chatScrollRef.current;
+      if (!el) return;
+      el.scrollTop = el.scrollHeight;
     });
     return () => cancelAnimationFrame(id);
   }, [messages, build, rm]);
@@ -1763,8 +1765,11 @@ export default function PsychShowroomPrototypeClient({ embed = false }: { embed?
       <div className="flex min-h-0 flex-1 flex-row overflow-hidden">
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       {/* ── Chat feed ── */}
-      <div className="relative z-10 flex-1 overflow-y-auto"
-        style={{ scrollbarWidth: "thin", scrollbarColor: `rgba(0,0,0,0.06) transparent` }}>
+      <div
+        ref={chatScrollRef}
+        className="relative z-10 flex-1 overflow-y-auto"
+        style={{ scrollbarWidth: "thin", scrollbarColor: `rgba(0,0,0,0.06) transparent` }}
+      >
         <div className="mx-auto w-full max-w-[720px] px-8 pt-10 pb-6">
 
           {/* Intro strip */}
@@ -1845,7 +1850,7 @@ export default function PsychShowroomPrototypeClient({ embed = false }: { embed?
             )}
           </AnimatePresence>
 
-          <div ref={chatEnd} className="h-4"/>
+          <div className="h-4" aria-hidden />
         </div>
       </div>
 

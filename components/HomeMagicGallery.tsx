@@ -13,10 +13,10 @@ const magicPreviews = [
     href: "/code/playground/omikuji",
     category: "御神籤",
     summary: "おみくじ",
-    panelBg: "bg-[#f4e2e8]",
+    panelBg: "bg-[#061a22]",
     kind: "image" as const,
-    mediaSrc: "/assets/magic/omikuji-home-preview.jpg",
-    mediaAlt: "Omikuji temple backdrop",
+    mediaSrc: "/assets/Playground/omikuji-shrine-bg.png",
+    mediaAlt: "Shrine torii and omikuji cabinet — teal and gold illustration",
     mediaClassName: "object-cover object-center",
   },
   {
@@ -30,13 +30,11 @@ const magicPreviews = [
   },
   {
     href: "/work/ai-character/prototype-psych",
-    kind: "image" as const,
-    mediaSrc: "/assets/magic/therapy-card.png",
-    mediaAlt: "Therapy showroom universe-embrace visual",
+    kind: "gradient" as const,
     category: "Therapy",
     summary: "Therapy Room",
-    panelBg: "bg-[#dce8f6]",
-    mediaClassName: "object-cover object-center",
+    panelBg:
+      "bg-gradient-to-br from-sky-50 via-[#e8f3fc] to-[#d4ebf5]",
   },
   {
     href: "/work/ai-character/prototype-astro",
@@ -55,8 +53,13 @@ export function HomeMagicGallery() {
   const inView = useInView(ref, { once: true, margin: "-8% 0px" });
   const prefersReducedMotion = useReducedMotion();
 
+  const cardHover = prefersReducedMotion
+    ? {}
+    : { y: -4, scale: 1.012, transition: { duration: 0.45, ease: easePortfolio } };
+
   const renderCardMedia = (item: (typeof magicPreviews)[number], eager = false) => {
     if (!inView) return null;
+    if (item.kind === "gradient") return null;
     if (item.kind === "video") {
       return (
         <video
@@ -117,16 +120,27 @@ export function HomeMagicGallery() {
           aria-label="Vibe coding preview gallery"
         >
           {magicPreviews.map((item, index) => (
-            <div
+            <motion.div
               key={`${item.category}-${item.summary}`}
               role="listitem"
-              className="relative flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.07]"
+              whileHover={cardHover}
+              className="group relative flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.07] transition-[box-shadow,ring-color] duration-500 ease-portfolio hover:shadow-[0_20px_56px_-22px_rgba(0,0,0,0.18)] hover:ring-black/[0.11] focus-within:shadow-[0_20px_56px_-22px_rgba(0,0,0,0.18)] focus-within:ring-black/[0.11]"
             >
               <div className={`relative aspect-[4/5] w-full shrink-0 overflow-hidden sm:aspect-[5/6] ${item.panelBg}`}>
-                {renderCardMedia(item, index === 0)}
+                <div
+                  className={`absolute inset-0 origin-center will-change-transform ${
+                    prefersReducedMotion
+                      ? ""
+                      : "transition-transform duration-[420ms] ease-portfolio group-hover:scale-[1.03] group-focus-within:scale-[1.03]"
+                  }`}
+                >
+                  {renderCardMedia(item, index === 0)}
+                </div>
               </div>
               <div className="relative border-t border-black/[0.06] px-3 py-3 md:px-3.5 md:py-3.5">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary">{item.category}</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary transition-colors duration-300 group-hover:text-textPrimary/80 group-focus-within:text-textPrimary/80">
+                  {item.category}
+                </p>
                 <p className="mt-1.5 text-pretty font-display text-[16px] font-light leading-snug text-textPrimary md:text-[17px]">
                   {item.summary}
                 </p>
@@ -137,7 +151,7 @@ export function HomeMagicGallery() {
                 className="absolute inset-0 z-10 rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 focus-visible:ring-offset-surfaceAlt"
                 aria-label={`Open — ${item.summary}`}
               />
-            </div>
+            </motion.div>
           ))}
         </motion.div>
       </div>
