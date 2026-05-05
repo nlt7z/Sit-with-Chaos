@@ -3,6 +3,7 @@
 import { BlurReveal } from "@/registry/spell-ui/blur-reveal";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 const heading = "Hello, I'm Yuan Fang.";
@@ -12,19 +13,20 @@ const credentialLinkClass =
   "underline decoration-black/[0.18] underline-offset-[3px] transition-[color,text-decoration-color] hover:text-textPrimary hover:decoration-black/[0.35] focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2";
 const heroHalftoneSrc = "/assets/Playground/nlt_halftone_dense_v3.html";
 
-export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
+export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const reduced = !!prefersReducedMotion;
   const ref = useRef<HTMLElement | null>(null);
   const [halftoneMounted, setHalftoneMounted] = useState(false);
   const [halftoneHovered, setHalftoneHovered] = useState(false);
-  const [gachaSwitchOn, setGachaSwitchOn] = useState(false);
+  const [vendingSwitchOn, setVendingSwitchOn] = useState(false);
   const [mousePos, setMousePos] = useState({ x: -9999, y: -9999 });
-  const gachaOpenTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const vendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     return () => {
-      if (gachaOpenTimerRef.current) clearTimeout(gachaOpenTimerRef.current);
+      if (vendingTimerRef.current) clearTimeout(vendingTimerRef.current);
     };
   }, []);
 
@@ -67,16 +69,16 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
   const halftoneY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : -48]);
   const textY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 22]);
 
-  const handleGachaSwitch = () => {
-    if (!onGachaToggle || gachaSwitchOn) return;
+  const handleVendingSwitch = () => {
+    if (vendingSwitchOn) return;
     if (reduced) {
-      onGachaToggle();
+      router.push("/vending");
       return;
     }
-    setGachaSwitchOn(true);
-    gachaOpenTimerRef.current = setTimeout(() => {
-      gachaOpenTimerRef.current = null;
-      onGachaToggle();
+    setVendingSwitchOn(true);
+    vendingTimerRef.current = setTimeout(() => {
+      vendingTimerRef.current = null;
+      router.push("/vending");
     }, 300);
   };
 
@@ -312,47 +314,45 @@ export function Hero({ onGachaToggle }: { onGachaToggle?: () => void }) {
           </motion.a>
         )}
 
-        {onGachaToggle && (
-          <motion.div
-            initial={reduced ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.6, delay: reduced ? 0 : 1.48 }}
-            className="mt-4 flex justify-center"
+        <motion.div
+          initial={reduced ? false : { opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: reduced ? 0 : 1.48 }}
+          className="mt-4 flex justify-center"
+        >
+          <button
+            type="button"
+            role="switch"
+            aria-checked={vendingSwitchOn}
+            aria-busy={vendingSwitchOn}
+            aria-label="Switch to vending machine view"
+            onClick={handleVendingSwitch}
+            className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-transparent px-2 py-2 transition-colors hover:border-black/[0.07] hover:bg-neutral-50/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 disabled:cursor-wait"
+            disabled={vendingSwitchOn}
           >
-            <button
-              type="button"
-              role="switch"
-              aria-checked={gachaSwitchOn}
-              aria-busy={gachaSwitchOn}
-              aria-label="Omikuji · Draw a project"
-              onClick={handleGachaSwitch}
-              className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-transparent px-2 py-2 transition-colors hover:border-black/[0.07] hover:bg-neutral-50/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 disabled:cursor-wait"
-              disabled={gachaSwitchOn}
+            <span
+              className={`relative h-[1.375rem] w-[2.625rem] shrink-0 rounded-full border transition-[border-color,background-color] duration-300 ease-out ${
+                vendingSwitchOn
+                  ? "border-[#c9a030]/55 bg-[#c9a030]/22"
+                  : "border-black/[0.12] bg-neutral-200/80 group-hover:border-black/[0.18] group-hover:bg-neutral-200"
+              }`}
+              aria-hidden
             >
               <span
-                className={`relative h-[1.375rem] w-[2.625rem] shrink-0 rounded-full border transition-[border-color,background-color] duration-300 ease-out ${
-                  gachaSwitchOn
-                    ? "border-[#c9a030]/55 bg-[#c9a030]/22"
-                    : "border-black/[0.12] bg-neutral-200/80 group-hover:border-black/[0.18] group-hover:bg-neutral-200"
+                className={`pointer-events-none absolute left-[3px] top-1/2 size-[1.125rem] -translate-y-1/2 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.1)] ring-1 ring-black/[0.06] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  vendingSwitchOn ? "translate-x-[1.125rem]" : "translate-x-0"
                 }`}
-                aria-hidden
-              >
-                <span
-                  className={`pointer-events-none absolute left-[3px] top-1/2 size-[1.125rem] -translate-y-1/2 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.1)] ring-1 ring-black/[0.06] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                    gachaSwitchOn ? "translate-x-[1.125rem]" : "translate-x-0"
-                  }`}
-                />
-              </span>
-              <span
-                className={`font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                  gachaSwitchOn ? "text-textSecondary/75" : "text-textSecondary/50 group-hover:text-textSecondary"
-                }`}
-              >
-                Omikuji · Draw a Project
-              </span>
-            </button>
-          </motion.div>
-        )}
+              />
+            </span>
+            <span
+              className={`font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
+                vendingSwitchOn ? "text-textSecondary/75" : "text-textSecondary/50 group-hover:text-textSecondary"
+              }`}
+            >
+              Vending Machine
+            </span>
+          </button>
+        </motion.div>
       </motion.div>
     </section>
   );

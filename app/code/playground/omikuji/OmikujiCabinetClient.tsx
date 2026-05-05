@@ -31,7 +31,7 @@ const C = {
   vermillion:  "#c41800",
 } as const;
 
-const SHRINE_BG = "/assets/Playground/omikuji-shrine-bg.png";
+const SHRINE_BG = "/assets/Playground/omikuji-bg.png";
 
 const shrineBgStyle = {
   backgroundImage: `url("${SHRINE_BG}")`,
@@ -46,8 +46,6 @@ const LEVEL_MAP: Record<string, { kanji: string; color: string }> = {
   "BLESSING":       { kanji: "中吉", color: "#b07a20" },
   "SMALL BLESSING": { kanji: "小吉", color: "#6a8040" },
   "FAINT BLESSING": { kanji: "末吉", color: "#4a7080" },
-  "CAUTION":        { kanji: "凶",   color: "#6a5a8a" },
-  "GREAT CAUTION":  { kanji: "大凶", color: "#383060" },
 };
 
 // ── Kamon ornament ─────────────────────────────────────────────────────────────
@@ -303,45 +301,20 @@ function Drawer({ label, disabled, isOpen, onClick }: {
           cursor: disabled ? "not-allowed" : "pointer",
         }}
       >
-        {/* Label */}
-        <span className={shippori.className} style={{
-          position: "absolute", top: 5, left: 0, right: 0, textAlign: "center",
-          fontSize: 8.5, letterSpacing: "0.08em",
-          color: isOpen ? `${C.goldLight}aa` : `${C.gold}77`,
-          pointerEvents: "none",
-        }}>
-          {label}
-        </span>
-
-        {/* Gold bevel stripe */}
-        <div style={{
-          position: "absolute", top: 0, left: 0, right: 0, height: 2,
-          background: `linear-gradient(90deg, transparent, ${C.gold}22 30%, ${C.gold}40 50%, ${C.gold}22 70%, transparent)`,
-          borderRadius: "2px 2px 0 0",
-        }} />
-
-        {/* Knob plate */}
-        <div style={{
-          position: "absolute", bottom: "30%", left: "50%", transform: "translateX(-50%)",
-          width: 20, height: 6, borderRadius: 3,
-          background: `linear-gradient(180deg, ${C.gold}66 0%, #0e0e0e 100%)`,
-          boxShadow: `0 2px 5px rgba(0,0,0,0.85), inset 0 1px 0 ${C.gold}55`,
-        }} />
-        {/* Knob ring */}
-        <div style={{
-          position: "absolute", bottom: "22%", left: "50%", transform: "translateX(-50%)",
-          width: 13, height: 7, borderRadius: "7px 7px 0 0",
-          border: `1.5px solid ${C.gold}99`, borderBottom: "none",
-          boxShadow: `0 1px 4px rgba(0,0,0,0.7), inset 0 1px 0 ${C.gold}22`,
-        }} />
-
-        {/* Subtle lacquer grain lines */}
-        {[42, 60].map((p) => (
-          <div key={p} style={{
-            position: "absolute", top: `${p}%`, left: "12%", right: "12%",
-            height: 1, background: "rgba(255,255,255,0.04)", borderRadius: 1,
-          }} />
-        ))}
+        {/* Cabinet image overlay */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/Playground/cab.png"
+          alt=""
+          aria-hidden
+          style={{
+            position: "absolute", inset: 0,
+            width: "100%", height: "100%",
+            objectFit: "cover",
+            borderRadius: 2,
+            pointerEvents: "none",
+          }}
+        />
       </motion.button>
     </div>
   );
@@ -524,69 +497,92 @@ function ShrineHotspot({ onEnter }: { onEnter: () => void }) {
 
   // Inner orbit: 6 small gold stars CW
   const innerStars = [
-    { char: "✦", size: 7,  color: C.goldBright },
-    { char: "✧", size: 6,  color: C.gold       },
-    { char: "✦", size: 7,  color: C.goldLight  },
+    { char: "✦", size: 6,  color: C.goldBright },
     { char: "✧", size: 5,  color: C.gold       },
-    { char: "✦", size: 7,  color: C.goldBright },
-    { char: "✧", size: 6,  color: C.goldLight  },
+    { char: "✦", size: 6,  color: C.goldLight  },
+    { char: "✧", size: 4,  color: C.gold       },
+    { char: "✦", size: 6,  color: C.goldBright },
+    { char: "✧", size: 5,  color: C.goldLight  },
   ];
 
-  // Outer orbit: 4 floral stars CCW — larger, more feminine
+  // Outer orbit: 4 floral stars CCW
   const outerStars = [
-    { char: "✿", size: 10, color: C.goldLight  },
-    { char: "✦", size: 7,  color: C.gold       },
-    { char: "✿", size: 9,  color: C.goldBright },
+    { char: "✿", size: 8,  color: C.goldLight  },
     { char: "✦", size: 6,  color: C.gold       },
+    { char: "✿", size: 7,  color: C.goldBright },
+    { char: "✦", size: 5,  color: C.gold       },
   ];
 
   return (
     <>
-      {/* ── Hover ripple waves ── */}
+      {/* ── Hover ripple waves — hairline ── */}
       {RIPPLE_DELAYS.map((delay, i) => (
         <motion.div
           key={i}
-          style={{ ...ringAt(52), border: `1.5px solid ${C.goldLight}` }}
-          animate={hovered ? { scale: [1, 3.5], opacity: [0.85, 0] } : { scale: 1, opacity: 0 }}
+          style={{ ...ringAt(46), border: `0.5px solid ${C.goldLight}` }}
+          animate={hovered ? { scale: [1, 3.6], opacity: [0.5, 0] } : { scale: 1, opacity: 0 }}
           transition={hovered
-            ? { duration: 1.1, delay, repeat: Infinity, ease: "easeOut" }
-            : { duration: 0.25 }
+            ? { duration: 1.2, delay, repeat: Infinity, ease: "easeOut" }
+            : { duration: 0.2 }
           }
         />
       ))}
 
-      {/* ── Outer breathe ring (fades on hover) ── */}
+      {/* ── Outer breathe ring — hairline ── */}
       <motion.div
-        style={{ ...ringAt(92), border: `1px solid ${C.gold}66` }}
+        style={{ ...ringAt(86), border: `0.4px solid ${C.gold}44` }}
         animate={hovered
-          ? { opacity: 0.12 }
-          : { scale: [0.88, 1.46, 0.88], opacity: [0.5, 0, 0.5] }
+          ? { opacity: 0.18, scale: 1 }
+          : { scale: [0.9, 1.42, 0.9], opacity: [0.38, 0, 0.38] }
         }
-        transition={hovered ? { duration: 0.3 } : { duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+        transition={hovered ? { duration: 0.35 } : { duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* ── Inner ring — glows on hover ── */}
+      {/* ── Mid ring — appears on hover only ── */}
       <motion.div
-        style={{ ...ringAt(52), border: `2px solid ${C.gold}` }}
+        style={{ ...ringAt(64), border: `0.4px solid ${C.gold}` }}
         animate={hovered
-          ? { scale: 1.15, opacity: 1, boxShadow: `0 0 32px 12px ${C.gold}55, 0 0 64px 20px ${C.gold}22` }
-          : { scale: [1, 1.1, 1], opacity: [0.85, 0.48, 0.85], boxShadow: `0 0 14px 4px ${C.gold}33` }
+          ? { opacity: [0.25, 0.55, 0.25], scale: [0.97, 1.03, 0.97] }
+          : { opacity: 0 }
+        }
+        transition={hovered
+          ? { duration: 2.4, repeat: Infinity, ease: "easeInOut" }
+          : { duration: 0.25 }
+        }
+      />
+
+      {/* ── Inner ring — hairline glow on hover ── */}
+      <motion.div
+        style={{ ...ringAt(46), border: `0.75px solid ${C.gold}` }}
+        animate={hovered
+          ? { scale: 1.12, opacity: 1, boxShadow: `0 0 18px 6px ${C.gold}38, 0 0 44px 14px ${C.gold}14` }
+          : { scale: [1, 1.08, 1], opacity: [0.7, 0.38, 0.7], boxShadow: `0 0 8px 2px ${C.gold}22` }
         }
         transition={hovered ? { duration: 0.35 } : { duration: 2.2, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* ── Orbiting stars ── */}
-      <OrbitStars radius={35} items={innerStars} duration={15} hovered={hovered} />
-      <OrbitStars radius={58} items={outerStars} duration={22} reverse hovered={hovered} />
-
-      {/* ── Center dot ── */}
+      {/* ── Innermost static hairline ── */}
       <motion.div
-        style={{ ...ringAt(12), background: C.goldBright }}
+        style={{ ...ringAt(30), border: `0.4px solid ${C.gold}30` }}
         animate={hovered
-          ? { scale: 1.55, opacity: 1, boxShadow: `0 0 26px 9px ${C.gold}88, 0 0 52px 18px ${C.gold}44` }
-          : { scale: [0.9, 1.12, 0.9], opacity: [0.75, 1, 0.75], boxShadow: `0 0 12px 4px ${C.gold}66` }
+          ? { opacity: [0.4, 0.7, 0.4] }
+          : { opacity: [0.15, 0.35, 0.15] }
         }
-        transition={hovered ? { duration: 0.28 } : { duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+        transition={{ duration: 2.0, repeat: Infinity, ease: "easeInOut" }}
+      />
+
+      {/* ── Orbiting stars ── */}
+      <OrbitStars radius={32} items={innerStars} duration={16} hovered={hovered} />
+      <OrbitStars radius={54} items={outerStars} duration={24} reverse hovered={hovered} />
+
+      {/* ── Center dot — refined ── */}
+      <motion.div
+        style={{ ...ringAt(7), background: C.goldBright, borderRadius: "50%" }}
+        animate={hovered
+          ? { scale: 1.6, opacity: 1, boxShadow: `0 0 16px 5px ${C.gold}70, 0 0 36px 12px ${C.gold}30` }
+          : { scale: [0.88, 1.08, 0.88], opacity: [0.65, 1, 0.65], boxShadow: `0 0 8px 2px ${C.gold}55` }
+        }
+        transition={hovered ? { duration: 0.3 } : { duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
       />
 
       {/* Invisible clickable / hover zone */}
@@ -726,29 +722,29 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
           top: "50%",
           transform: "translate(-50%, -50%)",
           // Width-constrained on mobile, height-constrained on desktop landscape
-          width: "min(82vw, calc(76vh * 4 / 3))",
+          width: "min(90vw, calc(84vh * 4 / 3))",
           aspectRatio: "4 / 3",
           borderRadius: 10,
           overflow: "hidden",
           boxShadow: [
-            `0 0 0 1px ${C.gold}14`,
-            "0 12px 80px 28px rgba(0,0,0,0.88)",
-            "0 0 120px 40px rgba(0,0,0,0.6)",
+            `0 0 0 1px ${C.gold}18`,
+            "0 12px 60px 16px rgba(0,0,0,0.65)",
+            "0 0 80px 24px rgba(0,0,0,0.38)",
           ].join(", "),
         }}
       >
         {/* Image fill */}
         <div className="pointer-events-none absolute inset-0" style={shrineBgStyle} />
 
-        {/* Vignette: dark fade from edges inward */}
+        {/* Vignette: light edge fade — keeps center image bright */}
         <div
           className="pointer-events-none absolute inset-0"
           style={{
             zIndex: 2,
             background: [
-              "radial-gradient(ellipse 66% 60% at 50% 50%, transparent 28%, rgba(5,5,5,0.52) 62%, rgba(5,5,5,0.90) 100%)",
-              // extra dark strip at very bottom so hint text reads clearly
-              "linear-gradient(180deg, transparent 70%, rgba(5,5,5,0.72) 100%)",
+              "radial-gradient(ellipse 70% 65% at 50% 50%, transparent 35%, rgba(5,5,5,0.22) 65%, rgba(5,5,5,0.62) 100%)",
+              // subtle bottom strip so hint text stays legible
+              "linear-gradient(180deg, transparent 72%, rgba(5,5,5,0.48) 100%)",
             ].join(", "),
           }}
         />
@@ -781,10 +777,12 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.38 }}
+            onClick={closeCabinet}
             style={{
               // Dark tint preserves the shrine image underneath — not pure black
               background: "rgba(3,5,8,0.58)",
               backdropFilter: "blur(5px) brightness(0.65)",
+              cursor: "pointer",
             }}
           >
             {/* Close button */}
@@ -807,7 +805,7 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
               ← 返 回
             </button>
 
-            {/* Floating cabinet */}
+            {/* Floating cabinet — stop propagation so clicks inside don't close */}
             <motion.div
               initial={{ opacity: 0, y: 55, scale: 0.91 }}
               animate={{ opacity: 1, y: 0,  scale: 1 }}
@@ -815,6 +813,7 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
               transition={{ type: "spring", stiffness: 210, damping: 28, mass: 0.85 }}
               className="flex flex-col items-center"
               style={{ gap: 10 }}
+              onClick={(e) => e.stopPropagation()}
             >
               {/* Title */}
               <div className="flex flex-col items-center" style={{ gap: 3 }}>

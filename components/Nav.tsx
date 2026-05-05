@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 
 const navLinks = [
-  { label: "Work", href: "/?view=main#work" },
+  { label: "Work", href: "/#work" },
   { label: "About", href: "/about" },
   { label: "Coding", href: "/vibe-coding" },
 ] as const;
@@ -68,7 +68,7 @@ export function Nav({ variant = "light" }: NavProps) {
           aria-label="Main"
         >
           <Link
-            href="/?view=main"
+            href="/"
             className={`font-mono text-sm font-medium tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
               isDark
                 ? "text-zinc-100 focus-visible:ring-white/50 focus-visible:ring-offset-[#060608]"

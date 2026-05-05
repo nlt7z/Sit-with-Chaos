@@ -2,187 +2,138 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
-/** All embedded previews use the same 16:9 stage; width scales from a height cap. */
-const PREVIEW_16_9 = { aspectW: 16, aspectH: 9, maxVh: 78, maxPx: 860 } as const;
+const NATURAL_W = 1280;
+const NATURAL_H = 860;
 
 const showrooms = [
   {
-    id: "astro" as const,
-    label: "Astrology",
-    title: "Astro Showroom · Tao Baibai",
-    tagline: "Constellation profile updates live while you chat.",
-    href: "/work/ai-character/prototype-astro",
-    src: "/work/ai-character/prototype-astro?embed=1",
-    iframeTitle: "Zodiac Showroom interactive prototype",
-    iframeBg: "bg-[#fdfaf5]",
+    id: "romance" as const,
+    label: "Romance · Meet with Lucien",
+    href: "/work/ai-character/prototype",
+    src: "/work/ai-character/prototype?muted=1",
+    iframeTitle: "Romance Showroom interactive prototype",
+    iframeBg: "bg-[#060608]",
+    caseStudy: "/work/ai-character",
+  },
+  {
+    id: "omikuji" as const,
+    label: "Omikuji · 御神籤",
+    href: "/code/playground/omikuji",
+    src: "/code/playground/omikuji?embed=1",
+    iframeTitle: "Omikuji Cabinet interactive prototype",
+    iframeBg: "bg-[#060608]",
+  },
+  {
+    id: "gacha" as const,
+    label: "Magic Lamp · Portfolio Draw",
+    href: "/code/playground/gacha",
+    src: "/code/playground/gacha?embed=1",
+    iframeTitle: "Magic Lamp gacha cabinet interactive prototype",
+    iframeBg: "bg-[#070605]",
   },
   {
     id: "therapy" as const,
-    label: "Therapy",
-    title: "Therapy Room · Therapy Space",
-    tagline: "Analysis rail beside the thread — what the model understood, visible.",
+    label: "Therapy Room",
     href: "/work/ai-character/prototype-psych",
     src: "/work/ai-character/prototype-psych?embed=1",
     iframeTitle: "Therapy Room interactive prototype",
     iframeBg: "bg-[#f8fcff]",
   },
   {
-    id: "romance" as const,
-    label: "Romance",
-    title: "Meet with Lucien",
-    tagline: "Long-term memory and emotional pacing in one flow.",
-    href: "/work/ai-character/prototype",
-    src: "/work/ai-character/prototype?muted=1",
-    iframeTitle: "Romance Showroom interactive prototype",
-    iframeBg: "bg-[#060608]",
-  },
-  {
-    id: "omikuji" as const,
-    label: "Omikuji",
-    title: "Omikuji Cabinet · 御神籤",
-    tagline: "Draw a fortune, open the drawer, and keep the ritual playful.",
-    href: "/code/playground/omikuji",
-    src: "/code/playground/omikuji?embed=1",
-    iframeTitle: "Omikuji Cabinet interactive prototype",
-    iframeBg: "bg-[#060608]",
+    id: "astro" as const,
+    label: "Astrology · Tao Baibai",
+    href: "/work/ai-character/prototype-astro",
+    src: "/work/ai-character/prototype-astro?embed=1",
+    iframeTitle: "Zodiac Showroom interactive prototype",
+    iframeBg: "bg-[#fdfaf5]",
   },
 ] as const;
 
-const showroomStyle = {
-  astro: {
-    card: "border-black/[0.08] bg-[linear-gradient(156deg,#fffdf8_0%,#fff7f3_34%,#f7f8ef_66%,#fff8e9_100%)] ring-1 ring-black/[0.05]",
-    eyebrow: "text-[#8a7a52]",
-    link: "text-[#7b6a3f] hover:text-[#5f5130]",
-    iframeBorder: "border-black/[0.08]",
-  },
-  therapy: {
-    card: "border-black/[0.08] bg-[linear-gradient(158deg,#f7fbff_0%,#eff7ff_42%,#e9f4ff_100%)] ring-1 ring-black/[0.05]",
-    eyebrow: "text-[#2f75aa]",
-    link: "text-[#1f6ea8] hover:text-[#18557f]",
-    iframeBorder: "border-black/[0.08]",
-  },
-  romance: {
-    card: "border-black/[0.08] bg-[linear-gradient(160deg,#fafbfc_0%,#f3f5f8_40%,#eceff4_100%)] ring-1 ring-black/[0.05]",
-    eyebrow: "text-[#667085]",
-    link: "text-[#344054] hover:text-[#1d2939]",
-    iframeBorder: "border-black/[0.08]",
-  },
-  omikuji: {
-    card: "border-[#c9a030]/45 bg-[linear-gradient(170deg,#121a22_0%,#0f1410_45%,#1a1510_100%)] shadow-[0_20px_64px_-20px_rgba(0,0,0,0.42)] ring-1 ring-[#d4af37]/20",
-    eyebrow: "text-[#c9a030]/85",
-    link: "text-[#e8c84a] hover:text-[#fdf6e8]",
-    iframeBorder: "border-[#c9a030]/35",
-  },
-} as const;
-
-function PrototypeFrame({
-  className,
-  children,
+function ScaledPreview({
+  src,
+  title,
+  iframeBg,
 }: {
-  className?: string;
-  children: ReactNode;
+  src: string;
+  title: string;
+  iframeBg: string;
 }) {
-  const { aspectW, aspectH, maxVh, maxPx } = PREVIEW_16_9;
-  const ratio = aspectW / aspectH;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.5);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      setScale(entry.contentRect.width / NATURAL_W);
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   return (
     <div
-      className={className}
-      style={{
-        aspectRatio: `${aspectW} / ${aspectH}`,
-        width: `min(100%, calc(min(${maxVh}vh, ${maxPx}px) * ${ratio}))`,
-      }}
+      ref={wrapperRef}
+      className="relative overflow-hidden rounded-2xl shadow-sm"
+      style={{ height: NATURAL_H * scale }}
     >
-      {children}
+      <iframe
+        title={title}
+        src={src}
+        className={`block border-0 ${iframeBg}`}
+        style={{
+          width: NATURAL_W,
+          height: NATURAL_H,
+          transform: `scale(${scale})`,
+          transformOrigin: "top left",
+        }}
+        loading="lazy"
+      />
     </div>
   );
 }
 
-/** Full-height showroom stack (moved from About). */
-export function VibeCodingShowrooms() {
+export function VibeCodingShowrooms({ lead }: { lead?: React.ReactNode }) {
   const rm = useReducedMotion();
   return (
-    <div className="flex flex-col gap-8">
-      {showrooms.map((s, i) => {
-        const st = showroomStyle[s.id];
-        return (
-          <motion.div
-            key={s.id}
-            initial={rm ? false : { opacity: 0, y: 28 }}
-            whileInView={rm ? undefined : { opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-8% 0px" }}
-            transition={{ duration: 0.65, ease: easePortfolio, delay: rm ? 0 : i * 0.06 }}
-            className={`overflow-hidden rounded-3xl border ${st.card}`}
-          >
-            <div className="border-b border-black/[0.08] px-5 py-5 md:px-6 md:py-6">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className={`font-mono text-[10px] uppercase tracking-[0.2em] ${st.eyebrow}`}>
-                  {String(i + 1).padStart(2, "0")} / {String(showrooms.length).padStart(2, "0")}
-                </span>
-                <span
-                  className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.14em] ${
-                    s.id === "omikuji"
-                      ? "border border-[#c9a030]/40 bg-[#261e18]/90 text-[#f0ddb8]/90"
-                      : "border border-black/[0.08] bg-white/80 text-textSecondary"
-                  }`}
+    <div className="grid grid-cols-1 gap-x-5 gap-y-8 md:grid-cols-2">
+      {lead && <div>{lead}</div>}
+      {lead && <div className="hidden md:block" />}
+      {showrooms.map((s, i) => (
+        <motion.div
+          key={s.id}
+          initial={rm ? false : { opacity: 0, y: 20 }}
+          whileInView={rm ? undefined : { opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-8% 0px" }}
+          transition={{ duration: 0.55, ease: easePortfolio, delay: rm ? 0 : i * 0.07 }}
+        >
+          <ScaledPreview src={s.src} title={s.iframeTitle} iframeBg={s.iframeBg} />
+
+          <div className="mt-3 flex items-center justify-between px-0.5">
+            <span className="text-[13px] text-textSecondary">{s.label}</span>
+            <div className="flex items-center gap-4">
+              {"caseStudy" in s && (
+                <Link
+                  href={(s as { caseStudy: string }).caseStudy}
+                  className="text-[13px] text-textSecondary underline underline-offset-4 transition-opacity hover:opacity-60"
                 >
-                  End-to-End Design · Prototype
-                </span>
-              </div>
-
-              <div className="mt-4 flex flex-col gap-4 md:flex-row md:items-start md:justify-between md:gap-8">
-                <div className="min-w-0 flex-1">
-                  <p
-                    className={`font-display text-xl font-light leading-snug md:text-[1.35rem] ${
-                      s.id === "omikuji" ? "text-[#f0ddb8]" : "text-[#111827]"
-                    }`}
-                  >
-                    {s.title}
-                  </p>
-                  <p
-                    className={`mt-2 max-w-xl text-[14px] leading-relaxed ${
-                      s.id === "omikuji" ? "text-[#c9b896]/90" : "text-[#475467]"
-                    }`}
-                  >
-                    {s.tagline}
-                  </p>
-                </div>
-                <div className="flex shrink-0 flex-wrap items-center gap-x-4 gap-y-2 md:justify-end">
-                  <Link
-                    href={s.href}
-                    className={`text-[13px] font-medium underline underline-offset-4 transition-opacity hover:opacity-70 ${st.link}`}
-                  >
-                    Open prototype
-                  </Link>
-                  {s.id === "romance" && (
-                    <Link
-                      href="/work/ai-character"
-                      className="text-[13px] font-medium text-[#344054] underline underline-offset-4 transition-opacity hover:opacity-70"
-                    >
-                      Case study
-                    </Link>
-                  )}
-                </div>
-              </div>
+                  Case study
+                </Link>
+              )}
+              <Link
+                href={s.href}
+                className="text-[13px] text-textPrimary underline underline-offset-4 transition-opacity hover:opacity-60"
+              >
+                Open →
+              </Link>
             </div>
-
-            <div className={`flex justify-center border-t ${st.iframeBorder}`}>
-              <PrototypeFrame className="relative w-full overflow-hidden">
-                <iframe
-                  key={s.src}
-                  title={s.iframeTitle}
-                  src={s.src}
-                  className={`absolute inset-0 block h-full w-full border-0 ${s.iframeBg}`}
-                  loading="lazy"
-                />
-              </PrototypeFrame>
-            </div>
-          </motion.div>
-        );
-      })}
+          </div>
+        </motion.div>
+      ))}
     </div>
   );
 }

@@ -544,7 +544,7 @@ function PsychShareModal({ onClose }: { onClose: () => void }) {
             <h2 id="psych-share-title" style={{ margin: 0, fontFamily: displayFont.style.fontFamily, fontSize: 17, fontWeight: 600, color: C.txt, lineHeight: 1.3 }}>Share this session</h2>
             <p style={{ margin: "6px 0 0", fontSize: 13, color: C.txt2, lineHeight: 1.5 }}>Copy the link and send it to open this therapy showroom.</p>
           </div>
-          <button type="button" aria-label="Close" onClick={close} style={{ width: 32, height: 32, borderRadius: 8, border: "1px solid rgba(132,180,222,0.24)", background: "transparent", color: C.txt2, cursor: "pointer", fontSize: 18, lineHeight: 1, flexShrink: 0 }}>&times;</button>
+          <button type="button" aria-label="Close" onClick={close} style={{ width: 32, height: 32, borderRadius: 8, border: "none", background: "transparent", color: C.txt2, cursor: "pointer", fontSize: 18, lineHeight: 1, flexShrink: 0 }}>&times;</button>
         </div>
         <div style={{ padding: "18px 20px 20px" }}>
           <p style={{ margin: "0 0 8px", fontSize: 11, fontWeight: 600, letterSpacing: 0.08, textTransform: "uppercase", color: C.txt3 }}>Page URL</p>
@@ -908,8 +908,8 @@ function SidePanel({ title, onClose, children, variant = "overlay" }: {
           type="button"
           onClick={onClose}
           className="flex h-6 w-6 items-center justify-center rounded-full"
-          style={{ background: "rgba(140,188,228,0.1)", color: C.txt2, border: "1px solid rgba(140,188,228,0.2)" }}
-          whileHover={{ backgroundColor: "rgba(140,188,228,0.2)" }}
+          style={{ background: "transparent", color: C.txt2, border: "none" }}
+          whileHover={{ opacity: 0.8 }}
           whileTap={{ scale: 0.92 }}
           transition={spring.snappy}
         >
@@ -1561,7 +1561,7 @@ export default function PsychShowroomPrototypeClient({ embed = false }: { embed?
         role: "assistant",
         text: replyText,
         analysis,
-        analysisCollapsed: true,
+        analysisCollapsed: false,
       }]);
       setPipeline(PIPE_INIT.map(s => ({ ...s, status: "done" as StepStatus })));
       setBuild(null);
@@ -1713,12 +1713,6 @@ export default function PsychShowroomPrototypeClient({ embed = false }: { embed?
             <p className={`text-[13.5px] font-semibold tracking-[.01em] ${displayFont.className}`}
               style={{ color: C.accent }}>Therapy Space</p>
           </div>
-          <span
-            className={`shrink-0 flex items-center self-stretch rounded-md px-2.5 text-[10px] font-medium tracking-[.04em] ${uiFont.className}`}
-            style={{ background: "rgba(59,111,165,0.07)", color: C.accent, border: `1px solid rgba(59,111,165,0.18)` }}
-          >
-            Trusted Care
-          </span>
         </div>
 
         <div className="flex-1"/>

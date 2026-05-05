@@ -23,7 +23,7 @@ const T = {
   bg: { void: "#050507", deep: "#08080d", card: "#0d0d16" },
   gold: { p: "#d4a853", l: "#f2da90", d: "#8a7038", dk: "#5a4e28" },
   rose: { p: "#c87878", l: "#e8a8a8", d: "#7e4444" },
-  txt: { p: "#f0ece2", s: "#a8a098", d: "#625e5a", m: "#3e3a36" },
+  txt: { p: "#f0ece2", s: "#b4afa8", d: "#8a8682", m: "#625e5a" },
   bdr: { f: "rgba(212,168,83,0.09)", s: "rgba(212,168,83,0.18)", g: "rgba(212,168,83,0.32)", gs: "rgba(212,168,83,0.55)" },
   glow: { g: "rgba(212,168,83,0.11)", gm: "rgba(212,168,83,0.22)", gs: "rgba(212,168,83,0.40)" },
   au: { accent: "#6090d8", border: "rgba(96,144,216,0.24)", text: "#ccd8f4" },
@@ -244,7 +244,7 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
             </div>
             <div style={{ fontSize: 11, color: T.txt.d, letterSpacing: 1.5, textTransform: "uppercase" }}>Inspect \u00b7 Clone \u00b7 Configure</div>
           </div>
-          <button type="button" onClick={close} aria-label="Close developer tools" style={{ width: 30, height: 30, borderRadius: 7, border: `1px solid ${T.bdr.f}`, background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: 16, display: "flex", alignItems: "center", justifyContent: "center" }}>&#215;</button>
+          <button type="button" onClick={close} aria-label="Close developer tools" style={{ width: 30, height: 30, borderRadius: 7, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6, transition: "opacity 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}>&#215;</button>
         </div>
         <div style={{ display: "flex", borderBottom: `1px solid ${T.bdr.f}` }}>
           {(["source", "clone", "config"] as const).map((t) => (
@@ -448,46 +448,21 @@ function AuUniverseMysteryLayer({ w, h }: { w: number; h: number }) {
 }
 
 function AuSideRails({ side }: { side?: "left" | "right" } = {}) {
-  const n = 14;
-  const make = (side: "left" | "right") => (
+  const make = (s: "left" | "right") => (
     <div
-      key={side}
+      key={s}
       aria-hidden
       style={{
         position: "absolute",
-        [side]: 4,
-        top: "11%",
-        bottom: "18%",
-        width: 11,
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "space-between",
+        [s]: 7,
+        top: "12%",
+        bottom: "16%",
+        width: 1,
+        background: "linear-gradient(to bottom, transparent 0%, rgba(130,160,220,0.3) 18%, rgba(130,160,220,0.22) 82%, transparent 100%)",
         pointerEvents: "none",
         zIndex: 1,
       }}
-    >
-      {Array.from({ length: n }, (_, i) => {
-        const star = i % 4 === 1;
-        const delay = `${(i * 0.12).toFixed(2)}s`;
-        return (
-          <span
-            key={i}
-            style={{
-              fontSize: star ? 9 : 5,
-              lineHeight: 1,
-              color: star ? "rgba(200,185,130,0.75)" : "rgba(130,160,220,0.45)",
-              fontFamily: "'Segoe UI Symbol','Apple Symbols',sans-serif",
-              animation: `auRailTwinkle ${2.8 + (i % 5) * 0.35}s ease-in-out infinite`,
-              animationDelay: delay,
-              textShadow: star ? "0 0 8px rgba(201,160,90,0.45)" : "0 0 4px rgba(130,160,220,0.35)",
-            }}
-          >
-            {star ? "\u2726" : "\u00b7"}
-          </span>
-        );
-      })}
-    </div>
+    />
   );
   return side ? make(side) : <>{make("left")}{make("right")}</>;
 }
@@ -568,24 +543,21 @@ function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean })
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
               borderRadius: 10,
-              overflow: "hidden",
-              background: "linear-gradient(118deg, rgba(12,11,20,0.98) 0%, rgba(6,6,11,0.995) 55%, rgba(8,7,14,0.98) 100%)",
-              boxShadow: "inset 0 0 0 1px rgba(201,160,90,0.07)",
+              background: "rgba(8,7,14,0.96)",
+              border: "1px solid rgba(201,160,90,0.32)",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              gap: 10,
+              padding: "18px 26px",
             }}
           >
-            <HeartbeatMysteryLayer w={cw} h={ch} />
-            <TarotCardFrame w={cw} h={ch} gradId={gF} />
-            <div style={{ position: "absolute", inset: 0, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "14px 22px", gap: 7 }}>
-              <CelestialMark size={markSize} />
-              <div style={{ display: "flex", alignItems: "center", gap: 10, width: "100%" }}>
-                <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, transparent, rgba(201,160,90,0.22))" }} />
-                <div style={{ fontFamily: F.display, fontSize: 9, letterSpacing: 3.5, textTransform: "uppercase", color: T.gold.l, opacity: 0.88 }}>Heartbeat</div>
-                <div style={{ flex: 1, height: 1, background: "linear-gradient(to left, transparent, rgba(201,160,90,0.22))" }} />
-              </div>
-              <p id={hintId} style={{ fontSize: 11.5, color: "rgba(232,226,216,0.72)", letterSpacing: 0.15, textAlign: "center", lineHeight: 1.5, margin: 0, fontFamily: F.ui, fontWeight: 300 }}>
-                Tap to reveal a thought he never says aloud
-              </p>
-            </div>
+            <CelestialMark size={22} />
+            <div style={{ fontSize: 8.5, color: T.gold.p, letterSpacing: 4, textTransform: "uppercase", fontFamily: F.display, opacity: 0.75 }}>Heartbeat</div>
+            <p id={hintId} style={{ fontSize: 14, color: "rgba(232,226,216,0.82)", letterSpacing: 0.1, textAlign: "center", lineHeight: 1.6, margin: 0, fontFamily: F.ui, fontWeight: 300 }}>
+              Tap to reveal a thought he never says aloud
+            </p>
           </div>
 
           {/* Back */}
@@ -597,22 +569,17 @@ function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean })
               WebkitBackfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
               borderRadius: 10,
-              overflow: "hidden",
-              background: "linear-gradient(118deg, rgba(9,8,16,0.99) 0%, rgba(4,4,8,0.995) 100%)",
-              boxShadow: "inset 0 0 0 1px rgba(201,160,90,0.06)",
+              background: "rgba(6,5,11,0.97)",
+              border: "1px solid rgba(201,160,90,0.28)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "18px 24px",
             }}
           >
-            <HeartbeatMysteryLayer w={cw} h={ch} />
-            <TarotCardFrame w={cw} h={ch} gradId={gB} />
-            <div style={{ position: "absolute", inset: 0, padding: "16px 20px", display: "flex", flexDirection: "column" }}>
-              <div style={{ fontSize: 8.5, color: T.gold.l, letterSpacing: 3.5, textTransform: "uppercase", marginBottom: 10, opacity: 0.85, display: "flex", alignItems: "center", gap: 8, fontFamily: F.ui, fontWeight: 500 }}>
-                <span>Inner voice</span>
-                <div style={{ flex: 1, height: 1, background: "linear-gradient(to right, rgba(201,160,90,0.26), transparent)" }} />
-              </div>
-              <blockquote style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.86, color: "rgba(238,232,222,0.94)", fontStyle: "italic", margin: 0, border: "none", padding: 0 }}>
-                &ldquo;{text}&rdquo;
-              </blockquote>
-            </div>
+            <blockquote style={{ fontFamily: F.body, fontSize: 14.5, lineHeight: 1.88, color: "rgba(238,232,222,0.92)", fontStyle: "italic", margin: 0, border: "none", padding: 0, textAlign: "center" }}>
+              &ldquo;{text}&rdquo;
+            </blockquote>
           </div>
         </div>
       </button>
@@ -693,12 +660,27 @@ function VinylGlyph({ playing }: { playing: boolean }) {
   const sz = HUD_BTN_PX - 10;
   return (
     <svg width={sz} height={sz} viewBox="0 0 36 36" style={{ animation: playing ? "vinylSpin 12s linear infinite" : "none" }} aria-hidden>
-      <defs><radialGradient id={gid} cx="50%" cy="50%" r="50%"><stop offset="0%" stopColor="#101018" /><stop offset="100%" stopColor="#050508" /></radialGradient></defs>
-      <circle cx="18" cy="18" r="17" fill={`url(#${gid})`} stroke="rgba(201,160,90,0.2)" strokeWidth="0.55" />
-      <circle cx="18" cy="18" r="14" fill="none" stroke="rgba(201,160,90,0.1)" strokeWidth="0.32" />
-      <circle cx="18" cy="18" r="10" fill="none" stroke="rgba(201,160,90,0.08)" strokeWidth="0.28" />
-      <circle cx="18" cy="18" r="3.2" fill="rgba(201,160,90,0.88)" />
-      <circle cx="18" cy="18" r="1.1" fill="#070710" />
+      <defs>
+        <radialGradient id={gid} cx="50%" cy="50%" r="50%">
+          {playing ? (
+            <>
+              <stop offset="0%" stopColor="#e8c87a" />
+              <stop offset="45%" stopColor="#c9a050" />
+              <stop offset="100%" stopColor="#7a5a20" />
+            </>
+          ) : (
+            <>
+              <stop offset="0%" stopColor="#101018" />
+              <stop offset="100%" stopColor="#050508" />
+            </>
+          )}
+        </radialGradient>
+      </defs>
+      <circle cx="18" cy="18" r="17" fill={`url(#${gid})`} stroke={playing ? "rgba(201,160,90,0.55)" : "rgba(201,160,90,0.2)"} strokeWidth="0.55" />
+      <circle cx="18" cy="18" r="14" fill="none" stroke={playing ? "rgba(201,160,90,0.35)" : "rgba(201,160,90,0.1)"} strokeWidth="0.32" />
+      <circle cx="18" cy="18" r="10" fill="none" stroke={playing ? "rgba(201,160,90,0.25)" : "rgba(201,160,90,0.08)"} strokeWidth="0.28" />
+      <circle cx="18" cy="18" r="3.2" fill={playing ? "#1a120a" : "rgba(201,160,90,0.88)"} />
+      <circle cx="18" cy="18" r="1.1" fill={playing ? "#0a0806" : "#070710"} />
     </svg>
   );
 }
@@ -779,7 +761,7 @@ function ShareCharacterModal({ characterName, onClose }: { characterName: string
             <h2 id="share-char-title" style={{ fontFamily: F.display, fontSize: 16, fontWeight: 600, color: T.txt.p, margin: 0, lineHeight: 1.3 }}>Share {characterName}</h2>
             <p style={{ margin: "5px 0 0", fontSize: 10.5, color: T.txt.d, lineHeight: 1.5 }}>Copy this link and share with anyone.</p>
           </div>
-          <button type="button" aria-label="Close" onClick={close} style={{ width: 28, height: 28, borderRadius: 8, border: `1px solid ${T.bdr.f}`, background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: 16, lineHeight: 1, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>&times;</button>
+          <button type="button" aria-label="Close" onClick={close} style={{ width: 28, height: 28, borderRadius: 8, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: 18, lineHeight: 1, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6, transition: "opacity 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}>&times;</button>
         </div>
 
         <div style={{ padding: "16px 20px 20px" }}>
@@ -928,7 +910,7 @@ function StoryOverlay({ onClose, liked, setLiked, related, setRelated }: {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
               <CelestialMark size={22} />
-              <div style={{ fontSize: 9, color: T.gold.d, letterSpacing: 4, textTransform: "uppercase", fontFamily: F.ui }}>Story Unlocks</div>
+              <div style={{ fontSize: 9, color: T.gold.d, letterSpacing: 4, textTransform: "uppercase", fontFamily: F.display }}>Story Unlocks</div>
             </div>
             <div style={{ fontFamily: F.display, fontSize: 22, fontWeight: 600, color: T.txt.p, letterSpacing: 0.3 }}>Hidden Moments</div>
             <div style={{ fontSize: 11, color: T.txt.d, marginTop: 4 }}>Unlock fragments of Lucien&apos;s past as your bond deepens.</div>
@@ -1049,7 +1031,7 @@ function MomentsPane({ onBack, liked, setLiked }: {
         </div>
         {/* Avatar — outside overflow:hidden so it shows above the section below */}
         <div style={{ position: "absolute", bottom: -24, left: 16, zIndex: 10 }}>
-          <div style={{ width: 52, height: 52, borderRadius: "50%", border: `2px solid ${T.gold.p}`, overflow: "hidden", boxShadow: `0 0 20px rgba(212,168,83,0.38), 0 4px 14px rgba(0,0,0,0.6)` }}>
+          <div style={{ width: 52, height: 52, borderRadius: "50%", border: "1px solid rgba(212,168,83,0.28)", overflow: "hidden", boxShadow: "0 2px 10px rgba(0,0,0,0.55)" }}>
             <img src="/assets/ai-character/character.PNG" alt={CHAR_NAME} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 15%" }} />
           </div>
         </div>
@@ -1058,7 +1040,7 @@ function MomentsPane({ onBack, liked, setLiked }: {
       {/* Name + ornament */}
       <div style={{ padding: "34px 16px 10px", borderBottom: `0.5px solid ${T.bdr.f}` }}>
         <div style={{ fontFamily: F.display, fontSize: 14, fontWeight: 600, color: T.txt.p, marginBottom: 1 }}>{CHAR_NAME}</div>
-        <div style={{ fontSize: 10, color: T.gold.d, letterSpacing: 1.8, textTransform: "uppercase", marginBottom: 8 }}>Private moments</div>
+        <div style={{ fontFamily: F.display, fontSize: 10, color: T.gold.d, letterSpacing: 1.8, textTransform: "uppercase", marginBottom: 8 }}>Private moments</div>
         <OrnamentRule opacity={0.22} />
       </div>
 
@@ -1068,7 +1050,7 @@ function MomentsPane({ onBack, liked, setLiked }: {
           <div key={i} style={{ padding: "16px 16px 14px", borderBottom: `0.5px solid rgba(212,168,83,0.07)`, animation: `paneIn 0.4s ease ${i * 0.08}s both` }}>
             {/* Row: avatar + name + mood tag */}
             <div style={{ display: "flex", gap: 9, marginBottom: 10, alignItems: "center" }}>
-              <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, overflow: "hidden", border: `1px solid ${T.bdr.g}` }}>
+              <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, overflow: "hidden", border: "1px solid rgba(212,168,83,0.14)" }}>
                 <img src="/assets/ai-character/character.PNG" alt={CHAR_NAME} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 15%" }} />
               </div>
               <div style={{ fontSize: 12.5, fontWeight: 500, color: T.txt.p, flex: 1 }}>{CHAR_NAME}</div>
@@ -1125,7 +1107,7 @@ function CharacterPane() {
         <div style={{ marginTop: 18 }}><OrnamentRule opacity={0.2} /></div>
 
         <div style={{ marginTop: 16, padding: "15px 16px", borderRadius: 12, border: `1px solid ${T.bdr.f}`, background: "rgba(201,160,90,0.03)" }}>
-          <div style={{ fontSize: 8.5, color: T.gold.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>His words</div>
+          <div style={{ fontFamily: F.display, fontSize: 8.5, color: T.gold.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>His words</div>
           <div style={{ fontFamily: F.body, fontSize: 13.5, lineHeight: 1.95, color: T.txt.s, fontStyle: "italic" }}>
             &ldquo;I have worn a thousand masks. But when I look at you, I forget every line I ever rehearsed.&rdquo;
           </div>
@@ -1159,6 +1141,7 @@ function FeatureBtn({ icon, label, desc, onClick, active }: { icon: string; labe
 function AlternateUniverseMessageCard({ onEnterNewWorld }: { onEnterNewWorld: () => void }) {
   const CW = 320;
   const CH = 520;
+  const [expanded, setExpanded] = useState(true);
   const bgVideoRef = useRef<HTMLVideoElement | null>(null);
   useEffect(() => {
     const v = bgVideoRef.current;
@@ -1175,6 +1158,27 @@ function AlternateUniverseMessageCard({ onEnterNewWorld }: { onEnterNewWorld: ()
     void v.play().catch(() => {});
     return () => v.removeEventListener("loadedmetadata", apply);
   }, []);
+  if (!expanded) {
+    return (
+      <button
+        type="button"
+        onClick={() => setExpanded(true)}
+        style={{
+          width: "100%", padding: "10px 16px", borderRadius: 10,
+          border: "1px solid rgba(96,144,216,0.22)",
+          background: "rgba(4,8,20,0.72)", backdropFilter: "blur(12px)",
+          cursor: "pointer", display: "flex", alignItems: "center", gap: 10, textAlign: "left",
+          animation: "auCardGlow 4.2s ease-in-out infinite",
+        }}
+      >
+        <CelestialMark size={14} />
+        <span style={{ fontFamily: F.ui, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: T.au.accent, opacity: 0.75 }}>New World</span>
+        <span style={{ fontFamily: F.display, fontSize: 13, color: T.au.text, flex: 1, opacity: 0.9 }}>{AU_EVENT.title}</span>
+        <span style={{ fontSize: 9, color: "rgba(130,160,220,0.5)", letterSpacing: 1 }}>▸</span>
+      </button>
+    );
+  }
+
   return (
     <div style={{ width: "100%", margin: 0, position: "relative" }}>
       <div
@@ -1231,11 +1235,17 @@ function AlternateUniverseMessageCard({ onEnterNewWorld }: { onEnterNewWorld: ()
         />
 
         <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", width: "54%", minHeight: 0, height: "100%", padding: "20px 24px 18px 24px", isolation: "isolate" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12, flexShrink: 0 }}>
+          <button
+            type="button"
+            onClick={() => setExpanded(false)}
+            aria-label="Collapse alternate universe card"
+            style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12, flexShrink: 0, background: "none", border: "none", padding: 0, cursor: "pointer", width: "100%", textAlign: "left" }}
+          >
             <CelestialMark size={18} />
-            <span style={{ fontFamily: F.ui, fontSize: 9.5, letterSpacing: 2.8, textTransform: "uppercase", color: T.gold.l, opacity: 0.78, whiteSpace: "nowrap" }}>New world</span>
+            <span style={{ fontFamily: F.display, fontSize: 9.5, letterSpacing: 2.8, textTransform: "uppercase", color: T.gold.l, opacity: 0.78, whiteSpace: "nowrap" }}>New world</span>
             <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(201,160,90,0.34), rgba(130,160,220,0.28), transparent)" }} />
-          </div>
+            <span style={{ fontSize: 8, color: "rgba(130,160,220,0.45)", letterSpacing: 1, flexShrink: 0 }}>▾</span>
+          </button>
 
           <div style={{ flexShrink: 0, marginBottom: 12 }}>
             <div style={{ fontSize: 9.5, letterSpacing: 2.1, textTransform: "uppercase", color: "rgba(116,156,226,0.68)", marginBottom: 6, fontFamily: F.ui }}>{AU_EVENT.intro}</div>
@@ -1327,47 +1337,6 @@ function InspirationCard({ data, onSelect, disabled }: { data: { label: string; 
   );
 }
 
-/* ─── Demo Guide ─────────────────────────────────────────────────────────── */
-function DemoGuide() {
-  const [open, setOpen] = useState(false);
-  const [step, setStep] = useState(0);
-  return (
-    <div style={{ position: "fixed", bottom: 22, left: 20, zIndex: 400, fontFamily: F.ui }}>
-      {open && (
-        <div style={{ position: "absolute", bottom: "calc(100% + 8px)", left: 0, width: 300, background: "rgba(7,7,12,0.97)", border: `1px solid ${T.bdr.s}`, borderRadius: 13, overflow: "hidden", boxShadow: "0 20px 60px rgba(0,0,0,0.6)", animation: "slideUp 0.35s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
-          <div style={{ padding: "14px 16px 10px", borderBottom: `1px solid ${T.bdr.f}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-            <div>
-              <div style={{ fontSize: 14, fontWeight: 500, color: T.txt.p }}>Demo Script</div>
-              <div style={{ fontSize: 10.5, color: T.txt.d, marginTop: 2 }}>2-min walkthrough</div>
-            </div>
-            <div style={{ fontSize: 10.5, color: T.txt.d }}>{step + 1} / {DEMO_STEPS.length}</div>
-          </div>
-          <div style={{ maxHeight: 300, overflowY: "auto" }}>
-            {DEMO_STEPS.map((ds, i) => (
-              <div key={ds.step} onClick={() => setStep(i)} style={{ padding: "9px 16px", cursor: "pointer", background: i === step ? T.glow.g : "transparent", borderLeft: `2px solid ${i === step ? T.gold.p : "transparent"}`, transition: "all 0.18s ease" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: i === step ? 4 : 0 }}>
-                  <div style={{ fontSize: 10, color: T.txt.d, minWidth: 32, fontFamily: "ui-monospace,monospace" }}>{ds.time}</div>
-                  <div style={{ fontSize: 12, fontWeight: i === step ? 500 : 400, color: i === step ? T.gold.l : T.txt.s }}>{ds.label}</div>
-                  {i < step && <div style={{ marginLeft: "auto", fontSize: 10, color: "#62a872" }}>&#10003;</div>}
-                </div>
-                {i === step && <div style={{ fontSize: 11.5, color: T.txt.s, lineHeight: 1.65, paddingLeft: 39 }}>{ds.hint}</div>}
-              </div>
-            ))}
-          </div>
-          <div style={{ padding: "9px 14px", borderTop: `1px solid ${T.bdr.f}`, display: "flex", gap: 7 }}>
-            <button onClick={() => setStep(s => Math.max(0, s - 1))} disabled={step === 0} style={{ flex: 1, padding: "7px 0", borderRadius: 7, border: `1px solid ${T.bdr.f}`, background: "transparent", color: step === 0 ? T.txt.m : T.txt.s, fontSize: 11, cursor: step === 0 ? "default" : "pointer", fontFamily: F.ui, opacity: step === 0 ? 0.4 : 1 }}>&larr; Prev</button>
-            <button onClick={() => setStep(s => Math.min(DEMO_STEPS.length - 1, s + 1))} disabled={step === DEMO_STEPS.length - 1} style={{ flex: 1, padding: "7px 0", borderRadius: 7, border: `1px solid ${step < DEMO_STEPS.length - 1 ? T.bdr.g : T.bdr.f}`, background: step < DEMO_STEPS.length - 1 ? T.glow.g : "transparent", color: step < DEMO_STEPS.length - 1 ? T.gold.l : T.txt.m, fontSize: 11, cursor: step === DEMO_STEPS.length - 1 ? "default" : "pointer", fontFamily: F.ui }}>Next &rarr;</button>
-          </div>
-        </div>
-      )}
-      <button onClick={() => setOpen(v => !v)} style={{ width: 40, height: 40, borderRadius: 12, border: `1px solid ${open ? T.bdr.g : T.bdr.s}`, background: open ? T.glow.g : "rgba(8,8,14,0.82)", backdropFilter: "blur(16px)", color: open ? T.gold.l : T.txt.d, cursor: "pointer", boxShadow: "0 6px 24px rgba(0,0,0,0.4)", transition: "all 0.25s ease", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 2, fontFamily: F.ui }}>
-        <div style={{ fontSize: 10 }}>&#9658;</div>
-        <div style={{ fontSize: 7, letterSpacing: 0.3, opacity: 0.7 }}>DEMO</div>
-      </button>
-    </div>
-  );
-}
-
 /* ─── Pane Close Button — shared system ────────────────────────────────── */
 function PaneCloseBtn({ onClick, ariaLabel = "Close panel" }: { onClick: () => void; ariaLabel?: string }) {
   return (
@@ -1375,9 +1344,9 @@ function PaneCloseBtn({ onClick, ariaLabel = "Close panel" }: { onClick: () => v
       type="button"
       onClick={onClick}
       aria-label={ariaLabel}
-      style={{ width: 28, height: 28, borderRadius: 6, border: `1px solid ${T.bdr.f}`, background: "transparent", color: T.txt.d, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 15, flexShrink: 0, transition: "all 0.2s ease" }}
-      onMouseEnter={e => { e.currentTarget.style.color = T.txt.p; e.currentTarget.style.borderColor = T.bdr.s; e.currentTarget.style.background = T.glow.g; }}
-      onMouseLeave={e => { e.currentTarget.style.color = T.txt.d; e.currentTarget.style.borderColor = T.bdr.f; e.currentTarget.style.background = "transparent"; }}
+      style={{ width: 28, height: 28, borderRadius: 6, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0, opacity: 0.6, transition: "opacity 0.2s ease" }}
+      onMouseEnter={e => { e.currentTarget.style.opacity = "1"; }}
+      onMouseLeave={e => { e.currentTarget.style.opacity = "0.6"; }}
     >
       &#215;
     </button>
@@ -1517,6 +1486,23 @@ function GothicStar({ size = 7, color = "currentColor" }: { size?: number; color
   );
 }
 
+const FANCY_BTN_STARS = [
+  // upper-left cluster
+  { top: -22, left: "-4px", delay: 0,    size: 10, isDot: false },
+  { top:  -8, left: "3%",   delay: 0.2,  size: 3,  isDot: true  },
+  { top: -28, left: "16%",  delay: 0.09, size: 6,  isDot: false },
+  { top: -14, left: "11%",  delay: 0.25, size: 3,  isDot: true  },
+  { top: -20, left: "28%",  delay: 0.13, size: 5,  isDot: false },
+  // lower-right cluster
+  { top:  32, left: "72%",  delay: 0.06, size: 9,  isDot: false },
+  { top:  20, left: "85%",  delay: 0.3,  size: 3,  isDot: true  },
+  { top:  38, left: "96%",  delay: 0.15, size: 6,  isDot: false },
+  { top:  24, left: "107%", delay: 0.08, size: 4,  isDot: true  },
+  { top:  14, left: "91%",  delay: 0.22, size: 4,  isDot: false },
+  // lone stray
+  { top:  -6, left: "54%",  delay: 0.38, size: 3,  isDot: true  },
+];
+
 function FancyStartButton({ onClick }: { onClick: () => void }) {
   const [hov, setHov] = useState(false);
   const c = hov ? T.gold.l : T.gold.p;
@@ -1527,27 +1513,60 @@ function FancyStartButton({ onClick }: { onClick: () => void }) {
         onMouseEnter={() => setHov(true)}
         onMouseLeave={() => setHov(false)}
       >
-        <button
-          type="button"
-          onClick={onClick}
-          style={{
-            background: "none",
-            border: "none",
-            padding: "8px 0",
-            margin: 0,
-            cursor: "pointer",
-            fontFamily: F.display,
-            fontSize: 15,
-            letterSpacing: 4.5,
-            textTransform: "uppercase",
-            color: c,
-            textAlign: "left",
-            textShadow: hov ? "0 0 22px rgba(212,168,83,0.5)" : "0 0 10px rgba(212,168,83,0.1)",
-            transition: "color 0.3s ease, text-shadow 0.3s ease",
-          }}
-        >
-          Enter his world
-        </button>
+        {/* Button text wrapped in relative container for sparkle positioning */}
+        <div style={{ position: "relative" }}>
+          {hov && FANCY_BTN_STARS.map((s, i) => (
+            <div
+              key={i}
+              aria-hidden
+              style={{
+                position: "absolute",
+                top: s.top,
+                left: s.left,
+                pointerEvents: "none",
+                zIndex: 10,
+                animation: s.isDot
+                  ? `btnDotFloat 1.1s ease-out ${s.delay}s infinite`
+                  : `btnStarDance 1.0s ease-in-out ${s.delay}s infinite`,
+              }}
+            >
+              {s.isDot ? (
+                <div style={{
+                  width: s.size,
+                  height: s.size,
+                  borderRadius: "50%",
+                  background: "radial-gradient(circle, #FFE566 0%, #FFD700 55%, #FFA800 100%)",
+                  boxShadow: `0 0 ${s.size * 2}px rgba(255,200,0,0.85), 0 0 ${s.size}px rgba(255,160,0,0.5)`,
+                }} />
+              ) : (
+                <GothicStar size={s.size} color={T.gold.l} />
+              )}
+            </div>
+          ))}
+          <button
+            type="button"
+            onClick={onClick}
+            style={{
+              background: "none",
+              border: "none",
+              padding: "8px 0",
+              margin: 0,
+              cursor: "pointer",
+              fontFamily: F.display,
+              fontSize: 15,
+              letterSpacing: 4.5,
+              textTransform: "uppercase",
+              color: c,
+              textAlign: "left",
+              textShadow: hov ? "0 0 22px rgba(212,168,83,0.5)" : "0 0 10px rgba(212,168,83,0.1)",
+              transform: hov ? "scale(1.06)" : "scale(1)",
+              transformOrigin: "left center",
+              transition: "color 0.3s ease, text-shadow 0.3s ease, transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)",
+            }}
+          >
+            Enter his world
+          </button>
+        </div>
         <div
           style={{
             height: 1,
@@ -1614,7 +1633,7 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
         opacity: vis ? 1 : 0, transform: vis ? "translateY(0)" : "translateY(18px)",
         transition: "opacity 1.1s ease 0.28s, transform 1.1s ease 0.28s",
       }}>
-        <div style={{ fontSize: 8.5, color: T.gold.p, letterSpacing: 7, textTransform: "uppercase", marginBottom: 36, fontFamily: F.ui, fontWeight: 400, opacity: 0.66 }}>
+        <div style={{ fontSize: 8.5, color: T.gold.p, letterSpacing: 7, textTransform: "uppercase", marginBottom: 36, fontFamily: F.display, fontWeight: 400, opacity: 0.66 }}>
           Eternal Vow
         </div>
         <div style={{ marginBottom: 12 }}>
@@ -1805,6 +1824,8 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
         @keyframes splashRingRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         @keyframes splashStarBlink{0%,100%{opacity:.12;transform:scale(0.55)}45%{opacity:1;transform:scale(1.15)}55%{opacity:.85;transform:scale(1.05)}}
         @keyframes splashCompassSpin{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
+        @keyframes btnStarDance{0%,100%{opacity:.35;transform:scale(0.5) rotate(0deg) translateY(0)}25%{opacity:1;transform:scale(1.3) rotate(22deg) translateY(-6px)}60%{opacity:.75;transform:scale(0.85) rotate(-8deg) translateY(-3px)}}
+        @keyframes btnDotFloat{0%{opacity:0;transform:translateY(0) scale(0)}15%{opacity:1;transform:translateY(-5px) scale(1.4)}85%{opacity:.25;transform:translateY(-24px) scale(0.6)}100%{opacity:0;transform:translateY(-28px) scale(0)}}
         *::-webkit-scrollbar{width:2px}*::-webkit-scrollbar-track{background:transparent}*::-webkit-scrollbar-thumb{background:${T.gold.dk};border-radius:4px}
         *{margin:0;padding:0;box-sizing:border-box}textarea::placeholder{color:${T.txt.d}}
         input[type=range]{-webkit-appearance:none;appearance:none;height:3px;background:rgba(201,160,90,0.18);border-radius:2px;outline:none;display:block}
@@ -1943,14 +1964,14 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                   onClick={() => setDevOpen(true)}
                 >
                   <svg width={HUD_ICON_PX} height={HUD_ICON_PX} viewBox="0 0 20 20" fill="none" aria-hidden>
-                    <path d="M7 5L3 10l4 5M13 5l4 5-4 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+                    <path d="M7 5L3 10l4 5M13 5l4 5-4 5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </HudToolButton>
                 <HudToolButton ariaLabel="Share character" explanation="Open a short flow to copy a profile link or preview sharing (prototype only)." onClick={() => setShareOpen(true)}>
-                  <svg width={HUD_ICON_PX} height={HUD_ICON_PX} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                    <circle cx="18" cy="5" r="2.5" />
-                    <circle cx="6" cy="12" r="2.5" />
-                    <circle cx="18" cy="19" r="2.5" />
+                  <svg width={HUD_ICON_PX} height={HUD_ICON_PX} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <circle cx="18" cy="5" r="2.1" />
+                    <circle cx="6" cy="12" r="2.1" />
+                    <circle cx="18" cy="19" r="2.1" />
                     <line x1="8.59" y1="13.51" x2="15.42" y2="17.49" />
                     <line x1="15.41" y1="6.51" x2="8.59" y2="10.49" />
                   </svg>
@@ -1960,7 +1981,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                   explanation="Restart the scene from the opening line and clear this session’s story state (prototype)."
                   onClick={() => setResetMemoryOpen(true)}
                 >
-                  <svg width={HUD_ICON_PX} height={HUD_ICON_PX} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <svg width={HUD_ICON_PX} height={HUD_ICON_PX} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 4" />
                     <path d="M21 4v5h-5" />
                     <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 20" />
@@ -2052,7 +2073,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                 )}
 
                 {/* Feature bar */}
-                <div style={{ padding: "6px 16px 7px", display: "flex", gap: 3, justifyContent: "center", background: "rgba(6,6,10,0.78)", backdropFilter: "blur(28px)", borderTop: `1px solid rgba(212,168,83,0.08)` }}>
+                <div style={{ padding: "6px 16px 7px", display: "flex", gap: 3, justifyContent: "center", background: "linear-gradient(to bottom, rgba(6,6,10,0) 0%, rgba(6,6,10,0.72) 28%, rgba(6,6,10,0.82) 100%)", backdropFilter: "blur(28px)" }}>
                   {features.map(f => (
                     <FeatureBtn key={f.label} icon={f.icon} label={f.label} desc={f.desc} onClick={f.action} active={f.isActive} />
                   ))}
@@ -2104,7 +2125,6 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
         </div>
       </div>
 
-          <DemoGuide />
           {shareOpen && <ShareCharacterModal characterName={CHAR_NAME} onClose={() => setShareOpen(false)} />}
           {devOpen && <DeveloperSidebar onClose={() => setDevOpen(false)} />}
           {storyOpen && <StoryOverlay onClose={() => setStoryOpen(false)} liked={storyLiked} setLiked={setStoryLiked} related={storyRelated} setRelated={setStoryRelated} />}

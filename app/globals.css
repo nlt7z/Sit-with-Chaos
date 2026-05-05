@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@keyframes vinyl-spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes soundbar {
+  from { height: 4px;  opacity: 0.45; }
+  to   { height: 18px; opacity: 1; }
+}
+
 @layer base {
   :root {
     --background: #ffffff;

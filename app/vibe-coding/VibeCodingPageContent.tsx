@@ -1,5 +1,6 @@
 "use client";
 
+import { TurntableWidget } from "@/components/TurntableWidget";
 import { VibeCodingShowrooms } from "@/components/VibeCodingShowrooms";
 import Link from "next/link";
 
@@ -17,7 +18,7 @@ export function VibeCodingPageContent() {
       </p>
 
       <div className="mt-8 md:mt-10">
-        <VibeCodingShowrooms />
+        <VibeCodingShowrooms lead={<TurntableWidget />} />
       </div>
 
       <Link

@@ -1,4 +1,4 @@
-export type FortuneLevel = "daikichi" | "chukichi" | "shokichi" | "suekichi" | "kyo" | "daikyo";
+export type FortuneLevel = "daikichi" | "chukichi" | "shokichi" | "suekichi";
 
 export type ParticleKind = "sakura" | "gold" | "water" | "firefly" | "leaf";
 
@@ -31,8 +31,6 @@ const LEVEL_META: Record<
   chukichi: { label: "BLESSING", kanji: "中吉", particle: "gold" },
   shokichi: { label: "SMALL BLESSING", kanji: "小吉", particle: "water" },
   suekichi: { label: "FAINT BLESSING", kanji: "末吉", particle: "firefly" },
-  kyo: { label: "CAUTION", kanji: "凶", particle: "leaf" },
-  daikyo: { label: "GREAT CAUTION", kanji: "大凶", particle: "leaf", dense: true },
 };
 
 /** Drawer face labels 壱 … 二十四 (24-draw cabinet) */
@@ -101,20 +99,6 @@ const POEMS: Record<FortuneLevel, [string, string][]> = {
     ["The boat drifts; the oar is near", "You are not helpless — only paused"],
     ["Clouds return; the roof still holds", "Weather changes; foundations remain"],
   ],
-  kyo: [
-    ["The mirror fogs when breath is hurried", "Slow down before you choose a door"],
-    ["Stones shift under careless feet", "Risk rises when attention thins"],
-    ["Thunder speaks; the field empties", "Not every battle is yours to fight today"],
-    ["The ink blot spreads where the hand shook", "Imprecision has downstream costs"],
-    ["Branches cross where the wind argues", "Conflict grows where listening stops"],
-    ["The path narrows between two walls", "Choose carefully — retreat is honorable"],
-    ["Ash falls where the fire leapt", "After intensity, inspect what remains"],
-    ["The clock skips when wound too tight", "Overwork breaks more than rest fixes"],
-  ],
-  daikyo: [
-    ["The river turns back on itself tonight", "Wait — do not force the crossing"],
-    ["Black ice where moonlight lies", "Assume danger until proven otherwise"],
-  ],
 };
 
 function clampStars(n: number) {
@@ -122,14 +106,12 @@ function clampStars(n: number) {
 }
 
 function buildFortunes(): Fortune[] {
-  /** 24 drawers — half of classic 48 distribution */
+  /** 24 drawers — all auspicious, no bad luck */
   const sequence: FortuneLevel[] = [
-    ...Array.from({ length: 3 }, () => "daikichi" as const),
-    ...Array.from({ length: 5 }, () => "chukichi" as const),
+    ...Array.from({ length: 5 }, () => "daikichi" as const),
+    ...Array.from({ length: 9 }, () => "chukichi" as const),
     ...Array.from({ length: 6 }, () => "shokichi" as const),
-    ...Array.from({ length: 5 }, () => "suekichi" as const),
-    ...Array.from({ length: 4 }, () => "kyo" as const),
-    ...Array.from({ length: 1 }, () => "daikyo" as const),
+    ...Array.from({ length: 4 }, () => "suekichi" as const),
   ];
 
   const counts: Record<FortuneLevel, number> = {
@@ -137,15 +119,13 @@ function buildFortunes(): Fortune[] {
     chukichi: 0,
     shokichi: 0,
     suekichi: 0,
-    kyo: 0,
-    daikyo: 0,
   };
 
   return sequence.map((level, i) => {
     const meta = LEVEL_META[level];
     const idx = counts[level]++;
     const [a, b] = POEMS[level][idx % POEMS[level].length];
-    const baseLove = level === "daikichi" ? 5 : level === "daikyo" ? 1 : 3 + (i % 3);
+    const baseLove = level === "daikichi" ? 5 : 3 + (i % 3);
     const id = `f${String(i + 1).padStart(3, "0")}`;
     const drawerLabel = drawerKanjiFromIndex(i);
 
@@ -163,23 +143,12 @@ function buildFortunes(): Fortune[] {
             ? "Steady progress; refine details and keep your promises modest."
             : level === "shokichi"
               ? "Small openings favor patient work and gentle persistence."
-              : level === "suekichi"
-                ? "Mixed signals — verify facts, shorten commitments, and rest."
-                : level === "kyo"
-                  ? "Friction is likely — protect boundaries and postpone big bets."
-                  : "A heavy fog — conserve energy, seek counsel, and wait for clarity.",
-      lucky:
-        level === "daikyo"
-          ? ["Rest", "Seek counsel", "Simplify plans"]
-          : level === "kyo"
-            ? ["Quiet reflection", "Organize your desk", "Walk outdoors"]
-            : ["Travel short distances", "Meet a mentor", "Finish one small task"],
+              : "Mixed signals — verify facts, shorten commitments, and rest.",
+      lucky: ["Travel short distances", "Meet a mentor", "Finish one small task"],
       unlucky:
         level === "daikichi"
           ? ["Arrogance", "Overpromising"]
-          : level === "daikyo"
-            ? ["Major decisions", "Risky investments", "Sharp conflict"]
-            : ["Impulsive spending", "Late-night debates"],
+          : ["Impulsive spending", "Late-night debates"],
       love: clampStars(baseLove + (i % 2)),
       career: clampStars(baseLove + ((i + 1) % 3)),
       wealth: clampStars(baseLove + ((i + 2) % 2)),

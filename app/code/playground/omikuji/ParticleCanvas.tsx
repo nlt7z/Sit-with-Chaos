@@ -3,162 +3,277 @@
 import { useEffect, useRef } from "react";
 import type { ParticleKind } from "./fortunes";
 
-type Base = { x: number; y: number; vx: number; vy: number; life: number; r: number; rot: number; vr: number };
+type Shape = "petal" | "star4" | "star5" | "dot";
+
+type Particle = {
+  x: number; y: number;
+  vx: number; vy: number;
+  life: number;       // 0–1, decreases to 0
+  r: number;
+  rot: number; vr: number;
+  shape: Shape;
+  h: number; s: number; l: number; // hue / saturation / lightness
+  phase: number; phaseSpeed: number;
+};
 
 function rnd(a: number, b: number) {
   return a + Math.random() * (b - a);
 }
 
-function initParticles(type: ParticleKind, count: number): Base[] {
-  const w = typeof window !== "undefined" ? window.innerWidth : 800;
-  const h = typeof window !== "undefined" ? window.innerHeight : 600;
-  const out: Base[] = [];
-  for (let i = 0; i < count; i++) {
-    if (type === "sakura") {
-      out.push({
-        x: rnd(0, w),
-        y: rnd(-80, 0),
-        vx: rnd(-0.35, 0.35),
-        vy: rnd(0.8, 2),
-        life: rnd(0.4, 1),
-        r: rnd(6, 14),
-        rot: rnd(0, Math.PI * 2),
-        vr: rnd(-0.04, 0.04),
-      });
-    } else if (type === "gold") {
-      const a = Math.random() * Math.PI * 2;
-      const sp = rnd(2, 5);
-      out.push({
-        x: w / 2,
-        y: h / 2,
-        vx: Math.cos(a) * sp,
-        vy: Math.sin(a) * sp + 0.35,
-        life: rnd(0.5, 1),
-        r: rnd(2, 5),
-        rot: rnd(0, Math.PI * 2),
-        vr: rnd(-0.15, 0.15),
-      });
-    } else if (type === "water") {
-      out.push({
-        x: rnd(-40, 0),
-        y: rnd(0, h),
-        vx: rnd(3, 6),
-        vy: rnd(-0.25, 0.25),
-        life: rnd(0.45, 0.95),
-        r: rnd(4, 9),
-        rot: rnd(-0.2, 0.2),
-        vr: 0,
-      });
-    } else if (type === "firefly") {
-      out.push({
-        x: rnd(0, w),
-        y: rnd(0, h),
-        vx: rnd(-0.6, 0.6),
-        vy: rnd(-0.6, 0.6),
-        life: rnd(0.4, 1),
-        r: rnd(2, 4),
-        rot: 0,
-        vr: 0,
-      });
-    } else {
-      out.push({
-        x: rnd(0, w),
-        y: rnd(-60, 0),
-        vx: rnd(-1.2, 1.2),
-        vy: rnd(1.5, 3.2),
-        life: rnd(0.5, 1),
-        r: rnd(5, 11),
-        rot: rnd(0, Math.PI),
-        vr: rnd(0.02, 0.08),
-      });
-    }
-  }
-  return out;
+// ─── Shape drawers ────────────────────────────────────────────────────────────
+
+function petalPath(ctx: CanvasRenderingContext2D, r: number) {
+  ctx.beginPath();
+  ctx.moveTo(0, r * 0.1);
+  ctx.bezierCurveTo( r * 0.52, -r * 0.06,  r * 0.65, -r * 0.80,  0, -r);
+  ctx.bezierCurveTo(-r * 0.65, -r * 0.80, -r * 0.52, -r * 0.06,  0,  r * 0.1);
+  ctx.closePath();
 }
 
-function update(p: Base, type: ParticleKind, frame: number, w: number, h: number) {
+function drawFlower(
+  ctx: CanvasRenderingContext2D,
+  r: number, h: number, s: number, l: number, frame: number
+) {
+  const breath = 0.70 + 0.18 * Math.sin(frame * 0.034);
+  for (let k = 0; k < 5; k++) {
+    ctx.save();
+    ctx.rotate((k / 5) * Math.PI * 2);
+    const shade = l - (k % 2 === 0 ? 0 : 5);
+    ctx.fillStyle = `hsla(${h},${s}%,${shade}%,${breath})`;
+    petalPath(ctx, r);
+    ctx.fill();
+    ctx.restore();
+  }
+  ctx.beginPath();
+  ctx.arc(0, 0, r * 0.16, 0, Math.PI * 2);
+  ctx.fillStyle = `hsla(${h + 18},${s - 10}%,${l + 10}%,0.95)`;
+  ctx.fill();
+}
+
+function drawSparkle(
+  ctx: CanvasRenderingContext2D,
+  r: number, h: number, s: number, l: number
+) {
+  const t = 0.11;
+  ctx.beginPath();
+  ctx.moveTo(0, -r);
+  ctx.bezierCurveTo( r*t, -r*t,  r*t, -r*t,  r, 0);
+  ctx.bezierCurveTo( r*t,  r*t,  r*t,  r*t,  0, r);
+  ctx.bezierCurveTo(-r*t,  r*t, -r*t,  r*t, -r, 0);
+  ctx.bezierCurveTo(-r*t, -r*t, -r*t, -r*t,  0, -r);
+  ctx.closePath();
+  ctx.fillStyle = `hsla(${h},${s}%,${l}%,0.90)`;
+  ctx.fill();
+}
+
+function drawStar5(
+  ctx: CanvasRenderingContext2D,
+  r: number, h: number, s: number, l: number
+) {
+  const inner = r * 0.42;
+  ctx.beginPath();
+  for (let i = 0; i < 10; i++) {
+    const rad = i % 2 === 0 ? r : inner;
+    const a = (i * Math.PI) / 5 - Math.PI / 2;
+    if (i === 0) ctx.moveTo(Math.cos(a) * rad, Math.sin(a) * rad);
+    else         ctx.lineTo(Math.cos(a) * rad, Math.sin(a) * rad);
+  }
+  ctx.closePath();
+  ctx.fillStyle = `hsla(${h},${s}%,${l}%,0.92)`;
+  ctx.fill();
+}
+
+function drawDot(
+  ctx: CanvasRenderingContext2D,
+  r: number, h: number, s: number, l: number, alpha: number
+) {
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.fillStyle = `hsla(${h},${s}%,${l}%,${alpha})`;
+  ctx.fill();
+}
+
+// ─── Particle init (all types burst from screen center) ───────────────────────
+
+function pickSakuraShape(): Shape {
+  const n = Math.random();
+  if (n < 0.55) return "petal";
+  if (n < 0.78) return "dot";
+  if (n < 0.90) return "star4";
+  return "star5";
+}
+
+function makeParticle(type: ParticleKind, w: number, h: number): Particle {
+  // All particles spawn from the center (where the card is)
+  const cx = w / 2 + rnd(-30, 30);
+  const cy = h / 2 + rnd(-30, 30);
+  const a = Math.random() * Math.PI * 2;
+
   if (type === "sakura") {
-    p.x += p.vx + Math.sin(frame * 0.02 + p.life * 10) * 0.35;
-    p.y += p.vy;
+    const shape = pickSakuraShape();
+    const sp = rnd(0.6, 3.2);
+    return {
+      x: cx, y: cy,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp - rnd(0.6, 2.0), // upward burst bias
+      life: rnd(0.75, 1),
+      r: shape === "petal" ? rnd(8, 15) : shape === "dot" ? rnd(3, 5.5) : rnd(4, 8),
+      rot: rnd(0, Math.PI * 2), vr: rnd(-0.020, 0.020),
+      shape, h: rnd(326, 352), s: rnd(70, 88), l: rnd(74, 85),
+      phase: rnd(0, Math.PI * 2), phaseSpeed: rnd(0.018, 0.032),
+    };
+  }
+
+  if (type === "gold") {
+    const sp = rnd(1.8, 5.0);
+    const shape: Shape = Math.random() < 0.55 ? "star5" : Math.random() < 0.5 ? "star4" : "dot";
+    return {
+      x: cx, y: cy,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp - rnd(0.5, 1.8),
+      life: rnd(0.7, 1),
+      r: shape === "star5" ? rnd(3.5, 7) : shape === "star4" ? rnd(3, 6) : rnd(2, 3.5),
+      rot: rnd(0, Math.PI * 2), vr: rnd(-0.10, 0.10),
+      shape, h: rnd(38, 52), s: rnd(85, 96), l: rnd(60, 72),
+      phase: rnd(0, Math.PI * 2), phaseSpeed: 0,
+    };
+  }
+
+  if (type === "water") {
+    const sp = rnd(0.8, 2.8);
+    return {
+      x: cx, y: cy,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp,
+      life: rnd(0.65, 1),
+      r: rnd(3, 7),
+      rot: 0, vr: 0,
+      shape: "dot", h: rnd(188, 202), s: rnd(65, 80), l: rnd(68, 78),
+      phase: rnd(0, Math.PI * 2), phaseSpeed: rnd(0.04, 0.07),
+    };
+  }
+
+  if (type === "firefly") {
+    const sp = rnd(0.3, 1.8);
+    return {
+      x: cx, y: cy,
+      vx: Math.cos(a) * sp,
+      vy: Math.sin(a) * sp,
+      life: rnd(0.5, 1),
+      r: rnd(2, 4),
+      rot: 0, vr: 0,
+      shape: "dot", h: rnd(95, 115), s: rnd(75, 90), l: rnd(72, 82),
+      phase: rnd(0, Math.PI * 2), phaseSpeed: rnd(0.05, 0.10),
+    };
+  }
+
+  // leaf / fallback
+  const sp = rnd(0.8, 3.5);
+  const fbShape: Shape = Math.random() < 0.4 ? "petal" : Math.random() < 0.55 ? "star4" : "dot";
+  return {
+    x: cx, y: cy,
+    vx: Math.cos(a) * sp,
+    vy: Math.sin(a) * sp - rnd(0.3, 1.2),
+    life: rnd(0.7, 1),
+    r: fbShape === "petal" ? rnd(7, 13) : rnd(4, 8),
+    rot: rnd(0, Math.PI), vr: rnd(-0.025, 0.025),
+    shape: fbShape, h: rnd(25, 55), s: rnd(75, 90), l: rnd(65, 78),
+    phase: rnd(0, Math.PI * 2), phaseSpeed: rnd(0.020, 0.040),
+  };
+}
+
+function initParticles(type: ParticleKind, count: number): Particle[] {
+  const w = typeof window !== "undefined" ? window.innerWidth  : 800;
+  const h = typeof window !== "undefined" ? window.innerHeight : 600;
+  return Array.from({ length: count }, () => makeParticle(type, w, h));
+}
+
+// ─── Physics ──────────────────────────────────────────────────────────────────
+
+function update(p: Particle, type: ParticleKind) {
+  p.phase += p.phaseSpeed;
+
+  if (type === "sakura") {
+    p.x  += p.vx + Math.sin(p.phase) * 0.42;
+    p.y  += p.vy;
+    p.vy += 0.038;   // gravity
+    p.vx *= 0.994;   // air drag
     p.rot += p.vr;
-    if (p.y > h + 40) {
-      p.y = rnd(-60, -10);
-      p.x = rnd(0, w);
-    }
+    p.life -= 0.0030;
   } else if (type === "gold") {
-    p.x += p.vx;
-    p.y += p.vy;
-    p.vy += 0.04;
+    p.x  += p.vx;
+    p.y  += p.vy;
+    p.vy += 0.055;
+    p.vx *= 0.990;
     p.rot += p.vr;
-    p.life *= 0.997;
+    p.life -= 0.0028;
   } else if (type === "water") {
-    p.x += p.vx;
-    p.y += Math.sin(frame * 0.05 + p.r) * 0.4;
-    if (p.x > w + 30) {
-      p.x = -20;
-      p.y = rnd(0, h);
-    }
+    p.x  += p.vx + Math.sin(p.phase) * 0.35;
+    p.y  += p.vy;
+    p.vy += 0.03;
+    p.vx *= 0.992;
+    p.life -= 0.0032;
   } else if (type === "firefly") {
-    p.vx += rnd(-0.08, 0.08);
-    p.vy += rnd(-0.08, 0.08);
-    p.vx *= 0.92;
-    p.vy *= 0.92;
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0 || p.x > w) p.vx *= -1;
-    if (p.y < 0 || p.y > h) p.vy *= -1;
-    p.life = 0.45 + Math.sin(frame * 0.08 + p.r * 3) * 0.45;
+    p.vx += rnd(-0.07, 0.07);
+    p.vy += rnd(-0.07, 0.07);
+    p.vx *= 0.93;
+    p.vy *= 0.93;
+    p.x  += p.vx;
+    p.y  += p.vy;
+    p.life = 0.45 + Math.sin(p.phase) * 0.45;
   } else {
-    p.x += p.vx + Math.sin(frame * 0.03) * 0.6;
-    p.y += p.vy;
+    p.x  += p.vx + Math.sin(p.phase) * 0.45;
+    p.y  += p.vy;
+    p.vy += 0.04;
+    p.vx *= 0.993;
     p.rot += p.vr;
-    if (p.y > h + 30) {
-      p.y = -20;
-      p.x = rnd(0, w);
-    }
+    p.life -= 0.0030;
   }
 }
 
-function drawParticle(ctx: CanvasRenderingContext2D, p: Base, type: ParticleKind, frame: number) {
+// ─── Render ───────────────────────────────────────────────────────────────────
+
+function drawParticle(
+  ctx: CanvasRenderingContext2D, p: Particle, type: ParticleKind, frame: number
+) {
+  if (p.life <= 0) return;
   ctx.save();
   ctx.translate(p.x, p.y);
-  ctx.rotate(p.rot);
   ctx.globalAlpha = Math.min(1, p.life);
 
-  if (type === "sakura") {
-    ctx.fillStyle = `rgba(244, 167, 185, ${0.55 + 0.25 * Math.sin(frame * 0.04)})`;
-    for (let k = 0; k < 5; k++) {
-      const a = (k / 5) * Math.PI * 2;
-      ctx.beginPath();
-      ctx.arc(Math.cos(a) * p.r * 0.45, Math.sin(a) * p.r * 0.45, p.r * 0.35, 0, Math.PI * 2);
-      ctx.fill();
+  switch (p.shape) {
+    case "petal":
+      ctx.rotate(p.rot);
+      drawFlower(ctx, p.r, p.h, p.s, p.l, frame);
+      break;
+    case "star4":
+      ctx.rotate(p.rot);
+      drawSparkle(ctx, p.r, p.h, p.s, p.l);
+      break;
+    case "star5":
+      if (type === "gold") {
+        ctx.shadowColor = `hsl(${p.h},95%,78%)`;
+        ctx.shadowBlur  = p.r * 1.6;
+      }
+      ctx.rotate(p.rot);
+      drawStar5(ctx, p.r, p.h, p.s, p.l);
+      if (type === "gold") ctx.shadowBlur = 0;
+      break;
+    default: {
+      if (type === "firefly") {
+        ctx.shadowColor = `hsl(${p.h},80%,75%)`;
+        ctx.shadowBlur  = 10;
+      }
+      const alpha = Math.min(1, p.life) * (0.58 + 0.30 * Math.sin(frame * 0.05 + p.phase));
+      drawDot(ctx, p.r, p.h, p.s, p.l, alpha);
+      if (type === "firefly") ctx.shadowBlur = 0;
     }
-  } else if (type === "gold") {
-    const tw = 0.5 + 0.5 * Math.sin(frame * 0.12 + p.r);
-    ctx.fillStyle = `rgba(240, 192, 64, ${0.35 + 0.55 * tw})`;
-    ctx.beginPath();
-    ctx.arc(0, 0, p.r, 0, Math.PI * 2);
-    ctx.fill();
-  } else if (type === "water") {
-    ctx.fillStyle = "rgba(126, 207, 218, 0.55)";
-    ctx.beginPath();
-    ctx.ellipse(0, 0, 2, p.r, 0, 0, Math.PI * 2);
-    ctx.fill();
-  } else if (type === "firefly") {
-    ctx.shadowColor = "#b8f080";
-    ctx.shadowBlur = 12;
-    ctx.fillStyle = `rgba(184, 240, 128, ${0.45 + 0.45 * p.life})`;
-    ctx.beginPath();
-    ctx.arc(0, 0, p.r, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-  } else {
-    ctx.fillStyle = `rgba(212, 136, 42, ${0.55 + 0.2 * Math.sin(frame * 0.05)})`;
-    ctx.fillRect(-p.r * 0.6, -p.r * 0.25, p.r * 1.2, p.r * 0.5);
   }
 
   ctx.restore();
 }
+
+// ─── Component ────────────────────────────────────────────────────────────────
 
 export function ParticleCanvas({
   type,
@@ -181,49 +296,38 @@ export function ParticleCanvas({
     let raf = 0;
     const mobile = typeof window !== "undefined" && window.innerWidth < 768;
     const base =
-      type === "sakura"
-        ? 80
-        : type === "gold"
-          ? 120
-          : type === "water"
-            ? 60
-            : type === "firefly"
-              ? 30
-              : 40;
-    const count = Math.max(12, Math.round(base * (mobile ? 0.5 : 1) * (dense ? 1.35 : 1)));
+      type === "sakura"    ? 90
+      : type === "gold"    ? 130
+      : type === "water"   ? 70
+      : type === "firefly" ? 35
+      : 45;
+    const count = Math.max(14, Math.round(base * (mobile ? 0.55 : 1) * (dense ? 1.35 : 1)));
     const particles = initParticles(type, count);
 
     const resize = () => {
-      canvas.width = window.innerWidth;
+      canvas.width  = window.innerWidth;
       canvas.height = window.innerHeight;
     };
     resize();
     window.addEventListener("resize", resize);
 
-    const DURATION = 240;
+    const DURATION = 260;
     let frame = 0;
 
     const loop = () => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
-      if (type === "leaf") {
-        ctx.fillStyle = "rgba(40,40,40,0.15)";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
 
-      const alpha = frame < DURATION ? 1 : Math.max(0, 1 - (frame - DURATION + 1) / 30);
-      ctx.globalAlpha = alpha;
+      const fadeAlpha = frame < DURATION ? 1 : Math.max(0, 1 - (frame - DURATION + 1) / 30);
+      ctx.globalAlpha = fadeAlpha;
 
-      particles.forEach((p) => {
-        update(p, type, frame, canvas.width, canvas.height);
+      for (const p of particles) {
+        update(p, type);
         drawParticle(ctx, p, type, frame);
-      });
-      ctx.globalAlpha = 1;
-
-      frame += 1;
-      if (frame > DURATION + 29) {
-        onComplete();
-        return;
       }
+
+      ctx.globalAlpha = 1;
+      frame += 1;
+      if (frame > DURATION + 29) { onComplete(); return; }
       raf = requestAnimationFrame(loop);
     };
 

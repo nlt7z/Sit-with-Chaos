@@ -920,9 +920,11 @@ function GenieLamp({
 export function GachaCabinet({
   onExit,
   onNavigateMain,
+  embed = false,
 }: {
   onExit: () => void;
   onNavigateMain?: () => void;
+  embed?: boolean;
 }) {
   const reduced = !!useReducedMotion();
   const [flash, setFlash] = useState<Rarity | null>(null);
@@ -1108,7 +1110,7 @@ export function GachaCabinet({
 
         <GenieLamp reducedMotion={reduced} onDraw={drawOmikuji} lampRef={lampRef} />
 
-        <div className="fixed bottom-5 left-1/2 z-30 -translate-x-1/2">
+        {!embed && <div className="fixed bottom-5 left-1/2 z-30 -translate-x-1/2">
           <button
             type="button"
             role="switch"
@@ -1161,7 +1163,7 @@ export function GachaCabinet({
               Main Page
             </span>
           </button>
-        </div>
+        </div>}
       </div>
     </>
   );

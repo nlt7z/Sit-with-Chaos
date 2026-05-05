@@ -36,16 +36,6 @@ const magicPreviews = [
     panelBg:
       "bg-gradient-to-br from-sky-50 via-[#e8f3fc] to-[#d4ebf5]",
   },
-  {
-    href: "/work/ai-character/prototype-astro",
-    kind: "image" as const,
-    mediaSrc: "/assets/magic/astro-card.png",
-    mediaAlt: "Astro showroom stars and planetary animation",
-    category: "Astrology",
-    summary: "Astrology Reading",
-    panelBg: "bg-[#f2ebf5]",
-    mediaClassName: "object-cover object-center",
-  },
 ] as const;
 
 export function HomeMagicGallery() {
@@ -153,6 +143,19 @@ export function HomeMagicGallery() {
               />
             </motion.div>
           ))}
+
+          {/* placeholder — reserved slot */}
+          <div
+            role="listitem"
+            aria-hidden
+            className="hidden lg:flex flex-col overflow-hidden rounded-2xl ring-1 ring-black/[0.05]"
+          >
+            <div className="relative aspect-[4/5] w-full shrink-0 sm:aspect-[5/6] bg-[repeating-linear-gradient(45deg,transparent,transparent_6px,rgba(0,0,0,0.025)_6px,rgba(0,0,0,0.025)_7px)] bg-surfaceAlt" />
+            <div className="border-t border-black/[0.05] px-3 py-3 md:px-3.5 md:py-3.5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/30">Coming soon</p>
+              <p className="mt-1.5 font-display text-[16px] font-light text-textPrimary/20 md:text-[17px]">—</p>
+            </div>
+          </div>
         </motion.div>
       </div>
     </section>
