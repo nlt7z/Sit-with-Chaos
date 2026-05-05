@@ -30,12 +30,14 @@ function PixelKeyboard({
   onKeyHover,
   onKeyLeave,
   onKeyClick,
+  isMobile,
 }: {
   hoveredKey: number | null;
   displayText: string;
   onKeyHover: (n: number) => void;
   onKeyLeave: () => void;
   onKeyClick: (n: number) => void;
+  isMobile?: boolean;
 }) {
   const px = pixel.style.fontFamily;
   const ledLabel = hoveredKey ? KEYS[hoveredKey].label.toUpperCase() : displayText;
@@ -50,9 +52,9 @@ function PixelKeyboard({
           "inset -5px -5px 0 #880808",
           "10px 10px 0 #000",
         ].join(", "),
-        padding: "24px 22px 20px",
+        padding: isMobile ? "16px 14px 14px" : "24px 22px 20px",
         position: "relative",
-        width: 480,
+        width: isMobile ? "min(calc(100vw - 48px), 400px)" : 480,
         boxSizing: "border-box" as const,
         display: "flex",
         flexDirection: "column",
@@ -95,7 +97,7 @@ function PixelKeyboard({
           boxSizing: "border-box" as const,
           textAlign: "center",
           fontFamily: px,
-          fontSize: 11,
+          fontSize: isMobile ? 9 : 11,
           letterSpacing: "0.20em",
           color: hoveredKey ? "#ffffff" : "#44ff44",
           textShadow: hoveredKey
@@ -109,7 +111,7 @@ function PixelKeyboard({
       </div>
 
       {/* 3×3 key grid — square keys, text on top, number below */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 12, width: "100%" }}>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: isMobile ? 8 : 12, width: "100%" }}>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => {
           const active = hoveredKey === n;
           return (
@@ -119,7 +121,7 @@ function PixelKeyboard({
               onMouseEnter={() => onKeyHover(n)}
               onMouseLeave={onKeyLeave}
               style={{
-                cursor:        "none",
+                cursor:        isMobile ? "pointer" : "none",
                 fontFamily:    px,
                 aspectRatio:   "1 / 1",
                 background:    active ? "#e8d898" : "#f8edca",
@@ -127,7 +129,7 @@ function PixelKeyboard({
                 boxShadow:     active
                   ? "inset 2px 2px 0 #c0a870, inset -1px -1px 0 #f0e0a0"
                   : "inset 3px 3px 0 #fffae8, inset -3px -3px 0 #c0a860, 3px 3px 0 #2a1a0a",
-                padding:        "10px 6px",
+                padding:        isMobile ? "6px 4px" : "10px 6px",
                 textAlign:      "center" as const,
                 transform:      active ? "translateY(2px) translateX(1px)" : "none",
                 transition:     "all 0.05s",
@@ -135,16 +137,16 @@ function PixelKeyboard({
                 flexDirection:  "column",
                 alignItems:     "center",
                 justifyContent: "center",
-                gap:            8,
+                gap:            isMobile ? 4 : 8,
               }}
             >
-              {/* Project text — centered, larger */}
-              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 6 }}>
+              {/* Project text */}
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: isMobile ? 3 : 6 }}>
                 {KEYS[n].lines.map((line, li) => (
                   <span
                     key={li}
                     style={{
-                      fontSize:      13,
+                      fontSize:      isMobile ? 9 : 13,
                       color:         active ? "#2a1000" : "#3a2008",
                       lineHeight:    1,
                       letterSpacing: "0.04em",
@@ -159,8 +161,8 @@ function PixelKeyboard({
               {/* Thin divider */}
               <div style={{ width: "65%", height: 2, background: "#2a1a0a28" }} />
 
-              {/* Number — smaller, below */}
-              <div style={{ fontSize: 11, color: "#7a5030", lineHeight: 1 }}>
+              {/* Number */}
+              <div style={{ fontSize: isMobile ? 9 : 11, color: "#7a5030", lineHeight: 1 }}>
                 {n}
               </div>
             </button>
@@ -203,6 +205,15 @@ export function VendingMachineClient() {
   const router = useRouter();
   const px = pixel.style.fontFamily;
 
+  // mobile detection
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 768);
+    check();
+    window.addEventListener("resize", check);
+    return () => window.removeEventListener("resize", check);
+  }, []);
+
   // cursor
   const [mouse, setMouse] = useState({ x: -200, y: -200 });
 
@@ -232,9 +243,10 @@ export function VendingMachineClient() {
   const [draggedCoin, setDraggedCoin]     = useState<number | null>(null);
   const [dragPos, setDragPos]             = useState({ x: 0, y: 0 });
   const [isOverVending, setIsOverVending] = useState(false);
-  const dragOffRef  = useRef({ x: 0, y: 0 });
-  const dragCoinRef = useRef<number | null>(null);
-  const vendingRef  = useRef<HTMLDivElement>(null);
+  const dragOffRef    = useRef({ x: 0, y: 0 });
+  const dragCoinRef   = useRef<number | null>(null);
+  const touchMovedRef = useRef(false);
+  const vendingRef    = useRef<HTMLDivElement>(null);
 
   // keyboard
   const [showKeyboard, setShowKeyboard] = useState(false);
@@ -250,7 +262,13 @@ export function VendingMachineClient() {
     return () => clearInterval(id);
   }, [showKeyboard]);
 
-  // global pointer
+  const insertCoin = useCallback((coinIdx: number) => {
+    setUsedCoins(prev => { const s = new Set(prev); s.add(coinIdx); return s; });
+    setShowKeyboard(true);
+    setDisplayText("SELECT  1-9");
+  }, []);
+
+  // global mouse events
   useEffect(() => {
     const onMove = (e: MouseEvent) => {
       setMouse({ x: e.clientX, y: e.clientY });
@@ -277,11 +295,7 @@ export function VendingMachineClient() {
         !!rect &&
         e.clientX >= rect.left && e.clientX <= rect.right &&
         e.clientY >= rect.top  && e.clientY <= rect.bottom;
-      if (hit) {
-        setUsedCoins(prev => { const s = new Set(prev); s.add(coinIdx); return s; });
-        setShowKeyboard(true);
-        setDisplayText("SELECT  1-9");
-      }
+      if (hit) insertCoin(coinIdx);
     };
     window.addEventListener("mousemove", onMove);
     window.addEventListener("mouseup",   onUp);
@@ -289,7 +303,54 @@ export function VendingMachineClient() {
       window.removeEventListener("mousemove", onMove);
       window.removeEventListener("mouseup",   onUp);
     };
-  }, []);
+  }, [insertCoin]);
+
+  // global touch events
+  useEffect(() => {
+    const onTouchMove = (e: TouchEvent) => {
+      if (dragCoinRef.current === null) return;
+      touchMovedRef.current = true;
+      const touch = e.touches[0];
+      setDragPos({
+        x: touch.clientX - dragOffRef.current.x,
+        y: touch.clientY - dragOffRef.current.y,
+      });
+      const rect = vendingRef.current?.getBoundingClientRect();
+      setIsOverVending(
+        !!rect &&
+        touch.clientX >= rect.left && touch.clientX <= rect.right &&
+        touch.clientY >= rect.top  && touch.clientY <= rect.bottom,
+      );
+      e.preventDefault();
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      const coinIdx = dragCoinRef.current;
+      if (coinIdx === null) return;
+      const touch = e.changedTouches[0];
+      dragCoinRef.current = null;
+      setDraggedCoin(null);
+      setIsOverVending(false);
+
+      if (!touchMovedRef.current) {
+        // Tap — insert directly without needing to drag onto machine
+        insertCoin(coinIdx);
+        return;
+      }
+
+      const rect = vendingRef.current?.getBoundingClientRect();
+      const hit  =
+        !!rect &&
+        touch.clientX >= rect.left && touch.clientX <= rect.right &&
+        touch.clientY >= rect.top  && touch.clientY <= rect.bottom;
+      if (hit) insertCoin(coinIdx);
+    };
+    window.addEventListener("touchmove", onTouchMove, { passive: false });
+    window.addEventListener("touchend",  onTouchEnd);
+    return () => {
+      window.removeEventListener("touchmove", onTouchMove);
+      window.removeEventListener("touchend",  onTouchEnd);
+    };
+  }, [insertCoin]);
 
   const navigate = useCallback(
     (n: number) => {
@@ -327,38 +388,64 @@ export function VendingMachineClient() {
     e.preventDefault();
   };
 
+  const startTouchDrag = (idx: number, e: React.TouchEvent) => {
+    if (usedCoins.has(idx)) return;
+    const touch = e.touches[0];
+    const rect  = (e.currentTarget as HTMLElement).getBoundingClientRect();
+    touchMovedRef.current = false;
+    dragOffRef.current    = { x: touch.clientX - rect.left, y: touch.clientY - rect.top };
+    dragCoinRef.current   = idx;
+    setDragPos({ x: rect.left, y: rect.top });
+    setDraggedCoin(idx);
+  };
+
   const ledText    = hoveredKey ? KEYS[hoveredKey].label.toUpperCase() : displayText;
   const ledVisible = showKeyboard ? true : blinkOn;
+  const coinSize   = isMobile ? 60 : 96;
 
   return (
     <div
       className="relative min-h-screen overflow-hidden bg-white"
       style={{
-        cursor: "none",
+        cursor: isMobile ? "auto" : "none",
         userSelect: "none",
         backgroundImage: "radial-gradient(circle, #d8d8d8 1px, transparent 1px)",
         backgroundSize: "24px 24px",
-        display: "grid",
-        gridTemplateColumns: "220px 1fr 180px",
-        gridTemplateRows: "1fr",
-        minHeight: "100vh",
-        padding: "28px 40px",
-        boxSizing: "border-box",
-        alignItems: "center",
+        ...(isMobile
+          ? {
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              minHeight: "100vh",
+              padding: "70px 16px 32px",
+              boxSizing: "border-box",
+              gap: 0,
+            }
+          : {
+              display: "grid",
+              gridTemplateColumns: "220px 1fr 180px",
+              gridTemplateRows: "1fr",
+              minHeight: "100vh",
+              padding: "28px 40px",
+              boxSizing: "border-box",
+              alignItems: "center",
+            }),
       }}
     >
-      {/* ── pixel cursor ─────────────────────────────── */}
-      <div
-        className="pointer-events-none fixed z-[9999]"
-        style={{ left: mouse.x - 4, top: mouse.y - 4 }}
-      >
-        <Image
-          src="/assets/mainpage-vending machine/cursor.png"
-          alt="" width={72} height={72}
-          style={{ imageRendering: "pixelated" }}
-          priority
-        />
-      </div>
+      {/* ── pixel cursor (desktop only) ───────────────── */}
+      {!isMobile && (
+        <div
+          className="pointer-events-none fixed z-[9999]"
+          style={{ left: mouse.x - 4, top: mouse.y - 4 }}
+        >
+          <Image
+            src="/assets/mainpage-vending machine/cursor.png"
+            alt="" width={72} height={72}
+            style={{ imageRendering: "pixelated" }}
+            priority
+          />
+        </div>
+      )}
 
       {/* ── top-right: portfolio toggle ───────────────── */}
       <Link
@@ -366,17 +453,17 @@ export function VendingMachineClient() {
         style={{
           position: "fixed",
           top: 20,
-          right: 28,
+          right: isMobile ? 16 : 28,
           zIndex: 80,
           fontFamily: pixel.style.fontFamily,
-          fontSize: 8,
+          fontSize: isMobile ? 7 : 8,
           letterSpacing: "0.18em",
           color: "#555",
           background: "#f4f0e8",
           border: "2px solid #aaa",
           boxShadow: "2px 2px 0 #888",
-          padding: "8px 14px",
-          cursor: "none",
+          padding: isMobile ? "6px 10px" : "8px 14px",
+          cursor: isMobile ? "pointer" : "none",
           textDecoration: "none",
           display: "inline-block",
           transition: "background 0.1s, color 0.1s",
@@ -393,76 +480,110 @@ export function VendingMachineClient() {
         PORTFOLIO →
       </Link>
 
-      {/* ── left column: music icon ──────────────────── */}
-      <motion.div
-        style={{ alignSelf: "start", zIndex: 30, cursor: "none", position: "relative", display: "inline-block" }}
-        whileHover={{ scale: 1.1 }}
-        transition={{ duration: 0.2, ease: "easeOut" }}
-        onClick={toggleMusic}
-        title={isPlaying ? "Pause music" : "Play music"}
-      >
-        {/* Pixel stars — only animate when playing */}
-        {PIXEL_STARS.map(s => (
-          <motion.span
-            key={s.id}
-            style={{
-              position:      "absolute",
-              left:          s.x,
-              top:           s.y,
-              fontSize:      s.size,
-              color:         s.color,
-              fontFamily:    `${px}, monospace`,
-              lineHeight:    1,
-              pointerEvents: "none",
-              zIndex:        2,
-              display:       "block",
-            }}
-            animate={isPlaying
-              ? { y: [0, -10, 2, -6, 0], scale: [1, 1.5, 0.9, 1.3, 1], opacity: [0.5, 1, 0.7, 1, 0.5] }
-              : { scale: 0, opacity: 0 }
-            }
-            transition={isPlaying
-              ? { duration: 0.9 + s.delay * 0.4, repeat: Infinity, ease: "easeInOut", delay: s.delay }
-              : { duration: 0.2 }
-            }
-          >
-            {s.char}
-          </motion.span>
-        ))}
-
-        {/* Music icon image */}
-        <Image
-          src="/assets/mainpage-vending machine/music.png"
-          alt={isPlaying ? "Now playing — click to pause" : "Click to play music"}
-          width={200} height={152}
-          style={{ imageRendering: "pixelated", opacity: isPlaying ? 1 : 0.7, display: "block" }}
-        />
-
-        {/* Paused hint */}
-        <AnimatePresence>
-          {!isPlaying && (
-            <motion.p
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+      {/* ── music icon ──────────────────────────────────── */}
+      {isMobile ? (
+        /* Mobile: fixed top-left, compact */
+        <motion.button
+          type="button"
+          style={{
+            position: "fixed",
+            top: 16,
+            left: 16,
+            zIndex: 30,
+            cursor: "pointer",
+            background: "none",
+            border: "none",
+            padding: 0,
+          }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleMusic}
+          title={isPlaying ? "Pause music" : "Play music"}
+        >
+          <Image
+            src="/assets/mainpage-vending machine/music.png"
+            alt={isPlaying ? "Now playing — tap to pause" : "Tap to play music"}
+            width={72} height={55}
+            style={{ imageRendering: "pixelated", opacity: isPlaying ? 1 : 0.6, display: "block" }}
+          />
+        </motion.button>
+      ) : (
+        /* Desktop: left column */
+        <motion.div
+          style={{ alignSelf: "start", zIndex: 30, cursor: "none", position: "relative", display: "inline-block" }}
+          whileHover={{ scale: 1.1 }}
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          onClick={toggleMusic}
+          title={isPlaying ? "Pause music" : "Play music"}
+        >
+          {PIXEL_STARS.map(s => (
+            <motion.span
+              key={s.id}
               style={{
-                position:   "absolute",
-                bottom:     -20,
-                left:       "50%",
-                transform:  "translateX(-50%)",
-                fontFamily: px,
-                fontSize:   7,
-                color:      "#999",
-                whiteSpace: "nowrap",
+                position:      "absolute",
+                left:          s.x,
+                top:           s.y,
+                fontSize:      s.size,
+                color:         s.color,
+                fontFamily:    `${px}, monospace`,
+                lineHeight:    1,
                 pointerEvents: "none",
+                zIndex:        2,
+                display:       "block",
               }}
+              animate={isPlaying
+                ? { y: [0, -10, 2, -6, 0], scale: [1, 1.5, 0.9, 1.3, 1], opacity: [0.5, 1, 0.7, 1, 0.5] }
+                : { scale: 0, opacity: 0 }
+              }
+              transition={isPlaying
+                ? { duration: 0.9 + s.delay * 0.4, repeat: Infinity, ease: "easeInOut", delay: s.delay }
+                : { duration: 0.2 }
+              }
             >
-              ▶ PLAY
-            </motion.p>
-          )}
-        </AnimatePresence>
-      </motion.div>
+              {s.char}
+            </motion.span>
+          ))}
+
+          <Image
+            src="/assets/mainpage-vending machine/music.png"
+            alt={isPlaying ? "Now playing — click to pause" : "Click to play music"}
+            width={200} height={152}
+            style={{ imageRendering: "pixelated", opacity: isPlaying ? 1 : 0.7, display: "block" }}
+          />
+
+          <AnimatePresence>
+            {!isPlaying && (
+              <motion.p
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                style={{
+                  position:   "absolute",
+                  bottom:     -20,
+                  left:       "50%",
+                  transform:  "translateX(-50%)",
+                  fontFamily: px,
+                  fontSize:   7,
+                  color:      "#999",
+                  whiteSpace: "nowrap",
+                  pointerEvents: "none",
+                }}
+              >
+                ▶ PLAY
+              </motion.p>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      )}
 
       {/* ── center column: LED + vending machine ─────── */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16, zIndex: 10 }}>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: 16,
+          zIndex: 10,
+          ...(isMobile ? { width: "100%", marginTop: 8 } : {}),
+        }}
+      >
         {/* LED strip above machine */}
         <div
           style={{
@@ -470,10 +591,10 @@ export function VendingMachineClient() {
             border: "3px solid #111",
             boxShadow: "4px 4px 0 #000, inset 0 0 8px rgba(0,0,0,0.8)",
             padding: "9px 24px",
-            minWidth: 260,
+            minWidth: isMobile ? 180 : 260,
             textAlign: "center",
             fontFamily: px,
-            fontSize: 9,
+            fontSize: isMobile ? 8 : 9,
             letterSpacing: "0.26em",
             color: ledVisible ? "#44ff44" : "#1a3a1a",
             textShadow: ledVisible ? "0 0 8px #44ff44, 0 0 20px #44ff4466" : "none",
@@ -496,37 +617,102 @@ export function VendingMachineClient() {
           <Image
             src="/assets/mainpage-vending machine/vending-machine.png"
             alt="Vending Machine" width={520} height={779}
-            style={{ imageRendering: "pixelated", maxHeight: "78vh", width: "auto" }}
+            style={{
+              imageRendering: "pixelated",
+              maxHeight: isMobile ? "52vh" : "78vh",
+              width: "auto",
+              maxWidth: isMobile ? "min(260px, 70vw)" : undefined,
+            }}
             priority
           />
         </motion.div>
       </div>
 
-      {/* ── right column: coins ──────────────────────── */}
-      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, alignSelf: "center" }}>
-        <p style={{ fontFamily: px, fontSize: 7, letterSpacing: "0.2em", color: "#aaa", marginBottom: 8 }}>
-          COINS
-        </p>
-        {Array.from({ length: COIN_COUNT }, (_, i) => (
-          <motion.div
-            key={i}
-            animate={{ opacity: usedCoins.has(i) ? 0.12 : draggedCoin === i ? 0.18 : 1 }}
-            transition={{ duration: 0.12 }}
-            onMouseDown={e => startDrag(i, e)}
-            style={{ cursor: "none", flexShrink: 0 }}
+      {/* ── coins: vertical column (desktop) / horizontal row (mobile) ─── */}
+      {isMobile ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 10,
+            marginTop: 20,
+            width: "100%",
+          }}
+        >
+          <p style={{ fontFamily: px, fontSize: 7, letterSpacing: "0.2em", color: "#aaa" }}>
+            TAP A COIN TO INSERT
+          </p>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              gap: 10,
+              justifyContent: "center",
+              flexWrap: "wrap",
+            }}
           >
-            <Image
-              src="/assets/mainpage-vending machine/coin.png"
-              alt={`Coin ${i + 1}`} width={96} height={96}
-              draggable={false}
-              style={{ imageRendering: "pixelated", pointerEvents: "none", display: "block" }}
-            />
-          </motion.div>
-        ))}
-        <p style={{ fontFamily: px, fontSize: 7, letterSpacing: "0.1em", color: "#bbb", marginTop: 8 }}>
-          ← DRAG
-        </p>
-      </div>
+            {Array.from({ length: COIN_COUNT }, (_, i) => (
+              <motion.div
+                key={i}
+                animate={{ opacity: usedCoins.has(i) ? 0.12 : draggedCoin === i ? 0.18 : 1 }}
+                transition={{ duration: 0.12 }}
+                onMouseDown={e => startDrag(i, e)}
+                onTouchStart={e => startTouchDrag(i, e)}
+                style={{
+                  cursor: usedCoins.has(i) ? "default" : "pointer",
+                  flexShrink: 0,
+                  touchAction: "none",
+                }}
+              >
+                <Image
+                  src="/assets/mainpage-vending machine/coin.png"
+                  alt={`Coin ${i + 1}`} width={coinSize} height={coinSize}
+                  draggable={false}
+                  style={{ imageRendering: "pixelated", pointerEvents: "none", display: "block" }}
+                />
+              </motion.div>
+            ))}
+          </div>
+          <p style={{ fontFamily: px, fontSize: 7, letterSpacing: "0.1em", color: "#bbb" }}>
+            OR DRAG ONTO MACHINE ↑
+          </p>
+        </div>
+      ) : (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: 8,
+            alignSelf: "center",
+          }}
+        >
+          <p style={{ fontFamily: px, fontSize: 7, letterSpacing: "0.2em", color: "#aaa", marginBottom: 8 }}>
+            COINS
+          </p>
+          {Array.from({ length: COIN_COUNT }, (_, i) => (
+            <motion.div
+              key={i}
+              animate={{ opacity: usedCoins.has(i) ? 0.12 : draggedCoin === i ? 0.18 : 1 }}
+              transition={{ duration: 0.12 }}
+              onMouseDown={e => startDrag(i, e)}
+              style={{ cursor: "none", flexShrink: 0 }}
+            >
+              <Image
+                src="/assets/mainpage-vending machine/coin.png"
+                alt={`Coin ${i + 1}`} width={96} height={96}
+                draggable={false}
+                style={{ imageRendering: "pixelated", pointerEvents: "none", display: "block" }}
+              />
+            </motion.div>
+          ))}
+          <p style={{ fontFamily: px, fontSize: 7, letterSpacing: "0.1em", color: "#bbb", marginTop: 8 }}>
+            ← DRAG
+          </p>
+        </div>
+      )}
 
       {/* ── dragged coin ghost ───────────────────────── */}
       {draggedCoin !== null && (
@@ -537,7 +723,7 @@ export function VendingMachineClient() {
           >
             <Image
               src="/assets/mainpage-vending machine/coin.png"
-              alt="" width={96} height={96}
+              alt="" width={coinSize} height={coinSize}
               draggable={false}
               style={{ imageRendering: "pixelated" }}
             />
@@ -570,6 +756,7 @@ export function VendingMachineClient() {
                 onKeyHover={setHoveredKey}
                 onKeyLeave={() => setHoveredKey(null)}
                 onKeyClick={navigate}
+                isMobile={isMobile}
               />
             </motion.div>
           </motion.div>
