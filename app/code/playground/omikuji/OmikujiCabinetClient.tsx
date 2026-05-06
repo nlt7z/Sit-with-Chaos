@@ -48,6 +48,14 @@ const LEVEL_MAP: Record<string, { kanji: string; color: string }> = {
   "FAINT BLESSING": { kanji: "末吉", color: "#4a7080" },
 };
 
+// 3-D stepped text-shadow (no blur/glow) keyed by level color
+const LEVEL_SHADOW: Record<string, string> = {
+  [C.vermillion]: "1px 1px 0 #8a1000, 2px 2px 0 #5c0800, 3px 3px 2px rgba(0,0,0,0.55)",
+  "#b07a20":      "1px 1px 0 #7a5010, 2px 2px 0 #4e3008, 3px 3px 2px rgba(0,0,0,0.55)",
+  "#6a8040":      "1px 1px 0 #4a5c28, 2px 2px 0 #2e3a18, 3px 3px 2px rgba(0,0,0,0.55)",
+  "#4a7080":      "1px 1px 0 #2e5060, 2px 2px 0 #183040, 3px 3px 2px rgba(0,0,0,0.55)",
+};
+
 // ── Kamon ornament ─────────────────────────────────────────────────────────────
 function Kamon({ size = 40 }: { size?: number }) {
   const cx = size / 2, r1 = size * 0.46, r2 = size * 0.32;
@@ -108,36 +116,49 @@ const FortuneSlip = memo(function FortuneSlip({
     <div
       className="fixed inset-0 z-[70] flex items-center justify-center"
       role="dialog" aria-modal="true" aria-labelledby="slip-title"
-      style={{ background: "rgba(4,2,1,0.9)", backdropFilter: "blur(7px)" }}
+      style={{ background: "rgba(4,2,1,0.9)", backdropFilter: "blur(7px)", perspective: "1200px" }}
     >
       <button type="button" className="absolute inset-0 cursor-default" aria-label="閉じる" onClick={onClose} />
 
       <motion.div
-        initial={{ opacity: 0, scale: 0.84 }}
-        animate={{ opacity: 1, scale: 1 }}
-        exit={{ opacity: 0, scale: 0.91 }}
-        transition={{ type: "spring", stiffness: 270, damping: 26, mass: 0.72 }}
+        initial={{ opacity: 0, scale: 0.86, rotateX: 10, y: 16 }}
+        animate={{ opacity: 1, scale: 1, rotateX: 0, y: 0 }}
+        exit={{ opacity: 0, scale: 0.93, rotateX: -6 }}
+        transition={{ type: "spring", stiffness: 260, damping: 28, mass: 0.78 }}
         className="relative z-10 select-none"
         style={{ width: 480, maxWidth: "calc(100vw - 32px)" }}
       >
         <div className="relative overflow-hidden" style={{
-          borderRadius: 3,
+          borderRadius: 5,
           background: [
-            `linear-gradient(162deg, ${C.washi} 0%, ${C.washiMid} 50%, ${C.washiDark} 100%)`,
+            `linear-gradient(145deg, ${C.washi} 0%, ${C.washiMid} 55%, ${C.washiDark} 88%, #c6a884 100%)`,
+            "radial-gradient(ellipse 90% 75% at 36% 28%, rgba(255,255,255,0.22) 0%, transparent 100%)",
             "repeating-linear-gradient(0deg,rgba(0,0,0,0.015) 0 1px,transparent 1px 5px)",
             "repeating-linear-gradient(90deg,rgba(0,0,0,0.01) 0 1px,transparent 1px 7px)",
           ].join(", "),
           boxShadow: [
-            "0 28px 72px -8px rgba(0,0,0,0.9)",
-            `0 0 0 1px ${C.gold}40`,
-            "inset 0 1px 0 rgba(255,255,255,0.55)",
+            // Main lift shadow
+            "0 22px 60px -4px rgba(0,0,0,0.95)",
+            "0 50px 88px -14px rgba(0,0,0,0.55)",
+            // Card thickness layers
+            "0 2px 0 rgba(180,138,28,0.22)",
+            "0 4px 0 rgba(0,0,0,0.52)",
+            "0 7px 0 rgba(0,0,0,0.28)",
+            "0 10px 0 rgba(0,0,0,0.12)",
+            // Border ring
+            `0 0 0 1px ${C.gold}58`,
+            // Top + left bevel highlight
+            "inset 0 1.5px 0 rgba(255,255,255,0.82)",
+            "inset 1.5px 0 0 rgba(255,255,255,0.22)",
+            // Bottom-right shadow
+            "inset -1px -1.5px 0 rgba(0,0,0,0.14)",
           ].join(", "),
         }}>
           <SlipBorderH />
 
-          <div style={{ display: "flex", height: 180, padding: "14px 16px" }}>
+          <div style={{ display: "flex", minHeight: 200, padding: "14px 16px" }}>
             <div style={{
-              width: 112, flexShrink: 0,
+              width: 118, flexShrink: 0,
               display: "flex", flexDirection: "column",
               alignItems: "center", justifyContent: "space-between",
               paddingRight: 12,
@@ -145,15 +166,23 @@ const FortuneSlip = memo(function FortuneSlip({
               <Kamon size={28} />
               <div style={{ textAlign: "center" }}>
                 <p id="slip-title" className={shippori.className} style={{
-                  fontSize: 58, fontWeight: 800, lineHeight: 1,
-                  color: lvl.color, textShadow: `0 3px 16px ${lvl.color}44`,
+                  fontSize: 56, fontWeight: 800, lineHeight: 1,
+                  color: lvl.color,
+                  textShadow: LEVEL_SHADOW[lvl.color] ?? "1px 1px 0 rgba(0,0,0,0.4), 2px 2px 0 rgba(0,0,0,0.3), 3px 3px 2px rgba(0,0,0,0.2)",
                   letterSpacing: "0.03em",
                 }}>
                   {lvl.kanji}
                 </p>
+                <p className={notoSerif.className} style={{
+                  fontSize: 7, letterSpacing: "0.16em",
+                  color: lvl.color, opacity: 0.78, marginTop: 4,
+                  textTransform: "uppercase" as const, lineHeight: 1.35,
+                }}>
+                  {fortune.levelLabel}
+                </p>
                 <p className={shippori.className} style={{
-                  fontSize: 7.5, letterSpacing: "0.38em",
-                  color: C.inkMid, opacity: 0.5, marginTop: 4,
+                  fontSize: 7, letterSpacing: "0.38em",
+                  color: C.inkMid, opacity: 0.42, marginTop: 5,
                 }}>
                   御 神 籤
                 </p>
@@ -181,29 +210,29 @@ const FortuneSlip = memo(function FortuneSlip({
                 display: "flex", flexDirection: "column",
                 justifyContent: "center",
                 writingMode: "horizontal-tb",
-                gap: 6,
+                gap: 2,
                 overflow: "hidden",
               }}>
                 {lines.map((line, i) => (
                   <span key={i} style={{
-                    fontSize: 11.5, letterSpacing: "0.24em",
-                    color: C.ink, lineHeight: 1.85,
+                    fontSize: 13, letterSpacing: "0.10em",
+                    color: C.ink, lineHeight: 2.0,
                   }}>
                     {line}
                   </span>
                 ))}
               </div>
 
-              <div style={{ height: 1, background: `linear-gradient(90deg, ${C.gold}40, transparent)`, margin: "8px 0 7px" }} />
+              <div style={{ height: 1, background: `linear-gradient(90deg, ${C.gold}40, transparent)`, margin: "10px 0 8px" }} />
 
-              <div className={notoSerif.className} style={{ display: "flex", flexDirection: "column", gap: 5 }}>
-                <div style={{ fontSize: 9, color: C.inkMid, display: "flex", gap: 6, alignItems: "baseline" }}>
-                  <span className={shippori.className} style={{ color: C.goldDim, fontSize: 8, letterSpacing: "0.1em", flexShrink: 0 }}>吉</span>
-                  <span style={{ letterSpacing: "0.04em", opacity: 0.85 }}>{fortune.lucky.join("　")}</span>
+              <div className={notoSerif.className} style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                <div style={{ fontSize: 10.5, color: C.ink, display: "flex", gap: 7, alignItems: "baseline" }}>
+                  <span className={shippori.className} style={{ color: C.goldDim, fontSize: 9, letterSpacing: "0.1em", flexShrink: 0 }}>吉</span>
+                  <span style={{ letterSpacing: "0.03em" }}>{fortune.lucky.join("  ·  ")}</span>
                 </div>
-                <div style={{ fontSize: 9, color: C.inkMid, display: "flex", gap: 6, alignItems: "baseline" }}>
-                  <span className={shippori.className} style={{ color: "#8a5050", fontSize: 8, letterSpacing: "0.1em", flexShrink: 0 }}>凶</span>
-                  <span style={{ letterSpacing: "0.04em", opacity: 0.85 }}>{fortune.unlucky.join("　")}</span>
+                <div style={{ fontSize: 10.5, color: C.ink, display: "flex", gap: 7, alignItems: "baseline" }}>
+                  <span className={shippori.className} style={{ color: "#8a5050", fontSize: 9, letterSpacing: "0.1em", flexShrink: 0 }}>凶</span>
+                  <span style={{ letterSpacing: "0.03em" }}>{fortune.unlucky.join("  ·  ")}</span>
                 </div>
               </div>
             </div>
@@ -343,41 +372,25 @@ function KujiTube({ count }: { count: number }) {
       initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
       style={{
-        position: "fixed", bottom: 22, right: 22, zIndex: 50,
+        position: "fixed", bottom: 18, right: 18, zIndex: 50,
         display: "flex", flexDirection: "column", alignItems: "center", gap: 4,
       }}
     >
-      <div style={{ position: "relative", width: 26, height: 48 }}>
-        <div style={{
-          position: "absolute", inset: 0, borderRadius: "13px 13px 3px 3px",
-          background: `linear-gradient(155deg, ${C.drawerLit}, ${C.drawer}, #080808)`,
-          border: `1px solid ${C.gold}44`,
-          boxShadow: "2px 4px 10px rgba(0,0,0,0.7), inset 1px 0 0 rgba(255,255,255,0.03)",
-        }} />
-        <div style={{
-          position: "absolute", top: -3, left: -2, right: -2, height: 6, borderRadius: "50%",
-          background: `linear-gradient(180deg, ${C.goldDim}, ${C.drawer})`,
-          border: `1px solid ${C.gold}44`,
-        }} />
-        {count > 0 && (
-          <div style={{
-            position: "absolute", top: -9, left: "50%", transform: "translateX(-50%)",
-            width: 9, height: 12, borderRadius: "1px 1px 0 0",
-            background: `linear-gradient(180deg, ${C.washi}, ${C.washiMid})`,
-            border: `0.5px solid ${C.gold}44`,
-          }} />
-        )}
-        <div style={{
-          position: "absolute", top: 13, left: 2, right: 2, height: 3, borderRadius: 2,
-          background: `linear-gradient(90deg, transparent, ${C.goldDim}77, transparent)`,
-        }} />
-      </div>
-      {count > 0 && (
-        <span className={shippori.className}
-          style={{ fontSize: 7.5, color: `${C.gold}99`, letterSpacing: "0.1em" }}>
-          {count}枚
-        </span>
-      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src="/assets/Playground/qiantong.png"
+        alt="御籤筒"
+        style={{
+          width: 72,
+          height: 72,
+          objectFit: "contain",
+          filter: "drop-shadow(0 4px 12px rgba(0,0,0,0.7))",
+        }}
+      />
+      <span className={shippori.className}
+        style={{ fontSize: 7.5, color: `${C.gold}99`, letterSpacing: "0.1em" }}>
+        {count}枚
+      </span>
     </motion.div>
   );
 }
@@ -425,7 +438,7 @@ function OrbitStars({
   hovered,
 }: {
   radius: number;
-  items: { char: string; size: number; color: string }[];
+  items: { size: number; color: string }[];
   duration: number;
   reverse?: boolean;
   hovered: boolean;
@@ -443,7 +456,7 @@ function OrbitStars({
       animate={{ rotate: reverse ? [0, -360] : [0, 360] }}
       transition={{ duration, repeat: Infinity, ease: "linear", repeatType: "loop" as const }}
     >
-      {items.map(({ char, size, color }, i) => {
+      {items.map(({ size, color }, i) => {
         // Evenly distribute; start from top (−π/2 offset)
         const angle = (i / items.length) * Math.PI * 2 - Math.PI / 2;
         const x = radius * Math.cos(angle);
@@ -459,11 +472,11 @@ function OrbitStars({
               transform: "translate(-50%, -50%)",
             }}
           >
-            <motion.span
-              style={{ display: "block", fontSize: size, color, lineHeight: 1, userSelect: "none" }}
+            <motion.div
+              style={{ display: "block", width: size, height: size }}
               animate={{
                 opacity: hovered ? [0.7, 1, 0.7] : [0.22, 0.72, 0.22],
-                scale:   hovered ? [0.9, 1.5, 0.9] : [0.7, 1.15, 0.7],
+                scale:   hovered ? [0.9, 1.6, 0.9] : [0.7, 1.2, 0.7],
               }}
               transition={{
                 duration: 2,
@@ -472,8 +485,13 @@ function OrbitStars({
                 delay: (i / items.length) * 2,
               }}
             >
-              {char}
-            </motion.span>
+              <svg viewBox="-1 -1 2 2" style={{ width: "100%", height: "100%", display: "block", overflow: "visible" }}>
+                {/* Diamond body */}
+                <polygon points="0,-0.92 0.56,0 0,0.92 -0.56,0" fill={color} />
+                {/* Top-right highlight facet */}
+                <polygon points="0,-0.92 0.56,0 0,0" fill="rgba(255,255,255,0.28)" />
+              </svg>
+            </motion.div>
           </div>
         );
       })}
@@ -495,22 +513,22 @@ const ringAt = (size: number): React.CSSProperties => ({
 function ShrineHotspot({ onEnter }: { onEnter: () => void }) {
   const [hovered, setHovered] = useState(false);
 
-  // Inner orbit: 6 small gold stars CW
+  // Inner orbit: 6 small gold diamonds CW
   const innerStars = [
-    { char: "✦", size: 6,  color: C.goldBright },
-    { char: "✧", size: 5,  color: C.gold       },
-    { char: "✦", size: 6,  color: C.goldLight  },
-    { char: "✧", size: 4,  color: C.gold       },
-    { char: "✦", size: 6,  color: C.goldBright },
-    { char: "✧", size: 5,  color: C.goldLight  },
+    { size: 6,  color: C.goldBright },
+    { size: 5,  color: C.gold       },
+    { size: 6,  color: C.goldLight  },
+    { size: 4,  color: C.gold       },
+    { size: 6,  color: C.goldBright },
+    { size: 5,  color: C.goldLight  },
   ];
 
-  // Outer orbit: 4 floral stars CCW
+  // Outer orbit: 4 larger gold diamonds CCW
   const outerStars = [
-    { char: "✿", size: 8,  color: C.goldLight  },
-    { char: "✦", size: 6,  color: C.gold       },
-    { char: "✿", size: 7,  color: C.goldBright },
-    { char: "✦", size: 5,  color: C.gold       },
+    { size: 9,  color: C.goldLight  },
+    { size: 6,  color: C.gold       },
+    { size: 8,  color: C.goldBright },
+    { size: 5,  color: C.gold       },
   ];
 
   return (
@@ -826,7 +844,7 @@ export function OmikujiCabinetClient({ embed = false }: { embed?: boolean }) {
                     color: C.goldLight,
                     lineHeight: 1,
                     textAlign: "center",
-                    textShadow: "0 2px 28px rgba(0,0,0,0.8), 0 0 48px rgba(0,0,0,0.5)",
+                    textShadow: "1px 1px 0 #9a7a20, 2px 2px 0 #6a5018, 3px 3px 0 #4a3810, 4px 4px 3px rgba(0,0,0,0.6)",
                   }}
                 >
                   御　神　籤　箱
@@ -976,6 +994,7 @@ function CabinetBox({
         <p className={shippori.className} style={{
           fontSize: isEmbed ? 11 : 13,
           letterSpacing: "0.55em", color: C.goldLight, fontWeight: 700,
+          textShadow: "1px 1px 0 #9a7a20, 2px 2px 2px rgba(0,0,0,0.55)",
         }}>
           御　神　籤　箱
         </p>
