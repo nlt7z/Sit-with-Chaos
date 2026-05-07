@@ -643,11 +643,14 @@ function VibeCodingPrototypeGallery() {
           className="scroll-mt-28"
         >
           <div
-            className={`overflow-hidden border shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-out ${vibeGalleryChrome[item.id]} ${mediaRound}`}
+            className={`border shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-out ${vibeGalleryChrome[item.id]} ${mediaRound}`}
           >
+            {/* Sticky chrome — stays pinned below the fixed site nav while scrolling through the iframe */}
             <div
-              className={`flex flex-wrap items-start justify-between gap-3 border-b px-4 py-3 md:px-6 ${
-                item.id === "romance" ? "border-white/[0.1]" : "border-black/[0.07]"
+              className={`sticky top-20 z-30 flex flex-wrap items-start justify-between gap-3 rounded-tl-xl rounded-tr-xl border-b px-4 py-3 backdrop-blur-sm md:top-16 md:px-6 ${
+                item.id === "romance"
+                  ? "border-white/[0.1] bg-[#0d0b10]/90"
+                  : "border-black/[0.07] bg-white/90"
               }`}
             >
               <div className="min-w-0">
@@ -678,12 +681,14 @@ function VibeCodingPrototypeGallery() {
                 Open full page
               </Link>
             </div>
-            <iframe
-              title={item.title}
-              src={item.src}
-              className={`h-[min(72vh,820px)] min-h-[480px] w-full md:min-h-[560px] ${vibeIframeBg[item.id]}`}
-              loading="lazy"
-            />
+            <div className="overflow-hidden rounded-b-xl">
+              <iframe
+                title={item.title}
+                src={item.src}
+                className={`h-[min(56vh,820px)] min-h-[320px] w-full md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
+                loading="lazy"
+              />
+            </div>
           </div>
         </section>
       ))}

@@ -33,7 +33,7 @@ export function VibeCodingPageContent() {
         <p className="mt-3 max-w-2xl text-sm leading-relaxed text-textSecondary md:text-[15px]">
           Help engineer rebrand real work.
         </p>
-        <div className="mt-5 aspect-video overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm">
+        <div className="mt-5 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm" style={{ aspectRatio: "1728/1117" }}>
           <iframe
             title="Han Cao personal website"
             src="https://hancao.space/"

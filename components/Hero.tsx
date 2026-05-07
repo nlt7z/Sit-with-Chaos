@@ -86,7 +86,7 @@ export function Hero() {
     <section
       id="hero"
       ref={ref}
-      className="relative overflow-hidden bg-white pt-14 md:pt-16"
+      className="relative overflow-hidden bg-white pt-20 md:pt-16"
       aria-labelledby="hero-heading"
       onMouseMove={(e) => {
         const rect = ref.current?.getBoundingClientRect();
@@ -167,8 +167,8 @@ export function Hero() {
                   reduced
                     ? { opacity: 1, filter: "blur(0px)" }
                     : {
-                        opacity: halftoneHovered ? 1 : 0,
-                        filter: halftoneHovered ? "blur(0px)" : "blur(12px)",
+                        opacity: halftoneHovered ? 1 : 0.42,
+                        filter: halftoneHovered ? "blur(0px)" : "blur(8px)",
                       }
                 }
                 transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}

@@ -31,6 +31,20 @@ export const metadata: Metadata = {
     title: "Yuan Fang — UX Designer",
     description: "Portfolio of Yuan Fang, MS HCDE @ UW",
     url: "https://fangyuan7.com",
+    images: [
+      {
+        url: "/assets/hero-orb.png",
+        width: 1200,
+        height: 1200,
+        alt: "Yuan Fang — UX Designer",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Yuan Fang — UX Designer",
+    description: "Portfolio of Yuan Fang, MS HCDE @ UW",
+    images: ["/assets/hero-orb.png"],
   },
 };
 

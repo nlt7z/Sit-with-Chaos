@@ -97,6 +97,28 @@ function ScaledPreview({
   );
 }
 
+function MobilePreviewCard({
+  href,
+  title,
+  iframeBg,
+}: {
+  href: string;
+  title: string;
+  iframeBg: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className={`group flex aspect-[16/9] w-full items-center justify-center overflow-hidden rounded-2xl shadow-sm ring-1 ring-black/[0.07] transition-opacity hover:opacity-90 ${iframeBg}`}
+      aria-label={`Open ${title}`}
+    >
+      <span className="rounded-full bg-black/20 px-5 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-white/80 backdrop-blur-sm">
+        Open prototype →
+      </span>
+    </Link>
+  );
+}
+
 export function VibeCodingShowrooms({ lead }: { lead?: React.ReactNode }) {
   const rm = useReducedMotion();
   return (
@@ -111,7 +133,12 @@ export function VibeCodingShowrooms({ lead }: { lead?: React.ReactNode }) {
           viewport={{ once: true, margin: "-8% 0px" }}
           transition={{ duration: 0.55, ease: easePortfolio, delay: rm ? 0 : i * 0.07 }}
         >
-          <ScaledPreview src={s.src} title={s.iframeTitle} iframeBg={s.iframeBg} />
+          <div className="sm:hidden">
+            <MobilePreviewCard href={s.href} title={s.iframeTitle} iframeBg={s.iframeBg} />
+          </div>
+          <div className="hidden sm:block">
+            <ScaledPreview src={s.src} title={s.iframeTitle} iframeBg={s.iframeBg} />
+          </div>
 
           <div className="mt-3 flex items-center justify-between px-0.5">
             <span className="text-[13px] text-textSecondary">{s.label}</span>

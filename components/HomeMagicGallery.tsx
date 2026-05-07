@@ -4,6 +4,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { TurntableWidget } from "@/components/TurntableWidget";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
@@ -15,7 +16,7 @@ const magicPreviews = [
     summary: "おみくじ",
     panelBg: "bg-[#061a22]",
     kind: "image" as const,
-    mediaSrc: "/assets/Playground/omikuji-shrine-bg.png",
+    mediaSrc: "/assets/Playground/omikuji-bg.png",
     mediaAlt: "Shrine torii and omikuji cabinet — teal and gold illustration",
     mediaClassName: "object-cover object-center",
   },
@@ -144,18 +145,20 @@ export function HomeMagicGallery() {
             </motion.div>
           ))}
 
-          {/* placeholder — reserved slot */}
-          <div
+          {/* Turntable card */}
+          <motion.div
             role="listitem"
-            aria-hidden
-            className="hidden lg:flex flex-col overflow-hidden rounded-2xl ring-1 ring-black/[0.05]"
+            whileHover={cardHover}
+            className="hidden lg:flex flex-col overflow-hidden rounded-2xl bg-[#0d0d14] ring-1 ring-black/[0.07] transition-[box-shadow,ring-color] duration-500 ease-portfolio hover:shadow-[0_20px_56px_-22px_rgba(0,0,0,0.22)] hover:ring-black/[0.13]"
           >
-            <div className="relative aspect-[4/5] w-full shrink-0 sm:aspect-[5/6] bg-[repeating-linear-gradient(45deg,transparent,transparent_6px,rgba(0,0,0,0.025)_6px,rgba(0,0,0,0.025)_7px)] bg-surfaceAlt" />
-            <div className="border-t border-black/[0.05] px-3 py-3 md:px-3.5 md:py-3.5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/30">Coming soon</p>
-              <p className="mt-1.5 font-display text-[16px] font-light text-textPrimary/20 md:text-[17px]">—</p>
+            <div className="relative aspect-[4/5] w-full shrink-0 overflow-hidden sm:aspect-[5/6] p-3 flex items-center justify-center">
+              <TurntableWidget />
             </div>
-          </div>
+            <div className="border-t border-white/[0.06] px-3 py-3 md:px-3.5 md:py-3.5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">Lo-fi</p>
+              <p className="mt-1.5 font-display text-[16px] font-light text-white/80 md:text-[17px]">Vinyl Turntable</p>
+            </div>
+          </motion.div>
         </motion.div>
       </div>
     </section>

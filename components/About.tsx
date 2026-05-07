@@ -52,18 +52,17 @@ export function About() {
             transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <p className="text-base font-normal leading-relaxed text-textPrimary md:text-[17px] md:leading-relaxed">
-              Yuan Fang is a product designer with roots in fine arts. Over ten years across painting, spatial design,
-              and digital products, she developed something that formal training rarely gives: the ability to look
-              at a messy system and see what it wants to become.
+              Yuan Fang is a product designer with roots in fine arts. Ten years across painting, spatial design, and
+              digital products gave her something formal training rarely does: the ability to look at a messy system
+              and see what it wants to become.
             </p>
             <p className="mt-4 text-base font-normal leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
-              She works in the space where complex technology meets human behavior — where something powerful needs to
-              become understandable, trustworthy, and worth returning to. Her process combines research, product thinking,
-              and code, with AI as a core part of how she thinks, not just how she builds.
+              She works where complex technology meets human behavior — making the powerful feel understandable,
+              trustworthy, and worth returning to. Her process combines research, product thinking, and code, with AI
+              at the core of how she thinks, not just how she builds.
             </p>
             <p className="mt-4 text-base font-normal leading-relaxed text-textPrimary md:mt-5 md:text-[17px] md:leading-relaxed">
-              The goal is always the same: make the experience feel less like operating a tool, and more like being
-              guided through something.
+              The goal is always the same: less like operating a tool, more like being guided through something.
             </p>
           </motion.div>
 

@@ -7,7 +7,7 @@ import Link from "next/link";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
-const RESUME_PDF = "/assets/resume/may%20resume.pdf";
+const RESUME_PDF = "/assets/resume/Product%20Designer%20-%20Yuan%20Fang.pdf";
 const RESUME_PAGE_BG = "/assets/resume/resume-page-bg.png";
 
 export default function ResumePage() {

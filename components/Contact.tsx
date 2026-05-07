@@ -139,8 +139,14 @@ export function Contact() {
 
         <motion.div
           variants={prefersReducedMotion ? undefined : itemVariants}
-          className="mt-12 flex items-center justify-center gap-8 font-mono text-sm"
+          className="mt-12 flex flex-wrap items-center justify-center gap-6 font-mono text-sm"
         >
+          <a
+            href="mailto:fangyuanzero7@gmail.com"
+            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+          >
+            fangyuanzero7@gmail.com
+          </a>
           <a
             href="https://linkedin.com/in/yuan-fang-66395725b"
             target="_blank"
