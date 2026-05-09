@@ -30,12 +30,13 @@ const magicPreviews = [
     panelBg: "bg-[#060608]",
   },
   {
-    href: "/work/ai-character/prototype-psych",
-    kind: "gradient" as const,
-    category: "Therapy",
-    summary: "Therapy Room",
-    panelBg:
-      "bg-gradient-to-br from-sky-50 via-[#e8f3fc] to-[#d4ebf5]",
+    href: "/work/apsara-conference",
+    kind: "video" as const,
+    mediaSrc: "/assets/work/apsara.mp4",
+    mediaAlt: "Apsara Conference visual design preview",
+    category: "Apsara",
+    summary: "Visual Design",
+    panelBg: "bg-[#0a0a10]",
   },
 ] as const;
 

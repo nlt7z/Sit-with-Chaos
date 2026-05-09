@@ -45,30 +45,6 @@ const meituanIm: Project = {
   flowSteps: ["chat quote", "compare", "confirm"],
 };
 
-const apsaraConference: Project = {
-  slug: "apsara-conference",
-  title: "Apsara Conference — Alibaba AI on Cloud",
-  description:
-    "Crafted a cohesive visual system for Alibaba Cloud's flagship AI summit across keynote storytelling, event touchpoints, and digital assets.",
-  media: {
-    src: "/assets/work/apsara.mp4",
-    alt: "Preview video for Apsara Conference — Alibaba AI on Cloud",
-    type: "video",
-  },
-};
-
-const aiRide: Project = {
-  slug: "ridesharing",
-  title: "AI Ride — Autonomous Ridesharing Experience",
-  description:
-    "Designed an AI companion layer for driverless rides that adapts to rider intent, balancing reassurance, utility, and optional conversation.",
-  media: {
-    src: "/assets/work/av-ridesharing.jpg",
-    alt: "Preview image for autonomous ridesharing project",
-    type: "image",
-  },
-};
-
 type WorkRow =
   | { kind: "single"; project: Project }
   | { kind: "pair"; left: Project; right: Project };
@@ -79,11 +55,6 @@ const workRows: WorkRow[] = [
     kind: "pair",
     left: { ...studioEngine, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
     right: { ...meituanIm, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
-  },
-  {
-    kind: "pair",
-    left: { ...apsaraConference, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
-    right: { ...aiRide, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
   },
 ];
 

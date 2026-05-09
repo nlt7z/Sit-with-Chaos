@@ -139,29 +139,32 @@ function RevealLine({ className = "" }: { className?: string }) {
 }
 
 const caseNavItems = [
-  { id: "problem", label: "The Problem" },
-  { id: "d1-showroom", label: "Decision 01" },
-  { id: "d2-capability", label: "Decision 02" },
-  { id: "d3-acceleration", label: "Decision 03" },
-  { id: "how-i-worked", label: "How I Worked" },
-  { id: "product-showcase", label: "Product Showcase" },
-  { id: "backend", label: "Contribution" },
-  { id: "outcome", label: "Impact" },
+  { id: "problem", label: "Problem" },
+  { id: "strategy", label: "Product strategy" },
+  { id: "research", label: "Research" },
+  { id: "ux-strategy", label: "UX Strategy" },
+  { id: "innovations", label: "Interactions" },
+  { id: "experience-loop", label: "Experience Loop" },
+  { id: "process", label: "Visual Process" },
+  { id: "decisions", label: "Design Decisions" },
+  { id: "backend", label: "Backend" },
+  { id: "vibe-prototype", label: "Live Prototypes" },
+  { id: "product-showcase", label: "Product showcase" },
+  { id: "outcome", label: "Outcome" },
   { id: "takeaway", label: "Takeaway" },
 ] as const;
 
 function CaseStudyNav() {
   const [active, setActive] = useState<string>("problem");
   const SECTION_SCROLL_OFFSET = 112;
-  const navItems = caseNavItems;
 
   useEffect(() => {
     const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
-    if (hash && navItems.some((i) => i.id === hash)) setActive(hash);
+    if (hash && caseNavItems.some((i) => i.id === hash)) setActive(hash);
   }, []);
 
   useEffect(() => {
-    const ids = navItems.map((i) => i.id);
+    const ids = caseNavItems.map((i) => i.id);
     const elements = ids
       .map((id) => document.getElementById(id))
       .filter((el): el is HTMLElement => el !== null);
@@ -201,7 +204,7 @@ function CaseStudyNav() {
       <div className="pointer-events-auto sticky top-[calc(50vh-10rem)] px-6 pt-40">
         <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">On this page</p>
         <ul className="mt-5 max-h-[min(60vh,28rem)] space-y-0 overflow-y-auto overscroll-contain pr-1">
-          {navItems.map(({ id, label }) => {
+          {caseNavItems.map(({ id, label }) => {
             const isActive = active === id;
             return (
               <li key={id}>
@@ -324,19 +327,19 @@ const showcaseGallerySlides = [
     label: "Romance showroom",
     src: "/assets/ai-character/new-cover.mp4",
     poster: "/assets/ai-character/showcase.jpg",
-    caption: "Memory makes every return feel earned.",
+    caption: "Romance Room — memory callbacks and emotional escalation",
   },
   {
     tab: "Astrology",
     label: "Astrology showroom",
     src: "/assets/ai-character/taobaibai-1.mp4",
-    caption: "Every word updates what it knows about you.",
+    caption: "Astrology Room — constellation profile updates live",
   },
   {
     tab: "Therapy",
     label: "Therapy showroom",
     src: "/assets/ai-character/therapy-1.mp4",
-    caption: "You see what it understood, not just what it said.",
+    caption: "Therapy Room — visible analysis alongside chat",
   },
 ] as const;
 
@@ -453,6 +456,7 @@ const additionalShowroomGalleryItems: {
   room: string;
   capability: string;
   body: string;
+  detail: string;
   videoSrc: string;
   videoCaption: string;
 }[] = [
@@ -461,16 +465,20 @@ const additionalShowroomGalleryItems: {
     room: "Astrology Room",
     capability: "Real-time memory updates",
     body: "A personal constellation file updates during conversation — memory becomes transparent and inspectable.",
+    detail:
+      "Design focus: one persistent surface that mirrors live memory writes — readable at a glance without opening secondary panels.",
     videoSrc: "/assets/ai-character/interactions/other%20showrooms/astro%20profile/astro%20profile-1.mp4",
-    videoCaption: "Your profile rewrites in real time.",
+    videoCaption: "Screen recording — constellation profile and live memory file in the astrology showroom",
   },
   {
     id: "therapy",
     room: "Therapy Room",
     capability: "Real-time analysis",
     body: "A live panel surfaces conversation themes — users see what the system understood, not just what it said.",
+    detail:
+      "Design focus: parallel transcript + analysis rail so legibility stays high without relying on static screenshots.",
     videoSrc: "/assets/ai-character/interactions/other%20showrooms/therapy%20analysis/therapy%20analysis-1.mp4",
-    videoCaption: "The model's read, visible beside your words.",
+    videoCaption: "Screen recording — therapy analysis rail alongside the conversation",
   },
 ];
 
@@ -502,97 +510,13 @@ function AdditionalShowroomsGallery() {
             <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">{item.room}</h3>
             <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
             <p className="mt-4 max-w-prose font-sans text-[16px] leading-[1.65] text-textSecondary">{item.body}</p>
+            <p className="mt-4 max-w-prose border-t border-black/[0.06] pt-4 font-sans text-[15px] leading-relaxed text-textSecondary/95 md:mt-5 md:pt-5">
+              {item.detail}
+            </p>
           </div>
         </motion.article>
       ))}
     </motion.div>
-  );
-}
-
-const d1CycleOrder: Array<(typeof vibeCodingShowrooms)[number]["id"]> = [
-  "therapy",
-  "romance",
-  "astrology",
-];
-
-function D1BeforeAfter() {
-  const [idx, setIdx] = useState(0);
-
-  useEffect(() => {
-    const t = setInterval(() => setIdx((i) => (i + 1) % d1CycleOrder.length), 4200);
-    return () => clearInterval(t);
-  }, []);
-
-  const activeId = d1CycleOrder[idx];
-  const activeRoom = vibeCodingShowrooms.find((s) => s.id === activeId) ?? vibeCodingShowrooms[2];
-
-  return (
-    <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
-      {/* Before */}
-      <div>
-        <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">
-          Before — Generic chat
-        </p>
-        <div className="overflow-hidden rounded-xl bg-black ring-1 ring-black/[0.08]">
-          <video
-            className="h-[min(52vh,560px)] min-h-[280px] w-full object-cover"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-label="Before — static documentation and generic chat"
-          >
-            <source src="/assets/ai-character/before.mp4" type="video/mp4" />
-          </video>
-        </div>
-      </div>
-
-      {/* After — auto-cycling prototype */}
-      <div>
-        <div className="mb-3 flex items-center justify-between">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">
-            After —{" "}
-            <span className="text-textSecondary/70">{activeRoom.tab} room</span>
-          </p>
-          <div className="flex items-center gap-1.5">
-            {d1CycleOrder.map((id, i) => (
-              <button
-                key={id}
-                type="button"
-                aria-label={`Show ${id} room`}
-                onClick={() => setIdx(i)}
-                className={`h-1 rounded-full transition-all duration-300 ${
-                  i === idx ? "w-5 bg-textPrimary" : "w-1 bg-black/[0.15] hover:bg-black/30"
-                }`}
-              />
-            ))}
-          </div>
-        </div>
-        <div
-          className={`relative overflow-hidden rounded-xl border transition-[border-color,box-shadow] duration-500 ${vibeGalleryChrome[activeId]}`}
-        >
-          {d1CycleOrder.map((id, i) => {
-            const room = vibeCodingShowrooms.find((s) => s.id === id)!;
-            return (
-              <div
-                key={id}
-                className={`transition-opacity duration-500 ${
-                  i === idx ? "opacity-100" : "pointer-events-none absolute inset-0 opacity-0"
-                }`}
-              >
-                <iframe
-                  title={room.title}
-                  src={room.src}
-                  loading="lazy"
-                  className={`h-[min(52vh,560px)] min-h-[280px] w-full border-0 ${vibeIframeBg[id]}`}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    </div>
   );
 }
 
@@ -653,11 +577,12 @@ const sectionHeadInner = {
 };
 
 const metaFields = [
+  { label: "Company", value: "Alibaba Cloud" },
   { label: "Role", value: "UX Designer — End-to-End, research to production code" },
   { label: "Timeline", value: "4 weeks · July–August 2025" },
   { label: "Team", value: "1 supervisor · 2 UX · 2 PM · 4 Engineers" },
   {
-    label: "Impact",
+    label: "Outcome",
     value: "Shipped · ~2× model token/call traffic vs pre-launch · B2B framework adopted",
   },
 ];
@@ -709,83 +634,64 @@ const vibeIframeBg: Record<(typeof vibeCodingShowrooms)[number]["id"], string> =
 };
 
 function VibeCodingPrototypeGallery() {
-  const [activeId, setActiveId] = useState<(typeof vibeCodingShowrooms)[number]["id"]>("romance");
-  const item = vibeCodingShowrooms.find((s) => s.id === activeId) ?? vibeCodingShowrooms[0];
-
   return (
-    <div className="w-full pt-6 md:pt-8">
-      {/* Capsule switch */}
-      <div
-        className="flex flex-wrap gap-2.5 border-b border-black/[0.06] pb-4"
-        role="tablist"
-        aria-label="Live prototype showrooms"
-      >
-        {vibeCodingShowrooms.map((s) => {
-          const on = s.id === activeId;
-          return (
-            <button
-              key={s.id}
-              type="button"
-              role="tab"
-              aria-selected={on}
-              tabIndex={on ? 0 : -1}
-              onClick={() => setActiveId(s.id)}
-              className={`${roomTab.base} ${on ? roomTab.on : roomTab.off}`}
-            >
-              {s.tab}
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Active prototype */}
-      <div
-        className={`mt-8 border shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-out ${vibeGalleryChrome[item.id]} ${mediaRound}`}
-      >
-        <div
-          className={`sticky top-20 z-30 flex flex-wrap items-start justify-between gap-3 rounded-tl-xl rounded-tr-xl border-b px-4 py-3 backdrop-blur-sm md:top-16 md:px-6 ${
-            item.id === "romance"
-              ? "border-white/[0.1] bg-[#0d0b10]/90"
-              : "border-black/[0.07] bg-white/90"
-          }`}
+    <div className="w-full space-y-12 pt-6 md:space-y-14 md:pt-8">
+      {vibeCodingShowrooms.map((item) => (
+        <section
+          key={item.id}
+          aria-labelledby={`vibe-showroom-${item.id}-title`}
+          className="scroll-mt-28"
         >
-          <div className="min-w-0">
-            <p
-              className={`font-sans text-[11px] font-medium uppercase tracking-[0.16em] ${
-                item.id === "romance" ? "text-stone-500" : "text-textSecondary"
-              }`}
-            >
-              {item.label}
-            </p>
-            <p
-              className={`mt-1.5 font-sans text-[13px] font-medium ${
-                item.id === "romance" ? "text-stone-100" : "text-textPrimary"
-              }`}
-            >
-              {item.caption}
-            </p>
-          </div>
-          <Link
-            href={item.href}
-            className={`shrink-0 font-sans text-[12px] font-medium tracking-wide underline underline-offset-[5px] transition-colors duration-300 ${
-              item.id === "romance"
-                ? "text-amber-200/90 decoration-amber-200/35 hover:text-amber-100 hover:decoration-amber-100/55"
-                : "text-textSecondary decoration-black/[0.12] hover:text-textPrimary hover:decoration-textPrimary/35"
-            }`}
+          <div
+            className={`border shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-out ${vibeGalleryChrome[item.id]} ${mediaRound}`}
           >
-            Open full page
-          </Link>
-        </div>
-        <div className="overflow-hidden rounded-b-xl">
-          <iframe
-            key={item.id}
-            title={item.title}
-            src={item.src}
-            className={`h-[min(56vh,820px)] min-h-[320px] w-full md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
-            loading="lazy"
-          />
-        </div>
-      </div>
+            {/* Sticky chrome — stays pinned below the fixed site nav while scrolling through the iframe */}
+            <div
+              className={`sticky top-20 z-30 flex flex-wrap items-start justify-between gap-3 rounded-tl-xl rounded-tr-xl border-b px-4 py-3 backdrop-blur-sm md:top-16 md:px-6 ${
+                item.id === "romance"
+                  ? "border-white/[0.1] bg-[#0d0b10]/90"
+                  : "border-black/[0.07] bg-white/90"
+              }`}
+            >
+              <div className="min-w-0">
+                <p
+                  id={`vibe-showroom-${item.id}-title`}
+                  className={`font-sans text-[11px] font-medium uppercase tracking-[0.16em] ${
+                    item.id === "romance" ? "text-stone-500" : "text-textSecondary"
+                  }`}
+                >
+                  {item.label}
+                </p>
+                <p
+                  className={`mt-1.5 font-sans text-[13px] font-medium ${
+                    item.id === "romance" ? "text-stone-100" : "text-textPrimary"
+                  }`}
+                >
+                  {item.caption}
+                </p>
+              </div>
+              <Link
+                href={item.href}
+                className={`shrink-0 font-sans text-[12px] font-medium tracking-wide underline underline-offset-[5px] transition-colors duration-300 ${
+                  item.id === "romance"
+                    ? "text-amber-200/90 decoration-amber-200/35 hover:text-amber-100 hover:decoration-amber-100/55"
+                    : "text-textSecondary decoration-black/[0.12] hover:text-textPrimary hover:decoration-textPrimary/35"
+                }`}
+              >
+                Open full page
+              </Link>
+            </div>
+            <div className="overflow-hidden rounded-b-xl">
+              <iframe
+                title={item.title}
+                src={item.src}
+                className={`h-[min(56vh,820px)] min-h-[320px] w-full md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
+                loading="lazy"
+              />
+            </div>
+          </div>
+        </section>
+      ))}
     </div>
   );
 }
@@ -797,17 +703,16 @@ function CountUpStat({ value }: { value: string }) {
   const to = parseInt(num, 10);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
-  const from = Math.round(to * 0.82);
-  const [n, setN] = useState(from);
+  const [n, setN] = useState(0);
 
   useEffect(() => {
     if (!inView) return;
     let frame: number;
-    const dur = 700;
+    const dur = 900;
     const start = performance.now();
     const tick = (ts: number) => {
       const t = Math.min((ts - start) / dur, 1);
-      setN(Math.round(from + (1 - Math.pow(1 - t, 3)) * (to - from)));
+      setN(Math.round((1 - Math.pow(1 - t, 3)) * to));
       if (t < 1) frame = requestAnimationFrame(tick);
     };
     frame = requestAnimationFrame(tick);
@@ -826,7 +731,7 @@ function Section({
 }: {
   id: string;
   eyebrow: string;
-  title?: string;
+  title: string;
   bordered?: boolean;
   children: React.ReactNode;
 }) {
@@ -850,42 +755,22 @@ function Section({
           <span className="inline-block h-px w-5 shrink-0 bg-textSecondary/45" aria-hidden="true" />
           {eyebrow}
         </motion.p>
-        {title?.trim() ? (
-          <div className="mt-5 overflow-hidden md:mt-6">
-            <motion.h2
-              className="max-w-reading font-display text-[1.55rem] font-light leading-[1.14] tracking-[-0.02em] text-textPrimary md:text-[2rem] md:leading-[1.1]"
-              variants={reduced ? undefined : sectionHeadInner}
-            >
-              {title}
-            </motion.h2>
-          </div>
-        ) : null}
+        <div className="mt-5 overflow-hidden md:mt-6">
+          <motion.h2
+            className="max-w-reading font-display text-[1.55rem] font-light leading-[1.14] tracking-[-0.02em] text-textPrimary md:text-[2rem] md:leading-[1.1]"
+            variants={reduced ? undefined : sectionHeadInner}
+          >
+            {title}
+          </motion.h2>
+        </div>
         <motion.div
-          className={`space-y-9 font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:space-y-10 md:text-[1.0625rem] md:leading-[1.76] [&>blockquote]:mx-auto [&>blockquote]:max-w-reading [&>blockquote]:font-display [&>blockquote]:text-textPrimary [&>h3]:max-w-reading [&>h4]:max-w-reading [&>ol]:max-w-reading [&>p]:max-w-reading [&>ul]:max-w-reading ${title?.trim() ? "mt-12 md:mt-14" : "mt-8 md:mt-10"}`}
+          className="mt-12 space-y-9 font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:mt-14 md:space-y-10 md:text-[1.0625rem] md:leading-[1.76] [&>blockquote]:mx-auto [&>blockquote]:max-w-reading [&>blockquote]:font-display [&>blockquote]:text-textPrimary [&>h3]:max-w-reading [&>h4]:max-w-reading [&>ol]:max-w-reading [&>p]:max-w-reading [&>ul]:max-w-reading"
           variants={reduced ? undefined : sectionPiece}
         >
           {children}
         </motion.div>
       </motion.div>
     </section>
-  );
-}
-
-function DecisionFrame({
-  line1,
-  line2,
-  line3,
-}: {
-  line1: string;
-  line2: string;
-  line3: string;
-}) {
-  return (
-    <div className="mt-8 space-y-5 border-t border-black/[0.1] pt-7">
-      <p className="font-sans text-[16px] leading-relaxed text-textSecondary">{line1}</p>
-      <p className="font-sans text-[16px] leading-relaxed text-textSecondary">{line2}</p>
-      <p className="font-sans text-[16px] leading-relaxed text-textSecondary">{line3}</p>
-    </div>
   );
 }
 
@@ -897,15 +782,27 @@ const innovations: {
   workflowSrc: string;
   videoSrc: string;
   videoCaption: string;
-  notShipped?: true;
 }[] = [
+  {
+    id: "alternate-universe",
+    name: "Alternate Universe Events",
+    capability: "Long-term memory + generative storytelling",
+    workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
+    videoSrc: "/assets/ai-character/interactions/alternative%20universe/alternative%20universe-1.mp4",
+    videoCaption: "Alternate universe event — memory-driven scene shift",
+    detail: (
+      <>
+        Scenes triggered by <Em>personal history</Em> recontextualize the relationship — variable rewards from real shared context.
+      </>
+    ),
+  },
   {
     id: "heartbeat-power",
     name: "Heartbeat Power",
     capability: "Real-time generation + character depth modeling",
     workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow.svg",
     videoSrc: "/assets/ai-character/interactions/heartbeat/heartbeat-1.mp4",
-    videoCaption: "One tap. What it was actually thinking.",
+    videoCaption: "Heartbeat — inner-monologue reveal",
     detail: (
       <>
         A tap-to-reveal <Em>inner-monologue card</Em> creates <Em>emotional privilege</Em> — users glimpse the
@@ -919,7 +816,7 @@ const innovations: {
     capability: "Progressive memory building",
     workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow.svg",
     videoSrc: "/assets/ai-character/interactions/story%20unlocked/story%20unlocked-1.mp4",
-    videoCaption: "Go deeper. The character opens up.",
+    videoCaption: "Story unlock — milestone progression in chat",
     detail: (
       <>
         <Em>Backstory milestones</Em> unlock through conversation depth — one knowledge base revealing progressively
@@ -933,25 +830,11 @@ const innovations: {
     capability: "Generation from memory history",
     workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow.svg",
     videoSrc: "/assets/ai-character/interactions/moments/moments-1.mp4",
-    videoCaption: "It keeps living between sessions.",
+    videoCaption: "Moments feed — posts from memory history",
     detail: (
       <>
         <Em>Instagram-style posts</Em> generated from interaction history sustain <Em>off-session presence</Em> — the
         character keeps existing between conversations.
-      </>
-    ),
-  },
-  {
-    id: "alternate-universe",
-    name: "Alternate Universe Events",
-    capability: "Long-term memory + generative storytelling",
-    workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
-    videoSrc: "/assets/ai-character/interactions/alternative%20universe/alternative%20universe-1.mp4",
-    videoCaption: "A scene only your history could trigger.",
-    notShipped: true,
-    detail: (
-      <>
-        Scenes triggered by <Em>personal history</Em> recontextualize the relationship — variable rewards from real shared context.
       </>
     ),
   },
@@ -1003,30 +886,17 @@ function InteractionInnovationList() {
               className="w-full border-t border-black/[0.06] bg-white px-7 py-8 text-left transition-colors duration-300 hover:bg-black/[0.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-textPrimary md:px-9 md:py-9"
             >
               <div className="flex items-start justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
-                    {item.name}
-                  </h3>
-                  {item.notShipped && (
-                    <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/60">
-                      Not shipped
-                    </span>
-                  )}
-                </div>
+                <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
+                  {item.name}
+                </h3>
                 <span className="mt-0.5 shrink-0 rounded-full border border-black/[0.08] bg-black/[0.02] px-3 py-1.5 font-sans text-[12px] font-medium tracking-wide text-textSecondary">
                   {isOpen ? "Hide" : "Workflow"}
                 </span>
               </div>
               <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
               <p className="mt-4 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
-              {item.notShipped ? (
-                <p className="mt-4 font-sans text-[12px] leading-relaxed text-textSecondary/55">
-                  Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
-                </p>
-              ) : (
-                !isOpen && (
-                  <p className="mt-4 font-sans text-[12px] tracking-wide text-textSecondary/70">Tap to view LLM workflow</p>
-                )
+              {!isOpen && (
+                <p className="mt-4 font-sans text-[12px] tracking-wide text-textSecondary/70">Tap to view LLM workflow</p>
               )}
             </button>
             {isOpen && (
@@ -1055,9 +925,6 @@ function InteractionInnovationList() {
   );
 }
 
-const memoryVisibilityInsight =
-  "Most AI products treat memory as invisible state. I made it a first-class object in the UI — because in B2B evaluation, what you can see is what you can trust.";
-
 const uxStrategyShowrooms = [
   {
     id: "romance",
@@ -1085,168 +952,45 @@ const uxStrategyShowrooms = [
   },
 ] as const;
 
-function ShowroomStrategyCard({
-  tab,
-  capability,
-  feel,
-  proofSrc,
-  proofAlt,
-}: {
-  tab: string;
-  capability: string;
-  feel: string;
-  proofSrc: string;
-  proofAlt: string;
-}) {
-  return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.07]">
-      <div className="relative aspect-[10/13] w-full shrink-0 overflow-hidden bg-black/[0.05]">
-        <img
-          src={proofSrc}
-          alt={proofAlt}
-          className="h-full w-full object-cover object-left-top"
-          loading="lazy"
-          decoding="async"
-        />
-      </div>
-      <div className="flex flex-1 flex-col px-4 py-5 md:px-4 md:py-5">
-        <p className="font-sans text-[11px] font-medium leading-snug tracking-[0.06em] text-textSecondary/65">
-          {tab} Room
-        </p>
-        <p className="mt-2 font-display text-[0.98rem] font-light leading-snug tracking-tight text-textPrimary md:text-[1.05rem]">
-          {capability}
-        </p>
-        <div className="mt-4 border-t border-black/[0.07] pt-4">
-          <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">In experience</p>
-          <p className="mt-2 font-sans text-[13px] leading-relaxed text-textSecondary/90 md:text-[13.5px] md:leading-[1.5]">{feel}</p>
-        </div>
-      </div>
-    </article>
-  );
-}
-
 function UxStrategyShowroomTable() {
   return (
     <div className="w-full pt-3">
-      <p className="mt-8 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-textSecondary/70">
-        Showroom → One proof → In-product behavior
-      </p>
-
-      <div className="mt-6 space-y-8 md:space-y-10">
-        <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-4 lg:gap-5">
-          {uxStrategyShowrooms.map((s) => (
-            <ShowroomStrategyCard key={s.id} {...s} />
-          ))}
-        </div>
-
-        <div className="py-10 md:py-14">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary/45">Memory in the UI</p>
-          <p className="mt-5 max-w-[44rem] font-display text-[1.2rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:mt-6 md:text-[1.38rem] md:leading-[1.38]">
-            {memoryVisibilityInsight}
+      <div className="mt-8 overflow-hidden rounded-xl ring-1 ring-black/[0.07]">
+        <div className="border-b border-black/[0.07] bg-surfaceAlt/40 px-5 py-4 md:px-6">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-textSecondary">
+            Showroom → Isolated capability → Proof moment
           </p>
         </div>
-      </div>
-    </div>
-  );
-}
-
-const aiWorkflowStages = [
-  {
-    n: "01",
-    phase: "Research",
-    accentBg: "#EEEDFE",
-    accentNum: "#534AB7",
-    accentName: "#3C3489",
-    toolLines: ["Notion", "Memo", "ChatGPT, Claude"],
-    body: "Synthesized scattered research findings — 6 apps, 40+ user comments — into strategy patterns in one session.",
-  },
-  {
-    n: "02",
-    phase: "UX Strategy",
-    accentBg: "#E1F5EE",
-    accentNum: "#0F6E56",
-    accentName: "#085041",
-    toolLines: ["Qwen", "ChatGPT", "Figma"],
-    body: "Stress-tested competing design decisions as structured arguments. Resolved debates before stakeholder meetings.",
-  },
-  {
-    n: "03",
-    phase: "Visual Identity & UI",
-    accentBg: "#FAECE7",
-    accentNum: "#993C1D",
-    accentName: "#712B13",
-    toolLines: ["Figma, MasterGo", "Dreamnia, Wan", "Kling"],
-    body: "Generated character art, scene backgrounds, and motion loops. Would have required a 3D production team without AI video tools.",
-  },
-  {
-    n: "04",
-    phase: "Motion & Production Code",
-    accentBg: "#FAEEDA",
-    accentNum: "#854F0B",
-    accentName: "#633806",
-    toolLines: ["CodePen", "Cursor", "Claude Code"],
-    body: "Shipped motion, state logic, and live interaction designs without a dedicated frontend engineer.",
-  },
-] as const;
-
-function HowIWorkedDiagram() {
-  return (
-    <div className="mt-10 overflow-x-auto">
-      <div
-        className="min-w-[600px]"
-        style={{ display: "grid", gridTemplateColumns: "88px repeat(4, minmax(0, 1fr))", gap: "12px", alignItems: "stretch" }}
-      >
-        {/* Phase label */}
-        <div className="flex items-center font-mono text-[12px] tracking-[0.04em] text-textSecondary/40">Phase</div>
-
-        {/* Phase cards */}
-        {aiWorkflowStages.map((s, i) => (
-          <div
-            key={s.n}
-            className="relative flex min-h-[84px] flex-col justify-between rounded-xl px-4 py-3.5"
-            style={{ background: s.accentBg }}
-          >
-            <div className="font-mono text-[12px]" style={{ color: s.accentNum }}>{s.n}</div>
-            <div className="text-[15px] font-medium leading-snug" style={{ color: s.accentName }}>{s.phase}</div>
-            {i < aiWorkflowStages.length - 1 && (
-              <span
-                className="absolute -right-4 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white p-0.5 font-sans text-[18px] leading-none text-textSecondary/30"
-                aria-hidden
-              >
-                ›
-              </span>
-            )}
-          </div>
-        ))}
-
-        {/* Tools label */}
-        <div className="flex items-center font-mono text-[12px] tracking-[0.04em] text-textSecondary/40">Tools</div>
-
-        {/* Tools cells */}
-        {aiWorkflowStages.map((s) => (
-          <div
-            key={s.n}
-            className="rounded-lg bg-surfaceAlt/50 px-3.5 py-3 font-sans text-[13px] leading-[1.7] text-textPrimary"
-          >
-            {(s.toolLines as readonly string[]).map((line, i) => (
-              <div key={i}>{line}</div>
-            ))}
-          </div>
-        ))}
-
-        {/* Output label */}
-        <div className="flex items-start pt-3 font-mono text-[12px] tracking-[0.04em] text-textSecondary/40">Output</div>
-
-        {/* Output cells */}
-        {aiWorkflowStages.map((s) => (
-          <div
-            key={s.n}
-            className="border border-black/[0.07] bg-white px-3.5 py-3.5 font-sans text-[13px] leading-[1.6] text-textSecondary"
-            style={{ borderTop: `2px solid ${s.accentNum}` }}
-          >
-            {s.body}
-          </div>
-        ))}
+        <div className="grid grid-cols-1 gap-6 bg-surfaceAlt/15 p-5 md:grid-cols-3 md:gap-5 md:p-6">
+          {uxStrategyShowrooms.map((s) => (
+            <article
+              key={s.id}
+              className="flex flex-col overflow-hidden rounded-xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.07]"
+            >
+              <div className="relative aspect-[10/13] w-full shrink-0 overflow-hidden bg-black/[0.05]">
+                <img
+                  src={s.proofSrc}
+                  alt={s.proofAlt}
+                  className="h-full w-full object-cover object-left-top"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+              <div className="flex flex-1 flex-col border-t border-black/[0.06] px-4 py-4 md:px-5 md:py-4">
+                <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/55">Showroom</p>
+                <p className="mt-1.5 font-sans text-[14px] font-normal leading-snug text-textPrimary">{s.tab}</p>
+                <p className="mt-4 font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/55">
+                  Model strength on display
+                </p>
+                <p className="mt-1.5 font-sans text-[13px] font-medium leading-snug text-textSecondary">{s.capability}</p>
+                <p className="mt-4 font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/55">
+                  Proof in experience
+                </p>
+                <p className="mt-1.5 font-sans text-[12.5px] font-normal leading-snug text-textPrimary/85">{s.feel}</p>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
     </div>
   );
@@ -1255,7 +999,6 @@ function HowIWorkedDiagram() {
 function HeroSection({ reduced }: { reduced: boolean | null }) {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-
 
   const parallaxLead = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 28]);
 
@@ -1329,18 +1072,9 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 className="mt-6 max-w-[36rem] font-sans text-[1.0625rem] font-normal leading-[1.68] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.125rem] md:leading-[1.66]"
                 variants={reduced ? undefined : heroItem}
               >
-                Turned Qwen's static docs into interactive showrooms experiences. Post-launch <Em>model token and call traffic</Em> averaged{" "}
-                <Em>~2×</Em> the four-week pre-launch baseline.
+                Turned static cloud documentation into interactive LLM-powered product experiences, reducing onboarding from 60+ minutes to under 2 minutes. After showroom go-live, internal <Em>model token and call traffic</Em> averaged about{" "}
+                <Em>double</Em> the four-week pre-launch baseline on the same product analytics scope.
               </motion.p>
-
-              <motion.div
-                className="mt-6 flex items-start gap-3 border-l-2 border-black/[0.12] pl-4 md:mt-7"
-                variants={reduced ? undefined : heroItem}
-              >
-                <p className="font-sans text-[13.5px] leading-relaxed text-textSecondary/65">
-                  <span className="font-medium text-textSecondary/80">Design principle:</span>{" "}AI systems need <Em>visible cognition</Em>, not just outputs — I design to make model state inspectable.
-                </p>
-              </motion.div>
 
               <motion.nav
                 aria-label="Case study links"
@@ -1382,18 +1116,74 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
 
         <motion.div
           className="mt-14 md:mt-20"
-          initial={reduced ? false : { opacity: 0, y: 16 }}
+          initial={reduced ? false : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: reduced ? 0 : 0.85, ease: easePremium }}
         >
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-7 border-t border-black/[0.06] pt-8 sm:grid-cols-4 sm:gap-y-0 md:gap-x-10 md:pt-9">
-            {metaFields.map(({ label, value }) => (
-              <div key={label} className="min-w-0">
-                <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/35">{label}</dt>
-                <dd className="mt-2 font-sans text-[12.5px] leading-snug text-textSecondary/70">{value}</dd>
+          <motion.div
+            className="relative border-t border-black/[0.08] pt-10 md:pt-12"
+            initial={reduced ? false : "hidden"}
+            animate={reduced ? undefined : "visible"}
+            variants={reduced ? undefined : introBlockContainer}
+          >
+            <motion.p
+              className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-textSecondary/60"
+              variants={reduced ? undefined : introBlockItem}
+            >
+              Project snapshot
+            </motion.p>
+            <motion.dl
+              className="mt-8 divide-y divide-black/[0.06] border-b border-black/[0.06]"
+              variants={reduced ? undefined : introMetaBlock}
+            >
+              {metaFields.map(({ label, value }) => (
+                <motion.div
+                  key={label}
+                  variants={reduced ? undefined : introMetaRow}
+                  className="grid grid-cols-1 gap-1.5 py-5 sm:grid-cols-[minmax(5.5rem,7.5rem)_minmax(0,1fr)] sm:items-baseline sm:gap-x-10 sm:gap-y-0 md:gap-x-14"
+                >
+                  <dt className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary/90">{label}</dt>
+                  <dd className="font-sans text-[15px] font-normal leading-snug text-textPrimary md:text-[16px] md:leading-snug">{value}</dd>
+                </motion.div>
+              ))}
+            </motion.dl>
+
+            <motion.div
+              id="my-ownership"
+              className="scroll-mt-24 mt-12 border-t border-black/[0.07] pt-10 md:mt-14 md:scroll-mt-28 md:pt-12"
+              variants={reduced ? undefined : introBlockItem}
+            >
+              <p className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-textSecondary/60">My ownership</p>
+              <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                {[
+                  { icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z", label: "UX Strategy", text: "Led showroom strategy · 4 interaction patterns" },
+                  { icon: "M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z", label: "Showroom Design", text: "3 rooms end-to-end · romance, astrology, therapy" },
+                  {
+                    icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
+                    label: "Production Code",
+                    text: "Motion + final-page HTML/CSS by ChatGPT + Cursor",
+                  },
+                  { icon: "M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z", label: "Console Redesign", text: "4 B2B pages · Knowledge Base, API Center, Homepage" },
+                  { icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", label: "Delivery", text: "Research → production in 4 weeks" },
+                  { icon: "M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z", label: "Stakeholders", text: "PM + engineering · P0–P3 scoped in 24 h" },
+                ].map((item) => (
+                  <motion.div
+                    key={item.label}
+                    variants={reduced ? undefined : introMetaRow}
+                    className="flex items-start gap-3 rounded-xl bg-surfaceAlt/30 px-4 py-4 ring-1 ring-black/[0.05]"
+                  >
+                    <svg className="mt-0.5 h-4 w-4 shrink-0 text-textSecondary/45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
+                      <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
+                    </svg>
+                    <div>
+                      <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/55">{item.label}</p>
+                      <p className="mt-1 font-sans text-[13.5px] leading-snug text-textPrimary">{item.text}</p>
+                    </div>
+                  </motion.div>
+                ))}
               </div>
-            ))}
-          </dl>
+            </motion.div>
+          </motion.div>
         </motion.div>
       </div>
     </section>
@@ -1504,8 +1294,7 @@ export default function CaseStudyContent() {
         >
           
           <p>
-            The docs explained everything. But <Em>feeling</Em> the model meant configuring, running samples, and interpreting output alone — a loop that <Em>routinely stretched past an hour</Em>. Most trial users left before reaching the moment of value. 
-            Enterprise decks faced the same wall: descriptive, not convincing. So I shifted the product from documentation to <Em>proof</Em>.
+            Pages explained the stack. Docs walked through the API. But to <Em>feel</Em> what the model could do, users had to configure, run samples, and interpret output alone — a loop that <Em>routinely stretched past an hour</Em>. Most trial users left before reaching the moment of value. Enterprise decks hit the same wall: they could describe the model, but nothing created belief.
           </p>
 
           <SiteVideoPreviewFrame
@@ -1517,90 +1306,145 @@ export default function CaseStudyContent() {
           <blockquote className="my-16 w-full !max-w-none rounded-2xl border border-black/[0.07] bg-surfaceAlt/50 px-8 py-12 text-left not-italic md:my-20 md:px-12 md:py-16">
             <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary">How might we</p>
             <p className="mt-8 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
-              Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em> — within minutes?
+              Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em> — within minutes? let a customer feel their future product before they write a line of code?
             </p>
           </blockquote>
         </Section>
 
-        {/* D1: SHOWROOM OVER DOCS */}
+        {/* STRATEGY */}
         <Section
-          id="d1-showroom"
-          eyebrow="Decision 01"
-          title="I replaced documentation with market-specific showrooms."
+          id="strategy"
+          eyebrow="Product Strategy"
+          title="From explaining the model to showing their future product."
         >
           <p>
-            Instead of improving the documentation, I designed 4 market-specific showrooms that let users experience a working version of their own future product. Companionship, psychotherapy, character cloning, IP licensing.
-          </p>
-
-          <D1BeforeAfter />
-
-          <p>
-            6 apps, 40 + comments — every competitor felt like <Em>another ChatGPT</Em>. The answer was market-specific showrooms: one vertical per room, built for the evaluator who already works there.
+            Instead of explaining the model, I let customers experience <Em>a working version of their own future product</Em>.
+            Each showroom became a <Em>market-specific prototype</Em>.
           </p>
           <p>
-            Users don&apos;t believe descriptions. So the first message had to <Em>prove the capability</Em>.
+            The safer path was to polish the generic chat window and improve docs. But that still kept customers in static pages before they could feel the model&apos;s value.
           </p>
-          
-        </Section>
-
-        {/* Bridge: What makes this hard to design */}
-        <div className="border-y border-black/[0.06] py-20 md:py-24">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">
-            What makes AI experiences hard
-          </p>
-          <p className="mt-8 max-w-[38rem] font-display text-[1.4rem] font-light leading-[1.42] tracking-[-0.02em] text-textPrimary md:text-[1.6rem] md:leading-[1.38]">
-            My role was to turn invisible model behavior into visible product surfaces.
-          </p>
-          <p className="mt-6 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:mt-7 md:text-[1.0625rem] md:leading-[1.76]">
-            Users don&apos;t only judge the output. They judge whether they understand what the system knows, why it responds, and how much control they still have.
-          </p>
-          <p className="mt-7 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:mt-8 md:text-[1.0625rem] md:leading-[1.76]">
-            So I designed 3 forms of visibility:
-          </p>
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3 md:gap-4">
+         
+          <div className="grid grid-cols-1 pt-6 md:grid-cols-3 md:gap-0">
             {[
               {
-                type: "Memory visibility",
-                detail: "The system recalls and updates personal context in the flow.",
+                n: "01",
+                title: "Market-back character definition",
+                body: "Triangulated internal analytics with desk research. 4 verticals — companionship, therapy, persona replication, licensed IP — each a distinct entry point.",
               },
               {
-                type: "Analysis visibility",
-                detail: "The system shows what it understands while the conversation continues.",
+                n: "02",
+                title: "Capability-to-scenario mapping",
+                body: "Each interaction surfaces one model strength: memory callbacks, emotional depth, or personalization.",
               },
               {
-                type: "Implementation visibility",
-                detail: "The system exposes prompts, YAML, and constraints beside the live demo.",
+                n: "03",
+                title: "Reusable template for customers",
+                body: "Showrooms customers could clone, configure, and launch — not one-time pitch artifacts.",
               },
-            ].map((item) => (
-              <div key={item.type} className="rounded-xl bg-surfaceAlt/30 px-5 py-6 ring-1 ring-black/[0.06]">
-                <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">{item.type}</p>
-                <p className="mt-3 font-sans text-[13px] leading-relaxed text-textSecondary/80">{item.detail}</p>
+            ].map((card, i) => (
+              <div
+                key={card.n}
+                className={`min-w-0 md:px-3 lg:px-5 ${
+                  i > 0
+                    ? "mt-8 border-t border-black/[0.08] pt-8 md:mt-0 md:border-t-0 md:border-l md:border-black/[0.08] md:pt-0"
+                    : ""
+                }`}
+              >
+                <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{card.n}</p>
+                <p className="mt-3 font-display text-[1.02rem] font-light leading-snug tracking-tight text-textPrimary md:mt-3.5 md:text-[1.06rem]">
+                  {card.title}
+                </p>
+                <p className="mt-3 font-sans text-[14px] leading-relaxed text-textSecondary md:text-[15px] md:leading-relaxed">
+                  {card.body}
+                </p>
               </div>
             ))}
           </div>
-        </div>
+        </Section>
 
-        {/* D2: CAPABILITY MAPPING */}
+        {/* RESEARCH */}
         <Section
-          id="d2-capability"
-          eyebrow="Decision 02"
-          title="Each room proved one thing in 60 seconds."
+          id="research"
+          eyebrow="Research"
+          title="Users want to feel AI, not read about it"
         >
           <p>
-            Three model strengths in one chat window. None of them landed. Romance for memory callbacks. 
-            Astrology for live memory updates. Therapy for real-time analysis. One proof moment per room, legible in 60 seconds, no explainer text.
+            I skipped B2B competitors and studied consumer products directly — 6 apps, 40+ comments. The pattern: <Em>most felt like another ChatGPT window</Em>. Users wanted two-layer immersion: conversation depth and sensory environment.
           </p>
+          <p>
+            Our own customers confirmed it: <Em>show the capability, don&apos;t describe it</Em>. The task became turning a black box into tangible, inspectable proof.
+          </p>
+          <ImagePlaceholder
+            label="Character.AI — reference UI from competitor research (April 2026)"
+            src="/assets/ai-character/research-character-ai-screenshot.png"
+            className="mx-auto max-w-5xl"
+          />
+
+          <div className="mt-10 overflow-hidden rounded-2xl ring-1 ring-black/[0.07]">
+            {/* Column headers */}
+            <div className="hidden border-b border-black/[0.06] bg-surfaceAlt/60 px-6 py-3 md:grid md:grid-cols-[2rem_1fr_1.1fr] md:gap-x-8">
+              <div />
+              {[
+                { icon: "M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z", label: "Finding · Evidence" },
+                { icon: "M13 10V3L4 14h7v7l9-11h-7z", label: "Design Response" },
+              ].map(({ icon, label }) => (
+                <div key={label} className="flex items-center gap-1.5">
+                  <svg className="h-3 w-3 shrink-0 text-textSecondary/40" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
+                  </svg>
+                  <span className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">{label}</span>
+                </div>
+              ))}
+            </div>
+
+            {/* Rows */}
+            <div className="divide-y divide-black/[0.05]">
+              {[
+                { finding: "Feels like another ChatGPT", evidence: "6 apps · 40+ comments", response: "Two-layer immersion" },
+                { finding: "Feel it, don't read about it", evidence: "Memory & pacing invisible", response: "Visible proof moments" },
+                { finding: "Trust = fast time-to-value", evidence: "Trial users dropped early", response: "Compressed proof loop" },
+                { finding: "Enterprise hit a tell-vs-try wall", evidence: "Decks don't create belief", response: "Try-first showroom" },
+                { finding: "Different markets, different proof", evidence: "4 verticals · 4 needs", response: "One capability → one room" },
+              ].map((row, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-1 gap-3 px-6 py-5 transition-colors duration-150 hover:bg-surfaceAlt/25 md:grid-cols-[2rem_1fr_1.1fr] md:items-center md:gap-x-8 md:gap-y-0 md:py-5"
+                >
+                  <span className="hidden font-mono text-[11px] tabular-nums text-textSecondary/25 md:block">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  {/* Finding + Evidence stacked */}
+                  <div className="space-y-0.5">
+                    <p className="font-sans text-[13px] font-medium leading-snug text-textSecondary/80">{row.finding}</p>
+                    <p className="font-sans text-[11.5px] leading-snug text-textSecondary/45">{row.evidence}</p>
+                  </div>
+                  {/* Design Response — most prominent */}
+                  <p className="font-sans text-[15px] font-normal leading-snug text-textPrimary">{row.response}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </Section>
+
+        {/* UX STRATEGY */}
+        <Section
+          id="ux-strategy"
+          eyebrow="UX Strategy"
+          title="One capability → one proof moment."
+        >
+          <p>Each showroom isolates one model strength and demonstrates it through direct experience.</p>
 
           <UxStrategyShowroomTable />
+        </Section>
 
-          <div className="mt-10 md:mt-12">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">Interaction design</p>
-            <p className="mt-3 max-w-[34rem] font-sans text-[16px] leading-relaxed text-textSecondary">
-              Each room required its own interaction language — here's what was designed for each one.
-            </p>
-          </div>
-
-          <div className="mt-10 border-y border-black/[0.06] py-8 md:py-10">
+        {/* INNOVATIONS */}
+        <Section
+          id="innovations"
+          eyebrow="Core Interactions"
+          title="Interaction innovations that make model capability visible."
+        >
+          <div className="border-y border-black/[0.06] py-8 md:py-10">
             <div className="grid gap-8 md:grid-cols-2 md:gap-12">
               <div>
                 <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Focus room</p>
@@ -1620,32 +1464,36 @@ export default function CaseStudyContent() {
           <AdditionalShowroomsGallery />
         </Section>
 
-        {/* D3: GAMIFICATION + CODE TOOLS */}
+        {/* EXPERIENCE LOOP */}
         <Section
-          id="d3-acceleration"
-          eyebrow="Decision 03"
-          title="Make the demo emotional for users and inspectable for builders."
+          id="experience-loop"
+          eyebrow="Experience Loop"
+          title="Accelerated loop: faster comprehension, lower drop-off."
         >
           <p>
-            <Em>Inspiration and Continue Response</Em> guide users to the <Em>wow moment</Em>. A slide-out drawer keeps <Em>YAML</Em> and <Em>prompts</Em> next to the <Em>live demo</Em>.
-          </p>
-          <p>
-            The question shifts from <Em>&ldquo;can your model do this&rdquo;</Em> to <Em>&ldquo;how fast can we ship.&rdquo;</Em>
+            Engagement depth competes with time-to-value. I resolved this by{" "}
+            <Em>accelerating the interaction loop</Em> — making capability legible within minutes.
           </p>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2 md:gap-8">
+          <ShowcaseVideo
+            label="Experience loop — inspiration and continuation"
+            src="/assets/ai-character/conversation engine.mp4"
+            caption="Option generation, narrative continuation, and multimodal response cues"
+          />
+
+          <div className="grid gap-6 pt-4 md:grid-cols-2 md:gap-8">
             <div className="rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 01</p>
               <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Inspiration Response</p>
               <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-                Three <Em>reply options</Em> — action, emotion, expression. Guides without breaking flow. Feels like gameplay, not messaging.
+                Three <Em>context-grounded reply options</Em> with action, emotion, and expression cues. Guides the next move without breaking flow — feels like gameplay, not messaging.
               </p>
             </div>
             <div className="rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 02</p>
               <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Continue Response</p>
               <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-                One tap <Em>extends the story</Em> from context — long-context reasoning, no effort required.
+                One tap <Em>extends the active storyline</Em> from context — revealing long-context reasoning without user effort.
               </p>
             </div>
           </div>
@@ -1653,154 +1501,238 @@ export default function CaseStudyContent() {
           <ShowcaseVideo
             label="Experience loop — inspiration and continue response in flow"
             src="/assets/ai-character/inspire-continue-response/inspire-continue-response-1.mp4"
-            caption="Inspiration reply options and continue response in the romance room"
+            caption="Screen recording: inspiration reply options and continue response in the romance showroom"
             className="mt-10"
             preload="auto"
           />
 
-          <div className="mt-10 rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 03</p>
-            <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Code drawer, not console.</p>
-            <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-              YAML specs, prompts, and constraints slide open beside the live demo — no context switch. Evaluators can inspect implementation without switching context, and clone the template as a <Em>reusable starting point</Em> for their own product.
-            </p>
-          </div>
+          <RevealLine className="mt-12" />
 
+          <h3 className="mt-12 font-display text-[1.25rem] font-light tracking-tight text-textPrimary md:text-[1.35rem]">
+            Developer tools — code drawer
+          </h3>
+          <p className="mt-4">
+            A <Em>slide-out code drawer</Em> keeps YAML specs, prompts, and constraints beside the live experience — inspect and iterate without leaving the showroom. Shifted conversations from &ldquo;Can your model do this?&rdquo; to <Em>&ldquo;How fast can we ship?&rdquo;</Em>
+          </p>
           <ShowcaseVideo
             label="Developer tools — in-product code side panel"
             src="/assets/ai-character/code/code%20tool.mp4"
-            caption="The prompt is right there. No digging."
-            className="mt-10"
+            caption="Screen recording: code drawer with spec and prompt context alongside the demo"
+            className="mt-8"
           />
         </Section>
 
-        {/* HOW I WORKED */}
+        {/* PROCESS */}
         <Section
-          id="how-i-worked"
-          eyebrow="How I Worked"
-          title="AI changed how I shipped the work, not just how I made assets."
+          id="process"
+          eyebrow="Design Craft"
+          title="Visual identity crafted with AI tools."
         >
           <p>
-            AI compressed the distance between{" "}
-            <Em>strategy, visual direction, motion, and implementation</Em>. I used it to stress-test decisions, generate
-            visual directions, prototype motion, and deliver <Em>production-adjacent interfaces</Em> that engineers could merge
-            with <Em>minimal revision</Em>.
+            Drawing from <Em>Love and Deepspace</Em>, I used AI generation tools (Wan, Kling, Dreamnia, SeeDance) to explore and
+            finalize character visual identity under a 4-week constraint.
           </p>
-          <HowIWorkedDiagram />
-
-          <RevealLine className="mt-10" />
-
-          <p className="mt-10 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">A glimpse into the process</p>
-          <p className="mt-3 font-sans text-[16px] leading-relaxed text-textSecondary">
-            Inspired by <Em>Love and Deepspace</Em>, I used Wan, Kling, Dreamnia, and SeeDance for visual identity. Interactions built with <Em>Cursor</Em> and <Em>Claude Code</Em> — all in four weeks.
-          </p>
-          <div className="grid gap-6 pt-4 md:grid-cols-2 md:gap-8">
+          <div className="grid gap-6 pt-2 md:grid-cols-2 md:gap-8">
             <ImagePlaceholder label="Character design exploration" src="/assets/ai-character/design.jpg" />
             <ImagePlaceholder label="UI visual system" src="/assets/ai-character/uivisual.jpg" />
           </div>
-          <div className="mt-6 grid gap-6 md:mt-8 md:grid-cols-2 md:gap-8">
+          <div className="grid gap-6 md:grid-cols-2 md:gap-8">
             <ImagePlaceholder label="Character direction explorations" src="/assets/ai-character/characterdirection.jpg" />
             <ImagePlaceholder label="Scene music and motion concept" src="/assets/ai-character/innovation.jpg" />
           </div>
+
+          <RevealLine className="mt-2" />
+
+          <h3 className="mt-12 font-display text-[1.25rem] font-light tracking-tight text-textPrimary md:text-[1.35rem]">
+            Craft moment: 3D → AI video loops
+          </h3>
+          <p className="mt-4">
+            The 3D avatar crashed mid-interaction. I replaced it with an <Em>AI-generated looping video</Em> — lighter,
+            more stable, and subtly present. Small motion (blink, smile, nod) felt more alive than complex animation.
+          </p>
+        </Section>
+
+        {/* KEY DESIGN DECISIONS */}
+        <Section
+          id="decisions"
+          eyebrow="Design Decisions"
+          title="6 decisions where the obvious answer would have killed the project."
+        >
+          <div className="space-y-0 pt-2">
+            {[
+              {
+                n: "01",
+                decision: "Showroom over optimizing chat window",
+                angle: "Product strategy",
+                rejected: "Better chat window",
+                chosen: "Pre-seeded showroom — memory, arc, proof from msg 1",
+                tradeoff: "Constrained entry · guaranteed first impression",
+              },
+              {
+                n: "02",
+                decision: "Romance · astrology · therapy",
+                angle: "Market fit",
+                rejected: "Generic demo scenarios",
+                chosen:
+                  "Three B2C-facing rooms, each exercising one capability — sourced from the same mix as the Market-back pillar above: internal dashboards plus desk research on Character.AI (romance-heavy persona demand) and B2B signals on real-person digital replicas, not genre guessing.",
+                tradeoff: "Narrower scope · stronger, traceable market signal",
+              },
+              {
+                n: "03",
+                decision: "One capability → one proof moment",
+                angle: "Research insight",
+                rejected: "Multi-feature tour",
+                chosen: "Single model strength · legible in < 60 s, no instructions",
+                tradeoff: "Depth over breadth · faster conversion",
+              },
+              {
+                n: "04",
+                decision: "AI video loop over 3D avatar",
+                angle: "Production stability",
+                rejected: "3D avatar (crashed mid-demo in webview)",
+                chosen: "AI-generated loop — blink, nod, smile · 1/10th load time",
+                tradeoff: "Less interactivity · higher reliability + warmer feel",
+              },
+              {
+                n: "05",
+                decision: "Code drawer in side panel",
+                angle: "Sales context",
+                rejected: "Separate developer console",
+                chosen: "Slide-out drawer beside live demo · no tab switch",
+                tradeoff: "Shallower panel · coherent demo-to-review flow",
+              },
+              {
+                n: "06",
+                decision: "Features cut",
+                angle: "Scope trade-off",
+                rejected: "Voice lip-sync · relationship graphs · character creator",
+                chosen: "Shipped 4 showrooms on time",
+                tradeoff: "Parked, not abandoned · 4-week constraint",
+              },
+            ].map((item) => (
+              <div key={item.n} className="grid grid-cols-1 gap-4 border-t border-black/[0.06] py-6 first:border-t-0 first:pt-0 md:grid-cols-[1fr_1.6fr]">
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="font-mono text-[10px] font-medium text-textSecondary/40">{item.n}</span>
+                    <span className="rounded-full border border-black/[0.09] bg-surfaceAlt/60 px-2.5 py-0.5 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/65">{item.angle}</span>
+                  </div>
+                  <p className="mt-2 font-display text-[1.02rem] font-light leading-snug tracking-tight text-textPrimary md:text-[1.08rem]">{item.decision}</p>
+                </div>
+                <div className="space-y-1.5">
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-px shrink-0 font-mono text-[11px] font-medium text-red-400/60">×</span>
+                    <p className="font-sans text-[13px] leading-snug text-textSecondary">{item.rejected}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <span className="mt-px shrink-0 font-mono text-[11px] font-medium text-emerald-600/60">✓</span>
+                    <p className="font-sans text-[13px] leading-snug text-textPrimary/80">{item.chosen}</p>
+                  </div>
+                  <div className="flex items-start gap-2.5 pt-1">
+                    <span className="mt-px shrink-0 font-mono text-[11px] text-textSecondary/35">→</span>
+                    <p className="font-sans text-[12px] italic leading-snug text-textSecondary/65">{item.tradeoff}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Section>
+
+        {/* BACKEND */}
+        <Section
+          id="backend"
+          eyebrow="Backend Redesign"
+          title="Four B2B console pages redesigned for scanability."
+        >
+          <p>
+            Mapped missing scope to <Em>P0–P3</Em> and aligned timelines in <Em>24 hours</Em>. Redesigned Knowledge Base,
+            Extended Capability, API Center, and the homepage around one principle: <Em>easy to try, find, edit, and track</Em>.
+          </p>
+          <div className="grid grid-cols-1 gap-8 pt-4 md:grid-cols-2 md:gap-10">
+            <ShowcaseVideo label="Homepage redesign" src="/assets/ai-character/homepage.mov" caption="Homepage Redesign" />
+            <ImagePlaceholder label="Knowledge Base console redesign" src="/assets/ai-character/updateddesign1.jpg" />
+            <ImagePlaceholder label="Extended Capability console redesign" src="/assets/ai-character/updateddesign2.jpg" />
+            <ImagePlaceholder label="Knowledge base detail redesign" src="/assets/ai-character/updatedesign3.jpg" />
+          </div>
+        </Section>
+
+        {/* LIVE PROTOTYPES */}
+        <Section
+          id="vibe-prototype"
+          eyebrow="Live Interactive Prototypes"
+          title="Three showrooms, designed and built end-to-end."
+        >
+          <p>
+            Each showroom was designed, prototyped, and shipped end-to-end — research through production code. Three vibe-coded builds below; open full page for best fidelity.
+          </p>
+          <VibeCodingPrototypeGallery />
         </Section>
 
         {/* PRODUCT SHOWCASE */}
         <Section
           id="product-showcase"
           eyebrow="Product Showcase"
-        >
-          <ShowcaseSlideGallery reduced={reduced} />
-
-          <RevealLine className="mt-14" />
-
-          <h3 className="mt-12 font-display text-[1.25rem] font-light tracking-tight text-textPrimary md:text-[1.35rem]">
-            Live interactive prototypes
-          </h3>
-          <p className="mt-4 font-sans text-[16px] leading-relaxed text-textSecondary">
-            Open full page for best fidelity.
-          </p>
-          <VibeCodingPrototypeGallery />
-        </Section>
-
-        {/* ADDITIONAL CONTRIBUTION */}
-        <Section
-          id="backend"
-          eyebrow="Additional Contribution"
-          title="Full refresh of the Qwen Character SaaS console."
+          title="Motion-driven showrooms, replacing static docs."
         >
           <p>
-            I delivered an end-to-end update to the Qwen Character admin — spanning <Em>API</Em> surfaces,{" "}
-            <Em>Studio</Em> (Applications, Workflows, Knowledge Base, Characters), and the nested flows underneath.
-            That included secondary screens teams rely on in production: empty and error states, and{" "}
-            <Em>analytics</Em> views for operational data such as invocation metrics and call volume.
+            Four rooms, each proving a distinct model capability.
           </p>
-          <div className="grid grid-cols-1 gap-8 pt-4 md:grid-cols-2 md:gap-10">
-            <ShowcaseVideo
-              label="SaaS console — overview screen recording"
-              src="/assets/ai-character/homepage.mov"
-              caption="Updated console overview — API entry and Studio navigation"
-            />
-            <ImagePlaceholder label="Studio surfaces — capability and workflow modules" src="/assets/ai-character/updateddesign1.jpg" />
-            <ImagePlaceholder label="Nested flows — detail views and extended configuration" src="/assets/ai-character/updateddesign2.jpg" />
-            <ImagePlaceholder label="Knowledge Base and downstream screens" src="/assets/ai-character/updatedesign3.jpg" />
-          </div>
-
-          <h3 className="mt-14 font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.25rem]">
-            Design framework
-          </h3>
-          <SitePreviewFrame
-            eyebrow="Adoption"
-            title="Spark Design templates — adopted B2B design system page"
-            src="https://sparkdesign.agentscope.io/#/templates"
-            href="https://sparkdesign.agentscope.io/#/templates"
-          />
+          <ShowcaseSlideGallery reduced={reduced} />
         </Section>
 
         {/* OUTCOME */}
         <Section
           id="outcome"
-          eyebrow="Impact"
+          eyebrow="Outcome"
           title="Shipped. Converted. Adopted."
         >
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 border-b border-black/[0.06] pb-12 pt-4 md:grid-cols-4 md:gap-x-6 md:gap-y-8 lg:gap-x-10">
+          <div className="grid grid-cols-2 gap-x-8 gap-y-10 border-b border-black/[0.06] pb-12 pt-4 md:grid-cols-3 md:gap-y-8 lg:grid-cols-5">
             {[
-              { n: "4", label: "Showrooms shipped", detail: "romance · astrology · therapy · character" },
+              { n: "4", label: "Showrooms shipped", detail: "each proving a distinct capability" },
               {
                 n: "~2×",
-                label: "Model traffic",
-                detail: "token & call volume vs 4-wk pre-launch avg",
+                label: "model token / call traffic",
+                detail: "vs 4-wk pre-launch avg · same internal pipeline",
               },
               {
-                n: "60+ min → <2 min",
-                label: "Onboarding",
-                detail: "static docs to first proof moment",
+                n: "87%",
+                label: "fewer clone-to-try steps",
+                detail: "spec + local configure chain → template entry + pre-seed",
               },
-              { n: "4 weeks", label: "Research to production", detail: "intern project, shipped" },
+              { n: "4 wks", label: "design to deploy", detail: "intern project to live product" },
+              {
+                n: "60%",
+                label: "faster delivery",
+                detail: "engineering estimate · spec + code handoff while shipping 3 showrooms",
+              },
             ].map((stat, i) => (
               <motion.div
                 key={stat.n}
-                className="flex flex-col"
                 initial={{ opacity: 0, y: 16 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.75, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
               >
-                <div className="flex min-h-[7.25rem] flex-col justify-end md:min-h-[7.5rem]">
-                  <p className="font-display text-[2.5rem] font-light leading-[1.08] tracking-[-0.02em] text-textPrimary md:text-[2.75rem] md:leading-[1.06]">
-                    <CountUpStat value={stat.n} />
-                  </p>
-                </div>
-                <div className="mt-4 flex min-h-[2.75rem] items-start md:min-h-[3rem]">
-                  <p className="font-sans text-[12px] font-medium uppercase leading-snug tracking-[0.12em] text-textPrimary/65">
-                    {stat.label}
-                  </p>
-                </div>
+                <p className="font-display text-[2.5rem] font-light leading-none tracking-tight text-textPrimary md:text-[2.75rem]"><CountUpStat value={stat.n} /></p>
+                <p className="mt-3 font-sans text-[12px] font-medium uppercase tracking-[0.12em] text-textPrimary/65">{stat.label}</p>
                 <p className="mt-2 font-sans text-[14px] leading-snug text-textSecondary">{stat.detail}</p>
               </motion.div>
             ))}
           </div>
 
           <CollapsibleMetricTable />
+
+          <h3 className="mt-14 font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.25rem]">
+            Adopted Design Preview
+          </h3>
+          <p className="mt-3 max-w-reading font-sans text-[15px] leading-relaxed text-textSecondary">
+            The B2B framework was adopted into <Em>Spark Design templates</Em>, turning the showroom pattern into a reusable foundation.
+          </p>
+          <SitePreviewFrame
+            eyebrow="Adoption"
+            title="Spark Design templates — adopted B2B design system page"
+            src="https://sparkdesign.agentscope.io/#/templates"
+            href="https://sparkdesign.agentscope.io/#/templates"
+          />
 
           <p className="mt-10 border-l border-black/12 pl-6 font-sans text-[15px] leading-relaxed text-textSecondary md:mt-12 md:pl-7">
             <a
@@ -1814,14 +1746,17 @@ export default function CaseStudyContent() {
           </p>
         </Section>
 
-        <Section id="takeaway" eyebrow="Takeaway" title="What I learned" bordered={false}>
-          <p className="max-w-reading">
-            AI products do not sell themselves through capability lists. They need <Em>proof moments</Em>,{" "}
-            <Em>visible cognition</Em>, and <Em>inspectable systems</Em>. The designer&apos;s job is to translate model
-            behavior into experiences people can feel, trust, and build from.
-          </p>
+        <Section id="takeaway" eyebrow="Takeaway" title="What I Learned for AI Products" bordered={false}>
+          <ul className="max-w-reading space-y-3 font-sans text-[16px] leading-relaxed text-textSecondary">
+            <li>AI systems need <Em>visible cognition</Em>, not just outputs.</li>
+            <li>Trust comes from <Em>inspectability</Em> and feedback loops.</li>
+            <li>The fastest way to sell AI is to let users <Em>experience their own use case</Em>.</li>
+          </ul>
 
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 md:mt-16">
+          <h3 className="mt-14 font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.28rem]">
+            AI Trust &amp; Safety
+          </h3>
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
             {[
               {
                 icon: "M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
@@ -1859,25 +1794,14 @@ export default function CaseStudyContent() {
           <h3 className="mt-14 font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.28rem]">
             Design principles
           </h3>
-          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-            <div className="flex flex-col rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] md:px-7 md:py-9">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary">Principle 01</p>
-              <p className="mt-4 font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
-                Design is the translation layer.
-              </p>
-              <p className="mt-4 font-sans text-[15px] leading-relaxed text-textSecondary">
-                In AI products, the hardest problem isn&apos;t the model — it&apos;s helping people <Em>imagine what to build</Em>.
-              </p>
-            </div>
-            <div className="flex flex-col rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] md:px-7 md:py-9">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary">Principle 02</p>
-              <p className="mt-4 font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
-                The best demo is future-self proof.
-              </p>
-              <p className="mt-4 font-sans text-[15px] leading-relaxed text-textSecondary">
-                Show a <Em>working version of their product</Em>, then let them <Em>clone it</Em>.
-              </p>
-            </div>
+          <div className="mt-6 space-y-7 font-sans text-[16px] leading-relaxed text-textSecondary md:text-[17px] md:leading-[1.65]">
+            <p>
+              <Em>Design is the translation layer.</Em> The hardest problem in AI products isn&apos;t model quality —
+              it&apos;s helping customers imagine what they can build.
+            </p>
+            <p>
+              <Em>The strongest demo is future-self proof.</Em> Show a working version of their own future product — then let them clone it.
+            </p>
           </div>
         </Section>
         </article>

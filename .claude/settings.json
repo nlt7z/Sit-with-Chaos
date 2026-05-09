@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(grep -v \"^--$\")",
+      "Bash(git restore *)",
+      "Bash(rm /Users/fangyuan/Desktop/newpage/.git/index.lock && git restore --staged .)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(sed -n '143,151p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
+      "Bash(sed -n '1438,1444p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
+      "Bash(sed -n '1508,1514p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
+      "Bash(sed -n '1594,1603p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
+      "Bash(sed -n '1231,1315p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
+      "Bash(python3 -)"
+    ],
+    "additionalDirectories": [
+      "/Users/fangyuan/Desktop/newpage/.git"
+    ]
+  }
+}
