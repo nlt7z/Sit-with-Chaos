@@ -8,17 +8,17 @@ const capabilities = [
   {
     title: "AI-native Product Thinking",
     description:
-      "Designing workflows where AI acts as a collaborator, not just a response generator.",
+      "Workflows where AI acts as a collaborator at every step, not just a response generator.",
   },
   {
     title: "Motion as Interaction Logic",
     description:
-      "Using motion to clarify state, hierarchy, feedback, and user confidence.",
+      "Motion that clarifies state, hierarchy, and user confidence.",
   },
   {
     title: "Prototyping with Code",
     description:
-      "Building interactive prototypes with HTML, CSS, React, and AI coding tools to move from idea to shipped experience faster.",
+      "Interactive prototypes with React and AI tools to move from idea to shipped experience faster.",
   },
 ] as const;
 
@@ -52,17 +52,12 @@ export function About() {
             transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <p className="text-base font-normal leading-relaxed text-textPrimary md:text-[17px] md:leading-relaxed">
-              Yuan Fang is a product designer with roots in fine arts. Ten years across painting, spatial design, and
-              digital products gave her something formal training rarely does: the ability to look at a messy system
-              and see what it wants to become.
+              A product designer with fine arts roots. Ten years across painting, spatial design, and digital products
+              built her instinct for seeing what a messy system wants to become.
             </p>
             <p className="mt-4 text-base font-normal leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
-              She works where complex technology meets human behavior — making the powerful feel understandable,
-              trustworthy, and worth returning to. Her process combines research, product thinking, and code, with AI
-              at the core of how she thinks, not just how she builds.
-            </p>
-            <p className="mt-4 text-base font-normal leading-relaxed text-textPrimary md:mt-5 md:text-[17px] md:leading-relaxed">
-              The goal is always the same: less like operating a tool, more like being guided through something.
+              She works where technology meets human behavior, making the complex feel understandable and worth
+              returning to. Research, product thinking, and code, with AI at the core of how she thinks.
             </p>
           </motion.div>
 

@@ -53,11 +53,25 @@ export function VibeCodingPageContent() {
         </div>
       </section>
 
-      <Link
-        href="/#work"
-        className="mt-12 inline-block text-sm text-textPrimary underline decoration-[rgba(0,0,0,0.2)] underline-offset-4"
-      >
-        ← Back to selected work
+      <Link href="/#work" className="group mt-20 block">
+        <div className="relative overflow-hidden rounded-2xl bg-[#0c0c10] px-8 py-12 md:px-14 md:py-16 transition-colors duration-700 group-hover:bg-[#13131a]">
+          {/* Subtle radial glow that follows hover */}
+          <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 group-hover:opacity-100"
+            style={{ background: "radial-gradient(ellipse 60% 55% at 30% 50%, rgba(255,255,255,0.04), transparent)" }} />
+
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/25">Portfolio</p>
+
+          <div className="mt-5 flex items-end justify-between gap-6">
+            <h2 className="font-display text-5xl font-light leading-[1.08] text-white md:text-7xl">
+              Selected<br />Work
+            </h2>
+            <div className="mb-1 shrink-0 transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-1 group-hover:-translate-y-1">
+              <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden className="opacity-40 transition-opacity duration-500 group-hover:opacity-90 md:h-14 md:w-14">
+                <path d="M10 30L30 10M30 10H14M30 10V26" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </div>
+          </div>
+        </div>
       </Link>
     </section>
   );

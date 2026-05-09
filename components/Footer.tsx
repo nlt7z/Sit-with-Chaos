@@ -84,14 +84,24 @@ export function Footer({ variant = "light", showTopBorder = true, blendBackgroun
             <p className={`text-sm ${isDark ? "text-zinc-300" : "text-textPrimary"}`}>© 2026 Yuan Fang · NLT Studio</p>
           </div>
 
-          {/* Right — credit line only */}
-          <p
-            className={`shrink-0 font-mono text-xs leading-relaxed md:text-right md:whitespace-nowrap ${
-              isDark ? "text-zinc-500" : "text-textSecondary/80"
-            }`}
-          >
-            Built with Next.js · Designed with intent and boba tea
-          </p>
+          {/* Right — email + credit line */}
+          <div className={`flex shrink-0 flex-col gap-2 md:items-end`}>
+            <a
+              href="mailto:fangyuanzero7@gmail.com"
+              className={`font-mono text-xs transition-opacity hover:opacity-60 ${
+                isDark ? "text-zinc-400" : "text-textSecondary"
+              }`}
+            >
+              fangyuanzero7@gmail.com
+            </a>
+            <p
+              className={`font-mono text-xs leading-relaxed md:text-right md:whitespace-nowrap ${
+                isDark ? "text-zinc-500" : "text-textSecondary/80"
+              }`}
+            >
+              Built with Next.js · Designed with intent and boba tea
+            </p>
+          </div>
         </div>
       </div>
     </footer>
