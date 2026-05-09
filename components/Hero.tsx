@@ -2,7 +2,6 @@
 
 import { BlurReveal } from "@/registry/spell-ui/blur-reveal";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
@@ -270,19 +269,6 @@ export function Hero() {
           >
             Explore Work
           </motion.a>
-          <motion.div
-            whileHover={reduced ? undefined : { y: -2 }}
-            whileTap={reduced ? undefined : { y: 1 }}
-            transition={{ type: "spring", stiffness: 480, damping: 28 }}
-            className="inline-block"
-          >
-            <Link
-              href="/resume"
-              className="inline-flex rounded-full border border-[rgba(0,0,0,0.1)] bg-white/95 px-8 py-3 text-sm font-medium text-textPrimary shadow-[0_10px_26px_-18px_rgba(0,0,0,0.22)] backdrop-blur-[2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-            >
-              Resume
-            </Link>
-          </motion.div>
         </motion.div>
 
         {!reduced && (

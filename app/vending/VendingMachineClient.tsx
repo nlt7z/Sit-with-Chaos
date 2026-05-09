@@ -17,7 +17,7 @@ const KEYS: Record<number, { label: string; href: string; lines: string[] }> = {
   5: { label: "Apsara",        href: "/work/apsara-conference", lines: ["ALIBABA",  "CLOUD"]    },
   6: { label: "About",         href: "/about",                  lines: ["ABOUT",    "ME"]       },
   7: { label: "Vibe Coding",   href: "/vibe-coding",            lines: ["CREATIVE", "CODE"]     },
-  8: { label: "My Journey",    href: "/resume",                 lines: ["MY",       "JOURNEY"]  },
+  8: { label: "Selected Work", href: "/#work",                  lines: ["SELECTED", "WORK"]     },
   9: { label: "Random",        href: "/work/ai-character",      lines: ["???",      "LUCKY"]    },
 };
 

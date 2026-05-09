@@ -11,7 +11,7 @@ const navLinks = [
 ] as const;
 
 type NavProps = {
-  /** Dark chrome for pages with a black / near-black background (e.g. resume). */
+  /** Dark chrome for pages with a black / near-black background. */
   variant?: "light" | "dark";
 };
 
@@ -101,19 +101,6 @@ export function Nav({ variant = "light" }: NavProps) {
                 </a>
               </span>
             ))}
-            <span className={`select-none ${isDark ? "text-zinc-600" : "text-textSecondary/40"}`} aria-hidden>
-              ·
-            </span>
-            <Link
-              href="/resume"
-              className={`text-sm font-medium transition-opacity duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                isDark
-                  ? "text-zinc-100 hover:opacity-80 focus-visible:ring-white/45 focus-visible:ring-offset-[#060608]"
-                  : "text-textPrimary hover:opacity-70 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-              }`}
-            >
-              Resume
-            </Link>
           </div>
 
           <button
@@ -189,17 +176,6 @@ export function Nav({ variant = "light" }: NavProps) {
                     {link.label}
                   </a>
                 ))}
-                <Link
-                  href="/resume"
-                  onClick={() => setOpen(false)}
-                  className={`text-lg font-medium focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
-                    isDark
-                      ? "text-zinc-100 focus-visible:ring-white/45 focus-visible:ring-offset-[#0a0a0c]"
-                      : "text-textPrimary focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-                  }`}
-                >
-                  Resume
-                </Link>
               </div>
             </motion.div>
           </>

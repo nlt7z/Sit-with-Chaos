@@ -51,7 +51,6 @@ export function HomeMagicGallery() {
 
   const renderCardMedia = (item: (typeof magicPreviews)[number], eager = false) => {
     if (!inView) return null;
-    if (item.kind === "gradient") return null;
     if (item.kind === "video") {
       return (
         <video
