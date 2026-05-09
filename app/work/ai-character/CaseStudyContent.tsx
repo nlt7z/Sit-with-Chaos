@@ -515,16 +515,31 @@ const d1CycleOrder: Array<(typeof vibeCodingShowrooms)[number]["id"]> = [
   "astrology",
 ];
 
+const PROTO_W = 1440;
+const PROTO_H = 900;
+
 function D1BeforeAfter() {
   const [idx, setIdx] = useState(0);
+  const afterRef = useRef<HTMLDivElement>(null);
+  const [afterWidth, setAfterWidth] = useState(0);
 
   useEffect(() => {
     const t = setInterval(() => setIdx((i) => (i + 1) % d1CycleOrder.length), 4200);
     return () => clearInterval(t);
   }, []);
 
+  useEffect(() => {
+    const el = afterRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setAfterWidth(entry.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
   const activeId = d1CycleOrder[idx];
   const activeRoom = vibeCodingShowrooms.find((s) => s.id === activeId) ?? vibeCodingShowrooms[2];
+  const scale = afterWidth > 0 ? afterWidth / PROTO_W : 0;
+  const displayH = Math.round(PROTO_H * scale);
 
   return (
     <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
@@ -535,7 +550,7 @@ function D1BeforeAfter() {
         </p>
         <div className="overflow-hidden rounded-xl bg-black ring-1 ring-black/[0.08]">
           <video
-            className="h-[min(52vh,560px)] min-h-[280px] w-full object-cover"
+            className="w-full h-auto"
             autoPlay
             muted
             loop
@@ -570,23 +585,33 @@ function D1BeforeAfter() {
           </div>
         </div>
         <div
+          ref={afterRef}
           className={`relative overflow-hidden rounded-xl border transition-[border-color,box-shadow] duration-500 ${vibeGalleryChrome[activeId]}`}
+          style={{ height: displayH || undefined, aspectRatio: displayH ? undefined : `${PROTO_W}/${PROTO_H}` }}
         >
           {d1CycleOrder.map((id, i) => {
             const room = vibeCodingShowrooms.find((s) => s.id === id)!;
             return (
               <div
                 key={id}
-                className={`transition-opacity duration-500 ${
-                  i === idx ? "opacity-100" : "pointer-events-none absolute inset-0 opacity-0"
+                className={`absolute inset-0 transition-opacity duration-500 ${
+                  i === idx ? "opacity-100" : "pointer-events-none opacity-0"
                 }`}
               >
-                <iframe
-                  title={room.title}
-                  src={room.src}
-                  loading="lazy"
-                  className={`h-[min(52vh,560px)] min-h-[280px] w-full border-0 ${vibeIframeBg[id]}`}
-                />
+                {scale > 0 && (
+                  <iframe
+                    title={room.title}
+                    src={room.src}
+                    loading="lazy"
+                    className={`absolute top-0 left-0 border-0 ${vibeIframeBg[id]}`}
+                    style={{
+                      width: PROTO_W,
+                      height: PROTO_H,
+                      transform: `scale(${scale})`,
+                      transformOrigin: "top left",
+                    }}
+                  />
+                )}
               </div>
             );
           })}
@@ -1139,9 +1164,9 @@ function UxStrategyShowroomTable() {
           ))}
         </div>
 
-        <div className="py-10 md:py-14">
+        <div className="max-w-[36rem] border-l-2 border-black/[0.18] pl-7 py-5 md:pl-8 md:py-6">
           <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary/45">Memory in the UI</p>
-          <p className="mt-5 max-w-[44rem] font-display text-[1.2rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:mt-6 md:text-[1.38rem] md:leading-[1.38]">
+          <p className="mt-4 font-display text-[1.2rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:mt-5 md:text-[1.38rem] md:leading-[1.38]">
             {memoryVisibilityInsight}
           </p>
         </div>
@@ -1386,11 +1411,11 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.9, delay: reduced ? 0 : 0.85, ease: easePremium }}
         >
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-7 border-t border-black/[0.06] pt-8 sm:grid-cols-4 sm:gap-y-0 md:gap-x-10 md:pt-9">
+          <dl className="grid grid-cols-2 gap-x-8 gap-y-7 pt-8 sm:grid-cols-4 sm:gap-y-0 md:gap-x-10 md:pt-9">
             {metaFields.map(({ label, value }) => (
-              <div key={label} className="min-w-0">
-                <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/35">{label}</dt>
-                <dd className="mt-2 font-sans text-[12.5px] leading-snug text-textSecondary/70">{value}</dd>
+              <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
+                <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">{label}</dt>
+                <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
               </div>
             ))}
           </dl>
@@ -1514,9 +1539,9 @@ export default function CaseStudyContent() {
             src="/assets/ai-character/before.mp4"
           />
 
-          <blockquote className="my-16 w-full !max-w-none rounded-2xl border border-black/[0.07] bg-surfaceAlt/50 px-8 py-12 text-left not-italic md:my-20 md:px-12 md:py-16">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary">How might we</p>
-            <p className="mt-8 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
+          <blockquote className="my-16 w-full !max-w-none border-l-2 border-black/[0.18] pl-7 not-italic md:my-20 md:pl-8">
+            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary/60">How might we</p>
+            <p className="mt-4 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
               Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em> — within minutes?
             </p>
           </blockquote>

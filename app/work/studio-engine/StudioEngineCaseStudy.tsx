@@ -1,9 +1,7 @@
 "use client";
 
-import { CaseStudyMeta } from "@/components/CaseStudyMeta";
 import { MacBookFrame } from "@/components/MacBookFrame";
 import { Nav } from "@/components/Nav";
-import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import {
   AnimatePresence,
   motion,
@@ -26,25 +24,14 @@ const easeLux = [0.22, 1, 0.36, 1] as const;
 
 const caseNavItems = [
   { id: "overview", label: "Overview" },
-  { id: "starting-point", label: "Starting point" },
-  { id: "context", label: "Context" },
+  { id: "product", label: "The problem" },
   { id: "research", label: "Research" },
-  { id: "insights", label: "Insights" },
-  { id: "design", label: "Design" },
-  { id: "flow", label: "Flow" },
-  { id: "solutions", label: "Solutions" },
-  { id: "system", label: "System" },
-  { id: "outcomes", label: "Outcomes" },
+  { id: "design-principle", label: "AI principle" },
+  { id: "workflow-ia", label: "Design framework" },
+  { id: "solutions", label: "Decisions" },
+  { id: "agent", label: "Agent layer" },
+  { id: "outcome", label: "Impact" },
   { id: "reflection", label: "Reflection" },
-] as const;
-
-const RESEARCH_PARTICIPANTS = [
-  { id: "P1", role: "Cinematographer", detail: "1 year industry experience" },
-  { id: "P2", role: "Cinematographer · Student", detail: "Film school" },
-  { id: "P3", role: "Master's Student", detail: "Media & Communication" },
-  { id: "P4", role: "Documentarian & Editor", detail: "2 years industry experience" },
-  { id: "P5", role: "Animation Director · Student", detail: "Independent animation" },
-  { id: "P6", role: "Content Creator · Hobbyist", detail: "1 year experience" },
 ] as const;
 
 const RESEARCH_QUESTIONS = [
@@ -53,95 +40,6 @@ const RESEARCH_QUESTIONS = [
   "What emotions do users experience throughout the generation and review process?",
 ] as const;
 
-const METHODOLOGY = [
-  "Pre-task interview and survey to capture baseline knowledge and mental models",
-  "Moderated, within-subjects usability test across three representative tasks",
-  "Live observation with error logging on a 1–5 severity scale per task",
-  "Post-task interview and System Usability Scale (SUS) for quantitative benchmarking",
-] as const;
-
-const USABILITY_TASK_BLOCKS: {
-  id: string;
-  variant: "neutral" | "warn";
-  eyebrow: string;
-  body: string;
-  steps: readonly { src: string; alt: string; label: string }[];
-}[] = [
-  {
-    id: "task-01-script",
-    variant: "neutral",
-    eyebrow: "Task 01 · Script",
-    body: "From a written prompt, generate a full script with scenes, characters, locations, and props.",
-    steps: [
-      {
-        src: "/assets/studio-engine/task-1-1.jpg",
-        alt: "Usability session — participant enters a written prompt for script generation",
-        label: "Prompt input",
-      },
-      {
-        src: "/assets/studio-engine/task-1-2.jpg",
-        alt: "Usability session — AI-generated script content appearing on screen",
-        label: "Draft screenplay",
-      },
-      {
-        src: "/assets/studio-engine/task-1-3.jpg",
-        alt: "Usability session — structured script with scenes, characters, and locations",
-        label: "Scenes & breakdown",
-      },
-    ],
-  },
-  {
-    id: "task-02-visuals",
-    variant: "warn",
-    eyebrow: "Task 02 · Edit visuals",
-    body: "Edit character and location images to match a creative vision — the highest-friction task in the workflow.",
-    steps: [
-      {
-        src: "/assets/studio-engine/task-2-1.jpg",
-        alt: "Usability session — reviewing generated script and visual assets",
-        label: "Review outputs",
-      },
-      {
-        src: "/assets/studio-engine/task-2-2.jpg",
-        alt: "Usability session — character image editing interface",
-        label: "Character edit",
-      },
-      {
-        src: "/assets/studio-engine/task-2-3.jpg",
-        alt: "Usability session — controls for regeneration and inpainting",
-        label: "Regenerate / refine",
-      },
-      {
-        src: "/assets/studio-engine/task-2-4.jpg",
-        alt: "Usability session — mismatch between edited visual and intent",
-        label: "Friction & recovery",
-      },
-    ],
-  },
-  {
-    id: "task-03-storyboard",
-    variant: "neutral",
-    eyebrow: "Task 03 · Storyboard",
-    body: "Refine the storyboard by adjusting scenes and shots to finalize the visual narrative.",
-    steps: [
-      {
-        src: "/assets/studio-engine/task-3-1.jpg",
-        alt: "Usability session — storyboard overview and scene list",
-        label: "Board overview",
-      },
-      {
-        src: "/assets/studio-engine/task-3-2.jpg",
-        alt: "Usability session — arranging shots within a scene",
-        label: "Shot sequencing",
-      },
-      {
-        src: "/assets/studio-engine/task-3-3.jpg",
-        alt: "Usability session — adjusting a shot before sign-off",
-        label: "Shot detail",
-      },
-    ],
-  },
-];
 
 const TASK_EVAL_ROWS = [
   { label: "T1 · Create script from prompt", success: 83, error: 63, meta: "5/6 · 19 err", highlight: false },
@@ -269,7 +167,7 @@ function CaseStudySectionNav() {
                 }}
                 className={`block border-l border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
                   active === id
-                    ? "border-violet-600/70 font-medium text-textPrimary"
+                    ? "border-violet-600/70 text-textPrimary"
                     : "text-textSecondary/90 hover:translate-x-0.5 hover:border-violet-500/35 hover:text-violet-950"
                 }`}
               >
@@ -360,40 +258,10 @@ function HoverPanel({ children, className }: { children: ReactNode; className: s
   );
 }
 
-function TaskWorkflowGallery({
-  steps,
-  columns,
-}: {
-  steps: readonly { src: string; alt: string; label: string }[];
-  columns: 3 | 4;
-}) {
-  const gridClass =
-    columns === 4
-      ? "grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4"
-      : "grid grid-cols-1 gap-4 sm:grid-cols-3 sm:gap-4";
-
-  return (
-    <div className={`mt-6 ${gridClass}`}>
-      {steps.map((step, i) => (
-        <MediaReveal key={step.src} delay={0.05 * i} className="min-h-0">
-          <Figure
-            layout="grid"
-            gridColumns={columns === 4 ? 2 : 3}
-            src={step.src}
-            alt={step.alt}
-            width={800}
-            height={560}
-            caption={`Step ${i + 1} · ${step.label}`}
-          />
-        </MediaReveal>
-      ))}
-    </div>
-  );
-}
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.26em] text-textSecondary/55">
+    <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/55">
       {children}
     </p>
   );
@@ -402,7 +270,7 @@ function Eyebrow({ children }: { children: ReactNode }) {
 function SectionTitle({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <h2
-      className={`mt-8 max-w-[40rem] font-display text-[clamp(1.875rem,4.2vw,2.75rem)] font-light leading-[1.1] tracking-[-0.038em] text-textPrimary first:mt-0 md:mt-10 ${className}`}
+      className={`mt-8 max-w-[40rem] font-display text-[clamp(1.5rem,3.6vw,2.125rem)] font-light leading-[1.1] tracking-[-0.03em] text-textPrimary first:mt-0 md:mt-10 ${className}`}
     >
       {children}
     </h2>
@@ -412,7 +280,7 @@ function SectionTitle({ children, className = "" }: { children: ReactNode; class
 function Subtitle({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
     <h3
-      className={`mt-24 max-w-2xl font-display text-[1.3125rem] font-light leading-snug tracking-[-0.022em] text-textPrimary first:mt-0 md:mt-28 md:text-[1.5rem] ${className}`}
+      className={`mt-24 max-w-2xl font-display text-[1.125rem] font-light leading-snug tracking-[-0.018em] text-textPrimary first:mt-0 md:mt-28 md:text-[1.25rem] ${className}`}
     >
       {children}
     </h3>
@@ -462,8 +330,8 @@ function Figure({
   const noFrameTint = transparent ?? isPng;
 
   const frame = noFrameTint
-    ? "overflow-hidden rounded-2xl bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_22px_56px_-28px_rgba(109,40,217,0.1)] group-hover:ring-violet-400/25"
-    : "overflow-hidden rounded-2xl bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_26px_64px_-30px_rgba(109,40,217,0.1)] group-hover:ring-violet-400/22";
+    ? "overflow-hidden bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_22px_56px_-28px_rgba(109,40,217,0.1)] group-hover:ring-violet-400/25"
+    : "overflow-hidden bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_26px_64px_-30px_rgba(109,40,217,0.1)] group-hover:ring-violet-400/22";
 
   const figureHover = reduce ? undefined : { y: -3 };
 
@@ -526,12 +394,12 @@ function PullQuote({ children, className = "" }: { children: ReactNode; classNam
   const reduce = useReducedMotion();
   return (
     <motion.aside
-      className={`rounded-r-2xl border-l-2 border-textPrimary/15 bg-white py-6 pl-8 pr-6 transition-[border-color,box-shadow] duration-500 ease-out hover:border-violet-500/45 hover:shadow-[0_12px_40px_-20px_rgba(124,58,237,0.12)] md:pl-10 ${className}`}
+      className={`bg-zinc-50/55 px-6 py-6 transition-[background-color,box-shadow] duration-500 ease-out hover:bg-violet-50/45 hover:shadow-[0_12px_40px_-24px_rgba(124,58,237,0.1)] md:px-8 ${className}`}
       initial={false}
-      whileHover={reduce ? undefined : { x: 3 }}
+      whileHover={reduce ? undefined : { y: -2 }}
       transition={{ duration: 0.45, ease: easePremium }}
     >
-      <p className="font-display text-[1.2rem] font-light italic leading-relaxed text-textPrimary md:text-[1.35rem] md:leading-snug">
+      <p className="font-display text-[1.125rem] font-light italic leading-snug text-textPrimary md:text-[1.25rem]">
         {children}
       </p>
     </motion.aside>
@@ -541,25 +409,21 @@ function PullQuote({ children, className = "" }: { children: ReactNode; classNam
 function ParticipantQuote({ quote, attr }: { quote: string; attr: string }) {
   const reduce = useReducedMotion();
   return (
-    <motion.figure
-      className="relative mt-8 overflow-hidden rounded-xl border border-black/[0.06] bg-white py-5 pl-9 pr-6 transition-[border-color,box-shadow] duration-500 ease-out hover:border-violet-400/35 hover:shadow-[0_16px_48px_-24px_rgba(124,58,237,0.14)]"
+    <motion.aside
+      className="mt-8 bg-violet-50/35 px-5 py-4 transition-[background-color] duration-500 ease-out hover:bg-violet-50/55 md:px-6 md:py-5"
       initial={false}
-      whileHover={reduce ? undefined : { y: -3 }}
-      transition={{ duration: 0.45, ease: easePremium }}
+      whileHover={reduce ? undefined : { y: -2 }}
+      transition={{ duration: 0.4, ease: easePremium }}
+      aria-label="Participant feedback"
     >
-      <span
-        className="pointer-events-none absolute left-3 top-2 font-display text-5xl leading-none text-textPrimary/[0.12]"
-        aria-hidden
-      >
-        &ldquo;
-      </span>
-      <blockquote className="relative text-[15px] leading-relaxed text-textSecondary md:text-base">
-        <p className="italic">{quote}</p>
-        <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/80 not-italic">
-          {attr}
-        </figcaption>
-      </blockquote>
-    </motion.figure>
+      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-violet-800/65">Participant signal</p>
+      <p className="mt-2 text-[15px] leading-relaxed text-textPrimary">
+        {quote}
+      </p>
+      <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/75">
+        {attr}
+      </p>
+    </motion.aside>
   );
 }
 
@@ -588,7 +452,7 @@ function TaskSuccessEvaluation() {
 
   return (
     <div className="mt-20 md:mt-28">
-      <div className="overflow-hidden rounded-2xl border border-black/[0.06] bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
+      <div className="overflow-hidden bg-white shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]">
         <button
           type="button"
           id="task-success-chart-trigger"
@@ -598,7 +462,7 @@ function TaskSuccessEvaluation() {
           className="flex w-full items-center justify-between gap-4 px-4 py-3.5 text-left transition-colors hover:bg-violet-500/[0.04] active:bg-violet-500/[0.07] md:px-5 md:py-4"
         >
           <div className="min-w-0 flex-1">
-            <p className="text-[15px] font-medium leading-snug tracking-[-0.01em] text-textPrimary">
+            <p className="text-[15px] leading-snug tracking-[-0.01em] text-textPrimary">
               Task success &amp; errors
             </p>
             <p className="mt-0.5 text-[13px] leading-snug text-textSecondary/90">
@@ -607,7 +471,7 @@ function TaskSuccessEvaluation() {
             </p>
           </div>
           <span
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/80 text-violet-500/70 shadow-sm ring-1 ring-violet-200/40 transition-transform duration-300 ease-out ${
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-50/80 text-violet-500/70 shadow-sm ring-1 ring-violet-200/40 transition-transform duration-300 ease-out ${
               open ? "rotate-180" : ""
             }`}
             aria-hidden
@@ -649,7 +513,7 @@ function TaskSuccessEvaluation() {
                       <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:gap-5">
                         <p
                           className={`max-w-[min(100%,20rem)] shrink-0 text-[13px] leading-snug text-textSecondary md:max-w-[16rem] md:text-[13px] ${
-                            row.highlight ? "font-medium text-violet-950/90" : ""
+                            row.highlight ? "text-violet-950" : ""
                           }`}
                         >
                           {row.label}
@@ -670,7 +534,7 @@ function TaskSuccessEvaluation() {
                           </div>
                           <div className="h-1.5 overflow-hidden rounded-full bg-violet-100/50">
                             <motion.div
-                              className="h-full rounded-full bg-gradient-to-r from-indigo-400/45 to-violet-600/38"
+                              className="h-full rounded-full bg-gradient-to-r from-violet-300/35 to-violet-500/30"
                               initial={false}
                               animate={{ width: barsActive ? `${row.error}%` : 0 }}
                               transition={{
@@ -683,7 +547,7 @@ function TaskSuccessEvaluation() {
                         </div>
                         <div className="flex shrink-0 flex-col items-end gap-0.5 font-mono text-[10px] tabular-nums text-violet-900/35 sm:min-w-[5.75rem]">
                           <span>{row.success}%</span>
-                          <span className="text-indigo-700/40">err {row.error}%</span>
+                          <span className="text-violet-500/35">err {row.error}%</span>
                           <span className="pt-0.5 text-[9px] uppercase tracking-[0.08em] text-textSecondary/55">
                             {row.meta}
                           </span>
@@ -702,7 +566,7 @@ function TaskSuccessEvaluation() {
                   </span>
                   <span className="inline-flex items-center gap-2">
                     <span
-                      className="h-2 w-2 rounded-full bg-gradient-to-br from-indigo-400/80 to-violet-600/55"
+                      className="h-2 w-2 rounded-full bg-gradient-to-br from-violet-300/70 to-violet-500/50"
                       aria-hidden
                     />
                     Error rate (of max 30)
@@ -727,7 +591,7 @@ function SeverityIssuesTable() {
           universal — all six participants ran into them.
         </p>
       </Prose>
-      <div className="mt-10 overflow-x-auto rounded-xl border border-black/[0.06]">
+      <div className="mt-10 overflow-x-auto">
         <table className="w-full min-w-[36rem] border-collapse text-left text-[14px]">
           <thead>
             <tr className="border-b border-black/[0.06]">
@@ -747,7 +611,7 @@ function SeverityIssuesTable() {
               <tr key={row.area} className="border-b border-black/[0.04] transition-colors duration-300 hover:bg-violet-500/[0.025]">
                 <td className="px-4 py-3.5 align-top">
                   <span
-                    className={`inline-block rounded-full border px-2.5 py-0.5 font-mono text-[11px] font-medium ${row.badgeClass}`}
+                    className={`inline-block rounded-full border px-2.5 py-0.5 font-mono text-[11px] ${row.badgeClass}`}
                   >
                     {row.badge}
                   </span>
@@ -836,6 +700,7 @@ function FlowMacBookPair({
   caption,
   leftCaption,
   rightCaption,
+  callout,
   mediaRevealDelay = 0,
   imageWidth = 1100,
   imageHeight = 780,
@@ -851,6 +716,8 @@ function FlowMacBookPair({
   leftCaption?: string;
   /** Label under the right image (e.g. After). */
   rightCaption?: string;
+  /** Short delta stat shown above the pair, e.g. "4 screens → 1 panel". */
+  callout?: string;
   mediaRevealDelay?: number;
   imageWidth?: number;
   imageHeight?: number;
@@ -862,15 +729,15 @@ function FlowMacBookPair({
   const figureHover = reduce ? undefined : { y: -3 };
 
   const columnLabelClass =
-    "mt-4 text-center text-sm font-medium text-textSecondary md:text-[15px]";
+    "mt-4 text-left text-sm text-textSecondary md:text-[15px]";
 
   const frameInnerClass =
-    "min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain rounded-[0.9rem] bg-[#0a0a0b]";
+    "min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain bg-[#0a0a0b]";
 
   const plainInnerClass = (src: string) =>
     src.toLowerCase().endsWith(".png")
-      ? "min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain rounded-2xl bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06]"
-      : "min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain rounded-2xl bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05]";
+      ? "min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06]"
+      : "min-h-0 overflow-y-auto overflow-x-hidden overscroll-y-contain bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05]";
 
   function pairColumn(
     innerRef: React.RefObject<HTMLDivElement | null>,
@@ -904,6 +771,13 @@ function FlowMacBookPair({
 
   return (
     <MediaReveal delay={mediaRevealDelay}>
+      {callout ? (
+        <div className="mb-7 flex items-center gap-3">
+          <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 font-mono text-[12px] tracking-[0.06em] text-textPrimary/70">
+            {callout}
+          </span>
+        </div>
+      ) : null}
       <div className="grid items-stretch gap-8 md:grid-cols-2 md:gap-10">
         <motion.div
           className="group flex h-full min-h-0 flex-col"
@@ -960,7 +834,7 @@ function SingleTabletFrame({
       transition={{ duration: 0.55, ease: easePremium }}
     >
       <MacBookFrame>
-        <div className="overflow-hidden rounded-[0.9rem] bg-[#0a0a0b]">
+        <div className="overflow-hidden bg-[#0a0a0b]">
           <Image
             src={src}
             alt={alt}
@@ -980,6 +854,123 @@ function SingleTabletFrame({
   );
 }
 
+function WorkflowComparisonV2() {
+  const afterStages = [
+    { num: "01", label: "Basics", tags: ["tone", "goal", "audience"] },
+    { num: "02", label: "Outline", tags: ["structure", "beats"] },
+    { num: "03", label: "Script", tags: ["dialogue", "narration"] },
+    { num: "04", label: "Visuals", tags: ["shots", "scenes"] },
+  ] as const;
+
+  return (
+    <div className="bg-white px-6 py-8 md:px-10 md:py-10 lg:px-14 lg:py-12">
+      <div className="grid gap-5 md:grid-cols-[5fr_7fr] md:gap-8 lg:gap-10">
+
+        {/* LEFT — Before */}
+        <div className="flex flex-col">
+          <span className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/45">Before</span>
+          <p className="mb-1.5 font-display text-[1.125rem] font-light leading-snug tracking-[-0.018em] text-textPrimary">
+            One pass, no checkpoints
+          </p>
+          <p className="mb-5 text-[12px] leading-relaxed text-textSecondary/60">
+            Script, visuals, and shots all generate from a single prompt
+          </p>
+          <div className="flex min-h-[340px] flex-1 flex-col gap-0">
+            {/* Prompt node */}
+            <div className="shrink-0 border border-black/[0.08] px-5 py-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/55">Prompt</span>
+            </div>
+            {/* Arrow */}
+            <div className="flex shrink-0 items-center justify-center py-2">
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
+                <path d="M5 0v15" stroke="rgba(0,0,0,0.14)" strokeWidth="1.2" strokeLinecap="round"/>
+                <path d="M1 11l4 5 4-5" stroke="rgba(0,0,0,0.14)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            {/* One big undifferentiated block */}
+            <div className="relative flex flex-1 flex-col items-stretch justify-center border border-black/[0.08]">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-black/[0.08] bg-white px-3 py-[3px] font-mono text-[9px] uppercase tracking-[0.08em] text-textSecondary/55">
+                no checkpoints
+              </div>
+              <div className="divide-y divide-black/[0.05] px-5 py-4">
+                {(["Script", "Visuals", "Shots"] as const).map((label) => (
+                  <div key={label} className="flex items-center gap-3 py-3 first:pt-1 last:pb-1">
+                    <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-black/[0.12]" />
+                    <span className="text-[13px] tracking-[-0.01em] text-textSecondary/75">{label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Arrow */}
+            <div className="flex shrink-0 items-center justify-center py-2">
+              <svg width="10" height="18" viewBox="0 0 10 18" fill="none">
+                <path d="M5 0v15" stroke="rgba(0,0,0,0.14)" strokeWidth="1.2" strokeLinecap="round"/>
+                <path d="M1 11l4 5 4-5" stroke="rgba(0,0,0,0.14)" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </div>
+            {/* Output node */}
+            <div className="shrink-0 border border-black/[0.08] px-5 py-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/55">Output</span>
+            </div>
+          </div>
+        </div>
+
+        {/* RIGHT — After */}
+        <div className="flex flex-col">
+          <span className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/45">After</span>
+          <p className="mb-1.5 font-display text-[1.125rem] font-light leading-snug tracking-[-0.018em] text-textPrimary">
+            Staged, with checkpoints
+          </p>
+          <p className="mb-5 text-[12px] leading-relaxed text-textSecondary/60">
+            Each stage is reviewed and approved before the next begins
+          </p>
+          <div className="flex flex-1 flex-col overflow-hidden bg-white">
+            {afterStages.map((stage, i) => {
+              const shades = [
+                "bg-violet-50/40",
+                "bg-violet-50/70",
+                "bg-violet-100/50",
+                "bg-violet-100/70",
+              ];
+              const isLast = i === afterStages.length - 1;
+              return (
+                <div key={stage.label} className="flex flex-1 flex-col">
+                  <div className={`flex flex-1 items-center justify-between px-5 py-3 ${shades[i]}`}>
+                    <div className="flex items-center gap-3">
+                      <span className="w-5 font-mono text-[10px] tabular-nums text-violet-400/40">{stage.num}</span>
+                      <span className="text-[13px] tracking-[-0.01em] text-violet-950">{stage.label}</span>
+                    </div>
+                    <div className="flex flex-wrap justify-end gap-1.5">
+                      {stage.tags.map((tag) => (
+                        <span key={tag} className="rounded-full bg-white/80 px-2 py-0.5 font-mono text-[9px] text-violet-600/60">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  {!isLast && (
+                    <div className="flex shrink-0 items-center px-5 py-[5px]">
+                      <div className="h-px flex-1 bg-violet-200/50" />
+                      <div className="mx-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(124,58,237,0.05)]">
+                        <svg width="7" height="7" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M2 5.5L4.2 7.5L8 3" stroke="#7c3aed" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                      </div>
+                      <div className="h-px flex-1 bg-violet-200/50" />
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  );
+}
+
 export default function StudioEngineCaseStudy() {
   const reduce = useReducedMotion();
   const heroRef = useRef<HTMLElement | null>(null);
@@ -994,819 +985,636 @@ export default function StudioEngineCaseStudy() {
     <>
       <Nav />
       <main className="relative min-h-screen overflow-x-hidden bg-white text-textPrimary">
-        <CaseStudyAmbientGlow />
         <CaseStudySectionNav />
         <article className="relative z-10 mx-auto max-w-content px-6 pb-40 pt-32 md:px-12 md:pb-52 md:pt-40 lg:pl-36 lg:pr-14 lg:pt-44">
         <header id="overview" ref={heroRef} className="scroll-mt-32 max-w-4xl">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 14 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.05, ease: easeLux }}
-          >
-            <Eyebrow>UX research and design</Eyebrow>
-          </motion.div>
-          <CaseStudyMeta className="mt-4" {...CASE_STUDY_META["studio-engine"]} />
+          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/80">
+            StudioEngine.AI
+          </p>
           <motion.h1
             initial={reduce ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.18, delay: reduce ? 0 : 0.08, ease: easeLux }}
-            className="mt-10 font-display text-[clamp(2.5rem,6.5vw,4rem)] font-light leading-[1.04] tracking-[-0.038em] text-textPrimary"
+            className="mt-10 font-display text-[clamp(2rem,5vw,3rem)] font-light leading-[1.06] tracking-[-0.03em] text-textPrimary"
           >
-            Shaping an <em>efficient</em> and <em>intuitive</em> text-to-video creation experience
+            Designing Control Into AI Video Creation
           </motion.h1>
           <motion.p
             initial={reduce ? false : { opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.12, delay: reduce ? 0 : 0.14, ease: easeLux }}
-            className="mt-12 max-w-[40rem] text-[1.1875rem] font-light leading-snug tracking-[-0.021em] text-textSecondary/95 md:text-[1.3125rem] md:leading-snug"
+            className="mt-12 max-w-[40rem] text-[1.125rem] font-light leading-snug tracking-[-0.02em] text-textSecondary/95 md:text-[1.25rem]"
           >
-            How Studio Engine.ai could welcome a new generation of filmmakers without losing the professionals
-            already inside.
+            I redesigned the Gen-2 workflow around checkpoints, version history, unified editing, and
+            contextual AI guidance, so creators could shape output instead of just accepting it.
           </motion.p>
+
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.08, delay: reduce ? 0 : 0.19, ease: easeLux }}
+            className="mt-10 flex flex-wrap gap-x-8 gap-y-3"
+          >
+            {[
+              "6 moderated usability tests",
+              "6/6 users struggled with visual editing",
+              "One-shot generation → staged creative control",
+            ].map((s) => (
+              <span key={s} className="inline-flex items-center gap-2 text-[13px] leading-snug text-textSecondary/80">
+                <span className="h-1 w-1 shrink-0 rounded-full bg-violet-400/60" aria-hidden />
+                {s}
+              </span>
+            ))}
+          </motion.div>
 
           <motion.dl
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.08, delay: reduce ? 0 : 0.22, ease: easeLux }}
-            className="mt-24 grid gap-y-10 border-t border-black/[0.05] pt-20 sm:grid-cols-2 sm:gap-x-20"
+            className="mt-16 flex flex-wrap items-start divide-x divide-black/[0.07] pt-6"
           >
-            <div>
-              <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Company</dt>
-              <dd className="mt-2 text-[15px] leading-relaxed text-textPrimary">StudioEngine.AI</dd>
-            </div>
-            <div>
+            <div className="pr-8 pt-8">
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Product</dt>
               <dd className="mt-2 text-[15px] text-textPrimary">VP Genie</dd>
             </div>
-            <div>
+            <div className="px-8 pt-8">
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Role</dt>
-              <dd className="mt-2 text-[15px] leading-relaxed text-textPrimary">UX Design · UX Research</dd>
+              <dd className="mt-2 text-[15px] leading-relaxed text-textPrimary">Design · Information Architecture · Usability Test</dd>
             </div>
-            <div>
+            <div className="pl-8 pt-8">
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Timeline</dt>
               <dd className="mt-2 text-[15px] text-textPrimary">January – April 2025</dd>
             </div>
-            <div className="sm:col-span-2">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Team</dt>
-              <dd className="mt-2 max-w-xl text-[15px] leading-relaxed text-textPrimary">
-                1 supervisor · 1 lead designer · 4 UX researchers and designers
-              </dd>
-            </div>
           </motion.dl>
 
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.95, delay: reduce ? 0 : 0.28, ease: easeLux }}
-            className="mt-10"
-          >
-            <Link
-              href="/work/studio-engine/deck"
-              className="inline-flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.22em] text-textSecondary underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-textPrimary hover:decoration-textPrimary/30"
-            >
-              中文演示稿
-              <span aria-hidden className="text-[9px] opacity-70">
-                →
-              </span>
-            </Link>
-          </motion.div>
         </header>
 
         <motion.div
           style={{ y: heroMediaY, scale: heroMediaScale }}
-          className="relative mt-16 origin-top will-change-transform md:mt-24 lg:mt-28"
+          className="relative mt-20 origin-top will-change-transform md:mt-28 lg:mt-32"
         >
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 32 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.38, delay: reduce ? 0 : 0.26, ease: easeLux }}
-            className="overflow-hidden rounded-2xl bg-white shadow-[0_2px_36px_-18px_rgba(0,0,0,0.07)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-[580ms] ease-out hover:shadow-[0_28px_64px_-26px_rgba(109,40,217,0.1)] hover:ring-violet-400/22"
+            className="overflow-hidden"
           >
-            <Image
-              src="/assets/studio-engine/hero-1.jpg"
-              alt="Studio Engine.ai product and workflow overview"
-              width={2400}
-              height={1350}
-              sizes="(max-width: 1024px) 100vw, min(1152px, 92vw)"
-              className="h-auto w-full"
-              priority
-            />
+            <WorkflowComparisonV2 />
           </motion.div>
         </motion.div>
 
-        {/* Starting point */}
-        <section id="starting-point" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        {/* Problem */}
+        <section id="product" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
           <Reveal>
-            <Eyebrow>Starting point</Eyebrow>
-            <SectionTitle>A powerful tool with a narrow door</SectionTitle>
+            <Eyebrow>The problem</Eyebrow>
+            <SectionTitle>&ldquo;I don&apos;t think I&apos;m smart enough for this tool.&rdquo;</SectionTitle>
             <Prose className="mt-14">
               <p>
-                Studio Engine.ai turns a single text prompt into a full pre-production package — script,
-                character visuals, props, locations, and a synthesized storyboard. It was built for professional
-                film studios, and it showed.
+                P3 clicked 12 times. Each time the AI returned something different — never closer.
+                After the twelfth attempt, she stopped.
               </p>
+          
               <p>
-                The interaction model assumed everyone already thought like a professional filmmaker: dense
-                terminology, a non-linear workflow, and an unstated bar for who &ldquo;belonged&rdquo; in the tool.
-                Film students, independent animators, and content creators often felt they were using an industry
-                product they had not yet earned.
-              </p>
-              <p className="text-textPrimary">
-                That gap was both usability and growth. The company wanted a Gen-2 product that kept professional
-                depth while expanding to new audiences — grounded in real behavior, not assumption. Our team shaped
-                what that expansion should look like.
+                She is. Studio Engine.ai collapses professional pre-production — script, characters, props,
+                storyboard — into one prompt. The power was real. The mental model assumed expertise most
+                users didn&apos;t have.
               </p>
             </Prose>
-            <div className="mt-14 md:mt-16">
-              <PullQuote>
-                The product&apos;s capabilities were undeniable — but its interaction model was built around
-                professionals. The gap wasn&apos;t in the AI. It was in the assumptions baked into every screen.
-              </PullQuote>
+            <div className="mt-16 md:mt-20">
+              <div className="max-w-[42rem]">
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/65">HMW</p>
+                <p className="mt-4 font-display text-[clamp(1.5rem,3.6vw,2.125rem)] font-light leading-[1.1] tracking-[-0.03em] text-textPrimary">
+                  How might Studio Engine.ai Gen-2 serve both professionals and emerging creators — and
+                  convert free users to paid?
+                </p>
+              </div>
             </div>
           </Reveal>
         </section>
 
-        {/* Background */}
-        <section id="context" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="research" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
           <Reveal delay={0.04}>
-            <Eyebrow>Context</Eyebrow>
-            <SectionTitle>What the product actually does</SectionTitle>
-            <div className="mt-14 flex flex-col gap-8 lg:gap-10">
-              <Prose>
-                <p>
-                  A creative prompt becomes script, character and prop imagery, locations, and a composed
-                  storyboard — a production-ready visual script kit, through to final video output. The challenge
-                  is collapsing a multi-stage craft into one interaction model without assuming fluency in
-                  pre-production language.
-                </p>
-              </Prose>
-              <div className="grid items-stretch gap-6 md:grid-cols-2 md:gap-6">
-                <MediaReveal className="h-full min-h-0" delay={0}>
-                  <Figure
-                    layout="grid"
-                    gridColumns={3}
-                    src="/assets/studio-engine/workflow-1.jpg"
-                    alt="input"
-                    width={800}
-                    height={560}
-                    caption="input - a creative prompt"
+            <Eyebrow>Research</Eyebrow>
+            <SectionTitle>AI was treated as a one-shot oracle.</SectionTitle>
+            <Prose className="mt-10">
+              <p className="text-textPrimary">
+                We tested three workflow phases.{" "}
+                <span className="text-textSecondary/75">Task 2 is where the experience broke.</span>
+              </p>
+            </Prose>
+
+            <div className="mt-12 grid gap-4 md:mt-14 md:grid-cols-[1fr_1.85fr_1fr] md:items-start md:gap-4">
+
+              {/* Task 01 — compact */}
+              <div className="flex flex-col overflow-hidden bg-white">
+                <div className="aspect-[4/3] overflow-hidden bg-white">
+                  <Image
+                    src="/assets/studio-engine/task-1-2.jpg"
+                    alt="Task 01 — script generation from prompt"
+                    width={600}
+                    height={450}
+                    sizes="(max-width: 768px) 100vw, 22vw"
+                    className="h-full w-full object-cover"
                   />
-                </MediaReveal>
-                <MediaReveal className="h-full min-h-0" delay={0.08}>
-                  <Figure
-                    layout="grid"
-                    gridColumns={3}
-                    src="/assets/studio-engine/workflow-2-output.jpg"
-                    alt="Usability study — editing visual elements"
-                    width={800}
-                    height={560}
-                    caption="output - script generation from a written prompt."
-                  />
-                </MediaReveal>
+                </div>
+                <div className="px-4 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/55">
+                    Task 01 · Script
+                  </p>
+                  <p className="mt-2 text-[13px] leading-snug text-textSecondary">
+                    Script generation — manageable
+                  </p>
+                  <p className="mt-3 font-mono text-[11px] text-textSecondary/50">5 / 6 completed</p>
+                </div>
               </div>
 
+              {/* Task 02 — featured */}
+              <div className="flex flex-col overflow-hidden bg-white">
+                <div className="relative">
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-violet-600/80">
+                    Where it broke
+                  </span>
+                  <div className="aspect-video overflow-hidden bg-white">
+                    <Image
+                      src="/assets/studio-engine/task-2-4.jpg"
+                      alt="Task 02 — visual editing, where every session broke down"
+                      width={900}
+                      height={506}
+                      sizes="(max-width: 768px) 100vw, 40vw"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+                <div className="px-5 py-5">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-violet-600/70">
+                    Task 02 · Visual editing
+                  </p>
+                  <p className="mt-2 text-[15px] font-light leading-snug tracking-[-0.01em] text-textPrimary">
+                    Visual editing broke for everyone
+                  </p>
+                  <div className="mt-4 grid grid-cols-2 gap-3 border-t border-black/[0.05] pt-4">
+                    <div>
+                      <p className="font-mono text-[20px] leading-none text-textPrimary">2 / 6</p>
+                      <p className="mt-1 text-[11px] text-textSecondary/65">completed character edit</p>
+                    </div>
+                    <div>
+                      <p className="font-mono text-[20px] leading-none text-textPrimary">3 / 6</p>
+                      <p className="mt-1 text-[11px] text-textSecondary/65">completed location edit</p>
+                    </div>
+                  </div>
+                  <ul className="mt-4 space-y-2 border-t border-black/[0.05] pt-4">
+                    <li className="text-[12px] leading-snug text-textSecondary">
+                      <span className="text-textPrimary">AI output unpredictable</span>
+                      {" "}— 6/6 couldn&apos;t steer generation toward intent
+                    </li>
+                    <li className="text-[12px] leading-snug text-textSecondary">
+                      <span className="text-textPrimary">No recovery path</span>
+                      {" "}— 3/6 lost work permanently when regenerating
+                    </li>
+                    <li className="text-[12px] leading-snug text-textSecondary">
+                      <span className="text-textPrimary">4-screen editing path</span>
+                      {" "}— 6/6 lost context navigating to edit a single character
+                    </li>
+                  </ul>
+                </div>
+              </div>
 
+              {/* Task 03 — compact */}
+              <div className="flex flex-col overflow-hidden bg-white">
+                <div className="aspect-[4/3] overflow-hidden bg-white">
+                  <Image
+                    src="/assets/studio-engine/task-3-1.jpg"
+                    alt="Task 03 — storyboard overview and scene refinement"
+                    width={600}
+                    height={450}
+                    sizes="(max-width: 768px) 100vw, 22vw"
+                    className="h-full w-full object-cover"
+                  />
+                </div>
+                <div className="px-4 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/55">
+                    Task 03 · Storyboard
+                  </p>
+                  <p className="mt-2 text-[13px] leading-snug text-textSecondary">
+                    Storyboard — friction but functional
+                  </p>
+                  <p className="mt-3 font-mono text-[11px] text-textSecondary/50">4 – 5 / 6 completed</p>
+                </div>
+              </div>
+
+            </div>
+          </Reveal>
+          <Reveal className="mt-16 md:mt-20" delay={0.06}>
+            <TaskSuccessEvaluation />
+          </Reveal>
+        </section>
+
+        {/* Design principle */}
+        <section id="design-principle" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+          <Reveal>
+          <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/55">
+            AI-native principle
+          </p>
+          <p className="mt-6 max-w-lg font-display text-[clamp(1.5rem,3.6vw,2.125rem)] font-light leading-[1.1] tracking-[-0.03em] text-textPrimary">
+            Designing control around AI uncertainty.
+          </p>
+
+          <div className="mt-12 border-t border-black/[0.06] pt-10">
+            <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
+              What makes text-to-video UX different
+            </p>
+            <div className="grid items-start gap-10 md:grid-cols-2 md:gap-16">
+              <div className="space-y-3 text-[15px] leading-[1.68] tracking-[-0.011em] text-textSecondary/90">
+                <p><span className="text-textPrimary">Traditional tools:</span> cursor touches output. Intent equals result.</p>
+                <p><span className="text-textPrimary">AI tools:</span> system interprets, generates, surprises. The gap between intent and output is where trust breaks.</p>
+              </div>
               <div>
-                <p className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-textSecondary/70">
-                  Workflow
+                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
+                  New control patterns needed
                 </p>
-                <p className="mt-2 max-w-2xl text-[14px] leading-relaxed text-textSecondary md:text-[15px]">
-                  Same prompt — before it triggers everything at once; after it stages script work, then visuals.
-                </p>
-                <motion.div
-                  className="mt-6 overflow-hidden rounded-2xl ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-500 ease-out hover:shadow-[0_22px_56px_-22px_rgba(124,58,237,0.12)] hover:ring-violet-400/35 md:grid md:grid-cols-2 md:divide-x md:divide-black/[0.06]"
-                  initial={false}
-                  whileHover={reduce ? undefined : { y: -3 }}
-                  transition={{ duration: 0.45, ease: easePremium }}
+                <ul className="space-y-0 divide-y divide-black/[0.05]">
+                  {([
+                    ["Compare options", "Variations, not verdicts", "M3 3h7a1 1 0 011 1v3a1 1 0 01-1 1H3a1 1 0 01-1-1V4a1 1 0 011-1zm0 7h7a1 1 0 011 1v3a1 1 0 01-1 1H3a1 1 0 01-1-1v-3a1 1 0 011-1z"],
+                    ["Recover history", "Every generation reversible", "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"],
+                    ["Stage generation", "Review before next phase", "M4 6h16M4 10h16M4 14h16"],
+                    ["Show progress", "Pipeline legible in real time", "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"],
+                    ["Explain AI actions", "Surface what the model did", "M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"],
+                  ] as const).map(([pattern, sub, iconPath]) => (
+                    <li key={pattern} className="flex items-center gap-3.5 py-3 first:pt-0 last:pb-0">
+                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-black/[0.04]" aria-hidden>
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-textSecondary/60">
+                          <path d={iconPath} />
+                        </svg>
+                      </span>
+                      <span>
+                        <span className="block text-[13px] leading-snug text-textPrimary">{pattern}</span>
+                        <span className="block text-[11px] leading-snug text-textSecondary/75">{sub}</span>
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </Reveal>
+        </section>
+
+        {/* Design framework (merged with reframe) */}
+        <section id="workflow-ia" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+          <Reveal>
+            <Eyebrow>Design framework</Eyebrow>
+            <SectionTitle>From One-Shot Generation to Staged Creative Control</SectionTitle>
+            <Prose className="mt-14">
+              <p>
+                I reorganized the experience from a flat generation tool into a staged creative workflow,
+                so users could move from idea to editable video assets with clearer checkpoints and
+                recovery paths.
+              </p>
+              <p>
+                The original product treated text-to-video creation as a mostly linear generation task:
+                users entered a prompt, moved through separate pages, and waited for the system to
+                produce outputs. But the usability tests showed that creators did not think in a straight
+                line. They moved back and forth between story, characters, visuals, and editing
+                decisions. When the interface separated these steps too rigidly, users lost context,
+                overwrote previous outputs, and felt unsure about what to do next.
+              </p>
+              <p>
+                So I redesigned the interaction workflow around staged creative control. Instead of
+                asking users to commit everything upfront, the new IA breaks the process into clearer
+                checkpoints: Input, Basics, Visuals, Edit, and Manage.
+              </p>
+            </Prose>
+          </Reveal>
+
+          <MediaReveal className="mt-16 md:mt-20" delay={0.08}>
+            <div className="overflow-hidden">
+              <iframe
+                title="Workflow comparison — before vs after"
+                src="/assets/studio-engine/before_after_horizontal_workflow_v2.html"
+                className="block w-full border-0"
+                style={{ height: "min(72vh, 820px)", minHeight: "clamp(360px, 50vh, 560px)" }}
+                loading="lazy"
+              />
+            </div>
+          </MediaReveal>
+
+          <Reveal className="mt-16 md:mt-20">
+            {/* Stage pipeline */}
+            <div className="mt-14 flex flex-col divide-y divide-black/[0.06] md:flex-row md:divide-x md:divide-y-0">
+              {(
+                [
+                  { num: "01", name: "Input",   desc: "Capture creative intent before asking for detailed production choices." },
+                  { num: "02", name: "Basics",  desc: "Let users review the story foundation before visual generation begins." },
+                  { num: "03", name: "Visuals", desc: "Turn AI output into selectable options, not a single verdict." },
+                  { num: "04", name: "Edit",    desc: "Keep preview, controls, references, inpainting, and version history in one workspace." },
+                  { num: "05", name: "Manage",  desc: "Give users a clear place to organize, export, and continue projects." },
+                ] as const
+              ).map((stage) => (
+                <div
+                  key={stage.name}
+                  className="flex flex-1 flex-col py-6 first:pt-0 last:pb-0 md:py-0 md:first:pl-0 md:last:pr-0 md:[&:not(:first-child)]:pl-6 md:[&:not(:last-child)]:pr-6 lg:[&:not(:first-child)]:pl-8 lg:[&:not(:last-child)]:pr-8"
                 >
-                  <aside className="flex flex-col bg-white px-5 py-5 md:min-h-0 md:px-6 md:py-5">
-                    <p className="text-[11px] font-medium text-textPrimary">Before</p>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/75">
-                      Current product
-                    </p>
-                    <p className="mt-3 rounded-lg bg-white/80 px-3 py-2.5 text-[13px] leading-snug tracking-[-0.01em] text-textPrimary ring-1 ring-black/[0.04]">
-                      &ldquo;Create a video about Little Red Riding Hood&rdquo;
-                    </p>
-                    <div className="mt-3 flex items-center gap-2 text-textSecondary/50" aria-hidden>
-                      <span className="h-px flex-1 bg-black/[0.08]" />
-                      <span className="font-mono text-[10px] uppercase tracking-[0.14em]">One pass</span>
-                      <span className="h-px flex-1 bg-black/[0.08]" />
-                    </div>
-                    <p className="mt-3 text-[12px] leading-snug text-textSecondary md:text-[13px]">
-                      {WORKFLOW_BEFORE_AT_ONCE}
-                    </p>
-                  </aside>
-                  <aside className="flex flex-col border-t border-black/[0.06] bg-white px-5 py-5 md:border-t-0 md:px-6 md:py-5">
-                    <p className="text-[11px] font-medium text-textPrimary">After</p>
-                    <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/75">
-                      Gen-2
-                    </p>
-                    <div className="mt-3 flex flex-wrap gap-2">
-                      <span className="rounded-md border border-black/[0.06] bg-white px-2.5 py-1 text-[12px] leading-tight text-textPrimary">
-                        Brief
-                      </span>
-                      <span className="rounded-md border border-black/[0.06] bg-white px-2.5 py-1 text-[12px] leading-tight text-textPrimary">
-                        File upload
-                      </span>
-                    </div>
-                    <div className="mt-3 space-y-2 border-t border-black/[0.05] pt-3">
-                      <p>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-textSecondary/80">
-                          1 Script
-                        </span>
-                        <span className="mt-1 block text-[12px] leading-snug text-textSecondary md:text-[13px]">
-                          {WORKFLOW_AFTER_SCRIPT_LINE}
-                        </span>
-                      </p>
-                      <p className="rounded-md border border-black/[0.06] bg-white px-2.5 py-1.5 text-center font-mono text-[9px] uppercase tracking-[0.12em] text-textSecondary">
-                        Script verified
-                      </p>
-                      <p>
-                        <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-textSecondary/80">
-                          2 Visuals
-                        </span>
-                        <span className="mt-1 block text-[12px] leading-snug text-textSecondary md:text-[13px]">
-                          {WORKFLOW_AFTER_VISUALS_LINE}
-                        </span>
-                      </p>
-                    </div>
-                  </aside>
-                </motion.div>
+                  <div className="mb-4 h-px w-6 bg-violet-400/45" />
+                  <span className="font-mono text-[10px] tabular-nums text-violet-400/50">{stage.num}</span>
+                  <p className="mt-2 text-[15px] tracking-[-0.012em] text-textPrimary">{stage.name}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-textSecondary/80">{stage.desc}</p>
+                </div>
+              ))}
+            </div>
+
+            {/* IA table */}
+            <div className="mt-16 md:mt-20">
+              <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
+                Information architecture decisions
+              </p>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[48rem] border-collapse text-left text-[13px]">
+                  <thead>
+                    <tr className="border-b border-black/[0.06] bg-zinc-50/70">
+                      {(["Stage", "User question", "IA decision", "Interaction pattern"] as const).map((h) => (
+                        <th key={h} className="px-4 py-3 font-mono text-[10px] font-normal uppercase tracking-[0.13em] text-textSecondary/65">
+                          {h}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-black/[0.04]">
+                    {(
+                      [
+                        ["Input",   "What am I trying to make?",              "Capture creative intent first",                            "Prompt field + project setup"],
+                        ["Basics",  "Is the story direction right?",           "Add a review checkpoint before visual generation",         "Editable summary cards"],
+                        ["Visuals", "Which assets match my intent?",           "Show multiple options instead of one output",              "Selectable variations"],
+                        ["Edit",    "How do I refine without losing context?", "Keep controls, preview, references, and history together", "Unified editing workspace"],
+                        ["Manage",  "Where does this project live next?",      "Separate organization and export from creation",           "Project library + export structure"],
+                      ] as const
+                    ).map(([stage, question, decision, pattern]) => (
+                      <tr key={stage} className="transition-colors duration-200 hover:bg-violet-500/[0.025]">
+                        <td className="px-4 py-3.5 align-top">
+                          <span className="font-mono text-[11px] text-violet-700/70">{stage}</span>
+                        </td>
+                        <td className="px-4 py-3.5 align-top leading-relaxed text-textSecondary/85">{question}</td>
+                        <td className="px-4 py-3.5 align-top leading-relaxed text-textPrimary/80">{decision}</td>
+                        <td className="px-4 py-3.5 align-top leading-relaxed text-textSecondary/70">{pattern}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           </Reveal>
-          
-          <Reveal className="mt-24 md:mt-32" delay={0.04}>
-            <Subtitle>Who we needed to serve next</Subtitle>
-            <Prose className="mt-10">
+        </section>
+
+        {/* Decision 01 */}
+        <section id="solutions" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+          <Reveal>
+            <Eyebrow>Decision 01</Eyebrow>
+            <SectionTitle>Reframe AI: from oracle to collaborator</SectionTitle>
+            <Prose className="mt-14">
               <p>
-                Film and media students, animation and indie creators, beginners learning craft, and
-                budget-conscious directors who need fast pre-production. They were not failing for lack of
-                creativity — the product&apos;s mental model did not match theirs.
+                6/6 participants encountered AI outputs they couldn&apos;t steer — the study&apos;s
+                highest-severity finding. The product gave one output and waited for acceptance. If
+                it was wrong, the only option was to regenerate and hope.
+              </p>
+              <p>
+                Gen-2 makes two structural changes. Visual generation is gated behind a{" "}
+                <span className="text-textPrimary">script checkpoint</span> — users
+                review and commit the script before any images run, so a bad prompt doesn&apos;t
+                cascade into dozens of wrong assets. When visuals do generate, the interface returns{" "}
+                <span className="text-textPrimary">three variations at once</span>:
+                pick the closest match, regenerate that specific option, or save it to history. The
+                AI shifts from decision-maker to collaborator.
               </p>
             </Prose>
-            <Subtitle className="!mt-20 md:!mt-24">Project goals</Subtitle>
-            <div className="mt-10 grid gap-5 md:grid-cols-3 md:gap-6">
+          </Reveal>
+
+          <Reveal className="mt-24 md:mt-32" delay={0.05}>
+            <div className="mt-14">
+              <FlowMacBookPair
+                leftSrc="/assets/studio-engine/problem1.jpg"
+                leftAlt="Before state — one output per generation"
+                rightSrc="/assets/studio-engine/solution-1-1.jpg"
+                rightAlt="After state — multi-option visual selection"
+                leftCaption="Before: one output per generation — accept or restart."
+                rightCaption="After: 3 variations at once — pick, iterate, or save to history."
+                imageWidth={1000}
+                imageHeight={720}
+              />
+            </div>
+          </Reveal>
+        </section>
+
+        {/* Decision 02 */}
+        <section className="mt-32 md:mt-44 lg:mt-56">
+          <Reveal>
+            <Eyebrow>Decision 02</Eyebrow>
+            <SectionTitle>Make generation reversible</SectionTitle>
+            <Prose className="mt-14">
+              <p>
+                3/6 participants lost work to regeneration with no undo. A <span className="text-textPrimary">generation history panel</span> saves every output — return, compare, or recover at any point.
+              </p>
+            </Prose>
+            <ParticipantQuote
+              quote="How can you return to an old version of an image?"
+              attr="P4 — after losing a preferred generation"
+            />
+            <div className="mt-14">
+              <FlowMacBookPair
+                leftSrc="/assets/studio-engine/problem-2-1.png"
+                leftAlt="Problem — lost previous version after regenerate"
+                rightSrc="/assets/studio-engine/solution-2.jpg"
+                rightAlt="Solution — revision trail and recovery"
+                leftCaption="Before: regeneration overwrote previous work with no way back."
+                rightCaption="After: every generation is saved — return, compare, or recover at any point."
+                imageWidth={1000}
+                imageHeight={700}
+                deviceFrame={false}
+              />
+            </div>
+          </Reveal>
+        </section>
+
+        {/* Decision 03 */}
+        <section className="mt-32 md:mt-44 lg:mt-56">
+          <Reveal>
+            <Eyebrow>Decision 03</Eyebrow>
+            <SectionTitle>Bring editing onto one surface</SectionTitle>
+            <Prose className="mt-14">
+              <p>
+                Character editing required 4+ screen transitions. Only <span className="text-textPrimary">2/6 completed it</span> — the study&apos;s lowest success rate. A consolidated panel puts generation, inpainting, and history on one surface.
+              </p>
+            </Prose>
+            <div className="mt-14">
+              <FlowMacBookPair
+                leftSrc="/assets/studio-engine/problem-3.png"
+                leftAlt="Problem — fragmented editing across pages"
+                rightSrc="/assets/studio-engine/edit-after.jpg"
+                rightAlt="Solution — consolidated editing panel"
+                leftCaption="Before: visual editing was split across multiple pages."
+                rightCaption="After: generation, inpainting, references, and history live in one workspace."
+                imageWidth={1000}
+                imageHeight={700}
+                deviceFrame={false}
+              />
+            </div>
+          </Reveal>
+
+        </section>
+
+        {/* Decision 04 — AI-native */}
+        <section className="mt-44 md:mt-56 lg:mt-72">
+          <Reveal>
+            <Eyebrow>Decision 04 · AI-native</Eyebrow>
+            <SectionTitle>How AI shaped this work</SectionTitle>
+            <Prose className="mt-14">
+              <p>Designing for AI, with AI. Two areas where it accelerated the work without replacing judgment.</p>
+            </Prose>
+            <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-2 md:gap-6">
               {[
                 {
-                  n: "01",
-                  title: "Drive paid conversions",
-                  body: "Lower the barrier to a first successful experience so more people try a paid subscription.",
+                  label: "Research synthesis",
+                  body: "6 transcripts clustered by AI, reviewed for nuance by human.",
                 },
                 {
-                  n: "02",
-                  title: "Universal usability",
-                  body: "Work for people still learning the craft — not only five-year industry veterans.",
+                  label: "IA stress-testing",
+                  body: "AI asked to predict novice failure points — surfacing edge cases missed in manual walkthroughs.",
                 },
-                {
-                  n: "03",
-                  title: "Identify UX gaps",
-                  body: "Surface friction in the pre-production workflow and prioritize by user impact.",
-                },
-              ].map((g) => (
+              ].map((x) => (
                 <HoverPanel
-                  key={g.n}
-                  className="rounded-2xl border border-black/[0.06] bg-white p-6 shadow-[0_2px_24px_-12px_rgba(0,0,0,0.06)] md:p-7"
+                  key={x.label}
+                  className="bg-white px-6 py-7 shadow-[0_2px_24px_-12px_rgba(0,0,0,0.05)] md:px-7"
                 >
-                  <p className="font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-textSecondary/90">
-                    Goal {g.n}
+                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/80">
+                    {x.label}
                   </p>
-                  <h4 className="mt-3 font-display text-lg font-light tracking-[-0.02em] text-textPrimary">
-                    {g.title}
-                  </h4>
-                  <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">{g.body}</p>
+                  <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">{x.body}</p>
                 </HoverPanel>
               ))}
             </div>
           </Reveal>
         </section>
 
-        {/* Research */}
-        <section id="research" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
-            <Eyebrow>Research</Eyebrow>
-            <SectionTitle>Designing research around the right questions</SectionTitle>
-            <Prose className="mt-14">
-              <p>
-                Before recruiting, we aligned on three questions that anchored every observation. Each mapped to
-                a core phase of the workflow: script and assets from a prompt, understanding of edit and
-                regeneration, and emotional response across generation and review.
-              </p>
-            </Prose>
-            <div className="mt-12 grid gap-5 md:mt-16 md:grid-cols-3 md:gap-6">
-              {RESEARCH_QUESTIONS.map((q, i) => (
-                <HoverPanel
-                  key={q}
-                  className="rounded-2xl border border-black/[0.06] bg-white px-6 py-7 md:px-7 md:py-8"
-                >
-                  <p className="font-mono text-[28px] font-medium leading-none text-textPrimary/[0.15]">
-                    {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mt-4 text-[15px] leading-relaxed text-textSecondary md:text-base">{q}</p>
-                </HoverPanel>
-              ))}
-            </div>
-            <Subtitle>Who we recruited — and why</Subtitle>
+        <MediaReveal className="mt-20 md:mt-28">
+          <SingleTabletFrame
+            src="/assets/studio-engine/design-projects.jpg"
+            alt="Updated visual design language"
+            width={2000}
+            height={1120}
+          />
+        </MediaReveal>
+        <MediaReveal className="mt-10 md:mt-14" delay={0.06}>
+          <SingleTabletFrame
+            src="/assets/studio-engine/visual.jpg"
+            alt="Updated visual design language"
+            width={2000}
+            height={1120}
+          />
+        </MediaReveal>
+
+        <section id="agent" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+          <Reveal delay={0.07}>
+            <Eyebrow>Agent layer</Eyebrow>
+            <SectionTitle>Ask Genie</SectionTitle>
             <Prose className="mt-10">
               <p>
-                We recruited six participants from professional users through the new target audience. The mix was
-                deliberate: learn where novices struggled, and whether the tool also created friction for
-                experienced users with established creative habits.
+                Embedded in context, not summoned from a menu — at the five moments users most lose confidence:
               </p>
             </Prose>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {RESEARCH_PARTICIPANTS.map((p) => (
-                <HoverPanel
-                  key={p.id}
-                  className="rounded-xl border border-black/[0.06] bg-white px-5 py-5 md:px-6 md:py-5"
+            <div className="mt-10 grid gap-3 sm:grid-cols-2 md:mt-12 lg:grid-cols-3">
+              {[
+                { moment: "Before committing a script", detail: "Confirm intent before AI locks structure." },
+                { moment: "After a weak generation", detail: "Prompt hint, not just a regenerate button." },
+                { moment: "When comparing variations", detail: "Name the difference." },
+                { moment: "When a term needs defining", detail: "Explain at the moment it appears." },
+                { moment: "Before the next edit", detail: "Suggest the next controllable move." },
+              ].map((item) => (
+                <div
+                  key={item.moment}
+                  className="bg-white px-5 py-5 transition-[box-shadow] duration-300 hover:shadow-[0_4px_20px_-8px_rgba(0,0,0,0.08)]"
                 >
-                  <p className="font-mono text-[11px] font-medium text-textPrimary/80">{p.id}</p>
-                  <p className="mt-1.5 text-[15px] font-medium text-textPrimary">{p.role}</p>
-                  <p className="mt-1 text-[13px] text-textSecondary/90">{p.detail}</p>
-                </HoverPanel>
-              ))}
-            </div>
-            <Subtitle>Methodology</Subtitle>
-            <div className="mt-10 grid gap-4 md:grid-cols-2">
-              {METHODOLOGY.map((m, i) => (
-                <HoverPanel
-                  key={m}
-                  className="rounded-xl border border-black/[0.06] bg-white px-5 py-5 md:px-6 md:py-5"
-                >
-                  <p className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-textSecondary/80">
-                    Method {String(i + 1).padStart(2, "0")}
-                  </p>
-                  <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">{m}</p>
-                </HoverPanel>
-              ))}
-            </div>
-            <Subtitle>The three tasks</Subtitle>
-            <Prose className="mt-10">
-              <p>
-                Tasks mapped to three workflow phases. Task 2 — visual editing — was where everything broke in
-                session after session.
-              </p>
-            </Prose>
-            <div className="mt-10 space-y-12 md:space-y-14 lg:space-y-16">
-              {USABILITY_TASK_BLOCKS.map((task) => (
-                <div key={task.id}>
-                  {task.variant === "warn" ? (
-                    <motion.div
-                      className="rounded-2xl border border-violet-300/35 bg-violet-500/[0.045] px-6 py-7 transition-[box-shadow,border-color] duration-[520ms] ease-out hover:border-violet-400/45 hover:shadow-[0_24px_52px_-28px_rgba(109,40,217,0.1)]"
-                      initial={false}
-                      whileHover={reduce ? undefined : { y: -2 }}
-                      transition={{ duration: 0.52, ease: easePremium }}
-                    >
-                      <p className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-violet-900/75">
-                        {task.eyebrow}
-                      </p>
-                      <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">{task.body}</p>
-                    </motion.div>
-                  ) : (
-                    <HoverPanel className="rounded-2xl border border-black/[0.06] bg-white px-6 py-7">
-                      <p className="font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-textSecondary/90">
-                        {task.eyebrow}
-                      </p>
-                      <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">{task.body}</p>
-                    </HoverPanel>
-                  )}
-                  <TaskWorkflowGallery
-                    steps={task.steps}
-                    columns={task.steps.length >= 4 ? 4 : 3}
-                  />
+                  <p className="text-[13px] leading-snug text-textPrimary">{item.moment}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-textSecondary/85">{item.detail}</p>
                 </div>
               ))}
             </div>
           </Reveal>
 
-          <Reveal className="mt-16 md:mt-24" delay={0.06}>
-            <p className="max-w-2xl text-xl font-light leading-snug tracking-[-0.02em] text-textPrimary md:text-2xl">
-              Task 2 is where the experience broke for everyone.
-            </p>
-          </Reveal>
         </section>
 
-        {/* Insights — synthesis, task metrics, severity */}
-        <section id="insights" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        {/* Impact */}
+        <section id="outcome" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
           <Reveal>
-            <Eyebrow>Insights</Eyebrow>
-            <SectionTitle>Where the product was fighting its users</SectionTitle>
+            <Eyebrow>Impact</Eyebrow>
+            <SectionTitle>Designing for competence, not just capability</SectionTitle>
             <Prose className="mt-14">
               <p>
-                The data concentrated on one zone: <strong className="font-medium text-textPrimary">visual editing </strong> was the
-                highest-friction area across every participant. Six of six hit the same walls: unpredictable AI
-                output, no version recovery, fragmented multi-page editing, unexplained terms like
-                &ldquo;InPainting,&rdquo; weak CTA hierarchy, and exports missing structure.
-              </p>
-              <p className="text-textPrimary">
-                These were not isolated bugs. They pointed to one root issue: the product treated AI generation as
-                a one-shot oracle. Users needed a controllable, collaborative creative partner.
-              </p>
-            </Prose>
-          </Reveal>
-          <Reveal className="mt-16 md:mt-20" delay={0.04}>
-            <TaskSuccessEvaluation />
-          </Reveal>
-          <Reveal delay={0.04}>
-            <SeverityIssuesTable />
-          </Reveal>
-          <Reveal className="mt-14 md:mt-16" delay={0.06}>
-            <PullQuote>
-              Six out of six participants hit the same walls. Each issue was a symptom of a shared root problem:
-              the product was treating AI generation as a one-shot oracle.
-            </PullQuote>
-          </Reveal>
-          
-        </section>
-
-        {/* Design framing */}
-        <section id="design" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
-            <Eyebrow>Design</Eyebrow>
-            <SectionTitle>Progressive scaffolding</SectionTitle>
-            <Prose className="mt-14">
-              <p>
-                The central design question was not only &ldquo;how do we simplify?&rdquo; It was harder: how do
-                we make professional power feel accessible without removing it?
-              </p>
-              <p>
-                The original flow collapsed everything after one prompt. Efficient, but cognitively overwhelming —
-                when something failed, there was no sense of where in the process it broke.
+                The pipeline was capable. The gap was that users couldn&apos;t see their own agency inside it. Visual editing succeeded for only <span className="text-textPrimary">33–50%</span> of participants. Not a generation quality problem — a design control problem.
               </p>
             </Prose>
           </Reveal>
 
-          <Reveal className="mt-16 md:mt-20" delay={0.04}>
-            <iframe
-              title="Workflow comparison — before vs after"
-              src="/assets/studio-engine/before_after_horizontal_workflow_v2.html"
-              className="block h-[min(92vh,1000px)] w-full min-h-[52vh] border-0 sm:min-h-[60vh]"
-              loading="lazy"
-            />
-          </Reveal>
-
-          <Reveal className="mt-24 md:mt-32" delay={0.05}>
-            <blockquote className="max-w-3xl border-l border-black/[0.1] pl-10 md:pl-12">
-              <p className="font-display text-[1.35rem] font-light leading-snug text-textPrimary md:text-2xl md:leading-snug">
-                How might we design Studio Engine.ai Gen-2 to be equally usable and valuable for professional
-                filmmakers and emerging creators — while supporting growth and conversion from free to paid?
-              </p>
-            </blockquote>
-          </Reveal>
-        </section>
-
-        {/* Progressive UI */}
-        <section id="flow" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
-            <Eyebrow>Flow</Eyebrow>
-            <SectionTitle>Clarity at each checkpoint</SectionTitle>
-            <Prose className="mt-14">
-              <p>
-                Stages for input, basics, and editing give users room to review before the next layer of AI
-                work. Comparisons below are intentionally quiet — the interface carries the story.
-              </p>
-            </Prose>
-          </Reveal>
-          <div className="mt-20 space-y-20 md:mt-28 md:space-y-28">
-            <FlowMacBookPair
-              leftSrc="/assets/studio-engine/input-before.jpg"
-              leftAlt="Input experience before redesign"
-              rightSrc="/assets/studio-engine/input-after.jpg"
-              rightAlt="Input experience after redesign"
-              caption="Input — before and after."
-            />
-            <FlowMacBookPair
-              leftSrc="/assets/studio-engine/basic-before.jpg"
-              leftAlt="Basics stage before redesign"
-              rightSrc="/assets/studio-engine/basic-after.jpg"
-              rightAlt="Basics stage after redesign"
-              caption="Basics — progressive disclosure."
-              mediaRevealDelay={0.06}
-            />
-            <FlowMacBookPair
-              leftSrc="/assets/studio-engine/edit-before.jpg"
-              leftAlt="Editing surface before redesign"
-              rightSrc="/assets/studio-engine/edit-after.jpg"
-              rightAlt="Unified editing surface after redesign"
-              caption="Edit — unified surface, in-context changes."
-              mediaRevealDelay={0.06}
-            />
-          </div>
-        </section>
-
-        {/* Problem / solution pairs — one column narrative */}
-        <section id="solutions" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
-            <Eyebrow>Solutions</Eyebrow>
-            <SectionTitle>From friction to partnership</SectionTitle>
-          </Reveal>
-
-          <div className="mt-24 space-y-32 md:mt-32 md:space-y-40">
-            <Reveal delay={0.04}>
-              <Subtitle>Options, not verdicts</Subtitle>
-              <Prose className="mt-10">
-                <p>
-                  When users tried to modify characters or locations, the AI sometimes returned an entirely
-                  different image instead of a refinement — and the previous version disappeared with no undo.
-                  Regeneration is now framed as <strong className="font-medium text-textPrimary">multi-option selection, not replacement</strong>:
-                  several variations at once, pick the closest match to intent.
-                </p>
-                <p>
-                  The AI shifts from decision-maker to collaborator — closer to what the technology should feel
-                  like. <span className="text-textPrimary/90 italic">&ldquo;Option instead of edit.&rdquo;</span>
-                </p>
-              </Prose>
-              <div className="mt-14">
-                <FlowMacBookPair
-                  leftSrc="/assets/studio-engine/solution-1-1.jpg"
-                  leftAlt="Multi-option visual selection"
-                  rightSrc="/assets/studio-engine/solution-1-2.jpg"
-                  rightAlt="Variation grid in context"
-                  imageWidth={1000}
-                  imageHeight={720}
-                />
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.04}>
-              <Subtitle>Version history as a safety net</Subtitle>
-              <Prose className="mt-10">
-                <p>
-                  Regeneration overwrote prior work. One participant cycled versions trying to recover a lost
-                  image; another lost a character mid-edit when the page did not auto-save. A visible{" "}
-                  <strong className="font-medium text-textPrimary">generate history panel</strong> saves every
-                  generation so people can return to any past version, mark favorites, or delete iterations —
-                  the same safety net they trust in Figma or Google Docs.
-                </p>
-                <p>Iterative AI only feels safe when you know you can go back.</p>
-              </Prose>
-              <ParticipantQuote
-                quote="How can you return to an old version of an image?"
-                attr="P4 — after losing a preferred generation"
-              />
-              <div className="mt-14">
-                <FlowMacBookPair
-                  leftSrc="/assets/studio-engine/problem-2-1.png"
-                  leftAlt="Problem — lost previous version after regenerate"
-                  rightSrc="/assets/studio-engine/solution-2.jpg"
-                  rightAlt="Solution — revision trail and recovery"
-                  leftCaption="Before"
-                  rightCaption="After"
-                  imageWidth={1000}
-                  imageHeight={700}
-                  deviceFrame={false}
-                />
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.04}>
-              <Subtitle>One surface for editing</Subtitle>
-              <Prose className="mt-10">
-                <p>
-                  Editing a character meant script overview → characters list → character page → edit modal →
-                  back through multiple screens — a disorienting loop just to change one visual. A{" "}
-                  <strong className="font-medium text-textPrimary">consolidated editing panel</strong> keeps
-                  description, generation controls (generate, inpainting, draw, references), and history on one
-                  surface: generate here, edit here, see results immediately.
-                </p>
-                <p className="text-textPrimary/90 italic">
-                  Don&apos;t make users leave the page to do the thing they came to the page to do.
-                </p>
-              </Prose>
-              <div className="mt-14">
-                <FlowMacBookPair
-                  leftSrc="/assets/studio-engine/problem-3.png"
-                  leftAlt="Problem — fragmented editing across pages"
-                  rightSrc="/assets/studio-engine/edit-after.jpg"
-                  rightAlt="Solution — consolidated editing panel"
-                  leftCaption="Before"
-                  rightCaption="After"
-                  imageWidth={1000}
-                  imageHeight={700}
-                  deviceFrame={false}
-                />
-              </div>
-            </Reveal>
-
-        
-
-            <Reveal delay={0.04}>
-              <Subtitle>CTAs and wait states</Subtitle>
-              <Prose className="mt-10">
-                <p>
-                  CTAs varied in color, weight, and placement; under stress, people could not find the primary
-                  action. A <strong className="font-medium text-textPrimary">standardized button system</strong>{" "}
-                  (primary, secondary, hover, active, disabled) restores hierarchy. Labels update with context —
-                  for example before and after editing states.
-                </p>
-                <p>
-                  A static loading screen made generation feel stuck or crashed. A real-time progress panel for
-                  characters, locations, and props — with the option to edit completed assets while others
-                  generate — reduces perceived wait and rebuilds trust.
-                </p>
-              </Prose>
-              <div className="mt-14 space-y-16 md:space-y-20">
-                <FlowMacBookPair
-                  leftSrc="/assets/studio-engine/problem-5.jpg"
-                  leftAlt="Problem — inconsistent primary actions"
-                  rightSrc="/assets/studio-engine/solution-5.jpg"
-                  rightAlt="Solution — clear hierarchy and progress"
-                  leftCaption="Before"
-                  rightCaption="After"
-                  imageWidth={1000}
-                  imageHeight={700}
-                  deviceFrame={false}
-                />
-                <FlowMacBookPair
-                  leftSrc="/assets/studio-engine/problem-7.jpg"
-                  leftAlt="Problem — static loading felt like a crash"
-                  rightSrc="/assets/studio-engine/solution-7.jpg"
-                  rightAlt="Solution — active progress and continuity"
-                  leftCaption="Before"
-                  rightCaption="After"
-                  imageWidth={1000}
-                  imageHeight={700}
-                  deviceFrame={false}
-                  mediaRevealDelay={0.05}
-                />
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* Agent + IA */}
-        <section id="system" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
-            <Eyebrow>System</Eyebrow>
-            <SectionTitle>Agent layer and information architecture</SectionTitle>
-            <Prose className="mt-14">
-              <p>
-                Gen-2 structures the journey as Input → Basics → Visuals → Edit → Manage, with an AI agent
-                surfaced in context instead of buried in menus.
-              </p>
-            </Prose>
-          </Reveal>
-          <div className="mt-20 grid items-stretch gap-10 md:mt-28 md:grid-cols-2 md:gap-12">
-          <MediaReveal className="h-full min-h-0" delay={0.1}>
-              <Figure
-                layout="grid"
-                gridColumns={2}
-                src="/assets/studio-engine/information architecture.jpg"
-                alt="Agent experience after"
-                width={1100}
-                height={780}
-              />
-            </MediaReveal>
-            
-          </div>
-          
-        </section>
-
-        {/* Outcomes */}
-        <section id="outcomes" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
-            <Eyebrow>Outcomes</Eyebrow>
-            <SectionTitle>Measuring what changed</SectionTitle>
-            <Prose className="mt-14">
-              <p>
-                Baseline SUS and interviews converged: when friction dropped, Studio Engine.ai felt empowering
-                rather than forbidding. People described a low barrier to start, AI as assistant rather than
-                replacement, visuals they could share, and room to grow into the craft.
-              </p>
-              <p>
-                The goal is not to make filmmaking trivial — it is to make it accessible by removing arbitrary
-                barriers that come from interface opacity, not from the art itself.
-              </p>
-            </Prose>
-          </Reveal>
-         
           <Reveal className="mt-16 md:mt-20" delay={0.06}>
-            <Subtitle>What the redesigned experience delivered</Subtitle>
-            <div className="mt-10 grid gap-5 md:grid-cols-2 md:gap-6">
-              {[
-                {
-                  title: "Restructured workflow",
-                  body: "A progressive four-stage pipeline (basics → outline → script → visual generations) replaced one overwhelming generation step, with review and commit before the next layer.",
-                },
-                {
-                  title: "Generation history",
-                  body: "A persistent revision trail across AI-generated assets — return to any version, mark favorites, and recover from unexpected outputs without losing work.",
-                },
-                {
-                  title: "Unified edit surface",
-                  body: "Character and asset editing consolidated into one panel: generate, inpaint, draw, and review history without leaving the page or losing context.",
-                },
-                {
-                  title: "AI agent layer",
-                  body: "A contextual assistant surfaced throughout the workflow — not buried in menus — to guide the next creative decision at each stage.",
-                },
-              ].map((o) => (
-                <HoverPanel
-                  key={o.title}
-                  className="rounded-2xl border border-black/[0.06] bg-white px-6 py-7 shadow-[0_2px_24px_-12px_rgba(0,0,0,0.05)] md:px-7"
-                >
-                  <h4 className="font-display text-lg font-light tracking-[-0.02em] text-textPrimary">{o.title}</h4>
-                  <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">{o.body}</p>
-                </HoverPanel>
+            <div className="mt-10 grid grid-cols-2 grid-rows-2">
+              {(
+                [
+                  { title: "Options, not verdicts", body: "AI should return choices, not one final answer.", pad: "pb-9 pr-9 md:pb-12 md:pr-12" },
+                  { title: "History, not overwrite", body: "Every generation should be recoverable.", pad: "pb-9 pl-9 md:pb-12 md:pl-12" },
+                  { title: "One workspace, not scattered pages", body: "Editing should stay in context.", pad: "pt-9 pr-9 md:pt-12 md:pr-12" },
+                  { title: "Progress, not waiting", body: "Generation should feel active, not frozen.", pad: "pt-9 pl-9 md:pt-12 md:pl-12" },
+                ] as const
+              ).map((o) => (
+                <div key={o.title} className={o.pad}>
+                  <h4 className="font-display text-[1.125rem] font-light leading-snug tracking-[-0.02em] text-textPrimary md:text-[1.25rem]">
+                    {o.title}
+                  </h4>
+                  <p className="mt-3 text-[14px] leading-relaxed text-textSecondary/80">{o.body}</p>
+                </div>
               ))}
             </div>
           </Reveal>
-          <MediaReveal className="mt-20 md:mt-28" delay={0.08}>
-            <SingleTabletFrame
-              src="/assets/studio-engine/design-projects.jpg"
-              alt="Updated visual design language"
-              width={2000}
-              height={1120}
-              caption="Refined visual language supporting collaboration and clarity."
-            />
-          </MediaReveal>
+
         </section>
 
-        {/* Reflection */}
         <section id="reflection" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
+          <Reveal className="mt-24 md:mt-32" delay={0.04}>
             <Eyebrow>Reflection</Eyebrow>
-            <SectionTitle>Designing for competence, not just capability</SectionTitle>
-            <Prose className="mt-14">
-              <p className="text-textPrimary">
-                Designing AI-powered products is not primarily about making the AI smarter. It is about making
-                the human feel competent. The pipeline was already capable; the gap was that people could not see
-                their own agency inside it.
-              </p>
-              <p>
-                Every time the model returned something unexpected with no recovery path, users did not think
-                &ldquo;this model needs work.&rdquo; They thought: &ldquo;I don&apos;t know what I&apos;m
-                doing.&rdquo; That is a design failure, not a model failure.
-              </p>
-              <p>
-                Using AI to prototype flows, synthesize research patterns, and stress-test information architecture
-                reinforced a simple rule: AI does not replace design judgment. It accelerates the distance between a
-                question and an answer — which frees designers to ask better questions.
-              </p>
-              <MediaReveal className="mt-20 md:mt-28" delay={0.08}>
-                <SingleTabletFrame
-                  src="/assets/studio-engine/visual.jpg"
-                  alt="Updated visual design language"
-                  width={2000}
-                  height={1120}
-                  caption="Refined visual language supporting collaboration and clarity."
-                />
-              </MediaReveal>
-            </Prose>
-            <Subtitle>What I would push further</Subtitle>
+            <SectionTitle>What I would push further</SectionTitle>
             <Prose className="mt-10">
               <p>
-                With more time, I would run a longitudinal study with Gen-2 prototypes — especially with student
-                users over four to six weeks. Moving from &ldquo;can I complete this task?&rdquo; to &ldquo;does
-                this tool grow with me?&rdquo; is a different research question, and it matters for converting free
-                users to paid subscribers.
-              </p>
-              <p>
-                I would also invest a dedicated sprint in the AI agent layer: when it speaks, what it knows, and
-                how trust builds over time — rich enough to be its own project.
+                Next: a second-round test with Gen-2 prototypes and a 4–6 week longitudinal study — moving from &ldquo;can I complete this?&rdquo; to &ldquo;does this tool grow with me?&rdquo;
               </p>
             </Prose>
-            <div className="mt-14 grid gap-5 md:mt-16 md:grid-cols-3 md:gap-6">
+            <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-3 md:gap-6">
               {[
                 {
                   t: "AI as design material",
-                  d: "Treat AI outputs as constraints, not magic. Designing around failure and uncertainty is where the real UX work lives.",
+                  d: "Design around failure, not magic. Uncertainty is where the UX work lives.",
                 },
                 {
                   t: "Research as storytelling",
-                  d: "The most important output of research is not a deck — it is a narrative that makes product decisions feel inevitable to people who were not in the room.",
+                  d: "The output is not a deck — it is a narrative that makes decisions feel inevitable.",
                 },
                 {
                   t: "Iteration as proof",
-                  d: "Each prototype step should be explainable evidence of design thinking, not just process noise.",
+                  d: "Each prototype step should be explainable evidence, not process noise.",
                 },
               ].map((x) => (
                 <HoverPanel
                   key={x.t}
-                  className="rounded-xl border border-black/[0.06] bg-white px-5 py-6 md:px-6"
+                  className="bg-white px-5 py-6 md:px-6"
                 >
-                  <p className="text-[14px] font-medium text-textPrimary">{x.t}</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-textSecondary">{x.d}</p>
+                  <p className="font-display text-[1.125rem] font-light leading-snug tracking-[-0.018em] text-textPrimary md:text-[1.25rem]">
+                    {x.t}
+                  </p>
+                  <p className="mt-2 text-[15px] leading-relaxed text-textSecondary/90">{x.d}</p>
                 </HoverPanel>
               ))}
             </div>
           </Reveal>
-          
         </section>
 
-        <footer className="mt-44 border-t border-black/[0.05] pt-20 md:mt-56 md:pt-24">
-          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-textSecondary">
-            Studio Engine.ai · January–April 2025
-          </p>
-          <Link
-            href="/#work"
-            className="mt-10 inline-flex text-[15px] text-textSecondary underline decoration-black/[0.1] underline-offset-[6px] transition-[color,transform,text-decoration-color] duration-[420ms] ease-out hover:-translate-y-0.5 hover:text-violet-800 hover:decoration-violet-300/80 focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-600/40 focus-visible:ring-offset-4"
-          >
-            ← Back to work
-          </Link>
-        </footer>
-      </article>
-    </main>
+
+        </article>
+      </main>
     </>
   );
 }

@@ -12,7 +12,9 @@
       "Bash(sed -n '1508,1514p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
       "Bash(sed -n '1594,1603p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
       "Bash(sed -n '1231,1315p' /Users/fangyuan/Desktop/newpage/app/work/ai-character/CaseStudyContent.tsx)",
-      "Bash(python3 -)"
+      "Bash(python3 -)",
+      "Bash(ffprobe -v quiet -print_format json -show_streams /Users/fangyuan/Desktop/newpage/public/assets/ai-character/before.mp4)",
+      "Bash(sort -t '[' -k2)"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git"

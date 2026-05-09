@@ -15,46 +15,33 @@
     --text-tertiary: #aeaeb2;
     --border: rgba(0,0,0,0.1);
     --border-subtle: rgba(0,0,0,0.06);
-    --coral-bg: rgba(216,90,48,.09);
-    --coral-border: rgba(216,90,48,.25);
-    --coral-text: #712B13;
-    --coral-sub: #993C1D;
+    /* before — light warm gray for clear visibility */
+    --coral-bg: #f4f1ee;
+    --coral-border: rgba(120, 84, 62, 0.32);
+    --coral-text: #2b2019;
+    --coral-sub: #5f4d42;
     --teal-bg: rgba(29,158,117,.09);
     --teal-border: rgba(29,158,117,.25);
     --teal-text: #085041;
     --teal-sub: #0F6E56;
     --teal-cp: rgba(29,158,117,.4);
     --teal-cp-bg: rgba(29,158,117,.15);
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #1c1c1e;
-      --bg-secondary: #2c2c2e;
-      --text-primary: #f5f5f7;
-      --text-secondary: #aeaeb2;
-      --text-tertiary: #6e6e73;
-      --border: rgba(255,255,255,0.12);
-      --border-subtle: rgba(255,255,255,0.06);
-      --coral-bg: rgba(216,90,48,.14);
-      --coral-border: rgba(216,90,48,.3);
-      --coral-text: #F0997B;
-      --coral-sub: #D85A30;
-      --teal-bg: rgba(29,158,117,.14);
-      --teal-border: rgba(29,158,117,.3);
-      --teal-text: #5DCAA5;
-      --teal-sub: #1D9E75;
-      --teal-cp: rgba(29,158,117,.5);
-      --teal-cp-bg: rgba(29,158,117,.2);
-    }
+    --coral-cp: rgba(120, 84, 62, 0.38);
+    --coral-cp-bg: rgba(120, 84, 62, 0.12);
   }
 
   html, body {
-    min-height: 100%;
+    height: 100%;
     background: var(--bg);
     color: var(--text-primary);
     font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
     -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   .eyebrow {
@@ -167,7 +154,7 @@
   }
 
   .arrow svg { width: 18px; height: 18px; }
-  .arrow-before path { stroke: rgba(216,90,48,.5); }
+  .arrow-before path { stroke: rgba(120, 84, 62, .42); }
   .arrow-after path { stroke: rgba(29,158,117,.55); }
 
   .checkpoint {
@@ -187,6 +174,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+
+  .checkpoint-before .cp-dot {
+    background: var(--coral-cp-bg);
+    border: 0.5px solid var(--coral-cp);
+  }
+
+  .checkpoint-before .cp-tick {
+    display: none;
   }
 
   .cp-tick {
@@ -240,7 +236,7 @@
     flex-shrink: 0;
   }
 
-  .tag-bad { background: rgba(216,90,48,.12); color: var(--coral-text); }
+  .tag-bad { background: rgba(0,0,0,.04); color: var(--text-secondary); }
   .tag-good { background: rgba(29,158,117,.12); color: var(--teal-text); }
 
   .divider {
@@ -252,8 +248,8 @@
 
   /* Case study embed: fill iframe width, responsive padding & horizontal scroll for long rows */
   .page {
-    margin: 0 auto;
-    max-width: min(860px, 100%);
+    margin: 0;
+    max-width: 100%;
     padding: clamp(28px, 5vw, 64px) clamp(14px, 3vw, 48px) clamp(40px, 7vw, 80px);
   }
   @media (max-width: 720px) {
@@ -271,35 +267,33 @@
 <body>
 <div class="page">
 
-  <p class="eyebrow">Workflow comparison</p>
-  <h1 class="section-title">Before vs after</h1>
-
   <p class="block-label">Before — one giant leap</p>
+  <div class="no-checkpoint-badge" style="position: static; transform: none; display: inline-block; margin: 0 0 12px;">no checkpoints</div>
 
   <div class="row">
     <div class="node node-start"><span class="node-label">Prompt</span></div>
     <div class="arrow arrow-before">
       <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
-    <div class="node node-before node-big">
-      <div class="no-checkpoint-badge">no checkpoints</div>
-      <span class="node-label">Script + visuals + shots</span>
-      <span class="node-sub">generated in a single pass</span>
+    <div class="node node-before">
+      <span class="node-label">Script</span>
+      <span class="node-sub">generated</span>
+    </div>
+    <div class="checkpoint checkpoint-before"><div class="cp-dot"><div class="cp-tick"></div></div></div>
+    <div class="node node-before">
+      <span class="node-label">Visuals</span>
+      <span class="node-sub">generated</span>
+    </div>
+    <div class="checkpoint checkpoint-before"><div class="cp-dot"><div class="cp-tick"></div></div></div>
+    <div class="node node-before">
+      <span class="node-label">Shots</span>
+      <span class="node-sub">generated</span>
     </div>
     <div class="arrow arrow-before">
       <svg viewBox="0 0 18 18" fill="none"><path d="M4 9h10M10 5l4 4-4 4" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </div>
     <div class="node node-start"><span class="node-label">Output</span></div>
   </div>
-
-  <div class="outcome outcome-before">
-    <div>
-      <p class="outcome-title">Errors compound silently</p>
-      <p class="outcome-desc">Nothing to catch a wrong direction before it propagates</p>
-    </div>
-    <span class="tag tag-bad">high rework risk</span>
-  </div>
-
   <div class="divider"></div>
 
   <p class="block-label">After — staged with checkpoints</p>
@@ -334,13 +328,6 @@
     <div class="node node-start"><span class="node-label">Output</span></div>
   </div>
 
-  <div class="outcome outcome-after">
-    <div>
-      <p class="outcome-title">Issues caught at every gate</p>
-      <p class="outcome-desc">Each stage builds only on what's been approved</p>
-    </div>
-    <span class="tag tag-good">controlled quality</span>
-  </div>
 
 </div>
 </body>
