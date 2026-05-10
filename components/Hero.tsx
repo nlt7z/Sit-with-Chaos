@@ -113,7 +113,7 @@ export function Hero() {
           draggable={false}
           className="select-none"
           style={{
-            width: "clamp(480px, 72vw, 920px)",
+            width: "clamp(280px, 90vw, 920px)",
             opacity: 0.18,
             mixBlendMode: "multiply",
             transform: "translateY(-4%)",
@@ -137,7 +137,7 @@ export function Hero() {
             draggable={false}
             className="select-none"
             style={{
-              width: "clamp(480px, 72vw, 920px)",
+              width: "clamp(280px, 90vw, 920px)",
               opacity: 0.62,
               mixBlendMode: "multiply",
               transform: "translateY(-4%)",

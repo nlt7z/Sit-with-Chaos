@@ -1,9 +1,7 @@
 "use client";
 
-import { CaseStudyMeta } from "@/components/CaseStudyMeta";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
-import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -12,13 +10,13 @@ const easePremium = [0.25, 0.1, 0.25, 1] as const;
 
 const navItems = [
   { id: "overview", label: "Overview" },
-  { id: "problem", label: "Problem Signals" },
+  { id: "problem", label: "Context & Signal" },
   { id: "turning-point", label: "Turning Point" },
-  { id: "reframe", label: "Core Insight" },
-  { id: "solution", label: "Solution System" },
+  { id: "solution", label: "System Design" },
   { id: "chat", label: "IM Experience" },
   { id: "quote", label: "Quoting Engine" },
-  { id: "scenarios", label: "Scenario Extensions" },
+  { id: "prototype", label: "Interactive Prototype" },
+  { id: "scenarios", label: "Framework Extensions" },
   { id: "impact", label: "Impact & Validation" },
   { id: "reflection", label: "Reflection" },
 ] as const;
@@ -107,13 +105,13 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-28 border-t border-black/[0.04] py-32 md:py-40 lg:py-44">
+    <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-28 md:py-36 lg:py-40">
       <div>
-        <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">{eyebrow}</p>
-        <h2 className="mt-6 max-w-4xl font-display text-[2rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.75rem] md:leading-[1.06] lg:text-[3.1rem]">
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/75">{eyebrow}</p>
+        <h2 className="mt-5 max-w-4xl font-display text-[2rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.6rem] md:leading-[1.06] lg:text-[2.95rem]">
           {title}
         </h2>
-        <div className="mt-14 space-y-10 text-[17px] leading-[1.75] text-textSecondary [&>p]:max-w-[40rem] [&_.case-lead]:text-[1.05rem] [&_.case-lead]:leading-[1.65] [&_.case-lead]:text-textPrimary/88 md:[&_.case-lead]:text-[1.125rem] [&>div]:max-w-none [&>ul]:max-w-[40rem]">
+        <div className="mt-12 space-y-10 text-[16px] leading-[1.75] text-textSecondary [&>p]:max-w-[40rem] [&_.case-lead]:text-[16px] [&_.case-lead]:leading-[1.75] [&_.case-lead]:text-textPrimary/88 [&>div]:max-w-none [&>ul]:max-w-[40rem]">
           {children}
         </div>
       </div>
@@ -152,10 +150,10 @@ function AnnotationCard({
   body?: string;
 }) {
   return (
-    <div className="rounded-xl border border-black/[0.06] bg-white/80 px-5 py-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] backdrop-blur-sm transition-shadow duration-500 ease-portfolio hover:shadow-[0_12px_32px_-16px_rgba(0,0,0,0.12)]">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">{number}</p>
-      <p className="mt-2 text-[15px] font-medium leading-snug tracking-tight text-textPrimary">{title}</p>
-      {body ? <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">{body}</p> : null}
+    <div className="border-l-2 border-black/[0.12] pl-4 sm:pl-5">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/75">{number}</p>
+      <p className="mt-2 text-[16px] leading-snug tracking-tight text-textPrimary">{title}</p>
+      {body ? <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">{body}</p> : null}
     </div>
   );
 }
@@ -163,8 +161,8 @@ function AnnotationCard({
 function SubsectionHeader({ label, hint }: { label: string; hint?: string }) {
   return (
     <div className="mb-8 flex flex-col gap-3 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-      <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-textSecondary/85">{label}</p>
-      {hint ? <p className="max-w-lg text-[15px] leading-relaxed text-textSecondary">{hint}</p> : null}
+      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/85">{label}</p>
+      {hint ? <p className="max-w-lg text-[16px] leading-relaxed text-textSecondary">{hint}</p> : null}
     </div>
   );
 }
@@ -195,55 +193,51 @@ export default function MeituanImCaseStudyPage() {
                 <motion.p variants={heroItem} className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">
                   Meituan · Local Services · IM Consultation
                 </motion.p>
-                <motion.div variants={heroItem}>
-                  <CaseStudyMeta className="mt-4" {...CASE_STUDY_META["meituan-im"]} />
-                </motion.div>
                 <motion.h1
                   variants={heroItem}
                   className="mt-8 max-w-[18ch] font-display text-[2.65rem] font-light leading-[1.03] tracking-tight text-textPrimary sm:max-w-4xl md:text-[4rem] md:leading-[1.02]"
                 >
-                  IM Pricing Consultation System
+                  Designing Trust Before the Bill
                 </motion.h1>
                 <motion.p
                   variants={heroItem}
-                  className="mt-8 max-w-2xl text-[1.2rem] font-normal leading-[1.45] tracking-tight text-textPrimary/78 md:text-[1.35rem] md:leading-[1.42]"
+                  className="mt-6 max-w-2xl text-[16px] leading-[1.75] text-textSecondary"
                 >
-                  Turning price opacity into booking confidence through one guided conversation.
+                  I designed a trust infrastructure that turns uncertain local-service pricing into a guided, comparable, and bookable decision flow.
                 </motion.p>
                 <motion.section
                   variants={heroItem}
-                  className="mt-14 rounded-3xl border border-black/[0.06] bg-gradient-to-b from-surfaceAlt/60 to-white px-8 py-10 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:px-10 md:py-12"
+                  className="mt-14"
                   aria-label="Project summary for recruiters"
                 >
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">At a glance</p>
                   <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
                     <div className="min-w-0">
-                      <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-textSecondary">Role</p>
-                      <p className="mt-2 text-[17px] font-medium tracking-tight text-textPrimary">Product Design</p>
-                      <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">End-to-end case ownership</p>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Role</p>
+                      <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Product Design</p>
+                      <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">End-to-end case ownership</p>
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-textSecondary">Context</p>
-                      <p className="mt-2 text-[17px] font-medium tracking-tight text-textPrimary">Meituan super app</p>
-                      <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">Local services platform architecture</p>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Context</p>
+                      <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Meituan Super App</p>
+                      <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">Local services platform architecture</p>
                     </div>
                     <div className="min-w-0">
-                      <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-textSecondary">Timeline</p>
-                      <p className="mt-2 text-[17px] font-medium tracking-tight text-textPrimary">4 weeks</p>
-                      <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">Research through A/B validation</p>
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Timeline</p>
+                      <p className="mt-2 text-[16px] tracking-tight text-textPrimary">4 weeks</p>
                     </div>
-                    <div className="min-w-0 rounded-2xl bg-white/90 px-5 py-5 ring-1 ring-black/[0.05] sm:col-span-2 lg:col-span-1">
-                      <p className="text-[12px] font-medium uppercase tracking-[0.12em] text-textSecondary">Shipped outcome</p>
-                      <p className="mt-3 font-display text-[2.25rem] font-light tabular-nums tracking-tight text-textPrimary md:text-[2.5rem]">
-                        +5%
+                    <div className="min-w-0 sm:col-span-2 lg:col-span-1">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Shipped outcome</p>
+                      <div className="mt-4 space-y-1 text-[16px] text-textPrimary/90">
+                        <p>+5% conversion</p>
+                        <p>~2,000 additional daily orders</p>
+                        <p>−50% post-service disputes</p>
+                      </div>
+                      <p className="mt-1 text-[16px] leading-relaxed text-textSecondary">
+                        Validated through user-level randomized A/B on Meituan and Dianping
                       </p>
-                      <p className="mt-1 text-[14px] leading-snug text-textSecondary">Search-to-purchase conversion</p>
                     </div>
                   </div>
-                  <p className="mt-10 max-w-3xl border-t border-black/[0.06] pt-8 text-[15px] leading-relaxed text-textSecondary">
-                    <span className="font-medium text-textPrimary/90">Scope · </span>
-                    Research, strategy, interaction design, and statistically rigorous A/B testing on Meituan and Dianping.
-                  </p>
                 </motion.section>
               </motion.div>
             </header>
@@ -253,69 +247,87 @@ export default function MeituanImCaseStudyPage() {
             Meituan is one of China&apos;s largest super apps. This project sits in local services—home repair, banquet booking, maternity care, and other
             categories where price depends on details from consultation.
           </p>
+
+          <FadeIn className="my-2 py-8 md:py-9">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">User behavior signal</p>
+            <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
+              Before choosing a local service, users visit an average of <span className="text-textPrimary">10 merchants</span> and consult{" "}
+              <span className="text-textPrimary">6 of them</span> about their needs and pricing. They spend{" "}
+              <span className="text-textPrimary">30 minutes</span> weighing and comparing—yet still do not trust the prices and services merchants offer.
+            </p>
+          </FadeIn>
+
           <p>
             The friction was not demand. It was confidence: users needed service but did not trust the bill would match what they expected.
           </p>
 
-          <FadeIn className="grid gap-6 md:grid-cols-3 md:gap-5">
-            <div className="rounded-2xl bg-surfaceAlt/50 px-7 py-8 transition-transform duration-500 ease-portfolio md:hover:-translate-y-0.5">
+          <FadeIn className="grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3 md:gap-8">
+            <div className="border-l border-black/[0.1] pl-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Behavior</p>
-              <p className="mt-4 text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">Consult led bottom-bar taps.</p>
-              <p className="mt-4 text-[14px] leading-relaxed text-textSecondary">Across categories, consult outranked book and call.</p>
+              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Consult led bottom-bar taps.</p>
+              <p className="mt-4 text-[16px] leading-relaxed text-textSecondary">Across categories, consult outranked book and call.</p>
             </div>
-            <div className="rounded-2xl bg-surfaceAlt/50 px-7 py-8 transition-transform duration-500 ease-portfolio md:hover:-translate-y-0.5">
+            <div className="border-l border-black/[0.1] pl-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Conversion</p>
-              <p className="mt-4 text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">In-app consult stayed low.</p>
-              <p className="mt-4 text-[14px] leading-relaxed text-textSecondary">Intent was visible; many users left the platform or dropped.</p>
+              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">In-app consult stayed low.</p>
+              <p className="mt-4 text-[16px] leading-relaxed text-textSecondary">Intent was visible; many users left the platform or dropped.</p>
             </div>
-            <div className="rounded-2xl bg-surfaceAlt/50 px-7 py-8 transition-transform duration-500 ease-portfolio md:hover:-translate-y-0.5">
+            <div className="border-l border-black/[0.1] pl-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Experience</p>
-              <p className="mt-4 text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">Price disputes clustered in home repair.</p>
-              <p className="mt-4 text-[14px] leading-relaxed text-textSecondary">The consistent theme: final charge disagreed with expectations.</p>
+              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Price disputes clustered in home repair.</p>
+              <p className="mt-4 text-[16px] leading-relaxed text-textSecondary">The consistent theme: final charge disagreed with expectations.</p>
             </div>
           </FadeIn>
         </Section>
 
-        <Section id="turning-point" eyebrow="Turning Point" title="The brief started with price visibility. The evidence pointed to expectation mismatch.">
+        <Section id="turning-point" eyebrow="Turning Point" title="The brief started with price visibility. The evidence pointed to something deeper.">
           <p className="case-lead">
-            The team came to me with a brief: users were confused about pricing in local services and we should add package cards to show prices earlier.
+            We first noticed that local services had the longest browse time but the lowest transaction rate—and the highest complaint rate on the platform.
+            Much of the friction traced back to pricing: local services are customized, varying by situation and merchant, so even the same service could cost
+            significantly differently.
           </p>
           <p>
-            But dispute data and user reviews told a different story. Users were already seeing prices. The breakdown happened later, when final bills rarely
-            matched what people expected. That is not a display issue. It is a trust issue.
+            The initial ask was to make prices more visible. But when I used AI to analyze dispute reviews at scale, the evidence showed visibility was not
+            enough. Users were already seeing prices. The breakdown happened later, when final bills rarely matched what people expected.
           </p>
 
-          <FadeIn className="mt-6 rounded-3xl border border-black/[0.05] bg-white px-8 py-9 shadow-[0_20px_60px_-48px_rgba(0,0,0,0.25)] md:px-10 md:py-10">
+          <FadeIn>
+            <p className="text-[16px] leading-[1.75] tracking-tight text-textPrimary">
+              Price was not a number problem. It was a process trust problem.
+            </p>
+          </FadeIn>
+
+          <FadeIn className="mt-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Previous workflow · user journey map</p>
-            <div className="mt-6 grid gap-4 md:grid-cols-2">
-              <div className="rounded-2xl bg-surfaceAlt/45 px-5 py-5">
+            <div className="mt-5 grid gap-0 border-y border-black/[0.08] md:grid-cols-2">
+              <div className="border-b border-r border-black/[0.06] px-6 py-6 md:border-b-0">
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 1</p>
-                <p className="mt-2 text-[16px] font-medium tracking-tight text-textPrimary">Problem occurs at home</p>
-                <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">User finds an issue like toilet repair and opens Meituan to search.</p>
+                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Problem occurs at home</p>
+                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">User finds an issue like toilet repair and opens Meituan to search.</p>
               </div>
-              <div className="rounded-2xl bg-surfaceAlt/45 px-5 py-5">
+              <div className="border-b border-black/[0.06] px-6 py-6">
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 2</p>
-                <p className="mt-2 text-[16px] font-medium tracking-tight text-textPrimary">Many local merchants appear</p>
-                <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">User sees options, but cannot tell who can diagnose accurately.</p>
+                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Many local merchants appear</p>
+                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">User sees options, but cannot tell who can diagnose accurately.</p>
               </div>
-              <div className="rounded-2xl bg-surfaceAlt/45 px-5 py-5">
+              <div className="border-r border-black/[0.06] px-6 py-6">
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 3</p>
-                <p className="mt-2 text-[16px] font-medium tracking-tight text-textPrimary">One-by-one outreach in chat</p>
-                <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">
+                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">One-by-one outreach in chat</p>
+                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">
                   User sends repeated questions: what is the issue, how much will it cost, then waits for replies from different shops.
                 </p>
               </div>
-              <div className="rounded-2xl bg-surfaceAlt/45 px-5 py-5">
+              <div className="px-6 py-6">
                 <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 4</p>
-                <p className="mt-2 text-[16px] font-medium tracking-tight text-textPrimary">Select one merchant for visit</p>
-                <p className="mt-2 text-[14px] leading-relaxed text-textSecondary">
+                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Select one merchant for visit</p>
+                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">
                   Most merchants can only promise an arrival fee first; final quote is deferred to on-site inspection.
                 </p>
               </div>
             </div>
-            <div className="mt-4 rounded-2xl border border-black/[0.06] bg-[#FFF8F4] px-6 py-5">
+            <div className="mt-4 border-l-[3px] border-[#C47040] bg-[#FFF8F4] px-6 py-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#8A4B2A]">Trust break</p>
-              <p className="mt-2 text-[15px] leading-relaxed text-[#7A4330]">
+              <p className="mt-2 text-[16px] leading-relaxed text-[#7A4330]">
                 Final price changes with real conditions, materials, and scope. The range becomes wide, so users feel that &quot;quoted price&quot; and
                 &quot;actual bill&quot; are disconnected.
               </p>
@@ -325,84 +337,18 @@ export default function MeituanImCaseStudyPage() {
           I pushed back on the original direction. For customized services, static prices are often structurally wrong because scope and materials change.
           </p>
           
-            <p className="mt-5 max-w-4xl text-[17px] font-medium leading-[1.65] tracking-[-0.01em] text-textPrimary md:text-[1.2rem]">
-              So the product question shifted: how do we guide users through a credible path to a price they can trust before they commit?
+            <p className="mt-5 max-w-2xl text-[16px] leading-[1.75] text-textPrimary">
+              So the product question shifted:
+            </p>
+            <p className="mt-3 max-w-3xl font-display text-[1.6rem] italic leading-[1.35] tracking-tight text-textPrimary">
+              how do we guide users through a credible path to a price they can trust before they commit?
             </p>
           
         </Section>
 
-        <Section id="reframe" eyebrow="Core Insight" title="This is not a static pricing issue. This is a process trust issue.">
-          <p className="case-lead">
-            For customized services, static ranges are often too wide or wrong. An earlier number does not build confidence if users do not trust how it was
-            produced.
-          </p>
-
-          <FadeIn className="mt-4 rounded-3xl border border-black/[0.05] bg-white px-8 py-10 shadow-[0_24px_64px_-48px_rgba(0,0,0,0.2)] md:px-12 md:py-12">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Reframe</p>
-            <p className="mt-6 text-[16px] text-textSecondary">From</p>
-            <p className="mt-2 max-w-2xl text-[17px] text-textPrimary/80">&quot;How can we show a price earlier?&quot;</p>
-            <p className="mt-8 text-[16px] text-textSecondary">To</p>
-            <p className="font-display mt-3 max-w-4xl text-[1.5rem] font-light italic leading-[1.35] tracking-tight text-textPrimary md:text-[1.85rem]">
-              &quot;How can we guide users through a credible path to a price they can trust before booking?&quot;
-            </p>
-          </FadeIn>
-        </Section>
-
         <Section id="solution" eyebrow="System Design" title="A three-step consultation system that carries trust into checkout.">
-          <p className="case-lead">
-            The solution is a connected flow: each step closes a drop-off reason and passes structured context forward.
-          </p>
-
-          <FadeIn className="relative mx-auto max-w-4xl space-y-0 pt-4">
-            <div aria-hidden className="absolute bottom-8 left-[1.125rem] top-8 w-px bg-gradient-to-b from-transparent via-black/10 to-transparent md:left-[1.25rem]" />
-            <div className="relative space-y-12 pl-10 md:pl-12">
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Step one</p>
-                <p className="mt-3 text-[1.35rem] font-medium tracking-tight text-textPrimary">Official diagnosis entry</p>
-                <ul className="mt-5 space-y-3 text-[15px] leading-relaxed text-textSecondary">
-                  <li>
-                    <span className="font-medium text-textPrimary/90">Function · </span>Certified experts surface from search to define the problem.
-                  </li>
-                  <li>
-                    <span className="font-medium text-textPrimary/90">Goal · </span>Remove ambiguity before comparison begins.
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Step two</p>
-                <p className="mt-3 text-[1.35rem] font-medium tracking-tight text-textPrimary">Guided IM chat</p>
-                <ul className="mt-5 space-y-3 text-[15px] leading-relaxed text-textSecondary">
-                  <li>
-                    <span className="font-medium text-textPrimary/90">Function · </span>Multi-turn chat yields a structured service-order card.
-                  </li>
-                  <li>
-                    <span className="font-medium text-textPrimary/90">Goal · </span>Turn conversation into comparable intent.
-                  </li>
-                </ul>
-              </div>
-              <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Step three</p>
-                <p className="mt-3 text-[1.35rem] font-medium tracking-tight text-textPrimary">Competitive quoting</p>
-                <ul className="mt-5 space-y-3 text-[15px] leading-relaxed text-textSecondary">
-                  <li>
-                    <span className="font-medium text-textPrimary/90">Function · </span>Vetted merchants quote live; the chosen price threads into checkout.
-                  </li>
-                  <li>
-                    <span className="font-medium text-textPrimary/90">Goal · </span>Transparent competition and lower surprise billing risk.
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </FadeIn>
-        </Section>
-
-        <Section id="chat" eyebrow="IM Experience" title="The interface walkthrough maps every critical state in one coherent conversation flow.">
-          <p className="case-lead">
-            Visual first: swimlane map, then screen groups, with short notes on the key design moves.
-          </p>
-
+          <SubsectionHeader label="Flow map" />
           <FadeIn>
-            <SubsectionHeader label="Flow map" hint="Five stages across user, platform, and merchant lanes." />
             <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
               <div className="relative w-full aspect-[17/23]">
                 <iframe
@@ -414,7 +360,43 @@ export default function MeituanImCaseStudyPage() {
               </div>
             </div>
           </FadeIn>
+          <FadeIn className="mt-16 grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3">
+            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/70">Step 01</p>
+              <p className="mt-5 text-[16px] tracking-tight text-textPrimary">
+                Diagnose the problem
+              </p>
+              <div className="mt-5 space-y-3 text-[16px] leading-relaxed text-textSecondary">
+                <p><span className="text-textPrimary/90">Function · </span>Certified experts surface from search to define the problem.</p>
+                <p><span className="text-textPrimary/90">Goal · </span>Remove ambiguity before comparison begins.</p>
+              </div>
+            </div>
 
+            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/70">Step 02</p>
+              <p className="mt-5 text-[16px] tracking-tight text-textPrimary">
+                Structure the intent
+              </p>
+              <div className="mt-5 space-y-3 text-[16px] leading-relaxed text-textSecondary">
+                <p><span className="text-textPrimary/90">Function · </span>Multi-turn chat yields a structured service-order card.</p>
+                <p><span className="text-textPrimary/90">Goal · </span>Turn conversation into comparable intent.</p>
+              </div>
+            </div>
+
+            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/70">Step 03</p>
+              <p className="mt-5 text-[16px] tracking-tight text-textPrimary">
+                Compare and commit
+              </p>
+              <div className="mt-5 space-y-3 text-[16px] leading-relaxed text-textSecondary">
+                <p><span className="text-textPrimary/90">Function · </span>Vetted merchants quote live; the chosen price threads into checkout.</p>
+                <p><span className="text-textPrimary/90">Goal · </span>Transparent competition and lower surprise billing risk.</p>
+              </div>
+            </div>
+          </FadeIn>
+        </Section>
+
+        <Section id="chat" eyebrow="IM Experience" title="The interface walkthrough maps every critical state in one coherent conversation flow.">
           <section className="mt-20 md:mt-24">
             <SubsectionHeader label="The conversation flow" hint="Three entry states, one interaction model." />
 
@@ -503,29 +485,32 @@ export default function MeituanImCaseStudyPage() {
           </section>
         </Section>
 
+        <Section id="prototype" eyebrow="Interactive Prototype" title="An interactive prototype built with Cursor and Claude Code.">
+          <FadeIn className="mt-4 border-y border-black/[0.08] py-8 md:py-10">
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Prototype slot</p>
+            <div className="mt-5 aspect-[16/9] w-full border border-dashed border-black/[0.18] bg-surfaceAlt/20" />
+          </FadeIn>
+        </Section>
+
         <Section
           id="scenarios"
           eyebrow="Framework Extensions"
           title="The same trust-first framework scales to education, banquet booking, and maternity care."
         >
-          <p className="case-lead">
-            The same sequence applies across adjacent categories: clarify intent, structure consultation, then route to transparent comparison and checkout.
-          </p>
-
           <div className="space-y-16 md:space-y-20">
             <section className="pt-4">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <h3 className="font-display text-[1.65rem] font-light leading-tight tracking-tight text-textPrimary md:text-[2.1rem]">
+                <h3 className="text-[1.1rem] leading-tight tracking-tight text-textPrimary">
                   Education consultation
                 </h3>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">
-                  Parent intent → advisor matching → plan comparison
-                </p>
               </div>
-              <p className="mt-5 max-w-3xl text-[15px] leading-[1.7] text-textSecondary">
+              <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textSecondary">
                 Adapt entry and questioning to goals, grade level, budget, and schedule before surfacing advisors and course packages.
               </p>
-              <p className="mt-4 max-w-3xl rounded-2xl bg-surfaceAlt/35 px-6 py-5 text-[15px] leading-[1.75] text-textSecondary">
+              <p className="mt-4 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
+                Parent intent → advisor matching → plan comparison
+              </p>
+              <p className="mt-4 max-w-3xl border-l-2 border-black/[0.08] pl-5 text-[16px] leading-[1.75] text-textSecondary">
                 Story extension: parents first clarify goals and constraints, then compare advisors with consistent context captured in chat. The framework
                 keeps recommendation quality visible before any package decision.
               </p>
@@ -533,17 +518,17 @@ export default function MeituanImCaseStudyPage() {
 
             <section className="border-t border-black/[0.05] pt-16 md:pt-20">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <h3 className="font-display text-[1.65rem] font-light leading-tight tracking-tight text-textPrimary md:text-[2.1rem]">
+                <h3 className="text-[1.1rem] leading-tight tracking-tight text-textPrimary">
                   Banquet booking
                 </h3>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">
-                  Event requirements → venue negotiation → quote lock-in
-                </p>
               </div>
-              <p className="mt-5 max-w-3xl text-[15px] leading-[1.7] text-textSecondary">
+              <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textSecondary">
                 Keep multi-merchant quoting; capture event size, date flexibility, menu tiers, and inclusions so offers compare on equal terms.
               </p>
-              <p className="mt-4 max-w-3xl rounded-2xl bg-surfaceAlt/35 px-6 py-5 text-[15px] leading-[1.75] text-textSecondary">
+              <p className="mt-4 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
+                Event requirements → venue negotiation → quote lock-in
+              </p>
+              <p className="mt-4 max-w-3xl border-l-2 border-black/[0.08] pl-5 text-[16px] leading-[1.75] text-textSecondary">
                 Story extension: users define non-negotiables early, receive comparable venue offers, and commit only after quote boundaries are explicit.
                 Negotiation remains flexible without losing transparency.
               </p>
@@ -551,17 +536,17 @@ export default function MeituanImCaseStudyPage() {
 
             <section className="border-t border-black/[0.05] pt-16 md:pt-20">
               <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <h3 className="font-display text-[1.65rem] font-light leading-tight tracking-tight text-textPrimary md:text-[2.1rem]">
+                <h3 className="text-[1.1rem] leading-tight tracking-tight text-textPrimary">
                   Maternity care
                 </h3>
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">
-                  Need triage → caregiver trust layer → service package selection
-                </p>
               </div>
-              <p className="mt-5 max-w-3xl text-[15px] leading-[1.7] text-textSecondary">
+              <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textSecondary">
                 Lead with trust and safety—credentials, care scope, postpartum boundaries—before pricing, then preserve continuity for follow-up visits.
               </p>
-              <p className="mt-4 max-w-3xl rounded-2xl bg-surfaceAlt/35 px-6 py-5 text-[15px] leading-[1.75] text-textSecondary">
+              <p className="mt-4 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
+                Need triage → caregiver trust layer → service package selection
+              </p>
+              <p className="mt-4 max-w-3xl border-l-2 border-black/[0.08] pl-5 text-[16px] leading-[1.75] text-textSecondary">
                 Story extension: families build trust through caregiver credentials and scoped care plans first, then review pricing in that context.
                 Follow-up stays in one thread to support continuity and confidence.
               </p>
@@ -573,49 +558,49 @@ export default function MeituanImCaseStudyPage() {
           <p className="case-lead">
             Experiment design: user-level randomization, merchant whitelisting, and parallel runs on Meituan and Dianping in test and production.
           </p>
-          <FadeIn className="grid gap-6 md:grid-cols-3 md:gap-5">
-            <div className="rounded-2xl bg-surfaceAlt/45 px-7 py-9">
+          <FadeIn className="grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3">
+            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Conversion</p>
-              <p className="mt-5 font-display text-[2.25rem] font-light tabular-nums tracking-tight text-textPrimary md:text-[2.5rem]">+0.5pp</p>
-              <p className="mt-3 text-[14px] leading-relaxed text-textSecondary">Search-to-purchase lift at rollout scale.</p>
+              <p className="mt-5 text-[16px] tabular-nums tracking-tight text-textPrimary">+0.5pp</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">Search-to-purchase lift at rollout scale.</p>
             </div>
-            <div className="rounded-2xl bg-surfaceAlt/45 px-7 py-9">
+            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Order volume</p>
-              <p className="mt-5 font-display text-[2.25rem] font-light tabular-nums tracking-tight text-textPrimary md:text-[2.5rem]">+2,000</p>
-              <p className="mt-3 text-[14px] leading-relaxed text-textSecondary">Estimated additional daily orders at projected coverage.</p>
+              <p className="mt-5 text-[16px] tabular-nums tracking-tight text-textPrimary">+2,000</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">Estimated additional daily orders at projected coverage.</p>
             </div>
-            <div className="rounded-2xl bg-surfaceAlt/45 px-7 py-9">
+            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Disputes</p>
-              <p className="mt-5 font-display text-[2.25rem] font-light tabular-nums tracking-tight text-textPrimary md:text-[2.5rem]">−50%</p>
-              <p className="mt-3 text-[14px] leading-relaxed text-textSecondary">Post-service pricing disputes in this flow.</p>
+              <p className="mt-5 text-[16px] tabular-nums tracking-tight text-textPrimary">−50%</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">Post-service pricing disputes in this flow.</p>
             </div>
           </FadeIn>
         </Section>
 
         <Section id="reflection" eyebrow="Reflection" title="What I would improve in the next version.">
           <div className="space-y-6 md:space-y-8">
-            <FadeIn className="rounded-2xl border border-black/[0.06] bg-white px-7 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:px-9">
-              <p className="text-[17px] font-medium tracking-tight text-textPrimary">Merchant experience deserves its own product pass.</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">
+            <FadeIn className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
+              <p className="text-[16px] tracking-tight text-textPrimary">Merchant experience deserves its own product pass.</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">
                 Response quality is a system bottleneck: notification priority, context, and workload need first-class design.
               </p>
             </FadeIn>
-            <FadeIn delay={0.06} className="rounded-2xl border border-black/[0.06] bg-white px-7 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:px-9">
-              <p className="text-[17px] font-medium tracking-tight text-textPrimary">Guide pricing should explain variability, not imply a promise.</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">
+            <FadeIn delay={0.06} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
+              <p className="text-[16px] tracking-tight text-textPrimary">Guide pricing should explain variability, not imply a promise.</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">
                 Tie each range to concrete drivers so users do not read it as a fixed quote.
               </p>
             </FadeIn>
-            <FadeIn delay={0.12} className="rounded-2xl border border-black/[0.06] bg-white px-7 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:px-9">
-              <p className="text-[17px] font-medium tracking-tight text-textPrimary">Scale with AI triage, escalate to human experts.</p>
-              <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">
+            <FadeIn delay={0.12} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
+              <p className="text-[16px] tracking-tight text-textPrimary">Scale with AI triage, escalate to human experts.</p>
+              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">
                 Humans stay essential for ambiguity; high-confidence paths can be automated at the front.
               </p>
             </FadeIn>
           </div>
 
-          <FadeIn className="mt-12 max-w-3xl rounded-2xl bg-surfaceAlt/40 px-7 py-8 text-[17px] leading-relaxed text-textPrimary md:px-9 md:py-10">
-            Transparent process is often a stronger trust advantage than transparent pricing alone.
+          <FadeIn className="mt-12 max-w-3xl border-y border-black/[0.08] py-8 md:py-10">
+            <p className="text-[16px] leading-relaxed text-textPrimary">Transparent process is often a stronger trust advantage than transparent pricing alone.</p>
           </FadeIn>
         </Section>
           </main>

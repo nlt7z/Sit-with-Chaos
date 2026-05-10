@@ -56,11 +56,11 @@ export function VibeCodingPageContent() {
             Case study →
           </Link>
         </div>
-        <div className="mt-10 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm md:mt-12" style={{ aspectRatio: "1728/1117" }}>
+        <div className="mt-10 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm md:mt-12" style={{ aspectRatio: "1728/1117", minHeight: "280px" }}>
           <iframe
             title="Han Cao personal website"
             src="https://hancao.space/"
-            className="h-full w-full border-0"
+            className="h-full min-h-[280px] w-full border-0"
             loading="lazy"
           />
         </div>

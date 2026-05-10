@@ -1031,17 +1031,17 @@ export default function StudioEngineCaseStudy() {
             initial={reduce ? false : { opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.08, delay: reduce ? 0 : 0.22, ease: easeLux }}
-            className="mt-16 flex flex-wrap items-start divide-x divide-black/[0.07] pt-6"
+            className="mt-16 grid grid-cols-1 gap-6 border-t border-black/[0.07] pt-6 sm:flex sm:flex-wrap sm:items-start sm:gap-0 sm:divide-x sm:divide-black/[0.07] sm:border-0 sm:pt-0"
           >
-            <div className="pr-8 pt-8">
+            <div className="sm:pr-8 sm:pt-8">
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Product</dt>
               <dd className="mt-2 text-[15px] text-textPrimary">VP Genie</dd>
             </div>
-            <div className="px-8 pt-8">
+            <div className="sm:px-8 sm:pt-8">
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Role</dt>
               <dd className="mt-2 text-[15px] leading-relaxed text-textPrimary">Design · Information Architecture · Usability Test</dd>
             </div>
-            <div className="pl-8 pt-8">
+            <div className="sm:pl-8 sm:pt-8">
               <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Timeline</dt>
               <dd className="mt-2 text-[15px] text-textPrimary">January – April 2025</dd>
             </div>
