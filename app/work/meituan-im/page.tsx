@@ -205,40 +205,67 @@ export default function MeituanImCaseStudyPage() {
                 >
                   I designed a trust infrastructure that turns uncertain local-service pricing into a guided, comparable, and bookable decision flow.
                 </motion.p>
-                <motion.section
+                <motion.div
                   variants={heroItem}
-                  className="mt-14"
+                  className="mt-14 flex flex-col gap-12 lg:flex-row lg:items-start"
                   aria-label="Project summary for recruiters"
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">At a glance</p>
-                  <div className="mt-8 grid gap-10 sm:grid-cols-2 lg:grid-cols-4 lg:gap-8">
-                    <div className="min-w-0">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Role</p>
-                      <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Product Design</p>
-                      <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">End-to-end case ownership</p>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Context</p>
-                      <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Meituan Super App</p>
-                      <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">Local services platform architecture</p>
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Timeline</p>
-                      <p className="mt-2 text-[16px] tracking-tight text-textPrimary">4 weeks</p>
-                    </div>
-                    <div className="min-w-0 sm:col-span-2 lg:col-span-1">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Shipped outcome</p>
-                      <div className="mt-4 space-y-1 text-[16px] text-textPrimary/90">
-                        <p>+5% conversion</p>
-                        <p>~2,000 additional daily orders</p>
-                        <p>−50% post-service disputes</p>
+                  {/* At a glance */}
+                  <section className="flex-1" aria-label="Project summary for recruiters">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">At a glance</p>
+                    <div className="mt-8 flex gap-10 lg:gap-12">
+                      {/* Left — Role, Context, Timeline stacked */}
+                      <div className="flex flex-col gap-8">
+                        <div className="min-w-0">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Role</p>
+                          <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Product Design</p>
+                          <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">End-to-end case ownership</p>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Context</p>
+                          <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Meituan Super App</p>
+                          <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">Local services platform architecture</p>
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Timeline</p>
+                          <p className="mt-2 text-[16px] tracking-tight text-textPrimary">4 weeks</p>
+                        </div>
                       </div>
-                      <p className="mt-1 text-[16px] leading-relaxed text-textSecondary">
-                        Validated through user-level randomized A/B on Meituan and Dianping
-                      </p>
+                      {/* Right — Shipped outcome only */}
+                      <div className="min-w-0">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Shipped outcome</p>
+                        <div className="mt-4 space-y-1 text-[16px] text-textPrimary/90">
+                          <p>+5% conversion</p>
+                          <p>~2,000 additional daily orders</p>
+                          <p>−50% post-service disputes</p>
+                        </div>
+                        <p className="mt-1 text-[16px] leading-relaxed text-textSecondary">
+                          Validated through user-level randomized A/B on Meituan and Dianping
+                        </p>
+                      </div>
                     </div>
+                  </section>
+
+                  {/* Phone prototype — flush with At a glance, no wrapper box */}
+                  <div
+                    className="hidden lg:block"
+                    style={{ width: Math.round(390 * 0.68), height: Math.round(844 * 0.68), flexShrink: 0 }}
+                  >
+                    <iframe
+                      src="/assets/meituan-im/interaction-flow-phone.html"
+                      title="FixIt Express interactive prototype"
+                      scrolling="no"
+                      style={{
+                        width: 390,
+                        height: 844,
+                        border: "none",
+                        transform: "scale(0.68)",
+                        transformOrigin: "top left",
+                      }}
+                      loading="lazy"
+                    />
                   </div>
-                </motion.section>
+                </motion.div>
               </motion.div>
             </header>
 
@@ -421,10 +448,6 @@ export default function MeituanImCaseStudyPage() {
         </Section>
 
         <Section id="quote" eyebrow="Quoting Engine" title="Diagnosis output becomes structured intent, then drives transparent competitive quotes.">
-          <p className="case-lead">
-            Structured diagnosis feeds quoting: evidence becomes intent, intent becomes comparable offers, offers become checkout.
-          </p>
-
           <section>
             <SubsectionHeader label="Diagnosis in action" hint="From evidence capture to structured intent." />
             <div className="grid gap-10 md:grid-cols-2 md:gap-8">
@@ -486,9 +509,15 @@ export default function MeituanImCaseStudyPage() {
         </Section>
 
         <Section id="prototype" eyebrow="Interactive Prototype" title="An interactive prototype built with Cursor and Claude Code.">
-          <FadeIn className="mt-4 border-y border-black/[0.08] py-8 md:py-10">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Prototype slot</p>
-            <div className="mt-5 aspect-[16/9] w-full border border-dashed border-black/[0.18] bg-surfaceAlt/20" />
+          <FadeIn className="mt-4">
+            <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
+              <iframe
+                src="/assets/meituan-im/interaction-flow.html"
+                title="FixIt Express interactive consultation flow"
+                className="h-[780px] w-full border-0"
+                loading="lazy"
+              />
+            </div>
           </FadeIn>
         </Section>
 

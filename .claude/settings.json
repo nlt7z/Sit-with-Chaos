@@ -30,10 +30,23 @@
       "Bash(curl -s \"https://api.anthropic.com/v1/design/h/3VsaM_UL87Evm2wJ69p6Hg?open_file=screens-index.html\" -H \"Accept: text/html\" -o /tmp/screens_index.html)",
       "Bash(curl -s \"https://api.anthropic.com/v1/design/h/3VsaM_UL87Evm2wJ69p6Hg?open_file=screens-index.html\" --compressed -o /tmp/screens_decompressed.html)",
       "Bash(curl -s -L \"https://api.anthropic.com/v1/design/h/3VsaM_UL87Evm2wJ69p6Hg?open_file=screens-index.html\")",
-      "Bash(tar -xz -C /tmp/)"
+      "Bash(tar -xz -C /tmp/)",
+      "Bash(mkdir -p /Users/fangyuan/Desktop/newpage/app/daily-practice/widgets)",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/klqOiIvyPwFoxmzhs2eA6A\" -o /tmp/design_index.html)",
+      "Bash(curl -s \"https://api.anthropic.com/v1/design/h/klqOiIvyPwFoxmzhs2eA6A?open_file=Interaction+Flow.html\" --compressed -o /tmp/interaction_flow.html)",
+      "Bash(mv /tmp/interaction_flow.html /tmp/interaction_flow.html.gz)",
+      "Bash(gunzip /tmp/interaction_flow.html.gz)",
+      "Bash(mv /tmp/interaction_flow.html /tmp/interaction_flow.tar)",
+      "Bash(mkdir -p /tmp/interaction_flow)",
+      "Bash(tar -xf /tmp/interaction_flow.tar -C /tmp/interaction_flow)",
+      "Bash(python3 -c ' *)",
+      "Bash(python3 /tmp/make_phone_html.py)"
     ],
     "additionalDirectories": [
-      "/Users/fangyuan/Desktop/newpage/.git"
+      "/Users/fangyuan/Desktop/newpage/.git",
+      "/Users/fangyuan/Desktop/newpage/app/daily-practice",
+      "/tmp",
+      "/private/tmp"
     ]
   }
 }

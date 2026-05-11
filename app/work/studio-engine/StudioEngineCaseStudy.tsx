@@ -149,9 +149,9 @@ function CaseStudySectionNav() {
   return (
     <nav
       aria-label="Case study sections"
-      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-full w-[11rem] lg:block"
+      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-full w-[12rem] lg:block"
     >
-      <div className="pointer-events-auto sticky top-[calc(50vh-10rem)] px-6 pt-40">
+      <div className="pointer-events-auto sticky top-[calc(50vh-10rem)] px-5 pt-40">
         <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">
           On this page
         </p>
@@ -512,7 +512,7 @@ function TaskSuccessEvaluation() {
                     >
                       <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:gap-5">
                         <p
-                          className={`max-w-[min(100%,20rem)] shrink-0 text-[13px] leading-snug text-textSecondary md:max-w-[16rem] md:text-[13px] ${
+                          className={`max-w-[min(100%,24rem)] shrink-0 text-[13px] leading-snug text-textSecondary md:max-w-[20rem] md:text-[13px] ${
                             row.highlight ? "text-violet-950" : ""
                           }`}
                         >
@@ -986,7 +986,7 @@ export default function StudioEngineCaseStudy() {
       <Nav />
       <main className="relative min-h-screen overflow-x-hidden bg-white text-textPrimary">
         <CaseStudySectionNav />
-        <article className="relative z-10 mx-auto max-w-content px-6 pb-40 pt-32 md:px-12 md:pb-52 md:pt-40 lg:pl-36 lg:pr-14 lg:pt-44">
+        <article className="relative z-10 mx-auto max-w-content px-6 pb-40 pt-32 md:px-12 md:pb-52 md:pt-40 lg:pl-[13.5rem] lg:pr-14 lg:pt-44 xl:pl-44">
         <header id="overview" ref={heroRef} className="scroll-mt-32 max-w-4xl">
           <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/80">
             StudioEngine.AI
@@ -1165,15 +1165,19 @@ export default function StudioEngineCaseStudy() {
                   <ul className="mt-4 space-y-2 border-t border-black/[0.05] pt-4">
                     <li className="text-[12px] leading-snug text-textSecondary">
                       <span className="text-textPrimary">AI output unpredictable</span>
-                      {" "}— 6/6 couldn&apos;t steer generation toward intent
+                      {" "}— 6/6 clicked regenerate repeatedly with no convergence; had no way to communicate what was wrong
                     </li>
                     <li className="text-[12px] leading-snug text-textSecondary">
                       <span className="text-textPrimary">No recovery path</span>
-                      {" "}— 3/6 lost work permanently when regenerating
+                      {" "}— 3/6 lost work permanently when regenerating; there was no undo
+                    </li>
+                    <li className="text-[12px] leading-snug text-textSecondary">
+                      <span className="text-textPrimary">Inpainting invisible</span>
+                      {" "}— users found the button but had no mental model for what it would affect or how to use it
                     </li>
                     <li className="text-[12px] leading-snug text-textSecondary">
                       <span className="text-textPrimary">4-screen editing path</span>
-                      {" "}— 6/6 lost context navigating to edit a single character
+                      {" "}— changing a character&apos;s hair required: project overview → character list → character editor → inpainting tool. 6/6 lost context mid-flow
                     </li>
                   </ul>
                 </div>
@@ -1220,13 +1224,15 @@ export default function StudioEngineCaseStudy() {
           </p>
 
           <div className="mt-12 border-t border-black/[0.06] pt-10">
-            <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
-              What makes text-to-video UX different
-            </p>
             <div className="grid items-start gap-10 md:grid-cols-2 md:gap-16">
-              <div className="space-y-3 text-[15px] leading-[1.68] tracking-[-0.011em] text-textSecondary/90">
-                <p><span className="text-textPrimary">Traditional tools:</span> cursor touches output. Intent equals result.</p>
-                <p><span className="text-textPrimary">AI tools:</span> system interprets, generates, surprises. The gap between intent and output is where trust breaks.</p>
+              <div>
+                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
+                  What makes text-to-video UX different
+                </p>
+                <div className="space-y-3 text-[15px] leading-[1.68] tracking-[-0.011em] text-textSecondary/90">
+                  <p><span className="text-textPrimary">Traditional tools:</span> cursor touches output. Intent equals result.</p>
+                  <p><span className="text-textPrimary">AI tools:</span> system interprets, generates, surprises. The gap between intent and output is where trust breaks.</p>
+                </div>
               </div>
               <div>
                 <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
@@ -1271,17 +1277,8 @@ export default function StudioEngineCaseStudy() {
                 recovery paths.
               </p>
               <p>
-                The original product treated text-to-video creation as a mostly linear generation task:
-                users entered a prompt, moved through separate pages, and waited for the system to
-                produce outputs. But the usability tests showed that creators did not think in a straight
-                line. They moved back and forth between story, characters, visuals, and editing
-                decisions. When the interface separated these steps too rigidly, users lost context,
-                overwrote previous outputs, and felt unsure about what to do next.
-              </p>
-              <p>
-                So I redesigned the interaction workflow around staged creative control. Instead of
-                asking users to commit everything upfront, the new IA breaks the process into clearer
-                checkpoints: Input, Basics, Visuals, Edit, and Manage.
+                Instead of asking users to commit everything upfront, the new IA breaks the process into
+                clearer checkpoints: Input, Basics, Visuals, Edit, and Manage.
               </p>
             </Prose>
           </Reveal>
@@ -1300,67 +1297,29 @@ export default function StudioEngineCaseStudy() {
 
           <Reveal className="mt-16 md:mt-20">
             {/* Stage pipeline */}
-            <div className="mt-14 flex flex-col divide-y divide-black/[0.06] md:flex-row md:divide-x md:divide-y-0">
+            <div className="mt-14 flex flex-col divide-y divide-black/[0.06] xl:flex-row xl:divide-x xl:divide-y-0">
               {(
                 [
-                  { num: "01", name: "Input",   desc: "Capture creative intent before asking for detailed production choices." },
-                  { num: "02", name: "Basics",  desc: "Let users review the story foundation before visual generation begins." },
-                  { num: "03", name: "Visuals", desc: "Turn AI output into selectable options, not a single verdict." },
-                  { num: "04", name: "Edit",    desc: "Keep preview, controls, references, inpainting, and version history in one workspace." },
-                  { num: "05", name: "Manage",  desc: "Give users a clear place to organize, export, and continue projects." },
+                  { num: "01", name: "Input",   question: "What am I trying to make?",              desc: "Capture creative intent before asking for detailed production choices." },
+                  { num: "02", name: "Basics",  question: "Is the story direction right?",           desc: "Let users review the story foundation before visual generation begins." },
+                  { num: "03", name: "Visuals", question: "Which assets match my intent?",           desc: "Turn AI output into selectable options, not a single verdict." },
+                  { num: "04", name: "Edit",    question: "How do I refine without losing context?", desc: "Keep preview, controls, references, inpainting, and version history in one workspace." },
+                  { num: "05", name: "Manage",  question: "Where does this project live next?",      desc: "Give users a clear place to organize, export, and continue projects." },
                 ] as const
               ).map((stage) => (
                 <div
                   key={stage.name}
-                  className="flex flex-1 flex-col py-6 first:pt-0 last:pb-0 md:py-0 md:first:pl-0 md:last:pr-0 md:[&:not(:first-child)]:pl-6 md:[&:not(:last-child)]:pr-6 lg:[&:not(:first-child)]:pl-8 lg:[&:not(:last-child)]:pr-8"
+                  className="flex flex-1 flex-col py-5 first:pt-0 last:pb-0 xl:py-0 xl:first:pl-0 xl:last:pr-0 xl:[&:not(:first-child)]:pl-5 xl:[&:not(:last-child)]:pr-5"
                 >
-                  <div className="mb-4 h-px w-6 bg-violet-400/45" />
+                  <div className="mb-3 h-px w-6 bg-violet-400/45" />
                   <span className="font-mono text-[10px] tabular-nums text-violet-400/50">{stage.num}</span>
-                  <p className="mt-2 text-[15px] tracking-[-0.012em] text-textPrimary">{stage.name}</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-textSecondary/80">{stage.desc}</p>
+                  <p className="mt-2 text-[14px] tracking-[-0.012em] text-textPrimary">{stage.name}</p>
+                  <p className="mt-1 text-[11px] italic leading-snug text-textSecondary/55">&ldquo;{stage.question}&rdquo;</p>
+                  <p className="mt-2 text-[12px] leading-relaxed text-textSecondary/80">{stage.desc}</p>
                 </div>
               ))}
             </div>
 
-            {/* IA table */}
-            <div className="mt-16 md:mt-20">
-              <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
-                Information architecture decisions
-              </p>
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[48rem] border-collapse text-left text-[13px]">
-                  <thead>
-                    <tr className="border-b border-black/[0.06] bg-zinc-50/70">
-                      {(["Stage", "User question", "IA decision", "Interaction pattern"] as const).map((h) => (
-                        <th key={h} className="px-4 py-3 font-mono text-[10px] font-normal uppercase tracking-[0.13em] text-textSecondary/65">
-                          {h}
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-black/[0.04]">
-                    {(
-                      [
-                        ["Input",   "What am I trying to make?",              "Capture creative intent first",                            "Prompt field + project setup"],
-                        ["Basics",  "Is the story direction right?",           "Add a review checkpoint before visual generation",         "Editable summary cards"],
-                        ["Visuals", "Which assets match my intent?",           "Show multiple options instead of one output",              "Selectable variations"],
-                        ["Edit",    "How do I refine without losing context?", "Keep controls, preview, references, and history together", "Unified editing workspace"],
-                        ["Manage",  "Where does this project live next?",      "Separate organization and export from creation",           "Project library + export structure"],
-                      ] as const
-                    ).map(([stage, question, decision, pattern]) => (
-                      <tr key={stage} className="transition-colors duration-200 hover:bg-violet-500/[0.025]">
-                        <td className="px-4 py-3.5 align-top">
-                          <span className="font-mono text-[11px] text-violet-700/70">{stage}</span>
-                        </td>
-                        <td className="px-4 py-3.5 align-top leading-relaxed text-textSecondary/85">{question}</td>
-                        <td className="px-4 py-3.5 align-top leading-relaxed text-textPrimary/80">{decision}</td>
-                        <td className="px-4 py-3.5 align-top leading-relaxed text-textSecondary/70">{pattern}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            </div>
           </Reveal>
         </section>
 
@@ -1516,26 +1475,9 @@ export default function StudioEngineCaseStudy() {
             <SectionTitle>Ask Genie</SectionTitle>
             <Prose className="mt-10">
               <p>
-                Embedded in context, not summoned from a menu — at the five moments users most lose confidence:
+                We first introduced hover states to explain interaction logic while the new workflow was still unfamiliar. They worked as a lightweight bridge, but they were a temporary scaffold rather than a true teaching system. To make guidance persistent and contextual, we evolved this pattern into Genie: an agent layer that helps users navigate pages, surfaces what&apos;s possible, explains unfamiliar tools like Inpainting in the moment, and suggests what to do next as confidence grows.
               </p>
             </Prose>
-            <div className="mt-10 grid gap-3 sm:grid-cols-2 md:mt-12 lg:grid-cols-3">
-              {[
-                { moment: "Before committing a script", detail: "Confirm intent before AI locks structure." },
-                { moment: "After a weak generation", detail: "Prompt hint, not just a regenerate button." },
-                { moment: "When comparing variations", detail: "Name the difference." },
-                { moment: "When a term needs defining", detail: "Explain at the moment it appears." },
-                { moment: "Before the next edit", detail: "Suggest the next controllable move." },
-              ].map((item) => (
-                <div
-                  key={item.moment}
-                  className="bg-white px-5 py-5 transition-[box-shadow] duration-300 hover:shadow-[0_4px_20px_-8px_rgba(0,0,0,0.08)]"
-                >
-                  <p className="text-[13px] leading-snug text-textPrimary">{item.moment}</p>
-                  <p className="mt-2 text-[13px] leading-relaxed text-textSecondary/85">{item.detail}</p>
-                </div>
-              ))}
-            </div>
           </Reveal>
 
         </section>
@@ -1556,17 +1498,17 @@ export default function StudioEngineCaseStudy() {
             <div className="mt-10 grid grid-cols-2 grid-rows-2">
               {(
                 [
-                  { title: "Options, not verdicts", body: "AI should return choices, not one final answer.", pad: "pb-9 pr-9 md:pb-12 md:pr-12" },
-                  { title: "History, not overwrite", body: "Every generation should be recoverable.", pad: "pb-9 pl-9 md:pb-12 md:pl-12" },
-                  { title: "One workspace, not scattered pages", body: "Editing should stay in context.", pad: "pt-9 pr-9 md:pt-12 md:pr-12" },
-                  { title: "Progress, not waiting", body: "Generation should feel active, not frozen.", pad: "pt-9 pl-9 md:pt-12 md:pl-12" },
+                  { title: "Options, not verdicts", body: "AI should return choices, not one final answer.", pad: "pb-8 pr-8 md:pb-10 md:pr-10" },
+                  { title: "History, not overwrite", body: "Every generation should be recoverable.", pad: "pb-8 pl-8 md:pb-10 md:pl-10" },
+                  { title: "One workspace", body: "Editing should stay in context.", pad: "pt-8 pr-8 md:pt-10 md:pr-10" },
+                  { title: "Progress, not waiting", body: "Generation should feel active, not frozen.", pad: "pt-8 pl-8 md:pt-10 md:pl-10" },
                 ] as const
               ).map((o) => (
                 <div key={o.title} className={o.pad}>
-                  <h4 className="font-display text-[1.125rem] font-light leading-snug tracking-[-0.02em] text-textPrimary md:text-[1.25rem]">
+                  <h4 className="font-display text-[1rem] font-light leading-snug tracking-[-0.02em] text-textPrimary md:text-[1.125rem]">
                     {o.title}
                   </h4>
-                  <p className="mt-3 text-[14px] leading-relaxed text-textSecondary/80">{o.body}</p>
+                  <p className="mt-2 text-[13px] leading-relaxed text-textSecondary/80">{o.body}</p>
                 </div>
               ))}
             </div>
