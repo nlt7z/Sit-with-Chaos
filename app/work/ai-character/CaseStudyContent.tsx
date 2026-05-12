@@ -105,6 +105,7 @@ function SiteVideoPreviewFrame({
           className="h-auto w-full max-h-[min(72vh,780px)] min-h-[280px] object-contain md:max-h-[min(68vh,860px)] md:min-h-[360px]"
           controls
           playsInline
+          muted
           preload="metadata"
           aria-label={title}
         >
@@ -298,6 +299,7 @@ function ShowcaseVideo({
           className={`h-auto w-full object-contain ${mediaRound}`}
           controls
           playsInline
+          muted={startMuted}
           preload={preload}
           poster={poster}
           autoPlay={autoPlay}

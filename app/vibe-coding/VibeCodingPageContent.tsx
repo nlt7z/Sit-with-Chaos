@@ -1,23 +1,8 @@
 "use client";
 
-import { ProjectCard, type Project } from "@/components/ProjectCard";
 import { TurntableWidget } from "@/components/TurntableWidget";
 import { VibeCodingShowrooms } from "@/components/VibeCodingShowrooms";
 import Link from "next/link";
-
-const apsaraWebsiteDesign: Project = {
-  slug: "apsara-conference",
-  title: "Apsara Conference — Alibaba AI on Cloud",
-  description:
-    "Crafted a cohesive visual system for Alibaba Cloud's flagship AI summit across keynote storytelling, event touchpoints, and digital assets.",
-  media: {
-    src: "/assets/work/apsara.mp4",
-    alt: "Preview video for Apsara Conference — Alibaba AI on Cloud",
-    type: "video",
-  },
-  layout: "default",
-  imageSizes: "(min-width: 768px) min(72rem, 100vw), 100vw",
-};
 
 export function VibeCodingPageContent() {
   return (
@@ -45,16 +30,15 @@ export function VibeCodingPageContent() {
         <h2 className="font-display text-xl font-light lowercase tracking-[-0.01em] text-textPrimary md:text-2xl">
           website design
         </h2>
-        <div className="mt-8">
-          <ProjectCard project={apsaraWebsiteDesign} />
-        </div>
-        <div className="mt-3 flex justify-end px-0.5">
-          <Link
-            href="/work/apsara-conference"
-            className="text-[13px] text-textPrimary underline underline-offset-4 transition-opacity hover:opacity-60"
-          >
-            Case study →
-          </Link>
+        <div className="mt-8 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm">
+          <video
+            className="h-full w-full object-cover"
+            src="/assets/work/apsara.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+          />
         </div>
         <div className="mt-10 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm md:mt-12" style={{ aspectRatio: "1728/1117", minHeight: "280px" }}>
           <iframe

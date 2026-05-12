@@ -2,87 +2,56 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
-import { PortfolioCard } from "./widgets/PortfolioCard";
+import { GlassPortfolioCard } from "./widgets/GlassPortfolioCard";
 
 /* ── items catalogue ─────────────────────────────────────────── */
 const ITEMS = [
   {
-    id: "2025-05-10",
+    id: "2025-05-11",
     day: 1,
-    date: "May 10",
-    tag: "Fintech · Widget",
-    title: "Portfolio Card",
-    renderContent: () => (
-      <div className="relative">
-        {/* Sky image — same shape as card, slightly larger so it peeks out */}
-        <div
-          className="absolute overflow-hidden rounded-[32px]"
-          style={{ inset: "-10px", zIndex: 0 }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/assets/daily/sky-bg.png"
-            alt=""
-            className="w-full h-full object-cover"
-          />
-          {/* Blue-purple overall tint + bottom boost */}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(160deg, rgba(55,80,175,0.50) 0%, rgba(70,95,195,0.45) 50%, rgba(45,65,170,0.55) 100%)",
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "linear-gradient(to top, rgba(30,55,170,0.65) 0%, transparent 60%)",
-            }}
-          />
+    date: "May 11",
+    tag: "Glassmorphism · Framer Motion",
+    title: "Glass Portfolio Card",
+    renderContent: (isActive: boolean) => (
+      <div className="relative" style={{ padding: 20 }}>
+        {/* Mesh image and color fields for vivid glass refraction */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute left-1/2 bottom-1/2 w-1/2 aspect-square -translate-x-1/2 overflow-hidden">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/assets/daily/glass-card-bg-muted.png"
+              alt=""
+              className="w-full h-full object-cover"
+              style={{ objectPosition: "50% 50%" }}
+            />
+            <div
+              className="absolute inset-0"
+              style={{
+                background:
+                  "radial-gradient(56% 62% at 20% 72%, rgba(15, 23, 42, 0.58) 0%, rgba(15,23,42,0.14) 52%, rgba(15,23,42,0) 100%), radial-gradient(42% 48% at 78% 22%, rgba(30, 27, 75, 0.52) 0%, rgba(30,27,75,0.10) 60%, rgba(30,27,75,0) 100%), radial-gradient(28% 34% at 60% 58%, rgba(251,191,36,0.15) 0%, rgba(251,191,36,0) 100%), linear-gradient(160deg, rgba(30,58,138,0.28) 0%, rgba(67,56,202,0.22) 46%, rgba(56,189,248,0.18) 100%)",
+              }}
+            />
+          </div>
         </div>
-        <div style={{ position: "relative", zIndex: 1 }}>
-          <PortfolioCard />
+        <div className="relative z-10">
+          <div
+            style={{
+              display: "inline-flex",
+              padding: 14,
+              borderRadius: 30,
+              background:
+                "linear-gradient(165deg, rgba(196, 223, 255, 0.72) 0%, rgba(175, 208, 255, 0.60) 46%, rgba(162, 200, 255, 0.54) 100%)",
+              border: "1px solid rgba(255,255,255,0.35)",
+            }}
+          >
+            <GlassPortfolioCard isActive={isActive} />
+          </div>
         </div>
       </div>
     ),
   },
-  {
-    id: "2025-05-11",
-    day: 2,
-    date: "May 11",
-    tag: "—",
-    title: "Coming tomorrow",
-    renderContent: null,
-  },
-  {
-    id: "2025-05-12",
-    day: 3,
-    date: "May 12",
-    tag: "—",
-    title: "Coming soon",
-    renderContent: null,
-  },
-] as const;
+];
 
-/* ── placeholder item ────────────────────────────────────────── */
-function PlaceholderItem({ day, date }: { day: number; date: string }) {
-  return (
-    <div
-      className="flex flex-col items-center justify-center"
-      style={{
-        width: 110,
-        height: 148,
-        border: "1.5px dashed rgba(0,0,0,0.1)",
-        borderRadius: 18,
-        background: "#fafafa",
-      }}
-    >
-      <span className="font-mono text-[9px] text-black/20 tracking-[0.2em] uppercase mb-1">
-        DAY {String(day).padStart(2, "0")}
-      </span>
-      <span className="font-mono text-[11px] text-black/30">{date}</span>
-    </div>
-  );
-}
 
 /* ── iPod-style click wheel ──────────────────────────────────── */
 function ClickWheel({
@@ -240,11 +209,7 @@ export default function DailyPracticePage() {
                   zIndex: dist === 0 ? 10 : 5 - dist,
                 }}
               >
-                {item.renderContent ? (
-                  item.renderContent()
-                ) : (
-                  <PlaceholderItem day={item.day} date={item.date} />
-                )}
+                {item.renderContent(i === active)}
               </div>
             );
           })}
