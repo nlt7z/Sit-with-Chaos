@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useMotionValue, useSpring } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 
@@ -16,38 +16,41 @@ const FADE = { hidden: { opacity: 0 },        show: { opacity: 1,       transiti
 const LR_DECK =
   "mx-auto grid w-full max-w-[min(88rem,100%)] gap-8 md:gap-x-10 md:gap-y-8 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.58fr)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.72fr)]";
 
-// ─── Slide registry (31 slides · 11 chapters) ────────────────────────────────
+// ─── Slide registry (34 slides · 12 chapters) ────────────────────────────────
 const SLIDES = [
   { id: "cover",              chapter: "Opening",      dark: true  },
   { id: "hook",               chapter: "Opening",      dark: false },
   { id: "problem",            chapter: "Problem",      dark: true  },
   { id: "before",             chapter: "Problem",      dark: true  },
-  { id: "research",           chapter: "Research",     dark: false },
-  { id: "hmw",                chapter: "Strategy",     dark: false },
-  { id: "strategy",           chapter: "Strategy",     dark: false },
-  { id: "uxstrategy",         chapter: "Strategy",     dark: false },
-  { id: "ai",                 chapter: "Strategy",     dark: false },
-  { id: "heartbeat",          chapter: "Interactions", dark: false },
-  { id: "heartbeat-logic",    chapter: "Interactions", dark: false },
-  { id: "altuniv",            chapter: "Interactions", dark: false },
-  { id: "altuniv-logic",      chapter: "Interactions", dark: false },
-  { id: "storyunlock",        chapter: "Interactions", dark: false },
-  { id: "storyunlock-logic",  chapter: "Interactions", dark: false },
-  { id: "moments",            chapter: "Interactions", dark: false },
-  { id: "moments-logic",      chapter: "Interactions", dark: false },
-  { id: "exploop",            chapter: "Interactions", dark: true  },
-  { id: "astrology",          chapter: "Showrooms",    dark: false },
-  { id: "therapy",            chapter: "Showrooms",    dark: false },
+  { id: "decision-01-title",  chapter: "Decision 01",  dark: true  },
+  { id: "showrooms-thesis",   chapter: "Decision 01",  dark: false },
+  { id: "visibilities",       chapter: "Decision 01",  dark: false },
+  { id: "decision-02-title",  chapter: "Decision 02",  dark: false },
+  { id: "heartbeat",          chapter: "Decision 02",  dark: false },
+  { id: "heartbeat-logic",    chapter: "Decision 02",  dark: false },
+  { id: "altuniv",            chapter: "Decision 02",  dark: false },
+  { id: "altuniv-logic",      chapter: "Decision 02",  dark: false },
+  { id: "storyunlock",        chapter: "Decision 02",  dark: false },
+  { id: "storyunlock-logic",  chapter: "Decision 02",  dark: false },
+  { id: "moments",            chapter: "Decision 02",  dark: false },
+  { id: "moments-logic",      chapter: "Decision 02",  dark: false },
+  { id: "astro-profile",      chapter: "Decision 02",  dark: false },
+  { id: "therapy-analysis",   chapter: "Decision 02",  dark: false },
+  { id: "decision-03-title",  chapter: "Decision 03",  dark: true  },
+  { id: "inspire-continue",   chapter: "Decision 03",  dark: true  },
+  { id: "code-sidebar",       chapter: "Decision 03",  dark: false },
   { id: "showrooms",          chapter: "Showrooms",    dark: true  },
-  { id: "devtools",           chapter: "Craft",        dark: false },
-  { id: "decisions",          chapter: "Craft",        dark: false },
-  { id: "craft",              chapter: "Craft",        dark: false },
+  { id: "how-i-worked",       chapter: "Method",       dark: false },
+  { id: "ai-tools",           chapter: "Method",       dark: false },
   { id: "backend",            chapter: "Craft",        dark: false },
-  { id: "prototype-romance", chapter: "Live",         dark: false },
-  { id: "prototype-astro",   chapter: "Live",         dark: false },
+  { id: "spark-design",       chapter: "Craft",        dark: false },
+  { id: "prototype-romance",  chapter: "Live",         dark: false },
+  { id: "prototype-astro",    chapter: "Live",         dark: false },
   { id: "prototype-therapy",  chapter: "Live",         dark: false },
   { id: "metrics",            chapter: "Impact",       dark: true  },
-  { id: "reflect",            chapter: "Reflection",   dark: false },
+  { id: "metrics-method",     chapter: "Impact",       dark: true  },
+  { id: "principles",         chapter: "Principles",   dark: false },
+  { id: "takeaways",          chapter: "Principles",   dark: false },
   { id: "closing",            chapter: "Closing",      dark: false },
 ] as const;
 
@@ -83,19 +86,22 @@ function Mask({ children, delay = 0, className = "" }: { children: ReactNode; de
 }
 
 // ─── Count-up ─────────────────────────────────────────────────────────────────
-function CountUp({ to, suffix = "", prefix = "" }: { to: number; suffix?: string; prefix?: string }) {
+function CountUp({
+  to, suffix = "", prefix = "", startDelay = 320, duration = 1100,
+}: { to: number; suffix?: string; prefix?: string; startDelay?: number; duration?: number }) {
   const [n, setN] = useState(0);
   useEffect(() => {
     let frame: number;
-    const dur = 900; const start = performance.now();
+    let start = 0;
     const tick = (ts: number) => {
-      const t = Math.min((ts - start) / dur, 1);
+      if (!start) start = ts;
+      const t = Math.min((ts - start) / duration, 1);
       setN(Math.round((1 - Math.pow(1 - t, 3)) * to));
       if (t < 1) frame = requestAnimationFrame(tick);
     };
-    const tid = window.setTimeout(() => { frame = requestAnimationFrame(tick); }, 320);
+    const tid = window.setTimeout(() => { frame = requestAnimationFrame(tick); }, startDelay);
     return () => { clearTimeout(tid); cancelAnimationFrame(frame); };
-  }, [to]);
+  }, [to, startDelay, duration]);
   return <>{prefix}{n}{suffix}</>;
 }
 
@@ -220,7 +226,7 @@ function SlideCover() {
               ))}
             </div>
             <motion.p variants={UP} className={`mt-5 max-w-xl ${BODY} text-[14px] leading-[1.65] text-white/[0.96] md:mt-6 md:text-[15px]`}>
-              Turned static cloud docs into interactive LLM-powered experiences. After go-live, model token and call traffic averaged about double the four-week pre-launch baseline.
+              Turned static cloud docs into 4 interactive showrooms — guided workflows for enterprise buyers. Post-launch model API call volume lifted ~2× over the four-week pre-launch baseline, validated through internal usage analytics.
             </motion.p>
           </div>
           <div className="min-w-0 lg:flex lg:flex-col lg:justify-end">
@@ -284,6 +290,9 @@ function SlideProblem() {
           <motion.p variants={UP} className={`mt-7 ${BODY} text-[15px] text-white/[0.96]`}>
             Users had to read, set up, run samples, and interpret output on their own. Most trial users left before reaching the moment of value.
           </motion.p>
+          <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light italic leading-relaxed text-[#C8FF47]/85">
+            So I shifted the product from documentation to proof.
+          </motion.p>
         </div>
         <motion.div variants={UP} className="space-y-4">
           <div className="rounded-2xl border border-white/[0.1] bg-white/[0.04] px-6 py-6">
@@ -334,8 +343,8 @@ function SlideBefore() {
   );
 }
 
-// §04 Research
-function SlideResearch() {
+// §05 Showrooms Thesis (merges research + HMW)
+function SlideShowroomsThesis() {
   const rows = [
     { finding: "Feels like another ChatGPT",        evidence: "6 apps · 40+ reviews",      response: "Two-layer immersion" },
     { finding: "Feel it, don't read about it",      evidence: "Memory & pacing invisible",  response: "Visible proof moments" },
@@ -357,8 +366,14 @@ function SlideResearch() {
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-5 ${BODY} text-[14px] text-[#5A5A5A]`}>
-            Skipped B2B competitors, went straight to consumer apps like Character.AI. The pattern was consistent across every product tested.
+            6 apps, 40+ reviews — every competitor felt like another ChatGPT. The answer was one vertical per room, built for the evaluator who already works there.
           </motion.p>
+          <motion.div variants={UP} className="mt-7 border-l-2 border-[#0A0A0A]/15 pl-4">
+            <p className={`${EYE} text-[#9A9A9A]`}>How might we</p>
+            <p className="mt-3 font-display text-[16.5px] font-light italic leading-[1.4] tracking-[-0.012em] text-[#0A0A0A]">
+              Make model capabilities visible, testable, and trustworthy — within minutes?
+            </p>
+          </motion.div>
         </div>
         <motion.div variants={UP} className="min-w-0">
           <div className="overflow-hidden rounded-xl bg-white ring-1 ring-black/[0.07]">
@@ -385,54 +400,55 @@ function SlideResearch() {
   );
 }
 
-// §05 HMW
-function SlideHMW() {
+// §04 Decision 01 Title
+function SlideDecision01Title() {
   return (
-    <section className="flex h-full flex-col items-start justify-center bg-[#F7F5F0] px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="max-w-3xl">
-        <motion.div variants={FADE}><Eye>How Might We</Eye></motion.div>
+    <section className="flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
+      <motion.div variants={STG} initial="hidden" animate="show" className="max-w-4xl">
+        <motion.div variants={FADE}><Eye dark>Decision 01</Eye></motion.div>
         <Mask delay={0.1}>
-          <h2 className="mt-7 font-display font-light leading-[1.1] tracking-[-0.03em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.8rem, 4vw, 3.4rem)" }}>
-            Make model capabilities visible, testable, and trustworthy — within the first three minutes?
+          <h2 className="mt-6 font-display font-light leading-[1.08] tracking-[-0.032em] text-white"
+            style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>
+            I designed 4 interactive web showrooms — guided workflows for enterprise buyers.
           </h2>
         </Mask>
-        <motion.div variants={UP} className="mt-9 max-w-xl">
-          <p className={`${BODY} text-[15px] text-[#5A5A5A]`}>
-            Instead of explaining capabilities, let customers see a working version of their own future product. Each showroom is a market-specific prototype — built to prove, not to present.
-          </p>
-        </motion.div>
+        <motion.p variants={UP} className={`mt-8 max-w-2xl ${BODY} text-[15.5px] text-white/[0.92]`}>
+          Instead of improving documentation, I built 4 market-specific showrooms — companionship, psychotherapy, character cloning, IP licensing — that let evaluators experience a working version of their own future product.
+        </motion.p>
       </motion.div>
     </section>
   );
 }
 
-// §06 Strategy
-function SlideStrategy() {
-  const cards = [
-    { n: "01", title: "Market-back character definition", body: "Character.AI's creator landscape skews romance-heavy. B2B signals pointed to real-person digital replica. Companionship, therapy, persona replication, licensed IP — each a distinct entry point." },
-    { n: "02", title: "Capability-to-scenario mapping",   body: "Each showroom surfaces one model strength: memory callbacks in romance, live updates in astrology, visible analysis in therapy. One capability → one proof moment." },
-    { n: "03", title: "Reusable template for customers",  body: "Showrooms designed to be cloned, configured, and shipped — not one-time pitch artifacts. Every decision was made with reusability as a hard constraint." },
+// §06 Visibilities (bridge — what makes AI hard)
+function SlideVisibilities() {
+  const items = [
+    { type: "Memory visibility",          detail: "The system recalls and updates personal context in the flow." },
+    { type: "Analysis visibility",        detail: "The system shows what it understands while the conversation continues." },
+    { type: "Implementation visibility",  detail: "The system exposes prompts, YAML, and constraints beside the live demo." },
   ];
   return (
-    <section className="flex h-full flex-col justify-center bg-[#F7F5F0] px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show">
-        <motion.div variants={FADE}><Eye>Product Strategy</Eye></motion.div>
+    <section className="flex h-full items-center justify-center bg-[#F7F5F0] px-12 md:px-20">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>What makes AI experiences hard</Eye></motion.div>
         <Mask delay={0.1}>
-          <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.5rem, 3vw, 2.4rem)" }}>
-            From explaining the model to showing their future product.
+          <h2 className="mt-6 font-display font-light leading-[1.1] tracking-[-0.03em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.5rem)" }}>
+            My job was to turn invisible model behavior into visible product surfaces.
           </h2>
         </Mask>
+        <motion.p variants={UP} className={`mt-6 max-w-2xl ${BODY} text-[14.5px] text-[#5A5A5A]`}>
+          Users judge whether they understand what the system knows, why it responds, and how much control they still have. So I designed three forms of visibility:
+        </motion.p>
         <motion.div variants={UP} className="mt-8 grid gap-4 md:grid-cols-3">
-          {cards.map((c, i) => (
-            <motion.div key={c.n}
-              initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.72, ease: E, delay: 0.22 + i * 0.11 }}
-              className="rounded-2xl bg-white px-6 py-6 ring-1 ring-black/[0.06] hover:shadow-[0_14px_40px_-10px_rgba(0,0,0,0.1)] transition-shadow duration-500">
-              <span className={`${EYE} text-[#C8FF47]`}>{c.n}</span>
-              <p className="mt-3 font-display text-[1.0rem] font-light leading-snug tracking-tight text-[#0A0A0A]">{c.title}</p>
-              <p className="mt-2.5 font-sans text-[13px] leading-[1.72] text-[#5A5A5A]">{c.body}</p>
+          {items.map((it, i) => (
+            <motion.div key={it.type}
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.72, ease: E, delay: 0.24 + i * 0.1 }}
+              className="rounded-2xl bg-white px-6 py-6 ring-1 ring-black/[0.06]">
+              <p className={`${EYE} text-[#C8FF47]`}>{String(i + 1).padStart(2, "0")}</p>
+              <p className="mt-3 font-display text-[1rem] font-light text-[#0A0A0A]">{it.type}</p>
+              <p className="mt-2.5 font-sans text-[13px] leading-[1.72] text-[#5A5A5A]">{it.detail}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -441,61 +457,69 @@ function SlideStrategy() {
   );
 }
 
-// §07 UX Strategy
-function SlideUXStrategy() {
-  const rooms = [
-    { tab: "Romance",   cap: "Long-term memory",         proof: "Character recalls conversation specifics across sessions — name, mood, shared history", color: "#C8FF47", fg: "#0A0A0A" },
-    { tab: "Astrology", cap: "Real-time memory updates",  proof: "Live constellation profile updates mid-conversation — memory becomes transparent",     color: "#7B6CF4", fg: "#fff"    },
-    { tab: "Therapy",   cap: "Real-time analysis",        proof: "Expert panel surfaces themes as you chat — visible reasoning alongside conversation",   color: "#4ABFBF", fg: "#0A0A0A" },
+// §07 Decision 02 Title — 5 features overview
+function SlideDecision02Title() {
+  const features = [
+    { n: "01", scope: "Decision 02 / Romance",   name: "Romance suite",                  detail: "Long-term memory · 4 design moments" },
+    { n: "02", scope: "Decision 02 / Astrology", name: "Astro constellation profile",    detail: "Live memory updates" },
+    { n: "03", scope: "Decision 02 / Therapy",   name: "Therapy analysis rail",          detail: "Real-time visible reasoning" },
+    { n: "04", scope: "Decision 03 / Global",    name: "Guided scenario flow",           detail: "Inspire + Continue Response" },
+    { n: "05", scope: "Decision 03 / Global",    name: "Developer-facing code sidebar",  detail: "YAML + prompts beside the demo" },
   ];
   return (
-    <section className="flex h-full flex-col justify-center bg-white px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show">
-        <motion.div variants={FADE}><Eye>UX Strategy · One Capability = One Proof Moment</Eye></motion.div>
+    <section className="flex h-full flex-col justify-center overflow-hidden bg-[#F7F5F0] px-12 md:px-20">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>Decision 02</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
-            Each showroom demonstrates a single, undeniable model strength.
+          <h2 className="mt-5 font-display font-light leading-[1.1] tracking-[-0.03em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.8rem, 3.6vw, 2.8rem)" }}>
+            5 supporting features cut time-to-first-value from 60+ minutes to under 2 minutes.
           </h2>
         </Mask>
-        <motion.div variants={UP} className="mt-8 grid gap-4 md:grid-cols-3">
-          {rooms.map((r, i) => (
-            <motion.div key={r.tab}
-              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: E, delay: 0.2 + i * 0.1 }}
-              className="rounded-2xl bg-[#F7F5F0] px-6 py-6 ring-1 ring-black/[0.05]">
-              <span className="inline-block rounded px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.16em]"
-                style={{ background: r.color, color: r.fg }}>{r.tab}</span>
-              <p className="mt-4 font-sans text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#AEAEB2]">Model strength</p>
-              <p className="mt-1.5 font-display text-[1rem] font-light leading-snug text-[#0A0A0A]">{r.cap}</p>
-              <p className="mt-4 font-sans text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#AEAEB2]">Proof in experience</p>
-              <p className="mt-1.5 font-sans text-[13px] leading-[1.68] text-[#5A5A5A]">{r.proof}</p>
-            </motion.div>
-          ))}
+        <motion.p variants={UP} className={`mt-6 max-w-2xl ${BODY} text-[14.5px] text-[#5A5A5A]`}>
+          Three model strengths in one chat window — none landed. So I split them across rooms: Romance for memory callbacks, Astrology for live updates, Therapy for real-time analysis. One proof moment per room, plus two global features.
+        </motion.p>
+        <motion.div variants={UP} className="mt-7 overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.07]">
+          <div className="divide-y divide-black/[0.05]">
+            {features.map((f, i) => (
+              <motion.div key={f.n}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, ease: E, delay: 0.28 + i * 0.07 }}
+                className="grid grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.4fr)] items-center gap-3 px-5 py-3 md:gap-5 md:px-7">
+                <span className="font-mono text-[12px] font-medium text-[#C8FF47]">{f.n}</span>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#9A9A9A]">{f.scope}</p>
+                <p className="font-display text-[14.5px] font-light tracking-tight text-[#0A0A0A]">{f.name}</p>
+                <p className="font-sans text-[12.5px] leading-snug text-[#6A6A6A]">{f.detail}</p>
+              </motion.div>
+            ))}
+          </div>
         </motion.div>
       </motion.div>
     </section>
   );
 }
 
-// §08 AI in process
-function SlideAI() {
+// §23 How I Worked — AI workflow
+function SlideHowIWorked() {
   const steps = [
-    { n: "01", label: "Constraint first",  body: "What does 'immersion' look like technically? One-page constraint doc before touching Figma." },
-    { n: "02", label: "AI generation",     body: "\"Warm ambient lighting, subtle motion, emotional presence.\" Tools: Wan · Kling · Dreamnia · SeeDance." },
-    { n: "03", label: "Output review",     body: "40+ generated concepts → 3 character directions. Evaluated on: does a person feel present here?" },
-    { n: "04", label: "Design judgment",   body: "AI looping video over 3D avatar. Lighter, crash-free. Small motions felt more alive than complex rigging." },
+    { n: "01", label: "Strategy",         body: "Stress-test market positioning against competitor patterns and team capacity.", tool: "Claude · ChatGPT" },
+    { n: "02", label: "Visual direction", body: "40+ generated concepts → 3 character directions in 72 hours.",                  tool: "Wan · Kling · Dreamnia · SeeDance" },
+    { n: "03", label: "Motion",           body: "Looping video over 3D avatar — lighter, more alive, crash-free.",                tool: "After Effects · AI loops" },
+    { n: "04", label: "Code-ready",       body: "Components engineers merged with minimal revision — design to PR.",              tool: "Cursor · Claude Code · React" },
   ];
   return (
     <section className="flex h-full flex-col justify-center bg-white px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show">
-        <motion.div variants={FADE}><Eye>AI in My Process</Eye></motion.div>
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>How I Worked</Eye></motion.div>
         <Mask delay={0.1}>
           <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
             style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.2rem)" }}>
-            How AI tools shaped decisions — not just outputs.
+            AI changed how I shipped — not just how I made assets.
           </h2>
         </Mask>
+        <motion.p variants={UP} className={`mt-5 max-w-2xl ${BODY} text-[14.5px] text-[#5A5A5A]`}>
+          AI compressed the distance between strategy, visual direction, motion, and implementation — and let one designer deliver production-adjacent interfaces to engineers.
+        </motion.p>
         <motion.div variants={UP} className="mt-9 grid gap-0 md:grid-cols-4">
           {steps.map((s, i) => (
             <motion.div key={s.n}
@@ -505,6 +529,7 @@ function SlideAI() {
               <p className={`${EYE} text-[#C8FF47]`}>{s.n}</p>
               <p className="mt-3 font-sans text-[12px] font-semibold uppercase tracking-[0.1em] text-[#0A0A0A]">{s.label}</p>
               <p className="mt-2 font-sans text-[13px] leading-[1.72] text-[#5A5A5A]">{s.body}</p>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#9A9A9A]">{s.tool}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -519,11 +544,11 @@ function SlideHeartbeat() {
     <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Interaction 02 · Romance Room</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 1 of 4 · Heartbeat Power</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Heartbeat Power: the inner-monologue reveal.
+              The inner-monologue reveal.
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
@@ -557,7 +582,7 @@ function SlideHeartbeatLogic() {
     <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
       <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
         <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Interaction 02 · Model Workflow</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 1 of 4 · Model Workflow</Eye></motion.div>
           <Mask delay={0.08}>
             <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
@@ -581,7 +606,7 @@ function SlideAltUniv() {
     <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Interaction 01 · Alternate Universe</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 2 of 4 · Alternate Universe</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
@@ -617,7 +642,7 @@ function SlideAltUnivLogic() {
     <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
       <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
         <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Interaction 01 · Model Workflow</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 2 of 4 · Model Workflow</Eye></motion.div>
           <Mask delay={0.08}>
             <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
@@ -641,7 +666,7 @@ function SlideStoryUnlock() {
     <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Interaction 03 · Story Unlock</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 3 of 4 · Story Unlock</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
@@ -677,7 +702,7 @@ function SlideStoryUnlockLogic() {
     <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
       <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
         <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Interaction 03 · Model Workflow</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 3 of 4 · Model Workflow</Eye></motion.div>
           <Mask delay={0.08}>
             <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
@@ -701,7 +726,7 @@ function SlideMoments() {
     <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Interaction 04 · Moments Feed</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 4 of 4 · Moments Feed</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
@@ -737,7 +762,7 @@ function SlideMomentsLogic() {
     <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
       <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
         <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Interaction 04 · Model Workflow</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 4 of 4 · Model Workflow</Eye></motion.div>
           <Mask delay={0.08}>
             <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
@@ -755,13 +780,13 @@ function SlideMomentsLogic() {
   );
 }
 
-// §17 Experience Loop
-function SlideExpLoop() {
+// §19 Inspire / Continue · Feature 04 / 5
+function SlideInspireContinue() {
   return (
     <section className="flex h-full items-center overflow-hidden bg-[#050507] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye dark>Experience Loop · First 3 Minutes</Eye></motion.div>
+          <motion.div variants={FADE}><Eye dark>Feature 04 / 5 · Guided Scenario Flow</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light leading-[1.1] tracking-[-0.028em] text-white"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
@@ -789,21 +814,21 @@ function SlideExpLoop() {
   );
 }
 
-// §18 Astrology Showroom
-function SlideAstrology() {
+// §16 Astro Profile · Feature 02 / 5
+function SlideAstroProfile() {
   return (
     <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Astrology Room · Real-time Memory Updates</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 02 / 5 · Astrology · Live Memory Updates</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              A personal constellation file updates live.
+              Every word updates what it knows about you.
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            A personal constellation file updates during conversation — memory becomes transparent and inspectable.
+            A personal constellation file updates during conversation — memory becomes transparent and inspectable. Users see the model assembling them in real time.
           </motion.p>
           <motion.div variants={UP} className="mt-5 border-l-2 border-[#7B6CF4] pl-3">
             <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Design focus</p>
@@ -819,25 +844,29 @@ function SlideAstrology() {
   );
 }
 
-// §19 Therapy Showroom
-function SlideTherapy() {
+// §17 Therapy Analysis · Feature 03 / 5
+function SlideTherapyAnalysis() {
   return (
     <section className="flex h-full items-center bg-white px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Therapy Room · Real-time Analysis</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 03 / 5 · Therapy · Real-Time Analysis</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Visible reasoning alongside conversation.
+              You see what it understood, not just what it said.
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            A live panel surfaces conversation themes — users see what the system understood, not just what it said.
+            A live analysis rail surfaces conversation themes the model parsed — visible reasoning alongside conversation, not just visible reply.
           </motion.p>
           <motion.div variants={UP} className="mt-5 border-l-2 border-[#4ABFBF] pl-3">
             <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Design focus</p>
             <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Parallel transcript + analysis rail so legibility stays high — no static screenshots required</p>
+          </motion.div>
+          <motion.div variants={UP} className="mt-4 rounded-lg border border-black/[0.08] bg-[#F7F5F0] px-3.5 py-2.5">
+            <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#9A9A9A]">Emotional boundary</p>
+            <p className="mt-1.5 font-sans text-[11.5px] leading-snug text-[#6A6A6A]">Therapy room is an analysis-visibility demo. The rail surfaces themes the model parsed — no clinical claims are implied.</p>
           </motion.div>
         </div>
         <motion.div variants={FADE} className="min-w-0">
@@ -861,11 +890,11 @@ function SlideShowrooms() {
     <section className="flex h-full flex-col bg-[#050507] px-8 pb-6 pt-8 md:px-12">
       <motion.div variants={STG} initial="hidden" animate="show">
         <div>
-          <motion.div variants={FADE}><Eye dark>Four Showrooms · One Capability Each</Eye></motion.div>
+          <motion.div variants={FADE}><Eye dark>4 Showrooms · 4 Proof Moments · 1 Template</Eye></motion.div>
           <Mask delay={0.08}>
             <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-white"
               style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
-              Each proving a distinct model capability.
+              Each room turns one model capability into a guided workflow.
             </h2>
           </Mask>
         </div>
@@ -891,21 +920,21 @@ function SlideShowrooms() {
   );
 }
 
-// §21 Developer Tools
-function SlideDevTools() {
+// §20 Code Sidebar · Feature 05 / 5
+function SlideCodeSidebar() {
   return (
     <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Developer Tools · Code Drawer</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Feature 05 / 5 · Developer-Facing Live Code Sidebar</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Shifted &ldquo;Can it?&rdquo;<br />to &ldquo;How fast?&rdquo;
+              YAML, prompts, and constraints slide open beside the live demo.
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            A slide-out code drawer keeps YAML specs, prompts, and constraints beside the live experience — inspect and iterate without leaving the showroom.
+            Evaluators inspect implementation without switching context, then clone the template as a reusable starting point. The room ships as code.
           </motion.p>
           <motion.div variants={UP} className="mt-5 space-y-2.5">
             <div className="rounded-xl bg-[#E8E8E8] px-4 py-3.5">
@@ -927,73 +956,44 @@ function SlideDevTools() {
   );
 }
 
-// §22 Key decisions
-function SlideDecisions() {
-  const decisions = [
-    { n: "01", angle: "Product strategy",     decision: "Showroom over optimizing chat window",  rejected: "Better chat window", chosen: "Pre-seeded showroom — memory, arc, proof from message one", tradeoff: "Constrained entry · guaranteed first impression" },
-    { n: "02", angle: "Production stability", decision: "AI video loop over 3D avatar",           rejected: "3D avatar — crashed mid-demo in webview", chosen: "AI-generated loop — blink, nod, smile · 1/10th load time", tradeoff: "Less interactivity · higher reliability + warmer feel" },
-    { n: "03", angle: "Scope trade-off",      decision: "Features cut for ship",                  rejected: "Voice lip-sync · relationship graphs · character creator", chosen: "4 showrooms shipped on time", tradeoff: "Parked, not abandoned · 4-week constraint" },
-  ];
+// §18 Decision 03 Title
+function SlideDecision03Title() {
   return (
-    <section className="flex h-full flex-col justify-center bg-white px-12 md:px-20">
+    <section className="flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
       <motion.div variants={STG} initial="hidden" animate="show" className="max-w-4xl">
-        <motion.div variants={FADE}><Eye>Design Decisions</Eye></motion.div>
-        <Mask delay={0.08}>
-          <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
-            Where the obvious path would have failed.
+        <motion.div variants={FADE}><Eye dark>Decision 03</Eye></motion.div>
+        <Mask delay={0.1}>
+          <h2 className="mt-6 font-display font-light leading-[1.08] tracking-[-0.03em] text-white"
+            style={{ fontSize: "clamp(1.7rem, 3.4vw, 2.8rem)" }}>
+            The remaining 2 features run across every room — emotional for users, inspectable for builders.
           </h2>
         </Mask>
-        <motion.div variants={UP} className="mt-7 space-y-0">
-          {decisions.map((item, i) => (
-            <motion.div key={item.n}
-              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.68, ease: E, delay: 0.2 + i * 0.1 }}
-              className="grid grid-cols-1 gap-3 border-t border-black/[0.06] py-4 first:border-t-0 first:pt-0 md:grid-cols-[1fr_2fr]">
-              <div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="font-mono text-[10px] font-medium text-[#BDBDBD]">{item.n}</span>
-                  <span className="rounded-full border border-black/[0.09] bg-[#F7F5F0] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#5A5A5A]">{item.angle}</span>
-                </div>
-                <p className="mt-1.5 font-display text-[0.95rem] font-light leading-snug tracking-tight text-[#0A0A0A]">{item.decision}</p>
-              </div>
-              <div className="space-y-1">
-                <div className="flex items-start gap-2">
-                  <span className="mt-px shrink-0 font-mono text-[11px] font-semibold text-red-400/60">×</span>
-                  <p className="font-sans text-[12px] leading-snug text-[#5A5A5A]">{item.rejected}</p>
-                </div>
-                <div className="flex items-start gap-2">
-                  <span className="mt-px shrink-0 font-mono text-[11px] font-semibold text-emerald-600/60">✓</span>
-                  <p className="font-sans text-[12px] leading-snug text-[#0A0A0A]/80">{item.chosen}</p>
-                </div>
-                <div className="flex items-start gap-2 pt-0.5">
-                  <span className="mt-px shrink-0 font-mono text-[11px] text-[#BDBDBD]">→</span>
-                  <p className="font-sans text-[11px] italic leading-snug text-[#BDBDBD]">{item.tradeoff}</p>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </motion.div>
+        <motion.p variants={UP} className={`mt-7 max-w-2xl ${BODY} text-[15px] text-white/[0.92]`}>
+          Inspiration and Continue Response guide users to the wow moment. A slide-out drawer keeps YAML and prompts next to the live demo.
+        </motion.p>
+        <motion.p variants={UP} className="mt-5 font-display text-[16px] font-light italic leading-relaxed text-[#C8FF47]/85">
+          The question shifts from &ldquo;can your model do this&rdquo; to &ldquo;how fast can we ship.&rdquo;
+        </motion.p>
       </motion.div>
     </section>
   );
 }
 
-// §23 Craft — AI visual generation
-function SlideCraft() {
+// §24 AI Tools · A glimpse into the process
+function SlideAITools() {
   return (
     <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Design Craft · Visual Identity</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>A Glimpse Into the Process</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              72 hours.<br />40+ concepts.<br />One direction.
+              Four weeks.<br />Research to production.
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            Drawing from Love and Deepspace, I used Wan, Kling, Dreamnia, and SeeDance to explore character visual identity under a 4-week constraint.
+            Inspired by <em>Love and Deepspace</em>. Visual identity built with Wan, Kling, Dreamnia, SeeDance. Interactions built with Cursor and Claude Code. Direction validated with ChatGPT.
           </motion.p>
           <motion.div variants={UP} className="mt-5 border-l-2 border-[#C8FF47] pl-3">
             <p className="font-sans text-[12px] italic leading-relaxed text-[#7A7A7A]">
@@ -1114,86 +1114,213 @@ function SlideLivePrototype({ id }: { id: LivePrototypeSlideId }) {
   );
 }
 
-// §26 Metrics
+// §26 Metrics — staged AI-style reveal
+function DataStreamBg() {
+  // Horizontal "thinking" lines — small dots scan left → right at varied speeds.
+  const lines = [
+    { top: "8%",  width: "32%", dur: 5.4, delay: 0.0, opacity: 0.18 },
+    { top: "19%", width: "26%", dur: 6.2, delay: 1.1, opacity: 0.14 },
+    { top: "33%", width: "38%", dur: 4.8, delay: 0.4, opacity: 0.22 },
+    { top: "47%", width: "22%", dur: 7.0, delay: 2.0, opacity: 0.10 },
+    { top: "61%", width: "30%", dur: 5.6, delay: 0.8, opacity: 0.18 },
+    { top: "74%", width: "28%", dur: 6.4, delay: 1.6, opacity: 0.12 },
+    { top: "88%", width: "34%", dur: 5.0, delay: 0.2, opacity: 0.16 },
+  ];
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      {lines.map((l, i) => (
+        <motion.div key={i}
+          className="absolute h-px"
+          style={{
+            top: l.top, width: l.width, left: 0,
+            background: `linear-gradient(90deg, transparent 0%, rgba(200,255,71,${l.opacity}) 50%, transparent 100%)`,
+          }}
+          initial={{ x: "-30%" }}
+          animate={{ x: "360%" }}
+          transition={{ duration: l.dur, repeat: Infinity, delay: l.delay, ease: "linear" }} />
+      ))}
+    </div>
+  );
+}
+
+function TimeBar({
+  label, value, pct, delay, highlight,
+}: { label: string; value: string; pct: number; delay: number; highlight?: boolean }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 14, filter: "blur(10px)" }}
+      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+      transition={{ duration: 0.75, ease: E, delay }}
+      className="min-w-0">
+      <div className="flex items-baseline justify-between gap-3">
+        <p className={`${EYE} ${highlight ? "text-[#C8FF47]" : "text-white/60"}`}>{label}</p>
+        <motion.span
+          initial={{ opacity: 0, filter: "blur(8px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          transition={{ duration: 0.55, ease: E, delay: delay + 0.7 }}
+          className="font-display font-light tabular-nums tracking-tight"
+          style={{
+            fontSize: "clamp(1.2rem, 2.1vw, 1.7rem)",
+            color: highlight ? "#C8FF47" : "rgba(255,255,255,0.55)",
+            textShadow: highlight ? "0 0 18px rgba(200,255,71,0.22)" : "none",
+          }}>
+          {value}
+        </motion.span>
+      </div>
+      <div className="relative mt-2 h-[6px] w-full overflow-hidden rounded-full bg-white/[0.06]">
+        <motion.div
+          initial={{ width: "0%" }}
+          animate={{ width: `${pct}%` }}
+          transition={{ duration: 1.05, ease: E, delay: delay + 0.15 }}
+          className="absolute inset-y-0 left-0 rounded-full"
+          style={{
+            background: highlight
+              ? "linear-gradient(90deg, #C8FF47 0%, #d8ff6a 100%)"
+              : "linear-gradient(90deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.34) 100%)",
+            boxShadow: highlight ? "0 0 14px rgba(200,255,71,0.35)" : "none",
+          }} />
+        {/* Scanning highlight that sweeps as the bar fills — calculation feel */}
+        <motion.div
+          className="pointer-events-none absolute inset-y-0 w-12 rounded-full"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent)" }}
+          initial={{ x: "-100%", opacity: 0 }}
+          animate={{ x: ["-100%", `${pct * 4}%`], opacity: [0, 1, 0] }}
+          transition={{ duration: 1.05, ease: E, delay: delay + 0.15, times: [0, 0.6, 1] }} />
+      </div>
+    </motion.div>
+  );
+}
+
 function SlideMetrics() {
   const stats = [
     { to: 4,   suffix: "",   prefix: "",  label: "Showrooms shipped",       detail: "Each proving a distinct capability" },
-    { to: 200, suffix: "%",  prefix: "+", label: "Model call volume",        detail: "After showrooms went live vs pre-launch" },
+    { to: 100, suffix: "%",  prefix: "+", label: "Model API call volume",   detail: "~2× the 4-week pre-launch baseline" },
     { to: 87,  suffix: "%",  prefix: "",  label: "Fewer clone-to-try steps", detail: "Spec + configure chain → template entry" },
     { to: 60,  suffix: "%",  prefix: "",  label: "Faster delivery",          detail: "Engineering estimate · spec+code handoff" },
   ];
+  // Staged delays — 0.0 title · 0.3 subtitle · 0.6 chart · 0.9 numbers · 1.2 insight
+  const T_TITLE  = 0.0;
+  const T_SUB    = 0.3;
+  const T_CHART  = 0.6;
+  const T_STATS  = 0.9;
+  const T_OUTRO  = 1.4;
+
   return (
-    <section className="flex h-full flex-col justify-center bg-[#050507] px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show">
-        <motion.div variants={FADE}><Eye dark>Outcome · Shipped in 4 weeks</Eye></motion.div>
-        <Mask delay={0.1}>
-          <h2 className="mt-5 font-display font-light tracking-[-0.03em] text-white"
-            style={{ fontSize: "clamp(1.6rem, 3.4vw, 2.8rem)" }}>
+    <section className="relative flex h-full flex-col justify-center overflow-hidden bg-[#050507] px-12 md:px-20">
+      <DataStreamBg />
+
+      <div className="relative z-10 mx-auto w-full max-w-6xl">
+        {/* Eye — 0.0s */}
+        <motion.div
+          initial={{ opacity: 0, y: 12, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.7, ease: E, delay: T_TITLE }}>
+          <Eye dark>Outcome · Shipped in 4 weeks · Validated post-release through usage analytics</Eye>
+        </motion.div>
+
+        {/* Subtitle — 0.3s */}
+        <Mask delay={T_SUB}>
+          <h2 className="mt-4 font-display font-light tracking-[-0.03em] text-white"
+            style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.6rem)" }}>
             What shipped. What changed.
           </h2>
         </Mask>
-      </motion.div>
-      <div className="mt-8 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] md:grid-cols-4">
-        {stats.map((s, i) => (
-          <motion.div key={s.label} className="bg-[#050507] px-7 py-8"
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 0.55, ease: E, delay: 0.18 + i * 0.11 }}>
-            <div className="mb-3 h-[1.5px] w-6 bg-[#C8FF47]/65" />
-            <p className="font-display font-light leading-none text-[#C8FF47]"
-              style={{ fontSize: "clamp(2.6rem, 5vw, 4.2rem)" }}>
-              <CountUp to={s.to} suffix={s.suffix} prefix={s.prefix} />
-            </p>
-            <p className="mt-4 font-sans text-[12px] font-medium text-white/[0.94]">{s.label}</p>
-            <p className="mt-1 font-sans text-[11px] leading-relaxed text-white/[0.95]">{s.detail}</p>
-          </motion.div>
-        ))}
+
+        {/* Chart — 0.6s · Before/After time-to-value progress bars */}
+        <motion.div
+          initial={{ opacity: 0, y: 14, filter: "blur(10px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.75, ease: E, delay: T_CHART }}
+          className="mt-7 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-5 md:px-7 md:py-6">
+          <div className="flex items-baseline justify-between gap-6">
+            <p className={`${EYE} text-white/55`}>Time to first value</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]/85">~30× faster</p>
+          </div>
+          <div className="mt-4 grid gap-4 md:grid-cols-2 md:gap-x-10">
+            <TimeBar label="Before · Documentation onboarding" value="60+ min" pct={100} delay={T_CHART + 0.2} />
+            <TimeBar label="After · Interactive showroom"      value="<2 min"  pct={6}   delay={T_CHART + 0.45} highlight />
+          </div>
+        </motion.div>
+
+        {/* Stats — 0.9s · count-up with blur+scale reveal, key number glows */}
+        <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] md:grid-cols-4">
+          {stats.map((s, i) => {
+            const cardDelay = T_STATS + i * 0.12;
+            const isKey = s.label === "Model API call volume";
+            return (
+              <motion.div key={s.label} className="relative bg-[#050507] px-6 py-6"
+                initial={{ opacity: 0, y: 14, scale: 0.97, filter: "blur(10px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1,    filter: "blur(0px)" }}
+                transition={{ duration: 0.7, ease: E, delay: cardDelay }}>
+                {/* underline draws in as the card lands */}
+                <motion.div className="mb-3 h-[1.5px] bg-[#C8FF47]/65"
+                  initial={{ width: 0 }} animate={{ width: "1.5rem" }}
+                  transition={{ duration: 0.55, ease: E, delay: cardDelay + 0.15 }} />
+                <p className="relative font-display font-light leading-none text-[#C8FF47]"
+                  style={{ fontSize: "clamp(2.4rem, 4.6vw, 3.9rem)" }}>
+                  <motion.span
+                    animate={isKey
+                      ? { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 26px rgba(200,255,71,0.55)", "0 0 10px rgba(200,255,71,0.22)"] }
+                      : { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 14px rgba(200,255,71,0.3)",  "0 0 0px rgba(200,255,71,0)"] }}
+                    transition={{ duration: 2.2, ease: "easeOut",
+                      delay: cardDelay + 0.55,
+                      times: [0, 0.55, 1],
+                      repeat: isKey ? Infinity : 0,
+                      repeatDelay: isKey ? 2.4 : 0 }}>
+                    <CountUp
+                      to={s.to} suffix={s.suffix} prefix={s.prefix}
+                      startDelay={cardDelay * 1000 + 350}
+                      duration={1100} />
+                  </motion.span>
+                </p>
+                <p className="mt-3 font-sans text-[12px] font-medium text-white/[0.94]">{s.label}</p>
+                <p className="mt-1 font-sans text-[11px] leading-relaxed text-white/[0.7]">{s.detail}</p>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        {/* Insight — 1.4s */}
+        <motion.p
+          initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
+          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          transition={{ duration: 0.8, ease: E, delay: T_OUTRO }}
+          className={`mt-6 max-w-xl ${BODY} text-[13.5px] text-white/[0.78]`}>
+          The B2B framework was adopted into Spark Design templates, turning the showroom pattern into a reusable foundation across enterprise verticals.
+        </motion.p>
       </div>
-      <motion.p variants={UP} initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: E, delay: 0.75 }}
-        className={`mt-7 max-w-xl ${BODY} text-[14px] text-white/[0.94]`}>
-        The B2B framework was adopted into Spark Design templates, turning the showroom pattern into a reusable foundation across enterprise verticals.
-      </motion.p>
     </section>
   );
 }
 
-// §27 Reflection (now after metrics)
-function SlideReflect() {
-  const items = [
-    { label: "What I learned",      body: "AI systems need visible cognition, not just outputs. The gap wasn't model quality — it was making the model's reasoning legible in real time." },
-    { label: "What I'd do earlier", body: "Validate the 3D avatar assumption in week 1, not week 3. The pivot to AI video was luck, not foresight. Assumption-testing before craft." },
-    { label: "Design principle",    body: "The strongest demo is future-self proof. Show a working version of their own product — then let them clone it. That's how trust is built at speed." },
+// §32 Principles
+function SlidePrinciples() {
+  const principles = [
+    { n: "01", t: "Design is the translation layer.",
+      body: "In AI products, the hardest problem isn’t the model — it’s helping people imagine what to build." },
+    { n: "02", t: "The best demo is future-self proof.",
+      body: "Show a working version of their product, then let them clone it." },
   ];
   return (
     <section className="flex h-full flex-col justify-center bg-white px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="max-w-4xl">
-        <motion.div variants={FADE}><Eye>Takeaway</Eye></motion.div>
-        <Mask delay={0.1}>
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>Principles</Eye></motion.div>
+        <Mask delay={0.08}>
           <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
             style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
-            Design is the translation layer.
+            Two things I&apos;ll keep doing.
           </h2>
         </Mask>
-        <motion.div variants={UP} className="mt-8 grid gap-0 md:grid-cols-3">
-          {items.map((item, i) => (
-            <motion.div key={item.label}
+        <motion.div variants={UP} className="mt-8 grid gap-5 md:grid-cols-2 md:gap-6">
+          {principles.map((p, i) => (
+            <motion.div key={p.n}
               initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.72, ease: E, delay: 0.22 + i * 0.12 }}
-              className="border-l border-black/[0.07] px-5 py-1 first:border-l-0 first:pl-0">
-              <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.14em] text-[#BDBDBD]">{item.label}</p>
-              <p className="mt-3 font-sans text-[13.5px] leading-[1.76] text-[#0A0A0A]">{item.body}</p>
+              transition={{ duration: 0.75, ease: E, delay: 0.24 + i * 0.12 }}
+              className="rounded-2xl bg-[#F7F5F0] px-7 py-8 ring-1 ring-black/[0.06] md:px-8 md:py-9">
+              <p className={`${EYE} text-[#9A9A9A]`}>Principle {p.n}</p>
+              <p className="mt-4 font-display text-[1.2rem] font-light leading-[1.25] tracking-[-0.02em] text-[#0A0A0A] md:text-[1.32rem]">{p.t}</p>
+              <p className="mt-4 font-sans text-[14.5px] leading-[1.72] text-[#5A5A5A]">{p.body}</p>
             </motion.div>
-          ))}
-        </motion.div>
-        <motion.div variants={UP} className="mt-8 grid gap-3 md:grid-cols-2">
-          {[
-            { label: "Trust = Inspectability",   note: "Memory visible. Analysis visible. Code exposed beside the demo." },
-            { label: "Experience own use case",   note: "The fastest way to sell AI is to let users feel their own future product." },
-          ].map((item) => (
-            <div key={item.label} className="rounded-xl border border-black/[0.07] px-5 py-4">
-              <p className={`${EYE} text-[#0A0A0A]`}>{item.label}</p>
-              <p className="mt-2 font-sans text-[13px] leading-relaxed text-[#5A5A5A]">{item.note}</p>
-            </div>
           ))}
         </motion.div>
       </motion.div>
@@ -1235,6 +1362,136 @@ function SlideClosing() {
   );
 }
 
+// §26 Spark Design — adoption + art direction
+function SlideSparkDesign() {
+  return (
+    <section className="flex h-full flex-col justify-center bg-white px-10 md:px-14">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>Adoption · Spark Design</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className="mt-4 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+            Art-directed the visual system across 4 showrooms — adopted as the B2B design framework.
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[14px] text-[#5A5A5A]`}>
+          Components, interactions, and motion patterns built for the showrooms became the published Spark Design system used by external Agentscope partners — meaning these decisions outlived the showroom releases.
+        </motion.p>
+        <motion.div variants={UP} className="mt-6 overflow-hidden rounded-2xl bg-[#F7F5F0] ring-1 ring-black/[0.06]">
+          <div className="flex items-center justify-between gap-3 border-b border-black/[0.06] bg-white px-4 py-3 md:px-5">
+            <div>
+              <p className={`${EYE} text-[#9A9A9A]`}>Adoption</p>
+              <p className="mt-1.5 font-sans text-[12.5px] font-medium text-[#0A0A0A]">Spark Design templates — Agentscope</p>
+            </div>
+            <a href="https://sparkdesign.agentscope.io/#/templates" target="_blank" rel="noopener noreferrer"
+              className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6A6A6A] underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-[#0A0A0A]">
+              Open ↗
+            </a>
+          </div>
+          <iframe
+            title="Spark Design templates"
+            src="https://sparkdesign.agentscope.io/#/templates"
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="h-[min(56vh,540px)] min-h-[320px] w-full border-0 bg-white"
+          />
+          <p className="border-t border-black/[0.05] bg-white px-4 py-2 font-sans text-[10.5px] leading-relaxed text-[#9A9A9A] md:px-5">
+            If the frame is empty, the host blocks embedding — open in browser.
+          </p>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §30 Metrics Method — How the numbers are defined
+function SlideMetricsMethod() {
+  const rows = [
+    { metric: "+100% / ~2×", label: "Model API call volume",
+      baseline: "Four-week rolling avg of internal product analytics before showroom launch.",
+      result: "Four-week rolling avg after go-live, same pipeline and org scope.",
+      note: "Shorthand for +100% lift / ~2× total. Not +200%, not a third-party benchmark." },
+    { metric: "87%", label: "Setup reduction",
+      baseline: "~7 enumerated steps in the internal clone-to-try checklist — repo review through endpoint wiring.",
+      result: "Pre-seeded template + copy-ready YAML — setup collapses to a short checklist.",
+      note: "Counts setup actions, not taps inside the live demo." },
+    { metric: "60%", label: "Faster delivery",
+      baseline: "Spec-only handoff to engineers.",
+      result: "Spec + code delivered together.",
+      note: "Verbal engineering estimate across 3 showroom releases. Not from a cycle-time dashboard." },
+  ];
+  return (
+    <section className="flex h-full flex-col justify-center overflow-hidden bg-[#050507] px-10 md:px-14">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-6xl">
+        <motion.div variants={FADE}><Eye dark>How the numbers are defined</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className="mt-4 font-display font-light tracking-[-0.028em] text-white"
+            style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.2rem)" }}>
+            Honest about the baselines.
+          </h2>
+        </Mask>
+        <motion.div variants={UP} className="mt-7 overflow-hidden rounded-2xl border border-white/[0.1] bg-white/[0.03]">
+          <div className="hidden border-b border-white/[0.08] bg-white/[0.04] px-6 py-2.5 md:grid md:grid-cols-[10rem_1fr_1fr_1fr] md:gap-x-6">
+            {["Metric", "Baseline", "Result", "Note"].map(h => (
+              <p key={h} className={`${EYE} text-white/[0.55]`}>{h}</p>
+            ))}
+          </div>
+          <div className="divide-y divide-white/[0.06]">
+            {rows.map((row, i) => (
+              <motion.div key={row.metric}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.65, ease: E, delay: 0.24 + i * 0.08 }}
+                className="grid grid-cols-1 gap-2 px-6 py-4 md:grid-cols-[10rem_1fr_1fr_1fr] md:items-start md:gap-x-6">
+                <div>
+                  <p className="font-display text-[1.5rem] font-light tracking-tight text-[#C8FF47]">{row.metric}</p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/[0.55]">{row.label}</p>
+                </div>
+                <p className="font-sans text-[12.5px] leading-snug text-white/[0.78]">{row.baseline}</p>
+                <p className="font-sans text-[12.5px] leading-snug text-white/[0.92]">{row.result}</p>
+                <p className="font-sans text-[12px] italic leading-snug text-white/[0.6]">{row.note}</p>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §33 Takeaways — 4 cards
+function SlideTakeaways() {
+  const items = [
+    { label: "Memory transparency",      note: "Constellation file makes memory readable · not a silent black box" },
+    { label: "Analysis visibility",      note: "Therapy rail shows what the model understood · not just what it said" },
+    { label: "Developer inspectability", note: "YAML + prompt exposed in code drawer · inspect before you build" },
+    { label: "Emotional boundary",       note: "Therapy room = analysis demo · no clinical claims implied" },
+  ];
+  return (
+    <section className="flex h-full flex-col justify-center bg-[#F7F5F0] px-12 md:px-20">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>What I learned</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
+            Visible cognition over capability lists.
+          </h2>
+        </Mask>
+        <motion.div variants={UP} className="mt-8 grid gap-3 md:grid-cols-2 md:gap-4">
+          {items.map((it, i) => (
+            <motion.div key={it.label}
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: E, delay: 0.2 + i * 0.08 }}
+              className="rounded-xl bg-white px-5 py-5 ring-1 ring-black/[0.06]">
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-[#9A9A9A]">{it.label}</p>
+              <p className="mt-2 font-sans text-[13.5px] leading-[1.65] text-[#5A5A5A]">{it.note}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
 // ─── Slide renderer ───────────────────────────────────────────────────────────
 function SlideRenderer({ id }: { id: SlideId }) {
   switch (id) {
@@ -1242,11 +1499,10 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "hook":              return <SlideHook />;
     case "problem":           return <SlideProblem />;
     case "before":            return <SlideBefore />;
-    case "research":          return <SlideResearch />;
-    case "hmw":               return <SlideHMW />;
-    case "strategy":          return <SlideStrategy />;
-    case "uxstrategy":        return <SlideUXStrategy />;
-    case "ai":                return <SlideAI />;
+    case "decision-01-title": return <SlideDecision01Title />;
+    case "showrooms-thesis":  return <SlideShowroomsThesis />;
+    case "visibilities":      return <SlideVisibilities />;
+    case "decision-02-title": return <SlideDecision02Title />;
     case "heartbeat":         return <SlideHeartbeat />;
     case "heartbeat-logic":   return <SlideHeartbeatLogic />;
     case "altuniv":           return <SlideAltUniv />;
@@ -1255,19 +1511,23 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "storyunlock-logic": return <SlideStoryUnlockLogic />;
     case "moments":           return <SlideMoments />;
     case "moments-logic":     return <SlideMomentsLogic />;
-    case "exploop":           return <SlideExpLoop />;
-    case "astrology":         return <SlideAstrology />;
-    case "therapy":           return <SlideTherapy />;
+    case "astro-profile":     return <SlideAstroProfile />;
+    case "therapy-analysis":  return <SlideTherapyAnalysis />;
+    case "decision-03-title": return <SlideDecision03Title />;
+    case "inspire-continue":  return <SlideInspireContinue />;
+    case "code-sidebar":      return <SlideCodeSidebar />;
     case "showrooms":         return <SlideShowrooms />;
-    case "devtools":          return <SlideDevTools />;
-    case "decisions":         return <SlideDecisions />;
-    case "craft":             return <SlideCraft />;
+    case "how-i-worked":      return <SlideHowIWorked />;
+    case "ai-tools":          return <SlideAITools />;
     case "backend":           return <SlideBackend />;
+    case "spark-design":      return <SlideSparkDesign />;
     case "prototype-romance": return <SlideLivePrototype id="prototype-romance" />;
     case "prototype-astro":   return <SlideLivePrototype id="prototype-astro" />;
     case "prototype-therapy": return <SlideLivePrototype id="prototype-therapy" />;
     case "metrics":           return <SlideMetrics />;
-    case "reflect":           return <SlideReflect />;
+    case "metrics-method":    return <SlideMetricsMethod />;
+    case "principles":        return <SlidePrinciples />;
+    case "takeaways":         return <SlideTakeaways />;
     case "closing":           return <SlideClosing />;
     default:                  return null;
   }
@@ -1341,8 +1601,6 @@ export default function DeckPresentClient() {
   const progress = total > 1 ? (idx / (total - 1)) * 100 : 0;
   const minsLeft = Math.max(1, Math.ceil(((total - 1 - idx) * 50) / 60));
 
-  const [zone, setZone] = useState<"default" | "prev" | "next" | "big">("default");
-
   const prev = useCallback(() => setIdx(i => Math.max(0, i - 1)), []);
   const next = useCallback(() => setIdx(i => Math.min(total - 1, i + 1)), [total]);
 
@@ -1355,54 +1613,17 @@ export default function DeckPresentClient() {
     return () => window.removeEventListener("keydown", h);
   }, [next, prev]);
 
-  const mx = useMotionValue(-200);
-  const my = useMotionValue(-200);
-  const cx = useSpring(mx, { stiffness: 300, damping: 28, mass: 0.4 });
-  const cy = useSpring(my, { stiffness: 300, damping: 28, mass: 0.4 });
-  const [cursorVis, setCursorVis] = useState(false);
-
-  useEffect(() => {
-    const move  = (e: MouseEvent) => { setCursorVis(true); mx.set(e.clientX); my.set(e.clientY); };
-    const leave = () => setCursorVis(false);
-    window.addEventListener("mousemove", move);
-    document.documentElement.addEventListener("mouseleave", leave);
-    return () => {
-      window.removeEventListener("mousemove", move);
-      document.documentElement.removeEventListener("mouseleave", leave);
-    };
-  }, [mx, my]);
-
-  const big = zone !== "default";
-
   // ── Dark-aware chrome tokens ──
   const headerBg  = dark ? "bg-[#050507]/96 border-white/[0.14]"  : "bg-white/75 border-black/[0.06]";
   const footerBg  = dark ? "bg-[#050507]/96 border-white/[0.14]"  : "bg-white/75 border-black/[0.05]";
-  const cursorBdr = dark ? "border-white/30"                      : "border-black/22";
   /** Dark chrome: same secondary gray for header + footer (was mixed /90–/96). */
   const navChromeDark = "text-white/92";
-  const arrowClr  = dark ? navChromeDark                     : "text-black/55";
   const navLink   = dark ? `${navChromeDark} hover:text-white` : "text-[#6B6B6B] hover:text-[#0A0A0A]";
   const navMeta   = dark ? navChromeDark                   : "text-[#BDBDBD]";
   const navBtn    = dark ? `${navChromeDark} hover:text-white` : "text-[#6B6B6B] hover:text-[#0A0A0A]";
 
   return (
-    <div className="relative h-screen cursor-none select-none overflow-hidden">
-
-      {/* Custom cursor */}
-      {cursorVis && (
-        <motion.div className="pointer-events-none fixed z-[9999] hidden md:block" style={{ x: cx, y: cy }} aria-hidden>
-          <motion.div
-            className={`absolute -translate-x-1/2 -translate-y-1/2 rounded-full border ${cursorBdr}`}
-            animate={{ width: big ? 52 : 28, height: big ? 52 : 28 }}
-            transition={{ duration: 0.18, ease: E }} />
-          <div className="absolute left-0 top-0 h-[5px] w-[5px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#C8FF47]" />
-          {(zone === "prev" || zone === "next") && (
-            <span className={`absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 font-mono text-[11px] ${arrowClr}`}>
-              {zone === "prev" ? "←" : "→"}
-            </span>
-          )}
-        </motion.div>
-      )}
+    <div className="relative h-screen select-none overflow-hidden">
 
       {/* Progress line */}
       <div className="absolute inset-x-0 top-0 z-50 h-[1.5px] bg-transparent">
@@ -1415,7 +1636,6 @@ export default function DeckPresentClient() {
       <header className={`absolute inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b px-6 backdrop-blur-md transition-all duration-500 md:px-10 ${headerBg}`}>
         <div className="flex items-center gap-5">
           <Link href="/work/ai-character"
-            onMouseEnter={() => setZone("big")} onMouseLeave={() => setZone("default")}
             className={`font-mono text-[10px] uppercase tracking-[0.22em] transition-colors ${navLink}`}>
             ← Case Study
           </Link>
@@ -1447,17 +1667,14 @@ export default function DeckPresentClient() {
 
       {/* Click zones */}
       <button type="button" aria-label="Previous slide" onClick={prev} disabled={idx === 0}
-        className="fixed bottom-14 left-0 top-14 z-30 hidden w-[10%] disabled:pointer-events-none md:block"
-        onMouseEnter={() => setZone("prev")} onMouseLeave={() => setZone("default")} />
+        className="fixed bottom-14 left-0 top-14 z-30 hidden w-[10%] cursor-w-resize disabled:pointer-events-none md:block" />
       <button type="button" aria-label="Next slide" onClick={next} disabled={idx === total - 1}
-        className="fixed bottom-14 right-0 top-14 z-30 hidden w-[10%] disabled:pointer-events-none md:block"
-        onMouseEnter={() => setZone("next")} onMouseLeave={() => setZone("default")} />
+        className="fixed bottom-14 right-0 top-14 z-30 hidden w-[10%] cursor-e-resize disabled:pointer-events-none md:block" />
 
       {/* Footer */}
       <footer className={`absolute inset-x-0 bottom-0 z-40 border-t backdrop-blur-md transition-all duration-500 ${footerBg}`}>
         <div className="flex items-center gap-3 px-4 py-3 md:gap-5 md:px-10">
           <button type="button" onClick={prev} disabled={idx === 0}
-            onMouseEnter={() => setZone("big")} onMouseLeave={() => setZone("default")}
             className={`shrink-0 rounded px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors disabled:opacity-20 md:px-3 ${navBtn}`}>
             Prev
           </button>
@@ -1468,7 +1685,6 @@ export default function DeckPresentClient() {
             </div>
           </div>
           <button type="button" onClick={next} disabled={idx === total - 1}
-            onMouseEnter={() => setZone("big")} onMouseLeave={() => setZone("default")}
             className={`shrink-0 rounded px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors disabled:opacity-20 md:px-3 ${navBtn}`}>
             Next
           </button>

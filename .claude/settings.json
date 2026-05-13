@@ -40,7 +40,9 @@
       "Bash(mkdir -p /tmp/interaction_flow)",
       "Bash(tar -xf /tmp/interaction_flow.tar -C /tmp/interaction_flow)",
       "Bash(python3 -c ' *)",
-      "Bash(python3 /tmp/make_phone_html.py)"
+      "Bash(python3 /tmp/make_phone_html.py)",
+      "Bash(lsof -i :3000 -P -sTCP:LISTEN)",
+      "Bash(curl -sS -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/work/ai-character/deck-present)"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",
