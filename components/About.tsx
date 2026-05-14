@@ -31,7 +31,7 @@ export function About() {
     <section
       id="about"
       ref={ref}
-      className="bg-white py-16 md:py-20 lg:py-24"
+      className="bg-surfaceAlt py-16 md:py-20 lg:py-24"
       aria-labelledby="about-heading"
     >
       <div className="mx-auto max-w-content px-6">

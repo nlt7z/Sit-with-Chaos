@@ -64,6 +64,7 @@ function ScaledPreview({
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.5);
+  const [shouldLoad, setShouldLoad] = useState(false);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -75,24 +76,42 @@ function ScaledPreview({
     return () => ro.disconnect();
   }, []);
 
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setShouldLoad(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div
       ref={wrapperRef}
-      className="relative overflow-hidden rounded-2xl shadow-sm"
+      className={`relative overflow-hidden rounded-2xl shadow-sm ${iframeBg}`}
       style={{ height: NATURAL_H * scale }}
     >
-      <iframe
-        title={title}
-        src={src}
-        className={`block border-0 ${iframeBg}`}
-        style={{
-          width: NATURAL_W,
-          height: NATURAL_H,
-          transform: `scale(${scale})`,
-          transformOrigin: "top left",
-        }}
-        loading="lazy"
-      />
+      {shouldLoad && (
+        <iframe
+          title={title}
+          src={src}
+          className={`block border-0 ${iframeBg}`}
+          style={{
+            width: NATURAL_W,
+            height: NATURAL_H,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+          }}
+          loading="lazy"
+        />
+      )}
     </div>
   );
 }
@@ -119,12 +138,10 @@ function MobilePreviewCard({
   );
 }
 
-export function VibeCodingShowrooms({ lead }: { lead?: React.ReactNode }) {
+export function VibeCodingShowrooms({ trailing }: { trailing?: React.ReactNode }) {
   const rm = useReducedMotion();
   return (
     <div className="grid grid-cols-1 gap-x-5 gap-y-8 md:grid-cols-2">
-      {lead && <div>{lead}</div>}
-      {lead && <div className="hidden md:block" />}
       {showrooms.map((s, i) => (
         <motion.div
           key={s.id}
@@ -161,6 +178,7 @@ export function VibeCodingShowrooms({ lead }: { lead?: React.ReactNode }) {
           </div>
         </motion.div>
       ))}
+      {trailing && <div>{trailing}</div>}
     </div>
   );
 }

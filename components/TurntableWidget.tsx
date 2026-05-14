@@ -195,7 +195,8 @@ export function TurntableWidget() {
               ? "brightness-[1.1] saturate-[1.12]"
               : "brightness-100 group-hover:brightness-[1.04]"
           }`}
-          priority
+          loading="lazy"
+          sizes="(min-width: 1024px) 50vw, 100vw"
         />
 
         {/* Spinning conic overlay on the record platter */}

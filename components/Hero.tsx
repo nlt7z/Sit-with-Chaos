@@ -19,15 +19,31 @@ export function Hero() {
   const [halftoneMounted, setHalftoneMounted] = useState(false);
   const [halftoneHovered, setHalftoneHovered] = useState(false);
   const [vendingSwitchOn, setVendingSwitchOn] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: -9999, y: -9999 });
   const vendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const spotlightRef = useRef<HTMLDivElement | null>(null);
+  const pointerRef = useRef({ x: -9999, y: -9999 });
+  const pointerRafRef = useRef<number | null>(null);
   const router = useRouter();
 
   useEffect(() => {
     return () => {
       if (vendingTimerRef.current) clearTimeout(vendingTimerRef.current);
+      if (pointerRafRef.current !== null) cancelAnimationFrame(pointerRafRef.current);
     };
   }, []);
+
+  const flushPointerToCssVars = () => {
+    pointerRafRef.current = null;
+    const spotlight = spotlightRef.current;
+    if (!spotlight) return;
+    spotlight.style.setProperty("--spot-x", `${pointerRef.current.x}px`);
+    spotlight.style.setProperty("--spot-y", `${pointerRef.current.y}px`);
+  };
+
+  const queuePointerFlush = () => {
+    if (pointerRafRef.current !== null) return;
+    pointerRafRef.current = requestAnimationFrame(flushPointerToCssVars);
+  };
 
   // Mount the iframe on first paint; unmount when section leaves viewport to reclaim memory.
   useEffect(() => {
@@ -89,9 +105,14 @@ export function Hero() {
       aria-labelledby="hero-heading"
       onMouseMove={(e) => {
         const rect = ref.current?.getBoundingClientRect();
-        if (rect) setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        if (!rect) return;
+        pointerRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
+        queuePointerFlush();
       }}
-      onMouseLeave={() => setMousePos({ x: -9999, y: -9999 })}
+      onMouseLeave={() => {
+        pointerRef.current = { x: -9999, y: -9999 };
+        queuePointerFlush();
+      }}
     >
       {/* Soft vignette — keeps the hero from feeling flat */}
       <div
@@ -124,11 +145,12 @@ export function Hero() {
       {/* Orbital orb — spotlight layer, follows cursor */}
       {!reduced && (
         <div
+          ref={spotlightRef}
           aria-hidden
           className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
           style={{
-            WebkitMaskImage: `radial-gradient(circle 260px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 78%)`,
-            maskImage: `radial-gradient(circle 260px at ${mousePos.x}px ${mousePos.y}px, black 0%, transparent 78%)`,
+            WebkitMaskImage: "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
+            maskImage: "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
           }}
         >
           <img
@@ -176,7 +198,7 @@ export function Hero() {
                   <iframe
                     src={heroHalftoneSrc}
                     title="NLT Halftone — interactive"
-                    loading="eager"
+                    loading="lazy"
                     scrolling="no"
                     className="pointer-events-auto absolute left-1/2 top-[52%] h-[145%] w-[118%] max-w-none -translate-x-1/2 -translate-y-1/2 border-0 md:h-[138%] md:w-[112%]"
                   />
@@ -199,7 +221,7 @@ export function Hero() {
       {/* ── Introduction — tight to halftone ───────────────────────────────────── */}
       <motion.div
         style={{ y: textY }}
-        className="relative z-10 px-6 pb-20 pt-3 text-center md:pb-28 md:pt-4"
+        className="relative z-10 px-6 pb-12 pt-3 text-center md:pb-16 md:pt-4"
       >
         <div className="flex flex-col items-center text-center">
           <motion.h1
@@ -271,40 +293,11 @@ export function Hero() {
           </motion.a>
         </motion.div>
 
-        {!reduced && (
-          <motion.a
-            href="#work"
-            aria-label="Scroll to work"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.7, delay: 1.9, ease: [0.25, 0.1, 0.25, 1] }}
-            className="mt-10 flex flex-col items-center gap-2 text-textSecondary/30 transition-colors hover:text-textSecondary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-          >
-            <motion.svg
-              animate={{ y: [0, 4, 0] }}
-              transition={{ duration: 2.2, repeat: Infinity, ease: [0.45, 0, 0.55, 1] }}
-              width="16"
-              height="16"
-              viewBox="0 0 16 16"
-              fill="none"
-              aria-hidden
-            >
-              <path
-                d="M2 5.5L8 11l6-5.5"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-            </motion.svg>
-          </motion.a>
-        )}
-
         <motion.div
           initial={reduced ? false : { opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: reduced ? 0 : 1.48 }}
-          className="mt-4 flex justify-center"
+          className="mt-3 flex justify-center"
         >
           <button
             type="button"

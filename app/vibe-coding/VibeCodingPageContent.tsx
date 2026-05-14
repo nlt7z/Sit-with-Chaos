@@ -3,6 +3,76 @@
 import { TurntableWidget } from "@/components/TurntableWidget";
 import { VibeCodingShowrooms } from "@/components/VibeCodingShowrooms";
 import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
+
+function useInView<T extends HTMLElement>(rootMargin = "400px 0px") {
+  const ref = useRef<T>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setInView(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [rootMargin]);
+  return { ref, inView };
+}
+
+function LazyVideo({ src }: { src: string }) {
+  const { ref, inView } = useInView<HTMLDivElement>();
+  return (
+    <div
+      ref={ref}
+      className="overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] bg-[rgba(0,0,0,0.03)] shadow-sm"
+    >
+      {inView && (
+        <video
+          className="h-full w-full object-cover"
+          src={src}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+        />
+      )}
+    </div>
+  );
+}
+
+function LazyIframe({
+  src,
+  title,
+  className,
+  style,
+}: {
+  src: string;
+  title: string;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const { ref, inView } = useInView<HTMLDivElement>();
+  return (
+    <div ref={ref} className={className} style={style}>
+      {inView && (
+        <iframe
+          title={title}
+          src={src}
+          className="h-full min-h-[280px] w-full border-0"
+          loading="lazy"
+        />
+      )}
+    </div>
+  );
+}
 
 export function VibeCodingPageContent() {
   return (
@@ -19,10 +89,13 @@ export function VibeCodingPageContent() {
 
       <section className="mt-10">
         <h2 className="font-display text-xl font-light lowercase tracking-[-0.01em] text-textPrimary md:text-2xl">
-          vibe coding
+          app design
         </h2>
-        <div className="mt-6">
-          <VibeCodingShowrooms lead={<TurntableWidget />} />
+        <p className="mt-3 max-w-2xl text-sm leading-relaxed text-textSecondary md:text-[15px]">
+          A mobile game where players bid to open blind boxes — auction tension meets gacha luck.
+        </p>
+        <div className="mt-8">
+          <LazyVideo src="/assets/app%20design/ScreenRecording_05-12-2026%2022-36-16_1.mov" />
         </div>
       </section>
 
@@ -30,24 +103,15 @@ export function VibeCodingPageContent() {
         <h2 className="font-display text-xl font-light lowercase tracking-[-0.01em] text-textPrimary md:text-2xl">
           website design
         </h2>
-        <div className="mt-8 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm">
-          <video
-            className="h-full w-full object-cover"
-            src="/assets/work/apsara.mp4"
-            autoPlay
-            muted
-            loop
-            playsInline
-          />
+        <div className="mt-8">
+          <LazyVideo src="/assets/work/apsara.mp4" />
         </div>
-        <div className="mt-10 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm md:mt-12" style={{ aspectRatio: "1728/1117", minHeight: "280px" }}>
-          <iframe
-            title="Han Cao personal website"
-            src="https://hancao.space/"
-            className="h-full min-h-[280px] w-full border-0"
-            loading="lazy"
-          />
-        </div>
+        <LazyIframe
+          src="https://hancao.space/"
+          title="Han Cao personal website"
+          className="mt-10 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm md:mt-12"
+          style={{ aspectRatio: "1728/1117", minHeight: "280px" }}
+        />
         <div className="mt-3 flex justify-end px-0.5">
           <Link
             href="https://hancao.space/"
@@ -57,6 +121,15 @@ export function VibeCodingPageContent() {
           >
             Open →
           </Link>
+        </div>
+      </section>
+
+      <section className="mt-12 md:mt-14">
+        <h2 className="font-display text-xl font-light lowercase tracking-[-0.01em] text-textPrimary md:text-2xl">
+          vibe coding
+        </h2>
+        <div className="mt-6">
+          <VibeCodingShowrooms />
         </div>
       </section>
 
@@ -80,6 +153,10 @@ export function VibeCodingPageContent() {
           </div>
         </div>
       </Link>
+
+      <div className="mt-12 md:mt-14">
+        <TurntableWidget />
+      </div>
     </section>
   );
 }

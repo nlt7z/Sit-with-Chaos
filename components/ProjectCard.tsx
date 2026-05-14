@@ -95,6 +95,11 @@ export function ProjectCard({ project }: { project: Project }) {
     ? "font-display text-2xl font-light leading-snug text-textPrimary md:text-3xl"
     : "font-display text-lg font-light leading-snug text-textPrimary md:text-xl";
 
+  const titleSplitIndex = project.title.indexOf(" - ");
+  const companyName = titleSplitIndex >= 0 ? project.title.slice(0, titleSplitIndex).trim() : null;
+  const mainTitle =
+    titleSplitIndex >= 0 ? project.title.slice(titleSplitIndex + 3).trim() : project.title;
+
   return (
     <motion.article
       whileHover={hover}
@@ -166,7 +171,18 @@ export function ProjectCard({ project }: { project: Project }) {
         </div>
 
         <div className="mt-5 flex min-h-0 flex-1 flex-col md:mt-6">
-          <h3 className={titleClass}>{project.title}</h3>
+          <h3 className={titleClass}>
+            {companyName ? (
+              <>
+                <span className="mb-2 block font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-textSecondary md:text-xs">
+                  {companyName}
+                </span>
+                <span>{mainTitle}</span>
+              </>
+            ) : (
+              mainTitle
+            )}
+          </h3>
 
           <p
             className={`mt-3 text-[13px] leading-relaxed text-textSecondary md:text-sm ${

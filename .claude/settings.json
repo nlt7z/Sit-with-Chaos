@@ -42,7 +42,12 @@
       "Bash(python3 -c ' *)",
       "Bash(python3 /tmp/make_phone_html.py)",
       "Bash(lsof -i :3000 -P -sTCP:LISTEN)",
-      "Bash(curl -sS -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/work/ai-character/deck-present)"
+      "Bash(curl -sS -o /dev/null -w \"%{http_code}\\\\n\" http://localhost:3000/work/ai-character/deck-present)",
+      "Bash(mkdir -p \"/Users/fangyuan/Desktop/newpage/public/assets/app-design\")",
+      "Bash(mv \"/Users/fangyuan/Desktop/newpage/public/assets/app design/ScreenRecording_05-12-2026 22-36-16_1.mov\" \"/Users/fangyuan/Desktop/newpage/public/assets/app-design/app-design.mov\")",
+      "Bash(rmdir \"/Users/fangyuan/Desktop/newpage/public/assets/app design\")",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,display_aspect_ratio -of default=noprint_wrappers=1 \"/Users/fangyuan/Desktop/newpage/public/assets/app-design/app-design.mov\")",
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,display_aspect_ratio -of default=noprint_wrappers=1 \"/Users/fangyuan/Desktop/newpage/public/assets/work/apsara.mp4\")"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

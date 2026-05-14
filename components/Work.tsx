@@ -23,7 +23,7 @@ const studioEngine: Project = {
   slug: "studio-engine",
   title: "StudioEngine.ai - GenAI Text-to-Video Platform Redesign",
   description:
-    "Reorganized a one-step generation flow into a 4-stage creative pipeline: basics, outline, script, and visuals — helping users co-create with AI instead of waiting for output.",
+    "Reorganized a 1-step generation flow into a 4-stage creative pipeline: basics, outline, script, and visuals — helping users co-create with AI instead of waiting for output.",
   media: {
     src: "/assets/work/vp-genie.jpg",
     alt: "Preview image for Studio Engine.ai project",
@@ -34,7 +34,7 @@ const studioEngine: Project = {
 
 const meituanIm: Project = {
   slug: "meituan-im",
-  title: "Meituan In Message Quotation System - Three-Step Consultation Design",
+  title: "Meituan In Message Quotation System - 3-Step Consultation Design",
   description:
     "Designed a multi-round quotation experience inside chat, improving pricing clarity and supporting a 5%+ conversion lift through iteration and testing.",
   media: {
@@ -105,25 +105,12 @@ export function Work() {
     <section
       id="work"
       ref={ref}
-      className="bg-surfaceAlt py-20 md:py-28"
-      aria-labelledby="work-heading"
+      className="bg-surfaceAlt pt-14 pb-20 md:pt-20 md:pb-28"
+      aria-label="Selected projects"
     >
       <div className="mx-auto max-w-content px-6">
         <motion.div
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.55, ease: easePortfolio }}
-        >
-          <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">
-            Selected Work
-          </p>
-          <h2 id="work-heading" className="mt-3 font-display text-3xl font-light md:text-4xl">
-            Products shaped by research and craft.
-          </h2>
-        </motion.div>
-
-        <motion.div
-          className="mt-14 flex flex-col gap-9 md:gap-10 lg:gap-11"
+          className="flex flex-col gap-9 md:gap-10 lg:gap-11"
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "show" : "hidden"}
