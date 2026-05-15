@@ -87,7 +87,7 @@ export function VibeCodingPageContent() {
         Shipped code and interactive prototypes — the things I build to think.
       </p>
 
-      <section className="mt-10">
+      <section id="app-design" className="mt-10 scroll-mt-24">
         <h2 className="font-display text-xl font-light lowercase tracking-[-0.01em] text-textPrimary md:text-2xl">
           app design
         </h2>
@@ -95,7 +95,7 @@ export function VibeCodingPageContent() {
           A mobile game where players bid to open blind boxes — auction tension meets gacha luck.
         </p>
         <div className="mt-8">
-          <LazyVideo src="/assets/app%20design/ScreenRecording_05-12-2026%2022-36-16_1.mov" />
+          <LazyVideo src="/assets/app-design/app-design.mp4" />
         </div>
       </section>
 

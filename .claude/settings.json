@@ -47,7 +47,9 @@
       "Bash(mv \"/Users/fangyuan/Desktop/newpage/public/assets/app design/ScreenRecording_05-12-2026 22-36-16_1.mov\" \"/Users/fangyuan/Desktop/newpage/public/assets/app-design/app-design.mov\")",
       "Bash(rmdir \"/Users/fangyuan/Desktop/newpage/public/assets/app design\")",
       "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,display_aspect_ratio -of default=noprint_wrappers=1 \"/Users/fangyuan/Desktop/newpage/public/assets/app-design/app-design.mov\")",
-      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,display_aspect_ratio -of default=noprint_wrappers=1 \"/Users/fangyuan/Desktop/newpage/public/assets/work/apsara.mp4\")"
+      "Bash(ffprobe -v error -select_streams v:0 -show_entries stream=width,height,display_aspect_ratio -of default=noprint_wrappers=1 \"/Users/fangyuan/Desktop/newpage/public/assets/work/apsara.mp4\")",
+      "Bash(ffprobe -v error -show_entries stream=codec_name,width,height,duration,bit_rate -of default=noprint_wrappers=1 \"/Users/fangyuan/Desktop/newpage/public/assets/app-design/app-design.mov\")",
+      "Bash(ffmpeg -i \"/Users/fangyuan/Desktop/newpage/public/assets/app-design/app-design.mov\" -c:v libx264 -crf 24 -preset medium -vf \"scale=720:-2\" -pix_fmt yuv420p -c:a aac -b:a 96k -movflags +faststart -y \"/Users/fangyuan/Desktop/newpage/public/assets/app-design/app-design.mp4\")"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

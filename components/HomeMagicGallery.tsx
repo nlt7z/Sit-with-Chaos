@@ -11,9 +11,9 @@ const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 const magicPreviews = [
   // Row 1 · left (wide hero) — portrait phone, contained on brand-color panel
   {
-    href: "/work",
+    href: "/vibe-coding#app-design",
     kind: "video" as const,
-    mediaSrc: "/assets/app-design/app-design.mov",
+    mediaSrc: "/assets/app-design/app-design.mp4",
     mediaAlt: "App design screen recording",
     category: "App Design",
     summary: "Studio interactions",
