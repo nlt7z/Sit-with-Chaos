@@ -8,7 +8,7 @@ const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
 const aiCharacter: Project = {
   slug: "ai-character",
-  title: "Alibaba Qwen Character Platform - Interactive Character Showrooms Design",
+  title: "Alibaba Qwen - From 60 min to 2 min",
   description:
     "Turned static cloud documentation into interactive LLM-powered product experiences, reducing onboarding from 60+ minutes to under 2 minutes.",
   media: {
@@ -17,11 +17,12 @@ const aiCharacter: Project = {
     type: "video",
   },
   flowSteps: ["prompt", "response", "deploy"],
+  meta: { year: "2025", role: "Product Designer", status: "Shipped" },
 };
 
 const studioEngine: Project = {
   slug: "studio-engine",
-  title: "StudioEngine.ai - GenAI Text-to-Video Platform Redesign",
+  title: "StudioEngine - Co-creating with AI, in 4 stages",
   description:
     "Reorganized a 1-step generation flow into a 4-stage creative pipeline: basics, outline, script, and visuals — helping users co-create with AI instead of waiting for output.",
   media: {
@@ -30,11 +31,12 @@ const studioEngine: Project = {
     type: "image",
   },
   flowSteps: ["basics", "outline", "script", "visuals"],
+  meta: { year: "2024", role: "Product Designer", status: "Shipped" },
 };
 
 const meituanIm: Project = {
   slug: "meituan-im",
-  title: "Meituan In Message Quotation System - 3-Step Consultation Design",
+  title: "Meituan - Quote inside the chat",
   description:
     "Designed a multi-round quotation experience inside chat, improving pricing clarity and supporting a 5%+ conversion lift through iteration and testing.",
   media: {
@@ -43,6 +45,7 @@ const meituanIm: Project = {
     type: "video",
   },
   flowSteps: ["chat quote", "compare", "confirm"],
+  meta: { year: "2023", role: "UX Designer", status: "Shipped" },
 };
 
 type WorkRow =

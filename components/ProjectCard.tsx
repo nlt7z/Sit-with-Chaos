@@ -26,6 +26,12 @@ export type Project = {
   layout?: "featured" | "default";
   /** Optional hover micro-demo: pipeline steps over the media. */
   flowSteps?: readonly string[];
+  /** Top metadata strip: year · role · status. */
+  meta?: {
+    year: string;
+    role: string;
+    status: string;
+  };
 };
 
 function VideoCardMedia({ src, poster, alt }: { src: string; poster?: string; alt: string }) {
@@ -92,8 +98,8 @@ export function ProjectCard({ project }: { project: Project }) {
     (featured ? "aspect-video md:aspect-[21/9]" : "aspect-video");
 
   const titleClass = featured
-    ? "font-display text-2xl font-light leading-snug text-textPrimary md:text-3xl"
-    : "font-display text-lg font-light leading-snug text-textPrimary md:text-xl";
+    ? "font-display text-2xl font-light leading-snug text-textPrimary transition-colors duration-500 group-hover:text-white md:text-3xl"
+    : "font-display text-lg font-light leading-snug text-textPrimary transition-colors duration-500 group-hover:text-white md:text-xl";
 
   const titleSplitIndex = project.title.indexOf(" - ");
   const companyName = titleSplitIndex >= 0 ? project.title.slice(0, titleSplitIndex).trim() : null;
@@ -107,9 +113,22 @@ export function ProjectCard({ project }: { project: Project }) {
     >
       <Link
         href={`/work/${project.slug}`}
-        className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-portfolio hover:border-black/[0.11] hover:shadow-[0_20px_56px_-22px_rgba(0,0,0,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 md:rounded-[1.35rem] md:p-6"
+        className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[background-color,border-color,box-shadow] duration-500 ease-portfolio hover:border-textPrimary hover:bg-textPrimary hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2 md:rounded-[1.35rem] md:p-6"
       >
-        <div className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-black/[0.04]">
+        {project.meta ? (
+          <div className="mb-4 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary transition-colors duration-500 group-hover:text-white/55 md:text-[11px]">
+            <span>{project.meta.year}</span>
+            <span aria-hidden className="text-textSecondary/35 transition-colors duration-500 group-hover:text-white/30">·</span>
+            <span>{project.meta.role}</span>
+            <span aria-hidden className="text-textSecondary/35 transition-colors duration-500 group-hover:text-white/30">·</span>
+            <span className="inline-flex items-center gap-1.5">
+              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-textSecondary/45 transition-colors duration-500 group-hover:bg-white/55" />
+              {project.meta.status}
+            </span>
+          </div>
+        ) : null}
+
+        <div className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-black/[0.04] transition-[box-shadow] duration-500 group-hover:ring-white/10">
           <motion.div
             className={`${mediaAspect} w-full overflow-hidden bg-neutral-100`}
             whileHover={
@@ -174,7 +193,7 @@ export function ProjectCard({ project }: { project: Project }) {
           <h3 className={titleClass}>
             {companyName ? (
               <>
-                <span className="mb-2 block font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-textSecondary md:text-xs">
+                <span className="mb-2 block font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-textSecondary transition-colors duration-500 group-hover:text-white/55 md:text-xs">
                   {companyName}
                 </span>
                 <span>{mainTitle}</span>
@@ -185,14 +204,14 @@ export function ProjectCard({ project }: { project: Project }) {
           </h3>
 
           <p
-            className={`mt-3 text-[13px] leading-relaxed text-textSecondary md:text-sm ${
+            className={`mt-3 text-[13px] leading-relaxed text-textSecondary transition-colors duration-500 group-hover:text-white/70 md:text-sm ${
               featured ? "max-w-3xl" : "line-clamp-3 flex-1 text-pretty"
             }`}
           >
             {project.description}
           </p>
 
-          <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-30 transition-[opacity,color] duration-400 group-hover:opacity-100 group-focus-within:opacity-100">
+          <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-white group-hover:opacity-100 group-focus-within:opacity-100">
             Case study
             <span aria-hidden className="translate-x-0 transition-transform duration-400 group-hover:translate-x-1 group-focus-within:translate-x-1">
               →

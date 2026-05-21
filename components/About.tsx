@@ -2,6 +2,7 @@
 
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useRef } from "react";
 
 const capabilities = [
@@ -9,16 +10,19 @@ const capabilities = [
     title: "AI-native Product Thinking",
     description:
       "Workflows where AI acts as a collaborator at every step, not just a response generator.",
+    evidence: { href: "/work/ai-character", label: "See Qwen Character" },
   },
   {
     title: "Motion as Interaction Logic",
     description:
       "Motion that clarifies state, hierarchy, and user confidence.",
+    evidence: { href: "/work/meituan-im", label: "See Meituan IM" },
   },
   {
     title: "Prototyping with Code",
     description:
       "Interactive prototypes with React and AI tools to move from idea to shipped experience faster.",
+    evidence: { href: "/vibe-coding", label: "See Builds" },
   },
 ] as const;
 
@@ -38,7 +42,7 @@ export function About() {
         <p className="font-mono text-xs font-normal uppercase tracking-widest text-textSecondary">About</p>
         <h2
           id="about-heading"
-          className="mt-4 max-w-[22ch] font-display text-2xl font-light leading-snug text-textPrimary md:mt-5 md:text-3xl lg:max-w-[28ch]"
+          className="mt-4 max-w-[22ch] font-display text-2xl font-light leading-snug tracking-[-0.01em] text-textPrimary md:mt-5 md:text-3xl lg:max-w-[28ch]"
         >
           Fine arts roots. AI-native practice.
         </h2>
@@ -52,12 +56,12 @@ export function About() {
             transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <p className="text-base font-normal leading-relaxed text-textPrimary md:text-[17px] md:leading-relaxed">
-              A product designer with fine arts roots. Ten years across painting, spatial design, and digital products
-              built her instinct for seeing what a messy system wants to become.
+              Painting taught me to see what a system wants to become before it knows itself. Ten years across canvas,
+              spatial design, and digital products turned that instinct into a working method.
             </p>
             <p className="mt-4 text-base font-normal leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
-              She works where technology meets human behavior, making the complex feel understandable and worth
-              returning to. Research, product thinking, and code, with AI at the core of how she thinks.
+              I work where technology meets human behavior, making the complex feel understandable and worth returning
+              to. Research, product thinking, and code — with AI at the core of how I think.
             </p>
           </motion.div>
 
@@ -135,6 +139,18 @@ export function About() {
               <p className="mt-2 text-sm leading-relaxed text-textSecondary md:text-[15px] md:leading-relaxed">
                 {item.description}
               </p>
+              <Link
+                href={item.evidence.href}
+                className="group/cap mt-3 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2 md:text-[11px]"
+              >
+                {item.evidence.label}
+                <span
+                  aria-hidden
+                  className="translate-x-0 transition-transform duration-300 ease-portfolio group-hover/cap:translate-x-0.5"
+                >
+                  →
+                </span>
+              </Link>
             </motion.li>
           ))}
         </motion.ul>

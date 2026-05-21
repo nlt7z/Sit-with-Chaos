@@ -1,70 +1,39 @@
 "use client";
 
 import { motion, useInView, useReducedMotion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
-/** Live homepage previews — 2 rows × 2 cards, 3:7 ratio per row, color and aspect tuned to each card's content. */
+/** Live homepage previews — two product-driven builds, kept lean for hiring context.
+ *  Omikuji / Apsara moved to /code/playground/ so positioning stays sharp. */
 const magicPreviews = [
-  // Row 1 · left (wide hero) — portrait phone, contained on brand-color panel
+  // Wide hero — portrait phone, contained on brand-color panel
   {
     href: "/vibe-coding#app-design",
-    kind: "video" as const,
-    mediaSrc: "/assets/app-design/app-design.mp4",
+    mediaSrc: "/assets/app-design/bidking.mp4",
     mediaAlt: "App design screen recording",
     category: "App Design",
     summary: "Studio interactions",
+    soloMeta: "Solo · 4 days",
     panelBg: "bg-[#0c1422]",
     accentText: "text-[#7BA4E8]",
-    size: "wide" as const,
     colSpan: "lg:col-span-7" as const,
     fit: "contain" as const,
   },
-  // Row 1 · right (narrow side) — romance preview
+  // Narrow side — romance preview
   {
     href: "/work/ai-character/prototype",
-    kind: "video" as const,
     mediaSrc: "/assets/ai-character/newmove.mp4",
     mediaAlt: "Romance showroom hero motion",
     category: "Romance",
     summary: "Meet with Lucien",
+    soloMeta: "Solo · 1 day",
     panelBg: "bg-[#1a0a13]",
     accentText: "text-[#E58698]",
-    size: "narrow" as const,
     colSpan: "lg:col-span-3" as const,
     fit: "cover" as const,
-  },
-  // Row 2 · left (narrow side) — illustration thumbnail
-  {
-    href: "/code/playground/omikuji",
-    kind: "image" as const,
-    mediaSrc: "/assets/Playground/omikuji-bg.png",
-    mediaAlt: "Shrine torii and omikuji cabinet — teal and gold illustration",
-    mediaClassName: "object-cover object-center",
-    category: "御神籤",
-    summary: "おみくじ",
-    panelBg: "bg-[#061a22]",
-    accentText: "text-[#D4A85F]",
-    size: "narrow" as const,
-    colSpan: "lg:col-span-3" as const,
-    fit: "cover" as const,
-  },
-  // Row 2 · right (wide hero) — wide landscape video, near-native fit
-  {
-    href: "/work/apsara-conference",
-    kind: "video" as const,
-    mediaSrc: "/assets/work/apsara.mp4",
-    mediaAlt: "Apsara Conference visual design preview",
-    category: "Apsara",
-    summary: "Visual Design",
-    panelBg: "bg-[#0c0a18]",
-    accentText: "text-[#9588D8]",
-    size: "wide" as const,
-    colSpan: "lg:col-span-7" as const,
-    fit: "contain" as const,
   },
 ] as const;
 
@@ -126,28 +95,6 @@ export function HomeMagicGallery() {
     ? {}
     : { y: -4, scale: 1.012, transition: { duration: 0.45, ease: easePortfolio } };
 
-  const renderCardMedia = (item: (typeof magicPreviews)[number]) => {
-    if (!inView) return null;
-    if (item.kind === "video") {
-      return (
-        <PreviewVideo
-          src={item.mediaSrc}
-          alt={item.mediaAlt}
-          fit={item.fit}
-        />
-      );
-    }
-    return (
-      <Image
-        src={item.mediaSrc}
-        alt={item.mediaAlt}
-        fill
-        sizes="(min-width: 1024px) 26vw, (min-width: 640px) 50vw, 100vw"
-        className={item.mediaClassName ?? "object-cover"}
-      />
-    );
-  };
-
   return (
     <section
       id="magic"
@@ -161,16 +108,15 @@ export function HomeMagicGallery() {
           animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.55, ease: easePortfolio }}
         >
-          <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Magic</p>
+          <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">End-to-end Builds</p>
           <h2
             id="magic-heading"
-            className="mt-3 max-w-xl font-display text-2xl font-light lowercase leading-snug tracking-[-0.02em] text-textPrimary md:text-3xl"
+            className="mt-3 max-w-2xl font-display text-2xl font-light leading-snug tracking-[-0.01em] text-textPrimary md:text-3xl"
           >
-            coding stuff
+            One person, one throughline.
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-textSecondary md:text-[15px]">
-            Concept, logic, visuals, code, ship — one person, one throughline. End-to-end ownership with the creative
-            instinct behind every decision.
+            Concept, logic, visuals, code, ship — end-to-end ownership with the creative instinct behind every decision.
           </p>
         </motion.div>
 
@@ -180,7 +126,7 @@ export function HomeMagicGallery() {
           animate={inView ? { opacity: 1, y: 0 } : prefersReducedMotion ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.6, delay: prefersReducedMotion ? 0 : 0.06, ease: easePortfolio }}
           role="list"
-          aria-label="Vibe coding preview gallery"
+          aria-label="End-to-end builds preview gallery"
         >
           {magicPreviews.map((item) => (
             <motion.div
@@ -197,7 +143,17 @@ export function HomeMagicGallery() {
                     : "transition-transform duration-[420ms] ease-portfolio group-hover:scale-[1.025] group-focus-within:scale-[1.025]"
                 }`}
               >
-                {renderCardMedia(item)}
+                {inView ? (
+                  <PreviewVideo src={item.mediaSrc} alt={item.mediaAlt} fit={item.fit} />
+                ) : null}
+              </div>
+
+              {/* Solo · duration chip — top-right */}
+              <div className="pointer-events-none absolute right-3 top-3 z-[3] md:right-4 md:top-4">
+                <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/40 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-white/80 backdrop-blur-sm md:text-[10px]">
+                  <span aria-hidden className="inline-block h-1 w-1 rounded-full bg-white/60" />
+                  {item.soloMeta}
+                </span>
               </div>
 
               {/* Glass label strip at bottom — slim frosted bar */}

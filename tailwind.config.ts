@@ -13,6 +13,11 @@ const config: Config = {
         surfaceAlt: "#F5F5F7",
         textPrimary: "#1D1D1F",
         textSecondary: "#6E6E73",
+        nltLime: {
+          DEFAULT: "#B8E532",
+          soft: "#F5FBE0",
+          ink: "#5A7A12",
+        },
         meituan: {
           yellow: "#FFC300",
           "yellow-soft": "#FFF8E0",

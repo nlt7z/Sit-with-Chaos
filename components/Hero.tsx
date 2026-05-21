@@ -2,32 +2,24 @@
 
 import { BlurReveal } from "@/registry/spell-ui/blur-reveal";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
-const heading = "Hello, I'm Yuan Fang.";
+const heading = "I turn 60-minute docs into 2-minute products.";
 const subheading =
-  "Designing AI-native products with AI — from research to shipped code.";
+  "AI-native full-stack designer — from research to shipped code.";
 const credentialLinkClass =
-  "underline decoration-black/[0.18] underline-offset-[3px] transition-[color,text-decoration-color] hover:text-textPrimary hover:decoration-black/[0.35] focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2";
-const heroHalftoneSrc = "/assets/Playground/nlt_halftone_dense_v3.html";
+  "underline decoration-black/[0.18] underline-offset-[3px] transition-[color,text-decoration-color] hover:text-textPrimary hover:decoration-black/40 focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2";
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const reduced = !!prefersReducedMotion;
   const ref = useRef<HTMLElement | null>(null);
-  const [halftoneMounted, setHalftoneMounted] = useState(false);
-  const [halftoneHovered, setHalftoneHovered] = useState(false);
-  const [vendingSwitchOn, setVendingSwitchOn] = useState(false);
-  const vendingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const spotlightRef = useRef<HTMLDivElement | null>(null);
   const pointerRef = useRef({ x: -9999, y: -9999 });
   const pointerRafRef = useRef<number | null>(null);
-  const router = useRouter();
 
   useEffect(() => {
     return () => {
-      if (vendingTimerRef.current) clearTimeout(vendingTimerRef.current);
       if (pointerRafRef.current !== null) cancelAnimationFrame(pointerRafRef.current);
     };
   }, []);
@@ -45,57 +37,11 @@ export function Hero() {
     pointerRafRef.current = requestAnimationFrame(flushPointerToCssVars);
   };
 
-  // Mount the iframe on first paint; unmount when section leaves viewport to reclaim memory.
-  useEffect(() => {
-    if (reduced) return;
-    const section = ref.current;
-    if (!section) return;
-
-    let io: IntersectionObserver | null = null;
-
-    const attach = () => {
-      io = new IntersectionObserver(
-        ([e]) => setHalftoneMounted(e.isIntersecting),
-        { threshold: 0, rootMargin: "24px 0px" },
-      );
-      io.observe(section);
-    };
-
-    // Defer slightly so the page paints first, then load the iframe.
-    let idleCb: number | undefined;
-    let fallback: ReturnType<typeof setTimeout> | undefined;
-    if (typeof requestIdleCallback !== "undefined") {
-      idleCb = requestIdleCallback(attach, { timeout: 600 });
-    } else {
-      fallback = setTimeout(attach, 120);
-    }
-
-    return () => {
-      if (idleCb !== undefined && typeof cancelIdleCallback !== "undefined") cancelIdleCallback(idleCb);
-      if (fallback !== undefined) clearTimeout(fallback);
-      io?.disconnect();
-    };
-  }, [reduced]);
-
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
   });
-  const halftoneY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : -48]);
   const textY = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 22]);
-
-  const handleVendingSwitch = () => {
-    if (vendingSwitchOn) return;
-    if (reduced) {
-      router.push("/vending");
-      return;
-    }
-    setVendingSwitchOn(true);
-    vendingTimerRef.current = setTimeout(() => {
-      vendingTimerRef.current = null;
-      router.push("/vending");
-    }, 300);
-  };
 
   return (
     <section
@@ -168,60 +114,10 @@ export function Hero() {
         </div>
       )}
 
-      {/* ── NLT Halftone — hover to reveal ────────────────────────────────────── */}
-      <motion.div
-        aria-hidden
-        className="relative w-full overflow-hidden"
-        style={{ y: halftoneY }}
-      >
-        <div className="flex justify-center px-5 pt-3 md:px-10 md:pt-4">
-          <div className="w-full max-w-[min(32rem,72vw)]">
-            {/* Canvas logical ratio 620×260 — clip edges so only the letterform band shows */}
-            <div
-              className="relative mx-auto aspect-[620/260] w-full overflow-hidden bg-transparent"
-              onMouseEnter={() => setHalftoneHovered(true)}
-              onMouseLeave={() => setHalftoneHovered(false)}
-            >
-              <motion.div
-                className="absolute inset-0"
-                animate={
-                  reduced
-                    ? { opacity: 1, filter: "blur(0px)" }
-                    : {
-                        opacity: halftoneHovered ? 1 : 0.42,
-                        filter: halftoneHovered ? "blur(0px)" : "blur(8px)",
-                      }
-                }
-                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              >
-                {!reduced && halftoneMounted ? (
-                  <iframe
-                    src={heroHalftoneSrc}
-                    title="NLT Halftone — interactive"
-                    loading="lazy"
-                    scrolling="no"
-                    className="pointer-events-auto absolute left-1/2 top-[52%] h-[145%] w-[118%] max-w-none -translate-x-1/2 -translate-y-1/2 border-0 md:h-[138%] md:w-[112%]"
-                  />
-                ) : (
-                  <div
-                    className="absolute inset-0 bg-[#f0f0f3]"
-                    style={{
-                      backgroundImage:
-                        "radial-gradient(circle at 1px 1px, rgba(0,0,0,0.06) 1px, transparent 0)",
-                      backgroundSize: "14px 14px",
-                    }}
-                  />
-                )}
-              </motion.div>
-            </div>
-          </div>
-        </div>
-      </motion.div>
-
-      {/* ── Introduction — tight to halftone ───────────────────────────────────── */}
+      {/* ── Introduction ───────────────────────────────────── */}
       <motion.div
         style={{ y: textY }}
-        className="relative z-10 px-6 pb-12 pt-3 text-center md:pb-16 md:pt-4"
+        className="relative z-10 px-6 pb-12 pt-24 text-center md:pb-16 md:pt-32 lg:pt-36"
       >
         <div className="flex flex-col items-center text-center">
           <motion.h1
@@ -269,6 +165,26 @@ export function Hero() {
                 Alibaba
               </a>
             </p>
+
+            {/* Status strip — open to work, timezone, base */}
+            <motion.p
+              initial={reduced ? false : { opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: reduced ? 0 : 0.55, ease: [0.25, 0.1, 0.25, 1] }}
+              className="mt-4 inline-flex items-center gap-2 rounded-full border border-black/[0.06] bg-white/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary backdrop-blur-sm md:mt-5"
+            >
+              <span aria-hidden className="relative flex h-1.5 w-1.5">
+                {!reduced && (
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nltLime opacity-70" />
+                )}
+                <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nltLime" />
+              </span>
+              Open to work
+              <span aria-hidden className="text-textSecondary/40">·</span>
+              PST
+              <span aria-hidden className="text-textSecondary/40">·</span>
+              Seattle / San Francisco
+            </motion.p>
           </BlurReveal>
         </div>
 
@@ -280,57 +196,25 @@ export function Hero() {
             delay: reduced ? 0 : 1,
             ease: [0.25, 0.1, 0.25, 1],
           }}
-          className="mt-6 flex flex-wrap items-center justify-center gap-4 md:mt-7"
+          className="mt-7 flex flex-wrap items-center justify-center gap-4 md:mt-8"
         >
           <motion.a
             href="#work"
             whileHover={reduced ? undefined : { y: -2 }}
             whileTap={reduced ? undefined : { y: 1 }}
             transition={{ type: "spring", stiffness: 480, damping: 28 }}
-            className="rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+            className="group/cta relative overflow-hidden rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-400 hover:ring-nltLime/40 hover:shadow-[0_16px_36px_-14px_rgba(184,229,50,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
           >
-            Explore Work
-          </motion.a>
-        </motion.div>
-
-        <motion.div
-          initial={reduced ? false : { opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: reduced ? 0 : 1.48 }}
-          className="mt-3 flex justify-center"
-        >
-          <button
-            type="button"
-            role="switch"
-            aria-checked={vendingSwitchOn}
-            aria-busy={vendingSwitchOn}
-            aria-label="Switch to vending machine view"
-            onClick={handleVendingSwitch}
-            className="group inline-flex cursor-pointer items-center gap-2 rounded-full border border-transparent px-2 py-2 transition-colors hover:border-black/[0.07] hover:bg-neutral-50/90 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 disabled:cursor-wait"
-            disabled={vendingSwitchOn}
-          >
-            <span
-              className={`relative h-[1.375rem] w-[2.625rem] shrink-0 rounded-full border transition-[border-color,background-color] duration-300 ease-out ${
-                vendingSwitchOn
-                  ? "border-[#c9a030]/55 bg-[#c9a030]/22"
-                  : "border-black/[0.12] bg-neutral-200/80 group-hover:border-black/[0.18] group-hover:bg-neutral-200"
-              }`}
-              aria-hidden
-            >
+            <span className="relative z-10 inline-flex items-center gap-1.5">
+              Explore Work
               <span
-                className={`pointer-events-none absolute left-[3px] top-1/2 size-[1.125rem] -translate-y-1/2 rounded-full bg-white shadow-[0_1px_2px_rgba(0,0,0,0.1)] ring-1 ring-black/[0.06] transition-transform duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  vendingSwitchOn ? "translate-x-[1.125rem]" : "translate-x-0"
-                }`}
-              />
+                aria-hidden
+                className="inline-block translate-x-0 transition-transform duration-300 ease-portfolio group-hover/cta:translate-x-1"
+              >
+                →
+              </span>
             </span>
-            <span
-              className={`font-mono text-[11px] uppercase tracking-[0.2em] transition-colors ${
-                vendingSwitchOn ? "text-textSecondary/75" : "text-textSecondary/50 group-hover:text-textSecondary"
-              }`}
-            >
-              Vending Machine
-            </span>
-          </button>
+          </motion.a>
         </motion.div>
       </motion.div>
     </section>

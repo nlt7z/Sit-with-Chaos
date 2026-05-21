@@ -15,7 +15,7 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
 };
 
-const CONTACT_HEADLINE = "Let's build something amazing together.";
+const CONTACT_HEADLINE = "Looking for a team where research, motion, and code live in one head.";
 
 const letterRestTransition = { duration: 0.32, ease: [0.22, 1, 0.36, 1] as const };
 
@@ -33,42 +33,49 @@ function ContactWaveHeading({
   if (reduced) {
     return (
       <motion.h2 id={id} variants={variants} className={className}>
-        Let&apos;s build something amazing together.
+        Looking for a team where research, motion, and code live in one head.
       </motion.h2>
     );
   }
 
   return (
-    <motion.h2 id={id} variants={variants} className={`${className} cursor-default`}>
-      {Array.from(CONTACT_HEADLINE).map((char, i) => {
-        if (char === " ") {
+    <motion.h2
+      id={id}
+      variants={variants}
+      className={`${className} cursor-default`}
+      aria-label="Looking for a team where research, motion, and code live in one head."
+    >
+      <span aria-hidden>
+        {Array.from(CONTACT_HEADLINE).map((char, i) => {
+          if (char === " ") {
+            return (
+              <span key={`space-${i}`} className="inline-block w-[0.3em] shrink-0">
+                {"\u00A0"}
+              </span>
+            );
+          }
           return (
-            <span key={`space-${i}`} className="inline-block w-[0.3em] shrink-0">
-              {"\u00A0"}
-            </span>
+            <motion.span
+              key={`${char}-${i}`}
+              className="inline-block origin-bottom will-change-transform"
+              initial={{ y: 0, rotate: 0 }}
+              animate={{ y: 0, rotate: 0 }}
+              transition={letterRestTransition}
+              whileHover={{
+                y: [0, -13, 2, -5, 0],
+                rotate: [0, -2.5, 2, -1, 0],
+                transition: {
+                  duration: 0.55,
+                  times: [0, 0.22, 0.42, 0.68, 1],
+                  ease: [0.22, 1, 0.36, 1],
+                },
+              }}
+            >
+              {char === "'" ? "\u2019" : char}
+            </motion.span>
           );
-        }
-        return (
-          <motion.span
-            key={`${char}-${i}`}
-            className="inline-block origin-bottom will-change-transform"
-            initial={{ y: 0, rotate: 0 }}
-            animate={{ y: 0, rotate: 0 }}
-            transition={letterRestTransition}
-            whileHover={{
-              y: [0, -13, 2, -5, 0],
-              rotate: [0, -2.5, 2, -1, 0],
-              transition: {
-                duration: 0.55,
-                times: [0, 0.22, 0.42, 0.68, 1],
-                ease: [0.22, 1, 0.36, 1],
-              },
-            }}
-          >
-            {char === "'" ? "\u2019" : char}
-          </motion.span>
-        );
-      })}
+        })}
+      </span>
     </motion.h2>
   );
 }
@@ -131,7 +138,7 @@ export function Contact() {
             whileHover={prefersReducedMotion ? undefined : { y: -2 }}
             whileTap={prefersReducedMotion ? undefined : { y: 1 }}
             transition={{ type: "spring", stiffness: 480, damping: 28 }}
-            className="rounded-full bg-textPrimary px-10 py-3.5 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-[opacity,box-shadow] duration-300 hover:opacity-90 hover:shadow-[0_16px_36px_-12px_rgba(0,0,0,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+            className="rounded-full bg-textPrimary px-10 py-3.5 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-[opacity,box-shadow,ring-color] duration-300 hover:opacity-90 hover:shadow-[0_16px_36px_-12px_rgba(184,229,50,0.32)] hover:ring-nltLime/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
           >
             Say hello
           </motion.a>
@@ -142,22 +149,16 @@ export function Contact() {
           className="mt-12 flex flex-wrap items-center justify-center gap-6 font-mono text-sm"
         >
           <a
-            href="mailto:fangyuanzero7@gmail.com"
-            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-          >
-            fangyuanzero7@gmail.com
-          </a>
-          <a
             href="https://linkedin.com/in/yuan-fang-66395725b"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary hover:decoration-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
           >
             LinkedIn
           </a>
           <a
             href="https://github.com/nlt7z"
-            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary hover:decoration-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
           >
             GitHub
           </a>

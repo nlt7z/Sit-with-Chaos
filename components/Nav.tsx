@@ -8,6 +8,7 @@ const navLinks = [
   { label: "Work", href: "/#work" },
   { label: "Coding", href: "/vibe-coding" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/#contact" },
 ] as const;
 
 type NavProps = {
@@ -91,13 +92,17 @@ export function Nav({ variant = "light" }: NavProps) {
                 )}
                 <a
                   href={link.href}
-                  className={`text-sm font-medium transition-colors duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                  className={`group/navlink relative text-sm font-medium transition-colors duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                     isDark
-                      ? "text-zinc-400 hover:text-zinc-100 focus-visible:ring-white/45 focus-visible:ring-offset-[#060608]"
-                      : "text-textSecondary hover:text-textPrimary focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                      ? "text-zinc-400 hover:text-zinc-100 focus-visible:ring-nltLime/55 focus-visible:ring-offset-[#060608]"
+                      : "text-textSecondary hover:text-textPrimary focus-visible:ring-nltLime focus-visible:ring-offset-2"
                   }`}
                 >
                   {link.label}
+                  <span
+                    aria-hidden
+                    className="pointer-events-none absolute -bottom-1 left-0 h-px w-full origin-left scale-x-0 bg-nltLime transition-transform duration-400 ease-portfolio group-hover/navlink:scale-x-100"
+                  />
                 </a>
               </span>
             ))}
