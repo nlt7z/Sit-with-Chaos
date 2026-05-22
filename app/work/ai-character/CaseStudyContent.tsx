@@ -680,12 +680,12 @@ const sectionHeadInner = {
 };
 
 const metaFields = [
-  { label: "Role", value: "UX Designer — End-to-End, research to production code" },
+  { label: "Role", value: "Sole UX designer — research to production code" },
   { label: "Timeline", value: "4 weeks · July–August 2025" },
-  { label: "Team", value: "1 supervisor · 2 UX · 2 PM · 4 Engineers" },
+  { label: "Team", value: "Me · 2 supervisors · 2 PM · 1 engineer" },
   {
-    label: "Impact",
-    value: "Shipped · ~2× model token/call traffic vs pre-launch · B2B framework adopted",
+    label: "Owned",
+    value: "UX strategy · 4 showrooms (UX + visual) · design system templates",
   },
 ];
 
@@ -1356,8 +1356,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 className="mt-6 max-w-[36rem] font-sans text-[1.0625rem] font-normal leading-[1.68] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.125rem] md:leading-[1.66]"
                 variants={reduced ? undefined : heroItem}
               >
-                Turned Qwen's static docs into interactive showrooms experiences. Post-launch <Em>model token and call traffic</Em> averaged{" "}
-                <Em>~2×</Em> the four-week pre-launch baseline.
+                Turned Qwen's static docs into interactive showrooms — first proof moment dropped from <Em>60+ minutes</Em> to <Em>under 2 minutes</Em>, with post-launch traffic at <Em>~2×</Em> the pre-launch baseline.
               </motion.p>
 
               <motion.div
@@ -1611,35 +1610,18 @@ export default function CaseStudyContent() {
         <Section
           id="d2-capability"
           eyebrow="Decision 02"
-          title="Each room proved one thing in 60 seconds."
+          title="I designed each room to prove one capability in 60 seconds."
         >
           <p>
-            Three model strengths in one chat window. None of them landed. Romance for memory callbacks. 
-            Astrology for live memory updates. Therapy for real-time analysis. One proof moment per room, legible in 60 seconds, no explainer text.
+            Three model strengths crammed into one chat window. None of them landed. So I split them across rooms — one proof moment per room, legible in 60 seconds, no explainer text.
           </p>
 
           <UxStrategyShowroomTable />
 
-          <div className="mt-10 md:mt-12">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">Interaction design</p>
-            <p className="mt-3 max-w-[34rem] font-sans text-[16px] leading-relaxed text-textSecondary">
-              Each room required its own interaction language — here's what was designed for each one.
+          <div className="mt-10 max-w-[34rem] md:mt-12">
+            <p className="font-sans text-[16px] leading-relaxed text-textSecondary">
+              Each room required its own interaction language. Below, a deep-dive on the Romance Room — designed to sustain engagement through long-term memory and parallel narrative threads.
             </p>
-          </div>
-
-          <div className="mt-10 border-y border-black/[0.06] py-8 md:py-10">
-            <div className="grid gap-8 md:grid-cols-2 md:gap-12">
-              <div>
-                <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Focus room</p>
-                <p className="mt-3 font-display text-[1.25rem] font-light text-textPrimary">Romance Room</p>
-              </div>
-              <div>
-                <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Design goal</p>
-                <p className="mt-3 font-sans text-[16px] font-normal leading-snug text-textPrimary">
-                  Sustain engagement through long-term memory and parallel narrative threads.
-                </p>
-              </div>
-            </div>
           </div>
 
           <InteractionInnovationList />
@@ -1651,7 +1633,7 @@ export default function CaseStudyContent() {
         <Section
           id="d3-acceleration"
           eyebrow="Decision 03"
-          title="Make the demo emotional for users and inspectable for builders."
+          title="I made demos emotional for users and inspectable for builders."
         >
           <p>
             <Em>Inspiration and Continue Response</Em> guide users to the <Em>wow moment</Em>. A slide-out drawer keeps <Em>YAML</Em> and <Em>prompts</Em> next to the <Em>live demo</Em>.
@@ -1662,15 +1644,13 @@ export default function CaseStudyContent() {
 
           <div className="mt-8 grid gap-6 md:grid-cols-2 md:gap-8">
             <div className="rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
-              <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 01</p>
-              <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Inspiration Response</p>
+              <p className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Inspiration Response</p>
               <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
                 Three <Em>reply options</Em> — action, emotion, expression. Guides without breaking flow. Feels like gameplay, not messaging.
               </p>
             </div>
             <div className="rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
-              <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 02</p>
-              <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Continue Response</p>
+              <p className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Continue Response</p>
               <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
                 One tap <Em>extends the story</Em> from context — long-context reasoning, no effort required.
               </p>
@@ -1686,8 +1666,7 @@ export default function CaseStudyContent() {
           />
 
           <div className="mt-10 rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 03</p>
-            <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Code drawer, not console.</p>
+            <p className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Code drawer, not console.</p>
             <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
               YAML specs, prompts, and constraints slide open beside the live demo — no context switch. Evaluators can inspect implementation without switching context, and clone the template as a <Em>reusable starting point</Em> for their own product.
             </p>
@@ -1717,8 +1696,7 @@ export default function CaseStudyContent() {
 
           <RevealLine className="mt-10" />
 
-          <p className="mt-10 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">A glimpse into the process</p>
-          <p className="mt-3 font-sans text-[16px] leading-relaxed text-textSecondary">
+          <p className="mt-10 font-sans text-[16px] leading-relaxed text-textSecondary">
             Inspired by <Em>Love and Deepspace</Em>, I used Wan, Kling, Dreamnia, and SeeDance for visual identity. Interactions built with <Em>Cursor</Em> and <Em>Claude Code</Em> — all in four weeks.
           </p>
           <div className="grid gap-6 pt-4 md:grid-cols-2 md:gap-8">
@@ -1888,8 +1866,7 @@ export default function CaseStudyContent() {
           </h3>
           <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
             <div className="flex flex-col rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] md:px-7 md:py-9">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary">Principle 01</p>
-              <p className="mt-4 font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
+              <p className="font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
                 Design is the translation layer.
               </p>
               <p className="mt-4 font-sans text-[15px] leading-relaxed text-textSecondary">
@@ -1897,8 +1874,7 @@ export default function CaseStudyContent() {
               </p>
             </div>
             <div className="flex flex-col rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] md:px-7 md:py-9">
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary">Principle 02</p>
-              <p className="mt-4 font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
+              <p className="font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
                 The best demo is future-self proof.
               </p>
               <p className="mt-4 font-sans text-[15px] leading-relaxed text-textSecondary">

@@ -32,6 +32,11 @@ export type Project = {
     role: string;
     status: string;
   };
+  /** Headline impact metric shown as a chip on the media (e.g. "−97% time"). */
+  impact?: string;
+  /** Show the card without a clickable case-study link (no /work/<slug> destination yet).
+   *  Hover invert + bottom arrow are both suppressed; bottom CTA reads "Case study coming soon". */
+  comingSoon?: boolean;
 };
 
 function VideoCardMedia({ src, poster, alt }: { src: string; poster?: string; alt: string }) {
@@ -89,9 +94,11 @@ const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 export function ProjectCard({ project }: { project: Project }) {
   const prefersReducedMotion = useReducedMotion();
   const featured = project.layout === "featured";
-  const hover = prefersReducedMotion
-    ? {}
-    : { y: -4, scale: 1.012, transition: { duration: 0.45, ease: easePortfolio } };
+  const comingSoon = project.comingSoon === true;
+  const hover =
+    prefersReducedMotion || comingSoon
+      ? {}
+      : { y: -4, scale: 1.012, transition: { duration: 0.45, ease: easePortfolio } };
 
   const mediaAspect =
     project.mediaAspect ??
@@ -101,20 +108,23 @@ export function ProjectCard({ project }: { project: Project }) {
     ? "font-display text-2xl font-light leading-snug text-textPrimary transition-colors duration-500 group-hover:text-white md:text-3xl"
     : "font-display text-lg font-light leading-snug text-textPrimary transition-colors duration-500 group-hover:text-white md:text-xl";
 
-  const titleSplitIndex = project.title.indexOf(" - ");
+  const titleSeparatorMatch = project.title.match(/\s+[-–—]\s+/);
+  const titleSplitIndex = titleSeparatorMatch?.index ?? -1;
+  const titleSeparatorLength = titleSeparatorMatch?.[0].length ?? 0;
   const companyName = titleSplitIndex >= 0 ? project.title.slice(0, titleSplitIndex).trim() : null;
   const mainTitle =
-    titleSplitIndex >= 0 ? project.title.slice(titleSplitIndex + 3).trim() : project.title;
+    titleSplitIndex >= 0
+      ? project.title.slice(titleSplitIndex + titleSeparatorLength).trim()
+      : project.title;
 
-  return (
-    <motion.article
-      whileHover={hover}
-      className="group relative flex h-full flex-col"
-    >
-      <Link
-        href={`/work/${project.slug}`}
-        className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[background-color,border-color,box-shadow] duration-500 ease-portfolio hover:border-textPrimary hover:bg-textPrimary hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2 md:rounded-[1.35rem] md:p-6"
-      >
+  // Static card wrapper (no Link, no hover invert) when there's no case study to link to.
+  const wrapperBaseClass =
+    "flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.35rem] md:p-6";
+  const wrapperLinkClass = `${wrapperBaseClass} transition-[background-color,border-color,box-shadow] duration-500 ease-portfolio hover:border-textPrimary hover:bg-textPrimary hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2`;
+  const wrapperStaticClass = `${wrapperBaseClass} cursor-default`;
+
+  const wrapperContent = (
+    <>
         {project.meta ? (
           <div className="mb-4 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary transition-colors duration-500 group-hover:text-white/55 md:text-[11px]">
             <span>{project.meta.year}</span>
@@ -161,6 +171,15 @@ export function ProjectCard({ project }: { project: Project }) {
               />
             )}
           </motion.div>
+
+          {project.impact ? (
+            <div className="pointer-events-none absolute left-3 top-3 z-10 md:left-4 md:top-4">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-white/85 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textPrimary shadow-[0_4px_14px_-6px_rgba(0,0,0,0.18)] backdrop-blur-md md:text-[11px]">
+                <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-nltLime" />
+                {project.impact}
+              </span>
+            </div>
+          ) : null}
 
           {project.flowSteps && project.flowSteps.length > 0 ? (
             <div
@@ -211,14 +230,34 @@ export function ProjectCard({ project }: { project: Project }) {
             {project.description}
           </p>
 
-          <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-white group-hover:opacity-100 group-focus-within:opacity-100">
-            Case study
-            <span aria-hidden className="translate-x-0 transition-transform duration-400 group-hover:translate-x-1 group-focus-within:translate-x-1">
-              →
+          {comingSoon ? (
+            <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60">
+              Case study coming soon
             </span>
-          </span>
+          ) : (
+            <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-white group-hover:opacity-100 group-focus-within:opacity-100">
+              Case study
+              <span aria-hidden className="translate-x-0 transition-transform duration-400 group-hover:translate-x-1 group-focus-within:translate-x-1">
+                →
+              </span>
+            </span>
+          )}
         </div>
-      </Link>
+      </>
+    );
+
+  return (
+    <motion.article
+      whileHover={hover}
+      className={`relative flex h-full flex-col ${comingSoon ? "" : "group"}`}
+    >
+      {comingSoon ? (
+        <div className={wrapperStaticClass}>{wrapperContent}</div>
+      ) : (
+        <Link href={`/work/${project.slug}`} className={wrapperLinkClass}>
+          {wrapperContent}
+        </Link>
+      )}
     </motion.article>
   );
 }

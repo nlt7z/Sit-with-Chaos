@@ -95,8 +95,10 @@ export function Hero() {
           aria-hidden
           className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
           style={{
-            WebkitMaskImage: "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
-            maskImage: "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
+            WebkitMaskImage:
+              "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
+            maskImage:
+              "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
           }}
         >
           <img

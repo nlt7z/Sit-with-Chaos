@@ -16,7 +16,7 @@ const capabilities = [
     title: "Motion as Interaction Logic",
     description:
       "Motion that clarifies state, hierarchy, and user confidence.",
-    evidence: { href: "/work/meituan-im", label: "See Meituan IM" },
+    evidence: { href: "/vibe-coding", label: "See Coding" },
   },
   {
     title: "Prototyping with Code",
@@ -44,7 +44,7 @@ export function About() {
           id="about-heading"
           className="mt-4 max-w-[22ch] font-display text-2xl font-light leading-snug tracking-[-0.01em] text-textPrimary md:mt-5 md:text-3xl lg:max-w-[28ch]"
         >
-          Fine arts roots. AI-native practice.
+          Ten years of seeing systems before they exist.
         </h2>
 
         {/* Top row: copy + portrait — narrower measure + shorter portrait, vertically balanced */}

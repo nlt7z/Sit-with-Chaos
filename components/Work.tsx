@@ -8,21 +8,22 @@ const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
 const aiCharacter: Project = {
   slug: "ai-character",
-  title: "Alibaba Qwen - From 60 min to 2 min",
+  title: "Alibaba Qwen — From 60-min docs to a 2-min product",
   description:
     "Turned static cloud documentation into interactive LLM-powered product experiences, reducing onboarding from 60+ minutes to under 2 minutes.",
   media: {
-    src: "/assets/ai-character/figma.mp4",
+    src: "/assets/ai-character/figma-h264.mp4",
     alt: "Alibaba Qwen AI Character product experience preview",
     type: "video",
   },
   flowSteps: ["prompt", "response", "deploy"],
   meta: { year: "2025", role: "Product Designer", status: "Shipped" },
+  impact: "−97% onboarding time",
 };
 
 const studioEngine: Project = {
   slug: "studio-engine",
-  title: "StudioEngine - Co-creating with AI, in 4 stages",
+  title: "StudioEngine — From 1-shot AI to a 4-stage co-creation pipeline",
   description:
     "Reorganized a 1-step generation flow into a 4-stage creative pipeline: basics, outline, script, and visuals — helping users co-create with AI instead of waiting for output.",
   media: {
@@ -32,11 +33,12 @@ const studioEngine: Project = {
   },
   flowSteps: ["basics", "outline", "script", "visuals"],
   meta: { year: "2024", role: "Product Designer", status: "Shipped" },
+  impact: "1 → 4 stages",
 };
 
 const meituanIm: Project = {
   slug: "meituan-im",
-  title: "Meituan - Quote inside the chat",
+  title: "Meituan — +5% conversion with in-chat quotes",
   description:
     "Designed a multi-round quotation experience inside chat, improving pricing clarity and supporting a 5%+ conversion lift through iteration and testing.",
   media: {
@@ -45,7 +47,23 @@ const meituanIm: Project = {
     type: "video",
   },
   flowSteps: ["chat quote", "compare", "confirm"],
-  meta: { year: "2023", role: "UX Designer", status: "Shipped" },
+  meta: { year: "2025", role: "UX Designer", status: "Shipped" },
+  impact: "+5% conversion",
+};
+
+const liner: Project = {
+  slug: "liner",
+  title: "Liner — Research-driven AI collaboration workflow",
+  description:
+    "Designed an AI collaboration workflow — chat-switch, shared canvas, and a collaborative library — from 11 user interviews on context switching, source ownership, and AI-to-human handoffs.",
+  media: {
+    src: "/assets/liner/Frame%2097.jpg",
+    alt: "Liner AI collaboration feature — research and design preview",
+    type: "image",
+  },
+  flowSteps: ["chat-switch", "library", "shared canvas"],
+  meta: { year: "2026", role: "Product Designer", status: "Coming soon" },
+  comingSoon: true,
 };
 
 type WorkRow =
@@ -53,7 +71,11 @@ type WorkRow =
   | { kind: "pair"; left: Project; right: Project };
 
 const workRows: WorkRow[] = [
-  { kind: "single", project: { ...aiCharacter, layout: "featured" } },
+  {
+    kind: "pair",
+    left: { ...aiCharacter, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
+    right: { ...liner, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
+  },
   {
     kind: "pair",
     left: { ...studioEngine, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },

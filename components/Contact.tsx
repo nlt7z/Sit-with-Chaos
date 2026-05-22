@@ -15,7 +15,7 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
 };
 
-const CONTACT_HEADLINE = "Looking for a team where research, motion, and code live in one head.";
+const CONTACT_HEADLINE = "Research, motion, and code — in one head.";
 
 const letterRestTransition = { duration: 0.32, ease: [0.22, 1, 0.36, 1] as const };
 
@@ -33,7 +33,7 @@ function ContactWaveHeading({
   if (reduced) {
     return (
       <motion.h2 id={id} variants={variants} className={className}>
-        Looking for a team where research, motion, and code live in one head.
+        Research, motion, and code — in one head.
       </motion.h2>
     );
   }
@@ -43,7 +43,7 @@ function ContactWaveHeading({
       id={id}
       variants={variants}
       className={`${className} cursor-default`}
-      aria-label="Looking for a team where research, motion, and code live in one head."
+      aria-label="Research, motion, and code — in one head."
     >
       <span aria-hidden>
         {Array.from(CONTACT_HEADLINE).map((char, i) => {
@@ -125,8 +125,8 @@ export function Contact() {
           variants={prefersReducedMotion ? undefined : itemVariants}
           className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-textSecondary md:mt-8 md:text-base"
         >
-          I&apos;m looking for teams designing the next generation of AI-native products — where
-          interaction, trust, and system thinking matter.
+          I&apos;m looking for teams building products where interaction, trust, and system
+          thinking matter — and where one person can take an idea to shipped.
         </motion.p>
 
         <motion.div

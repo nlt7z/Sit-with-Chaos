@@ -1,5 +1,6 @@
 "use client";
 
+import { SiteWindow } from "@/components/SiteWindow";
 import { TurntableWidget } from "@/components/TurntableWidget";
 import { VibeCodingShowrooms } from "@/components/VibeCodingShowrooms";
 import Link from "next/link";
@@ -48,28 +49,35 @@ function LazyVideo({ src }: { src: string }) {
   );
 }
 
-function LazyIframe({
-  src,
-  title,
-  className,
-  style,
-}: {
-  src: string;
-  title: string;
-  className?: string;
-  style?: React.CSSProperties;
-}) {
+const websiteDesignSites = [
+  {
+    href: "https://qbix.space",
+    url: "qbix.space",
+    label: "Qbix — live site preview",
+  },
+  {
+    href: "https://hancao.space",
+    url: "hancao.space",
+    label: "Han Cao — live site preview",
+  },
+] as const;
+
+function WebsiteDesignSiteGrid() {
   const { ref, inView } = useInView<HTMLDivElement>();
   return (
-    <div ref={ref} className={className} style={style}>
-      {inView && (
-        <iframe
-          title={title}
-          src={src}
-          className="h-full min-h-[280px] w-full border-0"
-          loading="lazy"
+    <div
+      ref={ref}
+      className="mt-10 grid grid-cols-1 gap-5 md:mt-12 md:grid-cols-2 md:gap-6"
+    >
+      {websiteDesignSites.map((site) => (
+        <SiteWindow
+          key={site.url}
+          href={site.href}
+          url={site.url}
+          label={site.label}
+          active={inView}
         />
-      )}
+      ))}
     </div>
   );
 }
@@ -106,22 +114,7 @@ export function VibeCodingPageContent() {
         <div className="mt-8">
           <LazyVideo src="/assets/work/apsara.mp4" />
         </div>
-        <LazyIframe
-          src="https://hancao.space/"
-          title="Han Cao personal website"
-          className="mt-10 overflow-hidden rounded-2xl border border-[rgba(0,0,0,0.08)] shadow-sm md:mt-12"
-          style={{ aspectRatio: "1728/1117", minHeight: "280px" }}
-        />
-        <div className="mt-3 flex justify-end px-0.5">
-          <Link
-            href="https://hancao.space/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-[13px] text-textPrimary underline underline-offset-4 transition-opacity hover:opacity-60"
-          >
-            Open →
-          </Link>
-        </div>
+        <WebsiteDesignSiteGrid />
       </section>
 
       <section className="mt-12 md:mt-14">

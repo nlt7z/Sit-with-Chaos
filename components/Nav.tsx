@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
@@ -19,15 +20,38 @@ type NavProps = {
 export function Nav({ variant = "light" }: NavProps) {
   const isDark = variant === "dark";
   const [scrolled, setScrolled] = useState(false);
+  // `isScrolling` is true while the user is actively scrolling; resets ~220ms
+  // after the last scroll event. We weaken backdrop blur during scroll so the
+  // page content shows through, then snap back to full frost at rest.
+  const [isScrolling, setIsScrolling] = useState(false);
   const [open, setOpen] = useState(false);
   const prefersReducedMotion = useReducedMotion();
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8);
+    let scrollTimer: ReturnType<typeof setTimeout> | null = null;
+    const onScroll = () => {
+      setScrolled(window.scrollY > 8);
+      setIsScrolling(true);
+      if (scrollTimer) clearTimeout(scrollTimer);
+      scrollTimer = setTimeout(() => setIsScrolling(false), 220);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      if (scrollTimer) clearTimeout(scrollTimer);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
+
+  // Compute frost stops:
+  //  - top of page (not scrolled): fully transparent, no blur
+  //  - scrolling: light blur + low opacity (you can see through)
+  //  - settled: full frost (current behavior)
+  const blurPx = !scrolled ? 0 : isScrolling ? 4 : 20;
+  const bgAlpha = !scrolled ? 0 : isScrolling ? 0.35 : isDark ? 0.82 : 0.8;
+  const bgColor = isDark
+    ? `rgba(6, 6, 8, ${bgAlpha})`
+    : `rgba(255, 255, 255, ${bgAlpha})`;
 
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
@@ -46,14 +70,8 @@ export function Nav({ variant = "light" }: NavProps) {
       <motion.header
         initial={false}
         animate={{
-          backgroundColor: isDark
-            ? scrolled
-              ? "rgba(6, 6, 8, 0.82)"
-              : "rgba(0, 0, 0, 0)"
-            : scrolled
-              ? "rgba(255, 255, 255, 0.8)"
-              : "rgba(255, 255, 255, 0)",
-          backdropFilter: scrolled ? "blur(20px)" : "blur(0px)",
+          backgroundColor: bgColor,
+          backdropFilter: `blur(${blurPx}px)`,
         }}
         transition={barTransition}
         className={`fixed inset-x-0 top-0 z-50 border-b ${
@@ -70,13 +88,21 @@ export function Nav({ variant = "light" }: NavProps) {
         >
           <Link
             href="/"
-            className={`font-mono text-sm font-medium tracking-tight focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+            aria-label="Yuan Fang — Home"
+            className={`block rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
               isDark
-                ? "text-zinc-100 focus-visible:ring-white/50 focus-visible:ring-offset-[#060608]"
-                : "text-textPrimary focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                ? "focus-visible:ring-white/50 focus-visible:ring-offset-[#060608]"
+                : "focus-visible:ring-textPrimary focus-visible:ring-offset-2"
             }`}
           >
-            YF
+            <Image
+              src="/assets/logo.png"
+              alt="Yuan Fang"
+              width={924}
+              height={908}
+              className="h-8 w-auto select-none md:h-9"
+              priority
+            />
           </Link>
 
           <div className="hidden items-center gap-6 md:flex">
