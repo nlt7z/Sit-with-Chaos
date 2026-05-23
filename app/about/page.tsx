@@ -126,8 +126,8 @@ export default function AboutPage() {
   const storyInView = useInView(storyRef, { once: true, margin: "-10% 0px" });
   const expRef = useRef(null);
   const expInView = useInView(expRef, { once: true, margin: "-10% 0px" });
-  const eduRef = useRef(null);
-  const eduInView = useInView(eduRef, { once: true, margin: "-10% 0px" });
+  const workRef = useRef(null);
+  const workInView = useInView(workRef, { once: true, margin: "-10% 0px" });
 
   return (
     <>
@@ -191,30 +191,68 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── 2. How I Work ───────────────────────────────────────────────── */}
+        {/* ── 2. Manifesto / How I Work — 2-col editorial rows ────────────── */}
         <section
           id="about-workflow"
-          className="scroll-mt-24 bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
+          ref={workRef}
+          className="scroll-mt-24 px-6 py-24 md:scroll-mt-28 md:py-32"
+          aria-labelledby="about-workflow-heading"
         >
           <div className="mx-auto max-w-content">
-            <SectionReveal>
-              <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Workflow</p>
-              <h2 className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl">How I work</h2>
-            </SectionReveal>
+            <motion.div
+              initial={rm ? false : { opacity: 0, y: 20 }}
+              animate={workInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
+              transition={{ duration: 0.55, ease: easePortfolio }}
+            >
+              <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Manifesto</p>
+              <h2
+                id="about-workflow-heading"
+                className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl"
+              >
+                How I work
+              </h2>
+            </motion.div>
 
-            <div className="mt-14 grid gap-5 md:grid-cols-3 md:items-stretch md:gap-6">
+            <div className="mt-14 divide-y divide-black/[0.08] border-t border-black/[0.08]">
               {workPrinciples.map((p, i) => (
-                <SectionReveal key={p.number} delay={rm ? 0 : i * 0.08}>
-                  <article className="flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-6 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:p-7">
-                    <h3 className="font-display text-lg font-light leading-snug text-textPrimary md:text-xl">
+                <motion.article
+                  key={p.number}
+                  className="grid gap-4 py-10 md:grid-cols-[10rem_1fr] md:gap-12 md:py-12"
+                  initial={rm ? false : { opacity: 0, y: 18 }}
+                  animate={workInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.5, delay: rm ? 0 : 0.1 * i, ease: easePortfolio }}
+                >
+                  <div>
+                    <p className="font-display text-3xl font-light leading-none tabular-nums text-nltLime-ink md:text-4xl">
+                      {p.number}
+                    </p>
+                    {p.stack ? (
+                      <ul className="mt-4 hidden flex-col gap-1.5 md:flex">
+                        {p.stack.split(" · ").map((tag) => (
+                          <li
+                            key={tag}
+                            className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary"
+                          >
+                            {tag}
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </div>
+                  <div>
+                    <h3 className="font-display text-xl font-light leading-snug text-textPrimary md:text-2xl">
                       {p.title}
                     </h3>
-
-                    <p className="mt-4 text-pretty text-[15px] leading-[1.62] text-textSecondary md:text-[15px]">
+                    <p className="mt-4 max-w-2xl text-base leading-[1.7] text-textSecondary md:text-[17px]">
                       {p.body}
                     </p>
-                  </article>
-                </SectionReveal>
+                    {p.stack ? (
+                      <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary md:hidden">
+                        {p.stack}
+                      </p>
+                    ) : null}
+                  </div>
+                </motion.article>
               ))}
             </div>
           </div>
@@ -249,10 +287,10 @@ export default function AboutPage() {
                     transition={{ duration: 0.5, delay: rm ? 0 : 0.08 * i, ease: easePortfolio }}
                   >
                     <span
-                      className="absolute left-0 top-2 size-3.5 rounded-full border-2 border-textPrimary bg-white md:top-2.5"
+                      className="absolute left-0 top-2 size-3.5 rounded-full border-2 border-nltLime bg-white md:top-2.5"
                       aria-hidden
                     />
-                    <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">
+                    <p className="font-mono text-xs uppercase tracking-widest text-nltLime-ink">
                       {String(i + 1).padStart(2, "0")} / 04
                     </p>
                     <h3 className="mt-2 font-display text-2xl font-light text-textPrimary md:text-3xl">
@@ -332,111 +370,92 @@ export default function AboutPage() {
         {/* Gallery carousel (includes Alessa Design slides) */}
         <AboutArtGallery noTopBorder noHeading />
 
-        {/* ── 5. Path ─────────────────────────────────────────────────────── */}
+        {/* ── 5. Background — Experience + Education side by side ─────── */}
         <section
-          id="about-path"
+          id="about-background"
           ref={expRef}
-          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
-          aria-labelledby="about-path-heading"
+          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] px-6 py-14 md:scroll-mt-28 md:py-16"
+          aria-label="Experience and education"
         >
           <div className="mx-auto max-w-content">
-            <motion.div
-              initial={rm ? false : { opacity: 0, y: 24 }}
-              animate={expInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.55, ease: easePortfolio }}
-            >
-              <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Experience</p>
-              <h2
-                id="about-path-heading"
-                className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl"
-              >
-                Path and craft.
-              </h2>
-            </motion.div>
+            <div className="grid gap-12 lg:grid-cols-[1.45fr_1fr] lg:gap-x-16">
+              {/* Experience column */}
+              <div>
+                <motion.div
+                  initial={rm ? false : { opacity: 0, y: 16 }}
+                  animate={expInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.55, ease: easePortfolio }}
+                >
+                  <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Experience</p>
+                  <h2 className="mt-2 font-display text-lg font-light text-textPrimary md:text-xl">
+                    Path and craft.
+                  </h2>
+                </motion.div>
 
-            <div className="relative mt-16 pl-6 md:pl-10">
-              <div
-                className="absolute bottom-2 left-[7px] top-2 w-px bg-[rgba(0,0,0,0.08)] md:left-[11px]"
-                aria-hidden
-              />
-              <ul className="space-y-10">
-                {experienceEntries.map((item, i) => (
-                  <motion.li
-                    key={`${item.company}-${item.period}`}
-                    className="relative grid grid-cols-1 gap-2 pl-6 sm:grid-cols-[1fr_auto] sm:items-baseline md:pl-8"
-                    initial={rm ? false : { opacity: 0, x: -16 }}
-                    animate={expInView ? { opacity: 1, x: 0 } : rm ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.5, delay: rm ? 0 : 0.08 * i, ease: easePortfolio }}
-                  >
-                    <span
-                      className={`absolute left-0 top-2 size-3.5 rounded-full border-2 md:top-2.5 ${
-                        item.current
-                          ? "border-textPrimary bg-textPrimary"
-                          : "border-textPrimary bg-white"
-                      }`}
-                      aria-hidden
-                    />
-                    <div>
-                      <p className="font-medium text-textPrimary">{item.company}</p>
-                      <p className="text-sm text-textSecondary">{item.role}</p>
-                    </div>
-                    <p className="font-mono text-sm text-textSecondary sm:text-right">{item.period}</p>
-                  </motion.li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
+                <div className="mt-6 divide-y divide-black/[0.06] border-t border-black/[0.06]">
+                  {experienceEntries.map((item, i) => (
+                    <motion.div
+                      key={`${item.company}-${item.period}`}
+                      className="grid grid-cols-1 gap-y-0.5 py-4 sm:grid-cols-[1fr_auto] sm:items-baseline sm:gap-x-6"
+                      initial={rm ? false : { opacity: 0, y: 10 }}
+                      animate={expInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.45, delay: rm ? 0 : 0.05 * i, ease: easePortfolio }}
+                    >
+                      <div className="min-w-0">
+                        <div className="flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+                          <p className="text-[15px] font-medium leading-snug text-textPrimary md:text-base">
+                            {item.company}
+                          </p>
+                          {item.current ? (
+                            <span className="inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink">
+                              <span className="inline-block size-1.5 animate-pulse rounded-full bg-nltLime" />
+                              now
+                            </span>
+                          ) : null}
+                        </div>
+                        <p className="mt-0.5 text-[13px] leading-relaxed text-textSecondary">{item.role}</p>
+                      </div>
+                      <p className="font-mono text-[12px] text-nltLime-ink sm:text-right">{item.period}</p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
 
-        {/* ── 6. Education (timeline — matches Path, no cards) ───────────── */}
-        <section
-          id="about-education"
-          ref={eduRef}
-          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] px-6 py-24 md:scroll-mt-28 md:py-32"
-          aria-labelledby="about-education-heading"
-        >
-          <div className="mx-auto max-w-content">
-            <motion.div
-              initial={rm ? false : { opacity: 0, y: 24 }}
-              animate={eduInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.55, ease: easePortfolio }}
-            >
-              <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Education</p>
-              <h2
-                id="about-education-heading"
-                className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl"
-              >
-                Education
-              </h2>
-            </motion.div>
+              {/* Education column */}
+              <div>
+                <motion.div
+                  initial={rm ? false : { opacity: 0, y: 16 }}
+                  animate={expInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.55, ease: easePortfolio, delay: rm ? 0 : 0.08 }}
+                >
+                  <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Education</p>
+                  <h2 className="mt-2 font-display text-lg font-light text-textPrimary md:text-xl">
+                    Roots.
+                  </h2>
+                </motion.div>
 
-            <div className="relative mt-16 pl-6 md:pl-10">
-              <div
-                className="absolute bottom-2 left-[7px] top-2 w-px bg-[rgba(0,0,0,0.08)] md:left-[11px]"
-                aria-hidden
-              />
-              <ul className="space-y-10">
-                {educationEntries.map((item, i) => (
-                  <motion.li
-                    key={`${item.level}-${item.school}`}
-                    className="relative grid grid-cols-1 gap-1 pl-6 md:pl-8"
-                    initial={rm ? false : { opacity: 0, x: -16 }}
-                    animate={eduInView ? { opacity: 1, x: 0 } : rm ? { opacity: 1, x: 0 } : {}}
-                    transition={{ duration: 0.5, delay: rm ? 0 : 0.08 * i, ease: easePortfolio }}
-                  >
-                    <span
-                      className="absolute left-0 top-2 size-3.5 rounded-full border-2 border-textPrimary bg-white md:top-2.5"
-                      aria-hidden
-                    />
-                    <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">{item.level}</p>
-                    <p className="font-display text-xl font-light leading-snug text-textPrimary md:text-2xl">
-                      {item.degree}
-                    </p>
-                    <p className="text-sm text-textSecondary">{item.school}</p>
-                    <p className="text-sm text-textSecondary">{item.detail}</p>
-                  </motion.li>
-                ))}
-              </ul>
+                <div className="mt-6 divide-y divide-black/[0.06] border-t border-black/[0.06]">
+                  {educationEntries.map((item, i) => (
+                    <motion.div
+                      key={`${item.level}-${item.school}`}
+                      className="py-4"
+                      initial={rm ? false : { opacity: 0, y: 10 }}
+                      animate={expInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
+                      transition={{ duration: 0.45, delay: rm ? 0 : 0.12 + 0.06 * i, ease: easePortfolio }}
+                    >
+                      <p className="font-mono text-[10px] uppercase tracking-widest text-nltLime-ink">
+                        {item.level}
+                      </p>
+                      <p className="mt-1.5 text-[15px] font-medium leading-snug text-textPrimary md:text-base">
+                        {item.degree}
+                      </p>
+                      <p className="mt-1 text-[13px] leading-relaxed text-textSecondary">
+                        {item.school} · {item.detail}
+                      </p>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </section>

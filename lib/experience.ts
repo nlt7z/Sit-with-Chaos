@@ -7,6 +7,7 @@ export type ExperienceEntry = {
 
 /** Keep in sync with homepage Experience section */
 export const experienceEntries: ExperienceEntry[] = [
+  { company: "Liner", role: "Product Designer", period: "2026", current: true },
   { company: "Alibaba Cloud", role: "UX Design Intern", period: "2025", current: false },
   { company: "Meituan", role: "UX Design Intern", period: "2025", current: false },
   {
