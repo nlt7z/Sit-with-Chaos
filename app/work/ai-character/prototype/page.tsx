@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DesktopExperienceGate } from "@/components/DesktopExperienceGate";
 import AiCharacterPrototypeClient from "./AiCharacterPrototypeClient";
 
 export const metadata: Metadata = {
@@ -16,5 +17,15 @@ export default async function AiCharacterPrototypePage({
   const embed = params.embed === "1";
   const embedMuted = params.muted === "1";
 
-  return <AiCharacterPrototypeClient embed={embed} muted={embedMuted} />;
+  return (
+    <DesktopExperienceGate
+      disabled={embed}
+      embedPath="/work/ai-character/prototype?muted=1"
+      title="Romance companion prototype"
+      description="A one-round chat experience with a centered character presence."
+      backHref="/work/ai-character"
+    >
+      <AiCharacterPrototypeClient embed={embed} muted={embedMuted} />
+    </DesktopExperienceGate>
+  );
 }

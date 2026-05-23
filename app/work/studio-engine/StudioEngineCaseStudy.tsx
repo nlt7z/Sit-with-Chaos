@@ -1383,13 +1383,13 @@ export default function StudioEngineCaseStudy() {
 
           <Reveal className="mt-20 md:mt-28" delay={0.06}>
             <Subtitle>Design takeaways the research validated</Subtitle>
-            <div className="mt-10 grid grid-cols-2 grid-rows-2">
+            <div className="mt-10 grid grid-cols-1 divide-y divide-black/[0.06] sm:grid-cols-2 sm:grid-rows-2 sm:divide-y-0">
               {(
                 [
-                  { title: "Options, not verdicts", body: "AI should return choices, not one final answer.", pad: "pb-8 pr-8 md:pb-10 md:pr-10" },
-                  { title: "History, not overwrite", body: "Every generation should be recoverable.", pad: "pb-8 pl-8 md:pb-10 md:pl-10" },
-                  { title: "One workspace", body: "Editing should stay in context.", pad: "pt-8 pr-8 md:pt-10 md:pr-10" },
-                  { title: "Progress, not waiting", body: "Generation should feel active, not frozen.", pad: "pt-8 pl-8 md:pt-10 md:pl-10" },
+                  { title: "Options, not verdicts", body: "AI should return choices, not one final answer.", pad: "py-6 sm:pb-8 sm:pr-8 sm:pt-0 sm:pl-0 md:pb-10 md:pr-10" },
+                  { title: "History, not overwrite", body: "Every generation should be recoverable.", pad: "py-6 sm:pb-8 sm:pl-8 sm:pt-0 sm:pr-0 md:pb-10 md:pl-10" },
+                  { title: "One workspace", body: "Editing should stay in context.", pad: "py-6 sm:pt-8 sm:pr-8 sm:pb-0 sm:pl-0 md:pt-10 md:pr-10" },
+                  { title: "Progress, not waiting", body: "Generation should feel active, not frozen.", pad: "py-6 sm:pt-8 sm:pl-8 sm:pb-0 sm:pr-0 md:pt-10 md:pl-10" },
                 ] as const
               ).map((o) => (
                 <div key={o.title} className={o.pad}>

@@ -295,14 +295,17 @@ function PrototypeCard({
   entry,
   shouldLoad,
   isActive,
+  fluid = false,
 }: {
   entry: Entry;
   shouldLoad: boolean;
   isActive: boolean;
+  /** When true the card stretches to fill its container (used in the mobile list). */
+  fluid?: boolean;
 }) {
   return (
     <article
-      className="w-[min(56vw,520px)]"
+      className={fluid ? "w-full" : "w-[min(56vw,520px)]"}
       style={{ pointerEvents: isActive ? "auto" : "none" }}
     >
       <div>
@@ -418,7 +421,7 @@ export function VibeCodingPageContent() {
   }, [prev, next]);
 
   return (
-    <section className="flex h-full flex-col">
+    <section className="flex flex-col md:h-full">
       {/* Filter */}
       <header className="mx-auto w-full max-w-content shrink-0 px-6">
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
@@ -438,8 +441,25 @@ export function VibeCodingPageContent() {
         </div>
       </header>
 
-      {/* Carousel */}
-      <div className="relative min-h-0 flex-1 overflow-hidden">
+      {/* Mobile: stacked list — no carousel, no click wheel */}
+      <div className="mx-auto mt-6 w-full max-w-content px-6 md:hidden">
+        {n === 0 ? (
+          <p className="py-12 text-center text-sm text-textSecondary">
+            Nothing here yet under <TagChip tag={filter as Tag} />.
+          </p>
+        ) : (
+          <ul className="flex flex-col gap-10 pb-16">
+            {visible.map((entry) => (
+              <li key={entry.date + entry.title} className="min-w-0">
+                <PrototypeCard entry={entry} shouldLoad isActive fluid />
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      {/* Tablet / desktop: carousel */}
+      <div className="relative hidden min-h-0 flex-1 overflow-hidden md:block">
         <div className="absolute inset-0 flex items-center justify-center">
           {visible.map((entry, i) => {
             // Shortest-path offset for wrap-around carousel.
@@ -478,8 +498,8 @@ export function VibeCodingPageContent() {
         </div>
       </div>
 
-      {/* Click wheel */}
-      <div className="shrink-0 flex justify-center pb-8">
+      {/* Click wheel — desktop only; mobile uses native scroll */}
+      <div className="hidden shrink-0 justify-center pb-8 md:flex">
         <ClickWheel onLeft={prev} onRight={next} />
       </div>
     </section>

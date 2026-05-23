@@ -134,13 +134,14 @@ function PhoneFrame({
   naturalWidth?: number;
   naturalHeight?: number;
 }) {
-  // Phone canvas: 320 × 693 ≈ 9:19.5 ratio. We display the image at 320 width.
-  // If the natural displayed height exceeds the canvas, we crop to the top
-  // ("above the fold") and surface a bottom fade + "view full screen" affordance.
+  // Phone canvas: ≈ 9:19.5 ratio. The frame's width is fluid (capped at 320),
+  // and the visible screen height is locked to that ratio so the device never
+  // overflows narrow viewports. Long images crop to the top ("above the fold")
+  // with a fade + "view full" affordance.
   const FRAME_W = 320;
-  const FRAME_H = 693;
-  const displayedHeight = (FRAME_W * naturalHeight) / naturalWidth;
-  const isLong = displayedHeight > FRAME_H + 8;
+  const ASPECT = 693 / 320; // height ÷ width
+  const ratio = naturalHeight / naturalWidth; // > ASPECT means image is taller than frame
+  const isLong = ratio > ASPECT + 0.02;
 
   return (
     <figure className="space-y-4">
@@ -159,8 +160,8 @@ function PhoneFrame({
       </div>
 
       <div
-        className="relative mx-auto rounded-[2rem] bg-gradient-to-br from-black/[0.05] via-black/[0.02] to-black/[0.08] p-[4px] shadow-[0_28px_56px_-28px_rgba(0,0,0,0.22),0_10px_22px_-12px_rgba(0,0,0,0.1)]"
-        style={{ width: FRAME_W, height: FRAME_H }}
+        className="relative mx-auto w-full rounded-[2rem] bg-gradient-to-br from-black/[0.05] via-black/[0.02] to-black/[0.08] p-[4px] shadow-[0_28px_56px_-28px_rgba(0,0,0,0.22),0_10px_22px_-12px_rgba(0,0,0,0.1)]"
+        style={{ maxWidth: FRAME_W, aspectRatio: `${1} / ${ASPECT}` }}
       >
         <div className="relative h-full w-full overflow-hidden rounded-[1.78rem] border border-black/[0.06] bg-white">
           <Image
@@ -170,7 +171,7 @@ function PhoneFrame({
             height={naturalHeight}
             className="block w-full"
             style={{ height: "auto" }}
-            sizes="320px"
+            sizes="(max-width: 360px) 88vw, 320px"
           />
           {isLong ? (
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-white/0 via-white/70 to-white" />
@@ -558,7 +559,7 @@ export default function MeituanImCaseStudyPage() {
               <iframe
                 src="/assets/meituan-im/interaction-flow.html"
                 title="FixIt Express interactive consultation flow"
-                className="h-[780px] w-full border-0"
+                className="h-[640px] w-full border-0 sm:h-[720px] md:h-[780px]"
                 loading="lazy"
               />
             </div>
@@ -570,74 +571,139 @@ export default function MeituanImCaseStudyPage() {
           eyebrow="Framework Extensions"
           title="The same loop scales: education, banquet, maternity care."
         >
-          <FadeIn className="mt-2 overflow-hidden rounded-2xl border border-black/[0.08]">
-            {/* Matrix header */}
-            <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] bg-black/[0.025] text-[12px]">
-              <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">
-                Domain
-              </div>
-              <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
-                01 · Diagnose
-              </div>
-              <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
-                02 · Structure
-              </div>
-              <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
-                03 · Commit
-              </div>
-            </div>
-
-            {/* Reference row — Home repair (the anchor) */}
-            <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-[#FFF8F4]/40">
-              <div className="border-r border-black/[0.06] px-5 py-5">
-                <p className="text-[15px] tracking-tight text-[#8A4B2A]">Home repair</p>
-                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#C47040]/80">Reference case</p>
-              </div>
-              <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
-                Certified expert defines the issue.
-              </div>
-              <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
-                Chat → structured service-order card.
-              </div>
-              <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
-                Live competitive quote → checkout.
-              </div>
-            </div>
-
-            {/* Extension rows */}
-            {[
-              {
-                domain: "Education consultation",
-                tagline: "Parents · advisors · plans",
-                d: "Advisor clarifies goals, grade, budget, schedule.",
-                s: "Constraints → structured learning brief.",
-                c: "Plan comparison with visible recommendation quality.",
-              },
-              {
-                domain: "Banquet booking",
-                tagline: "Event · venue · quote lock-in",
-                d: "Capture event size, date flex, menu tier, must-haves.",
-                s: "Non-negotiables → comparable requirement card.",
-                c: "Venue offers on equal terms; explicit quote boundaries.",
-              },
-              {
-                domain: "Maternity care",
-                tagline: "Family · caregiver · continuity",
-                d: "Triage need and risk; surface caregiver credentials first.",
-                s: "Care scope, boundaries, schedule → service brief.",
-                c: "Package selection in trust context; follow-up in same thread.",
-              },
-            ].map((row, i) => (
-              <div key={i} className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06]">
-                <div className="border-r border-black/[0.06] px-5 py-5">
-                  <p className="text-[15px] tracking-tight text-textPrimary">{row.domain}</p>
-                  <p className="mt-1 text-[12px] leading-snug text-textSecondary">{row.tagline}</p>
+          <FadeIn className="mt-2">
+            {/* Desktop / tablet — 4-column matrix */}
+            <div className="hidden overflow-hidden rounded-2xl border border-black/[0.08] sm:block">
+              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] bg-black/[0.025] text-[12px]">
+                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">
+                  Domain
                 </div>
-                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.d}</div>
-                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.s}</div>
-                <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.c}</div>
+                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                  01 · Diagnose
+                </div>
+                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                  02 · Structure
+                </div>
+                <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                  03 · Commit
+                </div>
               </div>
-            ))}
+
+              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-[#FFF8F4]/40">
+                <div className="border-r border-black/[0.06] px-5 py-5">
+                  <p className="text-[15px] tracking-tight text-[#8A4B2A]">Home repair</p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#C47040]/80">Reference case</p>
+                </div>
+                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
+                  Certified expert defines the issue.
+                </div>
+                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
+                  Chat → structured service-order card.
+                </div>
+                <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
+                  Live competitive quote → checkout.
+                </div>
+              </div>
+
+              {[
+                {
+                  domain: "Education consultation",
+                  tagline: "Parents · advisors · plans",
+                  d: "Advisor clarifies goals, grade, budget, schedule.",
+                  s: "Constraints → structured learning brief.",
+                  c: "Plan comparison with visible recommendation quality.",
+                },
+                {
+                  domain: "Banquet booking",
+                  tagline: "Event · venue · quote lock-in",
+                  d: "Capture event size, date flex, menu tier, must-haves.",
+                  s: "Non-negotiables → comparable requirement card.",
+                  c: "Venue offers on equal terms; explicit quote boundaries.",
+                },
+                {
+                  domain: "Maternity care",
+                  tagline: "Family · caregiver · continuity",
+                  d: "Triage need and risk; surface caregiver credentials first.",
+                  s: "Care scope, boundaries, schedule → service brief.",
+                  c: "Package selection in trust context; follow-up in same thread.",
+                },
+              ].map((row, i) => (
+                <div key={i} className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06]">
+                  <div className="border-r border-black/[0.06] px-5 py-5">
+                    <p className="text-[15px] tracking-tight text-textPrimary">{row.domain}</p>
+                    <p className="mt-1 text-[12px] leading-snug text-textSecondary">{row.tagline}</p>
+                  </div>
+                  <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.d}</div>
+                  <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.s}</div>
+                  <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.c}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* Mobile — stacked cards: each domain becomes a definition list */}
+            <div className="space-y-4 sm:hidden">
+              {[
+                {
+                  domain: "Home repair",
+                  tagline: "Reference case",
+                  ref: true,
+                  d: "Certified expert defines the issue.",
+                  s: "Chat → structured service-order card.",
+                  c: "Live competitive quote → checkout.",
+                },
+                {
+                  domain: "Education consultation",
+                  tagline: "Parents · advisors · plans",
+                  d: "Advisor clarifies goals, grade, budget, schedule.",
+                  s: "Constraints → structured learning brief.",
+                  c: "Plan comparison with visible recommendation quality.",
+                },
+                {
+                  domain: "Banquet booking",
+                  tagline: "Event · venue · quote lock-in",
+                  d: "Capture event size, date flex, menu tier, must-haves.",
+                  s: "Non-negotiables → comparable requirement card.",
+                  c: "Venue offers on equal terms; explicit quote boundaries.",
+                },
+                {
+                  domain: "Maternity care",
+                  tagline: "Family · caregiver · continuity",
+                  d: "Triage need and risk; surface caregiver credentials first.",
+                  s: "Care scope, boundaries, schedule → service brief.",
+                  c: "Package selection in trust context; follow-up in same thread.",
+                },
+              ].map((row, i) => (
+                <div
+                  key={i}
+                  className={`overflow-hidden rounded-xl border border-black/[0.08] ${
+                    row.ref ? "bg-[#FFF8F4]/60" : "bg-white"
+                  }`}
+                >
+                  <div className="border-b border-black/[0.06] px-4 py-3">
+                    <p className={`text-[15px] tracking-tight ${row.ref ? "text-[#8A4B2A]" : "text-textPrimary"}`}>
+                      {row.domain}
+                    </p>
+                    <p className={`mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${row.ref ? "text-[#C47040]/80" : "text-textSecondary/70"}`}>
+                      {row.tagline}
+                    </p>
+                  </div>
+                  <dl className="divide-y divide-black/[0.05] text-[13.5px] leading-relaxed">
+                    {(
+                      [
+                        ["01 · Diagnose", row.d],
+                        ["02 · Structure", row.s],
+                        ["03 · Commit", row.c],
+                      ] as const
+                    ).map(([k, v]) => (
+                      <div key={k} className="px-4 py-3">
+                        <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#C47040]">{k}</dt>
+                        <dd className="mt-1 text-textSecondary">{v}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+              ))}
+            </div>
           </FadeIn>
         </Section>
 

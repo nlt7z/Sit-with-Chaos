@@ -124,7 +124,7 @@ export function Hero() {
         <div className="flex flex-col items-center text-center">
           <motion.h1
             id="hero-heading"
-            className="mx-auto max-w-4xl cursor-default touch-manipulation font-display text-4xl font-light leading-tight text-textPrimary md:text-6xl lg:text-7xl"
+            className="mx-auto max-w-4xl cursor-default touch-manipulation font-display text-[2rem] font-light leading-[1.1] text-textPrimary sm:text-4xl sm:leading-tight md:text-6xl lg:text-7xl"
             initial={reduced ? false : { opacity: 0, y: 44 }}
             animate={{ opacity: 1, y: 0 }}
             transition={
@@ -173,7 +173,7 @@ export function Hero() {
               initial={reduced ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: reduced ? 0 : 0.55, ease: [0.25, 0.1, 0.25, 1] }}
-              className="mt-4 inline-flex items-center gap-2 rounded-full border border-black/[0.06] bg-white/60 px-3 py-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary backdrop-blur-sm md:mt-5"
+              className="mt-4 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full border border-black/[0.06] bg-white/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary backdrop-blur-sm sm:text-[11px] sm:tracking-[0.16em] md:mt-5"
             >
               <span aria-hidden className="relative flex h-1.5 w-1.5">
                 {!reduced && (

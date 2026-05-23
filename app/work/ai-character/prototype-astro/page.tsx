@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DesktopExperienceGate } from "@/components/DesktopExperienceGate";
 import AstroShowroomPrototypeClient from "./AstroShowroomPrototypeClient";
 
 export const metadata: Metadata = {
@@ -12,5 +13,17 @@ export default async function AstroShowroomPrototypePage({
   searchParams: Promise<{ embed?: string }>;
 }) {
   const params = await searchParams;
-  return <AstroShowroomPrototypeClient embed={params.embed === "1"} />;
+  const embed = params.embed === "1";
+
+  return (
+    <DesktopExperienceGate
+      disabled={embed}
+      embedPath="/work/ai-character/prototype-astro"
+      title="Astrology character prototype"
+      description="A consultation showroom — chat, card draw, and a memory archive."
+      backHref="/work/ai-character"
+    >
+      <AstroShowroomPrototypeClient embed={embed} />
+    </DesktopExperienceGate>
+  );
 }

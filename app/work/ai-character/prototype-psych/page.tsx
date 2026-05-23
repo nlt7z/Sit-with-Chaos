@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { DesktopExperienceGate } from "@/components/DesktopExperienceGate";
 import PsychShowroomPrototypeClient from "./PsychShowroomPrototypeClient";
 
 export const metadata: Metadata = {
@@ -13,6 +14,17 @@ export default async function PsychShowroomPrototypePage({
   searchParams: Promise<{ embed?: string }>;
 }) {
   const params = await searchParams;
-  return <PsychShowroomPrototypeClient embed={params.embed === "1"} />;
-}
+  const embed = params.embed === "1";
 
+  return (
+    <DesktopExperienceGate
+      disabled={embed}
+      embedPath="/work/ai-character/prototype-psych"
+      title="Therapy companion prototype"
+      description="An ambient room interface — chat with the analysis steps made visible before each reply."
+      backHref="/work/ai-character"
+    >
+      <PsychShowroomPrototypeClient embed={embed} />
+    </DesktopExperienceGate>
+  );
+}
