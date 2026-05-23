@@ -39,41 +39,85 @@ export type Project = {
   comingSoon?: boolean;
 };
 
-function VideoCardMedia({ src, poster, alt }: { src: string; poster?: string; alt: string }) {
+function VideoCardMedia({
+  src,
+  poster,
+  alt,
+  parentHovered,
+}: {
+  src: string;
+  poster?: string;
+  alt: string;
+  /** Card-level hover signal from ProjectCard. On hover-capable devices the
+   *  video only plays while this is true; otherwise it sits paused on its
+   *  first frame so the card reads as a static thumbnail. Ignored on touch
+   *  devices, which always auto-play when the card is in view. */
+  parentHovered: boolean;
+}) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [activeSrc, setActiveSrc] = useState<string | null>(null);
+  const [inView, setInView] = useState(false);
+  const [canHover, setCanHover] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const apply = () => setCanHover(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setActiveSrc(src);
-        } else {
-          video.pause();
-          setActiveSrc(null);
-        }
-      },
+      ([entry]) => setInView(entry.isIntersecting),
       { threshold: 0.15, rootMargin: "64px" },
     );
     observer.observe(video);
     return () => observer.disconnect();
-  }, [src]);
+  }, []);
 
+  // Source management:
+  //  - Touch (no hover): only load while in view, unload when scrolled away.
+  //    Saves bandwidth and stops background playback.
+  //  - Hover-capable: load whenever in view so the first-frame poster is
+  //    visible at rest; never unload while the card is on screen.
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    if (!activeSrc) {
+    if (!inView && !canHover) {
       video.pause();
       video.removeAttribute("src");
       video.load();
       return;
     }
-    video.src = activeSrc;
-    video.load();
-    video.play().catch(() => {});
-  }, [activeSrc]);
+    if (inView && !video.src) {
+      video.src = src;
+      video.load();
+    }
+  }, [inView, canHover, src]);
+
+  // Playback control.
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    const shouldPlay = inView && (canHover ? parentHovered : true);
+    if (shouldPlay) {
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      // On hover-out, reset to the first frame so the card reverts to a clean
+      // static thumbnail instead of stopping mid-shot.
+      if (canHover && video.readyState >= 1 && video.currentTime !== 0) {
+        try {
+          video.currentTime = 0;
+        } catch {
+          /* readyState lied — ignore */
+        }
+      }
+    }
+  }, [inView, parentHovered, canHover]);
 
   return (
     <video
@@ -84,7 +128,9 @@ function VideoCardMedia({ src, poster, alt }: { src: string; poster?: string; al
       muted
       loop
       playsInline
-      preload="none"
+      // metadata is enough to render the first-frame poster substitute on
+      // hover-capable devices; on touch the next effect will set src + play.
+      preload="metadata"
     />
   );
 }
@@ -95,6 +141,7 @@ export function ProjectCard({ project }: { project: Project }) {
   const prefersReducedMotion = useReducedMotion();
   const featured = project.layout === "featured";
   const comingSoon = project.comingSoon === true;
+  const [cardHovered, setCardHovered] = useState(false);
   const hover =
     prefersReducedMotion || comingSoon
       ? {}
@@ -152,6 +199,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 src={project.media.src}
                 poster={project.media.poster}
                 alt={project.media.alt}
+                parentHovered={cardHovered}
               />
             ) : project.media.type === "embed" ? (
               <iframe
@@ -249,6 +297,8 @@ export function ProjectCard({ project }: { project: Project }) {
   return (
     <motion.article
       whileHover={hover}
+      onHoverStart={() => setCardHovered(true)}
+      onHoverEnd={() => setCardHovered(false)}
       className={`relative flex h-full flex-col ${comingSoon ? "" : "group"}`}
     >
       {comingSoon ? (
