@@ -10,14 +10,14 @@ const easePremium = [0.25, 0.1, 0.25, 1] as const;
 
 const navItems = [
   { id: "overview", label: "Overview" },
-  { id: "problem", label: "Context & Signal" },
-  { id: "turning-point", label: "Turning Point" },
-  { id: "solution", label: "System Design" },
-  { id: "chat", label: "IM Experience" },
-  { id: "quote", label: "Quoting Engine" },
-  { id: "prototype", label: "Interactive Prototype" },
-  { id: "scenarios", label: "Framework Extensions" },
-  { id: "impact", label: "Impact & Validation" },
+  { id: "problem", label: "Context" },
+  { id: "turning-point", label: "Turn" },
+  { id: "solution", label: "System" },
+  { id: "chat", label: "Chat" },
+  { id: "quote", label: "Quote" },
+  { id: "prototype", label: "Prototype" },
+  { id: "scenarios", label: "Extensions" },
+  { id: "impact", label: "Impact" },
   { id: "reflection", label: "Reflection" },
 ] as const;
 
@@ -79,7 +79,7 @@ function CaseNav() {
                 }}
                 className={`block border-l-[1.5px] py-2 pl-5 text-[13px] leading-snug transition-all duration-500 ease-portfolio ${
                   active === id
-                    ? "border-textPrimary font-medium text-textPrimary"
+                    ? "border-[#C47040] font-medium text-textPrimary"
                     : "border-transparent text-textSecondary/90 hover:border-black/[0.12] hover:text-textPrimary"
                 }`}
               >
@@ -123,37 +123,88 @@ function PhoneFrame({
   src,
   alt,
   label,
+  caption,
+  naturalWidth = 2250,
+  naturalHeight = 4872,
 }: {
   src: string;
   alt: string;
   label: string;
+  caption?: string;
+  naturalWidth?: number;
+  naturalHeight?: number;
 }) {
+  // Phone canvas: 320 × 693 ≈ 9:19.5 ratio. We display the image at 320 width.
+  // If the natural displayed height exceeds the canvas, we crop to the top
+  // ("above the fold") and surface a bottom fade + "view full screen" affordance.
+  const FRAME_W = 320;
+  const FRAME_H = 693;
+  const displayedHeight = (FRAME_W * naturalHeight) / naturalWidth;
+  const isLong = displayedHeight > FRAME_H + 8;
+
   return (
-    <div className="space-y-4">
-      <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">{label}</p>
-      <div className="mx-auto h-[648px] w-[300px] rounded-[2rem] bg-gradient-to-b from-black/[0.04] to-black/[0.08] p-[3px] shadow-[0_24px_48px_-24px_rgba(0,0,0,0.18)]">
-        <div className="h-full overflow-y-auto rounded-[1.8125rem] border border-black/[0.06] bg-white shadow-inner">
-          <Image src={src} alt={alt} width={390} height={1900} className="h-auto w-full object-contain" />
+    <figure className="space-y-4">
+      <div className="flex items-baseline justify-between">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">{label}</p>
+        {isLong ? (
+          <a
+            href={src}
+            target="_blank"
+            rel="noreferrer"
+            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-[#C47040]"
+          >
+            View full →
+          </a>
+        ) : null}
+      </div>
+
+      <div
+        className="relative mx-auto rounded-[2rem] bg-gradient-to-br from-black/[0.05] via-black/[0.02] to-black/[0.08] p-[4px] shadow-[0_28px_56px_-28px_rgba(0,0,0,0.22),0_10px_22px_-12px_rgba(0,0,0,0.1)]"
+        style={{ width: FRAME_W, height: FRAME_H }}
+      >
+        <div className="relative h-full w-full overflow-hidden rounded-[1.78rem] border border-black/[0.06] bg-white">
+          <Image
+            src={src}
+            alt={alt}
+            width={naturalWidth}
+            height={naturalHeight}
+            className="block w-full"
+            style={{ height: "auto" }}
+            sizes="320px"
+          />
+          {isLong ? (
+            <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-b from-white/0 via-white/70 to-white" />
+          ) : null}
         </div>
       </div>
-    </div>
+
+      {caption ? (
+        <figcaption className="mx-auto max-w-[300px] text-center text-[13px] leading-relaxed text-textSecondary">
+          {caption}
+        </figcaption>
+      ) : null}
+    </figure>
   );
 }
 
-function AnnotationCard({
-  number,
+function Callout({
+  index,
   title,
   body,
 }: {
-  number: string;
+  index: number;
   title: string;
   body?: string;
 }) {
   return (
-    <div className="border-l-2 border-black/[0.12] pl-4 sm:pl-5">
-      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/75">{number}</p>
-      <p className="mt-2 text-[16px] leading-snug tracking-tight text-textPrimary">{title}</p>
-      {body ? <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">{body}</p> : null}
+    <div className="flex gap-4">
+      <span className="mt-[2px] inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#C47040]/30 bg-[#FFF8F4] font-mono text-[11px] tabular-nums text-[#8A4B2A]">
+        {index.toString().padStart(2, "0")}
+      </span>
+      <div className="min-w-0">
+        <p className="text-[15px] leading-snug tracking-tight text-textPrimary">{title}</p>
+        {body ? <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">{body}</p> : null}
+      </div>
     </div>
   );
 }
@@ -189,7 +240,7 @@ export default function MeituanImCaseStudyPage() {
         <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-56 pt-32 text-left md:px-12 md:pb-72 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
           <main className="relative min-h-screen">
             <header id="overview" className="scroll-mt-28 pb-24 md:pb-32">
-              <motion.div variants={heroVariants} initial="hidden" animate="show" className="max-w-5xl">
+              <motion.div variants={heroVariants} initial="hidden" animate="show">
                 <motion.p variants={heroItem} className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">
                   Meituan · Local Services · IM Consultation
                 </motion.p>
@@ -201,181 +252,180 @@ export default function MeituanImCaseStudyPage() {
                 </motion.h1>
                 <motion.p
                   variants={heroItem}
-                  className="mt-6 max-w-2xl text-[16px] leading-[1.75] text-textSecondary"
+                  className="mt-6 max-w-xl text-[16px] leading-[1.6] text-textSecondary"
                 >
-                  I designed a trust infrastructure that turns uncertain local-service pricing into a guided, comparable, and bookable decision flow.
+                  Turning uncertain local-service pricing into a guided, comparable, bookable decision.
                 </motion.p>
+
                 <motion.div
                   variants={heroItem}
-                  className="mt-14 flex flex-col gap-12 lg:flex-row lg:items-start"
-                  aria-label="Project summary for recruiters"
+                  className="mt-16 grid gap-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-20"
+                  aria-label="Project summary"
                 >
-                  {/* At a glance */}
-                  <section className="flex-1" aria-label="Project summary for recruiters">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">At a glance</p>
-                    <div className="mt-8 flex gap-10 lg:gap-12">
-                      {/* Left — Role, Context, Timeline stacked */}
-                      <div className="flex flex-col gap-8">
-                        <div className="min-w-0">
-                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Role</p>
-                          <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Product Design</p>
-                          <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">End-to-end case ownership</p>
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Context</p>
-                          <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Meituan Super App</p>
-                          <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">Local services platform architecture</p>
-                        </div>
-                        <div className="min-w-0">
-                          <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Timeline</p>
-                          <p className="mt-2 text-[16px] tracking-tight text-textPrimary">4 weeks</p>
-                        </div>
+                  {/* Left — meta + hero metric */}
+                  <div className="space-y-12">
+                    {/* Hero metric */}
+                    <div>
+                      <p className="font-display text-[4.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[6rem] lg:text-[6.5rem]">
+                        +5<span className="text-[0.5em] text-textPrimary/70">%</span>
+                      </p>
+                      <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-textSecondary">
+                        Conversion lift · ~2k extra daily orders · −50% disputes.
+                      </p>
+                    </div>
+
+                    {/* Meta row */}
+                    <div className="grid grid-cols-3 gap-6 border-t border-black/[0.08] pt-8 sm:gap-10">
+                      <div>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">Role</p>
+                        <p className="mt-3 text-[15px] tracking-tight text-textPrimary">Product Design</p>
+                        <p className="mt-1 text-[14px] leading-snug text-textSecondary">End-to-end ownership</p>
                       </div>
-                      {/* Right — Shipped outcome only */}
-                      <div className="min-w-0">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Shipped outcome</p>
-                        <div className="mt-4 space-y-1 text-[16px] text-textPrimary/90">
-                          <p>+5% conversion</p>
-                          <p>~2,000 additional daily orders</p>
-                          <p>−50% post-service disputes</p>
-                        </div>
-                        <p className="mt-1 text-[16px] leading-relaxed text-textSecondary">
-                          Validated through user-level randomized A/B on Meituan and Dianping
-                        </p>
+                      <div>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">Context</p>
+                        <p className="mt-3 text-[15px] tracking-tight text-textPrimary">Meituan super app</p>
+                        <p className="mt-1 text-[14px] leading-snug text-textSecondary">Local services</p>
+                      </div>
+                      <div>
+                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">Timeline</p>
+                        <p className="mt-3 text-[15px] tracking-tight text-textPrimary">4 weeks</p>
+                        <p className="mt-1 text-[14px] leading-snug text-textSecondary">Shipped</p>
                       </div>
                     </div>
-                  </section>
+                  </div>
 
-                  {/* Phone prototype — flush with At a glance, no wrapper box */}
-                  <div
-                    className="hidden lg:block"
-                    style={{ width: Math.round(390 * 0.68), height: Math.round(844 * 0.68), flexShrink: 0 }}
-                  >
-                    <iframe
-                      src="/assets/meituan-im/interaction-flow-phone.html"
-                      title="FixIt Express interactive prototype"
-                      scrolling="no"
-                      style={{
-                        width: 390,
-                        height: 844,
-                        border: "none",
-                        transform: "scale(0.68)",
-                        transformOrigin: "top left",
-                      }}
-                      loading="lazy"
-                    />
+                  {/* Right — live prototype (FixIt Express · Saffron).
+                      The HTML renders its own Cosmic Orange titanium bezel + scenario rail,
+                      so we don't wrap it in another device frame. Scaled to fit the column. */}
+                  <div className="hidden lg:flex lg:flex-col lg:items-start">
+                    <div
+                      className="relative overflow-hidden"
+                      style={{ width: 340, height: 800 }}
+                    >
+                      <iframe
+                        src="/assets/meituan-im/interaction-flow-phone.html"
+                        title="FixIt Express · Saffron — interactive prototype"
+                        style={{
+                          width: 500,
+                          height: 1176,
+                          border: 0,
+                          display: "block",
+                          transform: "scale(0.68)",
+                          transformOrigin: "top left",
+                        }}
+                        loading="lazy"
+                      />
+                    </div>
+                    <p className="mt-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
+                      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[#C47040]" />
+                      Live prototype · interact above
+                    </p>
                   </div>
                 </motion.div>
               </motion.div>
             </header>
 
         <Section id="problem" eyebrow="Context & Signal" title="Users wanted to ask first, but the platform was not earning trust.">
-          <p className="case-lead">
-            Meituan is one of China&apos;s largest super apps. This project sits in local services—home repair, banquet booking, maternity care, and other
-            categories where price depends on details from consultation.
-          </p>
-
-          <FadeIn className="my-2 py-8 md:py-9">
+          <FadeIn className="my-2 py-6 md:py-8">
             <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">User behavior signal</p>
-            <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
-              Before choosing a local service, users visit an average of <span className="text-textPrimary">10 merchants</span> and consult{" "}
-              <span className="text-textPrimary">6 of them</span> about their needs and pricing. They spend{" "}
-              <span className="text-textPrimary">30 minutes</span> weighing and comparing—yet still do not trust the prices and services merchants offer.
+            <p className="mt-5 max-w-3xl text-[16px] leading-[1.6] text-textPrimary/85">
+              Users visit <span className="text-textPrimary">10 merchants</span>, consult{" "}
+              <span className="text-textPrimary">6</span>, spend <span className="text-textPrimary">30 minutes</span> comparing — and still don&apos;t trust the price.
             </p>
           </FadeIn>
-
-          <p>
-            The friction was not demand. It was confidence: users needed service but did not trust the bill would match what they expected.
-          </p>
 
           <FadeIn className="grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3 md:gap-8">
             <div className="border-l border-black/[0.1] pl-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Behavior</p>
-              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Consult led bottom-bar taps.</p>
-              <p className="mt-4 text-[16px] leading-relaxed text-textSecondary">Across categories, consult outranked book and call.</p>
+              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Consult outranked book and call.</p>
             </div>
             <div className="border-l border-black/[0.1] pl-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Conversion</p>
               <p className="mt-4 text-[16px] tracking-tight text-textPrimary">In-app consult stayed low.</p>
-              <p className="mt-4 text-[16px] leading-relaxed text-textSecondary">Intent was visible; many users left the platform or dropped.</p>
             </div>
             <div className="border-l border-black/[0.1] pl-5">
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Experience</p>
-              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Price disputes clustered in home repair.</p>
-              <p className="mt-4 text-[16px] leading-relaxed text-textSecondary">The consistent theme: final charge disagreed with expectations.</p>
+              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Disputes clustered in home repair.</p>
             </div>
           </FadeIn>
         </Section>
 
-        <Section id="turning-point" eyebrow="Turning Point" title="The brief started with price visibility. The evidence pointed to something deeper.">
-          <p className="case-lead">
-            We first noticed that local services had the longest browse time but the lowest transaction rate—and the highest complaint rate on the platform.
-            Much of the friction traced back to pricing: local services are customized, varying by situation and merchant, so even the same service could cost
-            significantly differently.
-          </p>
-          <p>
-            The initial ask was to make prices more visible. But when I used AI to analyze dispute reviews at scale, the evidence showed visibility was not
-            enough. Users were already seeing prices. The breakdown happened later, when final bills rarely matched what people expected.
-          </p>
-
+        <Section id="turning-point" eyebrow="Turning Point" title="The brief asked for price visibility. The evidence pointed deeper.">
           <FadeIn>
-            <p className="text-[16px] leading-[1.75] tracking-tight text-textPrimary">
-              Price was not a number problem. It was a process trust problem.
+            <p className="text-[18px] leading-[1.55] tracking-tight text-textPrimary">
+              Price was not a number problem. It was a <span className="text-[#C47040]">process trust</span> problem.
             </p>
           </FadeIn>
 
-          <FadeIn className="mt-6">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">Previous workflow · user journey map</p>
-            <div className="mt-5 grid gap-0 border-y border-black/[0.08] md:grid-cols-2">
-              <div className="border-b border-r border-black/[0.06] px-6 py-6 md:border-b-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 1</p>
-                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Problem occurs at home</p>
-                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">User finds an issue like toilet repair and opens Meituan to search.</p>
+          <FadeIn className="mt-8">
+            <div className="grid gap-6 lg:grid-cols-2 lg:gap-10">
+              {/* BEFORE — old workflow, muted */}
+              <div className="flex flex-col">
+                <div className="mb-4 flex items-baseline justify-between">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Before · 4-step linear journey</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">grayscale</p>
+                </div>
+                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-black/[0.04]">
+                  {[
+                    ["Problem occurs", "User finds an issue like toilet repair and opens Meituan to search."],
+                    ["Many merchants appear", "User sees options but cannot tell who can diagnose accurately."],
+                    ["One-by-one outreach", "Repeats the same questions across shops; waits in fragmented threads."],
+                    ["Pick one for visit", "Merchants only promise an arrival fee; final quote deferred to on-site."],
+                  ].map(([t, b], i) => (
+                    <li key={i} className="bg-white px-5 py-4">
+                      <div className="flex items-baseline gap-3">
+                        <span className="font-mono text-[10px] tabular-nums text-textSecondary/60">0{i + 1}</span>
+                        <p className="text-[15px] tracking-tight text-textPrimary/85">{t}</p>
+                      </div>
+                      <p className="mt-1.5 pl-[26px] text-[13.5px] leading-relaxed text-textSecondary">{b}</p>
+                    </li>
+                  ))}
+                </ol>
+                <div className="mt-3 rounded-md border border-[#C47040]/30 bg-[#FFF8F4] px-5 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#8A4B2A]">→ Trust break</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#7A4330]">
+                    Quoted price ≠ actual bill. Scope, materials, and conditions widen the range. Users feel the system did not warn them.
+                  </p>
+                </div>
               </div>
-              <div className="border-b border-black/[0.06] px-6 py-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 2</p>
-                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Many local merchants appear</p>
-                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">User sees options, but cannot tell who can diagnose accurately.</p>
+
+              {/* AFTER — redesigned, warm accent */}
+              <div className="flex flex-col">
+                <div className="mb-4 flex items-baseline justify-between">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#C47040]">After · 3-step trust loop</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">redesigned</p>
+                </div>
+                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-[#C47040]/[0.08]">
+                  {[
+                    ["Diagnose the problem", "Certified experts surface from search to define the issue — remove ambiguity before comparison."],
+                    ["Structure the intent", "Multi-turn chat yields a service-order card so quotes compare on equal terms."],
+                    ["Compare and commit", "Vetted merchants quote live; the chosen price threads into checkout, locked."],
+                  ].map(([t, b], i) => (
+                    <li key={i} className="bg-white px-5 py-4">
+                      <div className="flex items-baseline gap-3">
+                        <span className="font-mono text-[10px] tabular-nums text-[#C47040]">0{i + 1}</span>
+                        <p className="text-[15px] tracking-tight text-textPrimary">{t}</p>
+                      </div>
+                      <p className="mt-1.5 pl-[26px] text-[13.5px] leading-relaxed text-textSecondary">{b}</p>
+                    </li>
+                  ))}
+                </ol>
+                <div className="mt-3 rounded-md border border-emerald-700/20 bg-emerald-50/60 px-5 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-800/80">→ Trust restored</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-emerald-900/75">
+                    Price is the output of a credible process. Range is explained by structured intent — what the user agreed to is what they pay.
+                  </p>
+                </div>
               </div>
-              <div className="border-r border-black/[0.06] px-6 py-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 3</p>
-                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">One-by-one outreach in chat</p>
-                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">
-                  User sends repeated questions: what is the issue, how much will it cost, then waits for replies from different shops.
-                </p>
-              </div>
-              <div className="px-6 py-6">
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Step 4</p>
-                <p className="mt-2 text-[16px] tracking-tight text-textPrimary">Select one merchant for visit</p>
-                <p className="mt-2 text-[16px] leading-relaxed text-textSecondary">
-                  Most merchants can only promise an arrival fee first; final quote is deferred to on-site inspection.
-                </p>
-              </div>
-            </div>
-            <div className="mt-4 border-l-[3px] border-[#C47040] bg-[#FFF8F4] px-6 py-5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#8A4B2A]">Trust break</p>
-              <p className="mt-2 text-[16px] leading-relaxed text-[#7A4330]">
-                Final price changes with real conditions, materials, and scope. The range becomes wide, so users feel that &quot;quoted price&quot; and
-                &quot;actual bill&quot; are disconnected.
-              </p>
             </div>
           </FadeIn>
-          <p>
-          I pushed back on the original direction. For customized services, static prices are often structurally wrong because scope and materials change.
+          <p className="mt-2 max-w-3xl font-display text-[1.6rem] italic leading-[1.35] tracking-tight text-textPrimary">
+            How do we guide users through a credible path to a price they can trust before they commit?
           </p>
-          
-            <p className="mt-5 max-w-2xl text-[16px] leading-[1.75] text-textPrimary">
-              So the product question shifted:
-            </p>
-            <p className="mt-3 max-w-3xl font-display text-[1.6rem] italic leading-[1.35] tracking-tight text-textPrimary">
-              how do we guide users through a credible path to a price they can trust before they commit?
-            </p>
-          
         </Section>
 
-        <Section id="solution" eyebrow="System Design" title="A three-step consultation system that carries trust into checkout.">
-          <SubsectionHeader label="Flow map" />
-          <FadeIn>
+        <Section id="solution" eyebrow="System Design" title="One end-to-end flow. Trust compounds across every stage.">
+          <FadeIn className="mt-2">
             <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
               <div className="relative w-full aspect-[17/23]">
                 <iframe
@@ -387,129 +437,123 @@ export default function MeituanImCaseStudyPage() {
               </div>
             </div>
           </FadeIn>
-          <FadeIn className="mt-16 grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3">
-            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/70">Step 01</p>
-              <p className="mt-5 text-[16px] tracking-tight text-textPrimary">
-                Diagnose the problem
-              </p>
-              <div className="mt-5 space-y-3 text-[16px] leading-relaxed text-textSecondary">
-                <p><span className="text-textPrimary/90">Function · </span>Certified experts surface from search to define the problem.</p>
-                <p><span className="text-textPrimary/90">Goal · </span>Remove ambiguity before comparison begins.</p>
-              </div>
-            </div>
-
-            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/70">Step 02</p>
-              <p className="mt-5 text-[16px] tracking-tight text-textPrimary">
-                Structure the intent
-              </p>
-              <div className="mt-5 space-y-3 text-[16px] leading-relaxed text-textSecondary">
-                <p><span className="text-textPrimary/90">Function · </span>Multi-turn chat yields a structured service-order card.</p>
-                <p><span className="text-textPrimary/90">Goal · </span>Turn conversation into comparable intent.</p>
-              </div>
-            </div>
-
-            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/70">Step 03</p>
-              <p className="mt-5 text-[16px] tracking-tight text-textPrimary">
-                Compare and commit
-              </p>
-              <div className="mt-5 space-y-3 text-[16px] leading-relaxed text-textSecondary">
-                <p><span className="text-textPrimary/90">Function · </span>Vetted merchants quote live; the chosen price threads into checkout.</p>
-                <p><span className="text-textPrimary/90">Goal · </span>Transparent competition and lower surprise billing risk.</p>
-              </div>
-            </div>
-          </FadeIn>
         </Section>
 
-        <Section id="chat" eyebrow="IM Experience" title="The interface walkthrough maps every critical state in one coherent conversation flow.">
-          <section className="mt-20 md:mt-24">
-            <SubsectionHeader label="The conversation flow" hint="Three entry states, one interaction model." />
-
+        <Section id="chat" eyebrow="IM Experience" title="Three entry states, one interaction model.">
+          <div className="mt-4">
             <div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
-              <PhoneFrame src="/assets/meituan-im/screen-04-entry-generic.jpg" alt="Generic search entry screen" label="Screen 4 · Generic intent" />
-              <PhoneFrame src="/assets/meituan-im/screen-05-entry-specific.jpg" alt="Specific search entry screen" label="Screen 5 · Specific intent" />
-              <PhoneFrame src="/assets/meituan-im/screen-03-offhours-state.jpg" alt="Off-hours edge case screen" label="Screen 3 · Off-hours edge case" />
+              <PhoneFrame
+                src="/assets/meituan-im/screen-04-entry-generic.jpg"
+                alt="Generic search entry screen"
+                label="01 · Generic intent"
+                caption="Symptom chips compress triage."
+                naturalHeight={4872}
+              />
+              <PhoneFrame
+                src="/assets/meituan-im/screen-05-entry-specific.jpg"
+                alt="Specific search entry screen"
+                label="02 · Specific intent"
+                caption="Trust card frames expert identity."
+                naturalHeight={4872}
+              />
+              <PhoneFrame
+                src="/assets/meituan-im/screen-03-offhours-state.jpg"
+                alt="Off-hours edge case screen"
+                label="03 · Off-hours edge case"
+                caption="Status stays explicit."
+                naturalHeight={4872}
+              />
             </div>
 
-            <div className="mt-12">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Interaction highlights</p>
-              <div className="mt-6 grid gap-4 md:grid-cols-3">
-                <AnnotationCard number="①" title="Symptom chips compress triage" />
-                <AnnotationCard number="②" title="Trust card frames expert identity" />
-                <AnnotationCard number="③" title="Text progress strip keeps status explicit" />
-              </div>
-            </div>
-
-            
-            
-          </section>
+          </div>
         </Section>
 
-        <Section id="quote" eyebrow="Quoting Engine" title="Diagnosis output becomes structured intent, then drives transparent competitive quotes.">
-          <section>
-            <SubsectionHeader label="Diagnosis in action" hint="From evidence capture to structured intent." />
+        <Section id="quote" eyebrow="Quoting Engine" title="Conversation becomes a contract. Merchants quote against it.">
+          <div>
+            <SubsectionHeader label="Diagnosis in action" />
             <div className="grid gap-10 md:grid-cols-2 md:gap-8">
-              <PhoneFrame src="/assets/meituan-im/screen-07-diagnosis-start.jpg" alt="Diagnosis start in chat" label="Screen 7 · Diagnosis starts" />
-              <PhoneFrame src="/assets/meituan-im/screen-11-diagnosis-product-rec.jpg" alt="Post diagnosis recommendation state" label="Screen 11 · Product recommendation" />
+              <PhoneFrame
+                src="/assets/meituan-im/screen-07-diagnosis-start.jpg"
+                alt="Diagnosis start in chat"
+                label="04 · Diagnosis starts"
+                caption="Vague problem → structured intent."
+                naturalHeight={9090}
+              />
+              <PhoneFrame
+                src="/assets/meituan-im/screen-11-diagnosis-product-rec.jpg"
+                alt="Post diagnosis recommendation state"
+                label="05 · Product recommendation"
+                caption="Recommendations only after confidence."
+                naturalHeight={10032}
+              />
             </div>
-            <div className="mt-12">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Interaction highlights</p>
-              <div className="mt-6 grid gap-4 md:grid-cols-3">
-                <AnnotationCard number="①" title="Conversation captures evidence quickly" />
-                <AnnotationCard number="②" title="Diagnosis becomes structured intent" />
-                <AnnotationCard number="③" title="Recommendations appear after confidence" />
-              </div>
-            </div>
-          </section>
+          </div>
 
-          <section className="mt-20 md:mt-28">
-            <SubsectionHeader label="Competitive quoting" hint="Live bidding, expiry handling, and re-quote continuity." />
-            <div className="grid gap-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-12">
-              <PhoneFrame src="/assets/meituan-im/screen-02-live-quoting.jpg" alt="Live quoting state" label="Screen 2 · Live quoting state" />
+          <div className="mt-20 md:mt-28">
+            <SubsectionHeader label="Competitive quoting" />
+            <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
+              <PhoneFrame
+                src="/assets/meituan-im/screen-02-live-quoting.jpg"
+                alt="Live quoting state"
+                label="06 · Live quoting"
+                naturalHeight={5388}
+              />
               <div className="flex flex-col justify-center pt-2 md:pt-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Active quoting</p>
-                <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  <AnnotationCard number="①" title="Live updates make waiting legible" />
-                  <AnnotationCard number="②" title="Trust signals appear before price" />
-                  <AnnotationCard number="③" title="Price range sets realistic expectations" />
+                <h4 className="max-w-md font-display text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">
+                  Show progress before price.
+                </h4>
+                <div className="mt-6 space-y-3.5 border-l border-black/[0.06] pl-6">
+                  <Callout index={1} title="Live updates make waiting legible" />
+                  <Callout index={2} title="Trust signals appear before price" />
+                  <Callout index={3} title="Range, not a single number" />
                 </div>
               </div>
             </div>
 
-            <div className="mt-14 grid gap-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-12">
-              <PhoneFrame src="/assets/meituan-im/screen-10-quote-expired-chat.jpg" alt="Quote expired in chat state" label="Screen 10 · Expired in chat" />
+            <div className="mt-20 grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
+              <PhoneFrame
+                src="/assets/meituan-im/screen-10-quote-expired-chat.jpg"
+                alt="Quote expired in chat state"
+                label="07 · Expired in chat"
+                naturalHeight={7113}
+              />
               <div className="flex flex-col justify-center pt-2 md:pt-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Re-quote</p>
-                <div className="mt-6 grid gap-4 md:grid-cols-3">
-                  <AnnotationCard number="①" title="Expired quotes remain visible but disabled" />
-                  <AnnotationCard number="②" title="Only time slot is reset on re-quote" />
-                  <AnnotationCard number="③" title="Safety and convenience stay balanced" />
+                <h4 className="max-w-md font-display text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">
+                  Reset only what is unsafe to assume.
+                </h4>
+                <div className="mt-6 space-y-3.5 border-l border-black/[0.06] pl-6">
+                  <Callout index={1} title="Expired quotes stay visible but disabled" />
+                  <Callout index={2} title="Only the time slot resets" />
+                  <Callout index={3} title="Hard expiry, soft continuity" />
                 </div>
               </div>
             </div>
-            
-          </section>
+          </div>
 
-          <section className="mt-20 md:mt-28">
-            <SubsectionHeader label="Closing the loop" hint="Post-service continuity and return behavior." />
-            <div className="grid gap-10 lg:grid-cols-[300px_minmax(0,1fr)] lg:gap-12">
-              <PhoneFrame src="/assets/meituan-im/screen-09-return-visit.jpg" alt="Return visit and rating state" label="Screen 9 · Return visit" />
+          <div className="mt-20 md:mt-28">
+            <SubsectionHeader label="Closing the loop" />
+            <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
+              <PhoneFrame
+                src="/assets/meituan-im/screen-09-return-visit.jpg"
+                alt="Return visit and rating state"
+                label="08 · Return visit"
+                naturalHeight={5457}
+              />
               <div className="flex flex-col justify-center pt-2 md:pt-0">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Highlights</p>
-                <div className="mt-6 grid gap-4 md:grid-cols-2">
-                  <AnnotationCard number="①" title="Return flow stays in same thread" />
-                  <AnnotationCard number="②" title="Re-engagement is one tap" />
+                <h4 className="max-w-md font-display text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">
+                  The trust loop closes where it began.
+                </h4>
+                <div className="mt-6 space-y-3.5 border-l border-black/[0.06] pl-6">
+                  <Callout index={1} title="Return flow stays in the same thread" />
+                  <Callout index={2} title="Re-engagement is one tap" />
                 </div>
               </div>
             </div>
-           
-          </section>
+          </div>
         </Section>
 
-        <Section id="prototype" eyebrow="Interactive Prototype" title="An interactive prototype built with Cursor and Claude Code.">
-          <FadeIn className="mt-4">
+        <Section id="prototype" eyebrow="Interactive Prototype" title="Try the full flow.">
+          <FadeIn className="mt-2">
             <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
               <iframe
                 src="/assets/meituan-im/interaction-flow.html"
@@ -524,112 +568,130 @@ export default function MeituanImCaseStudyPage() {
         <Section
           id="scenarios"
           eyebrow="Framework Extensions"
-          title="The same trust-first framework scales to education, banquet booking, and maternity care."
+          title="The same loop scales: education, banquet, maternity care."
         >
-          <div className="space-y-16 md:space-y-20">
-            <section className="pt-4">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <h3 className="text-[1.1rem] leading-tight tracking-tight text-textPrimary">
-                  Education consultation
-                </h3>
+          <FadeIn className="mt-2 overflow-hidden rounded-2xl border border-black/[0.08]">
+            {/* Matrix header */}
+            <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] bg-black/[0.025] text-[12px]">
+              <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">
+                Domain
               </div>
-              <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textSecondary">
-                Adapt entry and questioning to goals, grade level, budget, and schedule before surfacing advisors and course packages.
-              </p>
-              <p className="mt-4 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
-                Parent intent → advisor matching → plan comparison
-              </p>
-              <p className="mt-4 max-w-3xl border-l-2 border-black/[0.08] pl-5 text-[16px] leading-[1.75] text-textSecondary">
-                Story extension: parents first clarify goals and constraints, then compare advisors with consistent context captured in chat. The framework
-                keeps recommendation quality visible before any package decision.
-              </p>
-            </section>
-
-            <section className="border-t border-black/[0.05] pt-16 md:pt-20">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <h3 className="text-[1.1rem] leading-tight tracking-tight text-textPrimary">
-                  Banquet booking
-                </h3>
+              <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                01 · Diagnose
               </div>
-              <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textSecondary">
-                Keep multi-merchant quoting; capture event size, date flexibility, menu tiers, and inclusions so offers compare on equal terms.
-              </p>
-              <p className="mt-4 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
-                Event requirements → venue negotiation → quote lock-in
-              </p>
-              <p className="mt-4 max-w-3xl border-l-2 border-black/[0.08] pl-5 text-[16px] leading-[1.75] text-textSecondary">
-                Story extension: users define non-negotiables early, receive comparable venue offers, and commit only after quote boundaries are explicit.
-                Negotiation remains flexible without losing transparency.
-              </p>
-            </section>
-
-            <section className="border-t border-black/[0.05] pt-16 md:pt-20">
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                <h3 className="text-[1.1rem] leading-tight tracking-tight text-textPrimary">
-                  Maternity care
-                </h3>
+              <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                02 · Structure
               </div>
-              <p className="mt-5 max-w-3xl text-[16px] leading-[1.75] text-textSecondary">
-                Lead with trust and safety—credentials, care scope, postpartum boundaries—before pricing, then preserve continuity for follow-up visits.
-              </p>
-              <p className="mt-4 max-w-3xl text-[16px] leading-[1.75] text-textPrimary/85">
-                Need triage → caregiver trust layer → service package selection
-              </p>
-              <p className="mt-4 max-w-3xl border-l-2 border-black/[0.08] pl-5 text-[16px] leading-[1.75] text-textSecondary">
-                Story extension: families build trust through caregiver credentials and scoped care plans first, then review pricing in that context.
-                Follow-up stays in one thread to support continuity and confidence.
-              </p>
-            </section>
-          </div>
-        </Section>
+              <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                03 · Commit
+              </div>
+            </div>
 
-        <Section id="impact" eyebrow="Impact & Validation" title="Higher conversion and fewer disputes validated the trust-first direction.">
-          <p className="case-lead">
-            Experiment design: user-level randomization, merchant whitelisting, and parallel runs on Meituan and Dianping in test and production.
-          </p>
-          <FadeIn className="grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3">
-            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Conversion</p>
-              <p className="mt-5 text-[16px] tabular-nums tracking-tight text-textPrimary">+0.5pp</p>
-              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">Search-to-purchase lift at rollout scale.</p>
+            {/* Reference row — Home repair (the anchor) */}
+            <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-[#FFF8F4]/40">
+              <div className="border-r border-black/[0.06] px-5 py-5">
+                <p className="text-[15px] tracking-tight text-[#8A4B2A]">Home repair</p>
+                <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#C47040]/80">Reference case</p>
+              </div>
+              <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
+                Certified expert defines the issue.
+              </div>
+              <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
+                Chat → structured service-order card.
+              </div>
+              <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
+                Live competitive quote → checkout.
+              </div>
             </div>
-            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Order volume</p>
-              <p className="mt-5 text-[16px] tabular-nums tracking-tight text-textPrimary">+2,000</p>
-              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">Estimated additional daily orders at projected coverage.</p>
-            </div>
-            <div className="border-l border-black/[0.12] pl-5 sm:pl-6">
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Disputes</p>
-              <p className="mt-5 text-[16px] tabular-nums tracking-tight text-textPrimary">−50%</p>
-              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">Post-service pricing disputes in this flow.</p>
-            </div>
+
+            {/* Extension rows */}
+            {[
+              {
+                domain: "Education consultation",
+                tagline: "Parents · advisors · plans",
+                d: "Advisor clarifies goals, grade, budget, schedule.",
+                s: "Constraints → structured learning brief.",
+                c: "Plan comparison with visible recommendation quality.",
+              },
+              {
+                domain: "Banquet booking",
+                tagline: "Event · venue · quote lock-in",
+                d: "Capture event size, date flex, menu tier, must-haves.",
+                s: "Non-negotiables → comparable requirement card.",
+                c: "Venue offers on equal terms; explicit quote boundaries.",
+              },
+              {
+                domain: "Maternity care",
+                tagline: "Family · caregiver · continuity",
+                d: "Triage need and risk; surface caregiver credentials first.",
+                s: "Care scope, boundaries, schedule → service brief.",
+                c: "Package selection in trust context; follow-up in same thread.",
+              },
+            ].map((row, i) => (
+              <div key={i} className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06]">
+                <div className="border-r border-black/[0.06] px-5 py-5">
+                  <p className="text-[15px] tracking-tight text-textPrimary">{row.domain}</p>
+                  <p className="mt-1 text-[12px] leading-snug text-textSecondary">{row.tagline}</p>
+                </div>
+                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.d}</div>
+                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.s}</div>
+                <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.c}</div>
+              </div>
+            ))}
           </FadeIn>
         </Section>
 
-        <Section id="reflection" eyebrow="Reflection" title="What I would improve in the next version.">
-          <div className="space-y-6 md:space-y-8">
+        <Section id="impact" eyebrow="Impact & Validation" title="Trust-first won the A/B.">
+          <FadeIn className="grid gap-12 border-t border-black/[0.06] pt-12 md:grid-cols-3 md:gap-8 md:pt-16">
+            <div>
+              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[5rem] lg:text-[5.75rem]">
+                +5<span className="text-[0.55em] text-textPrimary/70">%</span>
+              </p>
+              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-[#C47040]">Conversion lift</p>
+            </div>
+            <div>
+              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[5rem] lg:text-[5.75rem]">
+                ~2k
+              </p>
+              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
+            </div>
+            <div>
+              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[5rem] lg:text-[5.75rem]">
+                −50<span className="text-[0.55em] text-textPrimary/70">%</span>
+              </p>
+              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
+            </div>
+          </FadeIn>
+          <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/65">
+            User-level randomized A/B · Meituan + Dianping
+          </p>
+        </Section>
+
+        <Section id="reflection" eyebrow="Reflection" title="Next time, I would push on three fronts.">
+          <div className="space-y-5 md:space-y-6">
             <FadeIn className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
               <p className="text-[16px] tracking-tight text-textPrimary">Merchant experience deserves its own product pass.</p>
-              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">
-                Response quality is a system bottleneck: notification priority, context, and workload need first-class design.
-              </p>
             </FadeIn>
             <FadeIn delay={0.06} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
               <p className="text-[16px] tracking-tight text-textPrimary">Guide pricing should explain variability, not imply a promise.</p>
-              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">
-                Tie each range to concrete drivers so users do not read it as a fixed quote.
-              </p>
             </FadeIn>
             <FadeIn delay={0.12} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
               <p className="text-[16px] tracking-tight text-textPrimary">Scale with AI triage, escalate to human experts.</p>
-              <p className="mt-3 text-[16px] leading-relaxed text-textSecondary">
-                Humans stay essential for ambiguity; high-confidence paths can be automated at the front.
-              </p>
             </FadeIn>
           </div>
 
-          <FadeIn className="mt-12 max-w-3xl border-y border-black/[0.08] py-8 md:py-10">
-            <p className="text-[16px] leading-relaxed text-textPrimary">Transparent process is often a stronger trust advantage than transparent pricing alone.</p>
+          <FadeIn className="mt-20 md:mt-28">
+            <div className="relative">
+              <span aria-hidden className="absolute -left-2 -top-6 font-display text-[7rem] font-light leading-none text-[#C47040]/15 md:text-[9rem]">
+                &ldquo;
+              </span>
+              <p className="relative max-w-4xl font-display text-[1.75rem] font-light leading-[1.25] tracking-tight text-textPrimary md:text-[2.5rem] md:leading-[1.18]">
+                Transparent <span className="text-[#C47040]">process</span> is often a stronger trust advantage than transparent <span className="line-through decoration-textSecondary/40">pricing</span> alone.
+              </p>
+              <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
+                Designing trust before the bill · 2025
+              </p>
+            </div>
           </FadeIn>
         </Section>
           </main>

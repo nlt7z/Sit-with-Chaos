@@ -4,8 +4,89 @@
 <meta charset="utf-8" />
 <title>FixIt Express — Phone</title>
 <meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  html, body { margin:0; padding:0; background:transparent; font-family:-apple-system,system-ui,sans-serif; }
+  html, body { margin:0; padding:0; background:#FFFFFF; font-family: 'Inter', -apple-system, system-ui, sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; font-feature-settings: 'cv11','ss01','ss03'; }
+  body { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 32px 0; background: #FFFFFF; }
+
+  /* ─── Motion system ─────────────────────────────────────────── */
+  /* Bubble entrance — gentle spring with transform-origin anchored near avatar */
+  @keyframes msg-in {
+    0%   { opacity: 0; transform: translateY(10px) scale(.965); filter: blur(2px); }
+    60%  { opacity: 1; filter: blur(0); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  @keyframes msg-in-right {
+    0%   { opacity: 0; transform: translateY(10px) scale(.965); filter: blur(2px); }
+    100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+  }
+  /* Soft system text — pure fade */
+  @keyframes soft-in {
+    0%   { opacity: 0; transform: translateY(4px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fade-in   { from { opacity: 0; } to { opacity: 1; } }
+  /* Typing dots — smoother sine wave */
+  @keyframes dot-pulse {
+    0%, 60%, 100% { transform: translateY(0); opacity: .35; }
+    30%           { transform: translateY(-3px); opacity: 1; }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  /* Modal — iOS spring */
+  @keyframes sheet-up { 0% { transform: translateY(100%); } 100% { transform: translateY(0); } }
+  @keyframes pop-in {
+    0%   { opacity: 0; transform: scale(.92) translateY(8px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  /* Stage rail — shimmer pulse on active dot */
+  @keyframes ring-pulse {
+    0%   { box-shadow: 0 0 0 0 rgba(232,163,23,.50); }
+    70%  { box-shadow: 0 0 0 7px rgba(232,163,23,0); }
+    100% { box-shadow: 0 0 0 0 rgba(232,163,23,0); }
+  }
+  /* Joined-conversation ceremony */
+  @keyframes joined-rise {
+    0%   { opacity: 0; transform: translateY(-6px); letter-spacing: 0.6px; }
+    100% { opacity: 1; transform: translateY(0); letter-spacing: 0.3px; }
+  }
+  @keyframes avatar-pop {
+    0%   { transform: scale(.6); opacity: 0; }
+    60%  { transform: scale(1.06); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  /* Number flip */
+  @keyframes num-up {
+    0%   { transform: translateY(8px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+  }
+  /* Hero ambient glow drift */
+  @keyframes glow-drift {
+    0%, 100% { transform: translate(0,0) scale(1); }
+    50%      { transform: translate(-6px,4px) scale(1.05); }
+  }
+  /* Connecting-to-specialist scanning line */
+  @keyframes scan-line {
+    0%   { left: -28%; opacity: 0; }
+    20%  { opacity: 1; }
+    80%  { opacity: 1; }
+    100% { left: 100%; opacity: 0; }
+  }
+  /* License-found checkmark draw */
+  @keyframes check-draw {
+    0%   { stroke-dashoffset: 14; }
+    100% { stroke-dashoffset: 0; }
+  }
+  /* Button press */
+  .btn-press { transition: transform .15s cubic-bezier(.2,.7,.2,1), box-shadow .15s, background-color .2s; }
+  .btn-press:active { transform: scale(.97); }
+
+  /* Scroll polish */
+  .scroll::-webkit-scrollbar { width: 0; height: 0; }
+
+  /* Tabular numerics for prices/counts/timers */
+  .tnum { font-variant-numeric: tabular-nums; }
 </style>
 <script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
 <script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
@@ -19,44 +100,54 @@
 // as the static screens, but messages append over time as the script plays.
 
 const FC = {
-  // surfaces — warmer, layered creams
-  bg:        '#EDE6D6', // conversation area (slightly deeper)
-  chrome:    '#F6F1E4', // header + composer (warm off-white, NOT pure white)
-  surface:   '#FFFCF6', // cards (warm white, not pure)
-  surfaceAlt:'#F4EDDB',
-  // ink
-  ink:       '#1A1815', inkSoft: '#3D3935', muted: '#8A847C',
-  hairline:  '#E0D8C5', divider: '#EAE2CE',
-  // brand — peach/terracotta gradient family
-  accent:    '#C76140', // terracotta primary (slightly warmer)
-  accentInk: '#7A3A24',
-  accentBg:  '#F6E4D8',
-  peach:     '#E89B6E', // gradient mid
-  peachSoft: '#FBE7D4',
-  apricot:   '#F2C28A', // gradient highlight
+  // surfaces — editorial white, very soft warm cream secondaries
+  bg:        '#FFFFFF',  // conversation area (pure white)
+  chrome:    '#FFFFFF',  // header + composer
+  surface:   '#FFFFFF',  // cards (pure white)
+  surfaceAlt:'#F7F1DF',
+  surfaceDeep:'#EFE7CF',
+  // ink — warm near-black
+  ink:       '#14120F', inkSoft: '#3A3530', muted: '#857F73', mutedSoft: '#B7B0A1',
+  hairline:  '#EAE2CC', divider: '#F1EAD3', hairlineSoft: '#F5EFDF',
+  // brand — saffron family
+  accent:    '#E8A317', // saffron primary
+  accentDeep:'#B07A08',
+  accentInk: '#5A3D04',
+  accentBg:  '#FFF1C8',
+  peach:     '#F4C448', // gold gradient mid
+  peachSoft: '#FFF6DB',
+  apricot:   '#FFD86A', // highlight
   // secondary
-  forest:    '#3E7A5C', forestBg: '#E8F0EA',
-  amber:     '#C9882B', amberBg: '#FBF1DE',
+  forest:    '#2F6B4E', forestBg: '#E5EEE7',
+  amber:     '#B8771F', amberBg: '#F8EBD2',
   // bubbles
-  botBubble: '#FFFCF6', // bot bubble (warm white)
-  proBubble: '#FBF1E5', // pro bubble — soft peach tint, sets it apart
-  meBubble:  '#E8DCC4', // user bubble — warm tan
-  meInk:     '#3D3935', link: '#3D5A82',
+  botBubble: '#FFFFFF',
+  proBubble: '#FFF6DB',
+  meBubble:  '#FFDE7A',   // user — brand saffron; dark ink text
+  meInk:     '#14120F',
+  meBorder:  '#F0C946',
+  link: '#3D5A82',
+  // elevation
+  shadowSm: '0 1px 2px rgba(20,18,15,.04), 0 1px 0 rgba(20,18,15,.02)',
+  shadowMd: '0 1px 2px rgba(20,18,15,.05), 0 6px 18px -6px rgba(20,18,15,.10)',
+  shadowLg: '0 2px 4px rgba(20,18,15,.05), 0 22px 48px -16px rgba(20,18,15,.20)',
 };
 const FF = {
-  display: '-apple-system, "SF Pro Display", system-ui, sans-serif',
-  text: '-apple-system, "SF Pro Text", system-ui, sans-serif',
+  display: "'Inter', -apple-system, 'SF Pro Display', system-ui, sans-serif",
+  text:    "'Inter', -apple-system, 'SF Pro Text', system-ui, sans-serif",
+  serif:   "'Instrument Serif', 'Times New Roman', serif",
 };
 
 // ─── Chrome ────────────────────────────────────────────────────────
 function StatusBar() {
   return (
     <div style={{
-      height: 54, padding: '18px 30px 0', flexShrink: 0,
+      height: 54, padding: '18px 34px 0', flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
       fontFamily: FF.display, fontWeight: 600, fontSize: 16, color: FC.ink,
+      letterSpacing: '-0.2px',
     }}>
-      <span>9:41</span>
+      <span className="tnum">9:41</span>
       <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
         <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="6.5" width="3" height="4.5" rx="0.7" fill={FC.ink}/><rect x="4.5" y="4.2" width="3" height="6.8" rx="0.7" fill={FC.ink}/><rect x="9" y="2" width="3" height="9" rx="0.7" fill={FC.ink}/><rect x="13.5" y="0" width="3" height="11" rx="0.7" fill={FC.ink}/></svg>
         <svg width="16" height="11" viewBox="0 0 16 11"><path d="M8 3.4C10.1 3.4 12 4.2 13.4 5.6L14.4 4.6C12.7 2.9 10.4 1.9 8 1.9C5.6 1.9 3.3 2.9 1.6 4.6L2.6 5.6C4 4.2 5.9 3.4 8 3.4Z" fill={FC.ink}/><path d="M8 6.7C9.2 6.7 10.3 7.1 11.2 8L12.2 7C10.9 5.9 9.5 5.2 8 5.2C6.5 5.2 5.1 5.9 3.8 7L4.8 8C5.7 7.1 6.8 6.7 8 6.7Z" fill={FC.ink}/><circle cx="8" cy="9.6" r="1.4" fill={FC.ink}/></svg>
@@ -72,59 +163,106 @@ function HomeIndicator() {
     </div>
   );
 }
-function Header({ active = 1 }) {
-  const steps = ['Identify', 'Diagnose', 'Estimate', 'Match'];
+function Header({ active = 1, proJoined = false }) {
+  const steps = ['Identify', 'Diagnose', 'Plan', 'Match'];
+  const progressPct = ((active - 1) / (steps.length - 1)) * 100;
+  const currentStep = steps[Math.max(0, Math.min(steps.length - 1, active - 1))];
   return (
     <div style={{ background: FC.chrome, borderBottom: `1px solid ${FC.hairline}`, flexShrink: 0 }}>
-      <div style={{ height: 52, display: 'flex', alignItems: 'center', padding: '0 18px', justifyContent: 'space-between' }}>
+      <div style={{ height: 54, display: 'flex', alignItems: 'center', padding: '0 20px', justifyContent: 'space-between' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <svg width="10" height="18" viewBox="0 0 10 18"><path d="M8 1L1 9l7 8" stroke={FC.ink} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontFamily: FF.display, fontSize: 17, fontWeight: 600, letterSpacing: '-0.2px', color: FC.ink }}>Repair specialist</span>
-            <span style={{ fontSize: 10, fontWeight: 700, padding: '3px 7px', borderRadius: 3, background: FC.ink, color: FC.surface, letterSpacing: '0.5px' }}>FIXIT</span>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 1, transition: 'opacity .3s ease' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <span
+                key={proJoined ? 'mike' : 'fixit'}
+                style={{
+                  fontFamily: FF.display, fontSize: 16, fontWeight: 600,
+                  letterSpacing: '-0.2px', color: FC.ink,
+                  animation: 'soft-in .32s ease-out both',
+                }}
+              >
+                {proJoined ? 'Mike Chen' : 'Repair specialist'}
+              </span>
+              <span style={{ width: 6, height: 6, borderRadius: 3, background: FC.forest, boxShadow: `0 0 0 3px ${FC.forestBg}` }} />
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '.1px' }}>
+              {proJoined ? (
+                <>
+                  <span>Plumbing specialist</span>
+                  <span style={{ width: 2, height: 2, borderRadius: 1, background: FC.mutedSoft }} />
+                  <span>Step {active}/4 · <span style={{ color: FC.ink, fontWeight: 600 }}>{currentStep}</span></span>
+                </>
+              ) : (
+                <>
+                  <svg width="8" height="10" viewBox="0 0 8 10"><rect x="1" y="4" width="6" height="5" rx="1" fill="none" stroke={FC.muted} strokeWidth="1"/><path d="M2.3 4V2.7a1.7 1.7 0 0 1 3.4 0V4" fill="none" stroke={FC.muted} strokeWidth="1" strokeLinecap="round"/></svg>
+                  <span>Encrypted · FixIt secured</span>
+                  <span style={{ width: 2, height: 2, borderRadius: 1, background: FC.mutedSoft }} />
+                  <span>Step {active}/4 · <span style={{ color: FC.ink, fontWeight: 600 }}>{currentStep}</span></span>
+                </>
+              )}
+            </div>
           </div>
         </div>
-        <svg width="20" height="6" viewBox="0 0 20 6"><circle cx="2.5" cy="3" r="1.8" fill={FC.ink}/><circle cx="10" cy="3" r="1.8" fill={FC.ink}/><circle cx="17.5" cy="3" r="1.8" fill={FC.ink}/></svg>
+        <svg width="20" height="6" viewBox="0 0 20 6"><circle cx="2.5" cy="3" r="1.6" fill={FC.muted}/><circle cx="10" cy="3" r="1.6" fill={FC.muted}/><circle cx="17.5" cy="3" r="1.6" fill={FC.muted}/></svg>
       </div>
-      <div style={{ padding: '4px 18px 14px', display: 'flex', alignItems: 'center', gap: 8 }}>
-        {steps.map((s, i) => {
-          const idx = i + 1;
-          const isActive = idx === active;
-          const isPast = idx < active;
-          return (
-            <React.Fragment key={s}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 6, transition: 'all .35s' }}>
+      {/* Stage rail — single continuous track, current step labeled */}
+      <div style={{ padding: '2px 24px 16px' }}>
+        <div style={{ position: 'relative', height: 4, borderRadius: 2, background: FC.hairline, overflow: 'visible' }}>
+          <div style={{
+            position: 'absolute', left: 0, top: 0, bottom: 0, width: `${progressPct}%`,
+            background: `linear-gradient(90deg, ${FC.accent}, ${FC.peach})`,
+            borderRadius: 2,
+            transition: 'width .6s cubic-bezier(.2,.7,.2,1)',
+          }} />
+          {steps.map((_, i) => {
+            const left = (i / (steps.length - 1)) * 100;
+            const idx = i + 1;
+            const isActive = idx === active;
+            const isPast = idx < active;
+            return (
+              <div key={i} style={{ position: 'absolute', left: `${left}%`, top: '50%', transform: 'translate(-50%, -50%)' }}>
                 <div style={{
-                  width: 18, height: 18, borderRadius: 9, fontSize: 10, fontWeight: 700,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  background: isActive ? FC.ink : (isPast ? FC.ink : 'transparent'),
-                  color: isActive || isPast ? FC.surface : FC.muted,
-                  border: !isActive && !isPast ? `1px solid ${FC.hairline}` : 'none',
-                  fontFamily: FF.text, transition: 'all .35s',
-                }}>{isPast ? '✓' : idx}</div>
-                <span style={{
-                  fontSize: 12, fontWeight: isActive ? 600 : 500,
-                  color: isActive ? FC.ink : FC.muted, fontFamily: FF.text, letterSpacing: '-0.1px',
-                  transition: 'all .35s',
-                }}>{s}</span>
+                  width: isActive ? 14 : 10, height: isActive ? 14 : 10, borderRadius: '50%',
+                  background: isActive ? FC.chrome : (isPast ? FC.accent : FC.hairline),
+                  border: isActive ? `2.5px solid ${FC.accent}` : 'none',
+                  boxShadow: isActive ? '0 1px 3px rgba(197,89,58,.35)' : 'none',
+                  transition: 'all .4s cubic-bezier(.2,.7,.2,1)',
+                  animation: isActive ? 'ring-pulse 2.4s ease-out infinite' : 'none',
+                }} />
               </div>
-              {idx < steps.length && <div style={{ flex: 1, height: 1, background: FC.hairline }} />}
-            </React.Fragment>
-          );
-        })}
+            );
+          })}
+        </div>
+        <div style={{ marginTop: 8, display: 'flex', justifyContent: 'space-between' }}>
+          {steps.map((s, i) => {
+            const idx = i + 1;
+            const isActive = idx === active;
+            const isPast = idx < active;
+            return (
+              <span key={s} style={{
+                fontSize: 10.5, fontFamily: FF.text,
+                fontWeight: isActive ? 600 : 500,
+                letterSpacing: '.2px',
+                color: isActive ? FC.ink : (isPast ? FC.inkSoft : FC.mutedSoft),
+                transition: 'color .35s, font-weight .35s',
+              }}>{s}</span>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
-function IconBtn({ children }) {
+function IconBtn({ children, onClick }) {
   return (
-    <div style={{ width: 34, height: 34, borderRadius: 17, border: `1px solid ${FC.hairline}`, background: FC.surface, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>{children}</div>
+    <button onClick={onClick} className="btn-press" style={{ width: 36, height: 36, borderRadius: 18, border: `1px solid ${FC.hairline}`, background: FC.surface, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', padding: 0 }}>{children}</button>
   );
 }
-function Composer({ leftLabel }) {
+function Composer({ leftLabel, placeholder = 'Reply to Mike Chen…' }) {
   return (
-    <div style={{ background: FC.chrome, padding: '10px 14px 8px', borderTop: `1px solid ${FC.hairline}`, flexShrink: 0 }}>
+    <div style={{ background: FC.chrome, padding: '12px 16px 10px', borderTop: `1px solid ${FC.hairline}`, flexShrink: 0 }}>
       {leftLabel && (
         <div style={{ marginLeft: 4, marginBottom: 8 }}>
           <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.3px', textTransform: 'uppercase' }}>{leftLabel}</span>
@@ -132,7 +270,7 @@ function Composer({ leftLabel }) {
       )}
       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
         <IconBtn><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1v6M7 9v4M3 5l-2 2 2 2M11 5l2 2-2 2" stroke={FC.ink} strokeWidth="1.4" strokeLinecap="round"/></svg></IconBtn>
-        <div style={{ flex: 1, height: 38, background: FC.surface, borderRadius: 19, border: `1px solid ${FC.hairline}`, display: 'flex', alignItems: 'center', padding: '0 14px', color: FC.muted, fontSize: 13, fontFamily: FF.text }}>Reply to Mike Chen…</div>
+        <div style={{ flex: 1, height: 42, background: FC.surface, borderRadius: 21, border: `1px solid ${FC.hairline}`, display: 'flex', alignItems: 'center', padding: '0 18px', color: FC.muted, fontSize: 14, fontFamily: FF.text, boxShadow: 'inset 0 1px 0 rgba(255,255,255,.5)' }}>{placeholder}</div>
         <IconBtn><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke={FC.ink} strokeWidth="1.4"/><circle cx="6" cy="7" r="0.8" fill={FC.ink}/><circle cx="10" cy="7" r="0.8" fill={FC.ink}/><path d="M5.5 9.5c1 1.2 4 1.2 5 0" stroke={FC.ink} strokeWidth="1.2" strokeLinecap="round" fill="none"/></svg></IconBtn>
         <IconBtn><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 1.5v9M1.5 6h9" stroke={FC.ink} strokeWidth="1.5" strokeLinecap="round"/></svg></IconBtn>
       </div>
@@ -142,60 +280,228 @@ function Composer({ leftLabel }) {
 
 // ─── Avatars / bubbles / common ───────────────────────────────────
 function BotAvatar() {
-  return <div style={{ width: 30, height: 30, borderRadius: 8, background: FC.ink, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, color: FC.accent, fontSize: 13, fontWeight: 700, fontFamily: FF.display }}>F</div>;
+  return (
+    <div style={{
+      width: 32, height: 32, borderRadius: 11, flexShrink: 0,
+      background: `radial-gradient(120% 120% at 20% 0%, #2A2622, ${FC.ink} 70%)`,
+      display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative',
+      boxShadow: 'inset 0 1px 0 rgba(255,255,255,.08), 0 1px 2px rgba(0,0,0,.14)',
+    }}>
+      <svg width="15" height="15" viewBox="0 0 14 14">
+        <defs>
+          <linearGradient id="botMark" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor={FC.apricot}/><stop offset="1" stopColor={FC.accent}/>
+          </linearGradient>
+        </defs>
+        <path d="M7 1.5 L10 4 L8.5 5.5 L11.5 8.5 L9.5 10.5 L6.5 7.5 L5 9 L2.5 6.5 Z" fill="url(#botMark)"/>
+      </svg>
+    </div>
+  );
 }
-function ProAvatar() {
-  return <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, background: 'linear-gradient(135deg, #C7855E, #8B5036)', color: FC.surface, fontSize: 12, fontWeight: 700, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FF.display }}>MC</div>;
+function ProAvatar({ noVerify }) {
+  return (
+    <div style={{
+      width: 32, height: 32, borderRadius: 11, flexShrink: 0,
+      background: 'linear-gradient(135deg, #C99A2B 0%, #8A5E04 60%, #5A3D04 100%)',
+      color: '#FFF6DB', fontSize: 12, fontWeight: 600,
+      display: 'flex', alignItems: 'center', justifyContent: 'center',
+      fontFamily: FF.display, letterSpacing: '.2px',
+      boxShadow: 'inset 0 1px 0 rgba(255,255,255,.22), 0 1px 2px rgba(90,61,4,.30)',
+      position: 'relative',
+    }}>
+      MC
+      {!noVerify && (
+        <span style={{
+          position: 'absolute', right: -2, bottom: -2,
+          width: 13, height: 13, borderRadius: 7,
+          background: FC.forest, border: `2px solid ${FC.bg}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+        }}>
+          <svg width="6" height="6" viewBox="0 0 6 6"><path d="M1 3l1.5 1.5L5 1" stroke="#fff" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
+        </span>
+      )}
+    </div>
+  );
 }
 function UserAvatar() {
-  return <div style={{ width: 30, height: 30, borderRadius: 8, flexShrink: 0, background: FC.meBubble, border: `1px solid ${FC.hairline}`, color: FC.ink, fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FF.display }}>EW</div>;
+  return <div style={{ width: 32, height: 32, borderRadius: 11, flexShrink: 0, background: FC.surfaceDeep, border: `1px solid ${FC.hairline}`, color: FC.ink, fontSize: 12, fontWeight: 600, display: 'flex', alignItems: 'center', justifyContent: 'center', fontFamily: FF.display, letterSpacing: '.2px' }}>EW</div>;
 }
 
-const ENTER = { animation: 'msg-enter .28s ease-out both' };
+const ENTER       = { animation: 'msg-in .42s cubic-bezier(.2,.8,.2,1) both', transformOrigin: '0 0' };
+const ENTER_RIGHT = { animation: 'msg-in-right .42s cubic-bezier(.2,.8,.2,1) both', transformOrigin: '100% 0' };
+const ENTER_SOFT  = { animation: 'soft-in .35s ease-out both' };
 
 function BotBubble({ children }) {
   return (
-    <div style={{ display: 'flex', gap: 8, padding: '6px 14px', alignItems: 'flex-start', ...ENTER }}>
+    <div style={{ display: 'flex', gap: 9, padding: '5px 16px', alignItems: 'flex-start', ...ENTER }}>
       <BotAvatar />
-      <div style={{ background: FC.botBubble, borderRadius: '4px 14px 14px 14px', padding: '12px 14px', maxWidth: 268, fontSize: 14.5, lineHeight: '21px', color: FC.inkSoft, fontFamily: FF.text, border: `1px solid ${FC.hairline}` }}>{children}</div>
+      <div style={{
+        background: FC.botBubble, borderRadius: '5px 18px 18px 18px',
+        padding: '12px 15px', maxWidth: 290, fontSize: 15, lineHeight: '22px',
+        color: FC.inkSoft, fontFamily: FF.text, border: `1px solid ${FC.hairlineSoft}`,
+        boxShadow: FC.shadowSm,
+      }}>{children}</div>
     </div>
   );
 }
 function ProBubble({ children }) {
   return (
-    <div style={{ padding: '4px 14px', ...ENTER }}>
-      <div style={{ display: 'flex', alignItems: 'baseline', gap: 8, marginLeft: 38, marginBottom: 4 }}>
-        <span style={{ fontSize: 12, color: FC.ink, fontWeight: 600, fontFamily: FF.text }}>Mike Chen</span>
-        <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text }}>Plumbing specialist</span>
+    <div style={{ padding: '4px 16px', ...ENTER }}>
+      <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginLeft: 41, marginBottom: 4 }}>
+        <span style={{ fontSize: 12, color: FC.ink, fontWeight: 600, fontFamily: FF.text, letterSpacing: '-.05px' }}>Mike Chen</span>
+        <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text }}>· Plumbing specialist</span>
       </div>
-      <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+      <div style={{ display: 'flex', gap: 9, alignItems: 'flex-start' }}>
         <ProAvatar />
-        <div style={{ background: FC.proBubble, borderRadius: '4px 14px 14px 14px', padding: '12px 14px', maxWidth: 268, fontSize: 14.5, lineHeight: '21px', color: FC.inkSoft, fontFamily: FF.text, border: `1px solid ${FC.peachSoft}` }}>{children}</div>
+        <div style={{
+          background: FC.proBubble, borderRadius: '5px 18px 18px 18px',
+          padding: '12px 15px', maxWidth: 290, fontSize: 15, lineHeight: '22px',
+          color: FC.inkSoft, fontFamily: FF.text,
+          border: `1px solid #FBE89A`,
+          boxShadow: FC.shadowSm,
+        }}>{children}</div>
       </div>
     </div>
   );
 }
 function MeBubble({ children }) {
   return (
-    <div style={{ display: 'flex', gap: 8, padding: '6px 14px', justifyContent: 'flex-end', alignItems: 'flex-start', ...ENTER }}>
-      <div style={{ background: FC.meBubble, borderRadius: '14px 4px 14px 14px', padding: '12px 14px', maxWidth: 230, fontSize: 14.5, lineHeight: '21px', color: FC.meInk, fontFamily: FF.text }}>{children}</div>
+    <div style={{ display: 'flex', gap: 9, padding: '5px 16px', justifyContent: 'flex-end', alignItems: 'flex-start', ...ENTER_RIGHT }}>
+      <div style={{
+        background: FC.meBubble, borderRadius: '18px 5px 18px 18px',
+        padding: '12px 15px', maxWidth: 250, fontSize: 15, lineHeight: '22px',
+        color: FC.meInk, fontFamily: FF.text, fontWeight: 500,
+        border: `1px solid ${FC.meBorder}`,
+        boxShadow: '0 1px 2px rgba(176,122,8,.16), 0 6px 18px -10px rgba(232,163,23,.40)',
+      }}>{children}</div>
       <UserAvatar />
     </div>
   );
 }
-function SystemText({ time, sub }) {
+// Bot → Pro handoff ceremony — three phases inside a single message slot.
+// Phase 0: scanning + "Matching to a plumbing specialist…"
+// Phase 1: license-found row with avatar + "Mike Chen · #PL-04382 verified"
+// Phase 2: final "joined" pill (matches the legacy visual, kept for continuity)
+function Handshake({ time }) {
+  const [phase, setPhase] = React.useState(0);
+  React.useEffect(() => {
+    const t1 = setTimeout(() => setPhase(1), 850);
+    const t2 = setTimeout(() => setPhase(2), 1500);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
+  }, []);
   return (
-    <div style={{ textAlign: 'center', padding: '14px 0 6px', ...ENTER }}>
-      <div style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.3px' }}>{time}</div>
-      {sub && <div style={{ fontSize: 11, color: FC.muted, marginTop: 4, fontFamily: FF.text }}>{sub}</div>}
+    <div style={{ textAlign: 'center', padding: '20px 0 6px' }}>
+      <div style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.5px', textTransform: 'uppercase', fontWeight: 600, animation: 'soft-in .35s ease-out both' }}>{time}</div>
+      {/* Phase 0 — scanning */}
+      {phase === 0 && (
+        <div style={{
+          marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 9,
+          padding: '7px 16px', borderRadius: 100,
+          background: FC.surface, border: `1px solid ${FC.hairline}`,
+          boxShadow: FC.shadowSm, position: 'relative', overflow: 'hidden',
+          animation: 'joined-rise .4s cubic-bezier(.2,.8,.2,1) both',
+        }}>
+          <div style={{
+            position: 'absolute', top: 0, bottom: 0, width: '34%',
+            background: `linear-gradient(90deg, transparent, ${FC.apricot}aa, transparent)`,
+            animation: 'scan-line 1.05s cubic-bezier(.4,0,.2,1) infinite',
+            pointerEvents: 'none',
+          }} />
+          <div style={{
+            width: 13, height: 13, borderRadius: 7,
+            border: `2px solid ${FC.accent}`, borderTopColor: 'transparent',
+            animation: 'spin 0.9s linear infinite', position: 'relative', zIndex: 1,
+          }} />
+          <span style={{ fontSize: 12.5, fontFamily: FF.text, color: FC.inkSoft, fontWeight: 500, position: 'relative', zIndex: 1 }}>
+            Matching to a plumbing specialist<span className="tnum">…</span>
+          </span>
+        </div>
+      )}
+      {/* Phase 1 — license found */}
+      {phase === 1 && (
+        <div key="found" style={{
+          marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 9,
+          padding: '7px 14px 7px 7px', borderRadius: 100,
+          background: FC.surface, border: `1px solid ${FC.peach}55`,
+          boxShadow: `0 1px 2px rgba(176,122,8,.10), 0 8px 20px -10px rgba(232,163,23,.30)`,
+          animation: 'joined-rise .42s cubic-bezier(.2,.8,.2,1) both',
+        }}>
+          <span style={{ display: 'inline-flex', animation: 'avatar-pop .5s cubic-bezier(.34,1.56,.64,1) both' }}>
+            <ProAvatar noVerify />
+          </span>
+          <span style={{ fontSize: 12.5, fontFamily: FF.text, color: FC.ink, fontWeight: 500, letterSpacing: '-.05px' }}>
+            <span style={{ fontWeight: 600 }}>Mike Chen</span>{' '}
+            <span style={{ color: FC.muted, fontWeight: 400 }}>·</span>{' '}
+            <span className="tnum" style={{ color: FC.muted, fontWeight: 500 }}>#PL-04382</span>
+          </span>
+          <svg width="13" height="13" viewBox="0 0 13 13" style={{ flexShrink: 0 }}>
+            <circle cx="6.5" cy="6.5" r="6" fill={FC.forest} />
+            <path d="M3.8 6.7l2 2 3.5-4.4" stroke="#FFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"
+              style={{ strokeDasharray: 14, animation: 'check-draw .32s cubic-bezier(.4,0,.2,1) .08s both' }} />
+          </svg>
+        </div>
+      )}
+      {/* Phase 2 — connected (legacy join pill) */}
+      {phase === 2 && (
+        <div style={{
+          marginTop: 12, display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '6px 14px 6px 6px', borderRadius: 100,
+          background: FC.surface, border: `1px solid ${FC.hairline}`, boxShadow: FC.shadowSm,
+          animation: 'joined-rise .42s cubic-bezier(.2,.8,.2,1) both',
+        }}>
+          <span style={{ display: 'inline-flex' }}>
+            <ProAvatar />
+          </span>
+          <span style={{ fontSize: 12.5, fontFamily: FF.text, color: FC.ink, fontWeight: 500 }}>
+            <span style={{ fontWeight: 600 }}>Mike Chen</span> <span style={{ color: FC.muted, fontWeight: 400 }}>connected</span>
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function SystemText({ time, sub }) {
+  const isJoin = sub && /joined/i.test(sub);
+  if (isJoin) {
+    return (
+      <div style={{ textAlign: 'center', padding: '20px 0 6px' }}>
+        <div style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.5px', textTransform: 'uppercase', fontWeight: 600, animation: 'soft-in .35s ease-out both' }}>{time}</div>
+        <div style={{
+          marginTop: 10, display: 'inline-flex', alignItems: 'center', gap: 8,
+          padding: '6px 14px 6px 6px', borderRadius: 100,
+          background: FC.surface, border: `1px solid ${FC.hairline}`, boxShadow: FC.shadowSm,
+          animation: 'joined-rise .5s cubic-bezier(.2,.8,.2,1) .1s both',
+        }}>
+          <span style={{ display: 'inline-flex', animation: 'avatar-pop .55s cubic-bezier(.34,1.56,.64,1) .2s both' }}>
+            <ProAvatar />
+          </span>
+          <span style={{ fontSize: 12.5, fontFamily: FF.text, color: FC.ink, fontWeight: 500 }}>
+            <span style={{ fontWeight: 600 }}>Mike Chen</span> <span style={{ color: FC.muted, fontWeight: 400 }}>joined</span>
+          </span>
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div style={{ textAlign: 'center', padding: '14px 0 6px', ...ENTER_SOFT }}>
+      <div style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.5px', textTransform: 'uppercase', fontWeight: 600 }}>{time}</div>
+      {sub && (
+        <div style={{ fontSize: 11, color: FC.muted, marginTop: 6, fontFamily: FF.text, display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          {/privacy/i.test(sub) && (
+            <svg width="9" height="11" viewBox="0 0 9 11"><rect x="1" y="4.5" width="7" height="6" rx="1" fill="none" stroke={FC.muted} strokeWidth="1"/><path d="M2.5 4.5V3a2 2 0 0 1 4 0v1.5" fill="none" stroke={FC.muted} strokeWidth="1" strokeLinecap="round"/></svg>
+          )}
+          {sub}
+        </div>
+      )}
     </div>
   );
 }
 function Divider({ label }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 30px 14px', ...ENTER }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '20px 30px 14px', ...ENTER_SOFT }}>
       <div style={{ flex: 1, height: 1, background: FC.hairline }} />
-      <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.4px', textTransform: 'uppercase', fontWeight: 600 }}>{label}</span>
+      <span style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.5px', textTransform: 'uppercase', fontWeight: 600 }}>{label}</span>
       <div style={{ flex: 1, height: 1, background: FC.hairline }} />
     </div>
   );
@@ -203,11 +509,18 @@ function Divider({ label }) {
 function TypingBubble({ variant }) {
   const Av = variant === 'pro' ? ProAvatar : BotAvatar;
   return (
-    <div style={{ display: 'flex', gap: 8, padding: '6px 14px', alignItems: 'flex-start', ...ENTER }}>
+    <div style={{ display: 'flex', gap: 8, padding: '5px 14px', alignItems: 'flex-start', ...ENTER }}>
       <Av />
-      <div style={{ background: FC.surface, borderRadius: '4px 14px 14px 14px', padding: '14px 16px', border: `1px solid ${FC.hairline}`, display: 'flex', gap: 4 }}>
+      <div style={{
+        background: variant === 'pro' ? FC.proBubble : FC.surface,
+        borderRadius: '4px 16px 16px 16px',
+        padding: '13px 14px',
+        border: `1px solid ${variant === 'pro' ? FC.peachSoft : FC.hairlineSoft}`,
+        boxShadow: FC.shadowSm,
+        display: 'flex', gap: 5, alignItems: 'center',
+      }}>
         {[0, 1, 2].map(i => (
-          <span key={i} style={{ width: 6, height: 6, borderRadius: 3, background: FC.muted, animation: `bounce 1.1s ${i * 0.15}s infinite` }} />
+          <span key={i} style={{ width: 6, height: 6, borderRadius: 3, background: FC.muted, display: 'inline-block', animation: `dot-pulse 1.4s ${i * 0.18}s infinite ease-in-out` }} />
         ))}
       </div>
     </div>
@@ -216,20 +529,32 @@ function TypingBubble({ variant }) {
 
 function Hero() {
   return (
-    <div style={{ margin: '14px 14px 0', borderRadius: 18, overflow: 'hidden', background: 'linear-gradient(135deg, #2A1F18 0%, #1A1815 55%, #2E1A12 100%)', position: 'relative', height: 152, color: FC.surface, ...ENTER, flexShrink: 0 }}>
-      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(120% 80% at 100% 0%, rgba(232,155,110,0.42), transparent 60%)' }} />
-      <div style={{ padding: '20px 20px 0', position: 'relative', zIndex: 2 }}>
-        <div style={{ fontSize: 11, fontFamily: FF.text, color: 'rgba(255,255,255,0.65)', letterSpacing: '1.2px', textTransform: 'uppercase', fontWeight: 600 }}>FixIt Express</div>
-        <div style={{ marginTop: 6, fontSize: 22, fontFamily: FF.display, fontWeight: 700, letterSpacing: '-0.6px', lineHeight: '26px' }}>A specialist on the line<br/>in 30 seconds.</div>
-        <div style={{ marginTop: 12, display: 'flex', gap: 14, fontSize: 11, fontFamily: FF.text, color: 'rgba(255,255,255,0.85)' }}>
-          {['Verified pros', 'Free diagnosis', 'Open quotes'].map(t => (
+    <div style={{ margin: '14px 16px 0', borderRadius: 22, overflow: 'hidden', background: 'linear-gradient(135deg, #1A1814 0%, #0E0D0B 55%, #1F1A12 100%)', position: 'relative', minHeight: 178, color: FC.surface, animation: 'msg-in .6s cubic-bezier(.2,.8,.2,1) both', transformOrigin: '50% 0%', flexShrink: 0, boxShadow: '0 1px 2px rgba(0,0,0,.18), 0 14px 36px -16px rgba(20,18,15,.5)' }}>
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(120% 80% at 100% 0%, rgba(255,216,106,0.40), transparent 60%)', animation: 'glow-drift 8s ease-in-out infinite' }} />
+      <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(70% 60% at 10% 110%, rgba(232,163,23,0.32), transparent 60%)' }} />
+      <div style={{ padding: '22px 22px 22px', position: 'relative', zIndex: 2 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{ width: 18, height: 18, borderRadius: 5, background: 'linear-gradient(135deg, '+FC.apricot+', '+FC.accent+')', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <svg width="9" height="9" viewBox="0 0 14 14"><path d="M7 1.5 L10 4 L8.5 5.5 L11.5 8.5 L9.5 10.5 L6.5 7.5 L5 9 L2.5 6.5 Z" fill="#14120F"/></svg>
+          </div>
+          <div style={{ fontSize: 10.5, fontFamily: FF.text, color: 'rgba(255,255,255,0.70)', letterSpacing: '1.6px', textTransform: 'uppercase', fontWeight: 600 }}>FixIt Express</div>
+        </div>
+        <div style={{ marginTop: 14, fontSize: 26, fontFamily: FF.display, fontWeight: 600, letterSpacing: '-0.9px', lineHeight: '30px' }}>
+          A specialist on the line<br/><span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontWeight: 400, color: FC.apricot, letterSpacing: '-0.3px' }}>in 30 seconds.</span>
+        </div>
+        <div style={{ marginTop: 16, display: 'flex', gap: 18, fontSize: 11.5, fontFamily: FF.text, color: 'rgba(255,255,255,0.85)' }}>
+          {[
+            { t: 'Verified pros', i: <path d="M2 6l3 3 7-7" stroke={FC.apricot} strokeWidth="1.6" fill="none" strokeLinecap="round" strokeLinejoin="round"/> },
+            { t: 'Free diagnosis', i: <circle cx="7" cy="7" r="5" stroke={FC.apricot} strokeWidth="1.4" fill="none"/> },
+            { t: 'Open quotes', i: <path d="M2 4h10M2 8h7" stroke={FC.apricot} strokeWidth="1.4" fill="none" strokeLinecap="round"/> },
+          ].map(({t, i}) => (
             <div key={t} style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-              <span style={{ width: 4, height: 4, borderRadius: 2, background: FC.apricot }} />{t}
+              <svg width="12" height="12" viewBox="0 0 14 14">{i}</svg>{t}
             </div>
           ))}
         </div>
       </div>
-      <svg viewBox="0 0 200 200" width="170" height="170" style={{ position: 'absolute', right: -28, top: -16, opacity: 0.22 }}>
+      <svg viewBox="0 0 200 200" width="190" height="190" style={{ position: 'absolute', right: -30, top: -22, opacity: 0.22 }}>
         <circle cx="100" cy="100" r="78" fill="none" stroke={FC.apricot} strokeWidth="1"/>
         <circle cx="100" cy="100" r="56" fill="none" stroke={FC.apricot} strokeWidth="1"/>
         <path d="M70 70 L130 130 M75 65 a14 14 0 1 0 -10 10 L130 130 a14 14 0 1 1 -10 10 Z" fill="none" stroke={FC.peach} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -240,17 +565,21 @@ function Hero() {
 
 // Suggested question pill (tap to send)
 function SuggestedQ({ children, onTap }) {
+  const [hover, setHover] = React.useState(false);
   return (
-    <div onClick={onTap} style={{
-      padding: '10px 12px', border: `1px solid ${FC.hairline}`, borderRadius: 8,
-      color: FC.ink, fontSize: 13.5, fontFamily: FF.text, cursor: 'pointer',
-      display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      background: FC.surface, transition: 'all .15s',
-    }}
-    onMouseEnter={e => e.currentTarget.style.background = FC.surfaceAlt}
-    onMouseLeave={e => e.currentTarget.style.background = FC.surface}>
-      <span>{children}</span>
-      <svg width="6" height="10" viewBox="0 0 6 10"><path d="M1 1l4 4-4 4" stroke={FC.muted} strokeWidth="1.4" fill="none" strokeLinecap="round"/></svg>
+    <div onClick={onTap}
+      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      className="btn-press"
+      style={{
+        padding: '10px 14px', border: `1px solid ${hover ? FC.accent : FC.hairline}`, borderRadius: 10,
+        color: FC.ink, fontSize: 13.5, fontFamily: FF.text, cursor: 'pointer',
+        display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+        background: hover ? FC.accentBg : FC.surface,
+        transition: 'border-color .18s, background .18s, transform .15s',
+        boxShadow: FC.shadowSm,
+      }}>
+      <span style={{ color: hover ? FC.accentInk : FC.ink }}>{children}</span>
+      <svg width="7" height="11" viewBox="0 0 7 11" style={{ transition: 'transform .2s', transform: hover ? 'translateX(2px)' : 'translateX(0)' }}><path d="M1 1l4.5 4.5L1 10" stroke={hover ? FC.accent : FC.muted} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
     </div>
   );
 }
@@ -294,65 +623,97 @@ function PhotoStrip() {
     </div>
   );
 }
-function OrderRow({ k, v, last }) {
+function OrderRow({ k, v, last, delay = 0 }) {
   return (
-    <div style={{ display: 'flex', gap: 14, padding: '10px 0', borderBottom: last ? 'none' : `1px solid ${FC.divider}`, alignItems: 'flex-start' }}>
-      <div style={{ width: 72, color: FC.muted, fontFamily: FF.text, fontSize: 12, paddingTop: 1, textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: 500 }}>{k}</div>
-      <div style={{ flex: 1, fontSize: 13.5, fontFamily: FF.text, color: FC.ink }}>{v}</div>
+    <div style={{
+      display: 'flex', gap: 14, padding: '11px 0',
+      borderBottom: last ? 'none' : `1px solid ${FC.divider}`,
+      alignItems: 'flex-start',
+      animation: `soft-in .45s ${delay}ms both`,
+    }}>
+      <div style={{ width: 64, color: FC.muted, fontFamily: FF.text, fontSize: 10.5, paddingTop: 2, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>{k}</div>
+      <div style={{ flex: 1, fontSize: 13.5, fontFamily: FF.text, color: FC.ink, lineHeight: '18px' }}>{v}</div>
     </div>
   );
 }
 function PrimaryBtn({ children, full, disabled, onClick }) {
   return (
-    <button onClick={disabled ? undefined : onClick} style={{
-      height: 46, width: full ? '100%' : 'auto', padding: full ? 0 : '0 24px',
-      border: 0, borderRadius: 23,
-      background: disabled ? FC.hairline : FC.accent,
-      color: disabled ? FC.muted : FC.surface,
-      fontWeight: 600, fontSize: 14.5, fontFamily: FF.display, letterSpacing: '-0.1px',
+    <button onClick={disabled ? undefined : onClick} className="btn-press" style={{
+      height: 50, width: full ? '100%' : 'auto', padding: full ? 0 : '0 26px',
+      border: 0, borderRadius: 25,
+      background: disabled
+        ? FC.surfaceDeep
+        : `linear-gradient(180deg, ${FC.apricot} 0%, ${FC.accent} 100%)`,
+      color: disabled ? FC.muted : FC.ink,
+      fontWeight: 600, fontSize: 15, fontFamily: FF.display, letterSpacing: '-0.2px',
       cursor: disabled ? 'default' : 'pointer',
+      boxShadow: disabled
+        ? 'none'
+        : 'inset 0 1px 0 rgba(255,255,255,.55), 0 1px 2px rgba(176,122,8,.30), 0 8px 20px -6px rgba(232,163,23,.55)',
     }}>{children}</button>
   );
 }
 function GhostBtn({ children, onClick }) {
   return (
-    <button onClick={onClick} style={{
+    <button onClick={onClick} className="btn-press" style={{
       height: 32, padding: '0 14px', borderRadius: 16, border: `1px solid ${FC.hairline}`,
-      background: FC.surface, color: FC.inkSoft, fontFamily: FF.text, fontSize: 12, cursor: 'pointer',
+      background: FC.surface, color: FC.inkSoft, fontFamily: FF.text, fontSize: 12, fontWeight: 500, cursor: 'pointer',
+      boxShadow: FC.shadowSm,
     }}>{children}</button>
   );
 }
 
 function RepairOrderCard({ pending, onGetQuotes }) {
+  const chev = <svg width="6" height="10" viewBox="0 0 6 10"><path d="M1 1l4 4-4 4" stroke={FC.muted} strokeWidth="1.4" fill="none" strokeLinecap="round"/></svg>;
   return (
     <div style={{ padding: '6px 14px', ...ENTER }}>
-      <div style={{ marginBottom: 4, marginLeft: 38, fontSize: 12, color: FC.ink, fontWeight: 600, fontFamily: FF.text }}>
+      <div style={{ marginBottom: 4, marginLeft: 41, fontSize: 11.5, color: FC.ink, fontWeight: 600, fontFamily: FF.text }}>
         Mike Chen <span style={{ color: FC.muted, fontWeight: 400, marginLeft: 6 }}>drafted your repair order</span>
       </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
         <ProAvatar />
-        <div style={{ background: FC.surface, borderRadius: '4px 14px 14px 14px', flex: 1, padding: '16px 18px 18px', border: `1px solid ${FC.hairline}` }}>
-          <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginBottom: 6 }}>
-            <span style={{ fontFamily: FF.display, fontSize: 15, fontWeight: 700, color: FC.ink, letterSpacing: '-0.2px' }}>Repair order</span>
-            <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text }}>Draft #4729</span>
-          </div>
-          <OrderRow k="Issue" v="TOTO toilet · sewer odor" />
-          <OrderRow k="Photos" v={<PhotoStrip />} />
-          <OrderRow k="Plan" v={<>
-            <div>Replace flange wax ring</div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 4 }}>
-              <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text }}>Estimate</span>
-              <span style={{ color: FC.accent, fontWeight: 700, fontSize: 16, fontFamily: FF.display }}>$35</span>
-              <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text }}>· final on inspection</span>
+        <div style={{
+          background: FC.surface, borderRadius: '4px 16px 16px 16px',
+          flex: 1, padding: 0, border: `1px solid ${FC.hairlineSoft}`,
+          boxShadow: FC.shadowMd, overflow: 'hidden',
+        }}>
+          {/* Header strip */}
+          <div style={{
+            padding: '13px 16px 11px',
+            background: `linear-gradient(180deg, ${FC.surfaceAlt}, ${FC.surface})`,
+            borderBottom: `1px solid ${FC.hairlineSoft}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 22, height: 22, borderRadius: 6, background: FC.ink, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M3 6.5l2 2 4-5" stroke={FC.apricot} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
+              <span style={{ fontFamily: FF.display, fontSize: 14.5, fontWeight: 600, color: FC.ink, letterSpacing: '-0.2px' }}>Repair order</span>
             </div>
-          </>} />
-          <OrderRow k="When" v={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>
-            {pending ? <span style={{ color: FC.accent }}>Pick a time</span> : 'Right now'}
-            <svg width="6" height="10" viewBox="0 0 6 10"><path d="M1 1l4 4-4 4" stroke={FC.muted} strokeWidth="1.4" fill="none" strokeLinecap="round"/></svg>
-          </span>} />
-          <OrderRow last k="Where" v={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 4 }}>820 W Ridge Ln, Apt 4B<svg width="6" height="10" viewBox="0 0 6 10"><path d="M1 1l4 4-4 4" stroke={FC.muted} strokeWidth="1.4" fill="none" strokeLinecap="round"/></svg></span>} />
-          <div style={{ marginTop: 16 }}>
-            <PrimaryBtn full disabled={pending} onClick={onGetQuotes}>{pending ? 'Set a time to continue' : 'Request quotes'}</PrimaryBtn>
+            <span className="tnum" style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '.4px' }}>DRAFT · #4729</span>
+          </div>
+          <div style={{ padding: '4px 16px 16px' }}>
+            <OrderRow delay={50}  k="Issue"  v="TOTO toilet · sewer odor" />
+            <OrderRow delay={110} k="Photos" v={<PhotoStrip />} />
+            <OrderRow delay={170} k="Plan"   v={<>
+              <div>Replace flange wax ring</div>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: 6, marginTop: 5 }}>
+                <span style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '.3px', textTransform: 'uppercase', fontWeight: 600 }}>Estimate</span>
+                <span className="tnum" style={{ color: FC.accent, fontWeight: 700, fontSize: 17, fontFamily: FF.display, letterSpacing: '-.4px' }}>$35</span>
+                <span style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text }}>· final on inspection</span>
+              </div>
+            </>} />
+            <OrderRow delay={230} k="When" v={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+              {pending ? <span style={{ color: FC.accent, fontWeight: 600 }}>Pick a time</span> : 'Right now'}{chev}
+            </span>} />
+            <OrderRow delay={290} last k="Where" v={<span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>820 W Ridge Ln, Apt 4B{chev}</span>} />
+            <div style={{ marginTop: 16 }}>
+              <PrimaryBtn full disabled={pending} onClick={onGetQuotes}>{pending ? 'Set a time to continue' : 'Request quotes'}</PrimaryBtn>
+            </div>
+            <div style={{ marginTop: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 5, fontSize: 10.5, color: FC.muted, fontFamily: FF.text }}>
+              <svg width="9" height="11" viewBox="0 0 9 11"><rect x="1" y="4.5" width="7" height="6" rx="1" fill="none" stroke={FC.muted} strokeWidth="1"/><path d="M2.5 4.5V3a2 2 0 0 1 4 0v1.5" fill="none" stroke={FC.muted} strokeWidth="1" strokeLinecap="round"/></svg>
+              <span>Hold until you confirm a vendor · no charge yet</span>
+            </div>
           </div>
         </div>
       </div>
@@ -361,12 +722,12 @@ function RepairOrderCard({ pending, onGetQuotes }) {
 }
 
 function Tag({ children, tone = 'neutral' }) {
-  const t = tone === 'accent' ? { c: FC.accent, bg: FC.accentBg } :
-            tone === 'forest' ? { c: FC.forest, bg: FC.forestBg } :
-            tone === 'amber'  ? { c: FC.amber,  bg: FC.amberBg  } :
-                                { c: FC.inkSoft, bg: FC.surfaceAlt };
+  const t = tone === 'accent' ? { c: FC.accentInk, bg: FC.accentBg, b: 'rgba(197,89,58,.18)' } :
+            tone === 'forest' ? { c: FC.forest,    bg: FC.forestBg, b: 'rgba(47,107,78,.20)' } :
+            tone === 'amber'  ? { c: FC.amber,     bg: FC.amberBg,  b: 'rgba(184,119,31,.22)' } :
+                                { c: FC.inkSoft,   bg: FC.surfaceAlt, b: FC.hairline };
   return (
-    <span style={{ fontSize: 10.5, color: t.c, background: t.bg, fontFamily: FF.text, padding: '3px 8px', borderRadius: 4, fontWeight: 600, letterSpacing: '0.1px' }}>{children}</span>
+    <span style={{ fontSize: 10.5, color: t.c, background: t.bg, fontFamily: FF.text, padding: '3px 8px', borderRadius: 5, fontWeight: 600, letterSpacing: '0.1px', border: `1px solid ${t.b}`, lineHeight: '14px' }}>{children}</span>
   );
 }
 
@@ -382,18 +743,27 @@ function VendorImage({ kind }) {
   );
 }
 
-function VendorCard({ name, image, badge, tags, last, button = 'View', onView }) {
+function VendorCard({ name, image, badge, tags, last, button = 'View', onView, price = '$24 – $108', rating = '5.0', reviews = '12k' }) {
+  const [hover, setHover] = React.useState(false);
   return (
-    <div style={{ display: 'flex', gap: 14, padding: '14px 0', borderBottom: last ? 'none' : `1px solid ${FC.divider}` }}>
-      <div style={{ width: 88, height: 88, borderRadius: 10, overflow: 'hidden', flexShrink: 0 }}><VendorImage kind={image} /></div>
+    <div
+      onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}
+      style={{
+        display: 'flex', gap: 14, padding: '14px 0',
+        borderBottom: last ? 'none' : `1px solid ${FC.divider}`,
+        transition: 'background .18s', cursor: 'pointer',
+        margin: '0 -2px', paddingLeft: 2, paddingRight: 2,
+        borderRadius: hover ? 10 : 0, background: hover ? FC.surfaceAlt : 'transparent',
+      }} onClick={onView}>
+      <div style={{ width: 88, height: 88, borderRadius: 12, overflow: 'hidden', flexShrink: 0, boxShadow: FC.shadowSm }}><VendorImage kind={image} /></div>
       <div style={{ flex: 1, minWidth: 0, display: 'flex', flexDirection: 'column' }}>
         <div style={{ fontSize: 14.5, fontWeight: 600, color: FC.ink, fontFamily: FF.display, letterSpacing: '-0.2px', lineHeight: '18px' }}>{name}</div>
-        <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 5, fontSize: 11.5, color: FC.muted, fontFamily: FF.text }}>
+        <div style={{ display: 'flex', gap: 6, alignItems: 'center', marginTop: 5, fontSize: 11.5, color: FC.muted, fontFamily: FF.text }}>
           <span style={{ display: 'flex', alignItems: 'center', gap: 3 }}>
             <svg width="11" height="11" viewBox="0 0 12 12"><path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 8.5 3 10.5 3.5 7 1 4.5 4.5 4z" fill={FC.amber}/></svg>
-            <span style={{ color: FC.ink, fontWeight: 600 }}>5.0</span>
+            <span className="tnum" style={{ color: FC.ink, fontWeight: 600 }}>{rating}</span>
           </span>
-          <span>· 12k reviews</span>
+          <span>· {reviews} reviews</span>
           <span>· Home repair</span>
         </div>
         {badge && <div style={{ marginTop: 6 }}><Tag tone="amber">{badge}</Tag></div>}
@@ -403,54 +773,151 @@ function VendorCard({ name, image, badge, tags, last, button = 'View', onView })
         <div style={{ flex: 1 }} />
         <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 10 }}>
           <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
-            <span style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.3px', textTransform: 'uppercase', fontWeight: 600 }}>Quote</span>
-            <span style={{ color: FC.accent, fontSize: 16, fontWeight: 700, fontFamily: FF.display, letterSpacing: '-0.4px' }}>$24<span style={{ color: FC.muted, fontWeight: 400 }}>–</span>$108</span>
+            <span style={{ fontSize: 10, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.5px', textTransform: 'uppercase', fontWeight: 600 }}>Quote</span>
+            <span className="tnum" style={{ color: FC.accent, fontSize: 16, fontWeight: 700, fontFamily: FF.display, letterSpacing: '-0.5px' }}>{price.split('–')[0]}<span style={{ color: FC.mutedSoft, fontWeight: 400 }}>–</span>{price.split('–')[1]}</span>
           </div>
-          <button onClick={onView} style={{ height: 28, padding: '0 16px', borderRadius: 14, border: `1px solid ${FC.ink}`, background: FC.surface, color: FC.ink, fontSize: 12, fontWeight: 600, fontFamily: FF.text, cursor: 'pointer' }}>{button}</button>
+          <button onClick={(e) => { e.stopPropagation(); onView && onView(); }}
+            className="btn-press"
+            style={{
+              height: 30, padding: '0 16px', borderRadius: 15,
+              border: `1px solid ${hover ? FC.ink : FC.hairline}`,
+              background: hover ? FC.ink : FC.surface,
+              color: hover ? FC.surface : FC.ink,
+              fontSize: 12, fontWeight: 600, fontFamily: FF.text, cursor: 'pointer',
+              transition: 'all .2s',
+            }}>{button}</button>
         </div>
       </div>
     </div>
   );
 }
 
-function MerchantQuotesCard({ stale, onView }) {
-  const [count, setCount] = React.useState(0);
+// Animated counter — each integer change flips up with a tiny spring
+function CountUp({ to, ms = 1800 }) {
+  const [n, setN] = React.useState(0);
   React.useEffect(() => {
-    if (stale) { setCount(6); return; }
-    const t0 = Date.now();
-    const tick = () => {
-      const p = Math.min(1, (Date.now() - t0) / 2400);
-      setCount(Math.round(p * 6));
-      if (p < 1) requestAnimationFrame(tick);
+    let raf;
+    const t0 = performance.now();
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / ms);
+      // ease-out cubic
+      const e = 1 - Math.pow(1 - p, 3);
+      setN(Math.round(e * to));
+      if (p < 1) raf = requestAnimationFrame(step);
     };
-    requestAnimationFrame(tick);
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [to, ms]);
+  return (
+    <span key={n} className="tnum" style={{ display: 'inline-block', animation: 'num-up .3s cubic-bezier(.2,.8,.2,1) both' }}>{n}</span>
+  );
+}
+
+function MerchantQuotesCard({ stale, onView }) {
+  // polling progress 0→1 over 2.4s for the demo
+  const [progress, setProgress] = React.useState(stale ? 1 : 0);
+  React.useEffect(() => {
+    if (stale) return;
+    let raf;
+    const t0 = performance.now();
+    const step = (t) => {
+      const p = Math.min(1, (t - t0) / 2400);
+      setProgress(p);
+      if (p < 1) raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
   }, [stale]);
+
+  // Quote-window countdown — starts at 4:58, ticks down once per second.
+  // Visible constraint matters more than the exact number; the live tick is
+  // what makes the window feel real.
+  const [secondsLeft, setSecondsLeft] = React.useState(298);
+  React.useEffect(() => {
+    if (stale) return;
+    const id = setInterval(() => setSecondsLeft(s => (s > 0 ? s - 1 : 0)), 1000);
+    return () => clearInterval(id);
+  }, [stale]);
+  const mm = String(Math.floor(secondsLeft / 60)).padStart(2, '0');
+  const ss = String(secondsLeft % 60).padStart(2, '0');
+  const windowExpired = !stale && secondsLeft === 0;
 
   return (
     <div style={{ ...ENTER }}>
-      <div style={{ margin: '10px 14px', background: FC.surface, borderRadius: 14, padding: '4px 16px 14px', border: `1px solid ${FC.hairline}` }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '14px 0 6px' }}>
-          {stale
-            ? <div style={{ width: 8, height: 8, borderRadius: 4, background: FC.accent }} />
-            : <div style={{ width: 14, height: 14, borderRadius: 7, border: `2px solid ${FC.accent}`, borderTopColor: 'transparent', animation: 'spin 1.2s linear infinite' }} />
-          }
-          <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 600, color: FC.ink, fontFamily: FF.text }}>
-              {stale ? 'Quote window expired — re-poll to refresh' : 'Searching nearby pros'}
+      <div style={{
+        margin: '10px 14px', background: FC.surface, borderRadius: 16,
+        padding: '0 16px 14px', border: `1px solid ${FC.hairlineSoft}`,
+        boxShadow: FC.shadowMd, overflow: 'hidden',
+      }}>
+        {/* Polling header */}
+        <div style={{
+          margin: '0 -16px',
+          padding: '14px 16px 12px',
+          background: stale ? FC.surface : `linear-gradient(180deg, ${FC.peachSoft}40, ${FC.surface})`,
+          borderBottom: `1px solid ${FC.divider}`,
+          position: 'relative',
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            {stale
+              ? <div style={{ width: 8, height: 8, borderRadius: 4, background: FC.accent, boxShadow: `0 0 0 3px ${FC.accentBg}` }} />
+              : <div style={{ width: 14, height: 14, borderRadius: 7, border: `2px solid ${FC.accent}`, borderTopColor: 'transparent', animation: 'spin 1.1s linear infinite' }} />
+            }
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: FC.ink, fontFamily: FF.text, letterSpacing: '-.1px' }}>
+                {stale ? 'Quote window expired — re-poll to refresh' : 'Searching nearby pros'}
+              </div>
+              {!stale && (
+                <div style={{ fontSize: 11, color: FC.muted, marginTop: 3, fontFamily: FF.text }}>
+                  <span style={{ color: FC.accent, fontWeight: 700 }}><CountUp to={6} ms={2200} /> quotes</span> received · still polling
+                </div>
+              )}
             </div>
             {!stale && (
-              <div style={{ fontSize: 11, color: FC.muted, marginTop: 2, fontFamily: FF.text }}>
-                <span style={{ color: FC.accent, fontWeight: 700, fontVariantNumeric: 'tabular-nums' }}>{count} quotes</span> received · still polling
+              <div style={{ textAlign: 'right' }}>
+                <div style={{ fontSize: 9.5, color: FC.muted, letterSpacing: '.5px', textTransform: 'uppercase', fontWeight: 600, fontFamily: FF.text }}>Window</div>
+                <div
+                  className="tnum"
+                  style={{
+                    fontSize: 12, fontFamily: FF.display, fontWeight: 600,
+                    color: windowExpired ? '#B43A1A' : (secondsLeft < 60 ? FC.amber : FC.ink),
+                    transition: 'color .3s ease',
+                  }}
+                >
+                  {windowExpired ? 'EXPIRED' : `${mm}:${ss}`}
+                </div>
               </div>
             )}
           </div>
+          {!stale && (
+            <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, height: 2, background: FC.hairlineSoft }}>
+              <div style={{
+                height: '100%',
+                width: `${progress * 100}%`,
+                background: `linear-gradient(90deg, ${FC.accent}, ${FC.peach})`,
+                transition: 'width .25s linear',
+              }} />
+            </div>
+          )}
         </div>
-        <div style={{ height: 1, background: FC.divider, margin: '0 -16px' }} />
-        <VendorCard name="Citrus Home Services" image="bath" button={stale ? 'Grab it' : 'View'} onView={() => onView && onView('citrus')} tags={[{ text: '90-day warranty', tone: 'accent' }, { text: 'Transparent pricing' }, { text: 'No fix, no charge' }]} />
-        <VendorCard name="ServiceMaster Pro" image="tech" badge="#2 Home repair · SF" button={stale ? 'Grab it' : 'View'} onView={() => onView && onView('master')} tags={[{ text: 'Surcharge refund', tone: 'accent' }, { text: 'Transparent pricing' }]} />
-        <VendorCard last name="QuackFix Appliance" image="cleaner" button={stale ? 'Grab it' : 'View'} onView={() => onView && onView('quack')} tags={[{ text: 'Online estimate', tone: 'accent' }, { text: 'No fix, no charge', tone: 'accent' }]} />
-        <div style={{ textAlign: 'center', paddingTop: 10 }}>
-          <span style={{ fontSize: 12, color: FC.muted, fontFamily: FF.text }}>Show 3 more ⌄</span>
+        {/* Vendors stagger in to make the "calling around" moment feel earned. */}
+        {[
+          <VendorCard key="v1" name="Citrus Home Services" image="bath" rating="4.9" reviews="2.1k" price="$24 – $108" button={stale ? 'Grab it' : 'View'} onView={() => onView && onView('citrus')} tags={[{ text: '90-day warranty', tone: 'accent' }, { text: 'Transparent pricing' }, { text: 'No fix, no charge' }]} />,
+          <VendorCard key="v2" name="ServiceMaster Pro" image="tech" rating="5.0" reviews="12k" price="$30 – $128" badge="#2 Home repair · SF" button={stale ? 'Grab it' : 'View'} onView={() => onView && onView('master')} tags={[{ text: 'Surcharge refund', tone: 'accent' }, { text: 'Transparent pricing' }]} />,
+          <VendorCard key="v3" last name="QuackFix Appliance" image="cleaner" rating="4.9" reviews="6.8k" price="$19 – $84" button={stale ? 'Grab it' : 'View'} onView={() => onView && onView('quack')} tags={[{ text: 'Online estimate', tone: 'accent' }, { text: 'No fix, no charge', tone: 'accent' }]} />,
+        ].map((v, i) => (
+          <div
+            key={i}
+            style={stale ? undefined : {
+              animation: 'msg-in .45s cubic-bezier(.2,.8,.2,1) both',
+              animationDelay: `${380 + i * 130}ms`,
+              transformOrigin: '0 0',
+            }}
+          >
+            {v}
+          </div>
+        ))}
+        <div style={{ textAlign: 'center', paddingTop: 12 }}>
+          <span style={{ fontSize: 12, color: FC.muted, fontFamily: FF.text, cursor: 'pointer' }}>Show 3 more <span style={{ display: 'inline-block', transform: 'translateY(1px)' }}>⌄</span></span>
         </div>
       </div>
       {!stale && (
@@ -462,17 +929,91 @@ function MerchantQuotesCard({ stale, onView }) {
   );
 }
 
-function ProductCard() {
+// Inline quick-rating — shows three emoji-style buttons and disables itself
+// after a tap. Lighter than the full ReviewSheet but captures the directional
+// signal (positive / neutral / negative) without a context switch.
+function QuickRating({ onPick }) {
+  const [picked, setPicked] = React.useState(null);
+  const opts = [
+    { key: 'negative', label: 'Off',   ink: FC.amber,
+      svg: <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke={FC.amber} strokeWidth="1.5"/><circle cx="8" cy="9.5" r="1" fill={FC.amber}/><circle cx="14" cy="9.5" r="1" fill={FC.amber}/><path d="M7.5 15c1.5-1.5 5.5-1.5 7 0" stroke={FC.amber} strokeWidth="1.4" strokeLinecap="round" fill="none" transform="rotate(180 11 15)"/></svg> },
+    { key: 'neutral',  label: 'Okay',  ink: FC.inkSoft,
+      svg: <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke={FC.inkSoft} strokeWidth="1.5"/><circle cx="8" cy="9.5" r="1" fill={FC.inkSoft}/><circle cx="14" cy="9.5" r="1" fill={FC.inkSoft}/><path d="M7.5 14.5h7" stroke={FC.inkSoft} strokeWidth="1.5" strokeLinecap="round"/></svg> },
+    { key: 'positive', label: 'Great', ink: FC.forest,
+      svg: <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><circle cx="11" cy="11" r="9" stroke={FC.forest} strokeWidth="1.5"/><circle cx="8" cy="9.5" r="1" fill={FC.forest}/><circle cx="14" cy="9.5" r="1" fill={FC.forest}/><path d="M7.5 13c1.5 2 5.5 2 7 0" stroke={FC.forest} strokeWidth="1.5" strokeLinecap="round" fill="none"/></svg> },
+  ];
   return (
     <div style={{ padding: '6px 14px', ...ENTER }}>
-      <div style={{ marginBottom: 4, marginLeft: 38, fontSize: 12, color: FC.ink, fontWeight: 600, fontFamily: FF.text }}>
+      <div style={{ marginBottom: 4, marginLeft: 41, fontSize: 11.5, color: FC.ink, fontWeight: 600, fontFamily: FF.text }}>
+        FixIt <span style={{ color: FC.muted, fontWeight: 400, marginLeft: 6 }}>quick rating</span>
+      </div>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+        <BotAvatar />
+        <div style={{
+          flex: 1, background: FC.surface, borderRadius: '4px 16px 16px 16px',
+          border: `1px solid ${FC.hairlineSoft}`, padding: '14px 16px',
+          boxShadow: FC.shadowSm,
+        }}>
+          <div style={{ fontSize: 13.5, color: FC.inkSoft, fontFamily: FF.text, lineHeight: '19px' }}>
+            How was your time with <span style={{ fontWeight: 600, color: FC.ink }}>Mike</span>?
+          </div>
+          <div style={{ display: 'flex', gap: 10, marginTop: 12 }}>
+            {opts.map(o => {
+              const isPicked = picked === o.key;
+              const isOther = picked && !isPicked;
+              return (
+                <button
+                  key={o.key}
+                  onClick={() => {
+                    if (picked) return;
+                    setPicked(o.key);
+                    onPick && onPick(o.key);
+                  }}
+                  className="btn-press"
+                  disabled={!!picked}
+                  style={{
+                    flex: 1, height: 56, borderRadius: 14,
+                    border: `1px solid ${isPicked ? o.ink : FC.hairline}`,
+                    background: isPicked ? `${o.ink}12` : FC.surface,
+                    opacity: isOther ? 0.4 : 1,
+                    display: 'flex', flexDirection: 'column',
+                    alignItems: 'center', justifyContent: 'center', gap: 3,
+                    cursor: picked ? 'default' : 'pointer',
+                    fontFamily: FF.text, transition: 'all .22s',
+                    boxShadow: isPicked ? `0 1px 0 ${o.ink}20 inset, 0 6px 18px -10px ${o.ink}55` : FC.shadowSm,
+                  }}
+                >
+                  {o.svg}
+                  <span style={{ fontSize: 11, fontWeight: isPicked ? 600 : 500, color: isPicked ? o.ink : FC.muted, letterSpacing: '.1px' }}>{o.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {picked && (
+            <div style={{ marginTop: 10, fontSize: 12, color: FC.muted, fontFamily: FF.text, animation: 'soft-in .3s ease-out both' }}>
+              Thanks — noted. Want to leave a longer review?
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ProductCard({ onBuy }) {
+  return (
+    <div style={{ padding: '6px 14px', ...ENTER }}>
+      <div style={{ marginBottom: 4, marginLeft: 41, fontSize: 11.5, color: FC.ink, fontWeight: 600, fontFamily: FF.text }}>
         Mike Chen <span style={{ color: FC.muted, fontWeight: 400, marginLeft: 6 }}>recommends</span>
       </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
         <ProAvatar />
-        <div style={{ background: FC.surface, borderRadius: '4px 14px 14px 14px', flex: 1, border: `1px solid ${FC.hairline}`, overflow: 'hidden', display: 'flex' }}>
-          <div style={{ width: 96, position: 'relative', background: FC.ink, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '12px 0 14px' }}>
-            <div style={{ position: 'absolute', top: 10, left: 10, fontSize: 9, fontWeight: 700, color: FC.accent, letterSpacing: '1.2px', fontFamily: FF.text }}>VERIFIED</div>
+        <div style={{ background: FC.surface, borderRadius: '4px 16px 16px 16px', flex: 1, border: `1px solid ${FC.hairlineSoft}`, overflow: 'hidden', display: 'flex', boxShadow: FC.shadowMd }}>
+          <div style={{ width: 100, position: 'relative', background: `radial-gradient(120% 100% at 0% 0%, #2A2622, ${FC.ink} 70%)`, display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '12px 0 14px' }}>
+            <div style={{ position: 'absolute', top: 10, left: 10, display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 8.5, fontWeight: 700, color: FC.apricot, letterSpacing: '1.3px', fontFamily: FF.text }}>
+              <svg width="8" height="8" viewBox="0 0 10 10"><path d="M2 5l2 2 4-5" stroke={FC.apricot} strokeWidth="1.4" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              VERIFIED
+            </div>
             <svg viewBox="0 0 60 80" width="56" height="76">
               <rect x="20" y="22" width="22" height="42" rx="3" fill="#C7855E"/>
               <ellipse cx="31" cy="22" rx="14" ry="7" fill={FC.accent}/>
@@ -482,16 +1023,16 @@ function ProductCard() {
             </svg>
           </div>
           <div style={{ padding: '14px 14px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <div style={{ fontSize: 11, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.4px', textTransform: 'uppercase', fontWeight: 600 }}>First-party</div>
-            <div style={{ fontSize: 14, fontWeight: 600, lineHeight: '18px', color: FC.ink, marginTop: 4, fontFamily: FF.display, letterSpacing: '-0.2px' }}>Worry-Free Toilet Unclog · Express on-site</div>
-            <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}><Tag>Flat rate</Tag><Tag>No fix, no charge</Tag></div>
+            <div style={{ fontSize: 10, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.5px', textTransform: 'uppercase', fontWeight: 600 }}>First-party</div>
+            <div style={{ fontSize: 14, fontWeight: 600, lineHeight: '18px', color: FC.ink, marginTop: 4, fontFamily: FF.display, letterSpacing: '-0.2px' }}>Worry-Free Toilet Unclog <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontWeight: 400, color: FC.inkSoft }}>· Express on-site</span></div>
+            <div style={{ display: 'flex', gap: 6, marginTop: 8, flexWrap: 'wrap' }}><Tag>Flat rate</Tag><Tag tone="forest">No fix, no charge</Tag></div>
             <div style={{ flex: 1 }} />
             <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', marginTop: 12 }}>
               <div>
-                <span style={{ color: FC.accent, fontSize: 13, fontWeight: 600, fontFamily: FF.display }}>$</span>
-                <span style={{ color: FC.accent, fontSize: 22, fontWeight: 700, fontFamily: FF.display, letterSpacing: '-0.6px' }}>59.50</span>
+                <span className="tnum" style={{ color: FC.accent, fontSize: 13, fontWeight: 600, fontFamily: FF.display }}>$</span>
+                <span className="tnum" style={{ color: FC.accent, fontSize: 22, fontWeight: 700, fontFamily: FF.display, letterSpacing: '-0.6px' }}>59.50</span>
               </div>
-              <button style={{ height: 30, padding: '0 16px', borderRadius: 15, border: 0, background: FC.accent, color: FC.surface, fontSize: 12, fontWeight: 600, fontFamily: FF.text, cursor: 'pointer' }}>Buy</button>
+              <button onClick={onBuy} className="btn-press" style={{ height: 32, padding: '0 18px', borderRadius: 16, border: 0, background: `linear-gradient(180deg, ${FC.accent}, ${FC.accentDeep})`, color: FC.surface, fontSize: 12, fontWeight: 600, fontFamily: FF.text, cursor: 'pointer', boxShadow: 'inset 0 1px 0 rgba(255,255,255,.18), 0 4px 12px -4px rgba(197,89,58,.5)' }}>Buy</button>
             </div>
           </div>
         </div>
@@ -525,35 +1066,60 @@ function CatLitterPhoto() {
 
 // ─── Review bottom sheet ──────────────────────────────────────────
 function ReviewSheet({ onClose }) {
-  const Em = ({ glyph, label, active }) => (
+  const Em = ({ children, label, active }) => (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 7, flex: 1 }}>
-      <div style={{ width: 38, height: 38, borderRadius: 19, background: active ? FC.ink : FC.surfaceAlt, border: `1px solid ${active ? FC.ink : FC.hairline}`, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18, color: active ? FC.surface : FC.muted }}>{glyph}</div>
+      <div style={{
+        width: 42, height: 42, borderRadius: 14,
+        background: active ? `linear-gradient(180deg, ${FC.accent}, ${FC.accentDeep})` : FC.surfaceAlt,
+        border: `1px solid ${active ? FC.accent : FC.hairline}`,
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        boxShadow: active ? 'inset 0 1px 0 rgba(255,255,255,.2), 0 4px 12px -4px rgba(197,89,58,.4)' : 'none',
+        transition: 'all .25s',
+      }}>{children(active)}</div>
       <span style={{ fontSize: 10.5, color: active ? FC.ink : FC.muted, fontWeight: active ? 600 : 500, fontFamily: FF.text, letterSpacing: '0.1px' }}>{label}</span>
     </div>
   );
+  const lineColor = (a) => a ? FC.surface : FC.muted;
   const Chip = ({ children, active }) => (
-    <button style={{ height: 36, border: `1px solid ${active ? FC.accent : FC.hairline}`, borderRadius: 18, padding: '0 14px', background: active ? FC.accentBg : FC.surface, color: active ? FC.accent : FC.inkSoft, fontSize: 13, fontWeight: active ? 600 : 500, fontFamily: FF.text, cursor: 'pointer' }}>{children}</button>
+    <button className="btn-press" style={{ height: 36, border: `1px solid ${active ? FC.accent : FC.hairline}`, borderRadius: 18, padding: '0 14px', background: active ? FC.accentBg : FC.surface, color: active ? FC.accentInk : FC.inkSoft, fontSize: 13, fontWeight: active ? 600 : 500, fontFamily: FF.text, cursor: 'pointer', boxShadow: active ? 'none' : FC.shadowSm }}>{children}</button>
   );
   return (
     <>
       <div onClick={onClose} style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.42)', zIndex: 60, animation: 'fade-in .2s both' }} />
-      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: FC.surface, borderRadius: '20px 20px 0 0', padding: '22px 22px 22px', zIndex: 61, animation: 'sheet-up .3s ease-out both' }}>
+      <div style={{ position: 'absolute', left: 0, right: 0, bottom: 0, background: FC.chrome, borderRadius: '24px 24px 0 0', padding: '14px 22px 24px', zIndex: 61, animation: 'sheet-up .45s cubic-bezier(.32,.72,0,1) both', boxShadow: '0 -20px 60px rgba(0,0,0,.18)' }}>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 14 }}>
+          <div style={{ width: 40, height: 4, borderRadius: 2, background: FC.hairline }} />
+        </div>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 22 }}>
-          <span style={{ fontSize: 17, fontWeight: 700, fontFamily: FF.display, letterSpacing: '-0.3px', color: FC.ink }}>Rate this service</span>
+          <span style={{ fontSize: 18, fontWeight: 600, fontFamily: FF.display, letterSpacing: '-0.4px', color: FC.ink }}>How did <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontWeight: 400 }}>Mike</span> do?</span>
           <svg onClick={onClose} style={{ cursor: 'pointer' }} width="14" height="14" viewBox="0 0 14 14"><path d="M2 2l10 10M12 2L2 12" stroke={FC.muted} strokeWidth="1.5" strokeLinecap="round"/></svg>
         </div>
         <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
-          <Em glyph="·" label="Awful" /><Em glyph="·" label="Bad" /><Em glyph="·" label="Okay" /><Em glyph="·" label="Good" /><Em glyph="✦" label="Amazing" active />
+          <Em label="Awful">{(a) => (
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke={lineColor(a)} strokeWidth="1.4"/><circle cx="7" cy="9" r="1" fill={lineColor(a)}/><circle cx="13" cy="9" r="1" fill={lineColor(a)}/><path d="M6.5 14c1-1.2 4-1.2 5 0" stroke={lineColor(a)} strokeWidth="1.3" strokeLinecap="round" fill="none" transform="rotate(180 9 14)"/></svg>
+          )}</Em>
+          <Em label="Bad">{(a) => (
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke={lineColor(a)} strokeWidth="1.4"/><circle cx="7" cy="9" r="1" fill={lineColor(a)}/><circle cx="13" cy="9" r="1" fill={lineColor(a)}/><path d="M7 13.5c1-1 4-1 6 0" stroke={lineColor(a)} strokeWidth="1.3" strokeLinecap="round" fill="none" transform="rotate(180 10 13.5)"/></svg>
+          )}</Em>
+          <Em label="Okay">{(a) => (
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke={lineColor(a)} strokeWidth="1.4"/><circle cx="7" cy="9" r="1" fill={lineColor(a)}/><circle cx="13" cy="9" r="1" fill={lineColor(a)}/><path d="M7 13.5h6" stroke={lineColor(a)} strokeWidth="1.3" strokeLinecap="round"/></svg>
+          )}</Em>
+          <Em label="Good">{(a) => (
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke={lineColor(a)} strokeWidth="1.4"/><circle cx="7" cy="9" r="1" fill={lineColor(a)}/><circle cx="13" cy="9" r="1" fill={lineColor(a)}/><path d="M7 12c1 1.2 4 1.2 5 0" stroke={lineColor(a)} strokeWidth="1.3" strokeLinecap="round" fill="none"/></svg>
+          )}</Em>
+          <Em label="Amazing" active>{(a) => (
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="8" stroke={lineColor(a)} strokeWidth="1.5"/><path d="M6.5 8.5l1.2-1.2M13.5 8.5l-1.2-1.2" stroke={lineColor(a)} strokeWidth="1.4" strokeLinecap="round"/><path d="M7 12c1 1.6 5 1.6 6 0" stroke={lineColor(a)} strokeWidth="1.5" strokeLinecap="round" fill="none"/></svg>
+          )}</Em>
         </div>
-        <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
           <Chip active>Friendly tech</Chip><Chip active>Fast repair</Chip><Chip>Knew their stuff</Chip><Chip>Spot-on diagnosis</Chip>
         </div>
-        <div style={{ background: FC.surfaceAlt, borderRadius: 10, padding: 14, marginBottom: 18, position: 'relative', height: 84, border: `1px solid ${FC.hairline}` }}>
+        <div style={{ background: FC.surface, borderRadius: 12, padding: 14, marginBottom: 18, position: 'relative', height: 84, border: `1px solid ${FC.hairline}`, boxShadow: 'inset 0 1px 0 rgba(255,255,255,.5)' }}>
           <span style={{ color: FC.muted, fontSize: 13, fontFamily: FF.text }}>Tell us what went well — your kind words matter</span>
-          <span style={{ position: 'absolute', right: 14, bottom: 10, color: FC.muted, fontSize: 11, fontFamily: FF.text }}>0 / 100</span>
+          <span className="tnum" style={{ position: 'absolute', right: 14, bottom: 10, color: FC.muted, fontSize: 11, fontFamily: FF.text }}>0 / 100</span>
         </div>
-        <div style={{ fontSize: 12, color: FC.muted, marginBottom: 8, fontFamily: FF.text, textTransform: 'uppercase', letterSpacing: '0.4px', fontWeight: 600 }}>Did this resolve your issue?</div>
-        <div style={{ display: 'flex', gap: 10, marginBottom: 18 }}><Chip active>Yes, resolved</Chip><Chip>Not yet</Chip></div>
+        <div style={{ fontSize: 10.5, color: FC.muted, marginBottom: 8, fontFamily: FF.text, textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 600 }}>Did this resolve your issue?</div>
+        <div style={{ display: 'flex', gap: 10, marginBottom: 22 }}><Chip active>Yes, resolved</Chip><Chip>Not yet</Chip></div>
         <PrimaryBtn full onClick={onClose}>Submit review</PrimaryBtn>
       </div>
     </>
@@ -564,16 +1130,26 @@ function ReviewSheet({ onClose }) {
 function ExpiredModal({ onAct }) {
   return (
     <>
-      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', zIndex: 60, animation: 'fade-in .2s both' }} />
-      <div style={{ position: 'absolute', left: 26, right: 26, top: '34%', background: FC.surface, borderRadius: 18, padding: '26px 24px 22px', boxShadow: '0 24px 60px rgba(0,0,0,0.30)', zIndex: 61, animation: 'pop-in .25s ease-out both' }}>
-        <div style={{ width: 32, height: 32, borderRadius: 16, background: FC.accentBg, display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 14 }}>
-          <svg width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="5.5" stroke={FC.accent} strokeWidth="1.4" fill="none"/><path d="M7 4v3.5L9 9" stroke={FC.accent} strokeWidth="1.4" strokeLinecap="round" fill="none"/></svg>
+      <div style={{ position: 'absolute', inset: 0, background: 'rgba(0,0,0,0.45)', backdropFilter: 'blur(2px)', zIndex: 60, animation: 'fade-in .25s both' }} />
+      <div style={{ position: 'absolute', left: 26, right: 26, top: '32%', background: FC.surface, borderRadius: 22, padding: '24px 24px 22px', boxShadow: '0 32px 72px rgba(0,0,0,0.38), 0 0 0 1px rgba(255,255,255,.06)', zIndex: 61, animation: 'pop-in .42s cubic-bezier(.34,1.4,.64,1) both' }}>
+        <div style={{
+          width: 40, height: 40, borderRadius: 12,
+          background: `linear-gradient(180deg, ${FC.accentBg}, ${FC.peachSoft})`,
+          border: `1px solid ${FC.peachSoft}`,
+          display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: 16,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 18 18"><circle cx="9" cy="9" r="7" stroke={FC.accent} strokeWidth="1.5" fill="none"/><path d="M9 5v4.5L11.5 11" stroke={FC.accent} strokeWidth="1.5" strokeLinecap="round" fill="none"/></svg>
         </div>
-        <div style={{ fontSize: 17, fontWeight: 700, color: FC.ink, marginBottom: 8, fontFamily: FF.display, letterSpacing: '-0.3px' }}>This quote has expired</div>
-        <div style={{ fontSize: 13.5, lineHeight: '20px', color: FC.inkSoft, marginBottom: 22, fontFamily: FF.text }}>
+        <div style={{ fontSize: 19, fontWeight: 600, color: FC.ink, marginBottom: 8, fontFamily: FF.display, letterSpacing: '-0.4px', lineHeight: '24px' }}>
+          This quote has <span style={{ fontFamily: FF.serif, fontStyle: 'italic', fontWeight: 400 }}>expired</span>
+        </div>
+        <div style={{ fontSize: 13.5, lineHeight: '20px', color: FC.inkSoft, marginBottom: 20, fontFamily: FF.text }}>
           Your repair window passed and the vendor's quote is no longer valid. Update your request and we'll re-match you with available pros.
         </div>
         <PrimaryBtn full onClick={onAct}>Re-match vendors</PrimaryBtn>
+        <div style={{ textAlign: 'center', marginTop: 10 }}>
+          <button onClick={onAct} className="btn-press" style={{ background: 'transparent', border: 0, color: FC.muted, fontSize: 12, fontFamily: FF.text, padding: '6px 12px', cursor: 'pointer' }}>Keep current quotes anyway</button>
+        </div>
       </div>
     </>
   );
@@ -583,24 +1159,28 @@ function ExpiredModal({ onAct }) {
 function ExpertIntroCard() {
   return (
     <div style={{ padding: '6px 14px', ...ENTER }}>
-      <div style={{ marginLeft: 38, marginBottom: 4, fontSize: 12, color: FC.muted, fontFamily: FF.text }}>
+      <div style={{ marginLeft: 41, marginBottom: 4, fontSize: 11.5, color: FC.muted, fontFamily: FF.text }}>
         <span style={{ color: FC.ink, fontWeight: 600 }}>Mike Chen</span> joined
       </div>
       <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
         <ProAvatar />
-        <div style={{ flex: 1, background: FC.surface, borderRadius: '4px 14px 14px 14px', border: `1px solid ${FC.hairline}`, padding: '14px 16px' }}>
+        <div style={{
+          flex: 1, background: FC.surface, borderRadius: '4px 16px 16px 16px',
+          border: `1px solid ${FC.hairlineSoft}`, padding: '14px 16px',
+          boxShadow: FC.shadowSm,
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
             <div>
-              <div style={{ fontSize: 14, fontWeight: 700, color: FC.ink, fontFamily: FF.display, letterSpacing: '-0.2px' }}>Mike Chen</div>
+              <div style={{ fontSize: 14.5, fontWeight: 600, color: FC.ink, fontFamily: FF.display, letterSpacing: '-0.2px' }}>Mike Chen</div>
               <div style={{ fontSize: 11.5, color: FC.muted, fontFamily: FF.text, marginTop: 2 }}>Plumbing specialist · 8 yrs</div>
             </div>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11, color: FC.amber, fontFamily: FF.text, fontWeight: 600 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 11.5, color: FC.ink, fontFamily: FF.text, fontWeight: 600 }}>
               <svg width="11" height="11" viewBox="0 0 12 12"><path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 8.5 3 10.5 3.5 7 1 4.5 4.5 4z" fill={FC.amber}/></svg>
-              4.96 · 1,284
+              <span className="tnum">4.96</span><span style={{ color: FC.muted, fontWeight: 400, marginLeft: 2 }}>· 1,284</span>
             </span>
           </div>
-          <div style={{ display: 'flex', gap: 6, marginTop: 10, flexWrap: 'wrap' }}>
-            <Tag tone="forest">Background checked</Tag>
+          <div style={{ display: 'flex', gap: 6, marginTop: 12, flexWrap: 'wrap' }}>
+            <Tag tone="forest">✓ Background checked</Tag>
             <Tag tone="accent">Toilets · sewer odor</Tag>
             <Tag>License #PL-4421</Tag>
           </div>
@@ -617,7 +1197,7 @@ const VENDORS = {
   quack:  { name: 'QuackFix Appliance',   image: 'cleaner', tagline: 'Online estimate · 4.9 · 6.8k', warranty: '45-day', price: '$19 – $84',  blurb: 'Lightweight specialists. Send photos, get a flat quote in minutes, no surprises on arrival.', tags: ['Online estimate', 'No fix, no charge', 'Surcharge refund'] },
 };
 
-function VendorDetailOverlay({ vendorKey, onClose }) {
+function VendorDetailOverlay({ vendorKey, onClose, onBook }) {
   const v = VENDORS[vendorKey];
   if (!v) return null;
   return (
@@ -673,9 +1253,109 @@ function VendorDetailOverlay({ vendorKey, onClose }) {
           <div style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '0.3px', textTransform: 'uppercase', fontWeight: 600 }}>Quote</div>
           <div style={{ color: FC.accent, fontSize: 20, fontWeight: 700, fontFamily: FF.display, letterSpacing: '-0.5px' }}>{v.price}</div>
         </div>
-        <PrimaryBtn>Book this vendor</PrimaryBtn>
+        <PrimaryBtn onClick={() => onBook && onBook(vendorKey)}>Book this vendor</PrimaryBtn>
       </div>
       <style>{`@keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }`}</style>
+    </div>
+  );
+}
+
+// Booking confirmation card — the moment after a vendor is chosen.
+// Shows: vendor identity, ETA window, order # (mirrors the Repair Order #),
+// and two ghost actions ("Call" / "Track"). Trust-defining final beat.
+function BookingCard({ vendorKey, orderNum }) {
+  const v = VENDORS[vendorKey] || VENDORS.citrus;
+  // Live ETA — counts down from 14 min, never below 11 (don't fake arrival).
+  const [eta, setEta] = React.useState(14);
+  React.useEffect(() => {
+    const id = setInterval(() => setEta(e => (e > 11 ? e - 1 : e)), 18000);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <div style={{ padding: '6px 14px', ...ENTER }}>
+      <div style={{ marginBottom: 4, marginLeft: 41, fontSize: 11.5, color: FC.ink, fontWeight: 600, fontFamily: FF.text }}>
+        FixIt <span style={{ color: FC.muted, fontWeight: 400, marginLeft: 6 }}>confirmed your booking</span>
+      </div>
+      <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
+        <BotAvatar />
+        <div style={{
+          flex: 1, background: FC.surface, borderRadius: '4px 16px 16px 16px',
+          border: `1px solid ${FC.hairlineSoft}`, overflow: 'hidden',
+          boxShadow: FC.shadowMd,
+        }}>
+          {/* Header strip — same gradient family as RepairOrderCard for continuity */}
+          <div style={{
+            padding: '12px 16px 11px',
+            background: `linear-gradient(180deg, ${FC.surfaceAlt}, ${FC.surface})`,
+            borderBottom: `1px solid ${FC.hairlineSoft}`,
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ width: 22, height: 22, borderRadius: 6, background: FC.forest, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M3 6.5l2 2 4-5" stroke="#FFF" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              </div>
+              <span style={{ fontFamily: FF.display, fontSize: 14.5, fontWeight: 600, color: FC.ink, letterSpacing: '-0.2px' }}>Booked</span>
+            </div>
+            <span className="tnum" style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '.4px' }}>ORDER · {orderNum || '#4729-A'}</span>
+          </div>
+          {/* Vendor row */}
+          <div style={{ padding: '12px 16px 10px', display: 'flex', alignItems: 'center', gap: 12, borderBottom: `1px solid ${FC.divider}` }}>
+            <div style={{ width: 44, height: 44, borderRadius: 12, overflow: 'hidden', flexShrink: 0 }}>
+              <VendorImage kind={v.image} />
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 14, fontWeight: 600, color: FC.ink, fontFamily: FF.display, letterSpacing: '-.2px' }}>{v.name}</div>
+              <div style={{ marginTop: 2, fontSize: 11.5, color: FC.muted, fontFamily: FF.text }}>{v.tagline}</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <div style={{ fontSize: 10, color: FC.muted, fontFamily: FF.text, letterSpacing: '.4px', textTransform: 'uppercase', fontWeight: 600 }}>Locked</div>
+              <div style={{ fontSize: 13, fontWeight: 700, color: FC.accent, fontFamily: FF.display, letterSpacing: '-.2px' }} className="tnum">{v.price}</div>
+            </div>
+          </div>
+          {/* ETA strip */}
+          <div style={{ padding: '12px 16px', display: 'flex', alignItems: 'center', gap: 12 }}>
+            <div style={{
+              width: 38, height: 38, borderRadius: 19, flexShrink: 0,
+              background: FC.accentBg, border: `1px solid ${FC.peach}55`,
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+            }}>
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <circle cx="8" cy="8" r="6" stroke={FC.accentDeep} strokeWidth="1.4"/>
+                <path d="M8 4.5V8l2.4 1.4" stroke={FC.accentDeep} strokeWidth="1.4" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 10.5, color: FC.muted, fontFamily: FF.text, letterSpacing: '.4px', textTransform: 'uppercase', fontWeight: 600 }}>Arriving in</div>
+              <div style={{ marginTop: 2, fontSize: 15, fontWeight: 600, color: FC.ink, fontFamily: FF.display, letterSpacing: '-.2px' }}>
+                <span className="tnum">~{eta}</span> min · between <span className="tnum">4:15</span> — <span className="tnum">4:30 PM</span>
+              </div>
+            </div>
+          </div>
+          {/* Actions */}
+          <div style={{ padding: '0 14px 14px', display: 'flex', gap: 8 }}>
+            <button className="btn-press" style={{
+              flex: 1, height: 38, borderRadius: 19,
+              border: `1px solid ${FC.hairline}`, background: FC.surface,
+              fontSize: 13, fontWeight: 600, fontFamily: FF.text, color: FC.ink,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+            }}>
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 2.5l2 0 1 3-1.5 1c0.6 1.7 2 3.2 3.8 3.8l1-1.5 3 1 0 2c0 0.5-0.4 1-1 1C5 12.8 1.2 9 1.2 4c0-0.5 0.4-1 0.9-1z" stroke={FC.ink} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              Call {v.name.split(' ')[0]}
+            </button>
+            <button className="btn-press" style={{
+              flex: 1, height: 38, borderRadius: 19,
+              border: `1px solid ${FC.accent}`,
+              background: `linear-gradient(180deg, ${FC.apricot}, ${FC.peach})`,
+              fontSize: 13, fontWeight: 700, fontFamily: FF.text, color: FC.accentInk,
+              cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6,
+              boxShadow: '0 1px 0 rgba(255,255,255,.5) inset',
+            }}>
+              Track arrival
+              <svg width="10" height="10" viewBox="0 0 10 10"><path d="M2 5h6M5 2l3 3-3 3" stroke={FC.accentInk} strokeWidth="1.5" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -697,14 +1377,17 @@ function renderMessage(m, ctx) {
     case 'me-video': return <VideoMessage key={m.id} />;
     case 'me-photo': return <CatLitterPhoto key={m.id} />;
     case 'system': return <SystemText key={m.id} time={m.time} sub={m.sub} />;
+    case 'handshake': return <Handshake key={m.id} time={m.time} />;
     case 'divider': return <Divider key={m.id} label={m.label} />;
     case 'hero': return <Hero key={m.id} />;
     case 'typing-bot': return <TypingBubble key={m.id} />;
     case 'typing-pro': return <TypingBubble key={m.id} variant="pro" />;
     case 'order': return <RepairOrderCard key={m.id} pending={m.pending} onGetQuotes={() => ctx.onAction('get-quotes')} />;
     case 'quotes': return <MerchantQuotesCard key={m.id} stale={m.stale} onView={(k) => ctx.onAction('view-vendor:' + k)} />;
+    case 'booking': return <BookingCard key={m.id} vendorKey={ctx.bookedVendor || m.vendor} orderNum={m.orderNum} />;
     case 'expert-intro': return <ExpertIntroCard key={m.id} />;
-    case 'product': return <ProductCard key={m.id} />;
+    case 'product': return <ProductCard key={m.id} onBuy={() => ctx.onAction('buy-product')} />;
+    case 'quick-rating': return <QuickRating key={m.id} onPick={(k) => ctx.onAction('rate:' + k)} />;
     case 'invite': return (
       <div key={m.id} style={{ padding: '6px 14px', ...ENTER }}>
         <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start' }}>
@@ -715,7 +1398,7 @@ function renderMessage(m, ctx) {
             <div style={{ marginTop: 14 }}><PrimaryBtn full onClick={() => ctx.onAction('open-review')}>Rate this service</PrimaryBtn></div>
           </div>
         </div>
-        <div style={{ marginLeft: 38, marginTop: 8 }}>
+        <div style={{ marginLeft: 41, marginTop: 8 }}>
           <button style={{ background: 'transparent', border: 0, color: FC.muted, fontSize: 12, fontFamily: FF.text, padding: '4px 0', cursor: 'pointer' }}>Dismiss</button>
         </div>
       </div>
@@ -736,8 +1419,8 @@ const SCRIPTS = {
     { delay: 900,  replace: 't1', append: { type: 'bot-q', id: 'q1', text: "What's the trouble? Tap a common issue or describe it in your own words.", options: ['Toilet smells', "Toilet won't refill", 'Toilet is clogged'] } },
     { wait: 'q1' },
     { delay: 600,  append: { type: 'me', id: 'm1', text: 'Toilet smells. I can\'t tell where the odor is coming from.' } },
-    { delay: 900,  stage: 2, append: { type: 'system', id: 's2', time: '5:40 PM', sub: 'Mike Chen joined the conversation' } },
-    { delay: 800,  append: { type: 'typing-pro', id: 't2' } },
+    { delay: 900,  stage: 2, append: { type: 'handshake', id: 's2', time: '5:40 PM' } },
+    { delay: 1700, append: { type: 'typing-pro', id: 't2' } },
     { delay: 1100, replace: 't2', append: { type: 'pro', id: 'p1', text: 'I have a sense of what you\'re describing. Could you film a short clip of the toilet for me?' } },
     { delay: 900,  append: { type: 'me', id: 'm2', text: 'Sure thing' } },
     { delay: 600,  append: { type: 'me-video', id: 'm3' } },
@@ -751,6 +1434,12 @@ const SCRIPTS = {
     { delay: 500,  replace: 't5', append: { type: 'system', id: 's3', time: '5:44 PM' } },
     { delay: 300,  append: { type: 'bot', id: 'b2', text: 'Got it — pinging nearby pros now.' } },
     { delay: 500,  append: { type: 'quotes', id: 'quotes' } },
+    // Tap any vendor's "View" → "Book this vendor" to close the loop.
+    { wait: 'action:book-vendor' },
+    { delay: 400,  append: { type: 'system', id: 's4', time: '5:46 PM' } },
+    { delay: 200,  append: { type: 'typing-bot', id: 't6' } },
+    { delay: 700,  replace: 't6', append: { type: 'bot', id: 'b3', text: 'Locked. Your pro is on the way — quote is held, no surprises.' } },
+    { delay: 500,  append: { type: 'booking', id: 'booking', orderNum: '#4729-A' } },
   ],
 
   'cat-litter': [
@@ -760,14 +1449,22 @@ const SCRIPTS = {
     { delay: 900,  replace: 't1', append: { type: 'bot-q', id: 'q1', text: "Tell me what's going on and I'll work out the cause.", options: ['How do I deal with a clogged toilet?', 'How much does unclogging cost?'] } },
     { wait: 'q1' },
     { delay: 600,  append: { type: 'me', id: 'm1', text: "The toilet's clogged with cat litter" } },
-    { delay: 900,  stage: 2, append: { type: 'system', id: 's2', time: '5:40 PM', sub: 'Mike Chen joined the conversation' } },
-    { delay: 800,  append: { type: 'typing-pro', id: 't2' } },
+    { delay: 900,  stage: 2, append: { type: 'handshake', id: 's2', time: '5:40 PM' } },
+    { delay: 1700, append: { type: 'typing-pro', id: 't2' } },
     { delay: 1100, replace: 't2', append: { type: 'pro', id: 'p1', text: 'Quick question — is it tofu litter, clay, or a mix? A photo would help.' } },
     { delay: 800,  append: { type: 'me', id: 'm2', text: 'Tofu litter' } },
     { delay: 600,  append: { type: 'me-photo', id: 'm3' } },
     { delay: 1400, append: { type: 'typing-pro', id: 't3' } },
     { delay: 1300, replace: 't3', append: { type: 'pro', id: 'p2', text: 'Tofu litter dissolves slowly. If you flushed a lot at once, give it ten minutes and try again. If it still won\'t clear, the bundle below sends a tech for a quick clear-out.' } },
     { delay: 800,  append: { type: 'product', id: 'product' } },
+    { wait: 'action:buy-product' },
+    { delay: 400,  append: { type: 'system', id: 's3', time: '5:45 PM', sub: 'Order placed · arriving 6:15 PM' } },
+    { delay: 1800, append: { type: 'typing-pro', id: 't4' } },
+    { delay: 900,  replace: 't4', append: { type: 'bot-q', id: 'q2', text: 'Did that clear it up?', options: ['Yes, it cleared', 'Still clogged — talk to a pro'] } },
+    { wait: 'q2' },
+    // "Yes" path lands here; "talk to a pro" escalates to default scenario.
+    { delay: 700,  append: { type: 'typing-pro', id: 't5' } },
+    { delay: 900,  replace: 't5', append: { type: 'pro', id: 'p3', text: "Great. I'll close the ticket — ping us anytime if it acts up again." } },
   ],
 
   'off-hours': [
@@ -799,8 +1496,11 @@ const SCRIPTS = {
     { wait: 'q1' },
     { delay: 600,  append: { type: 'me', id: 'm1', text: 'Nope, all good' } },
     { delay: 900,  append: { type: 'typing-pro', id: 't2' } },
-    { delay: 800,  replace: 't2', append: { type: 'pro', id: 'p1', text: "Got it — I'll let you go. Reach out anytime if anything else comes up." } },
-    { delay: 700,  append: { type: 'invite', id: 'invite' } },
+    { delay: 800,  replace: 't2', append: { type: 'pro', id: 'p1', text: "Glad to hear it. One quick thing before I close out — how was it?" } },
+    { delay: 500,  append: { type: 'quick-rating', id: 'rate' } },
+    { wait: 'action:rate' },
+    { delay: 600,  append: { type: 'pro', id: 'p2', text: "Appreciate that. If you want, leave a longer review below — totally optional." } },
+    { delay: 600,  append: { type: 'invite', id: 'invite' } },
   ],
 };
 
@@ -815,6 +1515,7 @@ function Player({ scenario, onSceneEnd }) {
   const [stage, setStage] = React.useState(STAGE_BY_SCENARIO[scenario] || 1);
   const [waiting, setWaiting] = React.useState(null); // id we're waiting on
   const [modal, setModal] = React.useState(null);
+  const [bookedVendor, setBookedVendor] = React.useState(null);
   const scrollRef = React.useRef(null);
   const stepIdx = React.useRef(0);
   const cancelled = React.useRef(false);
@@ -825,6 +1526,7 @@ function Player({ scenario, onSceneEnd }) {
     setMessages([]);
     setWaiting(null);
     setModal(null);
+    setBookedVendor(null);
     setStage(STAGE_BY_SCENARIO[scenario] || 1);
     stepIdx.current = 0;
     cancelled.current = false;
@@ -894,13 +1596,30 @@ function Player({ scenario, onSceneEnd }) {
         setMessages(prev => prev.map(m => m.id === qId ? { ...m, options: [] } : m));
         setMessages(prev => [...prev, { type: 'me', id: 'pick-' + Date.now(), text }]);
         setWaiting(null);
+        // Cat-litter fallback: if self-serve didn't fix it, escalate to a pro
+        // by jumping to the default scenario's full repair flow.
+        if (/talk to a pro/i.test(text)) {
+          onSceneEnd && onSceneEnd('default');
+          return;
+        }
         runFrom(stepIdx.current + 1);
         stepIdx.current = stepIdx.current + 1;
       }
     },
     onAction: (a) => {
-      const key = 'action:' + a;
-      if (waiting === key) {
+      // Wildcard match: scripts can wait on a prefix like 'action:book-vendor'
+      // and any 'book-vendor:X' fulfills it. Keeps script readable when the
+      // exact suffix (vendor key) is user-determined.
+      const fullKey = 'action:' + a;
+      const prefixKey = 'action:' + a.split(':')[0];
+      const matchedWait = waiting && (waiting === fullKey || waiting === prefixKey);
+
+      if (a.startsWith('book-vendor:')) {
+        const k = a.split(':')[1];
+        setBookedVendor(k);
+        setModal(null);
+      }
+      if (matchedWait) {
         setWaiting(null);
         runFrom(stepIdx.current + 1);
         stepIdx.current = stepIdx.current + 1;
@@ -914,42 +1633,115 @@ function Player({ scenario, onSceneEnd }) {
         setModal('vendor:' + a.split(':')[1]);
       }
     },
+    bookedVendor,
   };
 
   return (
-    <div style={{ width: 390, height: 844, borderRadius: 47, overflow: 'hidden', background: FC.surface, boxShadow: '0 32px 70px rgba(26,24,21,0.18), 0 0 0 1px rgba(26,24,21,0.08)', position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: FF.text, color: FC.ink }}>
-      <div style={{ position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)', width: 122, height: 36, borderRadius: 22, background: FC.ink, zIndex: 50 }} />
-      <StatusBar />
-      <Header active={stage} />
-      <div ref={scrollRef} style={{ flex: 1, overflow: 'auto', background: FC.bg, paddingBottom: 14 }}>
-        {messages.map(m => renderMessage(m, ctx))}
-      </div>
-      <Composer leftLabel={scenario === 'return-visit' ? 'Rate this conversation' : null} />
-      <HomeIndicator />
+    <div style={{ position: 'relative' }}>
+      {/* Outer bezel — Cosmic Orange titanium */}
+      <div style={{
+        width: 448, height: 964, borderRadius: 62,
+        background: 'linear-gradient(135deg, #F0A06A 0%, #D26E3E 18%, #B04017 46%, #8A2C0A 60%, #B84218 78%, #E07B3D 100%)',
+        padding: 4, position: 'relative',
+        boxShadow:
+          'inset 0 1.5px 0 rgba(255,210,170,.55), inset 0 -1px 0 rgba(60,16,4,.6),' +
+          '0 1px 0 rgba(255,255,255,.04) inset,' +
+          '0 44px 96px -22px rgba(120,46,14,.55),' +
+          '0 14px 36px -10px rgba(120,46,14,.34),' +
+          '0 0 0 1px rgba(60,20,8,.18)',
+      }}>
+        {/* Side button highlights — thin orange titanium accents */}
+        <div style={{ position: 'absolute', left: -2, top: 110, width: 3, height: 32, borderRadius: 2, background: 'linear-gradient(90deg, #6B2706, #B5481A)' }} />
+        <div style={{ position: 'absolute', left: -2, top: 180, width: 3, height: 60, borderRadius: 2, background: 'linear-gradient(90deg, #6B2706, #B5481A)' }} />
+        <div style={{ position: 'absolute', left: -2, top: 248, width: 3, height: 60, borderRadius: 2, background: 'linear-gradient(90deg, #6B2706, #B5481A)' }} />
+        <div style={{ position: 'absolute', right: -2, top: 200, width: 3, height: 96, borderRadius: 2, background: 'linear-gradient(270deg, #6B2706, #B5481A)' }} />
+        <div style={{ width: 440, height: 956, borderRadius: 58, overflow: 'hidden', background: FC.surface, position: 'relative', display: 'flex', flexDirection: 'column', fontFamily: FF.text, color: FC.ink }}>
+          {/* Dynamic island */}
+          <div style={{
+            position: 'absolute', top: 11, left: '50%', transform: 'translateX(-50%)',
+            width: 124, height: 37, borderRadius: 22,
+            background: '#08070A', zIndex: 50,
+            boxShadow: 'inset 0 1px 0 rgba(255,255,255,.04), 0 1px 2px rgba(0,0,0,.4)',
+          }} />
+          <StatusBar />
+          <Header active={stage} proJoined={stage >= 2 && scenario !== 'off-hours'} />
+          <div ref={scrollRef} className="scroll" style={{ flex: 1, overflow: 'auto', background: FC.bg, paddingBottom: 14, overscrollBehavior: 'contain' }}>
+            {messages.map(m => renderMessage(m, ctx))}
+          </div>
+          <Composer
+            leftLabel={scenario === 'return-visit' ? 'Rate this conversation' : null}
+            placeholder={
+              scenario === 'return-visit' ? 'How was it?' :
+              scenario === 'off-hours' ? 'Leave a note for the team…' :
+              stage < 2 ? 'Tell us what is going on…' :
+              'Reply to Mike Chen…'
+            }
+          />
+          <HomeIndicator />
 
-      {modal === 'expired' && <ExpiredModal onAct={() => { setModal(null); onSceneEnd && onSceneEnd('expired-chat'); }} />}
-      {modal === 'review'  && <ReviewSheet onClose={() => setModal(null)} />}
-      {modal && modal.startsWith('vendor:') && <VendorDetailOverlay vendorKey={modal.split(':')[1]} onClose={() => setModal(null)} />}
+          {modal === 'expired' && <ExpiredModal onAct={() => { setModal(null); onSceneEnd && onSceneEnd('expired-chat'); }} />}
+          {modal === 'review'  && <ReviewSheet onClose={() => setModal(null)} />}
+          {modal && modal.startsWith('vendor:') && (
+            <VendorDetailOverlay
+              vendorKey={modal.split(':')[1]}
+              onClose={() => setModal(null)}
+              onBook={(k) => ctx.onAction('book-vendor:' + k)}
+            />
+          )}
+        </div>
+      </div>
     </div>
   );
 }
 
 // ─── App shell ────────────────────────────────────────────────────
 const SCENARIOS = [
-  { id: 'default',         label: 'Default · toilet odor' },
-  { id: 'cat-litter',      label: 'Cat litter clog' },
-  { id: 'off-hours',       label: 'Off hours' },
-  { id: 'expired-modal',   label: 'Quote expired · modal' },
-  { id: 'expired-chat',    label: 'Quote expired · chat' },
-  { id: 'return-visit',    label: 'Return visit' },
+  { id: 'default',         label: 'Standard repair · book a pro' },
+  { id: 'cat-litter',      label: 'Self-serve fix' },
+  { id: 'off-hours',       label: 'After hours' },
+  { id: 'expired-modal',   label: 'Quote expired · before action' },
+  { id: 'expired-chat',    label: 'Quote expired · after action' },
+  { id: 'return-visit',    label: 'Post-service follow-up' },
 ];
 
 function App() {
+  const [scenario, setScenario] = React.useState('default');
   const [nonce, setNonce] = React.useState(0);
+  const replay = () => setNonce(n => n + 1);
+  const onSceneEnd = (next) => { if (next) setScenario(next); };
 
   return (
-    <div style={{ background: 'transparent', display: 'flex', justifyContent: 'center' }}>
-      <Player key={nonce} scenario="default" onSceneEnd={() => {}} />
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 28, padding: '0 24px' }}>
+      <Player key={scenario + '-' + nonce} scenario={scenario} onSceneEnd={onSceneEnd} />
+      {/* Scenario rail */}
+      <div style={{
+        display: 'flex', gap: 6, flexWrap: 'wrap', justifyContent: 'center',
+        padding: 6, borderRadius: 100,
+        background: 'rgba(255,255,255,.85)', backdropFilter: 'blur(20px)', border: '1px solid rgba(0,0,0,.05)',
+        border: '1px solid rgba(27,24,20,.06)',
+        boxShadow: '0 1px 2px rgba(27,24,20,.04), 0 8px 20px -8px rgba(27,24,20,.12)',
+        maxWidth: 600,
+      }}>
+        {SCENARIOS.map(s => (
+          <button key={s.id}
+            onClick={() => { setScenario(s.id); setNonce(n => n + 1); }}
+            className="btn-press"
+            style={{
+              height: 32, padding: '0 14px', borderRadius: 100, border: 0,
+              background: scenario === s.id ? '#1B1814' : 'transparent',
+              color: scenario === s.id ? '#FDFAF2' : '#3D3833',
+              fontFamily: "'Inter', system-ui, sans-serif",
+              fontSize: 12, fontWeight: scenario === s.id ? 600 : 500,
+              letterSpacing: '-0.05px', cursor: 'pointer',
+              transition: 'background .25s, color .25s',
+            }}>{s.label}</button>
+        ))}
+        <div style={{ width: 1, background: 'rgba(27,24,20,.08)', margin: '4px 4px' }} />
+        <button onClick={replay} className="btn-press" style={{ height: 32, padding: '0 14px', borderRadius: 100, border: 0, background: 'transparent', color: '#8A847A', fontFamily: "'Inter', system-ui, sans-serif", fontSize: 12, fontWeight: 500, cursor: 'pointer', display: 'inline-flex', alignItems: 'center', gap: 5 }}>
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M10 6a4 4 0 1 1-1.2-2.8M10 2v2.5H7.5" stroke="#8A847A" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          Replay
+        </button>
+      </div>
     </div>
   );
 }

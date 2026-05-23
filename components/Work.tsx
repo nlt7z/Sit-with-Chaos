@@ -25,22 +25,22 @@ const studioEngine: Project = {
   slug: "studio-engine",
   title: "StudioEngine — From 1-shot AI to a 4-stage co-creation pipeline",
   description:
-    "Reorganized a 1-step generation flow into a 4-stage creative pipeline: basics, outline, script, and visuals — helping users co-create with AI instead of waiting for output.",
+    "Reframed 1-shot AI generation as a 4-stage co-creation pipeline — basics, outline, script, visuals — so creators steer each step instead of waiting on a black-box output.",
   media: {
     src: "/assets/work/vp-genie.jpg",
     alt: "Preview image for Studio Engine.ai project",
     type: "image",
   },
   flowSteps: ["basics", "outline", "script", "visuals"],
-  meta: { year: "2024", role: "Product Designer", status: "Shipped" },
-  impact: "1 → 4 stages",
+  meta: { year: "2025", role: "Product Designer", status: "Shipped" },
+  impact: "AI: output → process",
 };
 
 const meituanIm: Project = {
   slug: "meituan-im",
-  title: "Meituan — +5% conversion with in-chat quotes",
+  title: "Meituan — Led an in-chat quote redesign",
   description:
-    "Designed a multi-round quotation experience inside chat, improving pricing clarity and supporting a 5%+ conversion lift through iteration and testing.",
+    "Led the in-chat quoting redesign — multi-round negotiation, side-by-side comparison, confirmation — validated via A/B testing with a 5%+ conversion lift.",
   media: {
     src: "/assets/work/meituan.mp4",
     alt: "Preview video for IM System project",
@@ -48,7 +48,7 @@ const meituanIm: Project = {
   },
   flowSteps: ["chat quote", "compare", "confirm"],
   meta: { year: "2025", role: "UX Designer", status: "Shipped" },
-  impact: "+5% conversion",
+  impact: "+5% conversion (A/B)",
 };
 
 const liner: Project = {

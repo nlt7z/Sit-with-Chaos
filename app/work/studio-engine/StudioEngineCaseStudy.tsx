@@ -29,17 +29,9 @@ const caseNavItems = [
   { id: "design-principle", label: "AI principle" },
   { id: "workflow-ia", label: "Design framework" },
   { id: "solutions", label: "Decisions" },
-  { id: "agent", label: "Agent layer" },
-  { id: "outcome", label: "Impact" },
+  { id: "outcome", label: "Outcomes" },
   { id: "reflection", label: "Reflection" },
 ] as const;
-
-const RESEARCH_QUESTIONS = [
-  "What challenges do users encounter when generating a script and visual assets?",
-  "How well do users understand the editing and regeneration of visual elements?",
-  "What emotions do users experience throughout the generation and review process?",
-] as const;
-
 
 const TASK_EVAL_ROWS = [
   { label: "T1 · Create script from prompt", success: 83, error: 63, meta: "5/6 · 19 err", highlight: false },
@@ -51,45 +43,6 @@ const TASK_EVAL_ROWS = [
   { label: "T7 · Assign character to shot", success: 100, error: 33, meta: "6/6 · 10 err", highlight: false },
   { label: "T8 · Modify shot (beach at sunrise)", success: 67, error: 53, meta: "4/6 · 16 err", highlight: false },
   { label: "T9 · Export script as PDF", success: 100, error: 30, meta: "6/6 · 9 err", highlight: false },
-] as const;
-
-const SEVERITY_ISSUES = [
-  {
-    badge: "Catastrophic",
-    badgeClass: "border-violet-400/35 bg-violet-600/[0.1] text-violet-950",
-    area: "Unexpected AI-generated content — users could not predict or control output",
-    freq: 6,
-  },
-  {
-    badge: "Catastrophic",
-    badgeClass: "border-violet-400/35 bg-violet-600/[0.1] text-violet-950",
-    area: "No error recovery or version control — regenerated images replaced previous work with no undo",
-    freq: 3,
-  },
-  {
-    badge: "Moderate",
-    badgeClass: "border-violet-200/70 bg-violet-50/90 text-violet-900/85",
-    area: "Unintuitive content editing workflow — multi-page navigation broke context",
-    freq: 6,
-  },
-  {
-    badge: "Moderate",
-    badgeClass: "border-violet-200/70 bg-violet-50/90 text-violet-900/85",
-    area: "Unfamiliar terminology — terms like “InPainting” had no explanation",
-    freq: 6,
-  },
-  {
-    badge: "Moderate",
-    badgeClass: "border-violet-200/70 bg-violet-50/90 text-violet-900/85",
-    area: "Inconsistent CTAs and button hierarchy — primary actions were hard to find",
-    freq: 6,
-  },
-  {
-    badge: "Moderate",
-    badgeClass: "border-violet-200/70 bg-violet-50/90 text-violet-900/85",
-    area: "Incomplete and unstructured script export — missing visual assets and formatting",
-    freq: 6,
-  },
 ] as const;
 
 /** Soft cursor-following wash — disabled when reduced motion is on */
@@ -427,24 +380,6 @@ function ParticipantQuote({ quote, attr }: { quote: string; attr: string }) {
   );
 }
 
-function FreqDots({ filled, total = 6 }: { filled: number; total?: number }) {
-  return (
-    <div className="flex items-center gap-2">
-      <div className="flex gap-1" aria-hidden>
-        {Array.from({ length: total }, (_, i) => (
-          <span
-            key={i}
-            className={`h-2.5 w-2.5 rounded-full ${i < filled ? "bg-violet-500/45" : "bg-violet-200/35"}`}
-          />
-        ))}
-      </div>
-      <span className="font-mono text-[12px] text-textPrimary">
-        {filled}/{total}
-      </span>
-    </div>
-  );
-}
-
 function TaskSuccessEvaluation() {
   const [open, setOpen] = useState(false);
   const reduce = useReducedMotion();
@@ -580,66 +515,6 @@ function TaskSuccessEvaluation() {
     </div>
   );
 }
-
-function SeverityIssuesTable() {
-  return (
-    <div className="mt-16 md:mt-20">
-      <Subtitle>Severity and frequency</Subtitle>
-      <Prose className="mt-8">
-        <p>
-          Six issues emerged. Two were catastrophic for core tasks for several users. Four were moderate but
-          universal — all six participants ran into them.
-        </p>
-      </Prose>
-      <div className="mt-10 overflow-x-auto">
-        <table className="w-full min-w-[36rem] border-collapse text-left text-[14px]">
-          <thead>
-            <tr className="border-b border-black/[0.06]">
-              <th className="px-4 py-3 font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-textSecondary/80">
-                Severity
-              </th>
-              <th className="px-4 py-3 font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-textSecondary/80">
-                Area
-              </th>
-              <th className="px-4 py-3 font-mono text-[10px] font-normal uppercase tracking-[0.14em] text-textSecondary/80">
-                Frequency
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {SEVERITY_ISSUES.map((row) => (
-              <tr key={row.area} className="border-b border-black/[0.04] transition-colors duration-300 hover:bg-violet-500/[0.025]">
-                <td className="px-4 py-3.5 align-top">
-                  <span
-                    className={`inline-block rounded-full border px-2.5 py-0.5 font-mono text-[11px] ${row.badgeClass}`}
-                  >
-                    {row.badge}
-                  </span>
-                </td>
-                <td className="px-4 py-3.5 align-top text-textSecondary leading-relaxed">{row.area}</td>
-                <td className="px-4 py-3.5 align-top">
-                  <FreqDots filled={row.freq} />
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-const IA_IMAGE = "/assets/studio-engine/information%20architecture.jpg";
-
-/** One-line summaries for compact workflow comparison */
-const WORKFLOW_BEFORE_AT_ONCE =
-  "Script · character looks · props & locations · storyboard — all generated together.";
-
-const WORKFLOW_AFTER_SCRIPT_LINE =
-  "Draft script → user picks plots & details → edits in place → verifies before anything else runs.";
-
-const WORKFLOW_AFTER_VISUALS_LINE =
-  "Characters, environments, storyboard frames, then final video — only after the script is locked.";
 
 /** 2-column figure grid in this case study — Design, Flow, etc. */
 const STUDIO_ENGINE_GRID_2COL_SIZES = "(max-width: 768px) 100vw, (max-width: 1200px) 46vw, 560px";
@@ -1272,13 +1147,14 @@ export default function StudioEngineCaseStudy() {
             <SectionTitle>From One-Shot Generation to Staged Creative Control</SectionTitle>
             <Prose className="mt-14">
               <p>
-                I reorganized the experience from a flat generation tool into a staged creative workflow,
-                so users could move from idea to editable video assets with clearer checkpoints and
-                recovery paths.
+                The five control patterns above need somewhere to live. I mapped them onto a staged
+                creative workflow so each pattern has a home in the product, not just in the model.
               </p>
               <p>
-                Instead of asking users to commit everything upfront, the new IA breaks the process into
-                clearer checkpoints: Input, Basics, Visuals, Edit, and Manage.
+                Two layers, one system. The 4-stage pipeline shown at the top — Basics → Outline →
+                Script → Visuals — is the AI generation flow. The 5-area IA below wraps around it: an
+                entry point (Input), the pipeline itself (Basics, Visuals), and post-generation work
+                (Edit, Manage).
               </p>
             </Prose>
           </Reveal>
@@ -1419,40 +1295,7 @@ export default function StudioEngineCaseStudy() {
 
         </section>
 
-        {/* Decision 04 — AI-native */}
-        <section className="mt-44 md:mt-56 lg:mt-72">
-          <Reveal>
-            <Eyebrow>Decision 04 · AI-native</Eyebrow>
-            <SectionTitle>How AI shaped this work</SectionTitle>
-            <Prose className="mt-14">
-              <p>Designing for AI, with AI. Two areas where it accelerated the work without replacing judgment.</p>
-            </Prose>
-            <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-2 md:gap-6">
-              {[
-                {
-                  label: "Research synthesis",
-                  body: "6 transcripts clustered by AI, reviewed for nuance by human.",
-                },
-                {
-                  label: "IA stress-testing",
-                  body: "AI asked to predict novice failure points — surfacing edge cases missed in manual walkthroughs.",
-                },
-              ].map((x) => (
-                <HoverPanel
-                  key={x.label}
-                  className="bg-white px-6 py-7 shadow-[0_2px_24px_-12px_rgba(0,0,0,0.05)] md:px-7"
-                >
-                  <p className="font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/80">
-                    {x.label}
-                  </p>
-                  <p className="mt-3 text-[15px] leading-relaxed text-textSecondary">{x.body}</p>
-                </HoverPanel>
-              ))}
-            </div>
-          </Reveal>
-        </section>
-
-        <MediaReveal className="mt-20 md:mt-28">
+        <MediaReveal className="mt-32 md:mt-44 lg:mt-56">
           <SingleTabletFrame
             src="/assets/studio-engine/design-projects.jpg"
             alt="Updated visual design language"
@@ -1469,32 +1312,77 @@ export default function StudioEngineCaseStudy() {
           />
         </MediaReveal>
 
-        <section id="agent" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
-          <Reveal delay={0.07}>
-            <Eyebrow>Agent layer</Eyebrow>
-            <SectionTitle>Ask Genie</SectionTitle>
-            <Prose className="mt-10">
-              <p>
-                We first introduced hover states to explain interaction logic while the new workflow was still unfamiliar. They worked as a lightweight bridge, but they were a temporary scaffold rather than a true teaching system. To make guidance persistent and contextual, we evolved this pattern into Genie: an agent layer that helps users navigate pages, surfaces what&apos;s possible, explains unfamiliar tools like Inpainting in the moment, and suggests what to do next as confidence grows.
-              </p>
-            </Prose>
-          </Reveal>
-
-        </section>
-
-        {/* Impact */}
+        {/* Outcomes */}
         <section id="outcome" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
           <Reveal>
-            <Eyebrow>Impact</Eyebrow>
-            <SectionTitle>Designing for competence, not just capability</SectionTitle>
+            <Eyebrow>Outcomes</Eyebrow>
+            <SectionTitle>What shipped, and what&apos;s still open</SectionTitle>
             <Prose className="mt-14">
               <p>
-                The pipeline was capable. The gap was that users couldn&apos;t see their own agency inside it. Visual editing succeeded for only <span className="text-textPrimary">33–50%</span> of participants. Not a generation quality problem — a design control problem.
+                The framework was adopted as the direction for Gen-2: a script-locked checkpoint
+                before any visuals run, multi-option visual output, a generation history panel, and
+                a consolidated editing workspace.
+              </p>
+              <p>
+                We did not get to A/B the redesign in production before I left the engagement, so I
+                can&apos;t claim a conversion or retention number. What I would track in the next
+                round — and what success would look like — is below.
               </p>
             </Prose>
           </Reveal>
 
-          <Reveal className="mt-16 md:mt-20" delay={0.06}>
+          <Reveal className="mt-12 md:mt-16" delay={0.04}>
+            <div className="mt-10 divide-y divide-black/[0.06] border-y border-black/[0.06]">
+              {(
+                [
+                  {
+                    metric: "Visual editing completion",
+                    baseline: "33–50% (study)",
+                    target: "≥ 80%",
+                    note: "T3 / T4 in the usability study — the lowest-success tasks.",
+                  },
+                  {
+                    metric: "Regenerations per asset",
+                    baseline: "Not tracked",
+                    target: "Trending down over a session",
+                    note: "A proxy for convergence — users getting closer, not just trying again.",
+                  },
+                  {
+                    metric: "History panel adoption",
+                    baseline: "n/a (new surface)",
+                    target: "≥ 60% of users use it within first 3 sessions",
+                    note: "Tests whether reversibility is felt, not just available.",
+                  },
+                  {
+                    metric: "Session → export ratio",
+                    baseline: "Not tracked",
+                    target: "Improves vs. Gen-1",
+                    note: "End-to-end signal that the staged pipeline produces finished work, not just drafts.",
+                  },
+                ] as const
+              ).map((row) => (
+                <div key={row.metric} className="grid gap-2 py-5 md:grid-cols-[1.2fr_1fr_1fr_2fr] md:items-baseline md:gap-6 md:py-6">
+                  <p className="text-[14px] leading-snug tracking-[-0.01em] text-textPrimary md:text-[15px]">
+                    {row.metric}
+                  </p>
+                  <p className="font-mono text-[12px] text-textSecondary/75">
+                    <span className="text-textSecondary/55">Baseline · </span>
+                    {row.baseline}
+                  </p>
+                  <p className="font-mono text-[12px] text-violet-900/70">
+                    <span className="text-violet-500/55">Target · </span>
+                    {row.target}
+                  </p>
+                  <p className="text-[12px] leading-relaxed text-textSecondary/70 md:text-[13px]">
+                    {row.note}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <Reveal className="mt-20 md:mt-28" delay={0.06}>
+            <Subtitle>Design takeaways the research validated</Subtitle>
             <div className="mt-10 grid grid-cols-2 grid-rows-2">
               {(
                 [
@@ -1519,25 +1407,26 @@ export default function StudioEngineCaseStudy() {
         <section id="reflection" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
           <Reveal className="mt-24 md:mt-32" delay={0.04}>
             <Eyebrow>Reflection</Eyebrow>
-            <SectionTitle>What I would push further</SectionTitle>
+            <SectionTitle>What I would do differently — and push next</SectionTitle>
             <Prose className="mt-10">
               <p>
-                Next: a second-round test with Gen-2 prototypes and a 4–6 week longitudinal study — moving from &ldquo;can I complete this?&rdquo; to &ldquo;does this tool grow with me?&rdquo;
+                The framework holds, but three things stand out when I look back at the study and
+                the redesign.
               </p>
             </Prose>
             <div className="mt-10 grid gap-5 md:mt-12 md:grid-cols-3 md:gap-6">
               {[
                 {
-                  t: "AI as design material",
-                  d: "Design around failure, not magic. Uncertainty is where the UX work lives.",
+                  t: "What I underestimated",
+                  d: "How much of the trust gap was language. Terms like “InPainting” and “Storyboard” meant different things to different participants. Naming would have been worth another round of research time.",
                 },
                 {
-                  t: "Research as storytelling",
-                  d: "The output is not a deck — it is a narrative that makes decisions feel inevitable.",
+                  t: "What I’d test first",
+                  d: "Gen-2 prototypes with 6–8 new participants, focused on the visual-editing flow (the 33% completion drop). Then a 4–6 week longitudinal study — moving from “can I complete this?” to “does this tool grow with me?”",
                 },
                 {
-                  t: "Iteration as proof",
-                  d: "Each prototype step should be explainable evidence, not process noise.",
+                  t: "What I’d push next: Ask Genie",
+                  d: "Hover tooltips were a temporary scaffold, not a teaching system. The next step is an agent layer that watches user actions, explains tools like Inpainting in the moment, and proactively suggests the right control pattern — embedded in the editor, not a chat box beside it.",
                 },
               ].map((x) => (
                 <HoverPanel

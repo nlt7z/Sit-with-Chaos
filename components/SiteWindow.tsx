@@ -25,6 +25,8 @@ type SiteWindowProps = {
   meta?: string;
   /** Extra classes on the outer anchor (use for grid sizing). */
   className?: string;
+  /** Show the macOS-style browser chrome (traffic lights + URL pill). Default true. */
+  chrome?: boolean;
 };
 
 export function SiteWindow({
@@ -34,6 +36,7 @@ export function SiteWindow({
   active = true,
   meta,
   className = "",
+  chrome = true,
 }: SiteWindowProps) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.4);
@@ -64,6 +67,7 @@ export function SiteWindow({
       aria-label={`Open ${url} in a new tab`}
     >
       {/* Browser chrome */}
+      {chrome ? (
       <div className="flex items-center gap-3 border-b border-black/[0.06] bg-[#F5F5F7] px-3.5 py-2.5">
         <div className="flex shrink-0 items-center gap-1.5" aria-hidden>
           <span className="block h-2.5 w-2.5 rounded-full bg-[#FF5F57]" />
@@ -99,6 +103,7 @@ export function SiteWindow({
           <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2v-3a1 1 0 10-2 0v3H5V7h3a1 1 0 000-2H5z" />
         </svg>
       </div>
+      ) : null}
 
       {/* Iframe area */}
       <div
