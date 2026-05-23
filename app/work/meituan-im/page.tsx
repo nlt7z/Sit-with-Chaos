@@ -1,10 +1,12 @@
 "use client";
 
+import { CaseStudyMeta } from "@/components/CaseStudyMeta";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
+import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import Image from "next/image";
-import { motion, useReducedMotion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { motion, useInView, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 
 const easePremium = [0.25, 0.1, 0.25, 1] as const;
 
@@ -45,6 +47,27 @@ function FadeIn({
   );
 }
 
+/**
+ * Special reveal used once on the page — for the full interactive prototype.
+ * Heavier than FadeIn (longer duration, blur clear, slight rotate-tilt) because
+ * this is the case study's visual high point and deserves the announcement.
+ */
+function PrototypeReveal({ children }: { children: React.ReactNode }) {
+  const reduce = useReducedMotion();
+  if (reduce) return <div>{children}</div>;
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 48, scale: 0.965, rotate: -0.8, filter: "blur(8px)" }}
+      whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0, filter: "blur(0px)" }}
+      viewport={{ once: true, margin: "-20% 0px -12% 0px" }}
+      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+      style={{ transformOrigin: "50% 100%" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
 function CaseNav() {
   const [active, setActive] = useState("overview");
 
@@ -79,7 +102,7 @@ function CaseNav() {
                 }}
                 className={`block border-l-[1.5px] py-2 pl-5 text-[13px] leading-snug transition-all duration-500 ease-portfolio ${
                   active === id
-                    ? "border-[#C47040] font-medium text-textPrimary"
+                    ? "border-textPrimary font-medium text-textPrimary"
                     : "border-transparent text-textSecondary/90 hover:border-black/[0.12] hover:text-textPrimary"
                 }`}
               >
@@ -119,6 +142,70 @@ function Section({
   );
 }
 
+/** Renders the FixIt Express prototype iframe at its natural design size
+ *  (≈800×940 — a 390 phone + 280 side rail + padding) and CSS-scales it down
+ *  to fit narrow viewports, so the phone + side rail never get squeezed or
+ *  clipped horizontally. Above `naturalWidth` we stop scaling and the iframe
+ *  sits at its natural size, centered in the wrapper. The outer box is
+ *  capped to `naturalWidth` and uses an aspect-ratio lock so its height
+ *  is correct on the very first paint — no SSR → measured layout shift. */
+function ScaledPrototypeFrame({
+  src,
+  title,
+  naturalWidth = 800,
+  naturalHeight = 940,
+}: {
+  src: string;
+  title: string;
+  naturalWidth?: number;
+  naturalHeight?: number;
+}) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  // Best-guess initial scale on the client based on viewport width — avoids
+  // a one-frame flash where the iframe renders at full natural size before the
+  // ResizeObserver fires. Server-side falls back to 1.
+  const [scale, setScale] = useState(() => {
+    if (typeof window === "undefined") return 1;
+    const guess = Math.min(window.innerWidth - 32, naturalWidth) / naturalWidth;
+    return Math.max(0.1, Math.min(1, guess));
+  });
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([entry]) => {
+      const w = entry.contentRect.width;
+      if (w > 0) setScale(Math.min(1, w / naturalWidth));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [naturalWidth]);
+
+  return (
+    <div className="mx-auto w-full" style={{ maxWidth: naturalWidth }}>
+      <div
+        ref={wrapperRef}
+        className="relative w-full overflow-hidden"
+        style={{ aspectRatio: `${naturalWidth} / ${naturalHeight}` }}
+      >
+        <iframe
+          src={src}
+          title={title}
+          loading="lazy"
+          style={{
+            width: naturalWidth,
+            height: naturalHeight,
+            border: 0,
+            transform: `scale(${scale})`,
+            transformOrigin: "top left",
+          }}
+          className="absolute left-0 top-0 block"
+        />
+      </div>
+    </div>
+  );
+}
+
 function PhoneFrame({
   src,
   alt,
@@ -152,7 +239,7 @@ function PhoneFrame({
             href={src}
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-[#C47040]"
+            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-[#B07A08]"
           >
             View full →
           </a>
@@ -199,7 +286,7 @@ function Callout({
 }) {
   return (
     <div className="flex gap-4">
-      <span className="mt-[2px] inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#C47040]/30 bg-[#FFF8F4] font-mono text-[11px] tabular-nums text-[#8A4B2A]">
+      <span className="mt-[2px] inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#B07A08]/30 bg-[#FFF1C8] font-mono text-[11px] tabular-nums text-[#5A3D04]">
         {index.toString().padStart(2, "0")}
       </span>
       <div className="min-w-0">
@@ -207,6 +294,57 @@ function Callout({
         {body ? <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">{body}</p> : null}
       </div>
     </div>
+  );
+}
+
+/**
+ * Animated number that springs from 0 to the target value when first scrolled
+ * into view. The integer portion uses tabular-nums so the column doesn't shift
+ * mid-tween. Respects prefers-reduced-motion — falls back to the static target.
+ */
+function CountUp({
+  to,
+  format = (n) => n.toFixed(0),
+  durationMs = 1400,
+}: {
+  to: number;
+  format?: (n: number) => string;
+  durationMs?: number;
+}) {
+  const ref = useRef<HTMLSpanElement | null>(null);
+  const inView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
+  const reduce = useReducedMotion();
+  const mv = useMotionValue(0);
+  const display = useTransform(mv, (v) => format(v));
+  const [text, setText] = useState(format(0));
+
+  useEffect(() => {
+    if (!inView) return;
+    if (reduce) {
+      setText(format(to));
+      return;
+    }
+    const start = performance.now();
+    let raf = 0;
+    const tick = (t: number) => {
+      const p = Math.min(1, (t - start) / durationMs);
+      // ease-out cubic for a confident landing
+      const e = 1 - Math.pow(1 - p, 3);
+      mv.set(e * to);
+      if (p < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    const unsub = display.on("change", (v) => setText(v));
+    return () => {
+      cancelAnimationFrame(raf);
+      unsub();
+    };
+  }, [inView, to, durationMs, format, reduce, mv, display]);
+
+  return (
+    <span ref={ref} className="tabular-nums">
+      {text}
+    </span>
   );
 }
 
@@ -263,11 +401,12 @@ export default function MeituanImCaseStudyPage() {
                   className="mt-16 grid gap-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-20"
                   aria-label="Project summary"
                 >
-                  {/* Left — meta + hero metric */}
-                  <div className="space-y-12">
-                    {/* Hero metric */}
+                  {/* Left — hero metric + shared meta */}
+                  <div className="space-y-10">
+                    {/* Hero metric — slightly smaller so the prototype on the right
+                        can carry equal visual weight. */}
                     <div>
-                      <p className="font-display text-[4.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[6rem] lg:text-[6.5rem]">
+                      <p className="font-display text-[3.75rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[4.5rem] lg:text-[5rem]">
                         +5<span className="text-[0.5em] text-textPrimary/70">%</span>
                       </p>
                       <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-textSecondary">
@@ -275,23 +414,13 @@ export default function MeituanImCaseStudyPage() {
                       </p>
                     </div>
 
-                    {/* Meta row */}
-                    <div className="grid grid-cols-3 gap-6 border-t border-black/[0.08] pt-8 sm:gap-10">
-                      <div>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">Role</p>
-                        <p className="mt-3 text-[15px] tracking-tight text-textPrimary">Product Design</p>
-                        <p className="mt-1 text-[14px] leading-snug text-textSecondary">End-to-end ownership</p>
-                      </div>
-                      <div>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">Context</p>
-                        <p className="mt-3 text-[15px] tracking-tight text-textPrimary">Meituan super app</p>
-                        <p className="mt-1 text-[14px] leading-snug text-textSecondary">Local services</p>
-                      </div>
-                      <div>
-                        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">Timeline</p>
-                        <p className="mt-3 text-[15px] tracking-tight text-textPrimary">4 weeks</p>
-                        <p className="mt-1 text-[14px] leading-snug text-textSecondary">Shipped</p>
-                      </div>
+                    {/* Use the shared CaseStudyMeta line so this page reads like the
+                        rest of the portfolio. Project facts live in lib/caseStudyMeta. */}
+                    <div className="border-t border-black/[0.08] pt-6">
+                      <CaseStudyMeta {...CASE_STUDY_META["meituan-im"]} />
+                      <p className="mt-3 font-mono text-[11px] leading-relaxed tracking-[0.06em] text-textSecondary/75">
+                        4 weeks · End-to-end ownership · Validated via user-level A/B
+                      </p>
                     </div>
                   </div>
 
@@ -318,7 +447,7 @@ export default function MeituanImCaseStudyPage() {
                       />
                     </div>
                     <p className="mt-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
-                      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[#C47040]" />
+                      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[#B07A08]" />
                       Live prototype · interact above
                     </p>
                   </div>
@@ -354,7 +483,7 @@ export default function MeituanImCaseStudyPage() {
         <Section id="turning-point" eyebrow="Turning Point" title="The brief asked for price visibility. The evidence pointed deeper.">
           <FadeIn>
             <p className="text-[18px] leading-[1.55] tracking-tight text-textPrimary">
-              Price was not a number problem. It was a <span className="text-[#C47040]">process trust</span> problem.
+              Price was not a number problem. It was a <span className="text-[#B07A08]">process trust</span> problem.
             </p>
           </FadeIn>
 
@@ -382,9 +511,9 @@ export default function MeituanImCaseStudyPage() {
                     </li>
                   ))}
                 </ol>
-                <div className="mt-3 rounded-md border border-[#C47040]/30 bg-[#FFF8F4] px-5 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#8A4B2A]">→ Trust break</p>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#7A4330]">
+                <div className="mt-3 rounded-md border border-[#B07A08]/30 bg-[#FFF1C8] px-5 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#5A3D04]">→ Trust break</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#5A3D04]">
                     Quoted price ≠ actual bill. Scope, materials, and conditions widen the range. Users feel the system did not warn them.
                   </p>
                 </div>
@@ -393,10 +522,10 @@ export default function MeituanImCaseStudyPage() {
               {/* AFTER — redesigned, warm accent */}
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#C47040]">After · 3-step trust loop</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#B07A08]">After · 3-step trust loop</p>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">redesigned</p>
                 </div>
-                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-[#C47040]/[0.08]">
+                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-[#B07A08]/[0.08]">
                   {[
                     ["Diagnose the problem", "Certified experts surface from search to define the issue — remove ambiguity before comparison."],
                     ["Structure the intent", "Multi-turn chat yields a service-order card so quotes compare on equal terms."],
@@ -404,7 +533,7 @@ export default function MeituanImCaseStudyPage() {
                   ].map(([t, b], i) => (
                     <li key={i} className="bg-white px-5 py-4">
                       <div className="flex items-baseline gap-3">
-                        <span className="font-mono text-[10px] tabular-nums text-[#C47040]">0{i + 1}</span>
+                        <span className="font-mono text-[10px] tabular-nums text-[#B07A08]">0{i + 1}</span>
                         <p className="text-[15px] tracking-tight text-textPrimary">{t}</p>
                       </div>
                       <p className="mt-1.5 pl-[26px] text-[13.5px] leading-relaxed text-textSecondary">{b}</p>
@@ -554,16 +683,17 @@ export default function MeituanImCaseStudyPage() {
         </Section>
 
         <Section id="prototype" eyebrow="Interactive Prototype" title="Try the full flow.">
-          <FadeIn className="mt-2">
-            <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
-              <iframe
+          {/* Custom entrance — the prototype is the case's high point, so it
+              gets a bigger, slightly delayed reveal: blur clears, the device
+              settles down ~1deg, and a soft amber wash brushes through. */}
+          <PrototypeReveal>
+            <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06] shadow-[0_36px_72px_-36px_rgba(0,0,0,0.18)]">
+              <ScaledPrototypeFrame
                 src="/assets/meituan-im/interaction-flow.html"
                 title="FixIt Express interactive consultation flow"
-                className="h-[640px] w-full border-0 sm:h-[720px] md:h-[780px]"
-                loading="lazy"
               />
             </div>
-          </FadeIn>
+          </PrototypeReveal>
         </Section>
 
         <Section
@@ -578,21 +708,21 @@ export default function MeituanImCaseStudyPage() {
                 <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">
                   Domain
                 </div>
-                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#B07A08]">
                   01 · Diagnose
                 </div>
-                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#B07A08]">
                   02 · Structure
                 </div>
-                <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#C47040]">
+                <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#B07A08]">
                   03 · Commit
                 </div>
               </div>
 
-              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-[#FFF8F4]/40">
+              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-[#FFF1C8]/40">
                 <div className="border-r border-black/[0.06] px-5 py-5">
-                  <p className="text-[15px] tracking-tight text-[#8A4B2A]">Home repair</p>
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#C47040]/80">Reference case</p>
+                  <p className="text-[15px] tracking-tight text-[#5A3D04]">Home repair</p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#B07A08]/80">Reference case</p>
                 </div>
                 <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
                   Certified expert defines the issue.
@@ -676,14 +806,14 @@ export default function MeituanImCaseStudyPage() {
                 <div
                   key={i}
                   className={`overflow-hidden rounded-xl border border-black/[0.08] ${
-                    row.ref ? "bg-[#FFF8F4]/60" : "bg-white"
+                    row.ref ? "bg-[#FFF1C8]/60" : "bg-white"
                   }`}
                 >
                   <div className="border-b border-black/[0.06] px-4 py-3">
-                    <p className={`text-[15px] tracking-tight ${row.ref ? "text-[#8A4B2A]" : "text-textPrimary"}`}>
+                    <p className={`text-[15px] tracking-tight ${row.ref ? "text-[#5A3D04]" : "text-textPrimary"}`}>
                       {row.domain}
                     </p>
-                    <p className={`mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${row.ref ? "text-[#C47040]/80" : "text-textSecondary/70"}`}>
+                    <p className={`mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${row.ref ? "text-[#B07A08]/80" : "text-textSecondary/70"}`}>
                       {row.tagline}
                     </p>
                   </div>
@@ -696,7 +826,7 @@ export default function MeituanImCaseStudyPage() {
                       ] as const
                     ).map(([k, v]) => (
                       <div key={k} className="px-4 py-3">
-                        <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#C47040]">{k}</dt>
+                        <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#B07A08]">{k}</dt>
                         <dd className="mt-1 text-textSecondary">{v}</dd>
                       </div>
                     ))}
@@ -708,27 +838,43 @@ export default function MeituanImCaseStudyPage() {
         </Section>
 
         <Section id="impact" eyebrow="Impact & Validation" title="Trust-first won the A/B.">
-          <FadeIn className="grid gap-12 border-t border-black/[0.06] pt-12 md:grid-cols-3 md:gap-8 md:pt-16">
-            <div>
-              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[5rem] lg:text-[5.75rem]">
-                +5<span className="text-[0.55em] text-textPrimary/70">%</span>
+          {/* Hero metric — +5% conversion is the headline. Saffron-tinted so the
+              primary result reads first, supporting metrics step down below. */}
+          <FadeIn className="border-t border-black/[0.06] pt-12 md:pt-16">
+            <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4">
+              <p className="font-display text-[5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-[#B07A08] md:text-[7rem] lg:text-[8rem]">
+                +<CountUp to={5} />
+                <span className="text-[0.5em] text-[#B07A08]/70">%</span>
               </p>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-[#C47040]">Conversion lift</p>
-            </div>
-            <div>
-              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[5rem] lg:text-[5.75rem]">
-                ~2k
-              </p>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
-            </div>
-            <div>
-              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[5rem] lg:text-[5.75rem]">
-                −50<span className="text-[0.55em] text-textPrimary/70">%</span>
-              </p>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
+              <div className="max-w-md">
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#B07A08]">Conversion lift</p>
+                <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
+                  Search-to-purchase, validated via user-level randomized A/B.
+                </p>
+              </div>
             </div>
           </FadeIn>
-          <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/65">
+
+          {/* Supporting metrics — sit below at smaller scale, sharing a hairline
+              with the hero number above so they read as "and also". */}
+          <FadeIn delay={0.1} className="mt-14 grid gap-10 border-t border-black/[0.06] pt-10 md:grid-cols-2 md:gap-16">
+            <div>
+              <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
+                ~<CountUp to={2000} format={(n) => Math.round(n / 1000).toString() + "k"} />
+              </p>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Incremental volume at projected rollout coverage.</p>
+            </div>
+            <div>
+              <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
+                −<CountUp to={50} />
+                <span className="text-[0.55em] text-textPrimary/70">%</span>
+              </p>
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Post-service complaints in this flow.</p>
+            </div>
+          </FadeIn>
+          <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/65">
             User-level randomized A/B · Meituan + Dianping
           </p>
         </Section>
@@ -748,11 +894,11 @@ export default function MeituanImCaseStudyPage() {
 
           <FadeIn className="mt-20 md:mt-28">
             <div className="relative">
-              <span aria-hidden className="absolute -left-2 -top-6 font-display text-[7rem] font-light leading-none text-[#C47040]/15 md:text-[9rem]">
+              <span aria-hidden className="absolute -left-2 -top-6 font-display text-[7rem] font-light leading-none text-[#B07A08]/15 md:text-[9rem]">
                 &ldquo;
               </span>
               <p className="relative max-w-4xl font-display text-[1.75rem] font-light leading-[1.25] tracking-tight text-textPrimary md:text-[2.5rem] md:leading-[1.18]">
-                Transparent <span className="text-[#C47040]">process</span> is often a stronger trust advantage than transparent <span className="line-through decoration-textSecondary/40">pricing</span> alone.
+                Transparent <span className="text-[#B07A08]">process</span> is often a stronger trust advantage than transparent <span className="line-through decoration-textSecondary/40">pricing</span> alone.
               </p>
               <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
                 Designing trust before the bill · 2025
