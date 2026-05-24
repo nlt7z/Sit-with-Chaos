@@ -335,6 +335,39 @@ function PrototypeCard({
   );
 }
 
+/** Mobile list item that only mounts its media after the row scrolls into
+ *  view. Because IntersectionObserver treats `display: none` ancestors as
+ *  non-intersecting, the mobile list never fires on desktop where it sits
+ *  hidden under `md:hidden` — so iframes aren't double-mounted alongside the
+ *  carousel. Once loaded, an item stays loaded. */
+function MobilePrototypeListItem({ entry }: { entry: Entry }) {
+  const ref = useRef<HTMLLIElement>(null);
+  const [shouldLoad, setShouldLoad] = useState(false);
+
+  useEffect(() => {
+    if (shouldLoad) return;
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          setShouldLoad(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: "240px 0px" },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [shouldLoad]);
+
+  return (
+    <li ref={ref} className="min-w-0">
+      <PrototypeCard entry={entry} shouldLoad={shouldLoad} isActive fluid />
+    </li>
+  );
+}
+
 function ClickWheel({
   onLeft,
   onRight,
@@ -386,10 +419,19 @@ function ClickWheel({
   );
 }
 
+/** Stable identity for an entry — used as the sticky-load key so we don't
+ *  unmount/remount media when the user scrolls away from a card. */
+const entryKey = (e: Entry) => `${e.date}::${e.title}`;
+
 export function VibeCodingPageContent() {
   const [filter, setFilter] = useState<Tag | "all">("all");
   // Default to index 1 (qbix) so bidking, qbix, and hancao are all visible on first paint.
   const [active, setActive] = useState(1);
+  // Once a card has been within the load window, it stays loaded — prevents
+  // expensive iframes (qbix, hancao, the prototype routes) from reloading
+  // every time the user navigates back to them, and lets a card pre-warm
+  // even before it becomes the active slide.
+  const [loadedKeys, setLoadedKeys] = useState<Set<string>>(new Set());
 
   const visible = useMemo(() => {
     if (filter === "all") return entries;
@@ -410,6 +452,24 @@ export function VibeCodingPageContent() {
     setFilter(f);
     setActive(0);
   }, []);
+
+  // Expand the loaded set whenever the active slide moves. Window is dist ≤ 2
+  // so neighbors + neighbors-of-neighbors warm up early; combined with the
+  // sticky set above, the carousel becomes fully loaded after a few clicks.
+  useEffect(() => {
+    if (n === 0) return;
+    setLoadedKeys((prev) => {
+      const next = new Set(prev);
+      const halfN = n / 2;
+      visible.forEach((entry, i) => {
+        let offset = i - active;
+        if (offset > halfN) offset -= n;
+        if (offset < -halfN) offset += n;
+        if (Math.abs(offset) <= 2) next.add(entryKey(entry));
+      });
+      return next;
+    });
+  }, [active, visible, n]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -441,7 +501,10 @@ export function VibeCodingPageContent() {
         </div>
       </header>
 
-      {/* Mobile: stacked list — no carousel, no click wheel */}
+      {/* Mobile: stacked list — no carousel, no click wheel. Each list item
+          gates its own media on viewport intersection so a desktop visitor
+          (where this list is `md:hidden`) never pays to load any of these
+          iframes; only the carousel below mounts. */}
       <div className="mx-auto mt-6 w-full max-w-content px-6 md:hidden">
         {n === 0 ? (
           <p className="py-12 text-center text-sm text-textSecondary">
@@ -450,9 +513,7 @@ export function VibeCodingPageContent() {
         ) : (
           <ul className="flex flex-col gap-10 pb-16">
             {visible.map((entry) => (
-              <li key={entry.date + entry.title} className="min-w-0">
-                <PrototypeCard entry={entry} shouldLoad isActive fluid />
-              </li>
+              <MobilePrototypeListItem key={entryKey(entry)} entry={entry} />
             ))}
           </ul>
         )}
@@ -470,9 +531,10 @@ export function VibeCodingPageContent() {
             if (offset < -halfN) offset += n;
             const dist = Math.abs(offset);
             const isActive = dist === 0;
+            const shouldLoad = dist <= 2 || loadedKeys.has(entryKey(entry));
             return (
               <div
-                key={entry.date + entry.title}
+                key={entryKey(entry)}
                 onClick={() => !isActive && setActive(i)}
                 className="absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                 style={{
@@ -484,7 +546,7 @@ export function VibeCodingPageContent() {
               >
                 <PrototypeCard
                   entry={entry}
-                  shouldLoad={dist <= 1}
+                  shouldLoad={shouldLoad}
                   isActive={isActive}
                 />
               </div>

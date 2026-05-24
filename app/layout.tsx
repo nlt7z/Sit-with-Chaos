@@ -63,9 +63,12 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
+        {/* Intro veil is only for the homepage. The pathname check keeps the
+            data-intro flag (and therefore the black ::before veil) off every
+            other route so case-study / lab pages don't flash black. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(!sessionStorage.getItem('yf-intro-played-v1')){document.documentElement.dataset.intro='pending';var l=document.createElement('link');l.rel='preload';l.as='image';l.href='/assets/logo.png';l.setAttribute('fetchpriority','high');document.head.appendChild(l);}}catch(e){}})();`,
+            __html: `(function(){try{if(location.pathname==='/'&&!sessionStorage.getItem('yf-intro-played-v1')){document.documentElement.dataset.intro='pending';setTimeout(function(){if(document.documentElement.dataset.intro==='pending'){delete document.documentElement.dataset.intro;}},1500);var l=document.createElement('link');l.rel='preload';l.as='image';l.href='/assets/logo.png';l.setAttribute('fetchpriority','high');document.head.appendChild(l);}}catch(e){try{delete document.documentElement.dataset.intro;}catch(_){}}})();`,
           }}
         />
       </head>

@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const STORAGE_KEY = "yf-intro-played-v1";
@@ -14,12 +15,17 @@ type Phase = "idle" | "playing" | "exit";
 
 export function IntroAnimation() {
   const reduced = useReducedMotion();
+  const pathname = usePathname();
   const [phase, setPhase] = useState<Phase>("idle");
   const [percent, setPercent] = useState(0);
 
   // Decide whether to play (data-intro is set pre-paint by the inline
-  // script in app/layout.tsx — only present on first session visit).
+  // script in app/layout.tsx — only present on first session visit to the
+  // homepage). The pathname check is a belt-and-braces guard: even if the
+  // dataset flag survives a client-side nav, we still won't play anywhere
+  // except `/`.
   useEffect(() => {
+    if (pathname !== "/") return;
     const root = document.documentElement;
     if (root.dataset.intro !== "pending") return;
 
@@ -32,7 +38,7 @@ export function IntroAnimation() {
     }
 
     setPhase("playing");
-  }, [reduced]);
+  }, [reduced, pathname]);
 
   // Timeline driver
   useEffect(() => {
