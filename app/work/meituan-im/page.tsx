@@ -1,11 +1,9 @@
 "use client";
 
-import { CaseStudyMeta } from "@/components/CaseStudyMeta";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
-import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import Image from "next/image";
-import { motion, useInView, useMotionValue, useReducedMotion, useTransform } from "framer-motion";
+import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
 const easePremium = [0.25, 0.1, 0.25, 1] as const;
@@ -239,7 +237,7 @@ function PhoneFrame({
             href={src}
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-[#B07A08]"
+            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-nltLime-ink"
           >
             View full →
           </a>
@@ -286,7 +284,7 @@ function Callout({
 }) {
   return (
     <div className="flex gap-4">
-      <span className="mt-[2px] inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#B07A08]/30 bg-[#FFF1C8] font-mono text-[11px] tabular-nums text-[#5A3D04]">
+      <span className="mt-[2px] inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-nltLime-ink/30 bg-nltLime-soft font-mono text-[11px] tabular-nums text-nltLime-ink">
         {index.toString().padStart(2, "0")}
       </span>
       <div className="min-w-0">
@@ -314,32 +312,31 @@ function CountUp({
   const ref = useRef<HTMLSpanElement | null>(null);
   const inView = useInView(ref, { once: true, margin: "-15% 0px -15% 0px" });
   const reduce = useReducedMotion();
-  const mv = useMotionValue(0);
-  const display = useTransform(mv, (v) => format(v));
-  const [text, setText] = useState(format(0));
+  // Stash format in a ref so the rAF loop sees the latest function without
+  // re-running the effect — otherwise an inline `format={...}` prop would
+  // create a new ref every render, restart the tween from 0, and the number
+  // would visibly jitter forever.
+  const formatRef = useRef(format);
+  formatRef.current = format;
+  const [text, setText] = useState(() => format(0));
 
   useEffect(() => {
     if (!inView) return;
     if (reduce) {
-      setText(format(to));
+      setText(formatRef.current(to));
       return;
     }
     const start = performance.now();
     let raf = 0;
     const tick = (t: number) => {
       const p = Math.min(1, (t - start) / durationMs);
-      // ease-out cubic for a confident landing
       const e = 1 - Math.pow(1 - p, 3);
-      mv.set(e * to);
+      setText(formatRef.current(e * to));
       if (p < 1) raf = requestAnimationFrame(tick);
     };
     raf = requestAnimationFrame(tick);
-    const unsub = display.on("change", (v) => setText(v));
-    return () => {
-      cancelAnimationFrame(raf);
-      unsub();
-    };
-  }, [inView, to, durationMs, format, reduce, mv, display]);
+    return () => cancelAnimationFrame(raf);
+  }, [inView, to, durationMs, reduce]);
 
   return (
     <span ref={ref} className="tabular-nums">
@@ -414,14 +411,21 @@ export default function MeituanImCaseStudyPage() {
                       </p>
                     </div>
 
-                    {/* Use the shared CaseStudyMeta line so this page reads like the
-                        rest of the portfolio. Project facts live in lib/caseStudyMeta. */}
-                    <div className="border-t border-black/[0.08] pt-6">
-                      <CaseStudyMeta {...CASE_STUDY_META["meituan-im"]} />
-                      <p className="mt-3 font-mono text-[11px] leading-relaxed tracking-[0.06em] text-textSecondary/75">
-                        4 weeks · End-to-end ownership · Validated via user-level A/B
-                      </p>
-                    </div>
+                    {/* Project facts as a divider-grid — same pattern as the
+                        ai-character case study. Three columns: timeline, ownership,
+                        impact. Each cell has a hairline rule on the left. */}
+                    <dl className="grid grid-cols-1 gap-x-8 gap-y-6 border-t border-black/[0.08] pt-7 sm:grid-cols-3 sm:gap-y-0">
+                      {[
+                        { label: "Timeline", value: "4 weeks · 2025" },
+                        { label: "Ownership", value: "End-to-end · sole designer" },
+                        { label: "Impact", value: "+5% conversion · validated via user-level A/B" },
+                      ].map(({ label, value }) => (
+                        <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
+                          <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">{label}</dt>
+                          <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
+                        </div>
+                      ))}
+                    </dl>
                   </div>
 
                   {/* Right — live prototype (FixIt Express · Saffron).
@@ -447,7 +451,7 @@ export default function MeituanImCaseStudyPage() {
                       />
                     </div>
                     <p className="mt-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
-                      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-[#B07A08]" />
+                      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-nltLime" />
                       Live prototype · interact above
                     </p>
                   </div>
@@ -483,7 +487,7 @@ export default function MeituanImCaseStudyPage() {
         <Section id="turning-point" eyebrow="Turning Point" title="The brief asked for price visibility. The evidence pointed deeper.">
           <FadeIn>
             <p className="text-[18px] leading-[1.55] tracking-tight text-textPrimary">
-              Price was not a number problem. It was a <span className="text-[#B07A08]">process trust</span> problem.
+              Price was not a number problem. It was a <span className="text-nltLime-ink">process trust</span> problem.
             </p>
           </FadeIn>
 
@@ -511,9 +515,9 @@ export default function MeituanImCaseStudyPage() {
                     </li>
                   ))}
                 </ol>
-                <div className="mt-3 rounded-md border border-[#B07A08]/30 bg-[#FFF1C8] px-5 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#5A3D04]">→ Trust break</p>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-[#5A3D04]">
+                <div className="mt-3 rounded-md border border-nltLime-ink/30 bg-nltLime-soft px-5 py-4">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink">→ Trust break</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-nltLime-ink">
                     Quoted price ≠ actual bill. Scope, materials, and conditions widen the range. Users feel the system did not warn them.
                   </p>
                 </div>
@@ -522,10 +526,10 @@ export default function MeituanImCaseStudyPage() {
               {/* AFTER — redesigned, warm accent */}
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#B07A08]">After · 3-step trust loop</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">After · 3-step trust loop</p>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">redesigned</p>
                 </div>
-                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-[#B07A08]/[0.08]">
+                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-nltLime-ink/[0.08]">
                   {[
                     ["Diagnose the problem", "Certified experts surface from search to define the issue — remove ambiguity before comparison."],
                     ["Structure the intent", "Multi-turn chat yields a service-order card so quotes compare on equal terms."],
@@ -533,7 +537,7 @@ export default function MeituanImCaseStudyPage() {
                   ].map(([t, b], i) => (
                     <li key={i} className="bg-white px-5 py-4">
                       <div className="flex items-baseline gap-3">
-                        <span className="font-mono text-[10px] tabular-nums text-[#B07A08]">0{i + 1}</span>
+                        <span className="font-mono text-[10px] tabular-nums text-nltLime-ink">0{i + 1}</span>
                         <p className="text-[15px] tracking-tight text-textPrimary">{t}</p>
                       </div>
                       <p className="mt-1.5 pl-[26px] text-[13.5px] leading-relaxed text-textSecondary">{b}</p>
@@ -708,21 +712,21 @@ export default function MeituanImCaseStudyPage() {
                 <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">
                   Domain
                 </div>
-                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#B07A08]">
+                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-nltLime-ink">
                   01 · Diagnose
                 </div>
-                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#B07A08]">
+                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-nltLime-ink">
                   02 · Structure
                 </div>
-                <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-[#B07A08]">
+                <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-nltLime-ink">
                   03 · Commit
                 </div>
               </div>
 
-              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-[#FFF1C8]/40">
+              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-nltLime-soft/40">
                 <div className="border-r border-black/[0.06] px-5 py-5">
-                  <p className="text-[15px] tracking-tight text-[#5A3D04]">Home repair</p>
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-[#B07A08]/80">Reference case</p>
+                  <p className="text-[15px] tracking-tight text-nltLime-ink">Home repair</p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink/80">Reference case</p>
                 </div>
                 <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
                   Certified expert defines the issue.
@@ -806,14 +810,14 @@ export default function MeituanImCaseStudyPage() {
                 <div
                   key={i}
                   className={`overflow-hidden rounded-xl border border-black/[0.08] ${
-                    row.ref ? "bg-[#FFF1C8]/60" : "bg-white"
+                    row.ref ? "bg-nltLime-soft/60" : "bg-white"
                   }`}
                 >
                   <div className="border-b border-black/[0.06] px-4 py-3">
-                    <p className={`text-[15px] tracking-tight ${row.ref ? "text-[#5A3D04]" : "text-textPrimary"}`}>
+                    <p className={`text-[15px] tracking-tight ${row.ref ? "text-nltLime-ink" : "text-textPrimary"}`}>
                       {row.domain}
                     </p>
-                    <p className={`mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${row.ref ? "text-[#B07A08]/80" : "text-textSecondary/70"}`}>
+                    <p className={`mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${row.ref ? "text-nltLime-ink/80" : "text-textSecondary/70"}`}>
                       {row.tagline}
                     </p>
                   </div>
@@ -826,7 +830,7 @@ export default function MeituanImCaseStudyPage() {
                       ] as const
                     ).map(([k, v]) => (
                       <div key={k} className="px-4 py-3">
-                        <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#B07A08]">{k}</dt>
+                        <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-nltLime-ink">{k}</dt>
                         <dd className="mt-1 text-textSecondary">{v}</dd>
                       </div>
                     ))}
@@ -842,12 +846,12 @@ export default function MeituanImCaseStudyPage() {
               primary result reads first, supporting metrics step down below. */}
           <FadeIn className="border-t border-black/[0.06] pt-12 md:pt-16">
             <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4">
-              <p className="font-display text-[5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-[#B07A08] md:text-[7rem] lg:text-[8rem]">
+              <p className="font-display text-[5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-nltLime-ink md:text-[7rem] lg:text-[8rem]">
                 +<CountUp to={5} />
-                <span className="text-[0.5em] text-[#B07A08]/70">%</span>
+                <span className="text-[0.5em] text-nltLime-ink/70">%</span>
               </p>
               <div className="max-w-md">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#B07A08]">Conversion lift</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Conversion lift</p>
                 <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
                   Search-to-purchase, validated via user-level randomized A/B.
                 </p>
@@ -894,11 +898,11 @@ export default function MeituanImCaseStudyPage() {
 
           <FadeIn className="mt-20 md:mt-28">
             <div className="relative">
-              <span aria-hidden className="absolute -left-2 -top-6 font-display text-[7rem] font-light leading-none text-[#B07A08]/15 md:text-[9rem]">
+              <span aria-hidden className="absolute -left-2 -top-6 font-display text-[7rem] font-light leading-none text-nltLime-ink/15 md:text-[9rem]">
                 &ldquo;
               </span>
               <p className="relative max-w-4xl font-display text-[1.75rem] font-light leading-[1.25] tracking-tight text-textPrimary md:text-[2.5rem] md:leading-[1.18]">
-                Transparent <span className="text-[#B07A08]">process</span> is often a stronger trust advantage than transparent <span className="line-through decoration-textSecondary/40">pricing</span> alone.
+                Transparent <span className="text-nltLime-ink">process</span> is often a stronger trust advantage than transparent <span className="line-through decoration-textSecondary/40">pricing</span> alone.
               </p>
               <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
                 Designing trust before the bill · 2025
