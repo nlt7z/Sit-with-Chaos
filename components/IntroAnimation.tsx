@@ -44,7 +44,11 @@ export function IntroAnimation() {
   useEffect(() => {
     if (phase !== "playing") return;
 
-    const prevOverflow = document.body.style.overflow;
+    // Only restore the prior overflow if it wasn't already "hidden" — a
+    // re-mount (HMR, StrictMode double-run) would otherwise capture our own
+    // lock and write it back forever, leaving the page unscrollable.
+    const prior = document.body.style.overflow;
+    const prevOverflow = prior === "hidden" ? "" : prior;
     document.body.style.overflow = "hidden";
 
     const exitTimer = setTimeout(() => {
@@ -65,6 +69,9 @@ export function IntroAnimation() {
     return () => {
       clearTimeout(exitTimer);
       clearTimeout(doneTimer);
+      // If we unmount mid-play (HMR, route error, StrictMode), make sure
+      // the pre-paint veil and the scroll lock don't outlive us.
+      delete document.documentElement.dataset.intro;
       document.body.style.overflow = prevOverflow;
     };
   }, [phase]);
