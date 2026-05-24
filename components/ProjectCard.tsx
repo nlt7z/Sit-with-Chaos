@@ -172,19 +172,6 @@ export function ProjectCard({ project }: { project: Project }) {
 
   const wrapperContent = (
     <>
-        {project.meta ? (
-          <div className="mb-4 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary transition-colors duration-500 group-hover:text-white/55 md:text-[11px]">
-            <span>{project.meta.year}</span>
-            <span aria-hidden className="text-textSecondary/35 transition-colors duration-500 group-hover:text-white/30">·</span>
-            <span>{project.meta.role}</span>
-            <span aria-hidden className="text-textSecondary/35 transition-colors duration-500 group-hover:text-white/30">·</span>
-            <span className="inline-flex items-center gap-1.5">
-              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-textSecondary/45 transition-colors duration-500 group-hover:bg-white/55" />
-              {project.meta.status}
-            </span>
-          </div>
-        ) : null}
-
         <div className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-black/[0.04] transition-[box-shadow] duration-500 group-hover:ring-white/10">
           <motion.div
             className={`${mediaAspect} w-full overflow-hidden bg-neutral-100`}
