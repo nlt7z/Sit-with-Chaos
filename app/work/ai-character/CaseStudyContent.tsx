@@ -197,11 +197,14 @@ function CaseStudyNav() {
   return (
     <nav
       aria-label="Case study sections"
-      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-full w-[11rem] select-none lg:block"
+      // Center vertically with flex instead of `pt-40 + top-[calc(50vh-10rem)]`,
+      // which on shorter viewports pushed the bottom items past the fold and
+      // clipped them. Flex centering keeps the rail in view regardless of height.
+      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-screen w-[11rem] select-none flex-col justify-center lg:flex"
     >
-      <div className="pointer-events-auto sticky top-[calc(50vh-10rem)] px-6 pt-40">
+      <div className="pointer-events-auto px-6">
         <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">On this page</p>
-        <ul className="mt-5 max-h-[min(60vh,28rem)] space-y-0 overflow-y-auto overscroll-contain pr-1">
+        <ul className="mt-5 max-h-[calc(100vh-12rem)] space-y-0 overflow-y-auto overscroll-contain pr-1">
           {navItems.map(({ id, label }) => {
             const isActive = active === id;
             return (
@@ -209,10 +212,10 @@ function CaseStudyNav() {
                 <a
                   href={`#${id}`}
                   onClick={(e) => scrollToSection(id, e)}
-                  className={`block border-l border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
+                  className={`block border-l-[1.5px] border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
                     isActive
-                      ? "border-textPrimary font-medium text-textPrimary"
-                      : "text-textSecondary/90 hover:translate-x-0.5 hover:border-black/20 hover:text-textPrimary"
+                      ? "border-nltLime font-medium text-textPrimary"
+                      : "text-textSecondary/90 hover:translate-x-0.5 hover:border-nltLime/40 hover:text-textPrimary"
                   }`}
                 >
                   {label}
@@ -874,7 +877,10 @@ function Section({
           className="flex items-center gap-2.5 max-w-reading font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary"
           variants={reduced ? undefined : sectionPiece}
         >
-          <span className="inline-block h-px w-5 shrink-0 bg-textSecondary/45" aria-hidden="true" />
+          {/* Lime accent tick — quietly carries the brand color through every
+              section header. Doubles as a visual anchor that aligns the eyebrow
+              row with the surrounding content. */}
+          <span className="inline-block h-[2px] w-6 shrink-0 rounded-full bg-nltLime" aria-hidden="true" />
           {eyebrow}
         </motion.p>
         {title?.trim() ? (
@@ -1166,8 +1172,8 @@ function UxStrategyShowroomTable() {
           ))}
         </div>
 
-        <div className="max-w-[36rem] border-l-2 border-black/[0.18] pl-7 py-5 md:pl-8 md:py-6">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary/45">Memory in the UI</p>
+        <div className="max-w-[36rem] border-l-2 border-nltLime pl-7 py-5 md:pl-8 md:py-6">
+          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-nltLime-ink">Memory in the UI</p>
           <p className="mt-4 font-display text-[1.2rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:mt-5 md:text-[1.38rem] md:leading-[1.38]">
             {memoryVisibilityInsight}
           </p>
@@ -1360,11 +1366,12 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
               </motion.p>
 
               <motion.div
-                className="mt-6 flex items-start gap-3 border-l-2 border-black/[0.12] pl-4 md:mt-7"
+                className="mt-6 flex items-start gap-3 border-l-2 border-nltLime pl-4 md:mt-7"
                 variants={reduced ? undefined : heroItem}
               >
                 <p className="font-sans text-[13.5px] leading-relaxed text-textSecondary/65">
-                  <span className="font-medium text-textSecondary/80">Design principle:</span>{" "}AI systems need <Em>visible cognition</Em>, not just outputs — I design to make model state inspectable.
+                  <span className="font-medium uppercase tracking-[0.12em] text-nltLime-ink text-[11px]">Design principle</span>
+                  <span className="block mt-1.5">AI systems need <Em>visible cognition</Em>, not just outputs — I design to make model state inspectable.</span>
                 </p>
               </motion.div>
 
@@ -1540,8 +1547,8 @@ export default function CaseStudyContent() {
             src="/assets/ai-character/before.mp4"
           />
 
-          <blockquote className="my-16 w-full !max-w-none border-l-2 border-black/[0.18] pl-7 not-italic md:my-20 md:pl-8">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary/60">How might we</p>
+          <blockquote className="my-16 w-full !max-w-none border-l-2 border-nltLime pl-7 not-italic md:my-20 md:pl-8">
+            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-nltLime-ink">How might we</p>
             <p className="mt-4 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
               Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em> — within minutes?
             </p>
@@ -1795,8 +1802,9 @@ export default function CaseStudyContent() {
                     <CountUpStat value={stat.n} />
                   </p>
                 </div>
-                <div className="mt-4 flex min-h-[2.75rem] items-start md:min-h-[3rem]">
-                  <p className="font-sans text-[12px] font-medium uppercase leading-snug tracking-[0.12em] text-textPrimary/65">
+                <div className="mt-4 flex min-h-[2.75rem] items-start gap-2 md:min-h-[3rem]">
+                  <span className="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-nltLime" aria-hidden="true" />
+                  <p className="font-sans text-[12px] font-medium uppercase leading-snug tracking-[0.12em] text-textPrimary/70">
                     {stat.label}
                   </p>
                 </div>
@@ -1807,12 +1815,12 @@ export default function CaseStudyContent() {
 
           <CollapsibleMetricTable />
 
-          <p className="mt-10 border-l border-black/12 pl-6 font-sans text-[15px] leading-relaxed text-textSecondary md:mt-12 md:pl-7">
+          <p className="mt-10 border-l-2 border-nltLime pl-6 font-sans text-[15px] leading-relaxed text-textSecondary md:mt-12 md:pl-7">
             <a
               href="https://tongyi.aliyun.com/character"
               target="_blank"
               rel="noopener noreferrer"
-              className="font-medium text-textPrimary underline decoration-black/15 underline-offset-[6px] transition-colors duration-300 hover:decoration-textPrimary/40"
+              className="font-medium text-textPrimary underline decoration-nltLime decoration-2 underline-offset-[6px] transition-colors duration-300 hover:decoration-nltLime-ink"
             >
               View the live showrooms →
             </a>
