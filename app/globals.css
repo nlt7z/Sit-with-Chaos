@@ -26,4 +26,18 @@
     background: var(--background);
     overflow-x: hidden;
   }
+
+  /* Pre-paint veil — keeps hero hidden on first visit until the intro
+     overlay mounts and runs its own exit. Color matches the overlay's
+     near-black so there's no flash between paint and React hydration.
+     Removed by IntroAnimation when the exit phase begins, so the overlay's
+     fade reveals hero smoothly. */
+  html[data-intro="pending"] body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: #07080A;
+    z-index: 99;
+    pointer-events: none;
+  }
 }

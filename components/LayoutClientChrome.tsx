@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { IntroAnimation } from "@/components/IntroAnimation";
 import { ScrollToTop } from "@/components/ScrollToTop";
 
 export function LayoutClientChrome({ children }: { children: ReactNode }) {
@@ -8,6 +9,7 @@ export function LayoutClientChrome({ children }: { children: ReactNode }) {
     <>
       <ScrollToTop />
       <div className="relative z-[2]">{children}</div>
+      <IntroAnimation />
     </>
   );
 }

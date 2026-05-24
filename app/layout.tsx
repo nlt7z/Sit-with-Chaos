@@ -62,6 +62,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth">
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(!sessionStorage.getItem('yf-intro-played-v1')){document.documentElement.dataset.intro='pending';var l=document.createElement('link');l.rel='preload';l.as='image';l.href='/assets/logo.png';l.setAttribute('fetchpriority','high');document.head.appendChild(l);}}catch(e){}})();`,
+          }}
+        />
+      </head>
       <body
         className={`${playfair.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased text-[#1D1D1F] bg-white`}
       >
