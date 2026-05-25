@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, useInView, useReducedMotion } from "framer-motion";
+import Image from "next/image";
 import { useRef } from "react";
 import { SiteWindow } from "./SiteWindow";
 
@@ -32,10 +33,32 @@ export function HomeMagicGallery() {
     <section
       id="magic"
       ref={ref}
-      className="border-t border-[rgba(0,0,0,0.06)] bg-white py-20 md:py-28"
+      className="relative border-t border-[rgba(0,0,0,0.06)] py-20 md:py-28"
       aria-labelledby="magic-heading"
     >
-      <div className="mx-auto max-w-content px-6">
+      {/* Lime glow + slowly drifting disc-ring — sits at the seam between this
+       *  section and About, centered, straddling the boundary. */}
+      <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 z-0">
+        <div className="absolute bottom-[-160px] right-[6%] h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(184,229,50,0.42)_0%,rgba(184,229,50,0.16)_44%,transparent_72%)] blur-[90px] md:right-[10%] lg:right-[14%]" />
+        <div className="absolute bottom-[-210px] right-[2%] hidden md:block lg:right-[8%]">
+          <motion.div
+            className="w-[360px] lg:w-[440px]"
+            animate={reduced ? undefined : { y: [0, -18, 0], rotate: [0, 2.5, 0] }}
+            transition={reduced ? undefined : { duration: 11, ease: "easeInOut", repeat: Infinity }}
+          >
+            <Image
+              src="/assets/main-page-decor/decor4.png"
+              alt=""
+              width={1254}
+              height={1254}
+              sizes="440px"
+              className="h-auto w-full opacity-[0.6]"
+            />
+          </motion.div>
+        </div>
+      </div>
+
+      <div className="relative z-10 mx-auto max-w-content px-6">
         <motion.div
           initial={reduced ? false : { opacity: 0, y: 20 }}
           animate={inView ? { opacity: 1, y: 0 } : reduced ? { opacity: 1, y: 0 } : {}}
@@ -69,6 +92,7 @@ export function HomeMagicGallery() {
                 label={item.label}
                 meta={item.meta}
                 active={inView}
+                chrome={false}
               />
             </div>
           ))}

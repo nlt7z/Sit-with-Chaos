@@ -57,7 +57,7 @@ const liner: Project = {
   description:
     "Designed an AI collaboration workflow — chat-switch, shared canvas, and a collaborative library — from 11 user interviews on context switching, source ownership, and AI-to-human handoffs.",
   media: {
-    src: "/assets/liner/liner-present.png",
+    src: "/assets/liner/liner.jpg",
     alt: "Liner AI collaboration feature — research and design preview",
     type: "image",
   },
@@ -130,10 +130,10 @@ export function Work() {
     <section
       id="work"
       ref={ref}
-      className="bg-surfaceAlt pt-14 pb-20 md:pt-20 md:pb-28"
+      className="relative pt-14 pb-20 md:pt-20 md:pb-28"
       aria-label="Selected projects"
     >
-      <div className="mx-auto max-w-content px-6">
+      <div className="relative z-10 mx-auto max-w-content px-6">
         <motion.div
           className="flex flex-col gap-9 md:gap-10 lg:gap-11"
           variants={containerVariants}

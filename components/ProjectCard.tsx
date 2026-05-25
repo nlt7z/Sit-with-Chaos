@@ -164,7 +164,6 @@ export function ProjectCard({ project }: { project: Project }) {
       ? project.title.slice(titleSplitIndex + titleSeparatorLength).trim()
       : project.title;
 
-  // Static card wrapper (no Link, no hover invert) when there's no case study to link to.
   const wrapperBaseClass =
     "flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.35rem] md:p-6";
   const wrapperLinkClass = `${wrapperBaseClass} transition-[background-color,border-color,box-shadow] duration-500 ease-portfolio hover:border-textPrimary hover:bg-textPrimary hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2`;

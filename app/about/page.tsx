@@ -1,6 +1,7 @@
 "use client";
 
 import { AboutArtGallery } from "@/components/AboutArtGallery";
+import { FloatingDecor } from "@/components/FloatingDecor";
 import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { experienceEntries } from "@/lib/experience";
@@ -137,11 +138,28 @@ export default function AboutPage() {
         {/* ── 1. Identity ─────────────────────────────────────────────────── */}
         <section
           id="about-identity"
-          className="scroll-mt-24 border-b border-[rgba(0,0,0,0.08)] px-6 py-24 md:scroll-mt-28 md:py-32"
+          className="relative overflow-hidden scroll-mt-24 border-b border-[rgba(0,0,0,0.08)] px-6 py-24 md:scroll-mt-28 md:py-32"
         >
-          <div className="mx-auto grid max-w-content gap-14 lg:grid-cols-12 lg:items-center">
+          <div className="relative z-10 mx-auto grid max-w-content gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
               <SectionReveal>
+                {/* Keyboard caps — a small floating mark sitting above the eyebrow */}
+                <div aria-hidden className="relative mb-5 w-[92px] md:w-[108px]">
+                  <div className="absolute -inset-[28%] rounded-full bg-[radial-gradient(circle,rgba(184,229,50,0.42)_0%,rgba(184,229,50,0.16)_42%,transparent_72%)] blur-2xl" />
+                  <motion.div
+                    animate={rm ? undefined : { y: [0, -9, 0] }}
+                    transition={rm ? undefined : { duration: 8.5, ease: "easeInOut", repeat: Infinity }}
+                  >
+                    <Image
+                      src="/assets/main-page-decor/decor2.png"
+                      alt=""
+                      width={1122}
+                      height={955}
+                      sizes="108px"
+                      className="h-auto w-full"
+                    />
+                  </motion.div>
+                </div>
                 <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Identity</p>
                 <h1 className="mt-4 font-display text-4xl font-light leading-snug text-textPrimary md:text-5xl lg:text-6xl">
                   Designer, thinker, craftsperson.
@@ -195,10 +213,10 @@ export default function AboutPage() {
         <section
           id="about-workflow"
           ref={workRef}
-          className="scroll-mt-24 px-6 py-24 md:scroll-mt-28 md:py-32"
+          className="relative overflow-hidden scroll-mt-24 px-6 py-24 md:scroll-mt-28 md:py-32"
           aria-labelledby="about-workflow-heading"
         >
-          <div className="mx-auto max-w-content">
+          <div className="relative z-10 mx-auto max-w-content">
             <motion.div
               initial={rm ? false : { opacity: 0, y: 20 }}
               animate={workInView ? { opacity: 1, y: 0 } : rm ? { opacity: 1, y: 0 } : {}}
@@ -262,9 +280,19 @@ export default function AboutPage() {
         <section
           id="about-story"
           ref={storyRef}
-          className="scroll-mt-24 px-6 py-24 md:scroll-mt-28 md:py-32"
+          className="relative overflow-hidden scroll-mt-24 px-6 py-24 md:scroll-mt-28 md:py-32"
         >
-          <div className="mx-auto max-w-content">
+          <FloatingDecor
+            src="/assets/main-page-decor/decor6.png"
+            className="left-[26%] top-[1%] w-[160px] xl:left-[29%] xl:w-[195px]"
+            parallax={38}
+            rotate={[6, -6]}
+            sizes="195px"
+            floatDuration={11}
+            floatDistance={12}
+            maxOpacity={0.85}
+          />
+          <div className="relative z-10 mx-auto max-w-content">
             <SectionReveal>
               <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Story</p>
               <h2 className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl">
@@ -374,10 +402,10 @@ export default function AboutPage() {
         <section
           id="about-background"
           ref={expRef}
-          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] px-6 py-14 md:scroll-mt-28 md:py-16"
+          className="relative overflow-hidden scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] px-6 py-14 md:scroll-mt-28 md:py-16"
           aria-label="Experience and education"
         >
-          <div className="mx-auto max-w-content">
+          <div className="relative z-10 mx-auto max-w-content">
             <div className="grid gap-12 lg:grid-cols-[1.45fr_1fr] lg:gap-x-16">
               {/* Experience column */}
               <div>
@@ -463,9 +491,20 @@ export default function AboutPage() {
         {/* ── CTA ─────────────────────────────────────────────────────────── */}
         <section
           id="about-next"
-          className="scroll-mt-24 border-t border-[rgba(0,0,0,0.08)] bg-surfaceAlt px-6 py-24 md:scroll-mt-28 md:py-32"
+          className="relative isolate scroll-mt-24 overflow-hidden border-t border-[rgba(0,0,0,0.08)] px-6 py-24 md:scroll-mt-28 md:py-32"
         >
-          <div className="mx-auto max-w-content text-center">
+          {/* hero-decor lime backdrop (replaces the flat gray) */}
+          <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+            <img
+              src="/assets/hero-decor.png"
+              alt=""
+              draggable={false}
+              className="absolute inset-0 h-full w-full select-none object-cover object-center"
+            />
+            {/* soft wash so the centered copy stays legible over the busy art */}
+            <div className="absolute inset-0 bg-white/45" />
+          </div>
+          <div className="relative z-10 mx-auto max-w-content text-center">
             <SectionReveal>
               <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Next</p>
               <h2 className="mt-4 font-display text-3xl font-light text-textPrimary md:text-4xl">

@@ -35,10 +35,10 @@ export function About() {
     <section
       id="about"
       ref={ref}
-      className="bg-surfaceAlt py-16 md:py-20 lg:py-24"
+      className="relative overflow-hidden py-16 md:py-20 lg:py-24"
       aria-labelledby="about-heading"
     >
-      <div className="mx-auto max-w-content px-6">
+      <div className="relative z-10 mx-auto max-w-content px-6">
         <p className="font-mono text-xs font-normal uppercase tracking-widest text-textSecondary">About</p>
         <h2
           id="about-heading"

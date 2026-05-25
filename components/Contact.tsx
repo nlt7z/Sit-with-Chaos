@@ -89,12 +89,12 @@ export function Contact() {
     <section
       id="contact"
       ref={ref}
-      className="bg-white py-32 md:py-44"
+      className="relative py-32 md:py-44"
       aria-labelledby="contact-heading"
       aria-describedby="contact-subheading"
     >
       <motion.div
-        className="mx-auto max-w-content px-6 text-center"
+        className="relative z-10 mx-auto max-w-content px-6 text-center"
         variants={prefersReducedMotion ? undefined : containerVariants}
         initial={prefersReducedMotion ? { opacity: 0, y: 24 } : "hidden"}
         animate={
@@ -152,13 +152,13 @@ export function Contact() {
             href="https://linkedin.com/in/yuan-fang-66395725b"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary hover:decoration-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+            className="text-textSecondary transition-colors hover:text-nltLime focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
           >
             LinkedIn
           </a>
           <a
             href="https://github.com/nlt7z"
-            className="text-textSecondary underline decoration-[rgba(0,0,0,0.08)] underline-offset-4 transition-colors hover:text-textPrimary hover:decoration-black/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+            className="text-textSecondary transition-colors hover:text-nltLime focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
           >
             GitHub
           </a>

@@ -2,40 +2,18 @@
 
 import { BlurReveal } from "@/registry/spell-ui/blur-reveal";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 
-const heading = "I turn 60-minute docs into 2-minute products.";
+const heading = "Research, motion, and code — in one head.";
 const subheading =
   "AI-native full-stack designer — from research to shipped code.";
 const credentialLinkClass =
-  "underline decoration-black/[0.18] underline-offset-[3px] transition-[color,text-decoration-color] hover:text-textPrimary hover:decoration-black/40 focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2";
+  "font-medium text-textPrimary transition-colors hover:text-nltLime focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2";
 
 export function Hero() {
   const prefersReducedMotion = useReducedMotion();
   const reduced = !!prefersReducedMotion;
   const ref = useRef<HTMLElement | null>(null);
-  const spotlightRef = useRef<HTMLDivElement | null>(null);
-  const pointerRef = useRef({ x: -9999, y: -9999 });
-  const pointerRafRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    return () => {
-      if (pointerRafRef.current !== null) cancelAnimationFrame(pointerRafRef.current);
-    };
-  }, []);
-
-  const flushPointerToCssVars = () => {
-    pointerRafRef.current = null;
-    const spotlight = spotlightRef.current;
-    if (!spotlight) return;
-    spotlight.style.setProperty("--spot-x", `${pointerRef.current.x}px`);
-    spotlight.style.setProperty("--spot-y", `${pointerRef.current.y}px`);
-  };
-
-  const queuePointerFlush = () => {
-    if (pointerRafRef.current !== null) return;
-    pointerRafRef.current = requestAnimationFrame(flushPointerToCssVars);
-  };
 
   const { scrollYProgress } = useScroll({
     target: ref,
@@ -47,84 +25,17 @@ export function Hero() {
     <section
       id="hero"
       ref={ref}
-      className="relative overflow-hidden bg-white pt-20 md:pt-16"
+      className="relative pt-20 text-textPrimary md:pt-16"
       aria-labelledby="hero-heading"
-      onMouseMove={(e) => {
-        const rect = ref.current?.getBoundingClientRect();
-        if (!rect) return;
-        pointerRef.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
-        queuePointerFlush();
-      }}
-      onMouseLeave={() => {
-        pointerRef.current = { x: -9999, y: -9999 };
-        queuePointerFlush();
-      }}
     >
-      {/* Soft vignette — keeps the hero from feeling flat */}
-      <div
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_85%_55%_at_50%_-8%,rgba(15,23,42,0.04),transparent_58%),radial-gradient(ellipse_70%_45%_at_50%_92%,rgba(15,23,42,0.03),transparent_55%)]"
-        aria-hidden
-      />
-
-      {/* Orbital orb — dim base always visible */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
-        initial={reduced ? false : { opacity: 0, scale: 1.08 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-      >
-        <img
-          src="/assets/hero-orb.png"
-          alt=""
-          draggable={false}
-          className="select-none"
-          style={{
-            width: "clamp(280px, 90vw, 920px)",
-            opacity: 0.18,
-            mixBlendMode: "multiply",
-            transform: "translateY(-4%)",
-          }}
-        />
-      </motion.div>
-
-      {/* Orbital orb — spotlight layer, follows cursor */}
-      {!reduced && (
-        <div
-          ref={spotlightRef}
-          aria-hidden
-          className="pointer-events-none absolute inset-0 flex items-center justify-center overflow-hidden"
-          style={{
-            WebkitMaskImage:
-              "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
-            maskImage:
-              "radial-gradient(circle 260px at var(--spot-x, -9999px) var(--spot-y, -9999px), black 0%, transparent 78%)",
-          }}
+      <div className="relative z-10 mx-auto flex min-h-[calc(100svh-5rem)] max-w-content flex-col justify-center px-6 pb-24 pt-24 md:min-h-[640px] md:pb-28 md:pt-32 lg:min-h-[720px]">
+        <motion.div
+          style={{ y: textY }}
+          className="max-w-xl text-left md:max-w-[34rem] lg:max-w-[40rem]"
         >
-          <img
-            src="/assets/hero-orb.png"
-            alt=""
-            draggable={false}
-            className="select-none"
-            style={{
-              width: "clamp(280px, 90vw, 920px)",
-              opacity: 0.62,
-              mixBlendMode: "multiply",
-              transform: "translateY(-4%)",
-            }}
-          />
-        </div>
-      )}
-
-      {/* ── Introduction ───────────────────────────────────── */}
-      <motion.div
-        style={{ y: textY }}
-        className="relative z-10 px-6 pb-12 pt-24 text-center md:pb-16 md:pt-32 lg:pt-36"
-      >
-        <div className="flex flex-col items-center text-center">
           <motion.h1
             id="hero-heading"
-            className="mx-auto max-w-4xl cursor-default touch-manipulation font-display text-[2rem] font-light leading-[1.1] text-textPrimary sm:text-4xl sm:leading-tight md:text-6xl lg:text-7xl"
+            className="cursor-default touch-manipulation font-display text-[2.25rem] font-light leading-[1.05] tracking-[-0.012em] text-textPrimary sm:text-5xl md:text-6xl lg:text-[4.25rem] lg:leading-[1.02] xl:text-[4.75rem]"
             initial={reduced ? false : { opacity: 0, y: 44 }}
             animate={{ opacity: 1, y: 0 }}
             transition={
@@ -142,8 +53,8 @@ export function Hero() {
             {heading}
           </motion.h1>
 
-          <BlurReveal className="flex flex-col items-center text-center" delay={0.2} duration={0.72}>
-            <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-textSecondary md:mt-5 md:text-xl">
+          <BlurReveal className="flex flex-col items-start text-left" delay={0.2} duration={0.72}>
+            <p className="mt-5 max-w-xl text-lg leading-relaxed text-textSecondary md:mt-6 md:text-xl">
               {subheading}
             </p>
 
@@ -168,12 +79,11 @@ export function Hero() {
               </a>
             </p>
 
-            {/* Status strip — open to work, timezone, base */}
             <motion.p
               initial={reduced ? false : { opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: reduced ? 0 : 0.55, ease: [0.25, 0.1, 0.25, 1] }}
-              className="mt-4 inline-flex flex-wrap items-center justify-center gap-x-2 gap-y-1 rounded-full border border-black/[0.06] bg-white/60 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary backdrop-blur-sm sm:text-[11px] sm:tracking-[0.16em] md:mt-5"
+              className="mt-5 inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full border border-black/[0.08] bg-white/70 px-3 py-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary backdrop-blur-md sm:text-[11px] sm:tracking-[0.16em] md:mt-6"
             >
               <span aria-hidden className="relative flex h-1.5 w-1.5">
                 {!reduced && (
@@ -188,37 +98,37 @@ export function Hero() {
               Seattle / San Francisco
             </motion.p>
           </BlurReveal>
-        </div>
 
-        <motion.div
-          initial={reduced ? false : { opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{
-            duration: 0.55,
-            delay: reduced ? 0 : 1,
-            ease: [0.25, 0.1, 0.25, 1],
-          }}
-          className="mt-7 flex flex-wrap items-center justify-center gap-4 md:mt-8"
-        >
-          <motion.a
-            href="#work"
-            whileHover={reduced ? undefined : { y: -2 }}
-            whileTap={reduced ? undefined : { y: 1 }}
-            transition={{ type: "spring", stiffness: 480, damping: 28 }}
-            className="group/cta relative overflow-hidden rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-400 hover:ring-nltLime/40 hover:shadow-[0_16px_36px_-14px_rgba(184,229,50,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+          <motion.div
+            initial={reduced ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.55,
+              delay: reduced ? 0 : 1,
+              ease: [0.25, 0.1, 0.25, 1],
+            }}
+            className="mt-8 flex flex-wrap items-center gap-4 md:mt-10"
           >
-            <span className="relative z-10 inline-flex items-center gap-1.5">
-              Explore Work
-              <span
-                aria-hidden
-                className="inline-block translate-x-0 transition-transform duration-300 ease-portfolio group-hover/cta:translate-x-1"
-              >
-                →
+            <motion.a
+              href="#work"
+              whileHover={reduced ? undefined : { y: -2 }}
+              whileTap={reduced ? undefined : { y: 1 }}
+              transition={{ type: "spring", stiffness: 480, damping: 28 }}
+              className="group/cta relative overflow-hidden rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-400 hover:ring-nltLime/40 hover:shadow-[0_16px_36px_-14px_rgba(184,229,50,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+            >
+              <span className="relative z-10 inline-flex items-center gap-1.5">
+                Explore Work
+                <span
+                  aria-hidden
+                  className="inline-block translate-x-0 transition-transform duration-300 ease-portfolio group-hover/cta:translate-x-1"
+                >
+                  →
+                </span>
               </span>
-            </span>
-          </motion.a>
+            </motion.a>
+          </motion.div>
         </motion.div>
-      </motion.div>
+      </div>
     </section>
   );
 }

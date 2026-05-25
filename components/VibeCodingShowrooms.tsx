@@ -163,14 +163,14 @@ export function VibeCodingShowrooms({ trailing }: { trailing?: React.ReactNode }
               {"caseStudy" in s && (
                 <Link
                   href={(s as { caseStudy: string }).caseStudy}
-                  className="text-[13px] text-textSecondary underline underline-offset-4 transition-opacity hover:opacity-60"
+                  className="text-[13px] text-textSecondary transition-colors hover:text-textPrimary"
                 >
                   Case study
                 </Link>
               )}
               <Link
                 href={s.href}
-                className="text-[13px] text-textPrimary underline underline-offset-4 transition-opacity hover:opacity-60"
+                className="text-[13px] text-textPrimary transition-opacity hover:opacity-60"
               >
                 Open →
               </Link>
