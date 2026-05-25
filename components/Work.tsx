@@ -57,7 +57,7 @@ const liner: Project = {
   description:
     "Designed an AI collaboration workflow — chat-switch, shared canvas, and a collaborative library — from 11 user interviews on context switching, source ownership, and AI-to-human handoffs.",
   media: {
-    src: "/assets/liner/Frame%2097.jpg",
+    src: "/assets/liner/liner-present.png",
     alt: "Liner AI collaboration feature — research and design preview",
     type: "image",
   },
