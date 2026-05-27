@@ -17,6 +17,21 @@ const config: Config = {
           DEFAULT: "#B8E532",
           soft: "#F5FBE0",
           ink: "#5A7A12",
+          // Full numeric ramp anchored on the brand: 400 is the signature pop
+          // (#B8E532), the light end stays pale-lime for tints/backgrounds, and
+          // the dark end deepens to legible olive for accent text — so the lime
+          // palette can stand in for a violet scale across a case study.
+          50: "#F6FAE4",
+          100: "#EBF5C2",
+          200: "#DBED96",
+          300: "#C9E863",
+          400: "#B8E532",
+          500: "#A1CE1E",
+          600: "#82A916",
+          700: "#647F12",
+          800: "#4E640E",
+          900: "#3C4D0B",
+          950: "#222D06",
         },
         meituan: {
           yellow: "#FFC300",
@@ -107,6 +122,11 @@ const config: Config = {
           "35%": { transform: "translateX(220%) skewX(-18deg)", opacity: "0" },
           "100%": { opacity: "0" },
         },
+        /** Loading skeleton — diagonal shimmer sweeping across a placeholder */
+        "skeleton-sweep": {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
       },
       animation: {
         "spell-prism-a": "spell-prism-a 36s ease-in-out infinite alternate",
@@ -116,6 +136,7 @@ const config: Config = {
         "spell-silver-b": "spell-silver-b 54s ease-in-out infinite alternate",
         "gacha-cta-shimmer": "gacha-cta-shimmer 3.8s ease-in-out infinite",
         "gacha-cta-glint": "gacha-cta-glint 2.8s ease-in-out infinite",
+        "skeleton-sweep": "skeleton-sweep 1.6s ease-in-out infinite",
       },
     },
   },

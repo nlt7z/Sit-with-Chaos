@@ -1,7 +1,5 @@
 "use client";
 
-import { CaseStudyMeta } from "@/components/CaseStudyMeta";
-import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -821,13 +819,13 @@ function VibeCodingPrototypeGallery() {
 }
 
 function CountUpStat({ value }: { value: string }) {
+  // All hooks run unconditionally; the non-numeric early-out happens only at
+  // render time below, after the hooks (Rules of Hooks).
   const match = value.match(/^([+]?)(\d+)(.*)$/);
-  if (!match) return <>{value}</>;
-  const [, prefix, num, suffix] = match;
-  const to = parseInt(num, 10);
+  const to = match ? parseInt(match[2], 10) : 0;
+  const from = Math.round(to * 0.82);
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
-  const from = Math.round(to * 0.82);
   const [n, setN] = useState(from);
 
   useEffect(() => {
@@ -842,8 +840,10 @@ function CountUpStat({ value }: { value: string }) {
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [inView, to]);
+  }, [inView, to, from]);
 
+  if (!match) return <>{value}</>;
+  const [, prefix, , suffix] = match;
   return <span ref={ref}>{prefix}{n}{suffix}</span>;
 }
 
@@ -1362,7 +1362,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 className="mt-6 max-w-[36rem] font-sans text-[1.0625rem] font-normal leading-[1.68] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.125rem] md:leading-[1.66]"
                 variants={reduced ? undefined : heroItem}
               >
-                Turned Qwen's static docs into interactive showrooms — first proof moment dropped from <Em>60+ minutes</Em> to <Em>under 2 minutes</Em>, with post-launch traffic at <Em>~2×</Em> the pre-launch baseline.
+                Turned Qwen&apos;s static docs into interactive showrooms — first proof moment dropped from <Em>60+ minutes</Em> to <Em>under 2 minutes</Em>, with post-launch traffic at <Em>~2×</Em> the pre-launch baseline.
               </motion.p>
 
               <motion.div

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { getNextRoute, getPrevRoute, getRouteInfo, PROTOTYPE_ROUTES } from "@/lib/flow";
+import { getNextRoute, getPrevRoute, getRouteInfo } from "@/lib/flow";
 import { usePrototypeStore } from "@/lib/store";
 import { ChevronLeft, ChevronRight, RotateCcw } from "lucide-react";
 

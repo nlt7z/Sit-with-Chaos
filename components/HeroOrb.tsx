@@ -144,7 +144,9 @@ export default function HeroOrb({
   // Latest onReady kept in a ref so we don't re-init the scene when the
   // parent re-renders with a new inline callback.
   const onReadyRef = useRef(onReady);
-  onReadyRef.current = onReady;
+  useEffect(() => {
+    onReadyRef.current = onReady;
+  }, [onReady]);
 
   useEffect(() => {
     const container = containerRef.current;

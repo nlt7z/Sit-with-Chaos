@@ -15,8 +15,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 
-/** Calm editorial ease */
-const easeOut = [0.25, 0.1, 0.25, 1] as const;
 /** Slightly slower, premium ease */
 const easePremium = [0.16, 1, 0.3, 1] as const;
 
@@ -302,8 +300,6 @@ export default function RidesharingCaseStudy() {
     target: heroRef,
     offset: ["start start", "end start"],
   });
-  const heroImgY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 48]);
-  const heroImgScale = useTransform(scrollYProgress, [0, 1], [1, reduceMotion ? 1 : 1.02]);
   const heroTextY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 20]);
 
   const containerVariants = useMemo(
@@ -678,7 +674,7 @@ export default function RidesharingCaseStudy() {
               </ProseP>
               <ProseP>
                 Labels like &ldquo;Climate Control,&rdquo; read as
-                professional, we actually get this term from Tesla, but it's hard to understand for most users. We changed it to &ldquo;AC Control,&rdquo; which is more intuitive, and audited every string against a plain-language standard.
+                professional, we actually get this term from Tesla, but it&apos;s hard to understand for most users. We changed it to &ldquo;AC Control,&rdquo; which is more intuitive, and audited every string against a plain-language standard.
               </ProseP>
               <ProseP>
                 The AI buried in a tab was the biggest structural miss: people forgot it existed or found it by

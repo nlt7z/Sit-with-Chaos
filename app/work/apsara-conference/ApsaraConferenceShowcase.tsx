@@ -3,7 +3,6 @@
 import { CaseStudyMeta } from "@/components/CaseStudyMeta";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
-import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
 const easeOut = [0.25, 0.1, 0.25, 1] as const;

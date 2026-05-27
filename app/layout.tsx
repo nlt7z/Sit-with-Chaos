@@ -31,6 +31,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://fangyuan7.com"),
   title: "Yuan Fang — UX Designer",
   description:
     "A UX designer using AI as a core capability to iterate fast and turn ambiguity into clear product direction.",

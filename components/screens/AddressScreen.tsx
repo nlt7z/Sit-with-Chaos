@@ -41,8 +41,59 @@ function AddressIcon({ type }: { type: string }) {
   );
 }
 
+// Declared at module scope (not inside AddressScreen's render) so each input
+// keeps its identity across renders — an inline component definition remounts
+// every keystroke and drops focus.
+function Field({
+  id,
+  label,
+  value,
+  onChange,
+  placeholder,
+  half,
+  focused,
+  setFocused,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder?: string;
+  half?: boolean;
+  focused: string | null;
+  setFocused: (v: string | null) => void;
+}) {
+  const isFocused = focused === id;
+  return (
+    <div style={{ flex: half ? "0 0 calc(50% - 4px)" : "1 1 100%" }}>
+      <label style={{ fontSize: 11, fontWeight: 500, color: C.ink500, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.3px" }}>
+        {label}
+      </label>
+      <input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        onFocus={() => setFocused(id)}
+        onBlur={() => setFocused(null)}
+        style={{
+          width: "100%",
+          height: 44,
+          borderRadius: 8,
+          border: `1.5px solid ${isFocused ? C.trustBlue : C.lineStrong}`,
+          background: C.surface0,
+          padding: "0 12px",
+          fontSize: 14,
+          color: C.ink900,
+          outline: "none",
+          boxSizing: "border-box",
+          transition: "border-color 0.15s",
+        }}
+      />
+    </div>
+  );
+}
+
 export function AddressScreen({
-  currentAddress,
   onBack,
   onSave,
 }: {
@@ -58,51 +109,6 @@ export function AddressScreen({
   const [focused, setFocused] = useState<string | null>(null);
 
   const fullAddress = `${street}${apt ? ", " + apt : ""}, ${city}, CA ${zip}`;
-
-  function Field({
-    id,
-    label,
-    value,
-    onChange,
-    placeholder,
-    half,
-  }: {
-    id: string;
-    label: string;
-    value: string;
-    onChange: (v: string) => void;
-    placeholder?: string;
-    half?: boolean;
-  }) {
-    const isFocused = focused === id;
-    return (
-      <div style={{ flex: half ? "0 0 calc(50% - 4px)" : "1 1 100%" }}>
-        <label style={{ fontSize: 11, fontWeight: 500, color: C.ink500, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.3px" }}>
-          {label}
-        </label>
-        <input
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          placeholder={placeholder}
-          onFocus={() => setFocused(id)}
-          onBlur={() => setFocused(null)}
-          style={{
-            width: "100%",
-            height: 44,
-            borderRadius: 8,
-            border: `1.5px solid ${isFocused ? C.trustBlue : C.lineStrong}`,
-            background: C.surface0,
-            padding: "0 12px",
-            fontSize: 14,
-            color: C.ink900,
-            outline: "none",
-            boxSizing: "border-box",
-            transition: "border-color 0.15s",
-          }}
-        />
-      </div>
-    );
-  }
 
   return (
     <ScreenShell
@@ -242,10 +248,10 @@ export function AddressScreen({
           Edit Address
         </p>
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-          <Field id="street" label="Street" value={street} onChange={setStreet} placeholder="123 Main St" />
-          <Field id="apt" label="Unit / Apt" value={apt} onChange={setApt} placeholder="Apt 1A" half />
-          <Field id="city" label="City" value={city} onChange={setCity} placeholder="San Francisco" half />
-          <Field id="zip" label="ZIP Code" value={zip} onChange={setZip} placeholder="94102" half />
+          <Field id="street" label="Street" value={street} onChange={setStreet} placeholder="123 Main St" focused={focused} setFocused={setFocused} />
+          <Field id="apt" label="Unit / Apt" value={apt} onChange={setApt} placeholder="Apt 1A" half focused={focused} setFocused={setFocused} />
+          <Field id="city" label="City" value={city} onChange={setCity} placeholder="San Francisco" half focused={focused} setFocused={setFocused} />
+          <Field id="zip" label="ZIP Code" value={zip} onChange={setZip} placeholder="94102" half focused={focused} setFocused={setFocused} />
           <div style={{ flex: "1 1 100%" }}>
             <label style={{ fontSize: 11, fontWeight: 500, color: C.ink500, display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.3px" }}>
               Entry Note (optional)

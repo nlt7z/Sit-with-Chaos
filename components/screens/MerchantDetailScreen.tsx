@@ -190,7 +190,7 @@ export function MerchantDetailScreen({
             {quote.name}
           </p>
           <p style={{ fontSize: 12, color: "rgba(255,255,255,0.7)", fontStyle: "italic" }}>
-            "{detail.tagline}"
+            &ldquo;{detail.tagline}&rdquo;
           </p>
         </div>
       </div>

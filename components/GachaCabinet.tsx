@@ -287,6 +287,14 @@ function RarityFlash({ rarity }: { rarity: Rarity }) {
 
 // ── Particle burst ─────────────────────────────────────────────────────────────
 
+// Deterministic pseudo-random in [0,1). Keeps the particle scatter looking
+// random while staying pure: Math.random() in render is impure (flagged by
+// react-hooks/purity) and would reshuffle the burst on every re-render.
+function frac(seed: number) {
+  const x = Math.sin(seed * 127.1 + 311.7) * 43758.5453;
+  return x - Math.floor(x);
+}
+
 function ParticleBurst({ rarity }: { rarity: Rarity }) {
   const cfg = RC[rarity];
   return (
@@ -332,11 +340,11 @@ function ParticleBurst({ rarity }: { rarity: Rarity }) {
       )}
       {Array.from({ length: cfg.pCount }, (_, i) => {
         const spread = 360 / cfg.pCount;
-        const deg = i * spread + (Math.random() - 0.5) * spread * 0.7;
-        const r = cfg.pRadius * (0.55 + Math.random() * 0.9);
-        const size = 2 + Math.random() * 5;
+        const deg = i * spread + (frac(i + 1) - 0.5) * spread * 0.7;
+        const r = cfg.pRadius * (0.55 + frac(i + 2) * 0.9);
+        const size = 2 + frac(i + 3) * 5;
         const color = cfg.particles[i % cfg.particles.length];
-        const delay = 0.12 + Math.random() * 0.14;
+        const delay = 0.12 + frac(i + 4) * 0.14;
         return (
           <motion.div
             key={i}
@@ -824,7 +832,12 @@ function GenieLamp({
   onDraw: () => void;
   lampRef: React.Ref<HTMLDivElement>;
 }) {
-  const ModelViewer: any = "model-viewer";
+  // <model-viewer> is a custom element registered at runtime. Type it loosely
+  // (without `any`) so its hyphenated attributes type-check in JSX without
+  // polluting the global JSX.IntrinsicElements namespace.
+  const ModelViewer = "model-viewer" as unknown as React.ComponentType<
+    Record<string, unknown>
+  >;
   const [hovered, setHovered] = useState(false);
   const hoverAudioRef = useRef<HTMLAudioElement | null>(null);
   /** Hover line plays at most twice per gacha session (refund on failed `play()`). */

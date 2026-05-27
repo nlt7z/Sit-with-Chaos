@@ -8,7 +8,7 @@
     "dev:turbo": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "eslint ."
   },
   "dependencies": {
     "@types/three": "^0.184.1",
@@ -30,6 +30,7 @@
     "eslint": "^9",
     "eslint-config-next": "^16.2.3",
     "postcss": "^8",
+    "puppeteer-core": "^25.1.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

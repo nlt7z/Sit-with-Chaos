@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Clock, ChevronRight } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 import { merchants, mockQuoteSchedule } from "@/lib/mock-data";
 
 type Variant = "loading" | "live" | "selected" | "expired";

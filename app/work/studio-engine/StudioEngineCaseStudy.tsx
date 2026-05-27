@@ -14,7 +14,6 @@ import {
   useTransform,
 } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 
 /** Hover / micro-interaction ease */
@@ -65,7 +64,7 @@ function CaseStudyAmbientGlow() {
 
   if (reduce) return null;
 
-  const background = useMotionTemplate`radial-gradient(760px circle at ${sx}px ${sy}px, rgba(139, 92, 246, 0.07), rgba(250, 250, 252, 0) 50%)`;
+  const background = useMotionTemplate`radial-gradient(760px circle at ${sx}px ${sy}px, rgba(184, 229, 50, 0.07), rgba(250, 250, 252, 0) 50%)`;
 
   return (
     <motion.div
@@ -120,8 +119,8 @@ function CaseStudySectionNav() {
                 }}
                 className={`block border-l border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
                   active === id
-                    ? "border-violet-600/70 text-textPrimary"
-                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-violet-500/35 hover:text-violet-950"
+                    ? "border-nltLime-600/70 text-textPrimary"
+                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-nltLime-500/35 hover:text-nltLime-950"
                 }`}
               >
                 {label}
@@ -196,12 +195,12 @@ function MediaReveal({
   );
 }
 
-/** Subtle lift + violet glow on hover (case study cards) */
+/** Subtle lift + lime glow on hover (case study cards) */
 function HoverPanel({ children, className }: { children: ReactNode; className: string }) {
   const reduce = useReducedMotion();
   return (
     <motion.div
-      className={`transition-[box-shadow,border-color] duration-[520ms] ease-out hover:border-violet-300/40 hover:shadow-[0_28px_56px_-32px_rgba(109,40,217,0.09)] ${className}`}
+      className={`transition-[box-shadow,border-color] duration-[520ms] ease-out hover:border-nltLime-300/40 hover:shadow-[0_28px_56px_-32px_rgba(184, 229, 50,0.09)] ${className}`}
       initial={false}
       whileHover={reduce ? undefined : { y: -2 }}
       transition={{ duration: 0.52, ease: easePremium }}
@@ -283,8 +282,8 @@ function Figure({
   const noFrameTint = transparent ?? isPng;
 
   const frame = noFrameTint
-    ? "overflow-hidden bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_22px_56px_-28px_rgba(109,40,217,0.1)] group-hover:ring-violet-400/25"
-    : "overflow-hidden bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_26px_64px_-30px_rgba(109,40,217,0.1)] group-hover:ring-violet-400/22";
+    ? "overflow-hidden bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_22px_56px_-28px_rgba(184, 229, 50,0.1)] group-hover:ring-nltLime-400/25"
+    : "overflow-hidden bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_26px_64px_-30px_rgba(184, 229, 50,0.1)] group-hover:ring-nltLime-400/22";
 
   const figureHover = reduce ? undefined : { y: -3 };
 
@@ -347,7 +346,7 @@ function PullQuote({ children, className = "" }: { children: ReactNode; classNam
   const reduce = useReducedMotion();
   return (
     <motion.aside
-      className={`bg-zinc-50/55 px-6 py-6 transition-[background-color,box-shadow] duration-500 ease-out hover:bg-violet-50/45 hover:shadow-[0_12px_40px_-24px_rgba(124,58,237,0.1)] md:px-8 ${className}`}
+      className={`bg-zinc-50/55 px-6 py-6 transition-[background-color,box-shadow] duration-500 ease-out hover:bg-nltLime-50/45 hover:shadow-[0_12px_40px_-24px_rgba(184, 229, 50,0.1)] md:px-8 ${className}`}
       initial={false}
       whileHover={reduce ? undefined : { y: -2 }}
       transition={{ duration: 0.45, ease: easePremium }}
@@ -363,13 +362,13 @@ function ParticipantQuote({ quote, attr }: { quote: string; attr: string }) {
   const reduce = useReducedMotion();
   return (
     <motion.aside
-      className="mt-8 bg-violet-50/35 px-5 py-4 transition-[background-color] duration-500 ease-out hover:bg-violet-50/55 md:px-6 md:py-5"
+      className="mt-8 bg-nltLime-50/35 px-5 py-4 transition-[background-color] duration-500 ease-out hover:bg-nltLime-50/55 md:px-6 md:py-5"
       initial={false}
       whileHover={reduce ? undefined : { y: -2 }}
       transition={{ duration: 0.4, ease: easePremium }}
       aria-label="Participant feedback"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-violet-800/65">Participant signal</p>
+      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime-800/65">Participant signal</p>
       <p className="mt-2 text-[15px] leading-relaxed text-textPrimary">
         {quote}
       </p>
@@ -394,7 +393,7 @@ function TaskSuccessEvaluation() {
           aria-expanded={open}
           aria-controls="task-success-chart-panel"
           onClick={() => setOpen((v) => !v)}
-          className="flex w-full items-center justify-between gap-4 px-4 py-3.5 text-left transition-colors hover:bg-violet-500/[0.04] active:bg-violet-500/[0.07] md:px-5 md:py-4"
+          className="flex w-full items-center justify-between gap-4 px-4 py-3.5 text-left transition-colors hover:bg-nltLime-500/[0.04] active:bg-nltLime-500/[0.07] md:px-5 md:py-4"
         >
           <div className="min-w-0 flex-1">
             <p className="text-[15px] leading-snug tracking-[-0.01em] text-textPrimary">
@@ -402,11 +401,11 @@ function TaskSuccessEvaluation() {
             </p>
             <p className="mt-0.5 text-[13px] leading-snug text-textSecondary/90">
               N = 6 · up to 30 errors per task ·{" "}
-              <span className="text-violet-600/75">{open ? "Hide detail" : "Show detail"}</span>
+              <span className="text-nltLime-600/75">{open ? "Hide detail" : "Show detail"}</span>
             </p>
           </div>
           <span
-            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-50/80 text-violet-500/70 shadow-sm ring-1 ring-violet-200/40 transition-transform duration-300 ease-out ${
+            className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-50/80 text-nltLime-500/70 shadow-sm ring-1 ring-nltLime-200/40 transition-transform duration-300 ease-out ${
               open ? "rotate-180" : ""
             }`}
             aria-hidden
@@ -436,40 +435,40 @@ function TaskSuccessEvaluation() {
               className="overflow-hidden border-t border-black/[0.05]"
             >
               <div className="bg-white px-4 pb-4 pt-1 md:px-5 md:pb-5">
-                <p className="py-2 font-mono text-[10px] font-normal uppercase tracking-[0.16em] text-violet-600/55">
+                <p className="py-2 font-mono text-[10px] font-normal uppercase tracking-[0.16em] text-nltLime-600/55">
                   By task · success vs error share
                 </p>
-                <div className="divide-y divide-violet-200/[0.35]">
+                <div className="divide-y divide-nltLime-200/[0.35]">
                   {TASK_EVAL_ROWS.map((row) => (
                     <div
                       key={row.label}
-                      className={`py-3.5 first:pt-2 ${row.highlight ? "bg-violet-500/[0.035]" : ""}`}
+                      className={`py-3.5 first:pt-2 ${row.highlight ? "bg-nltLime-500/[0.035]" : ""}`}
                     >
                       <div className="flex flex-col gap-3.5 sm:flex-row sm:items-center sm:gap-5">
                         <p
                           className={`max-w-[min(100%,24rem)] shrink-0 text-[13px] leading-snug text-textSecondary md:max-w-[20rem] md:text-[13px] ${
-                            row.highlight ? "text-violet-950" : ""
+                            row.highlight ? "text-nltLime-950" : ""
                           }`}
                         >
                           {row.label}
                           {row.highlight ? (
-                            <span className="mt-0.5 block text-[11px] font-normal text-violet-700/65">
+                            <span className="mt-0.5 block text-[11px] font-normal text-nltLime-700/65">
                               Highest friction
                             </span>
                           ) : null}
                         </p>
                         <div className="min-w-0 flex-1 space-y-2">
-                          <div className="h-2 overflow-hidden rounded-full bg-violet-100/90 shadow-[inset_0_1px_2px_rgba(124,58,237,0.08)]">
+                          <div className="h-2 overflow-hidden rounded-full bg-nltLime-100/90 shadow-[inset_0_1px_2px_rgba(184, 229, 50,0.08)]">
                             <motion.div
-                              className="h-full rounded-full bg-gradient-to-r from-violet-300/85 to-violet-500/55"
+                              className="h-full rounded-full bg-gradient-to-r from-nltLime-300/85 to-nltLime-500/55"
                               initial={false}
                               animate={{ width: barsActive ? `${row.success}%` : 0 }}
                               transition={{ duration: reduce ? 0.01 : 1, ease: easeLux }}
                             />
                           </div>
-                          <div className="h-1.5 overflow-hidden rounded-full bg-violet-100/50">
+                          <div className="h-1.5 overflow-hidden rounded-full bg-nltLime-100/50">
                             <motion.div
-                              className="h-full rounded-full bg-gradient-to-r from-violet-300/35 to-violet-500/30"
+                              className="h-full rounded-full bg-gradient-to-r from-nltLime-300/35 to-nltLime-500/30"
                               initial={false}
                               animate={{ width: barsActive ? `${row.error}%` : 0 }}
                               transition={{
@@ -480,9 +479,9 @@ function TaskSuccessEvaluation() {
                             />
                           </div>
                         </div>
-                        <div className="flex shrink-0 flex-col items-end gap-0.5 font-mono text-[10px] tabular-nums text-violet-900/35 sm:min-w-[5.75rem]">
+                        <div className="flex shrink-0 flex-col items-end gap-0.5 font-mono text-[10px] tabular-nums text-nltLime-900/35 sm:min-w-[5.75rem]">
                           <span>{row.success}%</span>
-                          <span className="text-violet-500/35">err {row.error}%</span>
+                          <span className="text-nltLime-500/35">err {row.error}%</span>
                           <span className="pt-0.5 text-[9px] uppercase tracking-[0.08em] text-textSecondary/55">
                             {row.meta}
                           </span>
@@ -491,17 +490,17 @@ function TaskSuccessEvaluation() {
                     </div>
                   ))}
                 </div>
-                <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-violet-100/60 pt-3 text-[11px] text-textSecondary/80">
+                <div className="mt-4 flex flex-wrap gap-x-6 gap-y-2 border-t border-nltLime-100/60 pt-3 text-[11px] text-textSecondary/80">
                   <span className="inline-flex items-center gap-2">
                     <span
-                      className="h-2 w-2 rounded-full bg-gradient-to-br from-violet-300 to-violet-500/70"
+                      className="h-2 w-2 rounded-full bg-gradient-to-br from-nltLime-300 to-nltLime-500/70"
                       aria-hidden
                     />
                     Success rate
                   </span>
                   <span className="inline-flex items-center gap-2">
                     <span
-                      className="h-2 w-2 rounded-full bg-gradient-to-br from-violet-300/70 to-violet-500/50"
+                      className="h-2 w-2 rounded-full bg-gradient-to-br from-nltLime-300/70 to-nltLime-500/50"
                       aria-hidden
                     />
                     Error rate (of max 30)
@@ -802,22 +801,22 @@ function WorkflowComparisonV2() {
           <div className="flex flex-1 flex-col overflow-hidden bg-white">
             {afterStages.map((stage, i) => {
               const shades = [
-                "bg-violet-50/40",
-                "bg-violet-50/70",
-                "bg-violet-100/50",
-                "bg-violet-100/70",
+                "bg-nltLime-50/40",
+                "bg-nltLime-50/70",
+                "bg-nltLime-100/50",
+                "bg-nltLime-100/70",
               ];
               const isLast = i === afterStages.length - 1;
               return (
                 <div key={stage.label} className="flex flex-1 flex-col">
                   <div className={`flex flex-1 items-center justify-between px-5 py-3 ${shades[i]}`}>
                     <div className="flex items-center gap-3">
-                      <span className="w-5 font-mono text-[10px] tabular-nums text-violet-400/40">{stage.num}</span>
-                      <span className="text-[13px] tracking-[-0.01em] text-violet-950">{stage.label}</span>
+                      <span className="w-5 font-mono text-[10px] tabular-nums text-nltLime-400/40">{stage.num}</span>
+                      <span className="text-[13px] tracking-[-0.01em] text-nltLime-950">{stage.label}</span>
                     </div>
                     <div className="flex flex-wrap justify-end gap-1.5">
                       {stage.tags.map((tag) => (
-                        <span key={tag} className="rounded-full bg-white/80 px-2 py-0.5 font-mono text-[9px] text-violet-600/60">
+                        <span key={tag} className="rounded-full bg-white/80 px-2 py-0.5 font-mono text-[9px] text-nltLime-600/60">
                           {tag}
                         </span>
                       ))}
@@ -825,13 +824,13 @@ function WorkflowComparisonV2() {
                   </div>
                   {!isLast && (
                     <div className="flex shrink-0 items-center px-5 py-[5px]">
-                      <div className="h-px flex-1 bg-violet-200/50" />
-                      <div className="mx-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(124,58,237,0.05)]">
+                      <div className="h-px flex-1 bg-nltLime-200/50" />
+                      <div className="mx-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(184, 229, 50,0.05)]">
                         <svg width="7" height="7" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M2 5.5L4.2 7.5L8 3" stroke="#7c3aed" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M2 5.5L4.2 7.5L8 3" stroke="#82A916" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
                       </div>
-                      <div className="h-px flex-1 bg-violet-200/50" />
+                      <div className="h-px flex-1 bg-nltLime-200/50" />
                     </div>
                   )}
                 </div>
@@ -896,7 +895,7 @@ export default function StudioEngineCaseStudy() {
               "One-shot generation → staged creative control",
             ].map((s) => (
               <span key={s} className="inline-flex items-center gap-2 text-[13px] leading-snug text-textSecondary/80">
-                <span className="h-1 w-1 shrink-0 rounded-full bg-violet-400/60" aria-hidden />
+                <span className="h-1 w-1 shrink-0 rounded-full bg-nltLime-400/60" aria-hidden />
                 {s}
               </span>
             ))}
@@ -1006,7 +1005,7 @@ export default function StudioEngineCaseStudy() {
               {/* Task 02 — featured */}
               <div className="flex flex-col overflow-hidden bg-white">
                 <div className="relative">
-                  <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-violet-600/80">
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-nltLime-600/80">
                     Where it broke
                   </span>
                   <div className="aspect-video overflow-hidden bg-white">
@@ -1021,7 +1020,7 @@ export default function StudioEngineCaseStudy() {
                   </div>
                 </div>
                 <div className="px-5 py-5">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-violet-600/70">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime-600/70">
                     Task 02 · Visual editing
                   </p>
                   <p className="mt-2 text-[15px] font-light leading-snug tracking-[-0.01em] text-textPrimary">
@@ -1187,8 +1186,8 @@ export default function StudioEngineCaseStudy() {
                   key={stage.name}
                   className="flex flex-1 flex-col py-5 first:pt-0 last:pb-0 xl:py-0 xl:first:pl-0 xl:last:pr-0 xl:[&:not(:first-child)]:pl-5 xl:[&:not(:last-child)]:pr-5"
                 >
-                  <div className="mb-3 h-px w-6 bg-violet-400/45" />
-                  <span className="font-mono text-[10px] tabular-nums text-violet-400/50">{stage.num}</span>
+                  <div className="mb-3 h-px w-6 bg-nltLime-400/45" />
+                  <span className="font-mono text-[10px] tabular-nums text-nltLime-400/50">{stage.num}</span>
                   <p className="mt-2 text-[14px] tracking-[-0.012em] text-textPrimary">{stage.name}</p>
                   <p className="mt-1 text-[11px] italic leading-snug text-textSecondary/55">&ldquo;{stage.question}&rdquo;</p>
                   <p className="mt-2 text-[12px] leading-relaxed text-textSecondary/80">{stage.desc}</p>
@@ -1369,8 +1368,8 @@ export default function StudioEngineCaseStudy() {
                     <span className="text-textSecondary/55">Baseline · </span>
                     {row.baseline}
                   </p>
-                  <p className="font-mono text-[12px] text-violet-900/70">
-                    <span className="text-violet-500/55">Target · </span>
+                  <p className="font-mono text-[12px] text-nltLime-900/70">
+                    <span className="text-nltLime-500/55">Target · </span>
                     {row.target}
                   </p>
                   <p className="text-[12px] leading-relaxed text-textSecondary/70 md:text-[13px]">

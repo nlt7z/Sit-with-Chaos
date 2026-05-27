@@ -9,7 +9,6 @@ import { DECK_SLIDES, DECK_SLIDES_SIMPLE, type Slide } from "./deckSlides";
 
 /** Smooth deceleration — reads closer to apple.com product pages */
 const easeApple = [0.25, 0.1, 0.25, 1] as const;
-const easePremium = easeApple;
 const mediaRound = "rounded-2xl";
 
 const BROADCAST_ID = "studio-engine-deck-v1";
@@ -20,8 +19,8 @@ const theme = {
   label: "text-[#1D1D1F]",
   secondary: "text-[#6E6E73]",
   tertiary: "text-[#86868B]",
-  accent: "text-violet-600",
-  accentHover: "hover:text-violet-800",
+  accent: "text-nltLime-600",
+  accentHover: "hover:text-nltLime-800",
   separator: "border-black/[0.06]",
   chrome: "border-black/[0.06] bg-white/80 backdrop-blur-xl",
   dotPattern:
@@ -192,7 +191,7 @@ function InnovationsDeckSlide({ slide }: { slide: InnovationsSlide }) {
                 aria-controls={`deck-workflow-${item.id}`}
                 id={`deck-innovation-${item.id}`}
                 onClick={() => setOpenId((prev) => (prev === item.id ? null : item.id))}
-                className={`group w-full rounded-xl bg-transparent text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-violet-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FBFBFD]`}
+                className={`group w-full rounded-xl bg-transparent text-left focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime-500/40 focus-visible:ring-offset-2 focus-visible:ring-offset-[#FBFBFD]`}
               >
                 <h3
                   className={`font-display text-[1.25rem] font-light leading-snug tracking-[-0.02em] sm:text-[1.4rem] md:text-[1.55rem] ${theme.label}`}
@@ -492,7 +491,7 @@ function SlideBody({ slide }: { slide: Slide }) {
             <div className="mt-6 sm:mt-7">
               <Link
                 href="/work/studio-engine"
-                className={`font-sans text-[14px] font-normal underline underline-offset-[6px] decoration-black/[0.12] transition-colors ${theme.tertiary} hover:text-violet-800`}
+                className={`font-sans text-[14px] font-normal underline underline-offset-[6px] decoration-black/[0.12] transition-colors ${theme.tertiary} hover:text-nltLime-800`}
               >
                 ← 返回案例长文
               </Link>
@@ -642,7 +641,7 @@ export default function DeckClient() {
     >
       <div className="pointer-events-none fixed left-0 top-0 z-[60] h-[2px] w-full bg-black/[0.06]" aria-hidden>
         <motion.div
-          className="h-full bg-violet-600"
+          className="h-full bg-nltLime-600"
           initial={false}
           animate={{ width: `${((index + 1) / total) * 100}%` }}
           transition={{ duration: reduce ? 0 : 0.55, ease }}
@@ -653,7 +652,7 @@ export default function DeckClient() {
         <div className="flex min-w-0 items-center gap-5">
           <Link
             href="/work/studio-engine"
-            className="shrink-0 font-sans text-[13px] font-normal text-violet-600 transition-colors hover:text-violet-800"
+            className="shrink-0 font-sans text-[13px] font-normal text-nltLime-600 transition-colors hover:text-nltLime-800"
           >
             ← 案例长文
           </Link>
@@ -666,7 +665,7 @@ export default function DeckClient() {
             <button
               type="button"
               onClick={openSpeaker}
-              className="inline-flex rounded-full px-3 py-2 font-sans text-[13px] font-normal text-violet-600 transition-colors hover:bg-violet-500/[0.08] hover:text-violet-800"
+              className="inline-flex rounded-full px-3 py-2 font-sans text-[13px] font-normal text-nltLime-600 transition-colors hover:bg-nltLime-500/[0.08] hover:text-nltLime-800"
             >
               讲者
             </button>
@@ -675,7 +674,7 @@ export default function DeckClient() {
             <button
               type="button"
               onClick={enterFullscreen}
-              className="rounded-full px-3 py-2 font-sans text-[13px] font-normal text-violet-600 transition-colors hover:bg-violet-500/[0.08] hover:text-violet-800"
+              className="rounded-full px-3 py-2 font-sans text-[13px] font-normal text-nltLime-600 transition-colors hover:bg-nltLime-500/[0.08] hover:text-nltLime-800"
             >
               全屏
             </button>
@@ -767,7 +766,7 @@ export default function DeckClient() {
             type="button"
             onClick={prev}
             disabled={index === 0}
-            className="shrink-0 rounded-full px-4 py-2.5 font-sans text-[13px] font-normal text-[#1D1D1F] transition-colors hover:bg-violet-500/[0.07] hover:text-violet-950 disabled:opacity-30 sm:px-5"
+            className="shrink-0 rounded-full px-4 py-2.5 font-sans text-[13px] font-normal text-[#1D1D1F] transition-colors hover:bg-nltLime-500/[0.07] hover:text-nltLime-950 disabled:opacity-30 sm:px-5"
           >
             ← 上一张
           </button>
@@ -778,7 +777,7 @@ export default function DeckClient() {
             type="button"
             onClick={next}
             disabled={index === total - 1}
-            className="shrink-0 rounded-full px-4 py-2.5 font-sans text-[13px] font-normal text-[#1D1D1F] transition-colors hover:bg-violet-500/[0.07] hover:text-violet-950 disabled:opacity-30 sm:px-5"
+            className="shrink-0 rounded-full px-4 py-2.5 font-sans text-[13px] font-normal text-[#1D1D1F] transition-colors hover:bg-nltLime-500/[0.07] hover:text-nltLime-950 disabled:opacity-30 sm:px-5"
           >
             下一张 →
           </button>

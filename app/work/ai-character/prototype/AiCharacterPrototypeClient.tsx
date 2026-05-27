@@ -256,7 +256,7 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
         <div style={{ flex: 1, overflowY: "auto", padding: 18 }}>
           {tab === "source" && (
             <div style={{ animation: "fadeIn 0.3s ease both" }}>
-              <p style={{ fontSize: 12, color: T.txt.d, lineHeight: 1.7, marginBottom: 14 }}>The YAML spec defining Lucien's voice, constraints, and system prompt stub.</p>
+              <p style={{ fontSize: 12, color: T.txt.d, lineHeight: 1.7, marginBottom: 14 }}>The YAML spec defining Lucien&apos;s voice, constraints, and system prompt stub.</p>
               <div style={{ borderRadius: 10, border: `1px solid ${T.bdr.s}`, background: "rgba(6,6,10,0.9)", overflow: "hidden" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "9px 14px 7px", borderBottom: `1px solid ${T.bdr.f}` }}>
                   {["#d05","#d80","#4a4"].map((c, i) => <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: c, opacity: 0.6 }} />)}
@@ -508,11 +508,9 @@ function HeartbeatMysteryLayer({ w, h }: { w: number; h: number }) {
 function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean }) {
   const [flipped, setFlipped] = useState(false);
   const gF = useId();
-  const gB = `${gF}-b`;
   const hintId = `${gF}-hint`;
   if (hidden) return null;
-  const cw = 304, ch = 152;
-  const markSize = 22;
+  const ch = 152;
   return (
     <div style={{ width: "100%", maxWidth: "min(100%,360px)", marginTop: 14, perspective: 1300 }} role="region" aria-label="Heartbeat inner thought card">
       <button
@@ -1676,7 +1674,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
   const [isTyping, setIsTyping] = useState(false);
   const [auCardShown, setAuCardShown] = useState(false);
   const [heartbeatHidden, setHeartbeatHidden] = useState(false);
-  const [affection, setAffection] = useState(58);
+  const [, setAffection] = useState(58);
   const [hovMsg, setHovMsg] = useState<number | null>(null);
   const [showSplash, setShowSplash] = useState(!embed);
   const [leftOpen, setLeftOpen] = useState(false);

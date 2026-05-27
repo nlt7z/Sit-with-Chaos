@@ -1,7 +1,5 @@
 "use client";
 
-import { CaseStudyMeta } from "@/components/CaseStudyMeta";
-import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
@@ -697,10 +695,10 @@ function VibeCodingPrototypeGallery() {
 }
 
 function CountUpStat({ value }: { value: string }) {
+  // Hooks run unconditionally; the non-numeric early-out is deferred to render
+  // time below (Rules of Hooks).
   const match = value.match(/^([+]?)(\d+)(.*)$/);
-  if (!match) return <>{value}</>;
-  const [, prefix, num, suffix] = match;
-  const to = parseInt(num, 10);
+  const to = match ? parseInt(match[2], 10) : 0;
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const [n, setN] = useState(0);
@@ -719,6 +717,8 @@ function CountUpStat({ value }: { value: string }) {
     return () => cancelAnimationFrame(frame);
   }, [inView, to]);
 
+  if (!match) return <>{value}</>;
+  const [, prefix, , suffix] = match;
   return <span ref={ref}>{prefix}{n}{suffix}</span>;
 }
 

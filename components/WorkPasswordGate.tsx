@@ -273,6 +273,34 @@ export function WorkPasswordGate({
     );
   }
 
+  return (
+    <SessionUnlockGate
+      storageKey={storageKey}
+      workTitle={workTitle}
+      returnHref={returnHref}
+      returnLabel={returnLabel}
+    >
+      {children}
+    </SessionUnlockGate>
+  );
+}
+
+// Split out from WorkPasswordGate so its hooks are never called after the
+// `serverUnlockAction` early-return above — that branch made the hooks
+// conditional (a Rules of Hooks violation).
+function SessionUnlockGate({
+  storageKey,
+  children,
+  workTitle,
+  returnHref,
+  returnLabel,
+}: {
+  storageKey: string;
+  children?: ReactNode;
+  workTitle?: string;
+  returnHref: string;
+  returnLabel: string;
+}) {
   const [phase, setPhase] = useState<"init" | "open" | "closed">("init");
   const [value, setValue] = useState("");
   const [error, setError] = useState(false);

@@ -33,6 +33,11 @@ export default function Home() {
                   "linear-gradient(to bottom, black 0%, black 30%, transparent 66%)",
                 maskImage:
                   "linear-gradient(to bottom, black 0%, black 30%, transparent 66%)",
+                // Pin this masked layer to its own stable GPU layer. Masked
+                // images are a known repaint-on-scroll culprit — without this
+                // some browsers leave it un-painted (white hero) until a scroll.
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
               }}
             />
             {/* Left scrim — headline legibility only (horizontal, light touch) */}
@@ -63,6 +68,10 @@ export default function Home() {
                   "linear-gradient(to top, black 0%, black 26%, transparent 62%)",
                 maskImage:
                   "linear-gradient(to top, black 0%, black 26%, transparent 62%)",
+                // Stable GPU layer — see the hero decor above. Keeps the masked
+                // lime backdrop painted during scroll instead of flashing white.
+                transform: "translateZ(0)",
+                backfaceVisibility: "hidden",
               }}
             />
           </div>

@@ -21,10 +21,18 @@
     --border-subtle: rgba(0, 0, 0, 0.08);
   }
 
+  html {
+    /* Match body so an overscroll/rubber-band at the very top or bottom never
+       exposes a bare white gutter behind the page. */
+    background: var(--background);
+  }
+
   body {
     color: var(--text-primary);
     background: var(--background);
     overflow-x: hidden;
+    /* Stop scroll chaining / bounce from revealing white past the content. */
+    overscroll-behavior-y: none;
   }
 
   /* Pre-paint veil — keeps hero hidden on first visit until the intro

@@ -40,6 +40,15 @@ export function SiteWindow({
 }: SiteWindowProps) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.4);
+  // Live cross-origin iframes boot cold — the shell loads fast but the embedded
+  // site still has to fetch its own JS/fonts and paint (often behind its own
+  // intro). Until then the panel is blank white. `loaded` flips on the iframe's
+  // load event so the skeleton below can fade out only once there's real paint.
+  const [loaded, setLoaded] = useState(false);
+  // The skeleton only earns the screen if loading drags past a short beat.
+  // Instant / warm-cache loads settle before this fires, so they skip the
+  // skeleton entirely instead of flashing it for a frame.
+  const [showSkeleton, setShowSkeleton] = useState(false);
   const reduced = !!useReducedMotion();
 
   useEffect(() => {
@@ -52,6 +61,14 @@ export function SiteWindow({
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
+
+  useEffect(() => {
+    // Don't arm the timer until the iframe is actually mounting and still
+    // unloaded; if it loads first the cleanup clears it and nothing shows.
+    if (!active || loaded) return;
+    const t = window.setTimeout(() => setShowSkeleton(true), 180);
+    return () => clearTimeout(t);
+  }, [active, loaded]);
 
   return (
     <motion.a
@@ -119,6 +136,7 @@ export function SiteWindow({
             referrerPolicy="no-referrer"
             sandbox="allow-scripts allow-same-origin"
             tabIndex={-1}
+            onLoad={() => setLoaded(true)}
             style={{
               width: `${IFRAME_WIDTH}px`,
               height: `${IFRAME_HEIGHT}px`,
@@ -129,6 +147,30 @@ export function SiteWindow({
             className="absolute left-0 top-0 border-0"
           />
         ) : null}
+
+        {/* Loading skeleton — shown only while a cold load is genuinely in
+         *  flight (past the short delay, before the load event). An instant or
+         *  already-painted iframe never reveals it, and it fades out the moment
+         *  real paint arrives. */}
+        <div
+          aria-hidden
+          className={`absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2.5 overflow-hidden bg-neutral-50 transition-opacity duration-500 ease-portfolio ${
+            showSkeleton && !loaded ? "opacity-100" : "pointer-events-none opacity-0"
+          }`}
+        >
+          {!reduced ? (
+            <div className="pointer-events-none absolute inset-0 -translate-x-full animate-skeleton-sweep bg-gradient-to-r from-transparent via-white/60 to-transparent" />
+          ) : null}
+          <img
+            src="/assets/logo.png"
+            alt=""
+            draggable={false}
+            className="relative h-7 w-auto select-none opacity-80"
+          />
+          <span className="relative font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
+            {url}
+          </span>
+        </div>
 
         {meta ? (
           <div className="pointer-events-none absolute right-3 top-3 z-[2]">

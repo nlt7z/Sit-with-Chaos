@@ -60,7 +60,9 @@ export default function ChatPage() {
     }, step.delay);
   }, [scenario]);
 
-  runRef.current = run;
+  useEffect(() => {
+    runRef.current = run;
+  }, [run]);
 
   useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
