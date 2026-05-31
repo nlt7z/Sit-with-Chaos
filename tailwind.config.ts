@@ -17,21 +17,23 @@ const config: Config = {
           DEFAULT: "#B8E532",
           soft: "#F5FBE0",
           ink: "#5A7A12",
-          // Full numeric ramp anchored on the brand: 400 is the signature pop
-          // (#B8E532), the light end stays pale-lime for tints/backgrounds, and
-          // the dark end deepens to legible olive for accent text — so the lime
-          // palette can stand in for a violet scale across a case study.
-          50: "#F6FAE4",
-          100: "#EBF5C2",
-          200: "#DBED96",
-          300: "#C9E863",
+          // Restrained ramp with chroma peaking at 400. 400 is the vivid brand
+          // pop (#B8E532) — reserved for tiny accents (status dots, marker
+          // gradients). From 500 down the chroma drops sharply to a muted olive
+          // and deepens into ink, so the workhorses — body/accent text, fills,
+          // tints — read calm and legible while bright lime only ever winks as a
+          // point accent. The light end stays soft cream for backgrounds.
+          50: "#F5FBE0",
+          100: "#ECF5CC",
+          200: "#DCEAA2",
+          300: "#C8E06C",
           400: "#B8E532",
-          500: "#A1CE1E",
-          600: "#82A916",
-          700: "#647F12",
-          800: "#4E640E",
-          900: "#3C4D0B",
-          950: "#222D06",
+          500: "#93A840",
+          600: "#74882C",
+          700: "#5B6E1F",
+          800: "#475618",
+          900: "#354010",
+          950: "#1F280A",
         },
         meituan: {
           yellow: "#FFC300",
