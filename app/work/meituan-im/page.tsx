@@ -273,6 +273,86 @@ function PhoneFrame({
   );
 }
 
+/**
+ * A single prototype flow embedded live — deep-linked to one scenario
+ * (`#flow=…&rail=0`) so the bundle boots straight into that flow with its
+ * scenario rail hidden, reading as a self-contained interactive phone. The
+ * HTML renders its own dark bezel, so we just scale it to fit the column the
+ * same way ScaledPrototypeFrame does. Lazy-loaded so the heavy React+Babel
+ * bundle only compiles as each phone nears the viewport.
+ */
+function LiveFlowPhone({
+  flow,
+  label,
+  caption,
+}: {
+  flow: string;
+  label: string;
+  caption?: string;
+}) {
+  // Phone-only canvas: the 432-wide bezel + 24px gutters = 480; the height
+  // clears the 924-tall device with a little breathing room.
+  const NATURAL_W = 480;
+  const NATURAL_H = 952;
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(() => {
+    if (typeof window === "undefined") return 1;
+    const guess = Math.min(window.innerWidth - 32, NATURAL_W) / NATURAL_W;
+    return Math.max(0.1, Math.min(1, guess));
+  });
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([entry]) => {
+      const w = entry.contentRect.width;
+      if (w > 0) setScale(Math.min(1, w / NATURAL_W));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  return (
+    <figure className="space-y-4">
+      <div className="flex items-baseline justify-between">
+        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">{label}</p>
+        <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
+          <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-nltLime" />
+          Live
+        </span>
+      </div>
+
+      <div className="mx-auto w-full" style={{ maxWidth: NATURAL_W }}>
+        <div
+          ref={wrapperRef}
+          className="relative w-full overflow-hidden"
+          style={{ aspectRatio: `${NATURAL_W} / ${NATURAL_H}` }}
+        >
+          <iframe
+            src={`/assets/meituan-im/interaction-flow-phone.html#flow=${flow}&rail=0`}
+            title={`${label} — live interactive flow`}
+            loading="lazy"
+            style={{
+              width: NATURAL_W,
+              height: NATURAL_H,
+              border: 0,
+              transform: `scale(${scale})`,
+              transformOrigin: "top left",
+            }}
+            className="absolute left-0 top-0 block"
+          />
+        </div>
+      </div>
+
+      {caption ? (
+        <figcaption className="mx-auto max-w-[300px] text-center text-[13px] leading-relaxed text-textSecondary">
+          {caption}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
 function Callout({
   index,
   title,
@@ -576,29 +656,26 @@ export default function MeituanImCaseStudyPage() {
         <Section id="chat" eyebrow="IM Experience" title="Three entry states, one interaction model.">
           <div className="mt-4">
             <div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
-              <PhoneFrame
-                src="/assets/meituan-im/screen-04-entry-generic.jpg"
-                alt="Generic search entry screen"
-                label="01 · Generic intent"
-                caption="Symptom chips compress triage."
-                naturalHeight={4872}
+              <LiveFlowPhone
+                flow="default"
+                label="01 · Standard repair"
+                caption="Diagnose → service order → live quotes → booked."
               />
-              <PhoneFrame
-                src="/assets/meituan-im/screen-05-entry-specific.jpg"
-                alt="Specific search entry screen"
-                label="02 · Specific intent"
-                caption="Trust card frames expert identity."
-                naturalHeight={4872}
+              <LiveFlowPhone
+                flow="cat-litter"
+                label="02 · Self-serve fix"
+                caption="Resolves in-thread when a visit isn't needed."
               />
-              <PhoneFrame
-                src="/assets/meituan-im/screen-03-offhours-state.jpg"
-                alt="Off-hours edge case screen"
-                label="03 · Off-hours edge case"
-                caption="Status stays explicit."
-                naturalHeight={4872}
+              <LiveFlowPhone
+                flow="off-hours"
+                label="03 · After hours"
+                caption="Closed state stays explicit, never a dead end."
               />
             </div>
-
+            <p className="mt-8 max-w-[40rem] text-[13px] leading-relaxed text-textSecondary/80">
+              Each phone is the live prototype booted into one flow — tap the suggested
+              replies to play it through.
+            </p>
           </div>
         </Section>
 
