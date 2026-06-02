@@ -10,6 +10,7 @@ type Tag = "app" | "web" | "interaction" | "ai";
 
 type Media =
   | { kind: "video"; src: string }
+  | { kind: "image"; src: string; alt: string }
   | { kind: "live"; href: string; url: string; label: string }
   | { kind: "iframe"; src: string; href: string; bg: string; title: string }
   | { kind: "custom"; node: "turntable" };
@@ -25,6 +26,13 @@ type Entry = {
 };
 
 const entries: Entry[] = [
+  {
+    date: "2026.06",
+    title: "lamdre restaurant homepage",
+    description: "Restaurant website homepage design — brand atmosphere, menu showcase, and reservation entry flow.",
+    tags: ["web"],
+    media: { kind: "video", src: "/assets/lab/lamdre.mp4" },
+  },
   {
     date: "2026.05",
     title: "auction × gacha mobile game",
@@ -149,6 +157,13 @@ const entries: Entry[] = [
       title: "Astrology character interactive prototype",
     },
   },
+  {
+    date: "2025.05",
+    title: "tts reading workflow",
+    description: "Workflow redesign for a Chinese long-form text-to-speech reader — voice playback, sentence highlighting, and an immersive dark reading surface.",
+    tags: ["ai", "interaction"],
+    media: { kind: "image", src: "/assets/lab/tts-workflow.jpg", alt: "TTS reading workflow redesign — moody hero composition" },
+  },
 ];
 
 const allTags: Tag[] = ["app", "web", "interaction"];
@@ -166,6 +181,17 @@ function LazyVideo({ src, shouldLoad }: { src: string; shouldLoad: boolean }) {
           playsInline
           preload="metadata"
         />
+      )}
+    </div>
+  );
+}
+
+function LazyImage({ src, alt, shouldLoad }: { src: string; alt: string; shouldLoad: boolean }) {
+  return (
+    <div className="overflow-hidden rounded-md border border-black/10 bg-black/[0.03]">
+      {shouldLoad && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img className="block h-full w-full object-cover" src={src} alt={alt} loading="lazy" />
       )}
     </div>
   );
@@ -257,6 +283,9 @@ function FilterChip({
 function MediaSlot({ media, shouldLoad }: { media: Media; shouldLoad: boolean }) {
   if (media.kind === "video") {
     return <LazyVideo src={media.src} shouldLoad={shouldLoad} />;
+  }
+  if (media.kind === "image") {
+    return <LazyImage src={media.src} alt={media.alt} shouldLoad={shouldLoad} />;
   }
   if (media.kind === "live") {
     return (
