@@ -3976,7 +3976,7 @@
   setSegState();   // sync the File/Editor/Chat segments to which panels are actually visible
   fillProjectCollab(); updateProjectStats();
   syncMarginState();
-  setView('projects');   // open on the built-in projects screen (works offline; skips the React/CDN iframe entry page)
+  setView('project');   // open directly on the project overview (second page), skipping the projects landing
   setTimeout(function(){ layoutGutter(); placeAllCarets(); }, 60);
 
   /* ============================================================

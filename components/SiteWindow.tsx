@@ -80,7 +80,7 @@ export function SiteWindow({
           ? undefined
           : { y: -4, transition: { duration: 0.4, ease: easePortfolio } }
       }
-      className={`group relative flex flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-portfolio hover:border-black/[0.22] hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.28)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2 ${className}`}
+      className={`group relative flex flex-col overflow-hidden rounded-2xl border border-black/[0.08] bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] transition-[border-color,box-shadow] duration-500 ease-portfolio hover:border-black/[0.22] hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.28)] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2 ${className}`}
       aria-label={`Open ${url} in a new tab`}
     >
       {/* Browser chrome */}

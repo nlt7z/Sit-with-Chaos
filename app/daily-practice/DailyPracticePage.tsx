@@ -159,7 +159,7 @@ export default function DailyPracticePage() {
   }, [prev, next]);
 
   return (
-    <div className="h-screen bg-white flex flex-col overflow-hidden">
+    <div className="h-[100svh] bg-white flex flex-col overflow-hidden">
       {/* ── top bar ── */}
       <header className="shrink-0 flex items-center justify-between px-7 pt-6">
         <Link

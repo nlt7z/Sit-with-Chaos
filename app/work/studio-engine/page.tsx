@@ -1,10 +1,44 @@
 import type { Metadata } from "next";
+import StudioEngineCaseStudy from "./StudioEngineCaseStudy";
+import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
+
+const PATH = "/work/studio-engine";
+const TITLE = "StudioEngine — Designing Control Into AI Video Creation";
+const DESCRIPTION =
+  "Restructured a one-shot Gen-2 text-to-video tool into a four-stage creative workspace — basics, outline, script, visuals — with checkpoints and version history so creators iterate instead of re-generating.";
+const OG_IMAGE = "/assets/og/studio-engine.jpg";
 
 export const metadata: Metadata = {
-  title: "Studio Engine.ai — Text-to-Video UX — Yuan Fang",
-  description:
-    "Case study — UX research and design for Studio Engine.ai at Interco.AI: usability study, SUS baseline, progressive scaffolding, and Gen-2 pre-production for filmmakers and creators.",
+  title: `${TITLE} — Yuan Fang`,
+  description: DESCRIPTION,
+  alternates: { canonical: PATH },
+  openGraph: {
+    type: "article",
+    url: PATH,
+    title: TITLE,
+    description: DESCRIPTION,
+    siteName: "Yuan Fang — UX Designer",
+    images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: TITLE }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [OG_IMAGE],
+  },
 };
 
-/** Re-export default so bundler maps `/work/studio-engine` → client chunk cleanly (avoids stale split / undefined chunk id issues). */
-export { default } from "./StudioEngineCaseStudy";
+export default function StudioEnginePage() {
+  return (
+    <>
+      <ArticleJsonLd
+        url={PATH}
+        headline={TITLE}
+        description={DESCRIPTION}
+        image={OG_IMAGE}
+        datePublished="2025-04-01"
+      />
+      <StudioEngineCaseStudy />
+    </>
+  );
+}

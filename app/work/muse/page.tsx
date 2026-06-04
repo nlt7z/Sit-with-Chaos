@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 const easePremium = [0.25, 0.1, 0.25, 1] as const;
 
@@ -265,6 +266,7 @@ export default function MuseCaseStudyPage() {
       <Nav />
       <div className="relative min-h-screen bg-white">
         <CaseNav />
+        <CaseStudyMobileToc items={navItems} />
         <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-56 pt-32 text-left md:px-12 md:pb-72 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
           <main className="relative min-h-screen">
             <header id="overview" className="scroll-mt-28 pb-24 md:pb-32">
@@ -312,7 +314,7 @@ export default function MuseCaseStudyPage() {
                         { label: "Stack", value: "Arduino · TouchDesigner · OSC · Python" },
                       ].map(({ label, value }) => (
                         <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
-                          <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">{label}</dt>
+                          <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
                           <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
                         </div>
                       ))}
@@ -1069,7 +1071,7 @@ void loop() {
                         {flow.map((op, i) => (
                           <span key={op}>
                             <span className={terminal ? "text-nltLime-ink" : "text-textPrimary/75"}>{op}</span>
-                            {i < flow.length - 1 ? <span className="px-2 text-textSecondary/50">{terminal ? "·" : "→"}</span> : null}
+                            {i < flow.length - 1 ? <span className="px-2 text-textSecondary/70">{terminal ? "·" : "→"}</span> : null}
                           </span>
                         ))}
                       </p>

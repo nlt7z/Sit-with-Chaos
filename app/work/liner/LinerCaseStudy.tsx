@@ -39,21 +39,59 @@ function Section({
 }: {
   id: string;
   eyebrow: string;
-  title: string;
+  title?: string;
   children: React.ReactNode;
 }) {
   return (
     <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-24 md:py-32 lg:py-36">
       <div>
         <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/75">{eyebrow}</p>
-        <h2 className="mt-5 max-w-4xl font-display text-[1.85rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.4rem] md:leading-[1.06] lg:text-[2.75rem]">
-          {title}
-        </h2>
+        {title && (
+          <h2 className="mt-5 max-w-4xl font-display text-[1.85rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.4rem] md:leading-[1.06] lg:text-[2.75rem]">
+            {title}
+          </h2>
+        )}
         <div className="mt-12 space-y-10 text-[16px] leading-[1.75] text-textSecondary [&>p]:max-w-[40rem]">
           {children}
         </div>
       </div>
     </section>
+  );
+}
+
+/** Plays the video when it scrolls into view and pauses it when it leaves.
+ *  Muted so browsers allow programmatic autoplay; no poster frame. */
+function AutoplayVideo({ src }: { src: string }) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") return;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.play().catch(() => {});
+        } else {
+          el.pause();
+        }
+      },
+      { threshold: 0.4 }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      className="block h-auto w-full"
+      src={src}
+      muted
+      loop
+      controls
+      playsInline
+      preload="metadata"
+    />
   );
 }
 
@@ -124,15 +162,22 @@ export default function LinerCaseStudy() {
             {/* HERO — placeholder copy; full narrative to follow. */}
             <header id="overview" className="scroll-mt-28 pb-20 md:pb-28">
               <FadeIn>
+                <img
+                  src="/assets/liner/liner-scholar-logo.png"
+                  alt="Liner"
+                  className="mb-7 h-7 w-auto object-contain object-left md:h-8"
+                />
                 <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">
                   Liner AI · Capstone
                 </p>
                 <h1 className="mt-8 max-w-[22ch] font-display text-[2.4rem] font-light leading-[1.05] tracking-tight text-textPrimary sm:max-w-4xl md:text-[3.4rem] md:leading-[1.04] lg:text-[4rem]">
                   Research-driven AI collaboration workflow
                 </h1>
-                <p className="mt-6 max-w-xl text-[16px] leading-[1.6] text-textSecondary">
-                  Product video and interactive prototype from the UW HCDE × Liner AI capstone.
-                  Full case study is in progress.
+                <p className="mt-8 max-w-[44rem] text-[16px] leading-[1.65] text-textSecondary md:mt-10 md:text-[18px] md:leading-[1.6]">
+                  Led end-to-end research and design for an AI-native collaborative research
+                  experience on Liner — used by <span className="text-textPrimary">10M+ academic
+                  users</span> and ranked a top-20 web AI by a16z. Three core interaction patterns
+                  reframe AI from a feature add into a collaborative-trust layer.
                 </p>
 
                 <dl className="mt-14 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-black/[0.08] pt-7 sm:grid-cols-3 sm:gap-y-0">
@@ -142,7 +187,7 @@ export default function LinerCaseStudy() {
                     { label: "Partner", value: "Liner AI · UW HCDE" },
                   ].map(({ label, value }) => (
                     <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
-                      <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">
+                      <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">
                         {label}
                       </dt>
                       <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
@@ -153,17 +198,10 @@ export default function LinerCaseStudy() {
             </header>
 
             {/* PRODUCT VIDEO */}
-            <Section id="video" eyebrow="Product Video" title="The product, end to end.">
+            <Section id="video" eyebrow="Product Video">
               <FadeIn className="mt-2">
                 <div className="overflow-hidden rounded-2xl bg-black ring-1 ring-black/[0.08] shadow-[0_28px_60px_-30px_rgba(0,0,0,0.28)]">
-                  <video
-                    className="block h-auto w-full"
-                    src="/assets/liner/liner-product-video.mp4"
-                    controls
-                    playsInline
-                    preload="metadata"
-                    poster="/assets/liner/liner-present.png"
-                  />
+                  <AutoplayVideo src="/assets/liner/liner-product-video.mp4" />
                 </div>
               </FadeIn>
             </Section>

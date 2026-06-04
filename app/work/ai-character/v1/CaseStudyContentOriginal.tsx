@@ -977,13 +977,13 @@ function UxStrategyShowroomTable() {
                 />
               </div>
               <div className="flex flex-1 flex-col border-t border-black/[0.06] px-4 py-4 md:px-5 md:py-4">
-                <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/55">Showroom</p>
+                <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">Showroom</p>
                 <p className="mt-1.5 font-sans text-[14px] font-normal leading-snug text-textPrimary">{s.tab}</p>
-                <p className="mt-4 font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/55">
+                <p className="mt-4 font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">
                   Model strength on display
                 </p>
                 <p className="mt-1.5 font-sans text-[13px] font-medium leading-snug text-textSecondary">{s.capability}</p>
-                <p className="mt-4 font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/55">
+                <p className="mt-4 font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">
                   Proof in experience
                 </p>
                 <p className="mt-1.5 font-sans text-[12.5px] font-normal leading-snug text-textPrimary/85">{s.feel}</p>
@@ -1176,7 +1176,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                       <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
                     </svg>
                     <div>
-                      <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/55">{item.label}</p>
+                      <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">{item.label}</p>
                       <p className="mt-1 font-sans text-[13.5px] leading-snug text-textPrimary">{item.text}</p>
                     </div>
                   </motion.div>
@@ -1247,7 +1247,7 @@ function CollapsibleMetricTable() {
           >
             <div className="hidden grid-cols-[6rem_1fr_1fr_1fr] gap-x-6 border-t border-black/[0.06] bg-surfaceAlt/20 px-5 py-3 md:grid">
               {["Metric", "Baseline", "Result", "Note"].map((h) => (
-                <p key={h} className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary/55">{h}</p>
+                <p key={h} className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">{h}</p>
               ))}
             </div>
             <div className="divide-y divide-black/[0.06] border-t border-black/[0.06]">
@@ -1258,11 +1258,11 @@ function CollapsibleMetricTable() {
                     <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/60 md:mt-0.5">{row.label}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/50 md:hidden">Before</p>
+                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/70 md:hidden">Before</p>
                     <p className="font-sans text-[13px] leading-snug text-textSecondary">{row.before}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/50 md:hidden">After</p>
+                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/70 md:hidden">After</p>
                     <p className="font-sans text-[13px] font-normal leading-snug text-textPrimary/80">{row.after}</p>
                   </div>
                   <p className="font-sans text-[12px] italic leading-snug text-textSecondary/60">{row.note}</p>
@@ -1393,7 +1393,7 @@ export default function CaseStudyContent() {
                   <svg className="h-3 w-3 shrink-0 text-textSecondary/40" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" d={icon} />
                   </svg>
-                  <span className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">{label}</span>
+                  <span className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">{label}</span>
                 </div>
               ))}
             </div>

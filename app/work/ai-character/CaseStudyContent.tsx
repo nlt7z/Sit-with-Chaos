@@ -3,6 +3,7 @@
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 const mediaRound = "rounded-xl";
 const EMSK = [0.76, 0, 0.24, 1] as const;
@@ -548,7 +549,7 @@ function D1BeforeAfter() {
     <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
       {/* Before */}
       <div>
-        <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">
+        <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">
           Before — Generic chat
         </p>
         <div className="overflow-hidden rounded-xl bg-black ring-1 ring-black/[0.08]">
@@ -569,7 +570,7 @@ function D1BeforeAfter() {
       {/* After — auto-cycling prototype */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">
+          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">
             After —{" "}
             <span className="text-textSecondary/70">{activeRoom.tab} room</span>
           </p>
@@ -1053,7 +1054,7 @@ function InteractionInnovationList() {
               <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
               <p className="mt-4 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
               {item.notShipped ? (
-                <p className="mt-4 font-sans text-[12px] leading-relaxed text-textSecondary/55">
+                <p className="mt-4 font-sans text-[12px] leading-relaxed text-textSecondary/70">
                   Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
                 </p>
               ) : (
@@ -1150,7 +1151,7 @@ function ShowroomStrategyCard({
           {capability}
         </p>
         <div className="mt-4 border-t border-black/[0.07] pt-4">
-          <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">In experience</p>
+          <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">In experience</p>
           <p className="mt-2 font-sans text-[13px] leading-relaxed text-textSecondary/90 md:text-[13.5px] md:leading-[1.5]">{feel}</p>
         </div>
       </div>
@@ -1224,11 +1225,37 @@ const aiWorkflowStages = [
 
 function HowIWorkedDiagram() {
   return (
-    <div className="mt-10 overflow-x-auto">
-      <div
-        className="min-w-[600px]"
-        style={{ display: "grid", gridTemplateColumns: "88px repeat(4, minmax(0, 1fr))", gap: "12px", alignItems: "stretch" }}
-      >
+    <>
+      {/* Mobile (< md): the matrix doesn't fit in a phone width, so each phase
+       *  becomes a self-contained vertical card stacking its tools + output. */}
+      <div className="mt-10 flex flex-col gap-4 md:hidden">
+        {aiWorkflowStages.map((s) => (
+          <div
+            key={s.n}
+            className="overflow-hidden rounded-xl border border-black/[0.07] bg-white"
+          >
+            <div className="flex items-center gap-3 px-4 py-3.5" style={{ background: s.accentBg }}>
+              <span className="font-mono text-[12px]" style={{ color: s.accentNum }}>{s.n}</span>
+              <span className="text-[15px] font-medium leading-snug" style={{ color: s.accentName }}>{s.phase}</span>
+            </div>
+            <div className="px-4 py-3.5">
+              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/70">Tools</p>
+              <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-textPrimary">
+                {(s.toolLines as readonly string[]).join(" · ")}
+              </p>
+              <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/70">Output</p>
+              <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-textSecondary">{s.body}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* md+: the full phase × {tools, output} matrix, scrollable only as a fallback. */}
+      <div className="mt-10 hidden overflow-x-auto md:block">
+        <div
+          className="min-w-[600px]"
+          style={{ display: "grid", gridTemplateColumns: "88px repeat(4, minmax(0, 1fr))", gap: "12px", alignItems: "stretch" }}
+        >
         {/* Phase label */}
         <div className="flex items-center font-mono text-[12px] tracking-[0.04em] text-textSecondary/40">Phase</div>
 
@@ -1280,8 +1307,9 @@ function HowIWorkedDiagram() {
             {s.body}
           </div>
         ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
 
@@ -1362,7 +1390,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 className="mt-6 max-w-[36rem] font-sans text-[1.0625rem] font-normal leading-[1.68] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.125rem] md:leading-[1.66]"
                 variants={reduced ? undefined : heroItem}
               >
-                Turned Qwen&apos;s static docs into interactive showrooms — first proof moment dropped from <Em>60+ minutes</Em> to <Em>under 2 minutes</Em>, with post-launch traffic at <Em>~2×</Em> the pre-launch baseline.
+                Shipped Interactive Showrooms — the MVP feature for Qwen Character, serving millions of enterprise users. First proof moment dropped from <Em>60+ minutes</Em> of docs to <Em>under 2 minutes</Em>, with a <Em>200%</Em> lift in model API call volume.
               </motion.p>
 
               <motion.div
@@ -1422,7 +1450,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
           <dl className="grid grid-cols-2 gap-x-8 gap-y-7 pt-8 sm:grid-cols-4 sm:gap-y-0 md:gap-x-10 md:pt-9">
             {metaFields.map(({ label, value }) => (
               <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
-                <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">{label}</dt>
+                <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
                 <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
               </div>
             ))}
@@ -1490,7 +1518,7 @@ function CollapsibleMetricTable() {
           >
             <div className="hidden grid-cols-[6rem_1fr_1fr_1fr] gap-x-6 border-t border-black/[0.06] bg-surfaceAlt/20 px-5 py-3 md:grid">
               {["Metric", "Baseline", "Result", "Note"].map((h) => (
-                <p key={h} className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary/55">{h}</p>
+                <p key={h} className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">{h}</p>
               ))}
             </div>
             <div className="divide-y divide-black/[0.06] border-t border-black/[0.06]">
@@ -1501,11 +1529,11 @@ function CollapsibleMetricTable() {
                     <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/60 md:mt-0.5">{row.label}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/50 md:hidden">Before</p>
+                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/70 md:hidden">Before</p>
                     <p className="font-sans text-[13px] leading-snug text-textSecondary">{row.before}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/50 md:hidden">After</p>
+                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/70 md:hidden">After</p>
                     <p className="font-sans text-[13px] font-normal leading-snug text-textPrimary/80">{row.after}</p>
                   </div>
                   <p className="font-sans text-[12px] italic leading-snug text-textSecondary/60">{row.note}</p>
@@ -1525,6 +1553,7 @@ export default function CaseStudyContent() {
   return (
     <div className="relative min-h-screen bg-white pt-24 md:pt-28">
       <CaseStudyNav />
+      <CaseStudyMobileToc items={caseNavItems} />
       <main className="relative min-h-screen overflow-x-hidden pb-0">
         <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-0 md:px-12 md:pb-24 lg:pl-36 lg:pr-14">
           <HeroSection reduced={reduced} />
@@ -1578,7 +1607,7 @@ export default function CaseStudyContent() {
 
         {/* Bridge: What makes this hard to design */}
         <div className="border-y border-black/[0.06] py-20 md:py-24">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">
+          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">
             What makes AI experiences hard
           </p>
           <p className="mt-8 max-w-[38rem] font-display text-[1.4rem] font-light leading-[1.42] tracking-[-0.02em] text-textPrimary md:text-[1.6rem] md:leading-[1.38]">
@@ -1606,7 +1635,7 @@ export default function CaseStudyContent() {
               },
             ].map((item) => (
               <div key={item.type} className="rounded-xl bg-surfaceAlt/30 px-5 py-6 ring-1 ring-black/[0.06]">
-                <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/50">{item.type}</p>
+                <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">{item.type}</p>
                 <p className="mt-3 font-sans text-[13px] leading-relaxed text-textSecondary/80">{item.detail}</p>
               </div>
             ))}

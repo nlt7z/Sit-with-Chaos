@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import LinerCaseStudy from "./LinerCaseStudy";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
-const PATH = "/work/liner";
-const TITLE = "Liner — Research-driven AI collaboration workflow";
+// `page.tsx` is a client component (uses framer-motion + hooks heavily), so
+// metadata + JSON-LD live here in the server-rendered layout instead.
+
+const PATH = "/work/meituan-im";
+const TITLE = "Meituan — Designing Trust Before the Bill";
 const DESCRIPTION =
-  "Led research and design for an AI-native collaborative research experience on Liner — used by 10M+ academic users and ranked a top-20 web AI by a16z. Three core interaction patterns reframe AI from a feature add into a collaborative-trust layer.";
-const OG_IMAGE = "/assets/og/liner.jpg";
+  "A 0-to-1 in-message quotation system across Meituan's 770M+ annual users and 14.5M merchants — A/B-validated +5% conversion and −50% pricing disputes by reframing from price transparency to process trust.";
+const OG_IMAGE = "/assets/og/meituan-im.jpg";
 
 export const metadata: Metadata = {
   title: `${TITLE} — Yuan Fang`,
@@ -28,7 +30,7 @@ export const metadata: Metadata = {
   },
 };
 
-export default function LinerPage() {
+export default function MeituanImLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <ArticleJsonLd
@@ -36,9 +38,9 @@ export default function LinerPage() {
         headline={TITLE}
         description={DESCRIPTION}
         image={OG_IMAGE}
-        datePublished="2026-05-01"
+        datePublished="2025-07-15"
       />
-      <LinerCaseStudy />
+      {children}
     </>
   );
 }

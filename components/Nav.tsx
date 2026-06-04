@@ -120,8 +120,8 @@ export function Nav({ variant = "light" }: NavProps) {
                   href={link.href}
                   className={`relative text-sm font-medium transition-colors duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                     isDark
-                      ? "text-zinc-400 hover:text-nltLime focus-visible:ring-nltLime/55 focus-visible:ring-offset-[#060608]"
-                      : "text-textSecondary hover:text-textPrimary focus-visible:ring-nltLime focus-visible:ring-offset-2"
+                      ? "text-zinc-400 hover:text-nltLime focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime/55 focus-visible:ring-offset-[#060608]"
+                      : "text-textSecondary hover:text-textPrimary focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2"
                   }`}
                 >
                   {link.label}

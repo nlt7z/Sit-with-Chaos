@@ -15,6 +15,7 @@ import {
 } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 /** Hover / micro-interaction ease */
 const easePremium = [0.16, 1, 0.3, 1] as const;
@@ -213,7 +214,7 @@ function HoverPanel({ children, className }: { children: ReactNode; className: s
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/55">
+    <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/70">
       {children}
     </p>
   );
@@ -482,7 +483,7 @@ function TaskSuccessEvaluation() {
                         <div className="flex shrink-0 flex-col items-end gap-0.5 font-mono text-[10px] tabular-nums text-nltLime-900/35 sm:min-w-[5.75rem]">
                           <span>{row.success}%</span>
                           <span className="text-nltLime-500/35">err {row.error}%</span>
-                          <span className="pt-0.5 text-[9px] uppercase tracking-[0.08em] text-textSecondary/55">
+                          <span className="pt-0.5 text-[9px] uppercase tracking-[0.08em] text-textSecondary/70">
                             {row.meta}
                           </span>
                         </div>
@@ -752,7 +753,7 @@ function WorkflowComparisonV2() {
           <div className="flex min-h-[340px] flex-1 flex-col gap-0">
             {/* Prompt node */}
             <div className="shrink-0 border border-black/[0.08] px-5 py-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/55">Prompt</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/70">Prompt</span>
             </div>
             {/* Arrow */}
             <div className="flex shrink-0 items-center justify-center py-2">
@@ -763,7 +764,7 @@ function WorkflowComparisonV2() {
             </div>
             {/* One big undifferentiated block */}
             <div className="relative flex flex-1 flex-col items-stretch justify-center border border-black/[0.08]">
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-black/[0.08] bg-white px-3 py-[3px] font-mono text-[9px] uppercase tracking-[0.08em] text-textSecondary/55">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-black/[0.08] bg-white px-3 py-[3px] font-mono text-[9px] uppercase tracking-[0.08em] text-textSecondary/70">
                 no checkpoints
               </div>
               <div className="divide-y divide-black/[0.05] px-5 py-4">
@@ -784,7 +785,7 @@ function WorkflowComparisonV2() {
             </div>
             {/* Output node */}
             <div className="shrink-0 border border-black/[0.08] px-5 py-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/55">Output</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/70">Output</span>
             </div>
           </div>
         </div>
@@ -860,16 +861,29 @@ export default function StudioEngineCaseStudy() {
       <Nav />
       <main className="relative min-h-screen overflow-x-hidden bg-white text-textPrimary">
         <CaseStudySectionNav />
+        <CaseStudyMobileToc items={caseNavItems} />
         <article className="relative z-10 mx-auto max-w-content px-6 pb-40 pt-32 md:px-12 md:pb-52 md:pt-40 lg:pl-[13.5rem] lg:pr-14 lg:pt-44 xl:pl-44">
         <header id="overview" ref={heroRef} className="scroll-mt-32 max-w-4xl">
-          <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/80">
-            StudioEngine.AI
-          </p>
+          <motion.div
+            initial={reduce ? false : { opacity: 0, y: 14 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.0, ease: easeLux }}
+            className="flex items-center"
+          >
+            <Image
+              src="/assets/studio-engine/studioengine-logo.png"
+              alt="StudioEngine AI"
+              width={320}
+              height={68}
+              priority
+              className="h-8 w-auto object-contain object-left md:h-9"
+            />
+          </motion.div>
           <motion.h1
             initial={reduce ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1.18, delay: reduce ? 0 : 0.08, ease: easeLux }}
-            className="mt-10 font-display text-[clamp(2rem,5vw,3rem)] font-light leading-[1.06] tracking-[-0.03em] text-textPrimary"
+            className="mt-8 font-display text-[clamp(2rem,5vw,3rem)] font-light leading-[1.06] tracking-[-0.03em] text-textPrimary"
           >
             Designing Control Into AI Video Creation
           </motion.h1>
@@ -879,8 +893,9 @@ export default function StudioEngineCaseStudy() {
             transition={{ duration: 1.12, delay: reduce ? 0 : 0.14, ease: easeLux }}
             className="mt-12 max-w-[40rem] text-[1.125rem] font-light leading-snug tracking-[-0.02em] text-textSecondary/95 md:text-[1.25rem]"
           >
-            I redesigned the Gen-2 workflow around checkpoints, version history, unified editing, and
-            contextual AI guidance, so creators could shape output instead of just accepting it.
+            I restructured a one-shot Gen-2 text-to-video tool into a four-stage creative workspace —
+            basics, outline, script, visuals — with checkpoints and version history so creators iterate
+            instead of re-generating.
           </motion.p>
 
           <motion.div
@@ -992,13 +1007,13 @@ export default function StudioEngineCaseStudy() {
                   />
                 </div>
                 <div className="px-4 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/55">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/70">
                     Task 01 · Script
                   </p>
                   <p className="mt-2 text-[13px] leading-snug text-textSecondary">
                     Script generation — manageable
                   </p>
-                  <p className="mt-3 font-mono text-[11px] text-textSecondary/50">5 / 6 completed</p>
+                  <p className="mt-3 font-mono text-[11px] text-textSecondary/70">5 / 6 completed</p>
                 </div>
               </div>
 
@@ -1070,13 +1085,13 @@ export default function StudioEngineCaseStudy() {
                   />
                 </div>
                 <div className="px-4 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/55">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/70">
                     Task 03 · Storyboard
                   </p>
                   <p className="mt-2 text-[13px] leading-snug text-textSecondary">
                     Storyboard — friction but functional
                   </p>
-                  <p className="mt-3 font-mono text-[11px] text-textSecondary/50">4 – 5 / 6 completed</p>
+                  <p className="mt-3 font-mono text-[11px] text-textSecondary/70">4 – 5 / 6 completed</p>
                 </div>
               </div>
 
@@ -1090,7 +1105,7 @@ export default function StudioEngineCaseStudy() {
         {/* Design principle */}
         <section id="design-principle" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
           <Reveal>
-          <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/55">
+          <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/70">
             AI-native principle
           </p>
           <p className="mt-6 max-w-lg font-display text-[clamp(1.5rem,3.6vw,2.125rem)] font-light leading-[1.1] tracking-[-0.03em] text-textPrimary">
@@ -1100,7 +1115,7 @@ export default function StudioEngineCaseStudy() {
           <div className="mt-12 border-t border-black/[0.06] pt-10">
             <div className="grid items-start gap-10 md:grid-cols-2 md:gap-16">
               <div>
-                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
+                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
                   What makes text-to-video UX different
                 </p>
                 <div className="space-y-3 text-[15px] leading-[1.68] tracking-[-0.011em] text-textSecondary/90">
@@ -1109,7 +1124,7 @@ export default function StudioEngineCaseStudy() {
                 </div>
               </div>
               <div>
-                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">
+                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
                   New control patterns needed
                 </p>
                 <ul className="space-y-0 divide-y divide-black/[0.05]">
@@ -1189,7 +1204,7 @@ export default function StudioEngineCaseStudy() {
                   <div className="mb-3 h-px w-6 bg-nltLime-400/45" />
                   <span className="font-mono text-[10px] tabular-nums text-nltLime-400/50">{stage.num}</span>
                   <p className="mt-2 text-[14px] tracking-[-0.012em] text-textPrimary">{stage.name}</p>
-                  <p className="mt-1 text-[11px] italic leading-snug text-textSecondary/55">&ldquo;{stage.question}&rdquo;</p>
+                  <p className="mt-1 text-[11px] italic leading-snug text-textSecondary/70">&ldquo;{stage.question}&rdquo;</p>
                   <p className="mt-2 text-[12px] leading-relaxed text-textSecondary/80">{stage.desc}</p>
                 </div>
               ))}
@@ -1365,7 +1380,7 @@ export default function StudioEngineCaseStudy() {
                     {row.metric}
                   </p>
                   <p className="font-mono text-[12px] text-textSecondary/75">
-                    <span className="text-textSecondary/55">Baseline · </span>
+                    <span className="text-textSecondary/70">Baseline · </span>
                     {row.baseline}
                   </p>
                   <p className="font-mono text-[12px] text-nltLime-900/70">

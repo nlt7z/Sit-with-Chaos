@@ -1,9 +1,12 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+
+import { Icon } from "@/components/icons/Icon";
 
 type Media = {
   src: string;
@@ -34,8 +37,17 @@ export type Project = {
   };
   /** Headline impact metric shown as a chip on the media (e.g. "−97% time"). */
   impact?: string;
+  /** Optional brand logo shown as a badge on the media (top-right corner). */
+  logo?: {
+    src: string;
+    alt: string;
+  };
+  /** Light hover wash, set per-card to harmonize with the media (CSS color —
+   *  any valid `background-color` value). Keep alpha low (~0.08–0.12) so the
+   *  tint reads as a whisper, not a fill. Falls back to a neutral if absent. */
+  hoverTint?: string;
   /** Show the card without a clickable case-study link (no /work/<slug> destination yet).
-   *  Hover invert + bottom arrow are both suppressed; bottom CTA reads "Case study coming soon". */
+   *  Hover lift is suppressed; bottom CTA reads "Case study coming soon". */
   comingSoon?: boolean;
 };
 
@@ -145,15 +157,15 @@ export function ProjectCard({ project }: { project: Project }) {
   const hover =
     prefersReducedMotion || comingSoon
       ? {}
-      : { y: -4, scale: 1.012, transition: { duration: 0.45, ease: easePortfolio } };
+      : { y: -2, scale: 1.005, transition: { duration: 0.4, ease: easePortfolio } };
 
   const mediaAspect =
     project.mediaAspect ??
     (featured ? "aspect-video md:aspect-[21/9]" : "aspect-video");
 
   const titleClass = featured
-    ? "font-display text-2xl font-light leading-snug text-textPrimary transition-colors duration-500 group-hover:text-white md:text-3xl"
-    : "font-display text-lg font-light leading-snug text-textPrimary transition-colors duration-500 group-hover:text-white md:text-xl";
+    ? "font-display text-2xl font-light leading-snug text-textPrimary md:text-3xl"
+    : "font-display text-lg font-light leading-snug text-textPrimary md:text-xl";
 
   const titleSeparatorMatch = project.title.match(/\s+[-–—]\s+/);
   const titleSplitIndex = titleSeparatorMatch?.index ?? -1;
@@ -166,12 +178,15 @@ export function ProjectCard({ project }: { project: Project }) {
 
   const wrapperBaseClass =
     "flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.35rem] md:p-6";
-  const wrapperLinkClass = `${wrapperBaseClass} transition-[background-color,border-color,box-shadow] duration-500 ease-portfolio hover:border-textPrimary hover:bg-textPrimary hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.4)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2`;
+  // Hover wash: subtle, per-card. Tint is plumbed through the `--card-hover-tint`
+  // CSS variable so each project can adapt the wash to its media without forking
+  // the class. Falls back to a faint neutral when the project omits a tint.
+  const wrapperLinkClass = `${wrapperBaseClass} transition-[background-color,border-color,box-shadow] duration-500 ease-portfolio hover:border-transparent hover:bg-[var(--card-hover-tint,rgba(0,0,0,0.025))] hover:shadow-[0_18px_36px_-28px_rgba(0,0,0,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2`;
   const wrapperStaticClass = `${wrapperBaseClass} cursor-default`;
 
   const wrapperContent = (
     <>
-        <div className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-black/[0.04] transition-[box-shadow] duration-500 group-hover:ring-white/10">
+        <div className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-black/[0.04] transition-[box-shadow] duration-500 group-hover:ring-black/[0.08]">
           <motion.div
             className={`${mediaAspect} w-full overflow-hidden bg-neutral-100`}
             whileHover={
@@ -206,8 +221,20 @@ export function ProjectCard({ project }: { project: Project }) {
             )}
           </motion.div>
 
-          {project.impact ? (
+          {project.logo ? (
             <div className="pointer-events-none absolute left-3 top-3 z-10 md:left-4 md:top-4">
+              <Image
+                src={project.logo.src}
+                alt={project.logo.alt}
+                width={90}
+                height={36}
+                className="h-6 w-auto md:h-7"
+              />
+            </div>
+          ) : null}
+
+          {project.impact ? (
+            <div className="pointer-events-none absolute right-3 top-3 z-10 md:right-4 md:top-4">
               <span className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-white/85 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textPrimary shadow-[0_4px_14px_-6px_rgba(0,0,0,0.18)] backdrop-blur-md md:text-[11px]">
                 <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-nltLime" />
                 {project.impact}
@@ -246,7 +273,7 @@ export function ProjectCard({ project }: { project: Project }) {
           <h3 className={titleClass}>
             {companyName ? (
               <>
-                <span className="mb-2 block font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-textSecondary transition-colors duration-500 group-hover:text-white/55 md:text-xs">
+                <span className="mb-2 block font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-textSecondary md:text-xs">
                   {companyName}
                 </span>
                 <span>{mainTitle}</span>
@@ -257,7 +284,7 @@ export function ProjectCard({ project }: { project: Project }) {
           </h3>
 
           <p
-            className={`mt-3 text-[13px] leading-relaxed text-textSecondary transition-colors duration-500 group-hover:text-white/70 md:text-sm ${
+            className={`mt-3 text-[13px] leading-relaxed text-textSecondary md:text-sm ${
               featured ? "max-w-3xl" : "line-clamp-3 flex-1 text-pretty"
             }`}
           >
@@ -269,10 +296,10 @@ export function ProjectCard({ project }: { project: Project }) {
               Case study coming soon
             </span>
           ) : (
-            <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-white group-hover:opacity-100 group-focus-within:opacity-100">
+            <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-textPrimary group-hover:opacity-100 group-focus-within:opacity-100">
               Case study
-              <span aria-hidden className="translate-x-0 transition-transform duration-400 group-hover:translate-x-1 group-focus-within:translate-x-1">
-                →
+              <span aria-hidden className="inline-flex translate-x-0 transition-transform duration-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-within:translate-x-0.5 group-focus-within:-translate-y-0.5">
+                <Icon as={ArrowUpRight} size="sm" />
               </span>
             </span>
           )}
@@ -290,7 +317,15 @@ export function ProjectCard({ project }: { project: Project }) {
       {comingSoon ? (
         <div className={wrapperStaticClass}>{wrapperContent}</div>
       ) : (
-        <Link href={`/work/${project.slug}`} className={wrapperLinkClass}>
+        <Link
+          href={`/work/${project.slug}`}
+          className={wrapperLinkClass}
+          style={
+            project.hoverTint
+              ? ({ "--card-hover-tint": project.hoverTint } as React.CSSProperties)
+              : undefined
+          }
+        >
           {wrapperContent}
         </Link>
       )}

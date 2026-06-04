@@ -604,7 +604,7 @@ export default function DeckClient() {
         ) : (
           <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden px-4 pb-28 pt-6 md:px-12 md:pb-32 md:pt-10">
             <p
-              className="pointer-events-none absolute right-6 top-6 font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/50 md:right-10"
+              className="pointer-events-none absolute right-6 top-6 font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/70 md:right-10"
               aria-hidden
             >
               {String(index + 1).padStart(2, "0")}

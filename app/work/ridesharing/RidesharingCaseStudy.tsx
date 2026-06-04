@@ -14,6 +14,7 @@ import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 /** Slightly slower, premium ease */
 const easePremium = [0.16, 1, 0.3, 1] as const;
@@ -330,6 +331,7 @@ export default function RidesharingCaseStudy() {
   return (
     <div className="relative min-h-screen bg-white">
       <CaseNav />
+      <CaseStudyMobileToc items={navItems} />
       <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-52 pt-28 text-left md:px-10 md:pb-64 md:pt-36 lg:pl-32 lg:pr-10 lg:pb-72 lg:pt-40">
         {/* —— Overview —— */}
         <header id="overview" ref={heroRef} className="scroll-mt-28">

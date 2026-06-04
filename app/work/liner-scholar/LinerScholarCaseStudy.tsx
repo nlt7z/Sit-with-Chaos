@@ -4,6 +4,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 const easeOut = [0.25, 0.1, 0.25, 1] as const;
 
@@ -224,6 +225,7 @@ export default function LinerScholarCaseStudy() {
   return (
     <div className="relative min-h-screen bg-white">
       <CaseNav />
+      <CaseStudyMobileToc items={navItems} />
       <article className="mx-auto max-w-content bg-white px-6 pb-36 pt-24 text-left md:px-10 md:pb-48 md:pt-28 lg:pl-32 lg:pr-10 lg:pt-32">
         <header id="overview" className="scroll-mt-28">
           <motion.div
@@ -301,13 +303,13 @@ export default function LinerScholarCaseStudy() {
 
           <Reveal delay={0.04}>
             <div className="overflow-x-auto rounded-xl border border-black/[0.06]">
-              <table className="w-full min-w-[32rem] border-collapse text-left text-[14px]">
+              <table className="w-full min-w-0 border-collapse text-left text-[13px] sm:min-w-[32rem] sm:text-[14px]">
                 <thead>
                   <tr className="border-b border-black/[0.06] bg-black/[0.02]">
-                    <th className="px-4 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary">
+                    <th className="px-3 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary sm:px-4">
                       AI tools enable
                     </th>
-                    <th className="px-4 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary">
+                    <th className="px-3 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary sm:px-4">
                       Academic research requires
                     </th>
                   </tr>
@@ -315,8 +317,8 @@ export default function LinerScholarCaseStudy() {
                 <tbody>
                   {TENSION_ROWS.map(([a, b]) => (
                     <tr key={a} className="border-b border-black/[0.04]">
-                      <td className="px-4 py-3.5 text-textSecondary leading-relaxed">{a}</td>
-                      <td className="px-4 py-3.5 text-textPrimary/90 leading-relaxed">{b}</td>
+                      <td className="px-3 py-3.5 leading-relaxed text-textSecondary sm:px-4">{a}</td>
+                      <td className="px-3 py-3.5 leading-relaxed text-textPrimary/90 sm:px-4">{b}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -401,13 +403,13 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
           <Reveal delay={0.04}>
             <div className="overflow-x-auto rounded-xl border border-black/[0.06]">
-              <table className="w-full min-w-[28rem] border-collapse text-left text-[14px]">
+              <table className="w-full min-w-0 border-collapse text-left text-[13px] sm:min-w-[28rem] sm:text-[14px]">
                 <thead>
                   <tr className="border-b border-black/[0.06] bg-black/[0.02]">
-                    <th className="px-4 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary">
+                    <th className="px-3 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary sm:px-4">
                       Stage
                     </th>
-                    <th className="px-4 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary">
+                    <th className="px-3 py-3 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary sm:px-4">
                       Representative tools
                     </th>
                   </tr>
@@ -415,8 +417,8 @@ export default function LinerScholarCaseStudy() {
                 <tbody>
                   {TOOL_ROWS.map(([stage, tools]) => (
                     <tr key={stage} className="border-b border-black/[0.04]">
-                      <td className="whitespace-nowrap px-4 py-3 font-medium text-textPrimary">{stage}</td>
-                      <td className="px-4 py-3 text-textSecondary">{tools}</td>
+                      <td className="px-3 py-3 font-medium text-textPrimary sm:whitespace-nowrap sm:px-4">{stage}</td>
+                      <td className="px-3 py-3 text-textSecondary sm:px-4">{tools}</td>
                     </tr>
                   ))}
                 </tbody>

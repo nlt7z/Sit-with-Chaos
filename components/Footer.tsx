@@ -128,7 +128,7 @@ export function Footer({ variant = "light", showTopBorder = true, blendBackgroun
               aria-label="Switch to vending machine view"
               onClick={handleVendingSwitch}
               disabled={vendingSwitchOn}
-              className="group mt-3 inline-flex shrink-0 cursor-pointer items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2 disabled:cursor-wait"
+              className="group mt-3 inline-flex shrink-0 cursor-pointer items-center gap-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2 disabled:cursor-wait"
             >
               <span
                 className={`relative h-[0.875rem] w-[1.75rem] shrink-0 rounded-full border transition-[border-color,background-color] duration-300 ease-out ${
@@ -154,7 +154,7 @@ export function Footer({ variant = "light", showTopBorder = true, blendBackgroun
                 className={`font-mono text-[9px] uppercase tracking-[0.18em] transition-colors md:text-[10px] ${
                   isDark
                     ? "text-zinc-500 group-hover:text-zinc-300"
-                    : "text-textSecondary/55 group-hover:text-textSecondary"
+                    : "text-textSecondary/70 group-hover:text-textSecondary"
                 }`}
               >
                 Vending

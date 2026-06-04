@@ -4,6 +4,7 @@ import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
+import { LimeMark } from "@/components/LimeMark";
 
 const capabilities = [
   {
@@ -44,7 +45,7 @@ export function About() {
           id="about-heading"
           className="mt-4 max-w-[22ch] font-display text-2xl font-light leading-snug tracking-[-0.01em] text-textPrimary md:mt-5 md:text-3xl lg:max-w-[28ch]"
         >
-          Ten years of seeing systems before they exist.
+          Ten years of seeing systems <LimeMark>before they exist</LimeMark>.
         </h2>
 
         {/* Top row: copy + portrait — narrower measure + shorter portrait, vertically balanced */}
@@ -141,7 +142,7 @@ export function About() {
               </p>
               <Link
                 href={item.evidence.href}
-                className="group/cap mt-3 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2 md:text-[11px]"
+                className="group/cap mt-3 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2 md:text-[11px]"
               >
                 {item.evidence.label}
                 <span

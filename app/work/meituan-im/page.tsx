@@ -5,6 +5,7 @@ import { Nav } from "@/components/Nav";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 const easePremium = [0.25, 0.1, 0.25, 1] as const;
 
@@ -453,10 +454,20 @@ export default function MeituanImCaseStudyPage() {
       <Nav />
       <div className="relative min-h-screen bg-white">
         <CaseNav />
+        <CaseStudyMobileToc items={navItems} />
         <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-56 pt-32 text-left md:px-12 md:pb-72 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
           <main className="relative min-h-screen">
             <header id="overview" className="scroll-mt-28 pb-24 md:pb-32">
               <motion.div variants={heroVariants} initial="hidden" animate="show">
+                <motion.div variants={heroItem} className="mb-7 flex items-center">
+                  <Image
+                    src="/assets/meituan-im/meituan-logo.png"
+                    alt="Meituan"
+                    width={200}
+                    height={48}
+                    className="h-7 w-auto object-contain object-left md:h-8"
+                  />
+                </motion.div>
                 <motion.p variants={heroItem} className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">
                   Meituan · Local Services · IM Consultation
                 </motion.p>
@@ -470,7 +481,9 @@ export default function MeituanImCaseStudyPage() {
                   variants={heroItem}
                   className="mt-6 max-w-xl text-[16px] leading-[1.6] text-textSecondary"
                 >
-                  Turning uncertain local-service pricing into a guided, comparable, bookable decision.
+                  A 0-to-1 in-message quotation system across Meituan&apos;s 770M+ annual users and
+                  14.5M merchants — turning uncertain local-service pricing into a guided,
+                  comparable, bookable decision.
                 </motion.p>
 
                 <motion.div
@@ -501,7 +514,7 @@ export default function MeituanImCaseStudyPage() {
                         { label: "Impact", value: "+5% conversion · validated via user-level A/B" },
                       ].map(({ label, value }) => (
                         <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
-                          <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/50">{label}</dt>
+                          <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
                           <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
                         </div>
                       ))}
@@ -577,7 +590,7 @@ export default function MeituanImCaseStudyPage() {
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Before · 4-step linear journey</p>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">grayscale</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">grayscale</p>
                 </div>
                 <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-black/[0.04]">
                   {[
@@ -607,7 +620,7 @@ export default function MeituanImCaseStudyPage() {
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">After · 3-step trust loop</p>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/55">redesigned</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">redesigned</p>
                 </div>
                 <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-nltLime-ink/[0.08]">
                   {[

@@ -272,7 +272,7 @@ function FilterChip({
       className={`font-mono text-[10px] uppercase tracking-[0.12em] transition-opacity ${
         active
           ? "text-textPrimary"
-          : "text-textSecondary/55 hover:text-textSecondary"
+          : "text-textSecondary/70 hover:text-textSecondary"
       }`}
     >
       [{label}]

@@ -4,6 +4,7 @@ import { CaseStudyMeta } from "@/components/CaseStudyMeta";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { CASE_STUDY_META } from "@/lib/caseStudyMeta";
 import { useEffect, useRef, useState, type ReactNode } from "react";
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 const easeOut = [0.25, 0.1, 0.25, 1] as const;
 
@@ -129,6 +130,7 @@ export default function ApsaraConferenceShowcase() {
   return (
     <div className="relative min-h-screen bg-white">
       <CaseNav />
+      <CaseStudyMobileToc items={navItems} />
       <article className="mx-auto max-w-content bg-white px-6 pb-36 pt-24 text-left md:px-10 md:pb-48 md:pt-28 lg:pl-32 lg:pr-10 lg:pt-32">
         <header id="overview" className="scroll-mt-28">
           <motion.div

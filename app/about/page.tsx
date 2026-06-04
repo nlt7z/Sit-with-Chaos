@@ -515,13 +515,13 @@ export default function AboutPage() {
                   href="/#work"
                   className="rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                 >
-                  View Projects →
+                  View Projects ↗
                 </Link>
                 <Link
                   href="/#contact"
                   className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-8 py-3 text-sm font-medium text-textPrimary shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                 >
-                  Get in Touch →
+                  Get in Touch ↗
                 </Link>
               </div>
             </SectionReveal>

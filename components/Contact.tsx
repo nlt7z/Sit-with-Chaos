@@ -2,6 +2,7 @@
 
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
+import { LimeMark } from "@/components/LimeMark";
 
 const ease = [0.25, 0.1, 0.25, 1] as const;
 
@@ -126,22 +127,29 @@ export function Contact() {
           className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-textSecondary md:mt-8 md:text-base"
         >
           I&apos;m looking for teams building products where interaction, trust, and system
-          thinking matter — and where one person can take an idea to shipped.
+          thinking matter — and where <LimeMark>one person can take an idea to shipped</LimeMark>.
         </motion.p>
 
         <motion.div
           variants={prefersReducedMotion ? undefined : itemVariants}
-          className="mt-10 flex justify-center"
+          className="mt-10 flex flex-wrap justify-center gap-3"
         >
-          <motion.a
+          <a
             href="mailto:fangyuanzero7@gmail.com"
-            whileHover={prefersReducedMotion ? undefined : { y: -2 }}
-            whileTap={prefersReducedMotion ? undefined : { y: 1 }}
-            transition={{ type: "spring", stiffness: 480, damping: 28 }}
-            className="rounded-full bg-textPrimary px-10 py-3.5 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-[opacity,box-shadow,ring-color] duration-300 hover:opacity-90 hover:shadow-[0_16px_36px_-12px_rgba(184,229,50,0.32)] hover:ring-nltLime/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+            className="inline-flex items-center gap-1.5 rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
           >
             Say hello
-          </motion.a>
+            <span aria-hidden>↗</span>
+          </a>
+          <a
+            href="/assets/resume/Product%20Designer%20-%20Yuan%20Fang%20May.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-8 py-3 text-sm font-medium text-textPrimary shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+          >
+            Resume
+            <span aria-hidden>↗</span>
+          </a>
         </motion.div>
 
         <motion.div
@@ -152,13 +160,13 @@ export function Contact() {
             href="https://linkedin.com/in/yuan-fang-66395725b"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-textSecondary transition-colors hover:text-nltLime focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+            className="text-textSecondary transition-colors hover:text-nltLime focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2"
           >
             LinkedIn
           </a>
           <a
             href="https://github.com/nlt7z"
-            className="text-textSecondary transition-colors hover:text-nltLime focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+            className="text-textSecondary transition-colors hover:text-nltLime focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2"
           >
             GitHub
           </a>

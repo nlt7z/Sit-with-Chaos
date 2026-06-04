@@ -3,6 +3,7 @@
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useRef } from "react";
+import { LimeMark } from "@/components/LimeMark";
 import { SiteWindow } from "./SiteWindow";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
@@ -69,7 +70,7 @@ export function HomeMagicGallery() {
             id="magic-heading"
             className="mt-3 max-w-2xl font-display text-2xl font-light leading-snug tracking-[-0.01em] text-textPrimary md:text-3xl"
           >
-            One person, one throughline.
+            One person, <LimeMark>one throughline</LimeMark>.
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-textSecondary md:text-[15px]">
             Concept, logic, visuals, code, ship — end-to-end ownership with the creative instinct behind every decision.
