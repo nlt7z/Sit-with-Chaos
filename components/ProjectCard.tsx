@@ -41,6 +41,9 @@ export type Project = {
   logo?: {
     src: string;
     alt: string;
+    /** Override the badge size (height + width-auto). Defaults to "h-6 w-auto md:h-7".
+     *  Use to balance logos whose intrinsic proportions read larger than the rest. */
+    className?: string;
   };
   /** Light hover wash, set per-card to harmonize with the media (CSS color —
    *  any valid `background-color` value). Keep alpha low (~0.08–0.12) so the
@@ -228,7 +231,7 @@ export function ProjectCard({ project }: { project: Project }) {
                 alt={project.logo.alt}
                 width={90}
                 height={36}
-                className="h-6 w-auto md:h-7"
+                className={project.logo.className ?? "h-6 w-auto md:h-7"}
               />
             </div>
           ) : null}

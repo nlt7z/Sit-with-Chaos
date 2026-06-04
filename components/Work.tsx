@@ -22,6 +22,8 @@ const aiCharacter: Project = {
   logo: {
     src: "/assets/ai-character/alibaba-cloud-logo.png",
     alt: "Alibaba Cloud",
+    // ~60% of the default badge size — the Alibaba mark reads larger than the rest.
+    className: "h-[0.9rem] w-auto md:h-[1.05rem]",
   },
   hoverTint: "rgba(255, 138, 80, 0.10)",
 };
