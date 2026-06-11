@@ -513,10 +513,6 @@ export function LivingHero() {
               <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nltLime" />
             </span>
             Open to work
-            <span aria-hidden className="text-textSecondary/40">·</span>
-            PST
-            <span aria-hidden className="text-textSecondary/40">·</span>
-            Seattle / San Francisco
           </motion.p>
 
           <motion.div variants={itemV} className="mt-8 flex flex-wrap items-center gap-4">

@@ -51,7 +51,7 @@ const storyBeats: StoryBeat[] = [
     title: "So I followed it to Seattle.",
     body: "I graduated with four years on the president's list, moved from New York to LA to Seattle, and enrolled at UW HCDE — building the vocabulary to do this work precisely: qualitative research, usability testing, accessibility, service design, visual communication.",
     visualGallery: visualExperimentImages,
-    period: "UW HCDE, Seattle",
+    period: "UW HCDE",
     hideImage: true,
   },
 ];
@@ -61,7 +61,7 @@ const educationEntries = [
     level: "Graduate",
     degree: "MS, Human Centered Design & Engineering",
     school: "University of Washington",
-    detail: "Seattle",
+    detail: "",
   },
   {
     level: "Undergraduate",
@@ -478,7 +478,7 @@ export default function AboutPage() {
                         {item.degree}
                       </p>
                       <p className="mt-1 text-[13px] leading-relaxed text-textSecondary">
-                        {item.school} · {item.detail}
+                        {item.detail ? `${item.school} · ${item.detail}` : item.school}
                       </p>
                     </motion.div>
                   ))}
