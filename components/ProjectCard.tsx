@@ -258,6 +258,16 @@ export function ProjectCard({ project }: { project: Project }) {
         />
 
         <div className="relative z-10 flex flex-1 flex-col">
+          {project.logo ? (
+            <Image
+              src={project.logo.src}
+              alt={project.logo.alt}
+              width={90}
+              height={36}
+              className={`mb-6 self-start ${project.logo.className ?? "h-6 w-auto md:h-7"}`}
+            />
+          ) : null}
+
           <p className="font-mono text-[12px] tracking-[0.02em] text-textSecondary/55">
             ({project.meta?.year ?? "—"})
           </p>
@@ -310,16 +320,6 @@ export function ProjectCard({ project }: { project: Project }) {
         style={{ background: mediaPanelBackground }}
       >
         {mediaBlock}
-
-        {project.logo ? (
-          <Image
-            src={project.logo.src}
-            alt={project.logo.alt}
-            width={90}
-            height={36}
-            className={`absolute right-4 top-4 z-20 ${project.logo.className ?? "h-6 w-auto md:h-7"} md:right-5 md:top-5`}
-          />
-        ) : null}
       </div>
     </div>
   );

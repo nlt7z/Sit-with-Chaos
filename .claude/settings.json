@@ -321,7 +321,10 @@
       "Bash(git -C /Users/fangyuan/Desktop/newpage add -u)",
       "Bash(git -C /Users/fangyuan/Desktop/newpage commit -m ' *)",
       "Bash(git -C /Users/fangyuan/Desktop/newpage push)",
-      "Bash(node /tmp/shot6.js)"
+      "Bash(node /tmp/shot6.js)",
+      "Bash(rm /Users/fangyuan/Desktop/newpage/.git/index.lock *)",
+      "Bash(echo \"exit:$?\")",
+      "Bash(node /tmp/shot7.js)"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

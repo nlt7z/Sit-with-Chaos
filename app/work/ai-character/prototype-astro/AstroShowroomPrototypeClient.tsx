@@ -405,7 +405,7 @@ function UnifiedProfileCard({
   const pattern = items[2];
   return (
     <div className="rounded-2xl p-3.5" style={{ border: `1px solid ${borderColor}`, background: bgColor }}>
-      <p className="mb-2 text-[9px] uppercase tracking-[.18em]" style={{ color: C.txt3 }}>{label}</p>
+      <p className="mb-2 text-[10px] uppercase tracking-[.18em]" style={{ color: C.txt3 }}>{label}</p>
       {name && (
         <p className={`text-[16px] font-medium leading-tight ${displayFont.className}`} style={{ color: accentColor }}>
           {name.value}
@@ -417,7 +417,7 @@ function UnifiedProfileCard({
             style={{ border: `1px solid ${borderColor}`, color: accentColor }}>
             <FourPointStar size={8} color="currentColor" />
           </div>
-          <p className="text-[11px]" style={{ color: C.txt }}>{sign.value}</p>
+          <p className="text-[12px]" style={{ color: C.txt }}>{sign.value}</p>
         </div>
       )}
       {pattern && (
@@ -425,7 +425,7 @@ function UnifiedProfileCard({
       )}
       {consult && (
         <div className="mt-2 border-t pt-2" style={{ borderColor: `${borderColor}` }}>
-          <p className="text-[9px] uppercase tracking-[.14em]" style={{ color: C.txt3 }}>{consult.label}</p>
+          <p className="text-[10px] uppercase tracking-[.14em]" style={{ color: C.txt3 }}>{consult.label}</p>
           <p className="text-[10px] leading-snug" style={{ color: C.txt2 }}>{consult.value}</p>
         </div>
       )}
@@ -441,9 +441,8 @@ function ProfileHoverCard({ memory }: { memory: MemoryItem[] }) {
   return (
     <div className="absolute right-0 top-full z-50 mt-2 max-h-[min(70vh,520px)] w-[min(100vw-24px,300px)] overflow-y-auto rounded-2xl p-3"
       style={{
-        background:"#fffcf9",
-        border:"1px solid rgba(190,174,193,0.22)",
-        boxShadow:"0 12px 36px -10px rgba(90,65,128,0.2)",
+        background: "rgba(255,255,255,0.97)",
+        boxShadow: "0 8px 32px -8px rgba(80,60,110,0.15)",
       }}>
       <div className="mb-2.5">
         <p className="text-[10px] tracking-[.18em] uppercase" style={{ color:C.txt3 }}>Astro Profile</p>
@@ -472,8 +471,8 @@ function ProfileHoverCard({ memory }: { memory: MemoryItem[] }) {
         )}
       </div>
 
-      <div className="mt-2 rounded-lg px-2.5 py-1.5" style={{ border:"1px dashed rgba(190,174,193,0.24)" }}>
-        <p className="text-[9px]" style={{ color:C.txt3 }}>Session memory: {liveItems.length} entries</p>
+      <div className="mt-2 rounded-xl px-2.5 py-1.5" style={{ background:"rgba(190,174,193,0.08)" }}>
+        <p className="text-[10px]" style={{ color:C.txt3 }}>Session memory: {liveItems.length} entries</p>
       </div>
     </div>
   );
@@ -501,20 +500,19 @@ function AstroShareModal({ onClose }: { onClose: () => void }) {
         onClick={onClose}
       />
       <motion.div
-        className="fixed z-50 w-[min(92vw,400px)] overflow-hidden rounded-3xl"
+        className="fixed z-50 w-[min(92vw,400px)] overflow-hidden rounded-2xl"
         initial={{ opacity: 0, scale: 0.97 }}
         animate={{ opacity: 1, scale: 1 }}
         exit={{ opacity: 0, scale: 0.98 }}
         transition={{ duration: DUR.base, ease: EASE }}
         style={{
           left: "50%", top: "50%", x: "-50%", y: "-50%",
-          background: "linear-gradient(158deg, rgba(255,253,252,0.99) 0%, rgba(253,248,251,0.98) 100%)",
-          border: "1px solid rgba(210,195,220,0.28)",
-          boxShadow: "0 24px 60px -20px rgba(80,50,110,0.16), 0 1px 0 rgba(255,255,255,0.7) inset",
+          background: "rgba(255,255,255,0.97)",
+          boxShadow: "0 16px 48px -12px rgba(80,50,110,0.14)",
         }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(215,200,225,0.28)" }}>
+        <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: "1px solid rgba(190,174,193,0.18)" }}>
           <div className="flex items-center gap-2.5">
             <div className="flex h-6 w-6 items-center justify-center rounded-full" style={{ background: "rgba(144,115,150,0.1)", border: "1px solid rgba(144,115,150,0.2)" }}>
               <svg width={11} height={11} viewBox="0 0 24 24" fill="none" stroke={C.accent} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -530,16 +528,16 @@ function AstroShareModal({ onClose }: { onClose: () => void }) {
         </div>
 
         <div className="px-5 py-5">
-          <p className="mb-3 text-[11px]" style={{ color: C.txt3 }}>Copy this link and share with anyone</p>
-          <div className="mb-4 rounded-xl px-3.5 py-3 font-mono text-[10px] break-all leading-[1.55]"
-            style={{ background: "rgba(245,241,248,0.7)", border: "1px solid rgba(210,195,225,0.3)", color: C.txt2 }}>
+          <p className="mb-3 text-[12px]" style={{ color: C.txt3 }}>Copy this link and share with anyone</p>
+          <div className="mb-4 rounded-2xl px-3.5 py-3 font-mono text-[10px] break-all leading-[1.55]"
+            style={{ background: "rgba(240,236,244,0.6)", color: C.txt2 }}>
             {link}
           </div>
           <motion.button
             type="button"
             onClick={() => void copy()}
             className="w-full rounded-xl py-2.5 text-[12px] font-semibold text-white"
-            style={{ background: copied ? "linear-gradient(135deg,#6b9e5e,#4a8a42)" : `linear-gradient(135deg,${C.accent},#c390dc)`, boxShadow: "0 6px 20px -8px rgba(144,115,150,0.38)", transition: "background 0.3s ease" }}
+            style={{ background: copied ? "#6b9e5e" : C.accent, boxShadow: "0 4px 16px -6px rgba(144,115,150,0.38)", transition: "background 0.25s ease" }}
             whileHover={{ filter: "brightness(1.06)" }}
             whileTap={{ scale: 0.97 }}
           >
@@ -658,7 +656,7 @@ function SidePanel({ title, onClose, children, tone = "default", variant = "over
 
 function SLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[9px] uppercase tracking-[.22em]" style={{ color: C.txt3 }}>{children}</p>
+    <p className="text-[10px] uppercase tracking-[.22em]" style={{ color: C.txt3 }}>{children}</p>
   );
 }
 
@@ -704,7 +702,7 @@ const InputDock = memo(function InputDock({
           {QUICK_REPLIES.map(q => (
             <button key={q} type="button"
               onClick={() => { if (!typing) onSend(q); }} disabled={typing}
-              className="group flex shrink-0 items-center gap-1.5 rounded-full px-4 py-[7px] text-left text-[11px] leading-snug whitespace-nowrap transition-all duration-200 disabled:opacity-35"
+              className="group flex shrink-0 items-center gap-1.5 rounded-full px-4 py-[7px] text-left text-[12px] leading-snug whitespace-nowrap transition-all duration-200 disabled:opacity-35"
               style={{
                 background: "rgba(255,252,253,0.88)",
                 border: "1px solid rgba(190,174,193,0.22)",
@@ -742,11 +740,11 @@ const InputDock = memo(function InputDock({
               onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); submit(); }}}
               rows={1}
               placeholder="Chat with Tao Baibai…"
-              className="flex-1 resize-none bg-transparent text-[13px] outline-none"
+              className="flex-1 resize-none bg-transparent text-[14px] outline-none"
               style={{ color: C.txt, caretColor: C.accent, minHeight: 26, maxHeight: 88, lineHeight: "1.65" }}
             />
             <div className="flex items-center gap-1.5 shrink-0">
-              <span className="text-[9px]" style={{ color: C.txt3 }}>{input.length}</span>
+              <span className="text-[10px]" style={{ color: C.txt3 }}>{input.length}</span>
               <Tip label="Draw an astro card">
                 <button type="button" onClick={onDrawCard} disabled={typing}
                   className="flex h-6 w-6 items-center justify-center rounded-lg transition-all duration-150 disabled:opacity-30"
@@ -874,17 +872,17 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
         </div>
 
         {/* Identity */}
-        <p className="mt-5 text-[9px] tracking-[.22em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
-        <p className={`mt-1.5 flex items-center gap-1.5 text-[15px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
+        <p className="mt-5 text-[10px] tracking-[.22em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
+        <p className={`mt-1.5 flex items-center gap-1.5 text-[16px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
           <FourPointStar size={11} color={C.accent}/>
           Tao Baibai
         </p>
 
         {/* Headline */}
-        <h1 className={`mt-5 max-w-[20ch] text-[27px] leading-[1.26] tracking-[-0.01em] ${serifFont.className}`} style={{ color:C.txt }}>
+        <h1 className={`mt-5 max-w-[20ch] text-[26px] leading-[1.26] tracking-[-0.01em] ${serifFont.className}`} style={{ color:C.txt }}>
           Tell me your name and zodiac sign.
         </h1>
-        <p className="mt-3 max-w-[34ch] text-[11px] leading-[1.72]" style={{ color:C.txt3 }}>
+        <p className="mt-3 max-w-[34ch] text-[12px] leading-[1.72]" style={{ color:C.txt3 }}>
           Tao Baibai reads a first impression from your stars, then carries it into the conversation.
         </p>
 
@@ -902,7 +900,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                 value={name}
                 onChange={e => setName(e.target.value)}
                 placeholder="Your name"
-                className="min-w-0 flex-1 bg-transparent text-[13px] outline-none"
+                className="min-w-0 flex-1 bg-transparent text-[14px] outline-none"
                 style={{ color:C.txt, caretColor:C.rose }}
                 aria-label="Your name"
               />
@@ -920,7 +918,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                 id="astro-sign"
                 value={selectedCode}
                 onChange={e => setSelectedCode(e.target.value)}
-                className="min-w-0 flex-1 appearance-none bg-transparent text-[13px] outline-none"
+                className="min-w-0 flex-1 appearance-none bg-transparent text-[14px] outline-none"
                 style={{ color:C.txt }}
                 aria-label="Your zodiac sign"
               >
@@ -937,12 +935,12 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
             <button
               type="button"
               onClick={() => setShowPartner(true)}
-              className="mx-auto flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] tracking-[0.02em] transition-all duration-200"
+              className="mx-auto flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[12px] tracking-[0.02em] transition-all duration-200"
               style={{ color:C.txt2, border:"0.5px dashed rgba(190,174,193,0.4)", background:"transparent" }}
               onMouseEnter={e => { e.currentTarget.style.color = C.accent; e.currentTarget.style.borderColor = "rgba(144,115,150,0.5)"; }}
               onMouseLeave={e => { e.currentTarget.style.color = C.txt2; e.currentTarget.style.borderColor = "rgba(190,174,193,0.4)"; }}
             >
-              <span className="text-[13px] leading-none">+</span>
+              <span className="text-[14px] leading-none">+</span>
               Add someone — read you two together
             </button>
           ) : (
@@ -954,7 +952,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
               style={{ background:"rgba(255,250,252,0.55)", border:"0.5px solid rgba(210,184,200,0.4)" }}
             >
               <div className="mb-2.5 flex items-center justify-between">
-                <p className="text-[9px] uppercase tracking-[.18em]" style={{ color:C.txt3 }}>Them · synastry</p>
+                <p className="text-[10px] uppercase tracking-[.18em]" style={{ color:C.txt3 }}>Them · synastry</p>
                 <button type="button" onClick={clearPartner}
                   className="text-[10px] tracking-[0.02em] transition-opacity hover:opacity-100" style={{ color:C.txt3, opacity:0.7 }}>
                   Remove
@@ -971,7 +969,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                     value={partnerName}
                     onChange={e => setPartnerName(e.target.value)}
                     placeholder="Their name"
-                    className="min-w-0 flex-1 bg-transparent text-[13px] outline-none"
+                    className="min-w-0 flex-1 bg-transparent text-[14px] outline-none"
                     style={{ color:C.txt, caretColor:C.rose }}
                     aria-label="Their name"
                   />
@@ -985,7 +983,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                   <select
                     value={partnerCode}
                     onChange={e => setPartnerCode(e.target.value)}
-                    className="min-w-0 flex-1 appearance-none bg-transparent text-[13px] outline-none"
+                    className="min-w-0 flex-1 appearance-none bg-transparent text-[14px] outline-none"
                     style={{ color:C.txt }}
                     aria-label="Their zodiac sign"
                   >
@@ -1292,8 +1290,8 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
             </div>
           </div>
           <div className="leading-none">
-            <p className="text-[9px] tracking-[.14em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
-            <p className={`flex items-center gap-1.5 text-[13px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
+            <p className="text-[10px] tracking-[.14em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
+            <p className={`flex items-center gap-1.5 text-[14px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
               <FourPointStar size={ICON_SIZE - 4} color={C.accent}/>
               Tao Baibai
             </p>
@@ -1309,7 +1307,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
             <Tip label="Zodiac archive">
               <NavIcon onClick={() => setProfileHover(v => !v)} active={profileHover} wide>
                 <FourPointStar size={ICON_SIZE} color="currentColor"/>
-                <span className="text-[11px] font-medium">Profile</span>
+                <span className="text-[12px] font-medium">Profile</span>
                 <span className="text-[10px]" style={{ color:C.txt3 }}>Archive</span>
               </NavIcon>
             </Tip>
@@ -1321,7 +1319,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
               <svg width={ICON_SIZE} height={ICON_SIZE} viewBox="0 0 20 20" fill="none" aria-hidden style={{ color: "currentColor" }}>
                 <path d="M7 5L3 10l4 5M13 5l4 5-4 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="text-[11px] font-medium">Code</span>
+              <span className="text-[12px] font-medium">Code</span>
             </NavIcon>
           </Tip>
 
@@ -1376,11 +1374,10 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
 
                 {/* Opening */}
                 {m.isOpening && (
-                  <div className="rounded-3xl overflow-hidden"
+                  <div className="rounded-2xl overflow-hidden"
                     style={{
-                      background:"linear-gradient(152deg, rgba(255,253,253,0.95) 0%, rgba(255,245,249,0.9) 58%, rgba(251,244,254,0.9) 100%)",
-                      border:"1px solid rgba(190,174,193,0.22)",
-                      boxShadow:"0 16px 48px -20px rgba(144,115,150,0.2), 0 1px 0 rgba(255,255,255,0.65) inset",
+                      background: "rgba(255,255,255,0.92)",
+                      boxShadow: "0 4px 24px -10px rgba(100,80,130,0.12)",
                     }}>
                     <div className="flex flex-col items-center text-center px-8 py-8 gap-4">
                       <div className="h-14 w-14 overflow-hidden rounded-full shrink-0"
@@ -1388,7 +1385,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
                       </div>
                       <div className="max-w-[480px]">
-                        <p className={`text-[9px] tracking-[.22em] uppercase mb-2 ${displayFont.className}`}
+                        <p className={`text-[10px] tracking-[.22em] uppercase mb-2 ${displayFont.className}`}
                           style={{ color:C.accent }}>
                           Opening
                         </p>
@@ -1487,14 +1484,14 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                   <div className="flex flex-col gap-2 max-w-[90%]">
                     {m.mode && (
                       <div className="flex items-center gap-1.5 pl-[2.375rem]">
-                        <span className="rounded-full px-2.5 py-0.5 text-[9px] tracking-[.12em] uppercase"
+                        <span className="rounded-full px-2.5 py-0.5 text-[10px] tracking-[.12em] uppercase"
                           style={m.mode==="Astrology Consult"
                             ? { background:"rgba(144,115,150,0.09)", border:"1px solid rgba(144,115,150,0.18)", color:C.accent }
                             : { background:"rgba(200,147,158,0.09)", border:"1px solid rgba(200,147,158,0.18)", color:C.rose }}>
                           {m.mode==="Astrology Consult" ? "Chart" : "Casual"}
                         </span>
                         {m.sourceDb && (
-                          <span className="text-[9px]" style={{ color:C.txt3 }}>
+                          <span className="text-[10px]" style={{ color:C.txt3 }}>
                             {m.sourceDb==="zodiac_memory_db" ? "zodiac db" : "chat db"}
                           </span>
                         )}
@@ -1505,11 +1502,10 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         style={{ border:"1.5px solid rgba(190,174,193,0.28)", boxShadow:"0 2px 10px -3px rgba(80,50,120,0.18)" }}>
                         <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
                       </div>
-                      <div className="rounded-2xl rounded-tl px-5 py-3.5"
+                      <div className="rounded-2xl px-5 py-3.5"
                         style={{
-                          background:"linear-gradient(158deg, rgba(255,253,253,0.92) 0%, rgba(255,246,250,0.85) 58%, rgba(251,243,254,0.85) 100%)",
-                          border:"1px solid rgba(200,147,158,0.18)",
-                          boxShadow:"0 12px 32px -16px rgba(180,100,140,0.26), 0 1px 0 rgba(255,255,255,0.6) inset",
+                          background: "rgba(255,255,255,0.9)",
+                          boxShadow: "0 2px 14px -6px rgba(100,80,130,0.1)",
                         }}>
                         <p className={`text-[16px] leading-[1.7] ${serifFont.className}`} style={{ color:C.txt }}>
                           {m.text}
@@ -1539,7 +1535,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         </button>
                       </div>
                       {m.cue && (
-                        <p className="px-1 text-[11px] leading-[1.55]" style={{ color:C.txt3, animation:"cue-fade .4s ease" }}>
+                        <p className="px-1 text-[12px] leading-[1.55]" style={{ color:C.txt3, animation:"cue-fade .4s ease" }}>
                           {m.cue}
                         </p>
                       )}
@@ -1549,14 +1545,12 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                 {/* User */}
                 {m.role==="user" && (
                   <div className="flex justify-end">
-                    <div className="max-w-[78%] rounded-2xl rounded-tr px-5 py-3.5"
+                    <div className="max-w-[78%] rounded-2xl px-5 py-3.5"
                       style={{
-                        background: "linear-gradient(158deg, rgba(247,231,238,0.88) 0%, rgba(244,222,237,0.8) 100%)",
-                        backdropFilter: "blur(4px)",
-                        border: "1px solid rgba(200,147,158,0.18)",
-                        boxShadow: "0 8px 24px -14px rgba(180,100,140,0.28)",
+                        background: "rgba(236,228,244,0.88)",
+                        boxShadow: "0 2px 10px -4px rgba(100,80,130,0.08)",
                       }}>
-                      <p className="text-[15px] leading-[1.6]" style={{ color:C.userTxt }}>{m.text}</p>
+                      <p className="text-[16px] leading-[1.6]" style={{ color:C.userTxt }}>{m.text}</p>
                     </div>
                   </div>
                 )}
@@ -1577,16 +1571,15 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                   style={{ border:"1.5px solid rgba(190,174,193,0.28)" }}>
                   <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
                 </div>
-                <div className="flex items-center gap-2.5 rounded-2xl rounded-tl px-5 py-3.5"
+                <div className="flex items-center gap-2.5 rounded-2xl px-5 py-3.5"
                   style={{
-                    background:"linear-gradient(158deg, rgba(255,253,253,0.92) 0%, rgba(255,246,250,0.86) 58%, rgba(251,243,254,0.86) 100%)",
-                    border:"1px solid rgba(200,147,158,0.18)",
-                    boxShadow:"0 10px 28px -16px rgba(180,100,140,0.24)",
+                    background: "rgba(255,255,255,0.9)",
+                    boxShadow: "0 2px 14px -6px rgba(100,80,130,0.1)",
                   }}>
                   <span className="typing-dot block h-[5px] w-[5px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
                   <span className="typing-dot block h-[5px] w-[5px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
                   <span className="typing-dot block h-[5px] w-[5px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
-                  <span className="ml-1.5 text-[11px]" style={{ color:C.txt3 }}>Reading your chart…</span>
+                  <span className="ml-1.5 text-[12px]" style={{ color:C.txt3 }}>Reading your chart…</span>
                 </div>
               </motion.div>
             )}
@@ -1616,7 +1609,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
             onClose={() => { setCodeOpen(false); setCloneCopied(false); }}
           >
             <p
-              className={`text-[9px] tracking-[.18em] uppercase -mt-1 ${uiFont.className}`}
+              className={`text-[10px] tracking-[.18em] uppercase -mt-1 ${uiFont.className}`}
               style={{ color: "rgba(120, 96, 118, 0.48)" }}
             >
               Inspect · Clone · Configure
@@ -1661,7 +1654,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         key={k}
                         type="button"
                         onClick={() => setAstroSourcePage(k)}
-                        className="rounded-full px-2.5 py-1 text-[9px] font-medium transition-all"
+                        className="rounded-full px-2.5 py-1 text-[10px] font-medium transition-all"
                         style={{
                           background: act
                             ? "linear-gradient(145deg, rgba(255,248,250,0.95) 0%, rgba(244,232,242,0.82) 100%)"
@@ -1698,7 +1691,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                     {["#c1909a", "#dba67a", "#7ab8a0"].map((c, i) => (
                       <div key={i} className="h-2 w-2 rounded-full opacity-60" style={{ background: c }} />
                     ))}
-                    <span className="ml-1.5 text-[9px]" style={{ color: C.txt3 }}>
+                    <span className="ml-1.5 text-[10px]" style={{ color: C.txt3 }}>
                       {astroSourcePage === "dbs" && "zodiac_routing.yaml"}
                       {astroSourcePage === "router" && "intent_router.ts"}
                       {astroSourcePage === "spec" && "tao_baibai.config.yaml"}
@@ -1753,7 +1746,7 @@ else:
                     {["#c1909a", "#dba67a", "#7ab8a0"].map((c, i) => (
                       <div key={i} className="h-2 w-2 rounded-full opacity-60" style={{ background: c }} />
                     ))}
-                    <span className="ml-1.5 text-[9px] text-white/50">Terminal</span>
+                    <span className="ml-1.5 text-[10px] text-white/50">Terminal</span>
                   </div>
                   <pre className="m-0 px-3.5 py-3.5 text-[10px] leading-[1.9] whitespace-pre-wrap" style={{ color: "rgba(130,200,150,0.92)", fontFamily: "ui-monospace,monospace" }}>{ASTRO_CLONE_SNIPPET}</pre>
                 </div>
@@ -1782,7 +1775,7 @@ else:
             {codeToolTab === "config" && (
               <div className="space-y-3">
                 <div>
-                  <div className="text-[9px] uppercase tracking-[.14em] mb-1.5" style={{ color: "rgba(120, 96, 118, 0.5)" }}>Model</div>
+                  <div className="text-[10px] uppercase tracking-[.14em] mb-1.5" style={{ color: "rgba(120, 96, 118, 0.5)" }}>Model</div>
                   <div className="relative">
                     <select
                       value={cfgModel}
@@ -1814,7 +1807,7 @@ else:
                     border: "1px solid rgba(205, 185, 200, 0.32)",
                   }}
                 >
-                  <div className="text-[9px] uppercase tracking-[.12em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>{`Temperature — ${cfgTemp.toFixed(2)}`}</div>
+                  <div className="text-[10px] uppercase tracking-[.12em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>{`Temperature — ${cfgTemp.toFixed(2)}`}</div>
                   <input
                     type="range"
                     min={0}
@@ -1833,7 +1826,7 @@ else:
                     border: "1px solid rgba(205, 185, 200, 0.32)",
                   }}
                 >
-                  <div className="text-[9px] uppercase tracking-[.12em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>{`Max tokens — ${cfgTokens}`}</div>
+                  <div className="text-[10px] uppercase tracking-[.12em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>{`Max tokens — ${cfgTokens}`}</div>
                   <input
                     type="range"
                     min={256}
@@ -1852,7 +1845,7 @@ else:
                     border: "1px solid rgba(205, 188, 202, 0.3)",
                   }}
                 >
-                  <div className="text-[9px] uppercase tracking-[.1em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>Feature flags</div>
+                  <div className="text-[10px] uppercase tracking-[.1em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>Feature flags</div>
                   {["Zodiac memory routing", "Chart & transit tools", "Card draw ritual", "Smalltalk sentiment mirror"].map((label, i) => {
                     const on = i < 3;
                     return (
@@ -1861,7 +1854,7 @@ else:
                         className="flex items-center justify-between border-b last:border-0 py-1.5"
                         style={{ borderColor: "rgba(210, 190, 205, 0.22)" }}
                       >
-                        <span className="text-[11px]" style={{ color: C.txt2 }}>{label}</span>
+                        <span className="text-[12px]" style={{ color: C.txt2 }}>{label}</span>
                         <span
                           className="relative h-3.5 w-7 rounded-full"
                           style={{ background: on ? "rgba(190, 155, 175, 0.42)" : "rgba(180, 165, 178, 0.25)" }}
@@ -1896,7 +1889,7 @@ else:
                         className="h-1.5 w-1.5 rounded-full"
                         style={{ background: latestMode === "Astrology Consult" ? C.accent : C.rose }}
                       />
-                      <span className="text-[11px]" style={{ color: C.txt2 }}>
+                      <span className="text-[12px]" style={{ color: C.txt2 }}>
                         {latestMode === "Astrology Consult" ? "→ zodiac_memory_db" : "→ smalltalk_memory_db"}
                       </span>
                     </motion.div>
