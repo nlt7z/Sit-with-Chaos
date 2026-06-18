@@ -156,17 +156,17 @@ function ScaledPrototypeFrame({
   title,
   naturalWidth = 800,
   naturalHeight = 1180,
+  displayMaxWidth,
 }: {
   src: string;
   title: string;
   naturalWidth?: number;
   naturalHeight?: number;
+  displayMaxWidth?: number;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  // Start at 1 so the hydrated markup matches the server (a window-based
-  // initializer mismatches on narrow viewports); the layout effect measures
-  // before first paint, so there's still no flash at natural size.
   const [scale, setScale] = useState(1);
+  const effectiveMax = displayMaxWidth ?? naturalWidth;
 
   useIsomorphicLayoutEffect(() => {
     const el = wrapperRef.current;
@@ -182,7 +182,7 @@ function ScaledPrototypeFrame({
   }, [naturalWidth]);
 
   return (
-    <div className="mx-auto w-full" style={{ maxWidth: naturalWidth }}>
+    <div className="mx-auto w-full" style={{ maxWidth: effectiveMax }}>
       <div
         ref={wrapperRef}
         className="relative w-full"
@@ -524,14 +524,14 @@ export default function MeituanImCaseStudyPage() {
                   <div className="hidden lg:flex lg:flex-col lg:items-start">
                     <div
                       className="relative rounded-xl"
-                      style={{ width: 480, height: 320 }}
+                      style={{ width: 480, height: 360 }}
                     >
                       <iframe
                         src="/assets/meituan-im/Repair%20Flow.html"
                         title="Repair flow — interactive prototype"
                         style={{
                           width: 1200,
-                          height: 800,
+                          height: 900,
                           border: 0,
                           display: "block",
                           transform: "scale(0.4)",
@@ -685,14 +685,13 @@ export default function MeituanImCaseStudyPage() {
 
         <Section id="chat" eyebrow="IM Experience" title="Three entry states, one interaction model.">
           <FadeIn className="mt-2">
-            <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06] shadow-[0_36px_72px_-36px_rgba(0,0,0,0.18)]">
-              <ScaledPrototypeFrame
-                src="/assets/meituan-im/Repair%20Flow.html"
-                title="Repair flow — interactive prototype"
-                naturalWidth={1200}
-                naturalHeight={800}
-              />
-            </div>
+            <ScaledPrototypeFrame
+              src="/assets/meituan-im/Repair%20Flow.html"
+              title="Repair flow — interactive prototype"
+              naturalWidth={1200}
+              naturalHeight={900}
+              displayMaxWidth={900}
+            />
           </FadeIn>
         </Section>
 
@@ -792,14 +791,13 @@ export default function MeituanImCaseStudyPage() {
               gets a bigger, slightly delayed reveal: blur clears, the device
               settles down ~1deg, and a soft amber wash brushes through. */}
           <PrototypeReveal>
-            <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06] shadow-[0_36px_72px_-36px_rgba(0,0,0,0.18)]">
-              <ScaledPrototypeFrame
-                src="/assets/meituan-im/Repair%20Flow.html"
-                title="Repair flow — interactive prototype"
-                naturalWidth={1200}
-                naturalHeight={800}
-              />
-            </div>
+            <ScaledPrototypeFrame
+              src="/assets/meituan-im/Repair%20Flow.html"
+              title="Repair flow — interactive prototype"
+              naturalWidth={1200}
+              naturalHeight={900}
+              displayMaxWidth={900}
+            />
           </PrototypeReveal>
         </Section>
 
