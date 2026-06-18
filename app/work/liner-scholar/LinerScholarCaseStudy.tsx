@@ -129,7 +129,7 @@ function Prose({ children, className = "" }: { children: ReactNode; className?: 
 
 function PullQuote({ children, cite }: { children: ReactNode; cite?: string }) {
   return (
-    <figure className="my-14 border-l-2 border-black/[0.08] pl-6 md:my-20 md:pl-8">
+    <figure className="my-14 md:my-20">
       <blockquote className="font-display text-[1.15rem] font-light italic leading-snug text-textPrimary md:text-xl md:leading-snug">
         {children}
       </blockquote>
@@ -242,7 +242,7 @@ export default function LinerScholarCaseStudy() {
               <span className="font-medium text-textPrimary">context-transfer</span> problem. I led research synthesis
               to uncover why, and translated findings into clear product direction for Liner&apos;s next design cycle.
             </p>
-            <p className="mt-8 max-w-2xl border-l-2 border-textPrimary/12 pl-5 text-[15px] leading-relaxed text-textSecondary md:text-base">
+            <p className="mt-8 max-w-2xl text-[15px] leading-relaxed text-textSecondary md:text-base">
               <span className="font-medium text-textPrimary">My lens going in:</span> I treat AI not as a feature layer,
               but as a capability that reshapes how the whole workflow should be structured. That framing shaped how I
               read every interview.
@@ -462,7 +462,7 @@ export default function LinerScholarCaseStudy() {
                     </h3>
                     <p className="mt-4 max-w-2xl text-[16px] leading-relaxed text-textSecondary md:text-[17px]">{ins.body}</p>
                     <PullQuote cite={ins.cite}>&ldquo;{ins.quote}&rdquo;</PullQuote>
-                    <p className="max-w-2xl border-l-2 border-textPrimary/15 pl-5 text-[16px] font-medium leading-relaxed text-textPrimary/95 md:text-[17px]">
+                    <p className="max-w-2xl text-[16px] font-medium leading-relaxed text-textPrimary/95 md:text-[17px]">
                       <span className="font-mono text-[10px] font-normal uppercase tracking-[0.12em] text-textSecondary">
                         Design implication ·{" "}
                       </span>

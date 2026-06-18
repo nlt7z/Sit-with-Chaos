@@ -909,8 +909,7 @@ export default function StudioEngineCaseStudy() {
               "6/6 users struggled with visual editing",
               "One-shot generation → staged creative control",
             ].map((s) => (
-              <span key={s} className="inline-flex items-center gap-2 text-[13px] leading-snug text-textSecondary/80">
-                <span className="h-1 w-1 shrink-0 rounded-full bg-nltLime-400/60" aria-hidden />
+              <span key={s} className="text-[13px] leading-snug text-textSecondary/80">
                 {s}
               </span>
             ))}

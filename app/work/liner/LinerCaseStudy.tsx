@@ -189,14 +189,11 @@ export default function LinerCaseStudy() {
                       <p className="font-display text-[2.4rem] font-light leading-[1.02] tracking-[-0.02em] text-textPrimary md:text-[2.75rem]">
                         {n}
                       </p>
-                      <div className="mt-3 flex items-start gap-2">
-                        <span className="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-nltLime" aria-hidden="true" />
-                        <div>
-                          <p className="font-sans text-[12px] font-medium uppercase leading-snug tracking-[0.12em] text-textPrimary/70">
-                            {label}
-                          </p>
-                          <p className="mt-1.5 font-sans text-[13px] leading-snug text-textSecondary">{detail}</p>
-                        </div>
+                      <div className="mt-3">
+                        <p className="font-sans text-[12px] font-medium uppercase leading-snug tracking-[0.12em] text-textPrimary/70">
+                          {label}
+                        </p>
+                        <p className="mt-1.5 font-sans text-[13px] leading-snug text-textSecondary">{detail}</p>
                       </div>
                     </div>
                   ))}
@@ -208,7 +205,7 @@ export default function LinerCaseStudy() {
                     { label: "Role", value: "Product Designer" },
                     { label: "Partner", value: "Liner AI · UW HCDE" },
                   ].map(({ label, value }) => (
-                    <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
+                    <div key={label} className="min-w-0">
                       <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">
                         {label}
                       </dt>
@@ -235,8 +232,7 @@ export default function LinerCaseStudy() {
                   src="/assets/liner/Liner-AI-Capstone-Prototype-Jen.html"
                   title="Liner AI capstone — interactive editor prototype"
                 />
-                <p className="mt-6 flex flex-wrap items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
-                  <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-nltLime" />
+                <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
                   Built with Claude Code + Figma MCP
                 </p>
               </FadeIn>

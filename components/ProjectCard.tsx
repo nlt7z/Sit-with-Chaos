@@ -275,25 +275,12 @@ export function ProjectCard({ project }: { project: Project }) {
             )}
           </h3>
 
-          {/* impact chip — sits directly under the title now */}
-          {project.impact ? (
-            <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-black/[0.07] bg-white px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textPrimary shadow-[0_4px_14px_-8px_rgba(0,0,0,0.18)] transition-colors duration-500 ease-portfolio group-hover:bg-transparent group-hover:shadow-none group-focus-within:bg-transparent group-focus-within:shadow-none md:text-[11px]">
-              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-nltLime" />
-              {project.impact}
-            </span>
-          ) : null}
-
           <div className="mt-8 md:mt-auto md:pt-10">
-          {project.tags && project.tags.length > 0 ? (
+          {project.impact ? (
             <ul className="border-t border-black/[0.08]">
-              {project.tags.map((tag) => (
-                <li
-                  key={tag}
-                  className="border-b border-black/[0.08] py-2.5 text-[13px] leading-snug text-textSecondary last:border-b-0 md:py-3"
-                >
-                  {tag}
-                </li>
-              ))}
+              <li className="border-b border-black/[0.08] py-2.5 text-[13px] leading-snug text-textSecondary last:border-b-0 md:py-3">
+                {project.impact}
+              </li>
             </ul>
           ) : null}
 

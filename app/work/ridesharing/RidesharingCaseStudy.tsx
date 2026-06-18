@@ -173,7 +173,7 @@ function ProseP({ children }: { children: ReactNode }) {
 function PullQuote({ children }: { children: ReactNode }) {
   return (
     <figure className="my-24 md:my-36 lg:my-44">
-      <blockquote className="max-w-3xl border-l border-black/[0.06] pl-9 md:pl-12">
+      <blockquote className="max-w-3xl">
         <p className="font-display text-[1.4rem] font-light leading-[1.35] tracking-[-0.025em] text-textPrimary md:text-[1.75rem] md:leading-snug lg:text-[1.85rem]">
           {children}
         </p>
@@ -275,7 +275,7 @@ function DesignQuestionCallout() {
       <p className="font-mono text-[10px] font-normal uppercase tracking-[0.22em] text-textSecondary/65">
         The design question
       </p>
-      <blockquote className="mt-8 max-w-3xl border-l border-black/[0.06] pl-9 md:pl-12">
+      <blockquote className="mt-8 max-w-3xl">
         <p className="font-display text-[1.4rem] font-light italic leading-[1.3] tracking-[-0.03em] text-textPrimary md:text-[1.85rem] md:leading-snug">
           “In a driverless context, how do passengers regain a sense of control and emotional connection through the
           HMI — and turn the cabin into a space worth being in?”
@@ -605,7 +605,7 @@ export default function RidesharingCaseStudy() {
                 work.
               </ProseP>
             </Prose>
-            <ul className="mt-10 max-w-2xl space-y-6 border-l border-black/[0.08] pl-8 text-[17px] leading-[1.65] text-textSecondary md:text-lg md:leading-[1.7]">
+            <ul className="mt-10 max-w-2xl space-y-6 text-[17px] leading-[1.65] text-textSecondary md:text-lg md:leading-[1.7]">
               <li>
                 <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/70">P1 — Core</p>
                 <p className="mt-2 text-textSecondary">
@@ -997,7 +997,7 @@ export default function RidesharingCaseStudy() {
                   text: "Trust is not only built in smooth stretches. It is maintained or broken in sudden braking, odd routes, sensor hesitation. We know where passengers start; designing the exact moments when trust wavers is the most interesting open problem in this space.",
                 },
               ].map((item) => (
-                <li key={item.title} className="border-l border-black/[0.08] pl-8">
+                <li key={item.title}>
                   <p className="font-medium text-textPrimary">{item.title}</p>
                   <p className="mt-2 text-textSecondary">{item.text}</p>
                 </li>

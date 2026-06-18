@@ -479,47 +479,6 @@ function ProfileHoverCard({ memory }: { memory: MemoryItem[] }) {
   );
 }
 
-function AvatarTagCard() {
-  return (
-    <div
-      className="shrink-0 self-start"
-      style={{ ["--avw" as string]: "min(6.75rem, min(32vw, 104px))" }}
-    >
-      <div className="relative flex aspect-square w-[var(--avw)] items-center justify-center">
-        <span className="opening-orbit-star opening-orbit-a" style={{ color: "rgba(200,147,158,0.82)" }}>
-          <span style={{ transform: "translateX(calc(var(--avw) * 56 / 104))" }}>
-            <FourPointStar size={8} color="currentColor"/>
-          </span>
-        </span>
-        <span className="opening-orbit-star opening-orbit-b" style={{ color: "rgba(144,115,150,0.82)" }}>
-          <span style={{ transform: "translateX(calc(var(--avw) * 52 / 104))" }}>
-            <FourPointStar size={7} color="currentColor"/>
-          </span>
-        </span>
-        <span
-          className="opening-orbit-star"
-          style={{
-            color: "rgba(213,203,215,0.75)",
-            transform: "translate(-50%, -50%) translateX(calc(var(--avw) * -50 / 104)) translateY(calc(var(--avw) * 20 / 104))",
-          }}
-        >
-          <FourPointStar size={6} color="currentColor"/>
-        </span>
-
-        <motion.div
-          whileHover={{ scale: 1.04 }}
-          transition={{ duration: DUR.base, ease: EASE }}
-          className="relative z-10 h-full w-full overflow-hidden rounded-full"
-          style={{
-            boxShadow: "0 4px 22px -10px rgba(80,50,130,0.14)",
-          }}
-        >
-          <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
-        </motion.div>
-      </div>
-    </div>
-  );
-}
 
 // ─── Share modal (single step: copy link) ─────────────────────────────────────
 function AstroShareModal({ onClose }: { onClose: () => void }) {
@@ -735,7 +694,7 @@ const InputDock = memo(function InputDock({
       style={{
         background: "linear-gradient(180deg, rgba(255,251,252,0.94) 0%, rgba(253,243,249,0.92) 62%, rgba(249,241,253,0.92) 100%)",
         backdropFilter: "blur(12px)",
-        borderTop: "1px solid rgba(200,147,158,0.14)",
+        borderTop: "1px solid rgba(190,174,193,0.18)",
         boxShadow: "0 -1px 0 rgba(255,255,255,0.55)",
       }}>
       <div className="mx-auto max-w-[760px]">
@@ -748,9 +707,9 @@ const InputDock = memo(function InputDock({
               className="group flex shrink-0 items-center gap-1.5 rounded-full px-4 py-[7px] text-left text-[11px] leading-snug whitespace-nowrap transition-all duration-200 disabled:opacity-35"
               style={{
                 background: "rgba(255,252,253,0.88)",
-                border: "1px solid rgba(200,147,158,0.18)",
+                border: "1px solid rgba(190,174,193,0.22)",
                 color: C.txt2,
-                boxShadow: "0 2px 8px -4px rgba(180,100,140,0.14)",
+                boxShadow: "0 2px 8px -4px rgba(144,115,150,0.1)",
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.background = "rgba(144,115,150,0.07)";
@@ -771,9 +730,9 @@ const InputDock = memo(function InputDock({
         <div className="rounded-2xl overflow-hidden mt-4"
           style={{
             background: "linear-gradient(160deg, rgba(255,254,254,0.94) 0%, rgba(255,248,251,0.88) 62%, rgba(252,246,255,0.88) 100%)",
-            border: "1px solid rgba(200,147,158,0.17)",
+            border: "1px solid rgba(190,174,193,0.24)",
             backdropFilter: "blur(8px)",
-            boxShadow: "0 8px 28px -14px rgba(180,100,140,0.22), 0 1px 0 rgba(255,255,255,0.65) inset",
+            boxShadow: "0 8px 28px -14px rgba(144,115,150,0.18), 0 1px 0 rgba(255,255,255,0.65) inset",
           }}>
           <div className="flex items-end gap-2 px-4 py-3.5">
             <textarea ref={textareaRef}
@@ -1248,9 +1207,6 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
         @keyframes orb{0%,100%{opacity:.1;transform:translateY(0)}50%{opacity:.16;transform:translateY(-6px)}}
         @keyframes orbit-ring{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         @keyframes nav-orbit-a{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-        @keyframes nav-orbit-b{from{transform:rotate(135deg)}to{transform:rotate(495deg)}}
-        @keyframes opening-orbit-a{from{transform:translate(-50%,-50%) rotate(0deg)}to{transform:translate(-50%,-50%) rotate(360deg)}}
-        @keyframes opening-orbit-b{from{transform:translate(-50%,-50%) rotate(180deg)}to{transform:translate(-50%,-50%) rotate(540deg)}}
         @keyframes cue-fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
         @keyframes typing-dot{0%,80%,100%{opacity:.35;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
         .typing-dot{animation:typing-dot 0.95s ease-in-out infinite}
@@ -1260,14 +1216,10 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
         .nav-orbit-shell{position:relative;display:flex;align-items:center;justify-content:center;width:30px;height:30px}
         .nav-orbit-star{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;opacity:.85}
         .nav-orbit-a{animation:nav-orbit-a 8.5s linear infinite}
-        .nav-orbit-b{animation:nav-orbit-b 12s linear infinite}
-        .opening-orbit-star{position:absolute;left:50%;top:50%;display:flex;align-items:center;justify-content:center;opacity:.82;pointer-events:none}
-        .opening-orbit-a{animation:opening-orbit-a 9.8s linear infinite}
-        .opening-orbit-b{animation:opening-orbit-b 13.5s linear infinite}
         @media (prefers-reduced-motion:reduce){
           .bg-star,.bg-orb{animation:none!important}
           .typing-dot{animation:none!important;opacity:.55}
-          .nav-orbit-a,.nav-orbit-b,.opening-orbit-a,.opening-orbit-b{animation:none!important}
+          .nav-orbit-a{animation:none!important}
         }
       `}</style>
 
@@ -1333,14 +1285,6 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
               <span style={{ transform:"translateX(13px) translateY(-1px)" }}>
                 <FourPointStar size={7} color="currentColor"/>
               </span>
-            </span>
-            <span className="nav-orbit-star nav-orbit-b" style={{ color:"rgba(144,115,150,0.86)" }}>
-              <span style={{ transform:"translateX(13px) translateY(1px)" }}>
-                <FourPointStar size={6} color="currentColor"/>
-              </span>
-            </span>
-            <span className="nav-orbit-star" style={{ color:"rgba(213,203,215,0.8)", transform:"translate(-50%,-50%) translateX(-13px) translateY(3px)" }}>
-              <FourPointStar size={5} color="currentColor"/>
             </span>
             <div className="h-7 w-7 overflow-hidden rounded-full"
               style={{ border:"1px solid rgba(144,115,150,0.26)", boxShadow:"0 6px 16px -12px rgba(90,55,120,0.28)" }}>
@@ -1435,12 +1379,15 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                   <div className="rounded-3xl overflow-hidden"
                     style={{
                       background:"linear-gradient(152deg, rgba(255,253,253,0.95) 0%, rgba(255,245,249,0.9) 58%, rgba(251,244,254,0.9) 100%)",
-                      border:"1px solid rgba(200,147,158,0.2)",
-                      boxShadow:"0 16px 48px -20px rgba(180,100,140,0.28), 0 1px 0 rgba(255,255,255,0.65) inset",
+                      border:"1px solid rgba(190,174,193,0.22)",
+                      boxShadow:"0 16px 48px -20px rgba(144,115,150,0.2), 0 1px 0 rgba(255,255,255,0.65) inset",
                     }}>
-                    <div className="flex items-center gap-6 px-7 py-6">
-                      <AvatarTagCard/>
-                      <div className="flex-1 pt-1">
+                    <div className="flex flex-col items-center text-center px-8 py-8 gap-4">
+                      <div className="h-14 w-14 overflow-hidden rounded-full shrink-0"
+                        style={{ border:"1.5px solid rgba(190,174,193,0.3)", boxShadow:"0 8px 24px -12px rgba(80,50,120,0.2)" }}>
+                        <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
+                      </div>
+                      <div className="max-w-[480px]">
                         <p className={`text-[9px] tracking-[.22em] uppercase mb-2 ${displayFont.className}`}
                           style={{ color:C.accent }}>
                           Opening
@@ -1592,7 +1539,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         </button>
                       </div>
                       {m.cue && (
-                        <p className="px-1 text-[10px] leading-[1.55]" style={{ color:C.txt3, animation:"cue-fade .4s ease" }}>
+                        <p className="px-1 text-[11px] leading-[1.55]" style={{ color:C.txt3, animation:"cue-fade .4s ease" }}>
                           {m.cue}
                         </p>
                       )}

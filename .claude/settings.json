@@ -319,7 +319,9 @@
       "Bash(rm /Users/fangyuan/Desktop/newpage/.git/index.lock)",
       "Bash(git -C /Users/fangyuan/Desktop/newpage add app/lab/glass/ components/LimeGlassField.tsx components/RoseLoader.tsx components/hero/CraftModel.tsx components/hero/ImmersiveHero.tsx public/assets/hero/)",
       "Bash(git -C /Users/fangyuan/Desktop/newpage add -u)",
-      "Bash(git -C /Users/fangyuan/Desktop/newpage commit -m ' *)"
+      "Bash(git -C /Users/fangyuan/Desktop/newpage commit -m ' *)",
+      "Bash(git -C /Users/fangyuan/Desktop/newpage push)",
+      "Bash(node /tmp/shot6.js)"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

@@ -250,8 +250,8 @@ function ScaledIframe({
 
 function TagChip({ tag }: { tag: Tag }) {
   return (
-    <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/85">
-      [{tag}]
+    <span className="inline-flex items-center rounded-full border border-black/[0.1] bg-black/[0.03] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-textSecondary/80">
+      {tag}
     </span>
   );
 }
@@ -269,13 +269,13 @@ function FilterChip({
     <button
       type="button"
       onClick={onClick}
-      className={`font-mono text-[10px] uppercase tracking-[0.12em] transition-opacity ${
+      className={`inline-flex items-center rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] transition-colors ${
         active
-          ? "text-textPrimary"
-          : "text-textSecondary/70 hover:text-textSecondary"
+          ? "border-nltLime-ink/25 bg-nltLime/25 text-nltLime-ink"
+          : "border-black/[0.12] text-textSecondary/70 hover:border-black/25 hover:text-textSecondary"
       }`}
     >
-      [{label}]
+      {label}
     </button>
   );
 }
@@ -340,11 +340,11 @@ function PrototypeCard({
       <div>
         <MediaSlot media={entry.media} shouldLoad={shouldLoad} />
       </div>
-      <header className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+      <header className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3 className="font-display text-base lowercase tracking-[-0.01em] text-textPrimary md:text-lg">
           {entry.title}
         </h3>
-        <span className="flex flex-wrap items-baseline gap-2">
+        <span className="flex flex-wrap items-center gap-2">
           {entry.tags.map((t) => (
             <TagChip key={t} tag={t} />
           ))}
@@ -513,7 +513,7 @@ export function VibeCodingPageContent() {
     <section className="flex flex-col md:h-full">
       {/* Filter */}
       <header className="mx-auto w-full max-w-content shrink-0 px-6">
-        <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
           <FilterChip
             label="all"
             active={filter === "all"}

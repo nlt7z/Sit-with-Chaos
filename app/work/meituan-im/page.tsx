@@ -317,8 +317,7 @@ function LiveFlowPhone({
     <figure className="space-y-4">
       <div className="flex items-baseline justify-between">
         <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">{label}</p>
-        <span className="flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
-          <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-nltLime" />
+        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
           Live
         </span>
       </div>
@@ -513,7 +512,7 @@ export default function MeituanImCaseStudyPage() {
                         { label: "Ownership", value: "End-to-end · sole designer" },
                         { label: "Impact", value: "+5% conversion · validated via user-level A/B" },
                       ].map(({ label, value }) => (
-                        <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
+                        <div key={label} className="min-w-0">
                           <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
                           <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
                         </div>
@@ -543,8 +542,7 @@ export default function MeituanImCaseStudyPage() {
                         loading="lazy"
                       />
                     </div>
-                    <p className="mt-5 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
-                      <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-nltLime" />
+                    <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
                       Live prototype · interact above
                     </p>
                     <p className="mt-2 max-w-[19rem] text-[11px] leading-relaxed text-textSecondary/55">
@@ -565,15 +563,15 @@ export default function MeituanImCaseStudyPage() {
           </FadeIn>
 
           <FadeIn className="grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3 md:gap-8">
-            <div className="border-l border-black/[0.1] pl-5">
+            <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Behavior</p>
               <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Consult outranked book and call.</p>
             </div>
-            <div className="border-l border-black/[0.1] pl-5">
+            <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Conversion</p>
               <p className="mt-4 text-[16px] tracking-tight text-textPrimary">In-app consult stayed low.</p>
             </div>
-            <div className="border-l border-black/[0.1] pl-5">
+            <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Experience</p>
               <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Disputes clustered in home repair.</p>
             </div>
@@ -595,14 +593,14 @@ export default function MeituanImCaseStudyPage() {
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Before · 4-step linear journey</p>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">grayscale</p>
                 </div>
-                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-black/[0.04]">
+                <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
                     ["Problem occurs", "User finds an issue like toilet repair and opens Meituan to search."],
                     ["Many merchants appear", "User sees options but cannot tell who can diagnose accurately."],
                     ["One-by-one outreach", "Repeats the same questions across shops; waits in fragmented threads."],
                     ["Pick one for visit", "Merchants only promise an arrival fee; final quote deferred to on-site."],
                   ].map(([t, b], i) => (
-                    <li key={i} className="bg-white px-5 py-4">
+                    <li key={i} className="py-4">
                       <div className="flex items-baseline gap-3">
                         <span className="font-mono text-[10px] tabular-nums text-textSecondary/60">0{i + 1}</span>
                         <p className="text-[15px] tracking-tight text-textPrimary/85">{t}</p>
@@ -611,9 +609,9 @@ export default function MeituanImCaseStudyPage() {
                     </li>
                   ))}
                 </ol>
-                <div className="mt-3 rounded-md border border-nltLime-ink/30 bg-nltLime-soft px-5 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink">→ Trust break</p>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-nltLime-ink">
+                <div className="mt-6 border-t border-black/[0.07] pt-5">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">→ Trust break</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-textSecondary">
                     Quoted price ≠ actual bill. Scope, materials, and conditions widen the range. Users feel the system did not warn them.
                   </p>
                 </div>
@@ -625,13 +623,13 @@ export default function MeituanImCaseStudyPage() {
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">After · 3-step trust loop</p>
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">redesigned</p>
                 </div>
-                <ol className="flex-1 space-y-px overflow-hidden rounded-lg bg-nltLime-ink/[0.08]">
+                <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
                     ["Diagnose the problem", "Certified experts surface from search to define the issue — remove ambiguity before comparison."],
                     ["Structure the intent", "Multi-turn chat yields a service-order card so quotes compare on equal terms."],
                     ["Compare and commit", "Vetted merchants each quote against the same service order; the quote you accept carries into checkout as the agreed price."],
                   ].map(([t, b], i) => (
-                    <li key={i} className="bg-white px-5 py-4">
+                    <li key={i} className="py-4">
                       <div className="flex items-baseline gap-3">
                         <span className="font-mono text-[10px] tabular-nums text-nltLime-ink">0{i + 1}</span>
                         <p className="text-[15px] tracking-tight text-textPrimary">{t}</p>
@@ -640,9 +638,9 @@ export default function MeituanImCaseStudyPage() {
                     </li>
                   ))}
                 </ol>
-                <div className="mt-3 rounded-md border border-emerald-700/20 bg-emerald-50/60 px-5 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-emerald-800/80">→ Trust restored</p>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-emerald-900/75">
+                <div className="mt-6 border-t border-black/[0.07] pt-5">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink/80">→ Trust restored</p>
+                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-textSecondary">
                     Price is the output of a credible process. The range is each merchant&apos;s own quote against the same structured intent — explained, not arbitrary — so you compare on equal terms before you commit.
                   </p>
                 </div>
@@ -669,19 +667,19 @@ export default function MeituanImCaseStudyPage() {
           </FadeIn>
 
           <FadeIn className="mt-12 grid gap-8 border-t border-black/[0.06] pt-10 md:grid-cols-3 md:gap-10">
-            <div className="border-l border-black/[0.1] pl-5">
+            <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Product IA</p>
               <p className="mt-4 text-[15px] leading-relaxed text-textPrimary/85">
                 Four steps — <span className="text-textPrimary">Describe · Diagnose · Plan · Match</span> (Describe usually folds into the first message). The trust loop above — Diagnose → Structure → Commit — is the lens I designed against.
               </p>
             </div>
-            <div className="border-l border-black/[0.1] pl-5">
+            <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Supply model</p>
               <p className="mt-4 text-[15px] leading-relaxed text-textPrimary/85">
                 AI agents triage first — photos, video, structured intake — then a platform-certified expert diagnoses and drafts the order. Vetted merchants quote against it and do the work; the diagnosing expert never competes with them.
               </p>
             </div>
-            <div className="border-l border-black/[0.1] pl-5">
+            <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Why a real expert</p>
               <p className="mt-4 text-[15px] leading-relaxed text-textPrimary/85">
                 In launch cities that expert is real and paid an expert fee — a deliberate early-stage tradeoff: real humans at fixed points buy conversion and satisfaction before we automate, escalating like support does at peak.
@@ -753,7 +751,7 @@ export default function MeituanImCaseStudyPage() {
                 <h4 className="max-w-md font-display text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">
                   Show progress before price.
                 </h4>
-                <div className="mt-6 space-y-3.5 border-l border-black/[0.06] pl-6">
+                <div className="mt-6 space-y-3.5">
                   <Callout index={1} title="Live updates make waiting legible" />
                   <Callout index={2} title="Trust signals appear before price" />
                   <Callout index={3} title="A guide range, not a locked final" />
@@ -772,7 +770,7 @@ export default function MeituanImCaseStudyPage() {
                 <h4 className="max-w-md font-display text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">
                   Reset only what is unsafe to assume.
                 </h4>
-                <div className="mt-6 space-y-3.5 border-l border-black/[0.06] pl-6">
+                <div className="mt-6 space-y-3.5">
                   <Callout index={1} title="Expired quotes stay visible but disabled" />
                   <Callout index={2} title="Only the time slot resets" />
                   <Callout index={3} title="Hard expiry, soft continuity" />
@@ -794,7 +792,7 @@ export default function MeituanImCaseStudyPage() {
                 <h4 className="max-w-md font-display text-[1.35rem] font-light leading-snug tracking-tight text-textPrimary">
                   The trust loop closes where it began.
                 </h4>
-                <div className="mt-6 space-y-3.5 border-l border-black/[0.06] pl-6">
+                <div className="mt-6 space-y-3.5">
                   <Callout index={1} title="Return flow stays in the same thread" />
                   <Callout index={2} title="Re-engagement is one tap" />
                 </div>
@@ -1006,16 +1004,16 @@ export default function MeituanImCaseStudyPage() {
 
         <Section id="reflection" eyebrow="Reflection" title="Next time, I would push on four fronts.">
           <div className="space-y-5 md:space-y-6">
-            <FadeIn className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
+            <FadeIn>
               <p className="text-[16px] tracking-tight text-textPrimary">Merchant experience deserves its own product pass.</p>
             </FadeIn>
-            <FadeIn delay={0.06} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
+            <FadeIn delay={0.06}>
               <p className="text-[16px] tracking-tight text-textPrimary">Guide pricing should explain variability, not imply a promise.</p>
             </FadeIn>
-            <FadeIn delay={0.12} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
+            <FadeIn delay={0.12}>
               <p className="text-[16px] tracking-tight text-textPrimary">Scale with AI triage, escalate to human experts.</p>
             </FadeIn>
-            <FadeIn delay={0.18} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
+            <FadeIn delay={0.18}>
               <p className="text-[16px] tracking-tight text-textPrimary">When a diagnosis is wrong, make cost ownership explicit — who pays, who re-dispatches — so trust holds on the unhappy path, not just the happy one.</p>
             </FadeIn>
           </div>
