@@ -524,14 +524,14 @@ export default function MeituanImCaseStudyPage() {
                   <div className="hidden lg:flex lg:flex-col lg:items-start">
                     <div
                       className="relative rounded-xl"
-                      style={{ width: 480, height: 360 }}
+                      style={{ width: 480, height: 432 }}
                     >
                       <iframe
                         src="/assets/meituan-im/Repair%20Flow.html"
                         title="Repair flow — interactive prototype"
                         style={{
                           width: 1200,
-                          height: 900,
+                          height: 1080,
                           border: 0,
                           display: "block",
                           transform: "scale(0.4)",
@@ -689,7 +689,7 @@ export default function MeituanImCaseStudyPage() {
               src="/assets/meituan-im/Repair%20Flow.html"
               title="Repair flow — interactive prototype"
               naturalWidth={1200}
-              naturalHeight={900}
+              naturalHeight={1080}
               displayMaxWidth={900}
             />
           </FadeIn>
@@ -795,7 +795,7 @@ export default function MeituanImCaseStudyPage() {
               src="/assets/meituan-im/Repair%20Flow.html"
               title="Repair flow — interactive prototype"
               naturalWidth={1200}
-              naturalHeight={900}
+              naturalHeight={1080}
               displayMaxWidth={900}
             />
           </PrototypeReveal>
