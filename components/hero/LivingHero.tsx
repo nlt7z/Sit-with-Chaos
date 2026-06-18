@@ -23,7 +23,7 @@ import { useEffect, useRef, useState } from "react";
 type Channel = "research" | "motion" | "code";
 // Channels that auto-cycle at rest.
 const CYCLE: Channel[] = ["research", "motion", "code"];
-const LIME = "#B8E532";
+const LIME = "#d2ff00";
 const ease = [0.25, 0.1, 0.25, 1] as const;
 const spring = { type: "spring" as const, stiffness: 220, damping: 26, mass: 0.7 };
 
@@ -84,7 +84,7 @@ function Keyword({
 /* MotionDemo — ONE element transforms (no sibling cards)               */
 /* ------------------------------------------------------------------ */
 
-function MotionDemo({ reduced }: { reduced: boolean }) {
+export function MotionDemo({ reduced }: { reduced: boolean }) {
   const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
@@ -128,7 +128,7 @@ function MotionDemo({ reduced }: { reduced: boolean }) {
                 className="absolute bottom-3 left-3 inline-flex w-fit items-center gap-1.5 rounded-full bg-white/85 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-nltLime-ink shadow-[0_4px_14px_-6px_rgba(0,0,0,0.18)] backdrop-blur"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-nltLime" />
-                designed + built
+                crafted to the pixel
               </motion.span>
             ) : null}
           </AnimatePresence>
@@ -146,7 +146,7 @@ function MotionDemo({ reduced }: { reduced: boolean }) {
                 transition={{ duration: 0.3, delay: reduced ? 0 : 0.1 }}
               >
                 <div className="font-display text-base font-light leading-snug text-textPrimary md:text-lg">
-                  From idea to shipped — end to end.
+                  The last 5% — where craft lives.
                 </div>
                 <div className="mt-2 space-y-1.5">
                   <div className="h-1.5 w-[86%] rounded-full bg-black/[0.06]" />
@@ -178,11 +178,11 @@ function MotionDemo({ reduced }: { reduced: boolean }) {
 /* ResearchDemo — highlight → cite → footnote source (no boxed card)    */
 /* ------------------------------------------------------------------ */
 
-function ResearchDemo({ reduced }: { reduced: boolean }) {
+export function ResearchDemo({ reduced }: { reduced: boolean }) {
   return (
     <div className="flex h-full flex-col justify-center gap-6 px-8 py-7 md:px-10">
       <p className="max-w-[32ch] font-display text-[18px] font-light leading-relaxed text-textPrimary md:text-xl">
-        Merchants blamed price for the disputes. The interviews said otherwise —{" "}
+        The price looked like the problem. Curiosity said dig deeper —{" "}
         <span className="relative inline">
           <motion.span
             aria-hidden
@@ -211,7 +211,7 @@ function ResearchDemo({ reduced }: { reduced: boolean }) {
         animate={{ opacity: 1, x: 0 }}
         transition={reduced ? { duration: 0 } : { duration: 0.45, delay: 1.35, ease }}
         className="flex max-w-md items-start gap-3 pl-4"
-        style={{ borderLeft: "2px dotted #B8E532" }}
+        style={{ borderLeft: "2px dotted #d2ff00" }}
       >
         <span className="mt-0.5 shrink-0 font-mono text-[10px] text-nltLime-ink">[1]</span>
         <div className="min-w-0">
@@ -270,7 +270,7 @@ function Burst({ n }: { n: number }) {
           <motion.span
             key={i}
             className="absolute h-1.5 w-1.5 rounded-full"
-            style={{ background: i % 2 ? "#B8E532" : "#5A7A12" }}
+            style={{ background: i % 2 ? "#d2ff00" : "#5A7A12" }}
             initial={{ x: 0, y: 0, scale: 1, opacity: 1 }}
             animate={{ x: Math.cos(angle) * dist, y: Math.sin(angle) * dist, scale: 0, opacity: 0 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
@@ -328,7 +328,7 @@ function SparkleButton({ reduced }: { reduced: boolean }) {
   );
 }
 
-function CodeDemo({ reduced }: { reduced: boolean }) {
+export function CodeDemo({ reduced }: { reduced: boolean }) {
   const [n, setN] = useState(reduced ? CODE.length : 0);
 
   useEffect(() => {

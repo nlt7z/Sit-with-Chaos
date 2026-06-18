@@ -8,22 +8,22 @@ import { LimeMark } from "@/components/LimeMark";
 
 const capabilities = [
   {
-    title: "AI-native Product Thinking",
+    title: "AI-Native Velocity",
     description:
-      "Workflows where AI acts as a collaborator at every step, not just a response generator.",
+      "Interview insights in hours, not days — and a loose idea coded into a working prototype the same day.",
     evidence: { href: "/work/ai-character", label: "See Qwen Character" },
   },
   {
-    title: "Motion as Interaction Logic",
+    title: "Visual Craft",
     description:
-      "Motion that clarifies state, hierarchy, and user confidence.",
-    evidence: { href: "/vibe-coding", label: "See Coding" },
+      "When AI surfaces dozens of directions, I spot the right one and refine it until the craft holds.",
+    evidence: { href: "/vibe-coding", label: "See the craft" },
   },
   {
-    title: "Prototyping with Code",
+    title: "Relentless Builder",
     description:
-      "Interactive prototypes with React and AI tools to move from idea to shipped experience faster.",
-    evidence: { href: "/vibe-coding", label: "See Builds" },
+      "No technical wall stops me — I learn through it until I can ship it myself, web and mobile.",
+    evidence: { href: "/vibe-coding", label: "See the builds" },
   },
 ] as const;
 
@@ -58,11 +58,10 @@ export function About() {
           >
             <p className="text-base font-normal leading-relaxed text-textPrimary md:text-[17px] md:leading-relaxed">
               Painting taught me to see what a system wants to become before it knows itself. Ten years across canvas,
-              spatial design, and digital products turned that instinct into a working method.
+              spatial design, and digital products turned that instinct into a method.
             </p>
             <p className="mt-4 text-base font-normal leading-relaxed text-textSecondary md:mt-5 md:text-[17px] md:leading-relaxed">
-              I work where technology meets human behavior, making the complex feel understandable and worth returning
-              to. Research, product thinking, and code — with AI at the core of how I think.
+              AI keeps me fast; a decade of fine art tells me which direction is worth refining.
             </p>
           </motion.div>
 

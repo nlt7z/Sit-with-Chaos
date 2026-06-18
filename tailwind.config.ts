@@ -14,11 +14,11 @@ const config: Config = {
         textPrimary: "#1D1D1F",
         textSecondary: "#6E6E73",
         nltLime: {
-          DEFAULT: "#B8E532",
+          DEFAULT: "#d2ff00",
           soft: "#F5FBE0",
           ink: "#5A7A12",
           // Restrained ramp with chroma peaking at 400. 400 is the vivid brand
-          // pop (#B8E532) — reserved for tiny accents (status dots, marker
+          // pop (#d2ff00 — electric lime) — reserved for tiny accents (status dots, marker
           // gradients). From 500 down the chroma drops sharply to a muted olive
           // and deepens into ink, so the workhorses — body/accent text, fills,
           // tints — read calm and legible while bright lime only ever winks as a
@@ -27,7 +27,7 @@ const config: Config = {
           100: "#ECF5CC",
           200: "#DCEAA2",
           300: "#C8E06C",
-          400: "#B8E532",
+          400: "#d2ff00",
           500: "#93A840",
           600: "#74882C",
           700: "#5B6E1F",

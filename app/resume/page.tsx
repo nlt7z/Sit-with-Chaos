@@ -8,7 +8,6 @@ import Link from "next/link";
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
 const RESUME_PDF = "/assets/resume/Product%20Designer%20-%20Yuan%20Fang%20May.pdf";
-const RESUME_PAGE_BG = "/assets/resume/resume-page-bg.png";
 
 export default function ResumePage() {
   const prefersReducedMotion = useReducedMotion();
@@ -21,7 +20,6 @@ export default function ResumePage() {
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0 z-0 bg-neutral-100 bg-cover bg-center bg-no-repeat"
-          style={{ backgroundImage: `url(${RESUME_PAGE_BG})` }}
         />
         <div
           aria-hidden

@@ -9,8 +9,14 @@ const navLinks = [
   { label: "Work", href: "/#work" },
   { label: "Lab", href: "/vibe-coding" },
   { label: "About", href: "/about" },
-  { label: "Contact", href: "/#contact" },
 ] as const;
+
+// Resume is pulled out of the text-link row and rendered as a standalone
+// pill button so it reads as the primary call to action.
+const resumeLink = {
+  label: "Resume",
+  href: "/assets/resume/Product%20Designer%20-%20Yuan%20Fang%20May.pdf",
+} as const;
 
 type NavProps = {
   /** Dark chrome for pages with a black / near-black background. */
@@ -128,6 +134,20 @@ export function Nav({ variant = "light" }: NavProps) {
                 </a>
               </span>
             ))}
+
+            <a
+              href={resumeLink.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={`ml-1 inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm font-medium shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                isDark
+                  ? "bg-nltLime text-[#06060a] focus-visible:ring-white/50 focus-visible:ring-offset-[#060608]"
+                  : "bg-textPrimary text-white focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+              }`}
+            >
+              {resumeLink.label}
+              <span aria-hidden>↗</span>
+            </a>
           </div>
 
           <button
@@ -203,6 +223,20 @@ export function Nav({ variant = "light" }: NavProps) {
                     {link.label}
                   </a>
                 ))}
+                <a
+                  href={resumeLink.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => setOpen(false)}
+                  className={`mt-2 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-base font-medium shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                    isDark
+                      ? "bg-nltLime text-[#06060a] focus-visible:ring-white/45 focus-visible:ring-offset-[#0a0a0c]"
+                      : "bg-textPrimary text-white focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                  }`}
+                >
+                  {resumeLink.label}
+                  <span aria-hidden>↗</span>
+                </a>
               </div>
             </motion.div>
           </>

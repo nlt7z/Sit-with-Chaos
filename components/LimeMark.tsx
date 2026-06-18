@@ -37,7 +37,7 @@ export function LimeMark({
       <motion.span
         aria-hidden
         className="absolute inset-x-[-0.1em] bottom-[0.04em] -z-0 h-[0.6em] rounded-[3px]"
-        style={{ background: "#B8E532", opacity: 0.5, rotate: "-0.6deg" }}
+        style={{ background: "#d2ff00", opacity: 0.5, rotate: "-0.6deg" }}
         initial={reduced ? false : { clipPath: "inset(0 100% 0 0)" }}
         animate={lit ? { clipPath: "inset(0 0% 0 0)" } : { clipPath: "inset(0 100% 0 0)" }}
         transition={reduced ? { duration: 0 } : { duration: 0.5, ease }}

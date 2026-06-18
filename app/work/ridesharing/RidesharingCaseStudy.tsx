@@ -336,13 +336,13 @@ export default function RidesharingCaseStudy() {
         {/* —— Overview —— */}
         <header id="overview" ref={heroRef} className="scroll-mt-28">
           <motion.div style={{ y: heroTextY }} className="max-w-4xl will-change-transform">
-            <motion.p
+            <motion.div
               initial={reduceMotion ? false : { opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.85, ease: easePremium }}
             >
               <Eyebrow>Case study · Automotive HMI · Autonomous ride-sharing</Eyebrow>
-            </motion.p>
+            </motion.div>
             <CaseStudyMeta className="mt-5" {...CASE_STUDY_META.ridesharing} />
             <motion.h1
               initial={reduceMotion ? false : { opacity: 0, y: 16 }}

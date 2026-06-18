@@ -118,10 +118,10 @@ function CaseStudySectionNav() {
                   document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
                   setActive(id);
                 }}
-                className={`block border-l border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
+                className={`block border-l-[1.5px] border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
                   active === id
-                    ? "border-nltLime-600/70 text-textPrimary"
-                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-nltLime-500/35 hover:text-nltLime-950"
+                    ? "border-nltLime font-medium text-textPrimary"
+                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-nltLime/40 hover:text-textPrimary"
                 }`}
               >
                 {label}

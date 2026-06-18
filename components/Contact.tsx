@@ -16,7 +16,7 @@ const itemVariants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease } },
 };
 
-const CONTACT_HEADLINE = "Research, motion, and code — in one head.";
+const CONTACT_HEADLINE = "Curiosity, craft, and code.";
 
 const letterRestTransition = { duration: 0.32, ease: [0.22, 1, 0.36, 1] as const };
 
@@ -34,7 +34,7 @@ function ContactWaveHeading({
   if (reduced) {
     return (
       <motion.h2 id={id} variants={variants} className={className}>
-        Research, motion, and code — in one head.
+        Curiosity, craft, and code.
       </motion.h2>
     );
   }
@@ -44,7 +44,7 @@ function ContactWaveHeading({
       id={id}
       variants={variants}
       className={`${className} cursor-default`}
-      aria-label="Research, motion, and code — in one head."
+      aria-label="Curiosity, craft, and code."
     >
       <span aria-hidden>
         {Array.from(CONTACT_HEADLINE).map((char, i) => {

@@ -21,8 +21,9 @@ export default function Home() {
             className="pointer-events-none absolute inset-x-0 top-0 h-[1100px] md:h-[1300px] lg:h-[1500px]"
           >
             {/* Vertical opacity mask: lime is fully solid at the top of the hero,
-             *  then dissolves to transparent (pure white page) before the work
-             *  cards — no white wash, so the visible lime keeps its true color. */}
+             *  then dissolves to transparent (pure white page) within the hero,
+             *  well above the work cards — so no lime bleeds into the top of the
+             *  work section. Keeps the visible lime at its true color (no white wash). */}
             <img
               src="/assets/hero-decor.png"
               alt=""
@@ -30,9 +31,9 @@ export default function Home() {
               className="absolute inset-0 h-full w-full select-none object-cover object-[80%_top] md:object-[70%_top] lg:object-[right_top]"
               style={{
                 WebkitMaskImage:
-                  "linear-gradient(to bottom, black 0%, black 30%, transparent 66%)",
+                  "linear-gradient(to bottom, black 0%, black 18%, transparent 50%)",
                 maskImage:
-                  "linear-gradient(to bottom, black 0%, black 30%, transparent 66%)",
+                  "linear-gradient(to bottom, black 0%, black 18%, transparent 50%)",
                 // Pin this masked layer to its own stable GPU layer. Masked
                 // images are a known repaint-on-scroll culprit — without this
                 // some browsers leave it un-painted (white hero) until a scroll.

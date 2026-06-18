@@ -1,20 +1,19 @@
-import { LivingHero } from "@/components/hero/LivingHero";
+import { ImmersiveHero } from "@/components/hero/ImmersiveHero";
 
 /**
- * Hero — the homepage hero shell. The lime backdrop is supplied by the page
- * wrapper (app/page.tsx); this section provides the viewport rhythm and hosts
- * the living hero (headline channels + live demo stage).
+ * Hero — the homepage hero shell. The section is now a full-bleed 3D backdrop:
+ * a lime sculpture that re-forms as the Research / motion / code headline
+ * channels switch. The 3D scene supplies its own warm cream field, so this
+ * shell only provides the section box and stacking context.
  */
 export function Hero() {
   return (
     <section
       id="hero"
-      className="relative pt-20 text-textPrimary md:pt-16"
+      className="relative isolate overflow-hidden text-textPrimary"
       aria-labelledby="hero-heading"
     >
-      <div className="relative z-10 flex min-h-[calc(100svh-5rem)] flex-col justify-center pb-20 pt-20 md:min-h-[660px] md:pb-24 md:pt-24 lg:min-h-[720px]">
-        <LivingHero />
-      </div>
+      <ImmersiveHero />
     </section>
   );
 }

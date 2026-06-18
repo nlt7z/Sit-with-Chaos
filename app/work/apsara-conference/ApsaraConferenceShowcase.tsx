@@ -174,7 +174,6 @@ export default function ApsaraConferenceShowcase() {
               <video
                 className="h-full w-full object-cover"
                 src="/assets/work/apsara.mp4"
-                poster="/assets/work/apsara-conference-cover.svg"
                 aria-label="Apsara Conference — Alibaba AI on Cloud visual design"
                 muted
                 loop

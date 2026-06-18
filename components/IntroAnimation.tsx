@@ -3,6 +3,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { RoseLoader } from "@/components/RoseLoader";
 
 const STORAGE_KEY = "yf-intro-played-v1";
 
@@ -53,14 +54,28 @@ export function IntroAnimation() {
     loadedRef.current = loaded;
   }, [loaded]);
 
-  // Decide whether to play (data-intro is set pre-paint by the inline script
-  // in app/layout.tsx — only present on the first session visit to `/`). The
-  // pathname check is belt-and-braces: even if the flag survives a client nav
-  // we still only ever play on the homepage.
+  // Decide whether to play. The source of truth is sessionStorage (set once the
+  // intro has fully played this session) — NOT the pre-paint `data-intro` flag.
+  // That flag only drives the CSS veil and is cleared by a safety timer in
+  // app/layout.tsx; in dev, React can hydrate after that timer fires, so keying
+  // the decision off the flag would race and silently skip the intro. Reading
+  // sessionStorage here is robust, and we re-assert the veil so the overlay
+  // still covers the hero even if the timer already dropped it.
   useEffect(() => {
     if (pathname !== "/") return;
     const root = document.documentElement;
-    if (root.dataset.intro !== "pending") return;
+
+    let firstVisit = false;
+    try {
+      firstVisit = !sessionStorage.getItem(STORAGE_KEY);
+    } catch {
+      // sessionStorage blocked (private mode quirks) — fall back to the flag.
+      firstVisit = root.dataset.intro === "pending";
+    }
+    if (!firstVisit) {
+      delete root.dataset.intro;
+      return;
+    }
 
     if (reduced) {
       try {
@@ -69,6 +84,10 @@ export function IntroAnimation() {
       delete root.dataset.intro;
       return;
     }
+
+    // Re-assert (or keep) the veil so there's no hero flash before the overlay
+    // paints, even if the inline safety timer already cleared the flag.
+    root.dataset.intro = "pending";
 
     // Must live in an effect: phase has to render "idle" on the server and the
     // first client render (or hydration mismatches), then flip only after we
@@ -244,7 +263,7 @@ export function IntroAnimation() {
       />
 
       <div className="pointer-events-none relative flex flex-col items-center">
-        {/* Keycap + lime halo */}
+        {/* Rose curve loader + lime halo */}
         <div className="relative flex h-[180px] w-[180px] items-center justify-center md:h-[200px] md:w-[200px]">
           {/* Outer halo */}
           <motion.div
@@ -263,40 +282,20 @@ export function IntroAnimation() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           />
 
-          {/* Breath ring */}
+          {/* Rose curve loader — the lime comet that traces r = a·cos(3θ),
+              breathing + rotating on its own (no separate ring needed). */}
           <motion.div
-            className="absolute h-[160px] w-[160px] rounded-full border border-nltLime/20 md:h-[180px] md:w-[180px]"
-            initial={{ opacity: 0, scale: 0.85 }}
+            className="relative z-10 h-[150px] w-[150px] md:h-[170px] md:w-[170px]"
+            initial={{ opacity: 0, scale: 0.9 }}
             animate={
               phase === "exit"
-                ? { opacity: 0, scale: 1.1 }
-                : { opacity: 1, scale: [0.95, 1.04, 0.98] }
-            }
-            transition={{
-              duration: phase === "exit" ? 0.3 : 1.6,
-              ease: "easeInOut",
-              times: phase === "exit" ? undefined : [0, 0.55, 1],
-              repeat: phase === "exit" ? 0 : Infinity,
-            }}
-          />
-
-          {/* Keycap */}
-          <motion.img
-            src="/assets/logo.png"
-            alt=""
-            draggable={false}
-            fetchPriority="high"
-            decoding="async"
-            className="relative z-10 select-none drop-shadow-[0_8px_24px_rgba(184,229,50,0.25)]"
-            style={{ width: 132 }}
-            initial={{ opacity: 0, y: 16, scale: 0.92 }}
-            animate={
-              phase === "exit"
-                ? { opacity: 0, y: -8, scale: 1.06 }
-                : { opacity: 1, y: 0, scale: 1 }
+                ? { opacity: 0, scale: 1.06 }
+                : { opacity: 1, scale: 1 }
             }
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-          />
+          >
+            <RoseLoader reduced={!!reduced} />
+          </motion.div>
         </div>
 
         {/* Progress bar + caption */}

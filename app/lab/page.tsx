@@ -23,6 +23,14 @@ const EXPERIMENTS = [
       "Three candidate treatments — scroll line, reading highlighter, cursor companion. The highlighter (B) shipped to the live site.",
     proves: "an ownable brand colour",
   },
+  {
+    id: "⑥",
+    href: "/lab/glass",
+    title: "Lime glass field",
+    blurb:
+      "An interactive 3D still life in the signature lime — glass spheres, discs and arcs under a real lens. Hover racks the depth-of-field focus; drag orbits; scroll dollies.",
+    proves: "the palette can hold a whole 3D world",
+  },
 ];
 
 export default function LabIndexPage() {

@@ -9,8 +9,7 @@ const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 const aiCharacter: Project = {
   slug: "ai-character",
   title: "Alibaba Cloud — From 60-min docs to a 2-min product",
-  description:
-    "Shipped Interactive Showrooms, the MVP for Qwen Character — cut time-to-first-value from 60+ minutes of docs to under 2 minutes and drove a 200% lift in model API call volume across enterprise users.",
+  description: "Interactive Showrooms — the MVP for Qwen Character.",
   media: {
     src: "/assets/ai-character/figma-h264.mp4",
     alt: "Alibaba Qwen AI Character product experience preview",
@@ -19,20 +18,20 @@ const aiCharacter: Project = {
   flowSteps: ["prompt", "response", "deploy"],
   meta: { year: "2025", role: "Product Designer", status: "Shipped" },
   impact: "−97% onboarding time",
+  tags: ["AI-Native UX", "0→1 MVP"],
   logo: {
     src: "/assets/ai-character/alibaba-cloud-logo.png",
     alt: "Alibaba Cloud",
     // ~60% of the default badge size — the Alibaba mark reads larger than the rest.
     className: "h-[0.9rem] w-auto md:h-[1.05rem]",
   },
-  hoverTint: "rgba(255, 138, 80, 0.10)",
+  hoverTint: "rgba(64, 132, 240, 0.12)",
 };
 
 const studioEngine: Project = {
   slug: "studio-engine",
   title: "StudioEngine — From 1-shot AI to a 4-stage co-creation pipeline",
-  description:
-    "Restructured a one-shot GenAI text-to-video tool into a 4-stage workspace — basics → outline → script → visuals — with checkpoints and version history so creators iterate instead of re-generating.",
+  description: "GenAI text-to-video, rebuilt so creators iterate — not re-generate.",
   media: {
     src: "/assets/work/vp-genie.jpg",
     alt: "Preview image for Studio Engine.ai project",
@@ -41,6 +40,7 @@ const studioEngine: Project = {
   flowSteps: ["basics", "outline", "script", "visuals"],
   meta: { year: "2025", role: "Product Designer", status: "Shipped" },
   impact: "AI: output → process",
+  tags: ["GenAI Workflow", "Product Strategy"],
   logo: {
     src: "/assets/studio-engine/studioengine-logo.png",
     alt: "StudioEngine AI",
@@ -51,8 +51,7 @@ const studioEngine: Project = {
 const meituanIm: Project = {
   slug: "meituan-im",
   title: "Meituan — Led an in-chat quote redesign",
-  description:
-    "Shipped a 0-to-1 in-message quotation system across Meituan's 770M+ annual users and 14.5M merchants — A/B-validated +5% conversion and −50% pricing disputes by reframing from price transparency to process trust.",
+  description: "A 0-to-1 in-message quotation system for local services.",
   media: {
     src: "/assets/work/meituan.mp4",
     alt: "Preview video for IM System project",
@@ -61,6 +60,7 @@ const meituanIm: Project = {
   flowSteps: ["chat quote", "compare", "confirm"],
   meta: { year: "2025", role: "UX Designer", status: "Shipped" },
   impact: "+5% conversion (A/B)",
+  tags: ["Conversational Commerce", "A/B Validated"],
   logo: {
     src: "/assets/meituan-im/meituan-logo.png",
     alt: "Meituan",
@@ -71,15 +71,16 @@ const meituanIm: Project = {
 const liner: Project = {
   slug: "liner",
   title: "Liner — Research-driven AI collaboration workflow",
-  description:
-    "Led research and design for an AI-native research workflow on Liner — 10M+ academic users, a16z top-20 web AI — three core patterns that turn AI from a feature add into a collaborative-trust layer.",
+  description: "AI-native collaboration for academic research teams.",
   media: {
-    src: "/assets/liner/liner-cover.mp4",
+    src: "/assets/liner/liner-product-video.mp4",
     alt: "Liner AI collaboration feature — research and design preview",
     type: "video",
   },
   flowSteps: ["chat-switch", "library", "shared canvas"],
   meta: { year: "2026", role: "Product Designer", status: "In progress" },
+  impact: "10M+ users · a16z top 20",
+  tags: ["AI Collaboration", "Product Strategy"],
   logo: {
     src: "/assets/liner/linerlogo.png",
     alt: "Liner",
@@ -92,16 +93,10 @@ type WorkRow =
   | { kind: "pair"; left: Project; right: Project };
 
 const workRows: WorkRow[] = [
-  {
-    kind: "pair",
-    left: { ...aiCharacter, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
-    right: { ...liner, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
-  },
-  {
-    kind: "pair",
-    left: { ...studioEngine, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
-    right: { ...meituanIm, layout: "default", imageSizes: "(min-width: 768px) 42vw, 100vw" },
-  },
+  { kind: "single", project: liner },
+  { kind: "single", project: aiCharacter },
+  { kind: "single", project: meituanIm },
+  { kind: "single", project: studioEngine },
 ];
 
 const itemSpring = {

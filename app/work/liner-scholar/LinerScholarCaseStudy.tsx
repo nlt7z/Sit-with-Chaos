@@ -273,7 +273,7 @@ export default function LinerScholarCaseStudy() {
             className="relative mt-16 overflow-hidden rounded-2xl ring-1 ring-black/[0.06] md:mt-20"
           >
             <Image
-              src="/assets/work/liner-scholar-cover.svg"
+              src="/assets/work/liner-hero-v2.png"
               alt="Liner AI Scholar capstone — research collaboration"
               width={1600}
               height={900}
@@ -289,8 +289,9 @@ export default function LinerScholarCaseStudy() {
             <SectionTitle className="mt-6">From solo AI research to team collaboration</SectionTitle>
             <Prose className="mt-10">
               <p>
-                Liner had already built a strong AI-powered solo research experience (12M+ cumulative users, strong U.S.
-                academic adoption). The strategic bet was to evolve it into something teams could use together.
+                Liner had already built a strong AI-powered solo research experience (12M+ cumulative users, ranked a
+                top-20 web AI by a16z, with strong U.S. academic adoption). The strategic bet was to evolve it into
+                something teams could use together.
               </p>
               <p>
                 The brief was genuinely ambiguous:{" "}

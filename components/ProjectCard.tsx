@@ -37,6 +37,8 @@ export type Project = {
   };
   /** Headline impact metric shown as a chip on the media (e.g. "−97% time"). */
   impact?: string;
+  /** Category tags shown as a divided list in the left panel (e.g. "Capstone Project"). */
+  tags?: readonly string[];
   /** Optional brand logo shown as a badge on the media (top-right corner). */
   logo?: {
     src: string;
@@ -58,16 +60,10 @@ function VideoCardMedia({
   src,
   poster,
   alt,
-  parentHovered,
 }: {
   src: string;
   poster?: string;
   alt: string;
-  /** Card-level hover signal from ProjectCard. On hover-capable devices the
-   *  video only plays while this is true; otherwise it sits paused on its
-   *  first frame so the card reads as a static thumbnail. Ignored on touch
-   *  devices, which always auto-play when the card is in view. */
-  parentHovered: boolean;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [inView, setInView] = useState(false);
@@ -113,26 +109,18 @@ function VideoCardMedia({
     }
   }, [inView, canHover, src]);
 
-  // Playback control.
+  // Playback control. The video runs continuously as the panel background
+  // while in view (muted, looping) so the right side always reads as live
+  // video; hover does not affect it (hover only tints the left copy panel).
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
-    const shouldPlay = inView && (canHover ? parentHovered : true);
-    if (shouldPlay) {
+    if (inView) {
       video.play().catch(() => {});
     } else {
       video.pause();
-      // On hover-out, reset to the first frame so the card reverts to a clean
-      // static thumbnail instead of stopping mid-shot.
-      if (canHover && video.readyState >= 1 && video.currentTime !== 0) {
-        try {
-          video.currentTime = 0;
-        } catch {
-          /* readyState lied — ignore */
-        }
-      }
     }
-  }, [inView, parentHovered, canHover]);
+  }, [inView]);
 
   return (
     <video
@@ -152,23 +140,23 @@ function VideoCardMedia({
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
+/** Re-alpha an rgb/rgba() color to a fixed opacity. The per-project hover tints
+ *  ship at ~0.10 alpha (a whisper over the media); for the left copy panel we
+ *  want a clearly-visible-but-soft wash, so we keep the hue and lift the alpha. */
+function boostTintAlpha(color: string, alpha: number): string {
+  const m = color.match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i);
+  return m ? `rgba(${m[1]}, ${m[2]}, ${m[3]}, ${alpha})` : color;
+}
+
 export function ProjectCard({ project }: { project: Project }) {
   const prefersReducedMotion = useReducedMotion();
-  const featured = project.layout === "featured";
   const comingSoon = project.comingSoon === true;
-  const [cardHovered, setCardHovered] = useState(false);
   const hover =
     prefersReducedMotion || comingSoon
       ? {}
       : { y: -2, scale: 1.005, transition: { duration: 0.4, ease: easePortfolio } };
 
-  const mediaAspect =
-    project.mediaAspect ??
-    (featured ? "aspect-video md:aspect-[21/9]" : "aspect-video");
-
-  const titleClass = featured
-    ? "font-display text-2xl font-light leading-snug text-textPrimary md:text-3xl"
-    : "font-display text-lg font-light leading-snug text-textPrimary md:text-xl";
+  const mediaAspect = project.mediaAspect ?? "aspect-[16/10]";
 
   const titleSeparatorMatch = project.title.match(/\s+[-–—]\s+/);
   const titleSplitIndex = titleSeparatorMatch?.index ?? -1;
@@ -179,156 +167,185 @@ export function ProjectCard({ project }: { project: Project }) {
       ? project.title.slice(titleSplitIndex + titleSeparatorLength).trim()
       : project.title;
 
+  // Soft per-project wash sitting behind the video on the right panel (a
+  // fallback before the video paints; the video covers it once playing).
+  const mediaPanelBackground = `linear-gradient(145deg, #ffffff 0%, ${project.hoverTint ?? "rgba(0,0,0,0.035)"} 100%)`;
+  // Faint per-project gradient the LEFT copy panel washes to on hover — light,
+  // and a gradient (not a flat fill): the tint peaks softly then fades to
+  // transparent across the panel.
+  const tintBase = project.hoverTint ?? "rgba(0,0,0,0.05)";
+  const cardTintGradient = `linear-gradient(150deg, ${boostTintAlpha(
+    tintBase,
+    0.18,
+  )} 0%, ${boostTintAlpha(tintBase, 0.06)} 50%, rgba(255,255,255,0) 100%)`;
+
   const wrapperBaseClass =
-    "flex h-full flex-col rounded-2xl border border-black/[0.07] bg-white p-5 shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.35rem] md:p-6";
-  // Hover wash: subtle, per-card. Tint is plumbed through the `--card-hover-tint`
-  // CSS variable so each project can adapt the wash to its media without forking
-  // the class. Falls back to a faint neutral when the project omits a tint.
-  const wrapperLinkClass = `${wrapperBaseClass} transition-[background-color,border-color,box-shadow] duration-500 ease-portfolio hover:border-transparent hover:bg-[var(--card-hover-tint,rgba(0,0,0,0.025))] hover:shadow-[0_18px_36px_-28px_rgba(0,0,0,0.18)] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2`;
+    "flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.5rem]";
+  // No hover frame: the card border stays static. Interactivity is signaled by
+  // the product shot deepening its own shadow + the CTA arrow on hover.
+  const wrapperLinkClass = `${wrapperBaseClass} transition-[box-shadow] duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-2`;
   const wrapperStaticClass = `${wrapperBaseClass} cursor-default`;
 
-  const wrapperContent = (
+  const mediaBlock = (
     <>
-        <div className="relative shrink-0 overflow-hidden rounded-xl ring-1 ring-black/[0.04] transition-[box-shadow] duration-500 group-hover:ring-black/[0.08]">
-          <motion.div
-            className={`${mediaAspect} w-full overflow-hidden bg-neutral-100`}
-            whileHover={
-              prefersReducedMotion
-                ? {}
-                : { scale: 1.02, transition: { duration: 0.42, ease: easePortfolio } }
-            }
-          >
-            {project.media.type === "video" ? (
-              <VideoCardMedia
-                src={project.media.src}
-                poster={project.media.poster}
-                alt={project.media.alt}
-                parentHovered={cardHovered}
-              />
-            ) : project.media.type === "embed" ? (
-              <iframe
-                title={project.media.alt}
-                src={project.media.src}
-                className="pointer-events-none h-full w-full border-0 bg-black"
-                loading="lazy"
-              />
-            ) : (
-              <Image
-                src={project.media.src}
-                alt={project.media.alt}
-                fill
-                sizes={project.imageSizes ?? "(min-width: 1024px) 72rem, 100vw"}
-                className="object-cover"
-                loading="lazy"
-              />
-            )}
-          </motion.div>
+      {/* Cropped product media as the full-bleed panel background — no feather.
+          object-cover crops it to fill. It stays as live video at all times;
+          hover tints the left copy panel, not this. */}
+      <div className="absolute inset-0">
+        {project.media.type === "video" ? (
+          <VideoCardMedia
+            src={project.media.src}
+            poster={project.media.poster}
+            alt={project.media.alt}
+          />
+        ) : project.media.type === "embed" ? (
+          <iframe
+            title={project.media.alt}
+            src={project.media.src}
+            className="pointer-events-none h-full w-full border-0 bg-black"
+            loading="lazy"
+          />
+        ) : (
+          <Image
+            src={project.media.src}
+            alt={project.media.alt}
+            fill
+            sizes={project.imageSizes ?? "(min-width: 768px) 58vw, 100vw"}
+            className="object-cover object-left-top"
+            loading="lazy"
+          />
+        )}
+      </div>
 
-          {project.logo ? (
-            <div className="pointer-events-none absolute left-3 top-3 z-10 md:left-4 md:top-4">
-              <Image
-                src={project.logo.src}
-                alt={project.logo.alt}
-                width={90}
-                height={36}
-                className={project.logo.className ?? "h-6 w-auto md:h-7"}
-              />
-            </div>
-          ) : null}
-
-          {project.impact ? (
-            <div className="pointer-events-none absolute right-3 top-3 z-10 md:right-4 md:top-4">
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-black/[0.06] bg-white/85 px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textPrimary shadow-[0_4px_14px_-6px_rgba(0,0,0,0.18)] backdrop-blur-md md:text-[11px]">
-                <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-nltLime" />
-                {project.impact}
-              </span>
-            </div>
-          ) : null}
-
-          {project.flowSteps && project.flowSteps.length > 0 ? (
-            <div
-              className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/55 via-black/25 to-transparent px-3 pb-3 pt-10 md:px-4 md:pb-3.5 md:pt-12 ${
-                prefersReducedMotion
-                  ? "opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
-                  : "translate-y-1 opacity-0 transition-[opacity,transform] duration-500 ease-portfolio group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100"
-              }`}
-              aria-hidden
-            >
-              <div className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1.5 font-mono text-[9px] font-medium uppercase tracking-[0.12em] text-white/95 md:text-[10px] md:tracking-[0.14em]">
-                {project.flowSteps.map((step, i) => (
-                  <span key={`${step}-${i}`} className="flex items-center gap-x-1">
-                    {i > 0 ? (
-                      <span className="select-none text-white/45" aria-hidden>
-                        →
-                      </span>
-                    ) : null}
-                    <span className="rounded-md bg-white/12 px-1.5 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-[2px] md:px-2 md:py-1">
-                      {step}
-                    </span>
+      {project.flowSteps && project.flowSteps.length > 0 ? (
+        <div
+          className={`pointer-events-none absolute inset-x-0 bottom-0 z-10 bg-gradient-to-t from-black/55 via-black/25 to-transparent px-3 pb-3 pt-10 md:px-4 md:pb-3.5 md:pt-12 ${
+            prefersReducedMotion
+              ? "opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-within:opacity-100"
+              : "translate-y-1 opacity-0 transition-[opacity,transform] duration-500 ease-portfolio group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:translate-y-0 group-focus-within:opacity-100"
+          }`}
+          aria-hidden
+        >
+          <div className="flex flex-wrap items-center justify-center gap-x-1 gap-y-1.5 font-mono text-[9px] font-medium uppercase tracking-[0.12em] text-white/95 md:text-[10px] md:tracking-[0.14em]">
+            {project.flowSteps.map((step, i) => (
+              <span key={`${step}-${i}`} className="flex items-center gap-x-1">
+                {i > 0 ? (
+                  <span className="select-none text-white/45" aria-hidden>
+                    →
                   </span>
-                ))}
-              </div>
-            </div>
-          ) : null}
+                ) : null}
+                <span className="rounded-md bg-white/12 px-1.5 py-0.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)] backdrop-blur-[2px] md:px-2 md:py-1">
+                  {step}
+                </span>
+              </span>
+            ))}
+          </div>
         </div>
+      ) : null}
+    </>
+  );
 
-        <div className="mt-5 flex min-h-0 flex-1 flex-col md:mt-6">
-          <h3 className={titleClass}>
+  const wrapperContent = (
+    <div className="flex flex-col-reverse md:grid md:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)]">
+      {/* LEFT — copy panel. On hover a faint per-project gradient washes in
+          (the right keeps playing video). */}
+      <div className="relative flex flex-col px-6 py-7 md:px-9 md:py-9 lg:px-10">
+        {/* hover wash — light, gradient, fades in */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-portfolio group-hover:opacity-100 group-focus-within:opacity-100"
+          style={{ background: cardTintGradient }}
+        />
+
+        <div className="relative z-10 flex flex-1 flex-col">
+          <p className="font-mono text-[12px] tracking-[0.02em] text-textSecondary/55">
+            ({project.meta?.year ?? "—"})
+          </p>
+
+          <h3 className="mt-7 font-display font-light tracking-tight text-textPrimary md:mt-9">
             {companyName ? (
               <>
-                <span className="mb-2 block font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-textSecondary md:text-xs">
-                  {companyName}
+                <span className="block text-[1.5rem] leading-[1.06] md:text-[2rem]">{companyName}</span>
+                <span className="mt-1.5 block text-[1.05rem] leading-snug text-textPrimary/70 md:text-[1.28rem] md:leading-[1.2]">
+                  {mainTitle}
                 </span>
-                <span>{mainTitle}</span>
               </>
             ) : (
-              mainTitle
+              <span className="block text-[1.5rem] leading-[1.06] md:text-[2rem]">{mainTitle}</span>
             )}
           </h3>
 
-          <p
-            className={`mt-3 text-[13px] leading-relaxed text-textSecondary md:text-sm ${
-              featured ? "max-w-3xl" : "line-clamp-3 flex-1 text-pretty"
-            }`}
-          >
-            {project.description}
-          </p>
+          {/* impact chip — sits directly under the title now */}
+          {project.impact ? (
+            <span className="mt-4 inline-flex w-fit items-center gap-1.5 rounded-full border border-black/[0.07] bg-white px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textPrimary shadow-[0_4px_14px_-8px_rgba(0,0,0,0.18)] transition-colors duration-500 ease-portfolio group-hover:bg-transparent group-hover:shadow-none group-focus-within:bg-transparent group-focus-within:shadow-none md:text-[11px]">
+              <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full bg-nltLime" />
+              {project.impact}
+            </span>
+          ) : null}
+
+          <div className="mt-8 md:mt-auto md:pt-10">
+          {project.tags && project.tags.length > 0 ? (
+            <ul className="border-t border-black/[0.08]">
+              {project.tags.map((tag) => (
+                <li
+                  key={tag}
+                  className="border-b border-black/[0.08] py-2.5 text-[13px] leading-snug text-textSecondary last:border-b-0 md:py-3"
+                >
+                  {tag}
+                </li>
+              ))}
+            </ul>
+          ) : null}
 
           {comingSoon ? (
-            <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60">
+            <span className="mt-6 inline-flex items-center gap-1 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60">
               Case study coming soon
             </span>
           ) : (
-            <span className="mt-auto inline-flex items-center gap-1 pt-5 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-textPrimary group-hover:opacity-100 group-focus-within:opacity-100">
+            <span className="mt-6 inline-flex items-center gap-1 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-textPrimary group-hover:opacity-100 group-focus-within:opacity-100">
               Case study
               <span aria-hidden className="inline-flex translate-x-0 transition-transform duration-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-within:translate-x-0.5 group-focus-within:-translate-y-0.5">
                 <Icon as={ArrowUpRight} size="sm" />
               </span>
             </span>
           )}
+          </div>
         </div>
-      </>
-    );
+      </div>
+
+      {/* RIGHT — cropped product video as a full-bleed background. No feather:
+          it fills the panel and crops with object-cover, clipped to the card's
+          rounded corners. On hover the media fades out and the panel settles to
+          its per-project background wash. Mobile gets the aspect ratio for
+          height; on desktop the cell stretches to match the copy panel. */}
+      <div
+        className={`relative overflow-hidden ${mediaAspect} md:aspect-auto`}
+        style={{ background: mediaPanelBackground }}
+      >
+        {mediaBlock}
+
+        {project.logo ? (
+          <Image
+            src={project.logo.src}
+            alt={project.logo.alt}
+            width={90}
+            height={36}
+            className={`absolute right-4 top-4 z-20 ${project.logo.className ?? "h-6 w-auto md:h-7"} md:right-5 md:top-5`}
+          />
+        ) : null}
+      </div>
+    </div>
+  );
 
   return (
     <motion.article
       whileHover={hover}
-      onHoverStart={() => setCardHovered(true)}
-      onHoverEnd={() => setCardHovered(false)}
       className={`relative flex h-full flex-col ${comingSoon ? "" : "group"}`}
     >
       {comingSoon ? (
         <div className={wrapperStaticClass}>{wrapperContent}</div>
       ) : (
-        <Link
-          href={`/work/${project.slug}`}
-          className={wrapperLinkClass}
-          style={
-            project.hoverTint
-              ? ({ "--card-hover-tint": project.hoverTint } as React.CSSProperties)
-              : undefined
-          }
-        >
+        <Link href={`/work/${project.slug}`} className={wrapperLinkClass}>
           {wrapperContent}
         </Link>
       )}

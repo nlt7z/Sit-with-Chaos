@@ -19,7 +19,7 @@ import {
 } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
-const LIME = "#B8E532";
+const LIME = "#d2ff00";
 const ease = [0.25, 0.1, 0.25, 1] as const;
 
 /* A — scroll progress line */

@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { Cinzel, Cormorant_Garamond, Inter } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 
-const romanticDisplay = Cinzel({ subsets: ["latin"], weight: ["500", "600", "700"] });
-const romanticBody = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600"] });
+// Two families only: one serif (display + body) + one sans (UI). Cinzel dropped.
+const romanticSerif = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 const uiFont = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600"] });
-const F = { display: romanticDisplay.style.fontFamily, body: romanticBody.style.fontFamily, ui: uiFont.style.fontFamily };
+const F = { display: romanticSerif.style.fontFamily, body: romanticSerif.style.fontFamily, ui: uiFont.style.fontFamily };
 
 /** Alternate-universe card hero — dedicated portrait for the “new world” timeline */
 const AU_HERO_IMG = "/assets/ai-character/alternate-universe-hero.png";
@@ -21,7 +21,7 @@ const BG_MUSIC = "/assets/ai-character/background.MP3";
 
 const T = {
   bg: { void: "#050507", deep: "#08080d", card: "#0d0d16" },
-  gold: { p: "#d4a853", l: "#f2da90", d: "#8a7038", dk: "#5a4e28" },
+  gold: { l: "rgba(212,168,83,1)", p: "rgba(212,168,83,0.78)", d: "rgba(212,168,83,0.5)", dk: "rgba(212,168,83,0.3)" },
   rose: { p: "#c87878", l: "#e8a8a8", d: "#7e4444" },
   txt: { p: "#f0ece2", s: "#b4afa8", d: "#8a8682", m: "#625e5a" },
   bdr: { f: "rgba(212,168,83,0.09)", s: "rgba(212,168,83,0.18)", g: "rgba(212,168,83,0.32)", gs: "rgba(212,168,83,0.55)" },
@@ -29,19 +29,30 @@ const T = {
   au: { accent: "#6090d8", border: "rgba(96,144,216,0.24)", text: "#ccd8f4" },
 };
 
+/** Radius scale — 4 steps + pill. Replaces ~13 ad-hoc values. Nested: inner = outer − padding. */
+const R = { xs: 8, sm: 12, md: 16, lg: 20, pill: 999 } as const;
+/** Type scale — 7 steps, no half-pixels. micro is the legibility floor for uppercase labels. */
+const FS = { micro: 11, xs: 12, sm: 13, base: 15, md: 17, lg: 20, xl: 22 } as const;
+/** Motion language — one curve per intent (not one curve for everything). */
+const EASE = {
+  out: "cubic-bezier(0.16, 1, 0.3, 1)",        // expo-out: snappy then settles — the "premium" entrance curve
+  inOut: "cubic-bezier(0.65, 0, 0.35, 1)",     // symmetric — for cross-fades / transforms
+  back: "cubic-bezier(0.34, 1.4, 0.5, 1)",     // gentle overshoot — tactile pops (hover / press)
+  ambient: "cubic-bezier(0.45, 0, 0.55, 1)",   // sine — for ambient loops
+} as const;
+
 const CHAT_COLUMN_MAX_PX = 760;
 const SIDEBAR_LEFT_PX = 216;
 const SIDEBAR_RIGHT_PX = 288;
-const CHAT_DOCK_MAX_VH = 54;
-const CHAT_MESSAGES_MAX_VH = 32;
+const CHAT_DOCK_MAX_VH = 64;
+const CHAT_MESSAGES_MAX_VH = 46;
 /** When an Alternate Universe card is in-thread, give the transcript more height so the card fits */
-const CHAT_MESSAGES_MAX_VH_WITH_AU = 44;
+const CHAT_MESSAGES_MAX_VH_WITH_AU = 54;
 const CHAR_NAME = "Lucien Ashford";
 /** Header controls — rounded-square “cube” shells, compact */
 const HUD_BTN_PX = 32;
 const HUD_ICON_PX = 15;
-const HUD_RADIUS = 7;
-const FEATURE_ICON_PX = 17;
+const HUD_RADIUS = R.xs;
 
 const CHARACTER_CODE = `role: lucien_ashford
 voice: restrained_warmth, dry_humor, vulnerability_gated
@@ -229,7 +240,7 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
   useEffect(() => { const id = setTimeout(() => setShow(true), 30); return () => clearTimeout(id); }, []);
   const close = () => { setShow(false); setTimeout(onClose, 360); };
   const copyClone = () => { navigator.clipboard.writeText(CLONE_SNIPPET).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 2000); };
-  const TAB = (a: boolean) => ({ flex: 1, padding: "9px 4px", border: "none", background: a ? T.glow.g : "transparent", color: a ? T.gold.l : T.txt.d, fontSize: 12, fontFamily: F.ui, fontWeight: a ? 500 : 400, cursor: "pointer", borderBottom: `1.5px solid ${a ? T.gold.p : "transparent"}`, transition: "all 0.2s ease" });
+  const TAB = (a: boolean) => ({ flex: 1, padding: "9px 4px", border: "none", background: a ? T.glow.g : "transparent", color: a ? T.gold.l : T.txt.d, fontSize: FS.xs, fontFamily: F.ui, fontWeight: a ? 500 : 400, cursor: "pointer", borderBottom: `1.5px solid ${a ? T.gold.p : "transparent"}`, transition: "all 0.2s ease" });
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", justifyContent: "flex-end", background: show ? "rgba(4,4,8,0.4)" : "transparent", transition: "background 0.35s ease" }} onClick={close}>
@@ -240,11 +251,11 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
               <svg width="13" height="13" viewBox="0 0 20 20" fill="none" aria-hidden style={{ color: T.gold.p }}>
                 <path d="M7 5L3 10l4 5M13 5l4 5-4 5" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span style={{ fontSize: 16, fontWeight: 500, color: T.txt.p }}>Developer Tools</span>
+              <span style={{ fontSize: FS.md, fontWeight: 500, color: T.txt.p }}>Developer Tools</span>
             </div>
-            <div style={{ fontSize: 11, color: T.txt.d, letterSpacing: 1.5, textTransform: "uppercase" }}>Inspect \u00b7 Clone \u00b7 Configure</div>
+            <div style={{ fontSize: FS.xs, color: T.txt.d, letterSpacing: 1.5, textTransform: "uppercase" }}>Inspect \u00b7 Clone \u00b7 Configure</div>
           </div>
-          <button type="button" onClick={close} aria-label="Close developer tools" style={{ width: 30, height: 30, borderRadius: 7, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: 18, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6, transition: "opacity 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}>&#215;</button>
+          <button type="button" onClick={close} aria-label="Close developer tools" style={{ width: 30, height: 30, borderRadius: R.xs, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: FS.lg, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6, transition: "opacity 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}>&#215;</button>
         </div>
         <div style={{ display: "flex", borderBottom: `1px solid ${T.bdr.f}` }}>
           {(["source", "clone", "config"] as const).map((t) => (
@@ -256,27 +267,27 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
         <div style={{ flex: 1, overflowY: "auto", padding: 18 }}>
           {tab === "source" && (
             <div style={{ animation: "fadeIn 0.3s ease both" }}>
-              <p style={{ fontSize: 12, color: T.txt.d, lineHeight: 1.7, marginBottom: 14 }}>The YAML spec defining Lucien&apos;s voice, constraints, and system prompt stub.</p>
-              <div style={{ borderRadius: 10, border: `1px solid ${T.bdr.s}`, background: "rgba(6,6,10,0.9)", overflow: "hidden" }}>
+              <p style={{ fontSize: FS.xs, color: T.txt.d, lineHeight: 1.7, marginBottom: 14 }}>The YAML spec defining Lucien&apos;s voice, constraints, and system prompt stub.</p>
+              <div style={{ borderRadius: R.sm, border: `1px solid ${T.bdr.s}`, background: "rgba(6,6,10,0.9)", overflow: "hidden" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "9px 14px 7px", borderBottom: `1px solid ${T.bdr.f}` }}>
                   {["#d05","#d80","#4a4"].map((c, i) => <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: c, opacity: 0.6 }} />)}
-                  <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: T.txt.d, marginLeft: 6 }}>character.config.yaml</span>
+                  <span style={{ fontFamily: "ui-monospace,monospace", fontSize: FS.micro, color: T.txt.d, marginLeft: 6 }}>character.config.yaml</span>
                 </div>
-                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,SFMono-Regular,monospace", fontSize: 11.5, lineHeight: 1.75, color: T.txt.s, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{CHARACTER_CODE}</pre>
+                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,SFMono-Regular,monospace", fontSize: FS.xs, lineHeight: 1.75, color: T.txt.s, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{CHARACTER_CODE}</pre>
               </div>
             </div>
           )}
           {tab === "clone" && (
             <div style={{ animation: "fadeIn 0.3s ease both" }}>
-              <p style={{ fontSize: 12, color: T.txt.d, lineHeight: 1.7, marginBottom: 16 }}>Fork this template to build your own character. Includes the spec, UI shell, and prompt runtime.</p>
-              <div style={{ borderRadius: 10, border: `1px solid ${T.bdr.s}`, background: "rgba(6,6,10,0.9)", overflow: "hidden", marginBottom: 12 }}>
+              <p style={{ fontSize: FS.xs, color: T.txt.d, lineHeight: 1.7, marginBottom: 16 }}>Fork this template to build your own character. Includes the spec, UI shell, and prompt runtime.</p>
+              <div style={{ borderRadius: R.sm, border: `1px solid ${T.bdr.s}`, background: "rgba(6,6,10,0.9)", overflow: "hidden", marginBottom: 12 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "9px 14px 7px", borderBottom: `1px solid ${T.bdr.f}` }}>
                   {["#d05","#d80","#4a4"].map((c, i) => <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: c, opacity: 0.6 }} />)}
-                  <span style={{ fontFamily: "ui-monospace,monospace", fontSize: 10, color: T.txt.d, marginLeft: 6 }}>Terminal</span>
+                  <span style={{ fontFamily: "ui-monospace,monospace", fontSize: FS.micro, color: T.txt.d, marginLeft: 6 }}>Terminal</span>
                 </div>
-                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,monospace", fontSize: 11.5, lineHeight: 1.9, color: "#72c472", whiteSpace: "pre-wrap" }}>{CLONE_SNIPPET}</pre>
+                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,monospace", fontSize: FS.xs, lineHeight: 1.9, color: "#72c472", whiteSpace: "pre-wrap" }}>{CLONE_SNIPPET}</pre>
               </div>
-              <button onClick={copyClone} style={{ width: "100%", padding: "11px 0", borderRadius: 9, border: `1px solid ${copied ? T.gold.p : T.bdr.g}`, background: copied ? T.glow.gm : "transparent", color: copied ? T.gold.l : T.gold.p, fontFamily: F.ui, fontSize: 13, fontWeight: 500, cursor: "pointer", transition: "all 0.25s ease" }}>
+              <button onClick={copyClone} style={{ width: "100%", padding: "11px 0", borderRadius: R.xs, border: `1px solid ${copied ? T.gold.p : T.bdr.g}`, background: copied ? T.glow.gm : "transparent", color: copied ? T.gold.l : T.gold.p, fontFamily: F.ui, fontSize: FS.sm, fontWeight: 500, cursor: "pointer", transition: "all 0.25s ease" }}>
                 {copied ? "Copied" : "Copy command"}
               </button>
             </div>
@@ -285,7 +296,7 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
             <div style={{ animation: "fadeIn 0.3s ease both" }}>
               {[
                 { label: "Model", content: (
-                  <select value={model} onChange={(e) => setModel(e.target.value)} style={{ width: "100%", padding: "8px 12px", borderRadius: 7, border: `1px solid ${T.bdr.s}`, background: T.bg.card, color: T.txt.p, fontFamily: F.ui, fontSize: 12, cursor: "pointer", outline: "none" }}>
+                  <select value={model} onChange={(e) => setModel(e.target.value)} style={{ width: "100%", padding: "8px 12px", borderRadius: R.xs, border: `1px solid ${T.bdr.s}`, background: T.bg.card, color: T.txt.p, fontFamily: F.ui, fontSize: FS.xs, cursor: "pointer", outline: "none" }}>
                     <option value="qwen-qwq">qwen-qwq — Deep Reasoning</option>
                     <option value="qwen-plus">qwen-plus — Balanced</option>
                     <option value="qwen-turbo">qwen-turbo — Fastest</option>
@@ -298,17 +309,17 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
                   <input type="range" min={128} max={4096} step={128} value={tokens} onChange={(e) => setTokens(parseInt(e.target.value))} style={{ width: "100%", accentColor: T.gold.p }} />
                 )},
               ].map((row) => (
-                <div key={row.label} style={{ marginBottom: 14, padding: "12px 14px", borderRadius: 9, border: `1px solid ${T.bdr.f}`, background: "rgba(12,12,20,0.5)" }}>
-                  <div style={{ fontSize: 10, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 9 }}>{row.label}</div>
+                <div key={row.label} style={{ marginBottom: 14, padding: "12px 14px", borderRadius: R.xs, border: `1px solid ${T.bdr.f}`, background: "rgba(12,12,20,0.5)" }}>
+                  <div style={{ fontSize: FS.micro, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 9 }}>{row.label}</div>
                   {row.content}
                 </div>
               ))}
-              <div style={{ padding: "12px 14px", borderRadius: 9, border: `1px solid ${T.bdr.f}`, background: "rgba(12,12,20,0.5)" }}>
-                <div style={{ fontSize: 10, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 10 }}>Feature flags</div>
+              <div style={{ padding: "12px 14px", borderRadius: R.xs, border: `1px solid ${T.bdr.f}`, background: "rgba(12,12,20,0.5)" }}>
+                <div style={{ fontSize: FS.micro, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 10 }}>Feature flags</div>
                 {[{ label: "Heartbeat injection", on: true }, { label: "Emotion cues", on: true }, { label: "Alternate universe", on: true }, { label: "Long-context memory", on: false }].map((f) => (
                   <div key={f.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: `1px solid ${T.bdr.f}` }}>
-                    <span style={{ fontSize: 12, color: T.txt.s }}>{f.label}</span>
-                    <div style={{ width: 26, height: 14, borderRadius: 7, background: f.on ? "rgba(201,160,90,0.45)" : "rgba(78,74,70,0.35)", position: "relative" }}>
+                    <span style={{ fontSize: FS.xs, color: T.txt.s }}>{f.label}</span>
+                    <div style={{ width: 26, height: 14, borderRadius: R.xs, background: f.on ? "rgba(212,168,83,0.45)" : "rgba(78,74,70,0.35)", position: "relative" }}>
                       <div style={{ position: "absolute", top: 2, left: f.on ? 13 : 2, width: 10, height: 10, borderRadius: "50%", background: f.on ? T.gold.l : T.txt.d, transition: "left 0.22s ease" }} />
                     </div>
                   </div>
@@ -338,7 +349,7 @@ function TarotStars({ topInset = 0 }: { topInset?: number }) {
     <div aria-hidden style={{ position: "fixed", top: topInset, left: 0, right: 0, bottom: 0, zIndex: 2, pointerEvents: "none", overflow: "hidden" }}>
       {stars.map((st) => (
         <span key={st.id} style={{ position: "absolute", left: st.x, top: st.y, transform: "translate(-50%,-50%)", fontVariant: "normal" as const }}>
-          <span style={{ display: "block", transform: `scale(${st.s})`, color: `rgba(201,160,90,${st.o})`, fontSize: 10, fontFamily: "'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols',sans-serif", animation: `tarotDrift ${st.d}s ease-in-out infinite, tarotFade ${st.du}s ease-in-out infinite`, animationDelay: `${st.id * 0.7}s` }}>
+          <span style={{ display: "block", transform: `scale(${st.s})`, color: `rgba(212,168,83,${st.o})`, fontSize: FS.micro, fontFamily: "'Segoe UI Symbol','Apple Symbols','Noto Sans Symbols',sans-serif", animation: `tarotDrift ${st.d}s ease-in-out infinite, tarotFade ${st.du}s ease-in-out infinite`, animationDelay: `${st.id * 0.7}s` }}>
             {st.sym}
           </span>
         </span>
@@ -357,7 +368,7 @@ function TarotCardFrame({ w, h, gradId }: { w: number; h: number; gradId: string
     <svg width="100%" height="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} aria-hidden>
       <defs>
         <linearGradient id={gradId} x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#e4d49a" /><stop offset="52%" stopColor="#c9a05a" /><stop offset="100%" stopColor="#6b5a32" />
+          <stop offset="0%" stopColor="#ead29a" /><stop offset="52%" stopColor="#d4a853" /><stop offset="100%" stopColor="#7a5f2e" />
         </linearGradient>
       </defs>
       <rect x={3} y={3} width={w - 6} height={h - 6} rx={1.5} fill="none" stroke={gid} strokeWidth={0.38} opacity={0.52} />
@@ -438,11 +449,11 @@ function AuUniverseMysteryLayer({ w, h }: { w: number; h: number }) {
     <svg width="100%" height="100%" viewBox={`0 0 ${w} ${h}`} preserveAspectRatio="none" style={{ position: "absolute", inset: 0, pointerEvents: "none" }} aria-hidden>
       {gridDots}
       {microStar("au-s1", 22, 20, 0.82, 0.32, "rgba(180,195,235,0.75)")}
-      {microStar("au-s2", w - 22, 20, 0.82, 0.32, "rgba(201,160,90,0.55)")}
+      {microStar("au-s2", w - 22, 20, 0.82, 0.32, "rgba(212,168,83,0.55)")}
       {microStar("au-s3", 22, h - 22, 0.82, 0.28, "rgba(140,170,230,0.6)")}
-      {microStar("au-s4", w - 22, h - 22, 0.82, 0.28, "rgba(201,160,90,0.5)")}
+      {microStar("au-s4", w - 22, h - 22, 0.82, 0.28, "rgba(212,168,83,0.5)")}
       {microStar("au-s5", w / 2, 14, 0.6, 0.24, "rgba(200,210,245,0.5)")}
-      <circle cx={w / 2} cy={h - 16} r={0.45} fill="rgba(201,160,90,0.65)" opacity={0.28} />
+      <circle cx={w / 2} cy={h - 16} r={0.45} fill="rgba(212,168,83,0.65)" opacity={0.28} />
     </svg>
   );
 }
@@ -476,7 +487,7 @@ function HeartbeatMysteryLayer({ w, h }: { w: number; h: number }) {
       const x = 22 + col * 31 + (row % 2) * 8;
       const y = 18 + row * 26;
       if (x < w - 12 && y < h - 12) {
-        gridDots.push(<circle key={`g-${row}-${col}`} cx={x} cy={y} r={0.45} fill="rgba(201,160,90,0.55)" opacity={0.2} />);
+        gridDots.push(<circle key={`g-${row}-${col}`} cx={x} cy={y} r={0.45} fill="rgba(212,168,83,0.55)" opacity={0.2} />);
       }
     }
   }
@@ -486,7 +497,7 @@ function HeartbeatMysteryLayer({ w, h }: { w: number; h: number }) {
       transform={`translate(${tx},${ty}) scale(${sc})`}
       d="M0,-4 L0.85,-0.85 L4,0 L0.85,0.85 L0,4 L-0.85,0.85 L-4,0 L-0.85,-0.85 Z"
       fill="none"
-      stroke="rgba(201,160,90,0.7)"
+      stroke="rgba(212,168,83,0.7)"
       strokeWidth={0.32}
       strokeLinejoin="round"
       opacity={op}
@@ -500,7 +511,7 @@ function HeartbeatMysteryLayer({ w, h }: { w: number; h: number }) {
       {microStar("s3", 24, h - 22, 0.85, 0.3)}
       {microStar("s4", w - 24, h - 22, 0.85, 0.3)}
       {microStar("s5", w / 2, 16, 0.65, 0.26)}
-      <circle cx={w / 2} cy={h - 18} r={0.5} fill="rgba(201,160,90,0.55)" opacity={0.26} />
+      <circle cx={w / 2} cy={h - 18} r={0.5} fill="rgba(212,168,83,0.55)" opacity={0.26} />
     </svg>
   );
 }
@@ -510,9 +521,9 @@ function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean })
   const gF = useId();
   const hintId = `${gF}-hint`;
   if (hidden) return null;
-  const ch = 152;
+  const ch = 132;
   return (
-    <div style={{ width: "100%", maxWidth: "min(100%,360px)", marginTop: 14, perspective: 1300 }} role="region" aria-label="Heartbeat inner thought card">
+    <div style={{ width: "100%", maxWidth: "min(100%,360px)", marginTop: 12, perspective: 1300 }} role="region" aria-label="Heartbeat inner thought card">
       <button
         type="button"
         onClick={() => setFlipped((v) => !v)}
@@ -527,7 +538,7 @@ function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean })
           border: "none",
           background: "transparent",
           cursor: "pointer",
-          borderRadius: 10,
+          borderRadius: R.sm,
           animation: "cardPulse 3.8s ease-in-out infinite",
         }}
       >
@@ -540,9 +551,9 @@ function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean })
               inset: 0,
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
-              borderRadius: 10,
+              borderRadius: R.sm,
               background: "rgba(8,7,14,0.96)",
-              border: "1px solid rgba(201,160,90,0.32)",
+              border: "1px solid rgba(212,168,83,0.32)",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
@@ -552,8 +563,8 @@ function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean })
             }}
           >
             <CelestialMark size={22} />
-            <div style={{ fontSize: 8.5, color: T.gold.p, letterSpacing: 4, textTransform: "uppercase", fontFamily: F.display, opacity: 0.75 }}>Heartbeat</div>
-            <p id={hintId} style={{ fontSize: 14, color: "rgba(232,226,216,0.82)", letterSpacing: 0.1, textAlign: "center", lineHeight: 1.6, margin: 0, fontFamily: F.ui, fontWeight: 300 }}>
+            <div style={{ fontSize: FS.micro, color: T.gold.p, letterSpacing: 4, textTransform: "uppercase", fontFamily: F.display, opacity: 0.75 }}>Heartbeat</div>
+            <p id={hintId} style={{ fontSize: FS.base, color: "rgba(232,226,216,0.82)", letterSpacing: 0.1, textAlign: "center", lineHeight: 1.6, margin: 0, fontFamily: F.ui, fontWeight: 300 }}>
               Tap to reveal a thought he never says aloud
             </p>
           </div>
@@ -566,16 +577,16 @@ function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean })
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
               transform: "rotateY(180deg)",
-              borderRadius: 10,
+              borderRadius: R.sm,
               background: "rgba(6,5,11,0.97)",
-              border: "1px solid rgba(201,160,90,0.28)",
+              border: "1px solid rgba(212,168,83,0.28)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
               padding: "18px 24px",
             }}
           >
-            <blockquote style={{ fontFamily: F.body, fontSize: 14.5, lineHeight: 1.88, color: "rgba(238,232,222,0.92)", fontStyle: "italic", margin: 0, border: "none", padding: 0, textAlign: "center" }}>
+            <blockquote style={{ fontFamily: F.body, fontSize: FS.base, lineHeight: 1.88, color: "rgba(238,232,222,0.92)", fontStyle: "italic", margin: 0, border: "none", padding: 0, textAlign: "center" }}>
               &ldquo;{text}&rdquo;
             </blockquote>
           </div>
@@ -604,10 +615,10 @@ function HudToolButton({ ariaLabel, explanation, onClick, children, wide = false
           width: wide ? 52 : HUD_BTN_PX,
           height: HUD_BTN_PX,
           borderRadius: HUD_RADIUS,
-          border: `1px solid ${tip ? "rgba(201,160,90,0.42)" : "rgba(201,160,90,0.2)"}`,
+          border: `1px solid ${tip ? "rgba(212,168,83,0.42)" : "rgba(212,168,83,0.2)"}`,
           background: tip ? "rgba(14,14,22,0.72)" : "rgba(8,8,14,0.58)",
           backdropFilter: "blur(18px)",
-          boxShadow: tip ? "0 0 0 1px rgba(201,160,90,0.08), 0 6px 20px rgba(0,0,0,0.35)" : "0 1px 0 rgba(255,255,255,0.04) inset",
+          boxShadow: tip ? "0 0 0 1px rgba(212,168,83,0.08), 0 6px 20px rgba(0,0,0,0.35)" : "0 1px 0 rgba(255,255,255,0.04) inset",
           cursor: "pointer",
           padding: 0,
           display: "flex",
@@ -631,13 +642,13 @@ function HudToolButton({ ariaLabel, explanation, onClick, children, wide = false
             width: "max-content",
             maxWidth: "min(420px, calc(100vw - 32px))",
             padding: "10px 12px",
-            borderRadius: 8,
+            borderRadius: R.xs,
             border: `1px solid ${T.bdr.s}`,
             background: "rgba(10,10,18,0.96)",
             backdropFilter: "blur(12px)",
             boxShadow: "0 12px 32px rgba(0,0,0,0.45)",
             fontFamily: F.ui,
-            fontSize: 10.5,
+            fontSize: FS.micro,
             lineHeight: 1.45,
             color: T.txt.s,
             fontWeight: 400,
@@ -662,9 +673,9 @@ function VinylGlyph({ playing }: { playing: boolean }) {
         <radialGradient id={gid} cx="50%" cy="50%" r="50%">
           {playing ? (
             <>
-              <stop offset="0%" stopColor="#e8c87a" />
-              <stop offset="45%" stopColor="#c9a050" />
-              <stop offset="100%" stopColor="#7a5a20" />
+              <stop offset="0%" stopColor="#ead29a" />
+              <stop offset="45%" stopColor="#d4a853" />
+              <stop offset="100%" stopColor="#7a5f2e" />
             </>
           ) : (
             <>
@@ -674,43 +685,13 @@ function VinylGlyph({ playing }: { playing: boolean }) {
           )}
         </radialGradient>
       </defs>
-      <circle cx="18" cy="18" r="17" fill={`url(#${gid})`} stroke={playing ? "rgba(201,160,90,0.55)" : "rgba(201,160,90,0.2)"} strokeWidth="0.55" />
-      <circle cx="18" cy="18" r="14" fill="none" stroke={playing ? "rgba(201,160,90,0.35)" : "rgba(201,160,90,0.1)"} strokeWidth="0.32" />
-      <circle cx="18" cy="18" r="10" fill="none" stroke={playing ? "rgba(201,160,90,0.25)" : "rgba(201,160,90,0.08)"} strokeWidth="0.28" />
-      <circle cx="18" cy="18" r="3.2" fill={playing ? "#1a120a" : "rgba(201,160,90,0.88)"} />
+      <circle cx="18" cy="18" r="17" fill={`url(#${gid})`} stroke={playing ? "rgba(212,168,83,0.55)" : "rgba(212,168,83,0.2)"} strokeWidth="0.55" />
+      <circle cx="18" cy="18" r="14" fill="none" stroke={playing ? "rgba(212,168,83,0.35)" : "rgba(212,168,83,0.1)"} strokeWidth="0.32" />
+      <circle cx="18" cy="18" r="10" fill="none" stroke={playing ? "rgba(212,168,83,0.25)" : "rgba(212,168,83,0.08)"} strokeWidth="0.28" />
+      <circle cx="18" cy="18" r="3.2" fill={playing ? "#1a120a" : "rgba(212,168,83,0.88)"} />
       <circle cx="18" cy="18" r="1.1" fill={playing ? "#0a0806" : "#070710"} />
     </svg>
   );
-}
-
-/* ─── Click FX + cursor trail ────────────────────────────────────────────── */
-function useClickFx() {
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      ["\u2726", "\u00b7", "\u2727"].forEach((sym, i) => {
-        const el = document.createElement("span");
-        el.textContent = sym;
-        Object.assign(el.style, { position: "fixed", left: `${e.clientX + (Math.random() - 0.5) * 22}px`, top: `${e.clientY + (Math.random() - 0.5) * 22}px`, pointerEvents: "none", zIndex: "99999", fontSize: "9px", color: T.gold.l, animation: "cStar 0.55s ease-out forwards", animationDelay: `${i * 40}ms`, fontFamily: "'Segoe UI Symbol','Apple Symbols',sans-serif" });
-        document.body.appendChild(el); setTimeout(() => el.remove(), 650);
-      });
-    };
-    document.addEventListener("click", h);
-    return () => document.removeEventListener("click", h);
-  }, []);
-}
-function useCursorTrail() {
-  useEffect(() => {
-    let t = 0;
-    const h = (e: MouseEvent) => {
-      t++; if (t % 6 !== 0) return;
-      const d = document.createElement("div");
-      const sz = 1.5 + Math.random() * 1.5;
-      Object.assign(d.style, { position: "fixed", left: `${e.clientX}px`, top: `${e.clientY}px`, width: `${sz}px`, height: `${sz}px`, borderRadius: "50%", background: T.gold.p, pointerEvents: "none", zIndex: "99997", animation: "tFade 0.65s ease-out forwards", opacity: "0.4" });
-      document.body.appendChild(d); setTimeout(() => d.remove(), 750);
-    };
-    document.addEventListener("mousemove", h);
-    return () => document.removeEventListener("mousemove", h);
-  }, []);
 }
 
 /* ─── Share character (prototype flow) ───────────────────────────────────── */
@@ -744,7 +725,7 @@ function ShareCharacterModal({ characterName, onClose }: { characterName: string
         onClick={(e) => e.stopPropagation()}
         style={{
           width: "min(400px, 100%)",
-          borderRadius: 20,
+          borderRadius: R.lg,
           border: `1px solid ${T.bdr.s}`,
           background: "rgba(10,10,18,0.97)",
           boxShadow: "0 32px 80px rgba(0,0,0,0.6)",
@@ -756,23 +737,23 @@ function ShareCharacterModal({ characterName, onClose }: { characterName: string
       >
         <div style={{ padding: "18px 20px 14px", borderBottom: `1px solid ${T.bdr.f}`, display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
           <div>
-            <h2 id="share-char-title" style={{ fontFamily: F.display, fontSize: 16, fontWeight: 600, color: T.txt.p, margin: 0, lineHeight: 1.3 }}>Share {characterName}</h2>
-            <p style={{ margin: "5px 0 0", fontSize: 10.5, color: T.txt.d, lineHeight: 1.5 }}>Copy this link and share with anyone.</p>
+            <h2 id="share-char-title" style={{ fontFamily: F.display, fontSize: FS.md, fontWeight: 600, color: T.txt.p, margin: 0, lineHeight: 1.3 }}>Share {characterName}</h2>
+            <p style={{ margin: "5px 0 0", fontSize: FS.micro, color: T.txt.d, lineHeight: 1.5 }}>Copy this link and share with anyone.</p>
           </div>
-          <button type="button" aria-label="Close" onClick={close} style={{ width: 28, height: 28, borderRadius: 8, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: 18, lineHeight: 1, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6, transition: "opacity 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}>&times;</button>
+          <button type="button" aria-label="Close" onClick={close} style={{ width: 28, height: 28, borderRadius: R.xs, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: FS.lg, lineHeight: 1, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6, transition: "opacity 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}>&times;</button>
         </div>
 
         <div style={{ padding: "16px 20px 20px" }}>
-          <div style={{ padding: "11px 14px", borderRadius: 10, border: `1px solid ${T.bdr.f}`, background: "rgba(6,6,12,0.85)", fontFamily: "ui-monospace,Menlo,monospace", fontSize: 10, color: T.txt.s, wordBreak: "break-all", lineHeight: 1.6, marginBottom: 12 }}>{link}</div>
+          <div style={{ padding: "11px 14px", borderRadius: R.sm, border: `1px solid ${T.bdr.f}`, background: "rgba(6,6,12,0.85)", fontFamily: "ui-monospace,Menlo,monospace", fontSize: FS.micro, color: T.txt.s, wordBreak: "break-all", lineHeight: 1.6, marginBottom: 12 }}>{link}</div>
           <button
             type="button"
             onClick={() => void copy()}
             style={{
-              width: "100%", padding: "11px 0", borderRadius: 10,
+              width: "100%", padding: "11px 0", borderRadius: R.sm,
               border: `1px solid ${copied ? "rgba(100,180,80,0.5)" : T.bdr.g}`,
               background: copied ? "rgba(80,160,60,0.22)" : T.glow.g,
               color: copied ? "rgba(140,220,100,0.95)" : T.gold.l,
-              fontFamily: F.ui, fontSize: 12.5, fontWeight: 500, cursor: "pointer",
+              fontFamily: F.ui, fontSize: FS.xs, fontWeight: 500, cursor: "pointer",
               transition: "all 0.25s ease",
             }}>
             {copied ? "✓ Copied!" : "Copy Link"}
@@ -811,7 +792,7 @@ function ResetMemoryModal({ onCancel, onConfirm }: { onCancel: () => void; onCon
         onClick={(e) => e.stopPropagation()}
         style={{
           width: "min(420px, 100%)",
-          borderRadius: 16,
+          borderRadius: R.md,
           border: `1px solid ${T.bdr.s}`,
           background: "rgba(10,10,18,0.96)",
           boxShadow: "0 28px 80px rgba(0,0,0,0.55)",
@@ -821,19 +802,19 @@ function ResetMemoryModal({ onCancel, onConfirm }: { onCancel: () => void; onCon
         }}
       >
         <div style={{ padding: "18px 20px 14px", borderBottom: `1px solid ${T.bdr.f}` }}>
-          <div style={{ fontSize: 10, color: T.gold.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>Warning</div>
-          <h2 id="reset-memory-title" style={{ margin: 0, fontFamily: F.display, fontSize: 18, fontWeight: 600, color: T.txt.p, lineHeight: 1.35 }}>
+          <div style={{ fontSize: FS.micro, color: T.gold.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>Warning</div>
+          <h2 id="reset-memory-title" style={{ margin: 0, fontFamily: F.display, fontSize: FS.lg, fontWeight: 600, color: T.txt.p, lineHeight: 1.35 }}>
             Reset memory and restart?
           </h2>
-          <p style={{ margin: "8px 0 0", fontSize: 12, color: T.txt.d, lineHeight: 1.6 }}>
+          <p style={{ margin: "8px 0 0", fontSize: FS.xs, color: T.txt.d, lineHeight: 1.6 }}>
             This will clear the current conversation state and return to the opening line.
           </p>
         </div>
         <div style={{ padding: "14px 20px 20px", display: "flex", justifyContent: "flex-end", gap: 10 }}>
-          <button type="button" onClick={close} style={{ padding: "10px 14px", borderRadius: 10, border: `1px solid ${T.bdr.f}`, background: "transparent", color: T.txt.s, fontFamily: F.ui, fontSize: 12.5, cursor: "pointer" }}>
+          <button type="button" onClick={close} style={{ padding: "10px 14px", borderRadius: R.sm, border: `1px solid ${T.bdr.f}`, background: "transparent", color: T.txt.s, fontFamily: F.ui, fontSize: FS.xs, cursor: "pointer" }}>
             Cancel
           </button>
-          <button type="button" onClick={confirm} style={{ padding: "10px 14px", borderRadius: 10, border: `1px solid ${T.bdr.g}`, background: T.glow.g, color: T.gold.l, fontFamily: F.ui, fontSize: 12.5, fontWeight: 500, cursor: "pointer" }}>
+          <button type="button" onClick={confirm} style={{ padding: "10px 14px", borderRadius: R.sm, border: `1px solid ${T.bdr.g}`, background: T.glow.g, color: T.gold.l, fontFamily: F.ui, fontSize: FS.xs, fontWeight: 500, cursor: "pointer" }}>
             Reset
           </button>
         </div>
@@ -842,45 +823,6 @@ function ResetMemoryModal({ onCancel, onConfirm }: { onCancel: () => void; onCon
   );
 }
 
-/* ─── AU Overlay ─────────────────────────────────────────────────────────── */
-function AUOverlay({ onClose }: { onClose: () => void }) {
-  const [s, setS] = useState(false);
-  useEffect(() => { const id = setTimeout(() => setS(true), 40); return () => clearTimeout(id); }, []);
-  const close = () => { setS(false); setTimeout(onClose, 380); };
-  return (
-    <div style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", alignItems: "center", justifyContent: "center", background: s ? "rgba(4,5,10,0.93)" : "transparent", backdropFilter: s ? "blur(24px)" : "none", transition: "all 0.45s ease" }}>
-      <div style={{ maxWidth: 740, width: "90%", background: "rgba(5,7,14,0.97)", border: `1px solid ${T.au.border}`, borderRadius: 18, overflow: "hidden", opacity: s ? 1 : 0, transform: s ? "scale(1) translateY(0)" : "scale(0.94) translateY(18px)", transition: "all 0.7s cubic-bezier(0.25,0.46,0.45,0.94)", boxShadow: "0 0 60px rgba(85,128,200,0.1),0 40px 100px rgba(0,0,0,0.7)", display: "flex" }}>
-        <div style={{ flex: 1, padding: "36px 30px 30px", display: "flex", flexDirection: "column", minWidth: 0 }}>
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ fontSize: 10, color: T.au.accent, letterSpacing: 3, textTransform: "uppercase", marginBottom: 8, opacity: 0.75 }}>Alternate Universe Event</div>
-            <div style={{ fontFamily: F.display, fontSize: 22, fontWeight: 600, color: T.au.text, lineHeight: 1.25, marginBottom: 6 }}>{AU_EVENT.title}</div>
-            <div style={{ fontSize: 11, color: "rgba(85,128,200,0.45)", letterSpacing: 1.5, textTransform: "uppercase" }}>{AU_EVENT.intro}</div>
-          </div>
-          <div style={{ flex: 1, overflowY: "auto", marginBottom: 18 }}>
-            <div style={{ fontSize: 14, lineHeight: 2.05, color: "rgba(188,204,232,0.75)", whiteSpace: "pre-line" }}>{AU_EVENT.text}</div>
-          </div>
-          <div style={{ fontSize: 11.5, color: "rgba(85,128,200,0.4)", marginBottom: 20, lineHeight: 1.7 }}>{AU_EVENT.narration}</div>
-          <button onClick={close} onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(85,128,200,0.08)"; }} onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; }}
-            style={{ padding: "11px 0", borderRadius: 10, border: `1px solid ${T.au.border}`, background: "transparent", color: T.au.text, fontSize: 13, cursor: "pointer", fontFamily: F.ui, transition: "all 0.25s ease", letterSpacing: 0.8 }}>
-            &larr; Return to reality
-          </button>
-        </div>
-        <div style={{ width: 268, flexShrink: 0, position: "relative", overflow: "hidden" }}>
-          <img src={AU_HERO_IMG} alt="Alternate Lucien" style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 18%", filter: "brightness(0.94) contrast(1.03) saturate(0.9)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right,rgba(5,7,14,0.82) 0%,rgba(5,7,14,0.12) 48%,transparent 78%)" }} />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to top,rgba(5,7,14,0.75) 0%,transparent 50%)" }} />
-          <div style={{ position: "absolute", inset: 12, borderRadius: 12, border: "1px solid rgba(255,255,255,0.05)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", bottom: 20, left: 16, right: 16 }}>
-            <div style={{ fontSize: 9, color: "rgba(160,185,230,0.75)", letterSpacing: 2.4, textTransform: "uppercase", marginBottom: 5 }}>New appearance</div>
-            <div style={{ fontSize: 12.5, color: T.au.text, lineHeight: 1.5, opacity: 0.92, fontStyle: "italic", fontFamily: F.body }}>{AU_EVENT.appearanceNote}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-/* ─── Story Pane (inside right sidebar) ─────────────────────────────────── */
 /* ─── Story Overlay (full-screen) ───────────────────────────────────────── */
 function StoryOverlay({ onClose, liked, setLiked, related, setRelated }: {
   onClose: () => void;
@@ -899,7 +841,7 @@ function StoryOverlay({ onClose, liked, setLiked, related, setRelated }: {
     >
       <div
         onClick={e => e.stopPropagation()}
-        style={{ width: "min(720px,92vw)", maxHeight: "82vh", background: "rgba(8,8,14,0.97)", border: `1px solid ${T.bdr.s}`, borderRadius: 16, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,168,83,0.06)",
+        style={{ width: "min(720px,92vw)", maxHeight: "82vh", background: "rgba(8,8,14,0.97)", border: `1px solid ${T.bdr.s}`, borderRadius: R.md, overflow: "hidden", display: "flex", flexDirection: "column", boxShadow: "0 32px 80px rgba(0,0,0,0.7), 0 0 0 1px rgba(212,168,83,0.06)",
           opacity: vis ? 1 : 0, transform: vis ? "translateY(0) scale(1)" : "translateY(20px) scale(0.97)",
           transition: "opacity 0.4s ease, transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94)" }}
       >
@@ -908,34 +850,34 @@ function StoryOverlay({ onClose, liked, setLiked, related, setRelated }: {
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 6 }}>
               <CelestialMark size={22} />
-              <div style={{ fontSize: 9, color: T.gold.d, letterSpacing: 4, textTransform: "uppercase", fontFamily: F.display }}>Story Unlocks</div>
+              <div style={{ fontSize: FS.micro, color: T.gold.d, letterSpacing: 4, textTransform: "uppercase", fontFamily: F.display }}>Story Unlocks</div>
             </div>
-            <div style={{ fontFamily: F.display, fontSize: 22, fontWeight: 600, color: T.txt.p, letterSpacing: 0.3 }}>Hidden Moments</div>
-            <div style={{ fontSize: 11, color: T.txt.d, marginTop: 4 }}>Unlock fragments of Lucien&apos;s past as your bond deepens.</div>
+            <div style={{ fontFamily: F.display, fontSize: FS.xl, fontWeight: 600, color: T.txt.p, letterSpacing: 0.3 }}>Hidden Moments</div>
+            <div style={{ fontSize: FS.xs, color: T.txt.d, marginTop: 4 }}>Unlock fragments of Lucien&apos;s past as your bond deepens.</div>
           </div>
           <PaneCloseBtn onClick={close} ariaLabel="Close story" />
         </div>
         {/* Content */}
         <div style={{ flex: 1, overflowY: "auto", padding: "22px 28px 28px", display: "grid", gridTemplateColumns: "repeat(auto-fill,minmax(280px,1fr))", gap: 16, alignContent: "start" }}>
           {STORY_UNLOCK_POSTS.slice(0, 1).map((post, i) => (
-            <div key={post.id} style={{ borderRadius: 13, border: `1px solid ${T.bdr.f}`, background: "rgba(10,10,18,0.6)", overflow: "hidden", animation: `slideUp 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${i * 0.08}s both` }}>
+            <div key={post.id} style={{ borderRadius: R.sm, border: `1px solid ${T.bdr.f}`, background: "rgba(10,10,18,0.6)", overflow: "hidden", animation: `slideUp 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${i * 0.08}s both` }}>
               <div style={{ padding: "20px 20px 15px", textAlign: "center", borderBottom: `0.5px solid rgba(212,168,83,0.08)` }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 14 }}>
                   <div style={{ flex: 1, height: "0.5px", background: `linear-gradient(to right,transparent,rgba(212,168,83,0.25))` }} />
                   <CelestialMark size={26} />
                   <div style={{ flex: 1, height: "0.5px", background: `linear-gradient(to left,transparent,rgba(212,168,83,0.25))` }} />
                 </div>
-                <div style={{ fontSize: 10, color: T.txt.d, letterSpacing: 2.5, textTransform: "uppercase", marginBottom: 6 }}>{post.chapter}</div>
-                <div style={{ fontFamily: F.display, fontSize: 17, fontWeight: 500, color: T.txt.p, lineHeight: 1.3 }}>{post.title}</div>
+                <div style={{ fontSize: FS.micro, color: T.txt.d, letterSpacing: 2.5, textTransform: "uppercase", marginBottom: 6 }}>{post.chapter}</div>
+                <div style={{ fontFamily: F.display, fontSize: FS.md, fontWeight: 500, color: T.txt.p, lineHeight: 1.3 }}>{post.title}</div>
               </div>
               <div style={{ padding: "16px 20px 14px" }}>
-                <div style={{ fontFamily: F.body, fontSize: 14, lineHeight: 1.88, color: T.txt.s }}>{post.text}</div>
+                <div style={{ fontFamily: F.body, fontSize: FS.base, lineHeight: 1.88, color: T.txt.s }}>{post.text}</div>
                 <div style={{ marginTop: 14 }}><OrnamentRule opacity={0.22} /></div>
                 <div style={{ display: "flex", alignItems: "center", gap: 16, marginTop: 8 }}>
-                  <button onClick={() => setLiked(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: liked[post.id] ? T.rose.p : T.txt.d, fontSize: 15, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease, transform 0.15s ease", display: "flex", alignItems: "center", gap: 5, transform: liked[post.id] ? "scale(1.12)" : "scale(1)" }}>
+                  <button onClick={() => setLiked(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: liked[post.id] ? T.rose.p : T.txt.d, fontSize: FS.base, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease, transform 0.15s ease", display: "flex", alignItems: "center", gap: 5, transform: liked[post.id] ? "scale(1.12)" : "scale(1)" }}>
                     <span style={{ fontFamily: "'Segoe UI Symbol','Apple Symbols',sans-serif" }}>{liked[post.id] ? "♥" : "♡"}</span>
                   </button>
-                  <button onClick={() => setRelated(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: related[post.id] ? T.gold.p : T.txt.d, fontSize: 12, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease", padding: 0 }}>
+                  <button onClick={() => setRelated(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: related[post.id] ? T.gold.p : T.txt.d, fontSize: FS.xs, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease", padding: 0 }}>
                     Relate
                   </button>
                 </div>
@@ -944,11 +886,11 @@ function StoryOverlay({ onClose, liked, setLiked, related, setRelated }: {
           ))}
           {/* Locked fragments */}
           {[{ title: "Letters to No One", chapter: "Locked · Bond Lv 3" }, { title: "The East Wing", chapter: "Locked · Bond Lv 5" }].map((locked, i) => (
-            <div key={i} style={{ borderRadius: 13, border: `1px solid ${T.bdr.f}`, background: "rgba(8,8,14,0.5)", overflow: "hidden", opacity: 0.45, animation: `slideUp 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${(i + 1) * 0.1}s both` }}>
+            <div key={i} style={{ borderRadius: R.sm, border: `1px solid ${T.bdr.f}`, background: "rgba(8,8,14,0.5)", overflow: "hidden", opacity: 0.45, animation: `slideUp 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${(i + 1) * 0.1}s both` }}>
               <div style={{ padding: "20px 20px 15px", textAlign: "center" }}>
-                <div style={{ fontSize: 10, color: T.txt.m, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>{locked.chapter}</div>
-                <div style={{ fontFamily: F.display, fontSize: 16, color: T.txt.d }}>{locked.title}</div>
-                <div style={{ marginTop: 14, fontSize: 20, opacity: 0.3 }}>&#128274;</div>
+                <div style={{ fontSize: FS.micro, color: T.txt.m, letterSpacing: 2, textTransform: "uppercase", marginBottom: 6 }}>{locked.chapter}</div>
+                <div style={{ fontFamily: F.display, fontSize: FS.md, color: T.txt.d }}>{locked.title}</div>
+                <div style={{ marginTop: 14, fontSize: FS.lg, opacity: 0.3 }}>&#128274;</div>
               </div>
             </div>
           ))}
@@ -970,32 +912,32 @@ function StoryPane({ onBack, liked, setLiked, related, setRelated }: {
         <PaneCloseBtn onClick={onBack} ariaLabel="Close story panel" />
         <OrnamentRule opacity={0.35} />
         <div style={{ marginTop: 11, textAlign: "center" }}>
-          <div style={{ fontSize: 10, color: T.gold.d, letterSpacing: 3, textTransform: "uppercase", marginBottom: 3 }}>Story Unlocks</div>
-          <div style={{ fontSize: 15, fontWeight: 500, color: T.txt.p }}>Hidden Moments</div>
+          <div style={{ fontSize: FS.micro, color: T.gold.d, letterSpacing: 3, textTransform: "uppercase", marginBottom: 3 }}>Story Unlocks</div>
+          <div style={{ fontSize: FS.base, fontWeight: 500, color: T.txt.p }}>Hidden Moments</div>
         </div>
       </div>
       <div style={{ flex: 1, overflowY: "auto", padding: "14px 14px 20px" }}>
         {STORY_UNLOCK_POSTS.slice(0, 1).map((post, i) => (
-          <div key={post.id} style={{ marginBottom: 14, borderRadius: 11, border: `1px solid ${T.bdr.f}`, background: "rgba(10,10,18,0.6)", overflow: "hidden", animation: `paneIn 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${i * 0.08}s both` }}>
+          <div key={post.id} style={{ marginBottom: 14, borderRadius: R.sm, border: `1px solid ${T.bdr.f}`, background: "rgba(10,10,18,0.6)", overflow: "hidden", animation: `paneIn 0.45s cubic-bezier(0.25,0.46,0.45,0.94) ${i * 0.08}s both` }}>
             {/* Ornamental header */}
-            <div style={{ padding: "16px 16px 12px", textAlign: "center", borderBottom: `0.5px solid rgba(201,160,90,0.08)` }}>
+            <div style={{ padding: "16px 16px 12px", textAlign: "center", borderBottom: `0.5px solid rgba(212,168,83,0.08)` }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 12 }}>
-                <div style={{ flex: 1, height: "0.5px", background: `linear-gradient(to right,transparent,rgba(201,160,90,0.22))` }} />
+                <div style={{ flex: 1, height: "0.5px", background: `linear-gradient(to right,transparent,rgba(212,168,83,0.22))` }} />
                 <CelestialMark size={24} />
-                <div style={{ flex: 1, height: "0.5px", background: `linear-gradient(to left,transparent,rgba(201,160,90,0.22))` }} />
+                <div style={{ flex: 1, height: "0.5px", background: `linear-gradient(to left,transparent,rgba(212,168,83,0.22))` }} />
               </div>
-              <div style={{ fontSize: 10, color: T.txt.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 5 }}>{post.chapter}</div>
-              <div style={{ fontSize: 15, fontWeight: 500, color: T.txt.p, lineHeight: 1.3 }}>{post.title}</div>
+              <div style={{ fontSize: FS.micro, color: T.txt.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 5 }}>{post.chapter}</div>
+              <div style={{ fontSize: FS.base, fontWeight: 500, color: T.txt.p, lineHeight: 1.3 }}>{post.title}</div>
             </div>
             {/* Body */}
             <div style={{ padding: "13px 16px 11px" }}>
-              <div style={{ fontSize: 13, lineHeight: 1.85, color: T.txt.s }}>{post.text}</div>
+              <div style={{ fontSize: FS.sm, lineHeight: 1.85, color: T.txt.s }}>{post.text}</div>
               <OrnamentRule opacity={0.2} />
               <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: 3 }}>
-                <button onClick={() => setLiked(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: liked[post.id] ? T.rose.p : T.txt.d, fontSize: 12, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease", display: "flex", alignItems: "center", gap: 4 }}>
+                <button onClick={() => setLiked(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: liked[post.id] ? T.rose.p : T.txt.d, fontSize: FS.xs, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease", display: "flex", alignItems: "center", gap: 4 }}>
                   <span style={{ fontFamily: "'Segoe UI Symbol','Apple Symbols',sans-serif" }}>{liked[post.id] ? "\u2665" : "\u2661"}</span>
                 </button>
-                <button onClick={() => setRelated(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: related[post.id] ? T.gold.p : T.txt.d, fontSize: 12, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease" }}>
+                <button onClick={() => setRelated(p => ({ ...p, [post.id]: !p[post.id] }))} style={{ background: "none", border: "none", color: related[post.id] ? T.gold.p : T.txt.d, fontSize: FS.xs, cursor: "pointer", fontFamily: F.ui, transition: "color 0.2s ease" }}>
                   Relate
                 </button>
               </div>
@@ -1037,8 +979,8 @@ function MomentsPane({ onBack, liked, setLiked }: {
 
       {/* Name + ornament */}
       <div style={{ padding: "34px 16px 10px", borderBottom: `0.5px solid ${T.bdr.f}` }}>
-        <div style={{ fontFamily: F.display, fontSize: 14, fontWeight: 600, color: T.txt.p, marginBottom: 1 }}>{CHAR_NAME}</div>
-        <div style={{ fontFamily: F.display, fontSize: 10, color: T.gold.d, letterSpacing: 1.8, textTransform: "uppercase", marginBottom: 8 }}>Private moments</div>
+        <div style={{ fontFamily: F.display, fontSize: FS.base, fontWeight: 600, color: T.txt.p, marginBottom: 1 }}>{CHAR_NAME}</div>
+        <div style={{ fontFamily: F.display, fontSize: FS.micro, color: T.gold.d, letterSpacing: 1.8, textTransform: "uppercase", marginBottom: 8 }}>Private moments</div>
         <OrnamentRule opacity={0.22} />
       </div>
 
@@ -1051,19 +993,19 @@ function MomentsPane({ onBack, liked, setLiked }: {
               <div style={{ width: 28, height: 28, borderRadius: "50%", flexShrink: 0, overflow: "hidden", border: "1px solid rgba(212,168,83,0.14)" }}>
                 <img src="/assets/ai-character/character.PNG" alt={CHAR_NAME} style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center 15%" }} />
               </div>
-              <div style={{ fontSize: 12.5, fontWeight: 500, color: T.txt.p, flex: 1 }}>{CHAR_NAME}</div>
-              <div style={{ fontSize: 8, padding: "2px 6px", borderRadius: 6, border: `0.5px solid ${T.bdr.s}`, color: T.gold.d, letterSpacing: 1, textTransform: "uppercase" }}>{m.mood}</div>
+              <div style={{ fontSize: FS.xs, fontWeight: 500, color: T.txt.p, flex: 1 }}>{CHAR_NAME}</div>
+              <div style={{ fontSize: FS.micro, padding: "2px 6px", borderRadius: R.xs, border: `0.5px solid ${T.bdr.s}`, color: T.gold.d, letterSpacing: 1, textTransform: "uppercase" }}>{m.mood}</div>
             </div>
             {/* Quote */}
-            <div style={{ fontFamily: F.body, fontSize: 13.5, lineHeight: 1.95, color: T.txt.s, paddingLeft: 37, marginBottom: 4 }}>&ldquo;{m.text}&rdquo;</div>
+            <div style={{ fontFamily: F.body, fontSize: FS.sm, lineHeight: 1.95, color: T.txt.s, paddingLeft: 37, marginBottom: 4 }}>&ldquo;{m.text}&rdquo;</div>
             {/* Ornament divider */}
             <div style={{ paddingLeft: 37, paddingRight: 4, marginBottom: 8, marginTop: 10 }}>
               <div style={{ height: "0.5px", background: `linear-gradient(to right, transparent, rgba(212,168,83,0.18), transparent)` }} />
             </div>
             {/* Footer */}
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", paddingLeft: 37 }}>
-              <div style={{ fontSize: 9.5, color: T.txt.m, letterSpacing: 0.3 }}>{m.time}</div>
-              <button onClick={() => setLiked(p => ({ ...p, [i]: !p[i] }))} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: liked[i] ? T.rose.p : "rgba(255,255,255,0.25)", fontSize: 15, display: "flex", alignItems: "center", transition: "color 0.2s ease, transform 0.15s ease", transform: liked[i] ? "scale(1.18)" : "scale(1)" }}>
+              <div style={{ fontSize: FS.micro, color: T.txt.m, letterSpacing: 0.3 }}>{m.time}</div>
+              <button onClick={() => setLiked(p => ({ ...p, [i]: !p[i] }))} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, color: liked[i] ? T.rose.p : "rgba(255,255,255,0.25)", fontSize: FS.base, display: "flex", alignItems: "center", transition: "color 0.2s ease, transform 0.15s ease", transform: liked[i] ? "scale(1.18)" : "scale(1)" }}>
                 <span style={{ fontFamily: "'Segoe UI Symbol','Apple Symbols',sans-serif" }}>{liked[i] ? "♥" : "♡"}</span>
               </button>
             </div>
@@ -1080,39 +1022,39 @@ function CharacterPane() {
   return (
     <>
       <div style={{ padding: "20px 18px 14px", borderBottom: `1px solid ${T.bdr.f}` }}>
-        <div style={{ fontFamily: F.display, fontSize: 17, fontWeight: 700, color: T.txt.p, letterSpacing: 0.3, lineHeight: 1.25, marginBottom: 4 }}>{CHAR_NAME}</div>
-        <div style={{ fontSize: 11, color: T.txt.d, letterSpacing: 0.8 }}>Heir to the Ashford Legacy</div>
+        <div style={{ fontFamily: F.display, fontSize: FS.md, fontWeight: 700, color: T.txt.p, letterSpacing: 0.3, lineHeight: 1.25, marginBottom: 4 }}>{CHAR_NAME}</div>
+        <div style={{ fontSize: FS.xs, color: T.txt.d, letterSpacing: 0.8 }}>Heir to the Ashford Legacy</div>
       </div>
       <div style={{ flex: 1, overflowY: "auto", padding: "16px 18px 22px" }}>
-        <div style={{ fontFamily: F.body, fontSize: 13, lineHeight: 1.85, color: T.txt.d, marginBottom: 20 }}>{CHARACTER_STORY_BLURB}</div>
+        <div style={{ fontFamily: F.body, fontSize: FS.sm, lineHeight: 1.85, color: T.txt.d, marginBottom: 20 }}>{CHARACTER_STORY_BLURB}</div>
 
-        <div style={{ fontSize: 9, color: T.txt.m, letterSpacing: 2.5, textTransform: "uppercase", marginBottom: 12 }}>Getting Started</div>
+        <div style={{ fontSize: FS.micro, color: T.txt.m, letterSpacing: 2.5, textTransform: "uppercase", marginBottom: 12 }}>Getting Started</div>
         {[
           { num: "01", label: "Inspire", desc: "Choose from 3 candidate replies, each with a distinct emotional tone" },
           { num: "02", label: "Heartbeat", desc: "Flip the tarot card to hear the thought he won't say aloud" },
           { num: "03", label: "Continue", desc: "Extend the scene naturally — no retyping, just one click" },
           { num: "04", label: "Alt Universe", desc: "Step into another timeline — same soul, different world" },
         ].map((item, i) => (
-          <div key={item.num} style={{ display: "flex", gap: 14, padding: "11px 0", borderBottom: i < 3 ? `0.5px solid rgba(201,160,90,0.06)` : "none", alignItems: "flex-start" }}>
-            <div style={{ fontSize: 9, color: T.gold.dk, fontFamily: "ui-monospace,monospace", letterSpacing: 1, marginTop: 2, minWidth: 20, flexShrink: 0 }}>{item.num}</div>
+          <div key={item.num} style={{ display: "flex", gap: 14, padding: "11px 0", borderBottom: i < 3 ? `0.5px solid rgba(212,168,83,0.06)` : "none", alignItems: "flex-start" }}>
+            <div style={{ fontSize: FS.micro, color: T.gold.dk, fontFamily: "ui-monospace,monospace", letterSpacing: 1, marginTop: 2, minWidth: 20, flexShrink: 0 }}>{item.num}</div>
             <div>
-              <div style={{ fontSize: 12.5, fontWeight: 500, color: T.txt.s, marginBottom: 3 }}>{item.label}</div>
-              <div style={{ fontSize: 11, color: T.txt.d, lineHeight: 1.55 }}>{item.desc}</div>
+              <div style={{ fontSize: FS.xs, fontWeight: 500, color: T.txt.s, marginBottom: 3 }}>{item.label}</div>
+              <div style={{ fontSize: FS.xs, color: T.txt.d, lineHeight: 1.55 }}>{item.desc}</div>
             </div>
           </div>
         ))}
 
         <div style={{ marginTop: 18 }}><OrnamentRule opacity={0.2} /></div>
 
-        <div style={{ marginTop: 16, padding: "15px 16px", borderRadius: 12, border: `1px solid ${T.bdr.f}`, background: "rgba(201,160,90,0.03)" }}>
-          <div style={{ fontFamily: F.display, fontSize: 8.5, color: T.gold.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>His words</div>
-          <div style={{ fontFamily: F.body, fontSize: 13.5, lineHeight: 1.95, color: T.txt.s, fontStyle: "italic" }}>
+        <div style={{ marginTop: 16, padding: "15px 16px", borderRadius: R.sm, border: `1px solid ${T.bdr.f}`, background: "rgba(212,168,83,0.03)" }}>
+          <div style={{ fontFamily: F.display, fontSize: FS.micro, color: T.gold.d, letterSpacing: 2, textTransform: "uppercase", marginBottom: 8 }}>His words</div>
+          <div style={{ fontFamily: F.body, fontSize: FS.sm, lineHeight: 1.95, color: T.txt.s, fontStyle: "italic" }}>
             &ldquo;I have worn a thousand masks. But when I look at you, I forget every line I ever rehearsed.&rdquo;
           </div>
         </div>
 
-        <div style={{ marginTop: 14, textAlign: "center", padding: "10px 12px", borderRadius: 8, background: "rgba(255,255,255,0.015)", border: `0.5px solid ${T.bdr.f}` }}>
-          <div style={{ fontSize: 11, color: T.txt.d, lineHeight: 1.6 }}>Click <span style={{ color: T.gold.l, fontWeight: 500 }}>Inspire</span> below to begin</div>
+        <div style={{ marginTop: 14, textAlign: "center", padding: "10px 12px", borderRadius: R.xs, background: "rgba(255,255,255,0.015)", border: `0.5px solid ${T.bdr.f}` }}>
+          <div style={{ fontSize: FS.xs, color: T.txt.d, lineHeight: 1.6 }}>Click <span style={{ color: T.gold.l, fontWeight: 500 }}>Inspire</span> below to begin</div>
         </div>
       </div>
     </>
@@ -1120,15 +1062,60 @@ function CharacterPane() {
 }
 
 /* ─── Feature Button ─────────────────────────────────────────────────────── */
-function FeatureBtn({ icon, label, desc, onClick, active }: { icon: string; label: string; desc: string; onClick: () => void; active: boolean }) {
+/** Crafted line icons — uniform 1.5 stroke, replaces inconsistent unicode symbol glyphs. */
+function FeatureIcon({ name, active }: { name: string; active: boolean }) {
+  const common = { width: 19, height: 19, viewBox: "0 0 24 24", fill: "none", stroke: "currentColor", strokeWidth: 1.5, strokeLinecap: "round" as const, strokeLinejoin: "round" as const, "aria-hidden": true };
+  const dot = (cx: number, cy: number, r: number) => <circle cx={cx} cy={cy} r={r} fill={active ? "currentColor" : "none"} stroke="none" />;
+  switch (name) {
+    case "Inspire": // a spark — candidate replies / inspiration
+      return (
+        <svg {...common}>
+          <path d="M12 3.4 L13.5 9.2 L19.2 10.6 L13.5 12 L12 17.8 L10.5 12 L4.8 10.6 L10.5 9.2 Z" />
+          {dot(18.6, 5.4, 1)}{dot(5.6, 17.2, 0.8)}
+        </svg>
+      );
+    case "Alt Universe": // two crossing orbits — a parallel timeline
+      return (
+        <svg {...common}>
+          <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(30 12 12)" />
+          <ellipse cx="12" cy="12" rx="9" ry="3.6" transform="rotate(-30 12 12)" />
+          {dot(12, 12, 1.6)}
+        </svg>
+      );
+    case "Story": // an open book — unlocked story moments
+      return (
+        <svg {...common}>
+          <path d="M12 6.6 C9.5 4.9 5.6 4.9 3.6 5.7 V17.9 C5.6 17.1 9.5 17.1 12 18.8 C14.5 17.1 18.4 17.1 20.4 17.9 V5.7 C18.4 4.9 14.5 4.9 12 6.6 Z" />
+          <path d="M12 6.6 V18.8" />
+        </svg>
+      );
+    default: // Moments — an aperture / lens into his private feed
+      return (
+        <svg {...common}>
+          <circle cx="12" cy="12" r="8.2" />
+          <circle cx="12" cy="12" r="3.4" />
+          {dot(12, 12, 0.9)}
+        </svg>
+      );
+  }
+}
+
+function FeatureBtn({ label, desc, onClick, active }: { label: string; desc: string; onClick: () => void; active: boolean }) {
   const [h, setH] = useState(false);
   return (
     <button type="button" onClick={onClick} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)} aria-current={active ? "true" : undefined} aria-label={`${label}. ${desc}`}
-      style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 2, padding: "6px 11px", borderRadius: 9, cursor: "pointer", border: "1px solid transparent", background: "transparent", boxShadow: "none", transition: "all 0.28s cubic-bezier(0.25,0.46,0.45,0.94)", transform: h ? "translateY(-1px)" : "none", position: "relative", minWidth: 58 }}>
-      <span aria-hidden style={{ width: FEATURE_ICON_PX, height: FEATURE_ICON_PX, display: "flex", alignItems: "center", justifyContent: "center", fontSize: FEATURE_ICON_PX, lineHeight: 1, color: active ? T.gold.l : h ? T.gold.l : T.txt.d, textShadow: active ? "0 0 12px rgba(242,218,144,0.72), 0 0 28px rgba(212,168,83,0.34)" : "none", transition: "color 0.22s ease, text-shadow 0.22s ease", opacity: h || active ? 1 : 0.68, fontFamily: "'Segoe UI Symbol','Apple Symbols',sans-serif" }}>{icon}</span>
-      <span style={{ fontSize: 10, color: active ? T.gold.l : h ? T.txt.p : T.txt.d, textShadow: active ? "0 0 12px rgba(242,218,144,0.52), 0 0 24px rgba(96,144,216,0.2)" : "none", fontWeight: active ? 500 : 300, letterSpacing: 0.45, transition: "color 0.22s ease, text-shadow 0.22s ease", textAlign: "center", fontFamily: F.ui, whiteSpace: "nowrap" }}>{label}</span>
-      {h && !active && (
-        <div style={{ position: "absolute", bottom: "calc(100% + 7px)", left: "50%", transform: "translateX(-50%)", width: "max-content", maxWidth: "min(420px, calc(100vw - 32px))", padding: "10px 12px", borderRadius: 7, background: "rgba(8,8,14,0.96)", border: `1px solid ${T.bdr.s}`, fontSize: 10.5, lineHeight: 1.45, color: T.txt.s, boxShadow: "0 6px 24px rgba(0,0,0,0.5)", animation: "fadeIn 0.15s ease both", zIndex: 10, pointerEvents: "none", fontFamily: F.ui, textAlign: "center" }}>
+      style={{
+        position: "relative", display: "flex", flexDirection: "column", alignItems: "center", gap: 5, minWidth: 64, padding: "9px 14px 8px", borderRadius: R.sm, cursor: "pointer",
+        border: "none",
+        background: "transparent",
+        transition: `background 0.22s ${EASE.out}`,
+      }}>
+      <span aria-hidden style={{ display: "flex", color: active ? T.txt.p : h ? T.txt.s : T.txt.d, transition: `color 0.22s ${EASE.out}` }}>
+        <FeatureIcon name={label} active={active} />
+      </span>
+      <span style={{ fontSize: FS.micro, lineHeight: 1, color: active ? T.txt.p : h ? T.txt.s : T.txt.d, fontWeight: active ? 500 : 400, letterSpacing: 0.4, fontFamily: F.ui, whiteSpace: "nowrap", transition: `color 0.22s ${EASE.out}` }}>{label}</span>
+      {h && (
+        <div role="tooltip" style={{ position: "absolute", bottom: "calc(100% + 10px)", left: "50%", transform: "translateX(-50%)", width: "max-content", maxWidth: "min(260px, calc(100vw - 32px))", padding: "8px 11px", borderRadius: R.xs, background: "rgba(8,8,14,0.97)", border: `1px solid ${T.bdr.s}`, fontSize: FS.micro, lineHeight: 1.45, color: T.txt.s, boxShadow: "0 8px 28px rgba(0,0,0,0.55)", animation: `fadeIn 0.18s ${EASE.out} both`, zIndex: 10, pointerEvents: "none", fontFamily: F.ui, textAlign: "center" }}>
           {desc}
         </div>
       )}
@@ -1136,164 +1123,180 @@ function FeatureBtn({ icon, label, desc, onClick, active }: { icon: string; labe
   );
 }
 
+/** Parallax rain on canvas — near drops longer/faster/brighter, with occasional splash ripples. Fills its positioned parent. */
+function RainCanvas({ density = 80, color = "182,206,242" }: { density?: number; color?: string }) {
+  const ref = useRef<HTMLCanvasElement | null>(null);
+  useEffect(() => {
+    const c = ref.current; if (!c) return;
+    const ctx = c.getContext("2d"); if (!ctx) return;
+    const parent = c.parentElement;
+    const reduce = typeof window !== "undefined" && !!window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const dpr = Math.min(2, (typeof window !== "undefined" && window.devicePixelRatio) || 1);
+    let W = 1, H = 1, raf = 0;
+    const measure = () => {
+      const r = parent ? parent.getBoundingClientRect() : { width: c.clientWidth, height: c.clientHeight };
+      W = Math.max(1, Math.round(r.width)); H = Math.max(1, Math.round(r.height));
+      c.width = W * dpr; c.height = H * dpr; c.style.width = W + "px"; c.style.height = H + "px";
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    measure();
+    const ro = (typeof ResizeObserver !== "undefined" && parent) ? new ResizeObserver(measure) : null;
+    if (ro && parent) ro.observe(parent);
+    const slope = 0.22;
+    const drops = Array.from({ length: density }, () => {
+      const d = Math.random();
+      return { x: Math.random() * W, y: Math.random() * H, len: 9 + d * 22, sp: 3 + d * 7, w: 0.5 + d * 1.0, o: 0.06 + d * 0.34, near: d > 0.62 };
+    });
+    const splashes: { x: number; y: number; r: number; o: number }[] = [];
+    const frame = () => {
+      ctx.clearRect(0, 0, W, H);
+      for (const p of drops) {
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${color},${p.o})`;
+        ctx.lineWidth = p.w;
+        ctx.moveTo(p.x, p.y);
+        ctx.lineTo(p.x - p.len * slope, p.y + p.len);
+        ctx.stroke();
+        p.y += p.sp; p.x += p.sp * slope * 0.5;
+        if (p.y > H) {
+          if (p.near && splashes.length < 12 && Math.random() < 0.55) splashes.push({ x: p.x, y: H - 1, r: 0, o: 0.22 });
+          p.y = -p.len; p.x = Math.random() * W;
+        }
+      }
+      for (let i = splashes.length - 1; i >= 0; i--) {
+        const sp = splashes[i];
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(${color},${Math.max(0, sp.o)})`;
+        ctx.lineWidth = 0.6;
+        ctx.arc(sp.x, sp.y, sp.r, Math.PI * 1.15, Math.PI * 1.85);
+        ctx.stroke();
+        sp.r += 0.8; sp.o -= 0.014;
+        if (sp.o <= 0) splashes.splice(i, 1);
+      }
+      raf = requestAnimationFrame(frame);
+    };
+    frame();
+    if (reduce) cancelAnimationFrame(raf);
+    return () => { cancelAnimationFrame(raf); if (ro) ro.disconnect(); };
+  }, [density, color]);
+  return <canvas ref={ref} aria-hidden style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none", zIndex: 1 }} />;
+}
+
 function AlternateUniverseMessageCard({ onEnterNewWorld }: { onEnterNewWorld: () => void }) {
   const CW = 320;
   const CH = 520;
   const [expanded, setExpanded] = useState(true);
+  const [ctaHov, setCtaHov] = useState(false);
   const bgVideoRef = useRef<HTMLVideoElement | null>(null);
   useEffect(() => {
     const v = bgVideoRef.current;
     if (!v) return;
-    const apply = () => {
-      try {
-        v.playbackRate = AU_CARD_VIDEO_RATE;
-      } catch {
-        /* ignore */
-      }
-    };
+    const apply = () => { try { v.playbackRate = AU_CARD_VIDEO_RATE; } catch { /* ignore */ } };
     apply();
     v.addEventListener("loadedmetadata", apply);
     void v.play().catch(() => {});
     return () => v.removeEventListener("loadedmetadata", apply);
-  }, []);
+  }, [expanded]);
   if (!expanded) {
     return (
       <button
         type="button"
         onClick={() => setExpanded(true)}
         style={{
-          width: "100%", padding: "10px 16px", borderRadius: 10,
-          border: "1px solid rgba(96,144,216,0.22)",
+          width: "100%", padding: "11px 16px", borderRadius: R.sm,
+          border: "1px solid rgba(120,160,230,0.24)",
           background: "rgba(4,8,20,0.72)", backdropFilter: "blur(12px)",
           cursor: "pointer", display: "flex", alignItems: "center", gap: 10, textAlign: "left",
-          animation: "auCardGlow 4.2s ease-in-out infinite",
+          animation: `auCardGlowBlue 5s ${EASE.ambient} infinite`,
         }}
       >
         <CelestialMark size={14} />
-        <span style={{ fontFamily: F.ui, fontSize: 10, letterSpacing: 2, textTransform: "uppercase", color: T.au.accent, opacity: 0.75 }}>New World</span>
-        <span style={{ fontFamily: F.display, fontSize: 13, color: T.au.text, flex: 1, opacity: 0.9 }}>{AU_EVENT.title}</span>
-        <span style={{ fontSize: 9, color: "rgba(130,160,220,0.5)", letterSpacing: 1 }}>▸</span>
+        <span style={{ fontFamily: F.ui, fontSize: FS.micro, letterSpacing: 2, textTransform: "uppercase", color: T.au.accent, opacity: 0.85 }}>New World</span>
+        <span style={{ fontFamily: F.display, fontSize: FS.sm, color: T.au.text, flex: 1, opacity: 0.92 }}>{AU_EVENT.title}</span>
+        <span style={{ fontSize: FS.micro, color: "rgba(150,180,235,0.6)", letterSpacing: 1 }}>▸</span>
       </button>
     );
   }
 
   return (
     <div style={{ width: "100%", margin: 0, position: "relative" }}>
+      {/* Portal seam — a bright line that splits and fades as the world opens */}
+      <div aria-hidden style={{ position: "absolute", left: "50%", top: 0, bottom: 0, width: 2, transform: "translateX(-50%)", background: "linear-gradient(180deg, transparent, rgba(208,224,255,0.95) 30%, rgba(212,168,83,0.7) 60%, transparent)", filter: "blur(1px)", zIndex: 6, pointerEvents: "none", animation: `auSeamFlash 0.9s ${EASE.out} both` }} />
       <div
         role="article"
         aria-label={`${AU_EVENT.title}. Alternate universe event.`}
         style={{
           position: "relative",
-          borderRadius: 12,
+          borderRadius: R.sm,
           overflow: "hidden",
           height: "min(38vh, 360px)",
-          minHeight: 306,
+          minHeight: 308,
           display: "flex",
-          background: "linear-gradient(90deg, rgba(2,3,9,1) 0%, rgba(2,3,9,0.99) 48%, rgba(4,10,24,0.98) 68%, rgba(2,5,15,0.96) 100%)",
-          boxShadow: "0 18px 52px rgba(0,0,0,0.3), inset 0 0 0 1px rgba(96,144,216,0.12)",
-          animation: "auCardGlow 4.2s ease-in-out infinite",
+          background: "linear-gradient(100deg, rgba(3,5,12,1) 0%, rgba(3,6,16,0.99) 46%, rgba(7,15,32,0.98) 70%, rgba(3,8,20,0.96) 100%)",
+          boxShadow: "0 22px 60px rgba(0,0,0,0.4), inset 0 0 0 1px rgba(120,160,230,0.16)",
+          animation: `auPortalOpen 0.9s ${EASE.out} both, auCardGlowBlue 5.4s ${EASE.ambient} 0.95s infinite`,
         }}
       >
-        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "52%", zIndex: 0, overflow: "hidden" }}>
+        {/* Right: the rainy world */}
+        <div style={{ position: "absolute", top: 0, right: 0, bottom: 0, width: "54%", zIndex: 0, overflow: "hidden" }}>
           <video
             ref={bgVideoRef}
             src={AU_CARD_BG_VIDEO}
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="auto"
-            aria-hidden
-            tabIndex={-1}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              objectPosition: "center center",
-              filter: "brightness(0.7) contrast(1.06) saturate(0.9)",
-            }}
+            autoPlay loop muted playsInline preload="auto" aria-hidden tabIndex={-1}
+            style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", filter: "brightness(0.6) contrast(1.08) saturate(0.74) hue-rotate(-8deg)" }}
           />
-          <div style={{ position: "absolute", inset: 0, background: "linear-gradient(90deg, rgba(2,3,9,1) 0%, rgba(2,3,9,0.94) 18%, rgba(2,5,14,0.74) 34%, rgba(4,10,24,0.2) 66%, rgba(2,3,9,0.38) 100%), radial-gradient(ellipse 72% 120% at 0% 50%, rgba(0,0,0,0.82), transparent 72%), radial-gradient(ellipse 82% 92% at 42% 50%, rgba(42,74,132,0.14), transparent 74%), linear-gradient(to top, rgba(2,3,9,0.88), transparent 58%)", pointerEvents: "none" }} />
-          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2 }}>
+          <RainCanvas density={88} />
+          {/* moonlight grade + left fade so dialogue stays legible */}
+          <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(90deg, rgba(3,5,12,1) 0%, rgba(3,5,12,0.9) 18%, rgba(4,11,26,0.5) 42%, rgba(8,18,40,0.1) 72%, rgba(3,6,16,0.42) 100%), radial-gradient(ellipse 78% 120% at 0% 50%, rgba(0,0,0,0.78), transparent 70%), linear-gradient(to top, rgba(3,5,12,0.84), transparent 56%)", pointerEvents: "none" }} />
+          <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 3, opacity: 0.5 }}>
             <AuUniverseMysteryLayer w={CW} h={CH} />
             <AuSideRails side="right" />
           </div>
         </div>
-        <div
-          aria-hidden
-          style={{
-            position: "absolute",
-            inset: 0,
-            background: "radial-gradient(ellipse 120% 95% at 50% 50%, transparent 54%, rgba(0,0,0,0.34) 100%), linear-gradient(125deg, transparent 38%, rgba(255,255,255,0.045) 50%, transparent 64%)",
-            animation: "auShimmerSlide 6.5s ease-in-out infinite",
-            pointerEvents: "none",
-            mixBlendMode: "overlay",
-            opacity: 0.85,
-          }}
-        />
 
-        <div style={{ position: "relative", zIndex: 2, display: "flex", flexDirection: "column", width: "54%", minHeight: 0, height: "100%", padding: "20px 24px 18px 24px", isolation: "isolate" }}>
+        {/* Left: content, rising in sequence after the portal opens */}
+        <div style={{ position: "relative", zIndex: 4, display: "flex", flexDirection: "column", width: "56%", minHeight: 0, height: "100%", padding: "20px 22px 18px 22px", isolation: "isolate" }}>
           <button
             type="button"
             onClick={() => setExpanded(false)}
             aria-label="Collapse alternate universe card"
-            style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12, flexShrink: 0, background: "none", border: "none", padding: 0, cursor: "pointer", width: "100%", textAlign: "left" }}
+            style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 12, flexShrink: 0, background: "none", border: "none", padding: 0, cursor: "pointer", width: "100%", textAlign: "left", animation: `auLineRise 0.6s ${EASE.out} 0.5s both` }}
           >
             <CelestialMark size={18} />
-            <span style={{ fontFamily: F.display, fontSize: 9.5, letterSpacing: 2.8, textTransform: "uppercase", color: T.gold.l, opacity: 0.78, whiteSpace: "nowrap" }}>New world</span>
-            <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(201,160,90,0.34), rgba(130,160,220,0.28), transparent)" }} />
-            <span style={{ fontSize: 8, color: "rgba(130,160,220,0.45)", letterSpacing: 1, flexShrink: 0 }}>▾</span>
+            <span style={{ fontFamily: F.display, fontSize: FS.micro, letterSpacing: 2.8, textTransform: "uppercase", color: T.gold.l, opacity: 0.85, whiteSpace: "nowrap" }}>New world</span>
+            <div style={{ flex: 1, height: 1, background: "linear-gradient(90deg, rgba(212,168,83,0.4), rgba(130,160,220,0.32), transparent)" }} />
+            <span style={{ fontSize: FS.micro, color: "rgba(150,180,235,0.5)", letterSpacing: 1, flexShrink: 0 }}>▾</span>
           </button>
 
-          <div style={{ flexShrink: 0, marginBottom: 12 }}>
-            <div style={{ fontSize: 9.5, letterSpacing: 2.1, textTransform: "uppercase", color: "rgba(116,156,226,0.68)", marginBottom: 6, fontFamily: F.ui }}>{AU_EVENT.intro}</div>
-            <div style={{ fontFamily: F.display, fontSize: 22, fontWeight: 600, color: T.au.text, lineHeight: 1.14, textShadow: "0 0 24px rgba(96,144,216,0.22)" }}>{AU_EVENT.title}</div>
+          <div style={{ flexShrink: 0, marginBottom: 12, animation: `auLineRise 0.6s ${EASE.out} 0.6s both` }}>
+            <div style={{ fontSize: FS.micro, letterSpacing: 2.1, textTransform: "uppercase", color: "rgba(140,172,236,0.78)", marginBottom: 6, fontFamily: F.ui }}>{AU_EVENT.intro}</div>
+            <div style={{ fontFamily: F.display, fontSize: FS.xl, fontWeight: 600, color: T.au.text, lineHeight: 1.14, textShadow: "0 0 28px rgba(96,144,216,0.3)" }}>{AU_EVENT.title}</div>
           </div>
 
-          <div
-            style={{
-              flex: 1,
-              minHeight: 0,
-              overflow: "hidden",
-              paddingRight: 0,
-              marginBottom: 0,
-            }}
-          >
-            <div style={{ fontSize: 14.5, lineHeight: 1.5, color: "rgba(218,226,246,0.94)", whiteSpace: "pre-line", fontFamily: F.body, marginBottom: 9 }}>{AU_EVENT.text}</div>
-            <div style={{ fontSize: 12, color: "rgba(148,176,230,0.62)", lineHeight: 1.45, fontStyle: "italic", paddingLeft: 11, borderLeft: `2px solid rgba(130,160,220,0.35)` }}>{AU_EVENT.narration}</div>
+          <div style={{ flex: 1, minHeight: 0, overflow: "hidden", animation: `auLineRise 0.6s ${EASE.out} 0.72s both` }}>
+            <div style={{ fontSize: FS.base, lineHeight: 1.54, color: "rgba(226,234,250,0.96)", whiteSpace: "pre-line", fontFamily: F.body, marginBottom: 9, textShadow: "0 1px 10px rgba(0,0,0,0.4)" }}>{AU_EVENT.text}</div>
+            <div style={{ fontSize: FS.xs, color: "rgba(164,188,238,0.72)", lineHeight: 1.45, fontStyle: "italic", paddingLeft: 11, borderLeft: `2px solid rgba(140,170,230,0.4)` }}>{AU_EVENT.narration}</div>
           </div>
 
-          <div style={{ flexShrink: 0, marginTop: 16, paddingTop: 13, borderTop: "1px solid rgba(130,160,220,0.16)" }}>
+          <div style={{ flexShrink: 0, marginTop: 16, paddingTop: 13, borderTop: "1px solid rgba(130,160,220,0.18)", animation: `auLineRise 0.6s ${EASE.out} 0.86s both` }}>
             <button
               type="button"
               onClick={onEnterNewWorld}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.color = "rgba(244,236,214,0.98)";
-                e.currentTarget.style.textShadow = "0 0 28px rgba(201,160,90,0.45), 0 0 48px rgba(85,128,200,0.2)";
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.color = "rgba(214,222,242,0.94)";
-                e.currentTarget.style.textShadow = "none";
-              }}
+              onMouseEnter={() => setCtaHov(true)}
+              onMouseLeave={() => setCtaHov(false)}
               style={{
-                width: "max-content",
-                padding: 0,
-                margin: 0,
-                border: "none",
-                borderRadius: 0,
-                background: "transparent",
-                color: "rgba(214,222,242,0.94)",
-                fontSize: 15.5,
-                lineHeight: 1.35,
-                cursor: "pointer",
-                fontFamily: F.body,
-                fontWeight: 600,
-                fontStyle: "italic",
-                letterSpacing: "0.07em",
-                transition: "color 0.28s ease, text-shadow 0.28s ease",
+                position: "relative", display: "inline-flex", alignItems: "center", gap: 9, padding: 0, border: "none", background: "transparent", cursor: "pointer",
+                color: ctaHov ? "rgba(246,240,222,0.98)" : "rgba(220,228,246,0.94)",
+                fontSize: FS.base, lineHeight: 1.3, fontFamily: F.body, fontWeight: 600, fontStyle: "italic", letterSpacing: "0.06em",
+                textShadow: ctaHov ? "0 0 26px rgba(212,168,83,0.4), 0 0 44px rgba(96,144,216,0.22)" : "none",
+                transition: `color 0.3s ${EASE.out}, text-shadow 0.3s ${EASE.out}`,
               }}
             >
-              Enter New World &rarr;
+              <span style={{ position: "relative" }}>
+                Enter New World
+                <span aria-hidden style={{ position: "absolute", left: 0, right: 0, bottom: -3, height: 1, transformOrigin: "left center", transform: `scaleX(${ctaHov ? 1 : 0})`, background: "linear-gradient(90deg, rgba(212,168,83,0.9), rgba(130,170,235,0.7))", transition: `transform 0.34s ${EASE.out}` }} />
+              </span>
+              <span aria-hidden style={{ display: "inline-block", transform: ctaHov ? "translateX(5px)" : "translateX(0)", transition: `transform 0.32s ${EASE.back}` }}>&rarr;</span>
             </button>
           </div>
         </div>
@@ -1307,7 +1310,7 @@ function InspirationPanel({ onSelect, disabled }: { onSelect: (i: number) => voi
   return (
     <div style={{ animation: "slideUp 0.4s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 9 }}>
-        <div style={{ fontSize: 10, color: T.txt.d, letterSpacing: 1.8, textTransform: "uppercase" }}>Suggested replies</div>
+        <div style={{ fontSize: FS.micro, color: T.txt.d, letterSpacing: 1.8, textTransform: "uppercase" }}>Suggested replies</div>
         <div style={{ height: "0.5px", flex: 1, background: `linear-gradient(90deg,${T.bdr.s},transparent)` }} />
       </div>
       <div style={{ display: "flex", gap: 7 }}>
@@ -1323,13 +1326,13 @@ function InspirationCard({ data, onSelect, disabled }: { data: { label: string; 
   const [h, setH] = useState(false);
   return (
     <div onClick={disabled ? undefined : onSelect} onMouseEnter={() => setH(true)} onMouseLeave={() => setH(false)}
-      style={{ flex: 1, padding: "14px 15px", borderRadius: 14, border: `1px solid ${h && !disabled ? T.bdr.s : T.bdr.f}`, background: h && !disabled ? "rgba(14,14,24,0.88)" : "rgba(10,10,18,0.56)", backdropFilter: "blur(20px)", cursor: disabled ? "default" : "pointer", transition: "all 0.26s cubic-bezier(0.25,0.46,0.45,0.94)", opacity: disabled ? 0.35 : 1, transform: h && !disabled ? "translateY(-2px)" : "none", boxShadow: h && !disabled ? `0 12px 32px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(212,168,83,0.12) inset` : "none" }}>
-      <div style={{ fontSize: 12.5, fontWeight: 500, color: T.gold.l, marginBottom: 7, letterSpacing: 0.2 }}>{data.label}</div>
-      <div style={{ fontSize: 12, color: T.txt.s, lineHeight: 1.75, marginBottom: 7 }}>{data.text}</div>
-      <div style={{ fontSize: 10.5, color: T.txt.d, lineHeight: 1.5, fontStyle: "italic" }}>{data.action}</div>
-      <div style={{ marginTop: 9, paddingTop: 7, borderTop: `0.5px solid rgba(201,160,90,0.07)`, display: "flex", alignItems: "center", gap: 5 }}>
+      style={{ flex: 1, padding: "14px 15px", borderRadius: R.sm, border: `1px solid ${h && !disabled ? T.bdr.s : T.bdr.f}`, background: h && !disabled ? "rgba(14,14,24,0.88)" : "rgba(10,10,18,0.56)", backdropFilter: "blur(20px)", cursor: disabled ? "default" : "pointer", transition: "all 0.26s cubic-bezier(0.25,0.46,0.45,0.94)", opacity: disabled ? 0.35 : 1, transform: h && !disabled ? "translateY(-2px)" : "none", boxShadow: h && !disabled ? `0 12px 32px rgba(0,0,0,0.3), 0 0 0 0.5px rgba(212,168,83,0.12) inset` : "none" }}>
+      <div style={{ fontSize: FS.xs, fontWeight: 500, color: T.gold.l, marginBottom: 7, letterSpacing: 0.2 }}>{data.label}</div>
+      <div style={{ fontSize: FS.xs, color: T.txt.s, lineHeight: 1.75, marginBottom: 7 }}>{data.text}</div>
+      <div style={{ fontSize: FS.micro, color: T.txt.d, lineHeight: 1.5, fontStyle: "italic" }}>{data.action}</div>
+      <div style={{ marginTop: 9, paddingTop: 7, borderTop: `0.5px solid rgba(212,168,83,0.07)`, display: "flex", alignItems: "center", gap: 5 }}>
         <div style={{ width: 3.5, height: 3.5, borderRadius: 2, background: T.gold.dk }} />
-        <span style={{ fontSize: 9.5, color: T.txt.m, letterSpacing: 0.7 }}>{data.emotion}</span>
+        <span style={{ fontSize: FS.micro, color: T.txt.m, letterSpacing: 0.7 }}>{data.emotion}</span>
       </div>
     </div>
   );
@@ -1342,7 +1345,7 @@ function PaneCloseBtn({ onClick, ariaLabel = "Close panel" }: { onClick: () => v
       type="button"
       onClick={onClick}
       aria-label={ariaLabel}
-      style={{ width: 28, height: 28, borderRadius: 6, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0, opacity: 0.6, transition: "opacity 0.2s ease" }}
+      style={{ width: 28, height: 28, borderRadius: R.xs, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", fontSize: FS.lg, flexShrink: 0, opacity: 0.6, transition: "opacity 0.2s ease" }}
       onMouseEnter={e => { e.currentTarget.style.opacity = "1"; }}
       onMouseLeave={e => { e.currentTarget.style.opacity = "0.6"; }}
     >
@@ -1383,8 +1386,8 @@ function DemoPane({ onBack, onActionMap }: {
       {/* Header */}
       <div style={{ padding: "18px 18px 14px", borderBottom: `1px solid ${T.bdr.f}`, display: "flex", alignItems: "center", justifyContent: "space-between", flexShrink: 0 }}>
         <div>
-          <div style={{ fontFamily: F.display, fontSize: 13, fontWeight: 600, color: T.gold.l, letterSpacing: 1.5 }}>Demo Script</div>
-          <div style={{ fontSize: 10, color: T.txt.d, marginTop: 2 }}>Step {step + 1} of {DEMO_STEPS.length}</div>
+          <div style={{ fontFamily: F.display, fontSize: FS.sm, fontWeight: 600, color: T.gold.l, letterSpacing: 1.5 }}>Demo Script</div>
+          <div style={{ fontSize: FS.micro, color: T.txt.d, marginTop: 2 }}>Step {step + 1} of {DEMO_STEPS.length}</div>
         </div>
         <PaneCloseBtn onClick={onBack} ariaLabel="Close demo guide" />
       </div>
@@ -1399,19 +1402,19 @@ function DemoPane({ onBack, onActionMap }: {
       {/* Current step — focused view */}
       <div style={{ flex: 1, overflowY: "auto", padding: "18px 18px 12px" }}>
         <div style={{ marginBottom: 6, display: "flex", alignItems: "center", gap: 8 }}>
-          <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, background: T.glow.gm, border: `1px solid ${T.bdr.g}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: T.gold.l, fontFamily: "ui-monospace,monospace", fontWeight: 600 }}>{current.step}</div>
-          <div style={{ fontSize: 9, color: T.txt.m, fontFamily: "ui-monospace,monospace", letterSpacing: 0.5 }}>{current.time}</div>
+          <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, background: T.glow.gm, border: `1px solid ${T.bdr.g}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: FS.micro, color: T.gold.l, fontFamily: "ui-monospace,monospace", fontWeight: 600 }}>{current.step}</div>
+          <div style={{ fontSize: FS.micro, color: T.txt.m, fontFamily: "ui-monospace,monospace", letterSpacing: 0.5 }}>{current.time}</div>
         </div>
 
-        <div style={{ fontFamily: F.display, fontSize: 17, fontWeight: 500, color: T.txt.p, lineHeight: 1.3, marginBottom: 12 }}>{current.label}</div>
-        <div style={{ fontSize: 12, color: T.txt.s, lineHeight: 1.8, marginBottom: 16 }}>{current.hint}</div>
+        <div style={{ fontFamily: F.display, fontSize: FS.md, fontWeight: 500, color: T.txt.p, lineHeight: 1.3, marginBottom: 12 }}>{current.label}</div>
+        <div style={{ fontSize: FS.xs, color: T.txt.s, lineHeight: 1.8, marginBottom: 16 }}>{current.hint}</div>
 
         {/* CTA button — shown when there's an action for this step */}
         {(action && ctaLabel) && (
           <button
             type="button"
             onClick={action}
-            style={{ width: "100%", padding: "11px 16px", borderRadius: 9, border: `1px solid ${T.bdr.g}`, background: T.glow.g, color: T.gold.l, fontFamily: F.ui, fontSize: 12, fontWeight: 500, letterSpacing: 0.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.22s ease" }}
+            style={{ width: "100%", padding: "11px 16px", borderRadius: R.xs, border: `1px solid ${T.bdr.g}`, background: T.glow.g, color: T.gold.l, fontFamily: F.ui, fontSize: FS.xs, fontWeight: 500, letterSpacing: 0.5, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", gap: 6, transition: "all 0.22s ease" }}
             onMouseEnter={e => { e.currentTarget.style.background = T.glow.gm; e.currentTarget.style.borderColor = T.bdr.gs; }}
             onMouseLeave={e => { e.currentTarget.style.background = T.glow.g; e.currentTarget.style.borderColor = T.bdr.g; }}
           >
@@ -1428,12 +1431,12 @@ function DemoPane({ onBack, onActionMap }: {
             const isDone = i < step;
             const isActive = i === step;
             return (
-              <div key={ds.step} onClick={() => setStep(i)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 8px", borderRadius: 6, cursor: "pointer", background: isActive ? T.glow.g : "transparent", transition: "background 0.18s ease", marginBottom: 1 }}>
+              <div key={ds.step} onClick={() => setStep(i)} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 8px", borderRadius: R.xs, cursor: "pointer", background: isActive ? T.glow.g : "transparent", transition: "background 0.18s ease", marginBottom: 1 }}>
                 <div style={{ width: 14, height: 14, borderRadius: "50%", flexShrink: 0, border: `1px solid ${isDone ? T.bdr.g : isActive ? T.gold.p : T.bdr.f}`, background: isDone ? "rgba(212,168,83,0.18)" : "transparent", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 7, color: isDone ? T.gold.p : isActive ? T.gold.l : T.txt.m }}>
                   {isDone ? "✓" : ""}
                 </div>
-                <span style={{ fontSize: 11, color: isActive ? T.gold.l : isDone ? T.txt.s : T.txt.d, fontWeight: isActive ? 500 : 400 }}>{ds.label}</span>
-                <span style={{ marginLeft: "auto", fontSize: 9, color: T.txt.m, fontFamily: "ui-monospace,monospace" }}>{ds.time}</span>
+                <span style={{ fontSize: FS.xs, color: isActive ? T.gold.l : isDone ? T.txt.s : T.txt.d, fontWeight: isActive ? 500 : 400 }}>{ds.label}</span>
+                <span style={{ marginLeft: "auto", fontSize: FS.micro, color: T.txt.m, fontFamily: "ui-monospace,monospace" }}>{ds.time}</span>
               </div>
             );
           })}
@@ -1442,8 +1445,8 @@ function DemoPane({ onBack, onActionMap }: {
 
       {/* Prev / Next */}
       <div style={{ padding: "10px 14px 16px", borderTop: `1px solid ${T.bdr.f}`, display: "flex", gap: 7, flexShrink: 0 }}>
-        <button onClick={() => setStep(s => Math.max(0, s - 1))} disabled={!canPrev} style={{ flex: 1, padding: "9px 0", borderRadius: 8, border: `1px solid ${T.bdr.f}`, background: "transparent", color: canPrev ? T.txt.s : T.txt.m, fontSize: 11, cursor: canPrev ? "pointer" : "default", fontFamily: F.ui, opacity: canPrev ? 1 : 0.35, transition: "all 0.2s ease" }}>← Prev</button>
-        <button onClick={() => setStep(s => Math.min(DEMO_STEPS.length - 1, s + 1))} disabled={!canNext} style={{ flex: 1, padding: "9px 0", borderRadius: 8, border: `1px solid ${canNext ? T.bdr.g : T.bdr.f}`, background: canNext ? T.glow.g : "transparent", color: canNext ? T.gold.l : T.txt.m, fontSize: 11, cursor: canNext ? "pointer" : "default", fontFamily: F.ui, transition: "all 0.2s ease" }}>Next →</button>
+        <button onClick={() => setStep(s => Math.max(0, s - 1))} disabled={!canPrev} style={{ flex: 1, padding: "9px 0", borderRadius: R.xs, border: `1px solid ${T.bdr.f}`, background: "transparent", color: canPrev ? T.txt.s : T.txt.m, fontSize: FS.xs, cursor: canPrev ? "pointer" : "default", fontFamily: F.ui, opacity: canPrev ? 1 : 0.35, transition: "all 0.2s ease" }}>← Prev</button>
+        <button onClick={() => setStep(s => Math.min(DEMO_STEPS.length - 1, s + 1))} disabled={!canNext} style={{ flex: 1, padding: "9px 0", borderRadius: R.xs, border: `1px solid ${canNext ? T.bdr.g : T.bdr.f}`, background: canNext ? T.glow.g : "transparent", color: canNext ? T.gold.l : T.txt.m, fontSize: FS.xs, cursor: canNext ? "pointer" : "default", fontFamily: F.ui, transition: "all 0.2s ease" }}>Next →</button>
       </div>
     </div>
   );
@@ -1465,7 +1468,7 @@ function Particles({ topInset = 0 }: { topInset?: number }) {
         pt.x += pt.sx; pt.y += pt.sy; pt.p += pt.ps;
         if (pt.x < -5 || pt.x > c.width + 5 || pt.y < -5 || pt.y > c.height + 5) { pt.x = Math.random() * c.width; pt.y = c.height + 5; }
         ctx.beginPath(); ctx.arc(pt.x, pt.y, pt.s, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(201,160,90,${pt.o * (0.4 + 0.6 * Math.sin(pt.p))})`; ctx.fill();
+        ctx.fillStyle = `rgba(212,168,83,${pt.o * (0.4 + 0.6 * Math.sin(pt.p))})`; ctx.fill();
       });
       raf = requestAnimationFrame(draw);
     };
@@ -1476,129 +1479,23 @@ function Particles({ topInset = 0 }: { topInset?: number }) {
 }
 
 /* ─── Start Button ───────────────────────────────────────────────────────── */
-function GothicStar({ size = 7, color = "currentColor" }: { size?: number; color?: string }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 10 10" fill="none" aria-hidden>
-      <path d="M5 0L5.8 4.2L10 5L5.8 5.8L5 10L4.2 5.8L0 5L4.2 4.2Z" fill={color} />
-    </svg>
-  );
-}
-
-const FANCY_BTN_STARS = [
-  // upper-left cluster
-  { top: -22, left: "-4px", delay: 0,    size: 10, isDot: false },
-  { top:  -8, left: "3%",   delay: 0.2,  size: 3,  isDot: true  },
-  { top: -28, left: "16%",  delay: 0.09, size: 6,  isDot: false },
-  { top: -14, left: "11%",  delay: 0.25, size: 3,  isDot: true  },
-  { top: -20, left: "28%",  delay: 0.13, size: 5,  isDot: false },
-  // lower-right cluster
-  { top:  32, left: "72%",  delay: 0.06, size: 9,  isDot: false },
-  { top:  20, left: "85%",  delay: 0.3,  size: 3,  isDot: true  },
-  { top:  38, left: "96%",  delay: 0.15, size: 6,  isDot: false },
-  { top:  24, left: "107%", delay: 0.08, size: 4,  isDot: true  },
-  { top:  14, left: "91%",  delay: 0.22, size: 4,  isDot: false },
-  // lone stray
-  { top:  -6, left: "54%",  delay: 0.38, size: 3,  isDot: true  },
-];
-
 function FancyStartButton({ onClick }: { onClick: () => void }) {
   const [hov, setHov] = useState(false);
-  const c = hov ? T.gold.l : T.gold.p;
   return (
-    <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-      <div
-        style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: 10, justifyContent: "flex-start" }}
-        onMouseEnter={() => setHov(true)}
-        onMouseLeave={() => setHov(false)}
-      >
-        {/* Button text wrapped in relative container for sparkle positioning */}
-        <div style={{ position: "relative" }}>
-          {hov && FANCY_BTN_STARS.map((s, i) => (
-            <div
-              key={i}
-              aria-hidden
-              style={{
-                position: "absolute",
-                top: s.top,
-                left: s.left,
-                pointerEvents: "none",
-                zIndex: 10,
-                animation: s.isDot
-                  ? `btnDotFloat 1.1s ease-out ${s.delay}s infinite`
-                  : `btnStarDance 1.0s ease-in-out ${s.delay}s infinite`,
-              }}
-            >
-              {s.isDot ? (
-                <div style={{
-                  width: s.size,
-                  height: s.size,
-                  borderRadius: "50%",
-                  background: "radial-gradient(circle, #FFE566 0%, #FFD700 55%, #FFA800 100%)",
-                  boxShadow: `0 0 ${s.size * 2}px rgba(255,200,0,0.85), 0 0 ${s.size}px rgba(255,160,0,0.5)`,
-                }} />
-              ) : (
-                <GothicStar size={s.size} color={T.gold.l} />
-              )}
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={onClick}
-            style={{
-              background: "none",
-              border: "none",
-              padding: "8px 0",
-              margin: 0,
-              cursor: "pointer",
-              fontFamily: F.display,
-              fontSize: 15,
-              letterSpacing: 4.5,
-              textTransform: "uppercase",
-              color: c,
-              textAlign: "left",
-              textShadow: hov ? "0 0 22px rgba(212,168,83,0.5)" : "0 0 10px rgba(212,168,83,0.1)",
-              transform: hov ? "scale(1.06)" : "scale(1)",
-              transformOrigin: "left center",
-              transition: "color 0.3s ease, text-shadow 0.3s ease, transform 0.35s cubic-bezier(0.25,0.46,0.45,0.94)",
-            }}
-          >
-            Enter his world
-          </button>
-        </div>
-        <div
-          style={{
-            height: 1,
-            width: 28,
-            background: `linear-gradient(90deg, ${c}30, ${c}55)`,
-            borderRadius: 1,
-            opacity: 0.75,
-            flexShrink: 0,
-          }}
-        />
-        <GothicStar size={6} color={c} />
-        <div style={{ fontSize: 6, color: c, letterSpacing: 1.5, opacity: 0.5 }}>✦</div>
-        <div
-          style={{
-            height: 1,
-            width: 20,
-            background: `linear-gradient(90deg, ${c}25, ${c}40, ${c}25)`,
-            opacity: 0.6,
-            flexShrink: 0,
-          }}
-        />
-        <GothicStar size={6} color={c} />
-        <div
-          style={{
-            height: 1,
-            width: 36,
-            background: `linear-gradient(90deg, transparent, ${c}28, ${c}50)`,
-            borderRadius: 1,
-            opacity: 0.9,
-            flexShrink: 0,
-          }}
-        />
-      </div>
-    </div>
+    <button
+      type="button"
+      onClick={onClick}
+      onMouseEnter={() => setHov(true)}
+      onMouseLeave={() => setHov(false)}
+      style={{ position: "relative", display: "inline-flex", alignItems: "center", background: "none", border: "none", padding: "8px 0", margin: 0, cursor: "pointer" }}
+    >
+      <span style={{ position: "relative", fontFamily: F.ui, fontSize: FS.sm, letterSpacing: 5, textTransform: "uppercase", fontWeight: 500, color: hov ? "#f5efdd" : "rgba(234,228,218,0.9)", transition: `color 0.45s ${EASE.out}`, whiteSpace: "nowrap" }}>
+        Enter his world
+        {/* a resting baseline that draws to full width on hover — quiet, not sparkly */}
+        <span aria-hidden style={{ position: "absolute", left: 0, bottom: -9, height: 1, width: 34, background: T.gold.d, opacity: hov ? 0 : 0.7, transition: `opacity 0.35s ${EASE.out}` }} />
+        <span aria-hidden style={{ position: "absolute", left: 0, bottom: -9, height: 1, width: "100%", transformOrigin: "left center", transform: `scaleX(${hov ? 1 : 0})`, background: `linear-gradient(90deg, ${T.gold.l}, rgba(212,168,83,0))`, transition: `transform 0.55s ${EASE.out}` }} />
+      </span>
+    </button>
   );
 }
 
@@ -1607,56 +1504,49 @@ function SplashScreen({ onStart }: { onStart: () => void }) {
   const [vis, setVis] = useState(false);
   const [leaving, setLeaving] = useState(false);
   useEffect(() => { const t = setTimeout(() => setVis(true), 60); return () => clearTimeout(t); }, []);
-  const handleStart = () => { setLeaving(true); setTimeout(onStart, 850); };
+  const handleStart = () => { setLeaving(true); setTimeout(onStart, 880); };
+  // staggered entrance — each block rises in sequence instead of all-at-once
+  const rise = (d: number) => ({ opacity: vis ? 1 : 0, transform: vis ? "none" : "translateY(16px)", transition: `opacity 0.95s ${EASE.out} ${d}s, transform 0.95s ${EASE.out} ${d}s` });
   return (
     <div style={{
-      position: "fixed", inset: 0, zIndex: 900,
-      background: T.bg.void, display: "flex", overflow: "hidden",
-      opacity: leaving ? 0 : vis ? 1 : 0,
-      transition: leaving ? "opacity 0.85s ease" : "opacity 1.1s ease",
+      position: "fixed", inset: 0, zIndex: 900, background: T.bg.void, display: "flex", overflow: "hidden",
+      opacity: leaving ? 0 : 1,
+      transform: leaving ? "scale(1.05)" : "scale(1)",
+      filter: leaving ? "blur(7px)" : "blur(0px)",
+      transition: `opacity 0.9s ${EASE.inOut}, transform 0.95s ${EASE.inOut}, filter 0.9s ${EASE.inOut}`,
     }}>
-      <Particles topInset={0} />
-      <TarotStars topInset={0} />
-      {/* Background video */}
-      <div style={{ position: "absolute", inset: 0, zIndex: 1 }}>
+      {/* Background video — slow push-in resolve */}
+      <div style={{ position: "absolute", inset: 0, zIndex: 1, transform: vis ? "scale(1)" : "scale(1.12)", transition: `transform 2.8s ${EASE.out}` }}>
         <PortraitVideoPlaylist sources={PORTRAIT_VIDEO_PLAYLIST} />
         <div aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, rgba(5,5,8,0.97) 0%, rgba(5,5,8,0.82) 38%, rgba(5,5,8,0.22) 68%, transparent 100%)" }} />
         <div aria-hidden style={{ position: "absolute", inset: 0, background: "linear-gradient(to top, rgba(5,5,8,0.92) 0%, transparent 48%)" }} />
       </div>
-      {/* Content left column */}
-      <div style={{
-        position: "relative", zIndex: 2,
-        width: "min(560px, 52%)", padding: "0 7vw",
-        display: "flex", flexDirection: "column", justifyContent: "center",
-        opacity: vis ? 1 : 0, transform: vis ? "translateY(0)" : "translateY(18px)",
-        transition: "opacity 1.1s ease 0.28s, transform 1.1s ease 0.28s",
-      }}>
-        <div style={{ fontSize: 8.5, color: T.gold.p, letterSpacing: 7, textTransform: "uppercase", marginBottom: 36, fontFamily: F.display, fontWeight: 400, opacity: 0.66 }}>
-          Eternal Vow
+      <Particles topInset={0} />
+      <TarotStars topInset={0} />
+      {/* Fade up from black — cinematic open */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 4, background: T.bg.void, opacity: vis ? 0 : 1, transition: `opacity 1.5s ${EASE.out}`, pointerEvents: "none" }} />
+
+      {/* Content */}
+      <div style={{ position: "relative", zIndex: 5, width: "min(560px, 54%)", padding: "0 7vw", display: "flex", flexDirection: "column", justifyContent: "center" }}>
+        <div style={{ ...rise(0.12), fontSize: FS.micro, color: T.gold.p, letterSpacing: 7, textTransform: "uppercase", marginBottom: 32, fontFamily: F.ui, fontWeight: 500 }}>Eternal Vow</div>
+        <div style={{ marginBottom: 14 }}>
+          <div style={{ ...rise(0.26), fontFamily: F.display, fontSize: "clamp(52px,6.4vw,78px)", fontWeight: 600, color: T.gold.l, lineHeight: 0.92, letterSpacing: -1 }}>Lucien</div>
+          <div style={{ ...rise(0.36), fontFamily: F.display, fontSize: "clamp(52px,6.4vw,78px)", fontWeight: 600, color: T.txt.p, lineHeight: 1.0, letterSpacing: -1 }}>Ashford</div>
         </div>
-        <div style={{ marginBottom: 12 }}>
-          <div style={{ fontFamily: F.display, fontSize: "clamp(48px,6vw,72px)", fontWeight: 600, color: T.gold.l, lineHeight: 0.9, letterSpacing: -1.5 }}>Lucien</div>
-          <div style={{ fontFamily: F.display, fontSize: "clamp(48px,6vw,72px)", fontWeight: 600, color: T.txt.p, lineHeight: 1.0, letterSpacing: -1.5 }}>Ashford</div>
-        </div>
-        <div style={{ fontSize: 9, color: `rgba(201,160,90,0.52)`, letterSpacing: 5.5, textTransform: "uppercase", marginBottom: 38, fontFamily: F.display }}>
-          Chapter VII · The Silent Oath
-        </div>
-        <div style={{ width: "min(300px,80%)", marginBottom: 30 }}><OrnamentRule opacity={0.38} /></div>
-        <div style={{ display: "flex", marginBottom: 36 }}>
+        <div style={{ ...rise(0.5), fontSize: FS.micro, color: "rgba(212,168,83,0.62)", letterSpacing: 5, textTransform: "uppercase", marginBottom: 32, fontFamily: F.ui }}>Chapter VII · The Silent Oath</div>
+        <div style={{ ...rise(0.62), width: "min(300px,80%)", marginBottom: 30 }}><OrnamentRule opacity={0.38} /></div>
+        <div style={{ ...rise(0.74), display: "flex", marginBottom: 36 }}>
           {[{ l: "Age", v: "28" }, { l: "Height", v: "187 cm" }, { l: "Sign", v: "Leo" }, { l: "Role", v: "Physician" }].map((s, i) => (
-            <div key={s.l} style={{ paddingRight: 22, marginRight: 22, borderRight: i < 3 ? "0.5px solid rgba(201,160,90,0.24)" : "none" }}>
-              <div style={{ fontSize: 7.5, color: T.txt.s, letterSpacing: 2.4, textTransform: "uppercase", marginBottom: 6, fontFamily: F.ui }}>{s.l}</div>
-              <div style={{ fontSize: 14.5, color: T.txt.p, fontWeight: 400, fontFamily: F.ui }}>{s.v}</div>
+            <div key={s.l} style={{ paddingRight: 22, marginRight: 22, borderRight: i < 3 ? "0.5px solid rgba(212,168,83,0.24)" : "none" }}>
+              <div style={{ fontSize: FS.micro, color: T.txt.s, letterSpacing: 2, textTransform: "uppercase", marginBottom: 7, fontFamily: F.ui }}>{s.l}</div>
+              <div style={{ fontSize: FS.md, color: T.txt.p, fontWeight: 400, fontFamily: F.display }}>{s.v}</div>
             </div>
           ))}
         </div>
-        <div style={{ fontFamily: F.body, fontSize: 14.5, lineHeight: 2.05, color: "rgba(232,226,216,0.68)", maxWidth: 390, marginBottom: 56 }}>
+        <div style={{ ...rise(0.86), fontFamily: F.body, fontSize: FS.md, lineHeight: 1.9, color: "rgba(236,230,220,0.8)", maxWidth: 400, marginBottom: 48 }}>
           {CHARACTER_STORY_BLURB}
         </div>
-        <FancyStartButton onClick={handleStart} />
-      </div>
-      <div style={{ position: "absolute", bottom: 22, left: "50%", transform: "translateX(-50%)", zIndex: 3, fontSize: 8, color: T.txt.m, letterSpacing: 2.5, textTransform: "uppercase", fontFamily: F.ui, opacity: 0.55 }}>
-        AI · Prototype
+        <div style={rise(1.0)}><FancyStartButton onClick={handleStart} /></div>
       </div>
     </div>
   );
@@ -1666,6 +1556,20 @@ type Msg = { id: number; type: "char" | "user" | "au-event"; text: string; narra
 type RightPane = "moments" | "demo" | null;
 
 /* ─── Main ───────────────────────────────────────────────────────────────── */
+/** Canned in-character replies for free-typed messages — keeps the primary input honest (no real model in the prototype). */
+const FREE_REPLIES = [
+  {
+    text: "Mm. Say that again — slower this time. I want to remember the exact way you put it.",
+    narration: "He sets down whatever he was holding, giving you the kind of undivided attention most people wait a lifetime for.",
+    heartbeat: "Whatever she just said, I'll be turning it over at 3 a.m. like I always do. I've stopped pretending otherwise.",
+  },
+  {
+    text: "You have a way of saying ordinary things that makes them sound like a decision I've already made.",
+    narration: "A quiet breath of a laugh. He leans in, the distance between you suddenly a detail he is very aware of.",
+    heartbeat: "I rehearse composure for a living. She undoes it in a single sentence and doesn't even seem to notice.",
+  },
+];
+
 export default function AiCharacterPrototypeClient({ embed = false, muted = false }: { embed?: boolean; muted?: boolean }) {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
@@ -1674,8 +1578,8 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
   const [isTyping, setIsTyping] = useState(false);
   const [auCardShown, setAuCardShown] = useState(false);
   const [heartbeatHidden, setHeartbeatHidden] = useState(false);
-  const [, setAffection] = useState(58);
-  const [hovMsg, setHovMsg] = useState<number | null>(null);
+  // Only surface the heartbeat tarot card at narrative high-points (greeting + Continue), not after every reply.
+  const [heartbeatMsgId, setHeartbeatMsgId] = useState<number | null>(1);
   const [showSplash, setShowSplash] = useState(!embed);
   const [leftOpen, setLeftOpen] = useState(false);
   const [rightPane, setRightPane] = useState<RightPane>(null);
@@ -1743,7 +1647,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
       setIsTyping(false);
       const reply = CHAR_REPLIES[idx];
       setMessages(p => [...p, { id: Date.now() + 1, type: "char", text: reply.text, narration: reply.narration, heartbeat: reply.heartbeat }]);
-      setPhase("replied"); setHeartbeatHidden(false); setAffection(p => Math.min(p + 12, 100));
+      setPhase("replied"); setHeartbeatHidden(false);
     }, 2400);
   };
 
@@ -1752,9 +1656,26 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
     setIsTyping(true); setPhase("continuing");
     setTimeout(() => {
       setIsTyping(false);
-      setMessages(p => [...p, { id: Date.now(), type: "char", text: CONTINUE_RESPONSE.text, narration: CONTINUE_RESPONSE.narration, heartbeat: CONTINUE_RESPONSE.heartbeat }]);
-      setPhase("continued"); setHeartbeatHidden(false); setAffection(p => Math.min(p + 8, 100));
+      const contId = Date.now();
+      setMessages(p => [...p, { id: contId, type: "char", text: CONTINUE_RESPONSE.text, narration: CONTINUE_RESPONSE.narration, heartbeat: CONTINUE_RESPONSE.heartbeat }]);
+      setHeartbeatMsgId(contId);
+      setPhase("continued"); setHeartbeatHidden(false);
     }, 2800);
+  };
+
+  const sendFreeText = () => {
+    const t = inputVal.trim();
+    if (!t || isTyping || phase === "replying" || phase === "continuing") return;
+    setInputVal("");
+    if (phase === "inspiration") setPhase("idle");
+    setMessages(p => [...p, { id: Date.now(), type: "user", text: t }]);
+    setPhase("replying"); setIsTyping(true);
+    const r = FREE_REPLIES[messages.filter(m => m.type === "user").length % FREE_REPLIES.length];
+    setTimeout(() => {
+      setIsTyping(false);
+      setMessages(p => [...p, { id: Date.now() + 1, type: "char", text: r.text, narration: r.narration, heartbeat: r.heartbeat }]);
+      setPhase("replied"); setHeartbeatHidden(false);
+    }, 2000);
   };
 
   const returnToMainScene = () => {
@@ -1762,32 +1683,34 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
   };
 
   const enterAlternateWorld = () => {
+    const gId = Date.now();
     setSceneVideoSrc(SCENE_VIDEO_ALTERNATE);
-    setMessages([{ id: Date.now(), type: "char", text: GREETING.text, narration: GREETING.narration, heartbeat: GREETING.heartbeat }]);
+    setMessages([{ id: gId, type: "char", text: GREETING.text, narration: GREETING.narration, heartbeat: GREETING.heartbeat }]);
+    setHeartbeatMsgId(gId);
     setPhase("idle");
     setIsTyping(false);
     setHeartbeatHidden(false);
     setAuCardShown(false);
-    setAffection(58);
     setRightPane(null);
     setStoryOpen(false);
   };
 
   const restartStory = () => {
+    const gId = Date.now();
     setSceneVideoSrc(SCENE_VIDEO_DEFAULT);
-    setMessages([{ id: Date.now(), type: "char", text: GREETING.text, narration: GREETING.narration, heartbeat: GREETING.heartbeat }]);
+    setMessages([{ id: gId, type: "char", text: GREETING.text, narration: GREETING.narration, heartbeat: GREETING.heartbeat }]);
+    setHeartbeatMsgId(gId);
     setPhase("idle");
     setIsTyping(false);
     setHeartbeatHidden(false);
     setAuCardShown(false);
-    setAffection(58);
     setRightPane(null);
     setStoryOpen(false);
   };
 
   const features = [
     { icon: "\u2726", label: "Inspire",      desc: "Candidate replies",        action: showInspiration,                                                    isActive: phase === "inspiration" },
-    { icon: "\u25c8", label: "Alt Universe", desc: "Alternate timeline",        action: () => { if (!auCardShown) { setAuCardShown(true); setMessages(p => [...p, { id: Date.now(), type: "au-event", text: "" }]); } }, isActive: auCardShown },
+    { icon: "\u25c8", label: "Alt Universe", desc: "Alternate timeline",        action: () => { if (auCardShown) { setAuCardShown(false); setMessages(p => p.filter(m => m.type !== "au-event")); if (sceneVideoSrc === SCENE_VIDEO_ALTERNATE) setSceneVideoSrc(SCENE_VIDEO_DEFAULT); } else { setAuCardShown(true); setMessages(p => [...p, { id: Date.now(), type: "au-event", text: "" }]); } }, isActive: auCardShown },
     { icon: "\u25c6", label: "Story",        desc: "Unlocked story moments",    action: () => setStoryOpen(v => !v),                                       isActive: storyOpen },
     { icon: "\u25ce", label: "Moments",      desc: "His private feed",          action: () => setRightPane(p => p === "moments" ? null : "moments"),       isActive: rightPane === "moments" },
   ];
@@ -1808,15 +1731,19 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
         @keyframes tarotDrift{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
         @keyframes tarotFade{0%,100%{opacity:.5}50%{opacity:1}}
         @keyframes continuePulse{0%,100%{opacity:.85;transform:scale(1)}50%{opacity:1;transform:scale(1.01)}}
-        @keyframes cardPulse{0%,100%{box-shadow:0 0 10px rgba(201,160,90,0.08)}50%{box-shadow:0 0 22px rgba(201,160,90,0.22)}}
+        @keyframes cardPulse{0%,100%{box-shadow:0 0 10px rgba(212,168,83,0.08)}50%{box-shadow:0 0 22px rgba(212,168,83,0.22)}}
         @keyframes affDot{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
         @keyframes panelIn{from{opacity:0;transform:translateX(-16px)}}
         @keyframes panelInR{from{opacity:0;transform:translateX(16px)}}
         @keyframes paneIn{from{opacity:0;transform:translateX(8px)}}
         @keyframes shellIn{from{opacity:0;transform:translateY(10px)}}
         @keyframes typePulse{0%,100%{opacity:.22;transform:scale(.75)}50%{opacity:1;transform:scale(1)}}
-        @keyframes auCardGlow{0%,100%{box-shadow:0 0 0 1px rgba(201,160,90,0.12),0 0 24px rgba(85,128,200,0.18),0 0 56px rgba(201,160,90,0.08),inset 0 0 48px rgba(85,128,200,0.06)}50%{box-shadow:0 0 0 1px rgba(201,160,90,0.24),0 0 38px rgba(85,128,200,0.3),0 0 78px rgba(201,160,90,0.14),inset 0 0 72px rgba(85,128,200,0.1)}}
+        @keyframes auCardGlow{0%,100%{box-shadow:0 0 0 1px rgba(212,168,83,0.12),0 0 24px rgba(85,128,200,0.18),0 0 56px rgba(212,168,83,0.08),inset 0 0 48px rgba(85,128,200,0.06)}50%{box-shadow:0 0 0 1px rgba(212,168,83,0.24),0 0 38px rgba(85,128,200,0.3),0 0 78px rgba(212,168,83,0.14),inset 0 0 72px rgba(85,128,200,0.1)}}
         @keyframes auShimmerSlide{0%{transform:translateX(-140%) skewX(-16deg);opacity:0}20%{opacity:.45}55%{opacity:.28}100%{transform:translateX(160%) skewX(-16deg);opacity:0}}
+        @keyframes auPortalOpen{0%{clip-path:inset(0 49% 0 49% round 12px);opacity:0;filter:brightness(2.4) saturate(1.3)}42%{opacity:1}100%{clip-path:inset(0 0 0 0 round 12px);opacity:1;filter:brightness(1) saturate(1)}}
+        @keyframes auSeamFlash{0%{opacity:0;transform:translateX(-50%) scaleY(0.3)}26%{opacity:1}60%{opacity:.45}100%{opacity:0;transform:translateX(-50%) scaleY(1)}}
+        @keyframes auLineRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+        @keyframes auCardGlowBlue{0%,100%{box-shadow:0 22px 60px rgba(0,0,0,0.4),inset 0 0 0 1px rgba(120,160,230,0.16),0 0 26px rgba(96,144,216,0.14)}50%{box-shadow:0 22px 60px rgba(0,0,0,0.4),inset 0 0 0 1px rgba(140,175,240,0.32),0 0 46px rgba(96,144,216,0.28)}}
         @keyframes auPortraitSheen{0%,100%{opacity:.12}50%{opacity:.28}}
         @keyframes auRailTwinkle{0%,100%{opacity:.32;transform:scale(.86)}50%{opacity:1;transform:scale(1.1)}}
         @keyframes splashRingRotate{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
@@ -1826,8 +1753,8 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
         @keyframes btnDotFloat{0%{opacity:0;transform:translateY(0) scale(0)}15%{opacity:1;transform:translateY(-5px) scale(1.4)}85%{opacity:.25;transform:translateY(-24px) scale(0.6)}100%{opacity:0;transform:translateY(-28px) scale(0)}}
         *::-webkit-scrollbar{width:2px}*::-webkit-scrollbar-track{background:transparent}*::-webkit-scrollbar-thumb{background:${T.gold.dk};border-radius:4px}
         *{margin:0;padding:0;box-sizing:border-box}textarea::placeholder{color:${T.txt.d}}
-        input[type=range]{-webkit-appearance:none;appearance:none;height:3px;background:rgba(201,160,90,0.18);border-radius:2px;outline:none;display:block}
-        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:${T.gold.p};cursor:pointer;box-shadow:0 0 6px rgba(201,160,90,0.35)}
+        input[type=range]{-webkit-appearance:none;appearance:none;height:3px;background:rgba(212,168,83,0.18);border-radius:2px;outline:none;display:block}
+        input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;border-radius:50%;background:${T.gold.p};cursor:pointer;box-shadow:0 0 6px rgba(212,168,83,0.35)}
         select{-webkit-appearance:none;appearance:none}
         *{font-variant-emoji:text}
         .ai-proto-sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
@@ -1842,7 +1769,6 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
       ) : (
         <>
           <Particles topInset={0} />
-          <TarotStars topInset={0} />
 
       <div style={{ position: "relative", zIndex: 2, height: "100%", overflow: "hidden", animation: "shellIn 0.85s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
         <div style={{ display: "flex", height: "100%" }}>
@@ -1851,28 +1777,28 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
           <aside aria-label="Eternal Vow navigation" style={{ width: leftOpen ? SIDEBAR_LEFT_PX : 0, flexShrink: 0, transition: "width 0.42s cubic-bezier(0.25,0.46,0.45,0.94)", overflow: "hidden", borderRight: leftOpen ? `1px solid ${T.bdr.f}` : "none", display: "flex", flexDirection: "column", background: "rgba(7,7,12,0.72)", backdropFilter: "blur(40px) saturate(120%)" }}>
             <div style={{ width: SIDEBAR_LEFT_PX, height: "100%", display: "flex", flexDirection: "column" }}>
             <div style={{ padding: "20px 18px 15px", borderBottom: `1px solid ${T.bdr.f}` }}>
-              <div style={{ fontFamily: F.display, fontSize: 15, fontWeight: 600, color: T.gold.l, letterSpacing: 1.5 }}>Eternal Vow</div>
+              <div style={{ fontFamily: F.display, fontSize: FS.base, fontWeight: 600, color: T.gold.l, letterSpacing: 1.5 }}>Eternal Vow</div>
             </div>
             <nav style={{ flex: 1, padding: "12px 10px", overflowY: "auto" }}>
-              <div style={{ fontSize: 10, color: T.txt.m, letterSpacing: 2.2, textTransform: "uppercase", padding: "8px 10px 6px" }}>Stories</div>
+              <div style={{ fontSize: FS.micro, color: T.txt.m, letterSpacing: 2.2, textTransform: "uppercase", padding: "8px 10px 6px" }}>Stories</div>
               {[{ l: "The Silent Oath", b: "Ch.7", a: true }, { l: "Crimson Letters" }, { l: "Midnight Garden" }].map((n) => (
-                <div key={n.l} style={{ display: "flex", alignItems: "center", padding: "9px 10px", borderRadius: 7, marginBottom: 1, background: n.a ? T.glow.g : "transparent", borderLeft: `2px solid ${n.a ? T.gold.p : "transparent"}`, paddingLeft: 10, cursor: "pointer", transition: "all 0.2s ease" }}>
-                  <span style={{ fontSize: 13, fontWeight: n.a ? 400 : 300, color: n.a ? T.txt.p : T.txt.s, flex: 1 }}>{n.l}</span>
-                  {n.b && <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 5, background: T.gold.dk, color: T.gold.l, fontWeight: 500 }}>{n.b}</span>}
+                <div key={n.l} style={{ display: "flex", alignItems: "center", padding: "9px 10px", borderRadius: R.xs, marginBottom: 1, background: n.a ? T.glow.g : "transparent", borderLeft: `2px solid ${n.a ? T.gold.p : "transparent"}`, paddingLeft: 10, cursor: "pointer", transition: "all 0.2s ease" }}>
+                  <span style={{ fontSize: FS.sm, fontWeight: n.a ? 400 : 300, color: n.a ? T.txt.p : T.txt.s, flex: 1 }}>{n.l}</span>
+                  {n.b && <span style={{ fontSize: FS.micro, padding: "2px 6px", borderRadius: R.xs, background: T.gold.dk, color: T.gold.l, fontWeight: 500 }}>{n.b}</span>}
                 </div>
               ))}
-              <div style={{ fontSize: 10, color: T.txt.m, letterSpacing: 2.2, textTransform: "uppercase", padding: "16px 10px 6px" }}>Collection</div>
+              <div style={{ fontSize: FS.micro, color: T.txt.m, letterSpacing: 2.2, textTransform: "uppercase", padding: "16px 10px 6px" }}>Collection</div>
               {[{ l: "Gallery" }, { l: "Memory Album" }].map((n) => (
-                <div key={n.l} style={{ padding: "9px 10px", borderRadius: 7, marginBottom: 1, cursor: "pointer" }}>
-                  <span style={{ fontSize: 13, color: T.txt.d }}>{n.l}</span>
+                <div key={n.l} style={{ padding: "9px 10px", borderRadius: R.xs, marginBottom: 1, cursor: "pointer" }}>
+                  <span style={{ fontSize: FS.sm, color: T.txt.d }}>{n.l}</span>
                 </div>
               ))}
             </nav>
             <div style={{ padding: "12px 14px", borderTop: `1px solid ${T.bdr.f}`, display: "flex", alignItems: "center", gap: 9 }}>
-              <div style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${T.bdr.g}`, background: `linear-gradient(135deg,${T.rose.d},${T.gold.dk})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, color: T.gold.l, flexShrink: 0 }}>S</div>
+              <div style={{ width: 28, height: 28, borderRadius: "50%", border: `1px solid ${T.bdr.g}`, background: `linear-gradient(135deg,${T.rose.d},${T.gold.dk})`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: FS.xs, color: T.gold.l, flexShrink: 0 }}>S</div>
               <div>
-                <div style={{ fontSize: 13, fontWeight: 500, color: T.txt.p, lineHeight: 1.3 }}>Selene</div>
-                <div style={{ fontSize: 10, color: T.gold.d, letterSpacing: 0.8 }}>Premium</div>
+                <div style={{ fontSize: FS.sm, fontWeight: 500, color: T.txt.p, lineHeight: 1.3 }}>Selene</div>
+                <div style={{ fontSize: FS.micro, color: T.gold.d, letterSpacing: 0.8 }}>Premium</div>
               </div>
             </div>
             </div>
@@ -1885,7 +1811,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
               type="button"
               onClick={() => setLeftOpen(v => !v)}
               aria-label={leftOpen ? "Close navigation" : "Open navigation"}
-              style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", zIndex: 50, width: 18, height: 52, background: "rgba(8,8,13,0.78)", border: `1px solid ${T.bdr.s}`, borderLeft: "none", borderRadius: "0 8px 8px 0", color: T.gold.d, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", fontSize: 11, transition: "background 0.2s ease, color 0.2s ease" }}
+              style={{ position: "absolute", left: 0, top: "50%", transform: "translateY(-50%)", zIndex: 50, width: 18, height: 52, background: "rgba(8,8,13,0.78)", border: `1px solid ${T.bdr.s}`, borderLeft: "none", borderRadius: "0 8px 8px 0", color: T.gold.d, cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", backdropFilter: "blur(12px)", fontSize: FS.xs, transition: "background 0.2s ease, color 0.2s ease" }}
               onMouseEnter={e => { e.currentTarget.style.background = "rgba(12,12,22,0.9)"; e.currentTarget.style.color = T.gold.l; }}
               onMouseLeave={e => { e.currentTarget.style.background = "rgba(8,8,13,0.78)"; e.currentTarget.style.color = T.gold.d; }}
             >
@@ -1899,6 +1825,13 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                 sources={[sceneVideoSrc]}
                 playbackRate={sceneVideoSrc === SCENE_VIDEO_ALTERNATE ? AU_CARD_VIDEO_RATE : VIDEO_PLAYBACK_SLOW}
               />
+              {/* Entering the alternate world delivers the rain it promised — full-scene rain + moonlight wash */}
+              {sceneVideoSrc === SCENE_VIDEO_ALTERNATE && (
+                <>
+                  <RainCanvas density={130} />
+                  <div aria-hidden style={{ position: "absolute", inset: 0, zIndex: 1, pointerEvents: "none", background: "radial-gradient(ellipse 92% 88% at 50% 38%, rgba(44,74,134,0.18), transparent 70%)", mixBlendMode: "screen" }} />
+                </>
+              )}
               {/* 4-edge dark vignette */}
               <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2, background: "radial-gradient(ellipse 88% 88% at 50% 44%, transparent 44%, rgba(5,5,8,0.72) 100%)" }} />
               <div aria-hidden style={{ position: "absolute", top: 0, left: 0, right: 0, height: "28%", pointerEvents: "none", zIndex: 2, background: "linear-gradient(to bottom, rgba(5,5,8,0.88) 0%, rgba(5,5,8,0.42) 55%, transparent 100%)" }} />
@@ -1921,8 +1854,8 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
             {/* Header HUD */}
             <header style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 30, display: "flex", alignItems: "flex-start", justifyContent: "space-between", padding: "22px 34px", pointerEvents: "none" }}>
               <div style={{ pointerEvents: "auto" }}>
-                <div style={{ fontFamily: F.display, fontSize: 20, fontWeight: 500, color: T.txt.p, letterSpacing: 0.5 }}>{CHAR_NAME}</div>
-                <div style={{ fontSize: 9.5, color: "rgba(232,226,216,0.48)", marginTop: 5, letterSpacing: 3, textTransform: "uppercase", fontWeight: 300 }}>Chapter VII · The Silent Oath</div>
+                <div style={{ fontFamily: F.display, fontSize: FS.lg, fontWeight: 500, color: T.txt.p, letterSpacing: 0.5 }}>{CHAR_NAME}</div>
+                <div style={{ fontSize: FS.micro, color: "rgba(232,226,216,0.48)", marginTop: 5, letterSpacing: 3, textTransform: "uppercase", fontWeight: 300 }}>Chapter VII · The Silent Oath</div>
                 {sceneVideoSrc === SCENE_VIDEO_ALTERNATE && (
                   <button
                     type="button"
@@ -1934,14 +1867,14 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                       background: "none",
                       cursor: "pointer",
                       fontFamily: F.body,
-                      fontSize: 12.5,
+                      fontSize: FS.xs,
                       fontStyle: "italic",
                       fontWeight: 500,
                       color: "rgba(220,210,190,0.88)",
                       letterSpacing: "0.06em",
                       textDecoration: "underline",
                       textUnderlineOffset: 4,
-                      textDecorationColor: "rgba(201,160,90,0.45)",
+                      textDecorationColor: "rgba(212,168,83,0.45)",
                     }}
                   >
                     &larr; Back
@@ -1987,7 +1920,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                   </svg>
                 </HudToolButton>
                 <HudToolButton ariaLabel="Open demo guide" explanation="Step-by-step demo walkthrough with direct feature access." onClick={() => setRightPane(p => p === "demo" ? null : "demo")} wide>
-                  <span style={{ fontFamily: F.ui, fontSize: 8.5, fontWeight: 600, letterSpacing: 0.9, textTransform: "uppercase", lineHeight: 1 }}>GUIDE</span>
+                  <span style={{ fontFamily: F.ui, fontSize: FS.micro, fontWeight: 600, letterSpacing: 0.9, textTransform: "uppercase", lineHeight: 1 }}>GUIDE</span>
                 </HudToolButton>
               </div>
             </header>
@@ -1997,58 +1930,45 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
               <div style={{ width: "min(52vw, 100%)", maxWidth: CHAT_COLUMN_MAX_PX, display: "flex", flexDirection: "column", flex: "0 1 auto", minHeight: 0, maxHeight: "100%" }}>
 
                 {/* Messages */}
-                <div ref={chatRef} style={{ flex: "0 1 auto", overflowY: "auto", padding: "18px 18px 8px", minHeight: 0, maxHeight: `${chatMessagesMaxVh}vh`, WebkitMaskImage: "linear-gradient(to bottom,transparent 0%,black 10%)", maskImage: "linear-gradient(to bottom,transparent 0%,black 10%)" }}>
+                <div ref={chatRef} style={{ flex: "0 1 auto", overflowY: "auto", padding: "16px 22px 10px", minHeight: 0, maxHeight: `${chatMessagesMaxVh}vh`, WebkitMaskImage: "linear-gradient(to bottom,transparent 0%,black 9%)", maskImage: "linear-gradient(to bottom,transparent 0%,black 9%)" }}>
                   {(() => {
                     const tail = messages[messages.length - 1];
                     const continueId = phase === "replied" && tail?.type === "char" ? tail.id : null;
-                    const firstCharMsgId = messages.find((m) => m.type === "char")?.id ?? null;
                     return messages.map((msg) => {
                       if (msg.type === "au-event") return (
-                        <div key={msg.id} style={{ display: "flex", justifyContent: "center", width: "100%", marginBottom: 18, animation: "msgIn 0.55s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
+                        <div key={msg.id} style={{ display: "flex", justifyContent: "center", width: "100%", marginBottom: 16, animation: "msgIn 0.55s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
                           <AlternateUniverseMessageCard onEnterNewWorld={enterAlternateWorld} />
                         </div>
                       );
                       if (msg.type === "user") return (
-                        <div key={msg.id} style={{ display: "flex", justifyContent: "flex-end", marginBottom: 16, animation: "msgIn 0.55s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
-                          <div style={{ maxWidth: "84%" }}>
-                            <div style={{ padding: "13px 20px", borderRadius: 18, background: "rgba(201,160,90,0.11)", border: `1px solid rgba(201,160,90,0.16)`, boxShadow: "0 0 18px rgba(212,168,83,0.1), 0 6px 22px rgba(0,0,0,0.22)" }}>
-                              <div style={{ fontSize: 14.5, lineHeight: 1.88, color: T.txt.p }}>{msg.text}</div>
-                              {msg.action && <div style={{ fontSize: 12, color: T.txt.s, marginTop: 9, lineHeight: 1.62, fontStyle: "italic", opacity: 0.74, borderTop: "1px solid rgba(212,168,83,0.1)", paddingTop: 9 }}>{msg.action}</div>}
+                        <div key={msg.id} style={{ display: "flex", justifyContent: "flex-end", marginBottom: 14, animation: "msgIn 0.55s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
+                          <div style={{ maxWidth: "82%" }}>
+                            <div style={{ padding: "11px 16px", borderRadius: R.md, background: "rgba(212,168,83,0.1)", border: `1px solid rgba(212,168,83,0.15)`, boxShadow: "0 6px 22px rgba(0,0,0,0.22)" }}>
+                              <div style={{ fontSize: FS.base, lineHeight: 1.66, color: T.txt.p }}>{msg.text}</div>
+                              {msg.action && <div style={{ fontSize: FS.xs, color: T.txt.s, marginTop: 8, lineHeight: 1.55, fontStyle: "italic", opacity: 0.74, borderTop: "1px solid rgba(212,168,83,0.1)", paddingTop: 8 }}>{msg.action}</div>}
                             </div>
                           </div>
                         </div>
                       );
+                      // Character lines are spoken into the scene — no chat bubble. A soft left-fading legibility scrim (not a box) keeps it readable over video.
                       return (
-                        <div key={msg.id} style={{ display: "flex", justifyContent: "flex-start", marginBottom: 18, animation: "msgIn 0.55s cubic-bezier(0.25,0.46,0.45,0.94) both" }} onMouseEnter={() => setHovMsg(msg.id)} onMouseLeave={() => setHovMsg(null)}>
-                          <div style={{ maxWidth: "88%", position: "relative" }}>
-                            <div style={{ padding: "16px 22px", borderRadius: 18, background: "rgba(12,12,20,0.86)", border: `1px solid ${hovMsg === msg.id ? T.bdr.s : "rgba(201,160,90,0.08)"}`, backdropFilter: "blur(24px)", WebkitBackdropFilter: "blur(24px)", boxShadow: "0 12px 40px rgba(0,0,0,0.32), 0 0 0 0.5px rgba(255,255,255,0.03) inset", transition: "border-color 0.3s ease" }}>
-                              <div style={{ fontFamily: F.body, fontSize: 16.5, lineHeight: 1.92, color: T.txt.p, fontWeight: 400 }}>{msg.text}</div>
-                              {msg.narration && <div style={{ fontSize: 12, color: T.txt.s, marginTop: 11, lineHeight: 1.65, fontStyle: "italic", opacity: 0.72, borderTop: "1px solid rgba(255,255,255,0.04)", paddingTop: 10 }}>{msg.narration}</div>}
-                            </div>
-                            <div style={{ display: "flex", gap: 14, marginTop: 8, paddingLeft: 2, alignItems: "center" }}>
-                              <button type="button" aria-label="Play" style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.35)", padding: 0, display: "flex", alignItems: "center", transition: "color 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}>
-                                <svg width={13} height={13} viewBox="0 0 24 24" fill="currentColor" aria-hidden><polygon points="5,3 19,12 5,21" /></svg>
-                              </button>
-                              <button type="button" aria-label="Regenerate" style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.35)", padding: 0, display: "flex", alignItems: "center", transition: "color 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}>
-                                <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M1 4v6h6"/><path d="M3.51 15a9 9 0 1 0 .49-4.5"/></svg>
-                              </button>
-                              <button type="button" aria-label="Like" style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.35)", padding: 0, display: "flex", alignItems: "center", transition: "color 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}>
-                                <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3z"/><path d="M7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"/></svg>
-                              </button>
-                              <button type="button" aria-label="Dislike" style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.35)", padding: 0, display: "flex", alignItems: "center", transition: "color 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.color = "rgba(255,255,255,0.72)")} onMouseLeave={e => (e.currentTarget.style.color = "rgba(255,255,255,0.35)")}>
-                                <svg width={13} height={13} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
-                              </button>
+                        <div key={msg.id} style={{ display: "flex", justifyContent: "flex-start", marginBottom: 16, animation: `msgIn 0.55s ${EASE.out} both` }}>
+                          <div style={{ maxWidth: "94%", position: "relative" }}>
+                            <div style={{ position: "relative", padding: "9px 22px 10px 16px", borderRadius: R.md, background: "linear-gradient(95deg, rgba(7,7,12,0.78) 0%, rgba(7,7,12,0.55) 50%, rgba(7,7,12,0) 100%)", backdropFilter: "blur(3px)", WebkitBackdropFilter: "blur(3px)" }}>
+                              <span aria-hidden style={{ position: "absolute", left: 0, top: 10, bottom: 10, width: 2, borderRadius: R.pill, background: `linear-gradient(180deg, ${T.gold.l}, ${T.gold.d})`, opacity: 0.9 }} />
+                              <p style={{ fontFamily: F.body, fontSize: FS.md, fontWeight: 500, lineHeight: 1.6, color: "#f6f2e9", margin: 0, textShadow: "0 1px 2px rgba(0,0,0,0.9), 0 1px 16px rgba(0,0,0,0.55)" }}>{msg.text}</p>
+                              {msg.narration && <p style={{ fontFamily: F.body, fontSize: FS.sm, color: "#d2cdc2", lineHeight: 1.58, fontStyle: "italic", opacity: 0.92, margin: "7px 0 0", textShadow: "0 1px 2px rgba(0,0,0,0.85)" }}>{msg.narration}</p>}
                             </div>
                             {continueId === msg.id && (
-                              <div style={{ marginTop: 10 }}>
-                                <button type="button" onClick={doContinue} style={{ padding: "9px 20px", borderRadius: 999, border: `1px solid ${T.bdr.g}`, background: "rgba(12,12,20,0.78)", backdropFilter: "blur(16px)", color: T.gold.l, fontFamily: F.ui, fontSize: 12, fontWeight: 400, letterSpacing: 0.9, cursor: "pointer", animation: "continuePulse 3.2s ease-in-out infinite", transition: "all 0.2s ease" }}
+                              <div style={{ marginTop: 12 }}>
+                                <button type="button" onClick={doContinue} style={{ padding: "9px 20px", borderRadius: R.pill, border: `1px solid ${T.bdr.g}`, background: "rgba(12,12,20,0.78)", backdropFilter: "blur(16px)", color: T.gold.l, fontFamily: F.ui, fontSize: FS.xs, fontWeight: 400, letterSpacing: 0.9, cursor: "pointer", animation: "continuePulse 3.2s ease-in-out infinite", transition: "all 0.2s ease" }}
                                   onMouseEnter={e => { e.currentTarget.style.background = "rgba(20,18,28,0.88)"; e.currentTarget.style.borderColor = T.bdr.gs; }}
                                   onMouseLeave={e => { e.currentTarget.style.background = "rgba(12,12,20,0.78)"; e.currentTarget.style.borderColor = T.bdr.g; }}>
                                   Continue &rarr;
                                 </button>
                               </div>
                             )}
-                            {msg.heartbeat && msg.id === firstCharMsgId && <HeartbeatTarotCard text={msg.heartbeat} hidden={heartbeatHidden} />}
+                            {msg.heartbeat && msg.id === heartbeatMsgId && <HeartbeatTarotCard text={msg.heartbeat} hidden={heartbeatHidden} />}
                           </div>
                         </div>
                       );
@@ -2056,7 +1976,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                   })()}
                   {isTyping && (
                     <div style={{ display: "flex", marginBottom: 10, animation: "msgIn 0.4s ease both" }}>
-                      <div style={{ display: "flex", gap: 5, padding: "13px 18px", borderRadius: 18, background: "rgba(12,12,20,0.84)", border: `1px solid ${T.bdr.f}`, backdropFilter: "blur(20px)" }}>
+                      <div style={{ display: "flex", gap: 5, padding: "13px 18px", borderRadius: R.md, background: "rgba(12,12,20,0.84)", border: `1px solid ${T.bdr.f}`, backdropFilter: "blur(20px)" }}>
                         {[0,1,2].map(i => <div key={i} style={{ width: 5, height: 5, borderRadius: "50%", background: T.gold.d, animation: `typePulse 1.6s ease-in-out infinite ${i * 0.22}s` }} />)}
                       </div>
                     </div>
@@ -2070,11 +1990,13 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                   </div>
                 )}
 
-                {/* Feature bar */}
-                <div style={{ padding: "6px 16px 7px", display: "flex", gap: 3, justifyContent: "center", background: "linear-gradient(to bottom, rgba(6,6,10,0) 0%, rgba(6,6,10,0.72) 28%, rgba(6,6,10,0.82) 100%)", backdropFilter: "blur(28px)" }}>
-                  {features.map(f => (
-                    <FeatureBtn key={f.label} icon={f.icon} label={f.label} desc={f.desc} onClick={f.action} active={f.isActive} />
-                  ))}
+                {/* Feature bar — one cohesive segmented HUD dock */}
+                <div style={{ padding: "9px 16px 9px", display: "flex", justifyContent: "center", background: "linear-gradient(to bottom, rgba(6,6,10,0) 0%, rgba(6,6,10,0.72) 28%, rgba(6,6,10,0.82) 100%)", backdropFilter: "blur(28px)" }}>
+                  <div role="group" aria-label="Scene features" style={{ display: "inline-flex", gap: 2, padding: 4, borderRadius: R.lg, border: `1px solid ${T.bdr.f}`, background: "rgba(9,9,15,0.55)", backdropFilter: "blur(20px)", boxShadow: "0 8px 30px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.03)" }}>
+                    {features.map(f => (
+                      <FeatureBtn key={f.label} label={f.label} desc={f.desc} onClick={f.action} active={f.isActive} />
+                    ))}
+                  </div>
                 </div>
 
                 {/* Input */}
@@ -2086,15 +2008,17 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                       placeholder="Say something…"
                       rows={1}
                       aria-label="Message to the character"
-                      style={{ flex: 1, minHeight: 48, maxHeight: 96, padding: "13px 18px", borderRadius: 22, border: `1px solid ${T.bdr.f}`, background: "linear-gradient(145deg, rgba(14,14,24,0.62), rgba(10,10,18,0.42))", color: T.txt.p, fontFamily: F.ui, fontSize: 14.5, fontWeight: 300, resize: "none", outline: "none", transition: "border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease", lineHeight: 1.58, backdropFilter: "blur(16px)" }}
-                      onFocus={e => { e.currentTarget.style.borderColor = "rgba(242,218,144,0.4)"; e.currentTarget.style.boxShadow = "0 0 0 1px rgba(212,168,83,0.07), 0 0 28px rgba(212,168,83,0.1)"; e.currentTarget.style.background = "linear-gradient(145deg, rgba(22,18,26,0.74), rgba(12,12,22,0.58))"; }}
+                      onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendFreeText(); } }}
+                      style={{ flex: 1, minHeight: 48, maxHeight: 96, padding: "13px 18px", borderRadius: R.lg, border: `1px solid ${T.bdr.f}`, background: "linear-gradient(145deg, rgba(14,14,24,0.62), rgba(10,10,18,0.42))", color: T.txt.p, fontFamily: F.ui, fontSize: FS.base, fontWeight: 300, resize: "none", outline: "none", transition: "border-color 0.3s ease, box-shadow 0.3s ease, background 0.3s ease", lineHeight: 1.58, backdropFilter: "blur(16px)" }}
+                      onFocus={e => { e.currentTarget.style.borderColor = "rgba(212,168,83,0.4)"; e.currentTarget.style.boxShadow = "0 0 0 1px rgba(212,168,83,0.07), 0 0 28px rgba(212,168,83,0.1)"; e.currentTarget.style.background = "linear-gradient(145deg, rgba(22,18,26,0.74), rgba(12,12,22,0.58))"; }}
                       onBlur={e => { e.currentTarget.style.borderColor = T.bdr.f; e.currentTarget.style.boxShadow = "none"; e.currentTarget.style.background = "linear-gradient(145deg, rgba(14,14,24,0.62), rgba(10,10,18,0.42))"; }}
                     />
                     <button
                       type="button"
                       aria-label="Send message"
+                      onClick={sendFreeText}
                       disabled={!inputVal.trim()}
-                      style={{ width: 44, height: 44, borderRadius: 22, border: "none", background: inputVal.trim() ? `linear-gradient(150deg,${T.gold.p},${T.gold.d})` : "rgba(255,255,255,0.06)", color: inputVal.trim() ? T.bg.void : "rgba(255,255,255,0.2)", fontSize: 16, cursor: inputVal.trim() ? "pointer" : "default", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: inputVal.trim() ? `0 4px 18px ${T.glow.gm}` : "none", transition: "all 0.25s ease" }}
+                      style={{ width: 44, height: 44, borderRadius: R.pill, border: "none", background: inputVal.trim() ? `linear-gradient(150deg,${T.gold.p},${T.gold.d})` : "rgba(255,255,255,0.06)", color: inputVal.trim() ? T.bg.void : "rgba(255,255,255,0.2)", fontSize: FS.md, cursor: inputVal.trim() ? "pointer" : "default", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: inputVal.trim() ? `0 4px 18px ${T.glow.gm}` : "none", transition: "all 0.25s ease" }}
                       onMouseEnter={e => { if (inputVal.trim()) e.currentTarget.style.filter = "brightness(1.1)"; }}
                       onMouseLeave={e => { e.currentTarget.style.filter = "none"; }}
                     >&uarr;</button>

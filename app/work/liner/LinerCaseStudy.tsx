@@ -110,11 +110,10 @@ function ScaledPrototypeFrame({
   naturalHeight?: number;
 }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(() => {
-    if (typeof window === "undefined") return 1;
-    const guess = Math.min(window.innerWidth - 32, naturalWidth) / naturalWidth;
-    return Math.max(0.1, Math.min(1, guess));
-  });
+  // Always start at 1 to match the server-rendered HTML (avoids a hydration
+  // attribute mismatch); the ResizeObserver below fires on mount and sets the
+  // real scale immediately.
+  const [scale, setScale] = useState(1);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -174,13 +173,36 @@ export default function LinerCaseStudy() {
                   Research-driven AI collaboration workflow
                 </h1>
                 <p className="mt-8 max-w-[44rem] text-[16px] leading-[1.65] text-textSecondary md:mt-10 md:text-[18px] md:leading-[1.6]">
-                  Led end-to-end research and design for an AI-native collaborative research
-                  experience on Liner — used by <span className="text-textPrimary">10M+ academic
-                  users</span> and ranked a top-20 web AI by a16z. Three core interaction patterns
-                  reframe AI from a feature add into a collaborative-trust layer.
+                  Led end-to-end research and design for AI-native collaborative research on
+                  Liner — reframing AI from a feature add into a collaborative-trust layer through
+                  three core interaction patterns.
                 </p>
 
-                <dl className="mt-14 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-black/[0.08] pt-7 sm:grid-cols-3 sm:gap-y-0">
+                {/* Impact at a glance — magnitude up front, few words. */}
+                <div className="mt-12 grid grid-cols-1 gap-x-8 gap-y-8 border-t border-black/[0.08] pt-9 sm:grid-cols-3 sm:gap-y-0">
+                  {[
+                    { n: "10M+", label: "Academic users", detail: "research audience on Liner" },
+                    { n: "Top 20", label: "Web AI · a16z", detail: "ranked among consumer AI apps" },
+                    { n: "3", label: "Interaction patterns", detail: "chat-switch · multi-user editor · shared library" },
+                  ].map(({ n, label, detail }) => (
+                    <div key={label} className="min-w-0">
+                      <p className="font-display text-[2.4rem] font-light leading-[1.02] tracking-[-0.02em] text-textPrimary md:text-[2.75rem]">
+                        {n}
+                      </p>
+                      <div className="mt-3 flex items-start gap-2">
+                        <span className="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-nltLime" aria-hidden="true" />
+                        <div>
+                          <p className="font-sans text-[12px] font-medium uppercase leading-snug tracking-[0.12em] text-textPrimary/70">
+                            {label}
+                          </p>
+                          <p className="mt-1.5 font-sans text-[13px] leading-snug text-textSecondary">{detail}</p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <dl className="mt-12 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-black/[0.08] pt-7 sm:grid-cols-3 sm:gap-y-0">
                   {[
                     { label: "Timeline", value: "2026 · in progress" },
                     { label: "Role", value: "Product Designer" },

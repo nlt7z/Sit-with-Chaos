@@ -34,7 +34,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://fangyuan7.com"),
   title: "Yuan Fang — UX Designer",
   description:
-    "A UX designer using AI as a core capability to iterate fast and turn ambiguity into clear product direction.",
+    "A UX designer pairing AI-native speed with a fine-art command of craft and a relentless drive to build — turning ambiguity into clear product direction and working prototypes.",
   openGraph: {
     title: "Yuan Fang — UX Designer",
     description: "Portfolio of Yuan Fang, MS HCDE @ UW",
@@ -69,7 +69,7 @@ export default function RootLayout({
             other route so case-study / lab pages don't flash black. */}
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(location.pathname==='/'&&!sessionStorage.getItem('yf-intro-played-v1')){document.documentElement.dataset.intro='pending';setTimeout(function(){if(document.documentElement.dataset.intro==='pending'){delete document.documentElement.dataset.intro;}},1500);var l=document.createElement('link');l.rel='preload';l.as='image';l.href='/assets/logo.png';l.setAttribute('fetchpriority','high');document.head.appendChild(l);}}catch(e){try{delete document.documentElement.dataset.intro;}catch(_){}}})();`,
+            __html: `(function(){try{if(location.pathname==='/'&&!sessionStorage.getItem('yf-intro-played-v1')){document.documentElement.dataset.intro='pending';setTimeout(function(){if(document.documentElement.dataset.intro==='pending'){delete document.documentElement.dataset.intro;}},4000);}}catch(e){try{delete document.documentElement.dataset.intro;}catch(_){}}})();`,
           }}
         />
       </head>

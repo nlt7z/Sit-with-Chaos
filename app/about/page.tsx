@@ -74,21 +74,21 @@ const educationEntries = [
 const workPrinciples = [
   {
     number: "01",
-    title: "Clarity before output.",
-    body: "Ground in users, data, and constraints first—then align with PMs and engineers so the first frames answer the right question.",
-    stack: "Research · Data · Cross-functional alignment",
+    title: "AI as a velocity multiplier.",
+    body: "After user interviews, I synthesize insights in hours rather than days, and move a loose idea into a working, coded prototype within the same day — so decisions rest on something real, sooner.",
+    stack: "Synthesis · Prototype · Velocity",
   },
   {
     number: "02",
-    title: "Move fast, validate often.",
-    body: "Sketch early, prototype in tight loops, and slice ambiguity into testable pieces. Velocity and craft only clash when process gets fuzzy.",
-    stack: "Sketch · Prototype · Validate",
+    title: "Taste decides the direction.",
+    body: "When AI returns dozens of directions, I can tell which one is right and refine it until the craft holds. A decade of fine art lets me translate abstract calls for 'creative' or 'beautiful' into concrete, finished work.",
+    stack: "Visual craft · Polish · Art direction",
   },
   {
     number: "03",
-    title: "AI is the medium.",
-    body: "Models synthesize research and pressure-test directions; coding agents turn structure into UI; Figma is where the narrative ships.",
-    stack: "Claude · Cursor · Figma · Midjourney · Stable Diffusion",
+    title: "Whatever it takes to ship.",
+    body: "When I hit a technical wall, I learn my way through it — often with AI as a tutor — until I can build it myself. That path took me from non-coder to shipping full web and mobile apps, and keeps me ahead on new tools.",
+    stack: "Relentless · Curious by default · Ship",
   },
 ];
 
@@ -165,7 +165,7 @@ export default function AboutPage() {
                   Designer, thinker, craftsperson.
                 </h1>
                 <p className="mt-8 max-w-2xl text-lg leading-[1.72] text-textSecondary md:mt-9 md:text-xl md:leading-[1.7]">
-                  I&apos;m Yuan Fang, a UX designer shaped by over 10 years of fine arts training, bringing strong visual judgment and taste to AI-native workflows, rapid iteration, and the translation of ambiguity into clear product direction.
+                  I&apos;m Yuan Fang, a UX designer working at the intersection of three strengths: AI-native speed, a fine-art command of craft built over 10+ years, and a relentless drive to build whatever a project needs. I turn ambiguity into clear product direction — and into working, coded prototypes.
                 </p>
                 <p className="mt-6 max-w-2xl text-base leading-[1.72] text-textSecondary md:leading-[1.7]">
                   My name literally means &ldquo;Square and Circle.&rdquo; In Chinese culture it represents balance —
