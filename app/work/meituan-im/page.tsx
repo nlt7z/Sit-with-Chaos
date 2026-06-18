@@ -185,8 +185,8 @@ function ScaledPrototypeFrame({
     <div className="mx-auto w-full" style={{ maxWidth: naturalWidth }}>
       <div
         ref={wrapperRef}
-        className="relative w-full overflow-hidden"
-        style={{ aspectRatio: `${naturalWidth} / ${naturalHeight}` }}
+        className="relative w-full"
+        style={{ height: naturalHeight * scale }}
       >
         <iframe
           src={src}
@@ -523,7 +523,7 @@ export default function MeituanImCaseStudyPage() {
                   {/* Right — live prototype (Repair Flow). */}
                   <div className="hidden lg:flex lg:flex-col lg:items-start">
                     <div
-                      className="relative overflow-hidden rounded-xl"
+                      className="relative rounded-xl"
                       style={{ width: 480, height: 320 }}
                     >
                       <iframe
