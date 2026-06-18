@@ -520,23 +520,21 @@ export default function MeituanImCaseStudyPage() {
                     </dl>
                   </div>
 
-                  {/* Right — live prototype (FixIt Express · Saffron).
-                      The HTML renders its own Cosmic Orange titanium bezel + scenario rail,
-                      so we don't wrap it in another device frame. Scaled to fit the column. */}
+                  {/* Right — live prototype (Repair Flow). */}
                   <div className="hidden lg:flex lg:flex-col lg:items-start">
                     <div
-                      className="relative overflow-hidden"
-                      style={{ width: 340, height: 800 }}
+                      className="relative overflow-hidden rounded-xl"
+                      style={{ width: 480, height: 320 }}
                     >
                       <iframe
-                        src="/assets/meituan-im/interaction-flow-phone.html"
-                        title="FixIt Express · Saffron — interactive prototype"
+                        src="/assets/meituan-im/Repair%20Flow.html"
+                        title="Repair flow — interactive prototype"
                         style={{
-                          width: 500,
-                          height: 1176,
+                          width: 1200,
+                          height: 800,
                           border: 0,
                           display: "block",
-                          transform: "scale(0.68)",
+                          transform: "scale(0.4)",
                           transformOrigin: "top left",
                         }}
                         loading="lazy"
@@ -544,9 +542,6 @@ export default function MeituanImCaseStudyPage() {
                     </div>
                     <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
                       Live prototype · interact above
-                    </p>
-                    <p className="mt-2 max-w-[19rem] text-[11px] leading-relaxed text-textSecondary/55">
-                      Re-skinned in English with USD placeholders — the shipped product runs in Chinese with RMB pricing.
                     </p>
                   </div>
                 </motion.div>
@@ -689,29 +684,16 @@ export default function MeituanImCaseStudyPage() {
         </Section>
 
         <Section id="chat" eyebrow="IM Experience" title="Three entry states, one interaction model.">
-          <div className="mt-4">
-            <div className="grid gap-10 lg:grid-cols-3 lg:gap-8">
-              <LiveFlowPhone
-                flow="default"
-                label="01 · Standard repair"
-                caption="Diagnose → service order → live quotes → booked."
-              />
-              <LiveFlowPhone
-                flow="cat-litter"
-                label="02 · Self-serve fix"
-                caption="Resolves in-thread when a visit isn't needed."
-              />
-              <LiveFlowPhone
-                flow="off-hours"
-                label="03 · After hours"
-                caption="Closed state stays explicit, never a dead end."
+          <FadeIn className="mt-2">
+            <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06] shadow-[0_36px_72px_-36px_rgba(0,0,0,0.18)]">
+              <ScaledPrototypeFrame
+                src="/assets/meituan-im/Repair%20Flow.html"
+                title="Repair flow — interactive prototype"
+                naturalWidth={1200}
+                naturalHeight={800}
               />
             </div>
-            <p className="mt-8 max-w-[40rem] text-[13px] leading-relaxed text-textSecondary/80">
-              Each phone is the live prototype booted into one flow — tap the suggested
-              replies to play it through.
-            </p>
-          </div>
+          </FadeIn>
         </Section>
 
         <Section id="quote" eyebrow="Quoting Engine" title="Conversation becomes a contract. Merchants quote against it.">
@@ -812,8 +794,10 @@ export default function MeituanImCaseStudyPage() {
           <PrototypeReveal>
             <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06] shadow-[0_36px_72px_-36px_rgba(0,0,0,0.18)]">
               <ScaledPrototypeFrame
-                src="/assets/meituan-im/interaction-flow.html"
-                title="FixIt Express interactive consultation flow"
+                src="/assets/meituan-im/Repair%20Flow.html"
+                title="Repair flow — interactive prototype"
+                naturalWidth={1200}
+                naturalHeight={800}
               />
             </div>
           </PrototypeReveal>
