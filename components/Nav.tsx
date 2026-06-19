@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { SplitTextChars } from "@/components/SplitBtn";
 
 const navLinks = [
   { label: "Work", href: "/#work" },
@@ -95,7 +96,7 @@ export function Nav({ variant = "light" }: NavProps) {
           <Link
             href="/"
             aria-label="Yuan Fang — Home"
-            className={`block rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+            className={`flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
               isDark
                 ? "focus-visible:ring-white/50 focus-visible:ring-offset-[#060608]"
                 : "focus-visible:ring-textPrimary focus-visible:ring-offset-2"
@@ -109,6 +110,13 @@ export function Nav({ variant = "light" }: NavProps) {
               className="h-8 w-auto select-none md:h-9"
               priority
             />
+            <span
+              className={`text-sm font-semibold tracking-tight select-none ${
+                isDark ? "text-zinc-100" : "text-textPrimary"
+              }`}
+            >
+              YF
+            </span>
           </Link>
 
           <div className="hidden items-center gap-6 md:flex">
@@ -139,14 +147,13 @@ export function Nav({ variant = "light" }: NavProps) {
               href={resumeLink.href}
               target="_blank"
               rel="noopener noreferrer"
-              className={`ml-1 inline-flex items-center gap-1.5 rounded-full px-5 py-2 text-sm font-medium shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+              className={`group ml-1 inline-flex items-center rounded-full px-5 py-2 text-sm font-medium shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                 isDark
                   ? "bg-nltLime text-[#06060a] focus-visible:ring-white/50 focus-visible:ring-offset-[#060608]"
                   : "bg-textPrimary text-white focus-visible:ring-textPrimary focus-visible:ring-offset-2"
               }`}
             >
-              {resumeLink.label}
-              <span aria-hidden>↗</span>
+              <SplitTextChars text={`${resumeLink.label} ↗`} />
             </a>
           </div>
 
@@ -228,14 +235,13 @@ export function Nav({ variant = "light" }: NavProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => setOpen(false)}
-                  className={`mt-2 inline-flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-base font-medium shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
+                  className={`group mt-2 inline-flex items-center justify-center rounded-full px-5 py-3 text-base font-medium shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
                     isDark
                       ? "bg-nltLime text-[#06060a] focus-visible:ring-white/45 focus-visible:ring-offset-[#0a0a0c]"
                       : "bg-textPrimary text-white focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                   }`}
                 >
-                  {resumeLink.label}
-                  <span aria-hidden>↗</span>
+                  <SplitTextChars text={`${resumeLink.label} ↗`} />
                 </a>
               </div>
             </motion.div>

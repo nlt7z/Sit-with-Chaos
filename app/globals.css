@@ -27,6 +27,11 @@
     background: var(--background);
   }
 
+  ::selection {
+    background: #d2ff00;
+    color: #1d1d1f;
+  }
+
   body {
     color: var(--text-primary);
     background: var(--background);

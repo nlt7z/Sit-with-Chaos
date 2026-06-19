@@ -14,8 +14,7 @@ const easePremium = [0.25, 0.1, 0.25, 1] as const;
 
 const navItems = [
   { id: "overview", label: "Overview" },
-  { id: "problem", label: "Context" },
-  { id: "turning-point", label: "Turn" },
+  { id: "turning-point", label: "Context" },
   { id: "solution", label: "System" },
   { id: "chat", label: "Chat" },
   { id: "quote", label: "Quote" },
@@ -130,7 +129,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-28 md:py-36 lg:py-40">
+    <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-14 md:py-28 lg:py-36">
       <div>
         <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/75">{eyebrow}</p>
         <h2 className="mt-5 max-w-4xl font-display text-[2rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.6rem] md:leading-[1.06] lg:text-[2.95rem]">
@@ -454,9 +453,9 @@ export default function MeituanImCaseStudyPage() {
       <div className="relative min-h-screen bg-white">
         <CaseNav />
         <CaseStudyMobileToc items={navItems} />
-        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-56 pt-32 text-left md:px-12 md:pb-72 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
+        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-24 text-left md:px-12 md:pb-56 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
           <main className="relative min-h-screen">
-            <header id="overview" className="scroll-mt-28 pb-24 md:pb-32">
+            <header id="overview" className="scroll-mt-28 pb-16 md:pb-24">
               <motion.div variants={heroVariants} initial="hidden" animate="show">
                 <motion.div variants={heroItem} className="mb-7 flex items-center">
                   <Image
@@ -472,7 +471,7 @@ export default function MeituanImCaseStudyPage() {
                 </motion.p>
                 <motion.h1
                   variants={heroItem}
-                  className="mt-8 max-w-[18ch] font-display text-[2.65rem] font-light leading-[1.03] tracking-tight text-textPrimary sm:max-w-4xl md:text-[4rem] md:leading-[1.02]"
+                  className="mt-8 max-w-[18ch] font-display text-[2rem] font-light leading-[1.05] tracking-tight text-textPrimary sm:max-w-4xl sm:text-[2.65rem] md:text-[4rem] md:leading-[1.02]"
                 >
                   Designing Trust Before the Bill
                 </motion.h1>
@@ -487,7 +486,7 @@ export default function MeituanImCaseStudyPage() {
 
                 <motion.div
                   variants={heroItem}
-                  className="mt-16 grid gap-14 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-20"
+                  className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-20 md:mt-14 md:gap-14"
                   aria-label="Project summary"
                 >
                   {/* Left — hero metric + shared meta */}
@@ -495,7 +494,7 @@ export default function MeituanImCaseStudyPage() {
                     {/* Hero metric — slightly smaller so the prototype on the right
                         can carry equal visual weight. */}
                     <div>
-                      <p className="font-display text-[3.75rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[4.5rem] lg:text-[5rem]">
+                      <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[3.75rem] lg:text-[5rem]">
                         +5<span className="text-[0.5em] text-textPrimary/70">%</span>
                       </p>
                       <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-textSecondary">
@@ -548,34 +547,13 @@ export default function MeituanImCaseStudyPage() {
               </motion.div>
             </header>
 
-        <Section id="problem" eyebrow="Context & Signal" title="Users wanted to ask first, but the platform was not earning trust.">
-          <FadeIn className="my-2 py-6 md:py-8">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/80">User behavior signal</p>
-            <p className="mt-5 max-w-3xl text-[16px] leading-[1.6] text-textPrimary/85">
+        <Section id="turning-point" eyebrow="Context · Signal" title="The brief asked for price visibility. The evidence pointed deeper.">
+          <FadeIn>
+            <p className="max-w-3xl text-[16px] leading-[1.6] text-textPrimary/85">
               Users visit <span className="text-textPrimary">10 merchants</span>, consult{" "}
               <span className="text-textPrimary">6</span>, spend <span className="text-textPrimary">30 minutes</span> comparing — and still don&apos;t trust the price.
             </p>
-          </FadeIn>
-
-          <FadeIn className="grid gap-8 border-t border-black/[0.06] pt-8 md:grid-cols-3 md:gap-8">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Behavior</p>
-              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Consult outranked book and call.</p>
-            </div>
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Conversion</p>
-              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">In-app consult stayed low.</p>
-            </div>
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Experience</p>
-              <p className="mt-4 text-[16px] tracking-tight text-textPrimary">Disputes clustered in home repair.</p>
-            </div>
-          </FadeIn>
-        </Section>
-
-        <Section id="turning-point" eyebrow="Turning Point" title="The brief asked for price visibility. The evidence pointed deeper.">
-          <FadeIn>
-            <p className="text-[18px] leading-[1.55] tracking-tight text-textPrimary">
+            <p className="mt-5 text-[18px] leading-[1.55] tracking-tight text-textPrimary">
               Price was not a number problem. It was a <span className="text-nltLime-ink">process trust</span> problem.
             </p>
           </FadeIn>
@@ -590,24 +568,23 @@ export default function MeituanImCaseStudyPage() {
                 </div>
                 <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
-                    ["Problem occurs", "User finds an issue like toilet repair and opens Meituan to search."],
-                    ["Many merchants appear", "User sees options but cannot tell who can diagnose accurately."],
-                    ["One-by-one outreach", "Repeats the same questions across shops; waits in fragmented threads."],
-                    ["Pick one for visit", "Merchants only promise an arrival fee; final quote deferred to on-site."],
-                  ].map(([t, b], i) => (
+                    "Problem occurs",
+                    "Many merchants appear",
+                    "One-by-one outreach",
+                    "Pick one for visit",
+                  ].map((t, i) => (
                     <li key={i} className="py-4">
                       <div className="flex items-baseline gap-3">
                         <span className="font-mono text-[10px] tabular-nums text-textSecondary/60">0{i + 1}</span>
                         <p className="text-[15px] tracking-tight text-textPrimary/85">{t}</p>
                       </div>
-                      <p className="mt-1.5 pl-[26px] text-[13.5px] leading-relaxed text-textSecondary">{b}</p>
                     </li>
                   ))}
                 </ol>
                 <div className="mt-6 border-t border-black/[0.07] pt-5">
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">→ Trust break</p>
                   <p className="mt-1.5 text-[13.5px] leading-relaxed text-textSecondary">
-                    Quoted price ≠ actual bill. Scope, materials, and conditions widen the range. Users feel the system did not warn them.
+                    Quoted price ≠ actual bill.
                   </p>
                 </div>
               </div>
@@ -620,31 +597,24 @@ export default function MeituanImCaseStudyPage() {
                 </div>
                 <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
-                    ["Diagnose the problem", "Certified experts surface from search to define the issue — remove ambiguity before comparison."],
-                    ["Structure the intent", "Multi-turn chat yields a service-order card so quotes compare on equal terms."],
-                    ["Compare and commit", "Vetted merchants each quote against the same service order; the quote you accept carries into checkout as the agreed price."],
-                  ].map(([t, b], i) => (
+                    "Diagnose the problem",
+                    "Structure the intent",
+                    "Compare and commit",
+                  ].map((t, i) => (
                     <li key={i} className="py-4">
                       <div className="flex items-baseline gap-3">
                         <span className="font-mono text-[10px] tabular-nums text-nltLime-ink">0{i + 1}</span>
                         <p className="text-[15px] tracking-tight text-textPrimary">{t}</p>
                       </div>
-                      <p className="mt-1.5 pl-[26px] text-[13.5px] leading-relaxed text-textSecondary">{b}</p>
                     </li>
                   ))}
                 </ol>
                 <div className="mt-6 border-t border-black/[0.07] pt-5">
                   <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink/80">→ Trust restored</p>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-textSecondary">
-                    Price is the output of a credible process. The range is each merchant&apos;s own quote against the same structured intent — explained, not arbitrary — so you compare on equal terms before you commit.
-                  </p>
                 </div>
               </div>
             </div>
           </FadeIn>
-          <p className="mt-2 max-w-3xl font-display text-[1.6rem] italic leading-[1.35] tracking-tight text-textPrimary">
-            How do we guide users through a credible path to a price they can trust before they commit?
-          </p>
         </Section>
 
         <Section id="solution" eyebrow="System Design" title="One end-to-end flow. Trust compounds across every stage.">
@@ -661,26 +631,6 @@ export default function MeituanImCaseStudyPage() {
             </div>
           </FadeIn>
 
-          <FadeIn className="mt-12 grid gap-8 border-t border-black/[0.06] pt-10 md:grid-cols-3 md:gap-10">
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Product IA</p>
-              <p className="mt-4 text-[15px] leading-relaxed text-textPrimary/85">
-                Four steps — <span className="text-textPrimary">Describe · Diagnose · Plan · Match</span> (Describe usually folds into the first message). The trust loop above — Diagnose → Structure → Commit — is the lens I designed against.
-              </p>
-            </div>
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Supply model</p>
-              <p className="mt-4 text-[15px] leading-relaxed text-textPrimary/85">
-                AI agents triage first — photos, video, structured intake — then a platform-certified expert diagnoses and drafts the order. Vetted merchants quote against it and do the work; the diagnosing expert never competes with them.
-              </p>
-            </div>
-            <div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">Why a real expert</p>
-              <p className="mt-4 text-[15px] leading-relaxed text-textPrimary/85">
-                In launch cities that expert is real and paid an expert fee — a deliberate early-stage tradeoff: real humans at fixed points buy conversion and satisfaction before we automate, escalating like support does at peak.
-              </p>
-            </div>
-          </FadeIn>
         </Section>
 
         <Section id="chat" eyebrow="IM Experience" title="Three entry states, one interaction model.">
@@ -783,10 +733,23 @@ export default function MeituanImCaseStudyPage() {
         </Section>
 
         <Section id="prototype" eyebrow="Interactive Prototype" title="Try the full flow.">
-          <p className="mb-10 max-w-[40rem] text-[14px] leading-relaxed text-textSecondary">
+          <p className="mb-4 max-w-[40rem] text-[14px] leading-relaxed text-textSecondary">
             Switch scenarios from the rail under the phone, or tap the suggested replies to play a flow through.
             <span className="text-textSecondary/65"> This build is re-skinned in English with USD placeholders for a non-Chinese audience — the shipped product is in Chinese with RMB pricing.</span>
           </p>
+          <div className="mb-10 flex items-center justify-between gap-4">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
+              End-to-end build · interaction design, visual design & code
+            </p>
+            <a
+              href="/work/meituan-im/prototype"
+              target="_blank"
+              rel="noreferrer"
+              className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/60 transition-colors hover:text-nltLime-ink"
+            >
+              Open in new window ↗
+            </a>
+          </div>
           {/* Custom entrance — the prototype is the case's high point, so it
               gets a bigger, slightly delayed reveal: blur clears, the device
               settles down ~1deg, and a soft amber wash brushes through. */}
@@ -842,25 +805,25 @@ export default function MeituanImCaseStudyPage() {
 
               {[
                 {
-                  domain: "Education consultation",
+                  domain: "Education",
                   tagline: "Parents · advisors · plans",
-                  d: "Advisor clarifies goals, grade, budget, schedule.",
-                  s: "Constraints → structured learning brief.",
-                  c: "Plan comparison with visible recommendation quality.",
+                  d: "Goals, grade, budget.",
+                  s: "Constraints → learning brief.",
+                  c: "Plan comparison.",
                 },
                 {
-                  domain: "Banquet booking",
+                  domain: "Banquet",
                   tagline: "Event · venue · quote lock-in",
-                  d: "Capture event size, date flex, menu tier, must-haves.",
-                  s: "Non-negotiables → comparable requirement card.",
-                  c: "Venue offers on equal terms; explicit quote boundaries.",
+                  d: "Size, date, menu, must-haves.",
+                  s: "Non-negotiables → requirement card.",
+                  c: "Venues quote on equal terms.",
                 },
                 {
                   domain: "Maternity care",
                   tagline: "Family · caregiver · continuity",
-                  d: "Triage need and risk; surface caregiver credentials first.",
-                  s: "Care scope, boundaries, schedule → service brief.",
-                  c: "Package selection in trust context; follow-up in same thread.",
+                  d: "Need and risk; credentials first.",
+                  s: "Care scope → service brief.",
+                  c: "Package in trust context.",
                 },
               ].map((row, i) => (
                 <div key={i} className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06]">
@@ -887,25 +850,25 @@ export default function MeituanImCaseStudyPage() {
                   c: "Live competitive quote → checkout.",
                 },
                 {
-                  domain: "Education consultation",
+                  domain: "Education",
                   tagline: "Parents · advisors · plans",
-                  d: "Advisor clarifies goals, grade, budget, schedule.",
-                  s: "Constraints → structured learning brief.",
-                  c: "Plan comparison with visible recommendation quality.",
+                  d: "Goals, grade, budget.",
+                  s: "Constraints → learning brief.",
+                  c: "Plan comparison.",
                 },
                 {
-                  domain: "Banquet booking",
+                  domain: "Banquet",
                   tagline: "Event · venue · quote lock-in",
-                  d: "Capture event size, date flex, menu tier, must-haves.",
-                  s: "Non-negotiables → comparable requirement card.",
-                  c: "Venue offers on equal terms; explicit quote boundaries.",
+                  d: "Size, date, menu, must-haves.",
+                  s: "Non-negotiables → requirement card.",
+                  c: "Venues quote on equal terms.",
                 },
                 {
                   domain: "Maternity care",
                   tagline: "Family · caregiver · continuity",
-                  d: "Triage need and risk; surface caregiver credentials first.",
-                  s: "Care scope, boundaries, schedule → service brief.",
-                  c: "Package selection in trust context; follow-up in same thread.",
+                  d: "Need and risk; credentials first.",
+                  s: "Care scope → service brief.",
+                  c: "Package in trust context.",
                 },
               ].map((row, i) => (
                 <div
@@ -947,7 +910,7 @@ export default function MeituanImCaseStudyPage() {
               primary result reads first, supporting metrics step down below. */}
           <FadeIn className="border-t border-black/[0.06] pt-12 md:pt-16">
             <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4">
-              <p className="font-display text-[5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-nltLime-ink md:text-[7rem] lg:text-[8rem]">
+              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-nltLime-ink md:text-[5.5rem] lg:text-[8rem]">
                 +<CountUp to={5} />
                 <span className="text-[0.5em] text-nltLime-ink/70">%</span>
               </p>
@@ -964,14 +927,14 @@ export default function MeituanImCaseStudyPage() {
               with the hero number above so they read as "and also". */}
           <FadeIn delay={0.1} className="mt-14 grid gap-10 border-t border-black/[0.06] pt-10 md:grid-cols-2 md:gap-16">
             <div>
-              <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
+              <p className="font-display text-[2rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
                 ~<CountUp to={2000} format={(n) => Math.round(n / 1000).toString() + "k"} />
               </p>
               <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
               <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Incremental volume at projected rollout coverage.</p>
             </div>
             <div>
-              <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
+              <p className="font-display text-[2rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
                 −<CountUp to={50} />
                 <span className="text-[0.55em] text-textPrimary/70">%</span>
               </p>

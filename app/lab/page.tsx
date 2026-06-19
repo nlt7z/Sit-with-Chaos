@@ -16,6 +16,14 @@ const EXPERIMENTS = [
     proves: "the whole pitch, in 5 seconds",
   },
   {
+    id: "⑦",
+    href: "/lab/gallery",
+    title: "Dark gallery scroll",
+    blurb:
+      "Full-screen sticky horizontal gallery — scroll vertically to drive the track sideways. Five work cards, each with a unique abstract SVG visual and lime accents.",
+    proves: "dark editorial UI",
+  },
+  {
     id: "③",
     href: "/lab/lime",
     title: "Lime as signature",

@@ -16,6 +16,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { MotionDemo, ResearchDemo } from "@/components/hero/LivingHero";
 import { CraftModel } from "@/components/hero/CraftModel";
+import { SplitTextChars } from "@/components/SplitBtn";
 
 type Channel = "research" | "motion" | "code";
 const CYCLE: Channel[] = ["research", "motion", "code"];
@@ -38,6 +39,38 @@ const GRAIN =
 
 const credentialLinkClass =
   "font-medium text-textPrimary transition-colors hover:text-nltLime-ink focus:outline-none focus-visible:rounded-sm focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2";
+
+/* ------------------------------------------------------------------ */
+/* SplitBtn — pill button with per-char stagger slide (Norris pattern) */
+/* Each character clips inside its own overflow-hidden wrapper, slides  */
+/* up out of frame on hover while a duplicate slides up into frame.     */
+/* ------------------------------------------------------------------ */
+function SplitBtn({
+  href,
+  label,
+  pill,
+}: {
+  href: string;
+  label: string;
+  pill: "dark" | "light";
+}) {
+  const isDark = pill === "dark";
+
+  return (
+    <a
+      href={href}
+      className={[
+        "group inline-flex items-center rounded-full px-8 py-3 text-sm font-medium shadow-sm",
+        "focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+        isDark
+          ? "bg-textPrimary text-white focus-visible:ring-nltLime"
+          : "border border-[rgba(0,0,0,0.08)] bg-white text-textPrimary focus-visible:ring-textPrimary",
+      ].join(" ")}
+    >
+      <SplitTextChars text={label} />
+    </a>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /* Keyword — an interactive word with a lime highlighter swipe          */
@@ -157,8 +190,8 @@ export function ImmersiveHero() {
       {/* Bottom fade so the hero dissolves into the page / Work below. */}
       <div aria-hidden className="pointer-events-none absolute inset-x-0 bottom-0 h-28 bg-gradient-to-b from-transparent to-white" />
 
-      <div className="relative z-10 mx-auto flex min-h-[100svh] w-full max-w-content items-center px-6 py-24 md:py-20">
-        <div className="grid w-full items-center gap-10 md:gap-12 lg:grid-cols-[1.02fr_1fr] lg:gap-16">
+      <div className="relative z-10 mx-auto flex min-h-[82svh] w-full max-w-content items-center px-6 py-12 md:py-16">
+        <div className="grid w-full items-center gap-8 md:gap-12 lg:grid-cols-[1.02fr_1fr] lg:gap-16">
           {/* ---------- left: headline + real info ---------- */}
           <motion.div
             className="max-w-xl"
@@ -218,21 +251,8 @@ export function ImmersiveHero() {
             </motion.p>
 
             <motion.div variants={itemV} className="mt-8 flex flex-wrap items-center gap-3">
-              <a
-                href="#work"
-                className="inline-flex items-center gap-1.5 rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-              >
-                Explore Work
-                <span aria-hidden>↗</span>
-              </a>
-
-              <a
-                href="#contact"
-                className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-8 py-3 text-sm font-medium text-textPrimary shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-              >
-                Say hello
-                <span aria-hidden>↗</span>
-              </a>
+              <SplitBtn href="#work" label="Explore Work ↗" pill="dark" />
+              <SplitBtn href="#contact" label="Say hello ↗" pill="light" />
             </motion.div>
 
           </motion.div>

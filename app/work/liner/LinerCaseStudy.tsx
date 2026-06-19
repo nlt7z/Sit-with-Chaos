@@ -43,9 +43,9 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-24 md:py-32 lg:py-36">
+    <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-14 md:py-24 lg:py-32">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/75">{eyebrow}</p>
+        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-nltLime-ink">{eyebrow}</p>
         {title && (
           <h2 className="mt-5 max-w-4xl font-display text-[1.85rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.4rem] md:leading-[1.06] lg:text-[2.75rem]">
             {title}
@@ -156,7 +156,7 @@ export default function LinerCaseStudy() {
     <>
       <Nav />
       <div className="relative min-h-screen bg-white">
-        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-40 pt-32 text-left md:px-12 md:pb-56 md:pt-40 lg:pl-20 lg:pr-14 lg:pb-64 lg:pt-44">
+        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-24 text-left md:px-12 md:pb-40 md:pt-40 lg:pl-20 lg:pr-14 lg:pb-64 lg:pt-44">
           <main className="relative">
             {/* HERO — placeholder copy; full narrative to follow. */}
             <header id="overview" className="scroll-mt-28 pb-20 md:pb-28">
@@ -166,10 +166,10 @@ export default function LinerCaseStudy() {
                   alt="Liner"
                   className="mb-7 h-7 w-auto object-contain object-left md:h-8"
                 />
-                <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">
+                <p className="font-mono text-[11px] uppercase tracking-[0.24em] text-nltLime-ink">
                   Liner AI · Capstone
                 </p>
-                <h1 className="mt-8 max-w-[22ch] font-display text-[2.4rem] font-light leading-[1.05] tracking-tight text-textPrimary sm:max-w-4xl md:text-[3.4rem] md:leading-[1.04] lg:text-[4rem]">
+                <h1 className="mt-8 max-w-[22ch] font-display text-[1.9rem] font-light leading-[1.05] tracking-tight text-textPrimary sm:max-w-4xl sm:text-[2.4rem] md:text-[3.4rem] md:leading-[1.04] lg:text-[4rem]">
                   Research-driven AI collaboration workflow
                 </h1>
                 <p className="mt-8 max-w-[44rem] text-[16px] leading-[1.65] text-textSecondary md:mt-10 md:text-[18px] md:leading-[1.6]">
@@ -206,7 +206,7 @@ export default function LinerCaseStudy() {
                     { label: "Partner", value: "Liner AI · UW HCDE" },
                   ].map(({ label, value }) => (
                     <div key={label} className="min-w-0">
-                      <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">
+                      <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-nltLime-ink">
                         {label}
                       </dt>
                       <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
@@ -229,10 +229,10 @@ export default function LinerCaseStudy() {
             <Section id="prototype" eyebrow="Interactive Prototype" title="Try the editor.">
               <FadeIn>
                 <ScaledPrototypeFrame
-                  src="/assets/liner/Liner-AI-Capstone-Prototype-Jen.html"
+                  src="/assets/liner/Liner%20AI%20Capstone%20Prototype.html"
                   title="Liner AI capstone — interactive editor prototype"
                 />
-                <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
+                <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">
                   Built with Claude Code + Figma MCP
                 </p>
               </FadeIn>

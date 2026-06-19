@@ -94,7 +94,7 @@ function CaseNav() {
       className="pointer-events-none fixed left-0 top-0 z-30 hidden h-full w-[11rem] lg:block"
     >
       <div className="pointer-events-auto sticky top-[calc(50vh-9rem)] px-6 pt-32">
-        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">
+        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-nltLime-ink">
           On this page
         </p>
         <ul className="mt-5 space-y-0">
@@ -109,8 +109,8 @@ function CaseNav() {
                 }}
                 className={`block border-l border-transparent py-2 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity] duration-500 ease-out ${
                   active === id
-                    ? "border-textPrimary/80 font-medium text-textPrimary"
-                    : "text-textSecondary/90 hover:border-textPrimary/15 hover:text-textPrimary"
+                    ? "border-nltLime font-medium text-nltLime-ink"
+                    : "text-textSecondary/90 hover:border-nltLime/40 hover:text-textPrimary"
                 }`}
               >
                 {label}
@@ -150,7 +150,7 @@ function Reveal({
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[10px] font-normal uppercase tracking-[0.22em] text-textSecondary/65">
+    <p className="font-mono text-[10px] font-normal uppercase tracking-[0.22em] text-nltLime-ink">
       {children}
     </p>
   );
@@ -332,7 +332,7 @@ export default function RidesharingCaseStudy() {
     <div className="relative min-h-screen bg-white">
       <CaseNav />
       <CaseStudyMobileToc items={navItems} />
-      <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-52 pt-28 text-left md:px-10 md:pb-64 md:pt-36 lg:pl-32 lg:pr-10 lg:pb-72 lg:pt-40">
+      <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-24 text-left md:px-10 md:pb-52 md:pt-36 lg:pl-32 lg:pr-10 lg:pb-72 lg:pt-40">
         {/* —— Overview —— */}
         <header id="overview" ref={heroRef} className="scroll-mt-28">
           <motion.div style={{ y: heroTextY }} className="max-w-4xl will-change-transform">
@@ -348,7 +348,7 @@ export default function RidesharingCaseStudy() {
               initial={reduceMotion ? false : { opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, delay: reduceMotion ? 0 : 0.05, ease: easePremium }}
-              className="mt-10 font-display text-[clamp(2.5rem,6.2vw,4rem)] font-light leading-[1.04] tracking-[-0.035em] text-textPrimary"
+              className="mt-10 font-display text-[clamp(1.9rem,6.2vw,4rem)] font-light leading-[1.06] tracking-[-0.03em] text-textPrimary"
             >
               AI Agentic Autonomous Ridesharing Experience
             </motion.h1>
@@ -396,23 +396,23 @@ export default function RidesharingCaseStudy() {
               className="mt-16 grid gap-y-6 border-t border-black/[0.06] pt-12 sm:grid-cols-2 sm:gap-x-16"
             >
               <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/60">Role</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">Role</dt>
                 <dd className="mt-1.5 text-[15px] text-textPrimary">UX Research · UX Design</dd>
               </div>
               <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/60">
+                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">
                   Timeline
                 </dt>
                 <dd className="mt-1.5 text-[15px] text-textPrimary">10 weeks · 2024</dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/60">Team</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">Team</dt>
                 <dd className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-textPrimary">
                   1 supervisor · 1 PM · 1 UX researcher · 2 UX designers
                 </dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/60">Domain</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">Domain</dt>
                 <dd className="mt-1.5 text-[15px] text-textPrimary">
                   Automotive HMI · Autonomous vehicles · AI interaction design
                 </dd>
@@ -472,7 +472,7 @@ export default function RidesharingCaseStudy() {
         </header>
 
         {/* —— Research —— */}
-        <section id="research" className="scroll-mt-28 space-y-32 pt-32 md:space-y-40 md:pt-44 lg:space-y-48 lg:pt-52">
+        <section id="research" className="scroll-mt-28 space-y-16 pt-16 md:space-y-32 md:pt-36 lg:space-y-40 lg:pt-44">
           <Reveal>
             <Eyebrow>What passengers were actually missing</Eyebrow>
             <SectionTitle className="mt-8">The &ldquo;during&rdquo; barely existed</SectionTitle>
@@ -544,7 +544,7 @@ export default function RidesharingCaseStudy() {
         </section>
 
         {/* —— Framework —— */}
-        <section id="framework" className="scroll-mt-28 space-y-32 pt-32 md:space-y-40 md:pt-44 lg:space-y-48 lg:pt-52">
+        <section id="framework" className="scroll-mt-28 space-y-16 pt-16 md:space-y-32 md:pt-36 lg:space-y-40 lg:pt-44">
           <Reveal>
             <Eyebrow>Structuring the experience</Eyebrow>
             <SectionTitle className="mt-8">Three emotional layers</SectionTitle>
@@ -607,21 +607,21 @@ export default function RidesharingCaseStudy() {
             </Prose>
             <ul className="mt-10 max-w-2xl space-y-6 text-[17px] leading-[1.65] text-textSecondary md:text-lg md:leading-[1.7]">
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/70">P1 — Core</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P1 — Core</p>
                 <p className="mt-2 text-textSecondary">
                   <span className="text-textPrimary">Landing and onboarding, map and navigation, personalized voice AI.</span>{" "}
                   The trust floor — without these, the product does not function.
                 </p>
               </li>
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/70">P2 — Usability</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P2 — Usability</p>
                 <p className="mt-2 text-textSecondary">
                   <span className="text-textPrimary">Climate (AC/HVAC), Ride & Discover.</span> Makes the experience
                   tolerable and differentiated.
                 </p>
               </li>
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/70">P3 — Enhancement</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P3 — Enhancement</p>
                 <p className="mt-2 text-textSecondary">
                   <span className="text-textPrimary">
                     Entertainment, seat adjustments, contact support and emergency features.
@@ -630,7 +630,7 @@ export default function RidesharingCaseStudy() {
                 </p>
               </li>
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/70">P4 — Depth</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P4 — Depth</p>
                 <p className="mt-2 text-textSecondary">
                   <span className="text-textPrimary">Vehicle information, extended AI conversation</span> — for
                   passengers who want more, without burdening those who do not.
@@ -643,7 +643,7 @@ export default function RidesharingCaseStudy() {
         </section>
 
         {/* —— Iterations —— */}
-        <section id="iterations" className="scroll-mt-28 space-y-32 pt-32 md:space-y-40 md:pt-44 lg:space-y-48 lg:pt-52">
+        <section id="iterations" className="scroll-mt-28 space-y-16 pt-16 md:space-y-32 md:pt-36 lg:space-y-40 lg:pt-44">
           <Reveal>
             <Eyebrow>Design iterations</Eyebrow>
             <SectionTitle className="mt-8">Three rounds of RITE in ten weeks</SectionTitle>
@@ -840,7 +840,7 @@ export default function RidesharingCaseStudy() {
         </section>
 
         {/* —— Brooklyn —— */}
-        <section id="companion" className="scroll-mt-28 space-y-28 pt-32 md:space-y-36 md:pt-44 lg:space-y-40 lg:pt-52">
+        <section id="companion" className="scroll-mt-28 space-y-14 pt-16 md:space-y-28 md:pt-36 lg:space-y-36 lg:pt-44">
           <Reveal>
             <Eyebrow>Brooklyn</Eyebrow>
             <SectionTitle className="mt-8">The AI that belongs here</SectionTitle>
@@ -897,7 +897,7 @@ export default function RidesharingCaseStudy() {
         </section>
 
         {/* —— Insights —— */}
-        <section id="insights" className="scroll-mt-28 space-y-32 pt-32 md:space-y-40 md:pt-44 lg:space-y-48 lg:pt-52">
+        <section id="insights" className="scroll-mt-28 space-y-16 pt-16 md:space-y-32 md:pt-36 lg:space-y-40 lg:pt-44">
           <Reveal>
             <Eyebrow>What testing confirmed</Eyebrow>
             <SectionTitle className="mt-8">Three findings, every round</SectionTitle>
@@ -960,7 +960,7 @@ export default function RidesharingCaseStudy() {
         </section>
 
         {/* —— Next —— */}
-        <section id="next" className="scroll-mt-28 space-y-24 pt-32 md:space-y-28 md:pt-44 lg:space-y-32 lg:pt-52">
+        <section id="next" className="scroll-mt-28 space-y-14 pt-16 md:space-y-24 md:pt-36 lg:space-y-28 lg:pt-44">
           <Reveal>
             <Eyebrow>Looking forward</Eyebrow>
             <SectionTitle className="mt-8">It is 2026</SectionTitle>

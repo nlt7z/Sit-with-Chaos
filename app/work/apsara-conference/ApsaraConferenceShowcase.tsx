@@ -44,7 +44,7 @@ function CaseNav() {
       className="pointer-events-none fixed left-0 top-0 z-30 hidden h-full w-[11rem] lg:block"
     >
       <div className="pointer-events-auto sticky top-[calc(50vh-9rem)] px-6 pt-28">
-        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">On this page</p>
+        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-nltLime-ink">On this page</p>
         <ul className="mt-5 space-y-0">
           {navItems.map(({ id, label }) => (
             <li key={id}>
@@ -57,8 +57,8 @@ function CaseNav() {
                 }}
                 className={`block border-l border-transparent py-2 pl-4 text-left text-[12px] leading-snug transition-[color,border-color] duration-500 ease-out ${
                   active === id
-                    ? "border-textPrimary/80 font-medium text-textPrimary"
-                    : "text-textSecondary/90 hover:border-textPrimary/15 hover:text-textPrimary"
+                    ? "border-nltLime font-medium text-nltLime-ink"
+                    : "text-textSecondary/90 hover:border-nltLime/40 hover:text-textPrimary"
                 }`}
               >
                 {label}
@@ -98,7 +98,7 @@ function Reveal({
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-textSecondary/70">{children}</p>
+    <p className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-nltLime-ink">{children}</p>
   );
 }
 
@@ -131,7 +131,7 @@ export default function ApsaraConferenceShowcase() {
     <div className="relative min-h-screen bg-white">
       <CaseNav />
       <CaseStudyMobileToc items={navItems} />
-      <article className="mx-auto max-w-content bg-white px-6 pb-36 pt-24 text-left md:px-10 md:pb-48 md:pt-28 lg:pl-32 lg:pr-10 lg:pt-32">
+      <article className="mx-auto max-w-content bg-white px-6 pb-20 pt-20 text-left md:px-10 md:pb-36 md:pt-28 lg:pl-32 lg:pr-10 lg:pt-32">
         <header id="overview" className="scroll-mt-28">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -151,11 +151,11 @@ export default function ApsaraConferenceShowcase() {
             <dl className="mt-14 grid gap-y-5 border-t border-black/[0.06] pt-10 sm:grid-cols-2 sm:gap-x-12">
               
               <div>
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/60">Focus</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">Focus</dt>
                 <dd className="mt-1.5 text-[15px] text-textPrimary">Conference visual design</dd>
               </div>
               <div className="sm:col-span-2">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/60">Role</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">Role</dt>
                 <dd className="mt-1.5 max-w-2xl text-[15px] leading-relaxed text-textPrimary">
                   Visual design for the Apsara Conference identity and application across supporting
                   touchpoints.
@@ -185,7 +185,7 @@ export default function ApsaraConferenceShowcase() {
           </motion.div>
         </header>
 
-        <section id="conference" className="scroll-mt-28 space-y-10 pt-24 md:space-y-12 md:pt-32 lg:pt-40">
+        <section id="conference" className="scroll-mt-28 space-y-10 pt-16 md:space-y-12 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>About Apsara Conference</Eyebrow>
             <SectionTitle className="mt-6">A global summit for cloud and AI</SectionTitle>
@@ -206,7 +206,7 @@ export default function ApsaraConferenceShowcase() {
           </Reveal>
         </section>
 
-        <section id="approach" className="scroll-mt-28 space-y-10 pt-24 md:pt-32 lg:pt-40">
+        <section id="approach" className="scroll-mt-28 space-y-10 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>Design approach</Eyebrow>
             <SectionTitle className="mt-6">Built for live audiences and broadcast</SectionTitle>
@@ -222,7 +222,7 @@ export default function ApsaraConferenceShowcase() {
           
         </section>
 
-        <section id="system" className="scroll-mt-28 space-y-10 pt-24 md:pt-32 lg:pt-40">
+        <section id="system" className="scroll-mt-28 space-y-10 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>Visual system</Eyebrow>
             <SectionTitle className="mt-6">One thread from opening keynotes to partner halls</SectionTitle>

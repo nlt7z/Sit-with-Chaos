@@ -63,7 +63,7 @@ export function FloatingDecor({
     >
       {/* Lime gradient glow — stays put while the art floats over it. */}
       <div
-        className={`absolute rounded-full bg-[radial-gradient(circle,rgba(184,229,50,0.42)_0%,rgba(184,229,50,0.16)_42%,transparent_72%)] blur-2xl ${glowClassName}`}
+        className={`absolute rounded-full bg-[radial-gradient(circle,rgba(210,255,0,0.42)_0%,rgba(210,255,0,0.16)_42%,transparent_72%)] blur-2xl ${glowClassName}`}
         style={{ opacity: glowOpacity }}
       />
       {/* Scroll-parallax wrapper. */}

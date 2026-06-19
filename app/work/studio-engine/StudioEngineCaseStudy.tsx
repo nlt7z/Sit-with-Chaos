@@ -65,7 +65,7 @@ function CaseStudyAmbientGlow() {
 
   if (reduce) return null;
 
-  const background = useMotionTemplate`radial-gradient(760px circle at ${sx}px ${sy}px, rgba(184, 229, 50, 0.07), rgba(250, 250, 252, 0) 50%)`;
+  const background = useMotionTemplate`radial-gradient(760px circle at ${sx}px ${sy}px, rgba(210, 255, 0, 0.07), rgba(250, 250, 252, 0) 50%)`;
 
   return (
     <motion.div
@@ -201,7 +201,7 @@ function HoverPanel({ children, className }: { children: ReactNode; className: s
   const reduce = useReducedMotion();
   return (
     <motion.div
-      className={`transition-[box-shadow,border-color] duration-[520ms] ease-out hover:border-nltLime-300/40 hover:shadow-[0_28px_56px_-32px_rgba(184, 229, 50,0.09)] ${className}`}
+      className={`transition-[box-shadow,border-color] duration-[520ms] ease-out hover:border-nltLime-300/40 hover:shadow-[0_28px_56px_-32px_rgba(210, 255, 0,0.09)] ${className}`}
       initial={false}
       whileHover={reduce ? undefined : { y: -2 }}
       transition={{ duration: 0.52, ease: easePremium }}
@@ -283,8 +283,8 @@ function Figure({
   const noFrameTint = transparent ?? isPng;
 
   const frame = noFrameTint
-    ? "overflow-hidden bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_22px_56px_-28px_rgba(184, 229, 50,0.1)] group-hover:ring-nltLime-400/25"
-    : "overflow-hidden bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_26px_64px_-30px_rgba(184, 229, 50,0.1)] group-hover:ring-nltLime-400/22";
+    ? "overflow-hidden bg-transparent shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.06] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_22px_56px_-28px_rgba(210, 255, 0,0.1)] group-hover:ring-nltLime-400/25"
+    : "overflow-hidden bg-white shadow-[0_2px_28px_-16px_rgba(0,0,0,0.05)] ring-1 ring-black/[0.05] transition-[box-shadow,ring-color] duration-[560ms] ease-out group-hover:shadow-[0_26px_64px_-30px_rgba(210, 255, 0,0.1)] group-hover:ring-nltLime-400/22";
 
   const figureHover = reduce ? undefined : { y: -3 };
 
@@ -347,7 +347,7 @@ function PullQuote({ children, className = "" }: { children: ReactNode; classNam
   const reduce = useReducedMotion();
   return (
     <motion.aside
-      className={`bg-zinc-50/55 px-6 py-6 transition-[background-color,box-shadow] duration-500 ease-out hover:bg-nltLime-50/45 hover:shadow-[0_12px_40px_-24px_rgba(184, 229, 50,0.1)] md:px-8 ${className}`}
+      className={`bg-zinc-50/55 px-6 py-6 transition-[background-color,box-shadow] duration-500 ease-out hover:bg-nltLime-50/45 hover:shadow-[0_12px_40px_-24px_rgba(210, 255, 0,0.1)] md:px-8 ${className}`}
       initial={false}
       whileHover={reduce ? undefined : { y: -2 }}
       transition={{ duration: 0.45, ease: easePremium }}
@@ -459,7 +459,7 @@ function TaskSuccessEvaluation() {
                           ) : null}
                         </p>
                         <div className="min-w-0 flex-1 space-y-2">
-                          <div className="h-2 overflow-hidden rounded-full bg-nltLime-100/90 shadow-[inset_0_1px_2px_rgba(184, 229, 50,0.08)]">
+                          <div className="h-2 overflow-hidden rounded-full bg-nltLime-100/90 shadow-[inset_0_1px_2px_rgba(210, 255, 0,0.08)]">
                             <motion.div
                               className="h-full rounded-full bg-gradient-to-r from-nltLime-300/85 to-nltLime-500/55"
                               initial={false}
@@ -826,7 +826,7 @@ function WorkflowComparisonV2() {
                   {!isLast && (
                     <div className="flex shrink-0 items-center px-5 py-[5px]">
                       <div className="h-px flex-1 bg-nltLime-200/50" />
-                      <div className="mx-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(184, 229, 50,0.05)]">
+                      <div className="mx-2 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-white shadow-[0_1px_2px_rgba(210, 255, 0,0.05)]">
                         <svg width="7" height="7" viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M2 5.5L4.2 7.5L8 3" stroke="#82A916" strokeOpacity="0.5" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -862,7 +862,7 @@ export default function StudioEngineCaseStudy() {
       <main className="relative min-h-screen overflow-x-hidden bg-white text-textPrimary">
         <CaseStudySectionNav />
         <CaseStudyMobileToc items={caseNavItems} />
-        <article className="relative z-10 mx-auto max-w-content px-6 pb-40 pt-32 md:px-12 md:pb-52 md:pt-40 lg:pl-[13.5rem] lg:pr-14 lg:pt-44 xl:pl-44">
+        <article className="relative z-10 mx-auto max-w-content px-6 pb-24 pt-24 md:px-12 md:pb-52 md:pt-40 lg:pl-[13.5rem] lg:pr-14 lg:pt-44 xl:pl-44">
         <header id="overview" ref={heroRef} className="scroll-mt-32 max-w-4xl">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -952,7 +952,7 @@ export default function StudioEngineCaseStudy() {
         </motion.div>
 
         {/* Problem */}
-        <section id="product" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="product" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal>
             <Eyebrow>The problem</Eyebrow>
             <SectionTitle>&ldquo;I don&apos;t think I&apos;m smart enough for this tool.&rdquo;</SectionTitle>
@@ -980,7 +980,7 @@ export default function StudioEngineCaseStudy() {
           </Reveal>
         </section>
 
-        <section id="research" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="research" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal delay={0.04}>
             <Eyebrow>Research</Eyebrow>
             <SectionTitle>AI was treated as a one-shot oracle.</SectionTitle>
@@ -1102,7 +1102,7 @@ export default function StudioEngineCaseStudy() {
         </section>
 
         {/* Design principle */}
-        <section id="design-principle" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="design-principle" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal>
           <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/70">
             AI-native principle
@@ -1154,7 +1154,7 @@ export default function StudioEngineCaseStudy() {
         </section>
 
         {/* Design framework (merged with reframe) */}
-        <section id="workflow-ia" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="workflow-ia" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal>
             <Eyebrow>Design framework</Eyebrow>
             <SectionTitle>From One-Shot Generation to Staged Creative Control</SectionTitle>
@@ -1213,7 +1213,7 @@ export default function StudioEngineCaseStudy() {
         </section>
 
         {/* Decision 01 */}
-        <section id="solutions" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="solutions" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal>
             <Eyebrow>Decision 01</Eyebrow>
             <SectionTitle>Reframe AI: from oracle to collaborator</SectionTitle>
@@ -1326,7 +1326,7 @@ export default function StudioEngineCaseStudy() {
         </MediaReveal>
 
         {/* Outcomes */}
-        <section id="outcome" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="outcome" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal>
             <Eyebrow>Outcomes</Eyebrow>
             <SectionTitle>What shipped, and what&apos;s still open</SectionTitle>
@@ -1417,7 +1417,7 @@ export default function StudioEngineCaseStudy() {
 
         </section>
 
-        <section id="reflection" className="scroll-mt-32 mt-44 md:mt-56 lg:mt-72">
+        <section id="reflection" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal className="mt-24 md:mt-32" delay={0.04}>
             <Eyebrow>Reflection</Eyebrow>
             <SectionTitle>What I would do differently — and push next</SectionTitle>

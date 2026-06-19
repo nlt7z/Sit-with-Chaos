@@ -94,7 +94,7 @@ export function CraftModel({
 
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(40, w0 / h0, 0.1, 100);
-    camera.position.set(0, 0, 4);
+    camera.position.set(0, 0, 3.0);
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -184,12 +184,11 @@ export function CraftModel({
             const pre = new THREE.Box3().setFromObject(src);
             const preSize = pre.getSize(new THREE.Vector3());
             const maxDim = Math.max(preSize.x, preSize.y, preSize.z) || 1;
-            src.scale.setScalar(2.1 / maxDim);
+            src.scale.setScalar(3.5 / maxDim);
             const box = new THREE.Box3().setFromObject(src);
             const center = box.getCenter(new THREE.Vector3());
             src.position.sub(center);
-            // Sit it a touch lower so it reads as centered within the window.
-            src.position.y -= 0.28;
+            src.position.y -= 0.12;
             scene.add(src);
             setPhase("ready");
           })

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRef } from "react";
 import { LimeMark } from "@/components/LimeMark";
+import { SplitTextChars } from "@/components/SplitBtn";
 
 const capabilities = [
   {
@@ -141,15 +142,9 @@ export function About() {
               </p>
               <Link
                 href={item.evidence.href}
-                className="group/cap mt-3 inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2 md:text-[11px]"
+                className="group mt-3 inline-flex items-center font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary transition-colors hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2 md:text-[11px]"
               >
-                {item.evidence.label}
-                <span
-                  aria-hidden
-                  className="translate-x-0 transition-transform duration-300 ease-portfolio group-hover/cap:translate-x-0.5"
-                >
-                  →
-                </span>
+                <SplitTextChars text={item.evidence.label + " →"} />
               </Link>
             </motion.li>
           ))}

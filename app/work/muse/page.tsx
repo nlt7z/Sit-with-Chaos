@@ -106,7 +106,7 @@ function Section({
   children: React.ReactNode;
 }) {
   return (
-    <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-28 md:py-36 lg:py-40">
+    <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-14 md:py-28 lg:py-36">
       <div>
         <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/75">{eyebrow}</p>
         <h2 className="mt-5 max-w-4xl font-display text-[2rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.6rem] md:leading-[1.06] lg:text-[2.95rem]">
@@ -267,9 +267,9 @@ export default function MuseCaseStudyPage() {
       <div className="relative min-h-screen bg-white">
         <CaseNav />
         <CaseStudyMobileToc items={navItems} />
-        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-56 pt-32 text-left md:px-12 md:pb-72 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
+        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-24 text-left md:px-12 md:pb-56 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
           <main className="relative min-h-screen">
-            <header id="overview" className="scroll-mt-28 pb-24 md:pb-32">
+            <header id="overview" className="scroll-mt-28 pb-16 md:pb-24">
               <motion.div variants={heroVariants} initial="hidden" animate="show">
                 <motion.p variants={heroItem} className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">
                   Muse · Wearable Instrument · Independent Research

@@ -43,7 +43,7 @@ const EASE = {
 
 const CHAT_COLUMN_MAX_PX = 760;
 const SIDEBAR_LEFT_PX = 216;
-const SIDEBAR_RIGHT_PX = 288;
+const SIDEBAR_RIGHT_PX = 320;
 const CHAT_DOCK_MAX_VH = 64;
 const CHAT_MESSAGES_MAX_VH = 46;
 /** When an Alternate Universe card is in-thread, give the transcript more height so the card fits */
@@ -240,11 +240,11 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
   useEffect(() => { const id = setTimeout(() => setShow(true), 30); return () => clearTimeout(id); }, []);
   const close = () => { setShow(false); setTimeout(onClose, 360); };
   const copyClone = () => { navigator.clipboard.writeText(CLONE_SNIPPET).catch(() => {}); setCopied(true); setTimeout(() => setCopied(false), 2000); };
-  const TAB = (a: boolean) => ({ flex: 1, padding: "9px 4px", border: "none", background: a ? T.glow.g : "transparent", color: a ? T.gold.l : T.txt.d, fontSize: FS.xs, fontFamily: F.ui, fontWeight: a ? 500 : 400, cursor: "pointer", borderBottom: `1.5px solid ${a ? T.gold.p : "transparent"}`, transition: "all 0.2s ease" });
+  const TAB = (a: boolean) => ({ flex: 1, padding: "9px 4px", border: "none", background: a ? T.glow.g : "transparent", color: a ? T.gold.l : T.txt.d, fontSize: FS.sm, fontFamily: F.ui, fontWeight: a ? 500 : 400, cursor: "pointer", borderBottom: `1.5px solid ${a ? T.gold.p : "transparent"}`, transition: "all 0.2s ease" });
 
   return (
     <div style={{ position: "fixed", inset: 0, zIndex: 500, display: "flex", justifyContent: "flex-end", background: show ? "rgba(4,4,8,0.4)" : "transparent", transition: "background 0.35s ease" }} onClick={close}>
-      <div onClick={(e) => e.stopPropagation()} style={{ width: 390, height: "100%", background: "rgba(8,8,13,0.97)", backdropFilter: "blur(40px)", borderLeft: `1px solid ${T.bdr.s}`, transform: show ? "translateX(0)" : "translateX(100%)", transition: "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)", display: "flex", flexDirection: "column" }}>
+      <div onClick={(e) => e.stopPropagation()} style={{ width: 507, height: "100%", background: "rgba(8,8,13,0.97)", backdropFilter: "blur(40px)", borderLeft: `1px solid ${T.bdr.s}`, transform: show ? "translateX(0)" : "translateX(100%)", transition: "transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94)", display: "flex", flexDirection: "column" }}>
         <div style={{ padding: "22px 20px 14px", borderBottom: `1px solid ${T.bdr.f}`, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 3 }}>
@@ -253,7 +253,7 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
               </svg>
               <span style={{ fontSize: FS.md, fontWeight: 500, color: T.txt.p }}>Developer Tools</span>
             </div>
-            <div style={{ fontSize: FS.xs, color: T.txt.d, letterSpacing: 1.5, textTransform: "uppercase" }}>Inspect \u00b7 Clone \u00b7 Configure</div>
+            <div style={{ fontSize: FS.sm, color: T.txt.d, letterSpacing: 1.5, textTransform: "uppercase" }}>Inspect \u00b7 Clone \u00b7 Configure</div>
           </div>
           <button type="button" onClick={close} aria-label="Close developer tools" style={{ width: 30, height: 30, borderRadius: R.xs, border: "none", background: "transparent", color: T.txt.d, cursor: "pointer", fontSize: FS.lg, display: "flex", alignItems: "center", justifyContent: "center", opacity: 0.6, transition: "opacity 0.2s ease" }} onMouseEnter={e => (e.currentTarget.style.opacity = "1")} onMouseLeave={e => (e.currentTarget.style.opacity = "0.6")}>&#215;</button>
         </div>
@@ -267,27 +267,27 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
         <div style={{ flex: 1, overflowY: "auto", padding: 18 }}>
           {tab === "source" && (
             <div style={{ animation: "fadeIn 0.3s ease both" }}>
-              <p style={{ fontSize: FS.xs, color: T.txt.d, lineHeight: 1.7, marginBottom: 14 }}>The YAML spec defining Lucien&apos;s voice, constraints, and system prompt stub.</p>
+              <p style={{ fontSize: FS.base, color: T.txt.d, lineHeight: 1.7, marginBottom: 14 }}>The YAML spec defining Lucien&apos;s voice, constraints, and system prompt stub.</p>
               <div style={{ borderRadius: R.sm, border: `1px solid ${T.bdr.s}`, background: "rgba(6,6,10,0.9)", overflow: "hidden" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "9px 14px 7px", borderBottom: `1px solid ${T.bdr.f}` }}>
                   {["#d05","#d80","#4a4"].map((c, i) => <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: c, opacity: 0.6 }} />)}
                   <span style={{ fontFamily: "ui-monospace,monospace", fontSize: FS.micro, color: T.txt.d, marginLeft: 6 }}>character.config.yaml</span>
                 </div>
-                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,SFMono-Regular,monospace", fontSize: FS.xs, lineHeight: 1.75, color: T.txt.s, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{CHARACTER_CODE}</pre>
+                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,SFMono-Regular,monospace", fontSize: FS.sm, lineHeight: 1.75, color: T.txt.s, whiteSpace: "pre-wrap", wordBreak: "break-word" }}>{CHARACTER_CODE}</pre>
               </div>
             </div>
           )}
           {tab === "clone" && (
             <div style={{ animation: "fadeIn 0.3s ease both" }}>
-              <p style={{ fontSize: FS.xs, color: T.txt.d, lineHeight: 1.7, marginBottom: 16 }}>Fork this template to build your own character. Includes the spec, UI shell, and prompt runtime.</p>
+              <p style={{ fontSize: FS.base, color: T.txt.d, lineHeight: 1.7, marginBottom: 16 }}>Fork this template to build your own character. Includes the spec, UI shell, and prompt runtime.</p>
               <div style={{ borderRadius: R.sm, border: `1px solid ${T.bdr.s}`, background: "rgba(6,6,10,0.9)", overflow: "hidden", marginBottom: 12 }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, padding: "9px 14px 7px", borderBottom: `1px solid ${T.bdr.f}` }}>
                   {["#d05","#d80","#4a4"].map((c, i) => <div key={i} style={{ width: 8, height: 8, borderRadius: "50%", background: c, opacity: 0.6 }} />)}
                   <span style={{ fontFamily: "ui-monospace,monospace", fontSize: FS.micro, color: T.txt.d, marginLeft: 6 }}>Terminal</span>
                 </div>
-                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,monospace", fontSize: FS.xs, lineHeight: 1.9, color: "#72c472", whiteSpace: "pre-wrap" }}>{CLONE_SNIPPET}</pre>
+                <pre style={{ margin: 0, padding: "14px 16px", fontFamily: "ui-monospace,monospace", fontSize: FS.sm, lineHeight: 1.9, color: "#72c472", whiteSpace: "pre-wrap" }}>{CLONE_SNIPPET}</pre>
               </div>
-              <button onClick={copyClone} style={{ width: "100%", padding: "11px 0", borderRadius: R.xs, border: `1px solid ${copied ? T.gold.p : T.bdr.g}`, background: copied ? T.glow.gm : "transparent", color: copied ? T.gold.l : T.gold.p, fontFamily: F.ui, fontSize: FS.sm, fontWeight: 500, cursor: "pointer", transition: "all 0.25s ease" }}>
+              <button onClick={copyClone} style={{ width: "100%", padding: "11px 0", borderRadius: R.xs, border: `1px solid ${copied ? T.gold.p : T.bdr.g}`, background: copied ? T.glow.gm : "transparent", color: copied ? T.gold.l : T.gold.p, fontFamily: F.ui, fontSize: FS.base, fontWeight: 500, cursor: "pointer", transition: "all 0.25s ease" }}>
                 {copied ? "Copied" : "Copy command"}
               </button>
             </div>
@@ -296,7 +296,7 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
             <div style={{ animation: "fadeIn 0.3s ease both" }}>
               {[
                 { label: "Model", content: (
-                  <select value={model} onChange={(e) => setModel(e.target.value)} style={{ width: "100%", padding: "8px 12px", borderRadius: R.xs, border: `1px solid ${T.bdr.s}`, background: T.bg.card, color: T.txt.p, fontFamily: F.ui, fontSize: FS.xs, cursor: "pointer", outline: "none" }}>
+                  <select value={model} onChange={(e) => setModel(e.target.value)} style={{ width: "100%", padding: "8px 12px", borderRadius: R.xs, border: `1px solid ${T.bdr.s}`, background: T.bg.card, color: T.txt.p, fontFamily: F.ui, fontSize: FS.sm, cursor: "pointer", outline: "none" }}>
                     <option value="qwen-qwq">qwen-qwq — Deep Reasoning</option>
                     <option value="qwen-plus">qwen-plus — Balanced</option>
                     <option value="qwen-turbo">qwen-turbo — Fastest</option>
@@ -310,15 +310,15 @@ function DeveloperSidebar({ onClose }: { onClose: () => void }) {
                 )},
               ].map((row) => (
                 <div key={row.label} style={{ marginBottom: 14, padding: "12px 14px", borderRadius: R.xs, border: `1px solid ${T.bdr.f}`, background: "rgba(12,12,20,0.5)" }}>
-                  <div style={{ fontSize: FS.micro, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 9 }}>{row.label}</div>
+                  <div style={{ fontSize: FS.xs, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 9 }}>{row.label}</div>
                   {row.content}
                 </div>
               ))}
               <div style={{ padding: "12px 14px", borderRadius: R.xs, border: `1px solid ${T.bdr.f}`, background: "rgba(12,12,20,0.5)" }}>
-                <div style={{ fontSize: FS.micro, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 10 }}>Feature flags</div>
+                <div style={{ fontSize: FS.xs, color: T.txt.d, letterSpacing: 1.2, textTransform: "uppercase", marginBottom: 10 }}>Feature flags</div>
                 {[{ label: "Heartbeat injection", on: true }, { label: "Emotion cues", on: true }, { label: "Alternate universe", on: true }, { label: "Long-context memory", on: false }].map((f) => (
                   <div key={f.label} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0", borderBottom: `1px solid ${T.bdr.f}` }}>
-                    <span style={{ fontSize: FS.xs, color: T.txt.s }}>{f.label}</span>
+                    <span style={{ fontSize: FS.sm, color: T.txt.s }}>{f.label}</span>
                     <div style={{ width: 26, height: 14, borderRadius: R.xs, background: f.on ? "rgba(212,168,83,0.45)" : "rgba(78,74,70,0.35)", position: "relative" }}>
                       <div style={{ position: "absolute", top: 2, left: f.on ? 13 : 2, width: 10, height: 10, borderRadius: "50%", background: f.on ? T.gold.l : T.txt.d, transition: "left 0.22s ease" }} />
                     </div>
@@ -2028,10 +2028,31 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
             </div>
           </main>
 
-          {/* ── Right sidebar — shown only when a pane is active ── */}
-          {rightPane && (
-            <aside aria-label="Character and story panel" style={{ width: SIDEBAR_RIGHT_PX, flexShrink: 0, borderLeft: `1px solid rgba(212,168,83,0.1)`, display: "flex", flexDirection: "column", background: "rgba(6,6,11,0.82)", backdropFilter: "blur(40px) saturate(120%)", overflow: "hidden", animation: "panelInR 0.42s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
-              <div key={rightPane} style={{ height: "100%", display: "flex", flexDirection: "column", animation: "paneIn 0.38s cubic-bezier(0.25,0.46,0.45,0.94) both" }}>
+          {/* ── Right sidebar — slides open alongside chat ── */}
+          <aside
+            aria-label="Character and story panel"
+            style={{
+              width: rightPane ? SIDEBAR_RIGHT_PX : 0,
+              flexShrink: 0,
+              overflow: "hidden",
+              transition: "width 0.42s cubic-bezier(0.25,0.46,0.45,0.94)",
+              borderLeft: rightPane ? `1px solid rgba(212,168,83,0.1)` : "none",
+              display: "flex",
+              flexDirection: "column",
+              background: "rgba(6,6,11,0.82)",
+              backdropFilter: "blur(40px) saturate(120%)",
+            }}
+          >
+            <div style={{ width: SIDEBAR_RIGHT_PX, height: "100%", display: "flex", flexDirection: "column" }}>
+              <div
+                key={rightPane ?? "none"}
+                style={{
+                  height: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  animation: rightPane ? "paneIn 0.38s cubic-bezier(0.25,0.46,0.45,0.94) both" : "none",
+                }}
+              >
                 {rightPane === "moments" && <MomentsPane onBack={() => setRightPane(null)} liked={momentsLiked} setLiked={setMomentsLiked} />}
                 {rightPane === "demo" && <DemoPane onBack={() => setRightPane(null)} onActionMap={{
                   3: showInspiration,
@@ -2041,8 +2062,8 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                   9: () => { setDevOpen(true); },
                 }} />}
               </div>
-            </aside>
-          )}
+            </div>
+          </aside>
 
         </div>
       </div>

@@ -7,13 +7,17 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { Icon } from "@/components/icons/Icon";
+import { SplitTextChars } from "@/components/SplitBtn";
 
 type Media = {
   src: string;
   alt: string;
-  type: "image" | "video" | "embed";
+  type: "image" | "video" | "embed" | "prototype";
   /** Optional poster image (e.g. for cover art before the first frame). */
   poster?: string;
+  /** Natural content dimensions for prototype iframes (used to compute scale). */
+  naturalW?: number;
+  naturalH?: number;
 };
 
 export type Project = {
@@ -54,6 +58,12 @@ export type Project = {
   /** Show the card without a clickable case-study link (no /work/<slug> destination yet).
    *  Hover lift is suppressed; bottom CTA reads "Case study coming soon". */
   comingSoon?: boolean;
+  /** If set, the card links to this external URL instead of /work/<slug>.
+   *  CTA reads "Open site ↗". Opens in a new tab. */
+  externalHref?: string;
+  /** Fill the left copy panel with the brand lime (#d2ff00).
+   *  Hover wash is suppressed — the panel already has its own identity. */
+  limeLeft?: boolean;
 };
 
 function VideoCardMedia({
@@ -138,6 +148,52 @@ function VideoCardMedia({
   );
 }
 
+function PrototypeMedia({
+  src,
+  alt,
+  naturalW = 480,
+  naturalH = 930,
+}: {
+  src: string;
+  alt: string;
+  naturalW?: number;
+  naturalH?: number;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.5);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => {
+      const { width, height } = entry.contentRect;
+      setScale(Math.min(height / naturalH, width / naturalW));
+    });
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [naturalW, naturalH]);
+
+  return (
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden">
+      <iframe
+        src={src}
+        title={alt}
+        className="pointer-events-none border-0 block"
+        style={{
+          width: naturalW,
+          height: naturalH,
+          position: "absolute",
+          top: 0,
+          left: "50%",
+          transform: `translateX(-50%) scale(${scale})`,
+          transformOrigin: "top center",
+        }}
+        loading="lazy"
+      />
+    </div>
+  );
+}
+
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
 /** Re-alpha an rgb/rgba() color to a fixed opacity. The per-project hover tints
@@ -148,9 +204,26 @@ function boostTintAlpha(color: string, alpha: number): string {
   return m ? `rgba(${m[1]}, ${m[2]}, ${m[3]}, ${alpha})` : color;
 }
 
+/** Extract the R, G, B triple from an rgba() string, or fall back to nltLime. */
+function extractRgb(color: string): string {
+  const m = color.match(/rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)/i);
+  return m ? `${m[1]}, ${m[2]}, ${m[3]}` : "210, 255, 0";
+}
+
 export function ProjectCard({ project }: { project: Project }) {
   const prefersReducedMotion = useReducedMotion();
   const comingSoon = project.comingSoon === true;
+
+  const glowRgb = project.hoverTint ? extractRgb(project.hoverTint) : "210, 255, 0";
+
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [glowVisible, setGlowVisible] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMousePos({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
+
   const hover =
     prefersReducedMotion || comingSoon
       ? {}
@@ -176,11 +249,11 @@ export function ProjectCard({ project }: { project: Project }) {
   const tintBase = project.hoverTint ?? "rgba(0,0,0,0.05)";
   const cardTintGradient = `linear-gradient(150deg, ${boostTintAlpha(
     tintBase,
-    0.18,
-  )} 0%, ${boostTintAlpha(tintBase, 0.06)} 50%, rgba(255,255,255,0) 100%)`;
+    0.10,
+  )} 0%, ${boostTintAlpha(tintBase, 0.03)} 50%, rgba(255,255,255,0) 100%)`;
 
   const wrapperBaseClass =
-    "flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.5rem]";
+    "relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.5rem]";
   // No hover frame: the card border stays static. Interactivity is signaled by
   // the product shot deepening its own shadow + the CTA arrow on hover.
   const wrapperLinkClass = `${wrapperBaseClass} transition-[box-shadow] duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-2`;
@@ -197,6 +270,13 @@ export function ProjectCard({ project }: { project: Project }) {
             src={project.media.src}
             poster={project.media.poster}
             alt={project.media.alt}
+          />
+        ) : project.media.type === "prototype" ? (
+          <PrototypeMedia
+            src={project.media.src}
+            alt={project.media.alt}
+            naturalW={project.media.naturalW}
+            naturalH={project.media.naturalH}
           />
         ) : project.media.type === "embed" ? (
           <iframe
@@ -248,14 +328,18 @@ export function ProjectCard({ project }: { project: Project }) {
   const wrapperContent = (
     <div className="flex flex-col-reverse md:grid md:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)]">
       {/* LEFT — copy panel. On hover a faint per-project gradient washes in
-          (the right keeps playing video). */}
-      <div className="relative flex flex-col px-6 py-7 md:px-9 md:py-9 lg:px-10">
-        {/* hover wash — light, gradient, fades in */}
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-portfolio group-hover:opacity-100 group-focus-within:opacity-100"
-          style={{ background: cardTintGradient }}
-        />
+          (the right keeps playing video). Cards with leftPanelBg use a solid
+          color instead — hover wash is suppressed. */}
+      <div
+        className={`relative flex flex-col px-6 py-7 md:px-9 md:py-9 lg:px-10${project.limeLeft ? " bg-nltLime" : ""}`}
+      >
+        {!project.limeLeft && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-portfolio group-hover:opacity-100 group-focus-within:opacity-100"
+            style={{ background: cardTintGradient }}
+          />
+        )}
 
         <div className="relative z-10 flex flex-1 flex-col">
           {project.logo ? (
@@ -300,10 +384,7 @@ export function ProjectCard({ project }: { project: Project }) {
             </span>
           ) : (
             <span className="mt-6 inline-flex items-center gap-1 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-textPrimary group-hover:opacity-100 group-focus-within:opacity-100">
-              Case study
-              <span aria-hidden className="inline-flex translate-x-0 transition-transform duration-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-focus-within:translate-x-0.5 group-focus-within:-translate-y-0.5">
-                <Icon as={ArrowUpRight} size="sm" />
-              </span>
+              <SplitTextChars text={project.externalHref ? "Open site ↗" : "Case study ↗"} />
             </span>
           )}
           </div>
@@ -317,7 +398,7 @@ export function ProjectCard({ project }: { project: Project }) {
           height; on desktop the cell stretches to match the copy panel. */}
       <div
         className={`relative overflow-hidden ${mediaAspect} md:aspect-auto`}
-        style={{ background: mediaPanelBackground }}
+        style={{ background: project.media.type === "prototype" ? "#ffffff" : mediaPanelBackground }}
       >
         {mediaBlock}
       </div>
@@ -327,10 +408,50 @@ export function ProjectCard({ project }: { project: Project }) {
   return (
     <motion.article
       whileHover={hover}
-      className={`relative flex h-full flex-col ${comingSoon ? "" : "group"}`}
+      onMouseMove={comingSoon ? undefined : handleMouseMove}
+      onMouseEnter={comingSoon ? undefined : () => setGlowVisible(true)}
+      onMouseLeave={comingSoon ? undefined : () => setGlowVisible(false)}
+      className={`relative flex h-full flex-col rounded-2xl md:rounded-[1.5rem] ${comingSoon ? "" : "group"}`}
     >
+      {/* Spotlight border glow — two layers:
+          1. Soft bloom behind the card (blurred, extends outward)
+          2. Border ring (CSS mask punches out the interior, only the ~1.5px
+             perimeter shows the gradient color) */}
+      {!comingSoon && (
+        <>
+          {/* Layer 1: outer bloom — blurred radial that bleeds past the card edge */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-[-10px] rounded-[1.75rem] md:rounded-[2rem] transition-opacity duration-300"
+            style={{
+              opacity: glowVisible ? 1 : 0,
+              background: `radial-gradient(220px circle at ${mousePos.x}px ${mousePos.y}px, rgba(${glowRgb}, 0.18), transparent 100%)`,
+              filter: "blur(10px)",
+            }}
+          />
+          {/* Layer 2: border ring — mask-composite punches out the card interior
+              leaving only the padding ring (= the border) visible */}
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-[-1px] rounded-2xl md:rounded-[1.5rem] transition-opacity duration-300"
+            style={{
+              opacity: glowVisible ? 1 : 0,
+              padding: "1.5px",
+              background: `radial-gradient(200px circle at ${mousePos.x}px ${mousePos.y}px, rgba(${glowRgb}, 0.55) 0%, rgba(${glowRgb}, 0.22) 50%, transparent 100%)`,
+              WebkitMask:
+                "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+              WebkitMaskComposite: "xor",
+              maskComposite: "exclude",
+            }}
+          />
+        </>
+      )}
       {comingSoon ? (
         <div className={wrapperStaticClass}>{wrapperContent}</div>
+      ) : project.externalHref ? (
+        <a href={project.externalHref} target="_blank" rel="noopener noreferrer" className={wrapperLinkClass}>
+          {wrapperContent}
+        </a>
       ) : (
         <Link href={`/work/${project.slug}`} className={wrapperLinkClass}>
           {wrapperContent}

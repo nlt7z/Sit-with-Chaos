@@ -299,9 +299,6 @@ const DEFAULT_PROFILE: UserProfile = {
   sign: ZODIAC_SIGNS.find(sign => sign.code === "taurus") ?? ZODIAC_SIGNS[0],
 };
 
-// ─── CSS-only star orbit positions ───────────────────────────────────────────
-const ORBIT_ANGLES = [0, 60, 120, 180, 240, 300];
-
 // ─── SVG ornaments ────────────────────────────────────────────────────────────
 function SvgTinyStar({
   cx, cy, r = 1.1, fill = "rgba(144,115,150,0.34)",
@@ -384,6 +381,96 @@ function FourPointStar({ size = 12, color = "currentColor" }: { size?: number; c
   );
 }
 
+function CardBack() {
+  const gold = "#b6a079";
+  const goldA = (a: number) => `rgba(182,160,121,${a})`;
+  const cx = 160, cy = 90;
+  const rOuter = 70, rTextRing = 62, rInnerRing = 51, rCenterRing = 33, rSun = 21;
+  const SIGNS = ["♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓"];
+  const STARS: [number,number][] = [
+    [18,12],[290,14],[42,8],[258,9],[8,60],[306,58],
+    [28,145],[292,148],[62,168],[248,172],[10,98],[310,95],
+    [72,22],[234,18],[88,162],[222,166],[48,130],[268,128],
+    [130,6],[185,7],[105,172],[210,174],
+  ];
+  return (
+    <svg viewBox="0 0 320 180" className="absolute inset-0 w-full h-full" fill="none" aria-hidden="true">
+      <defs>
+        <radialGradient id="cbGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#b6a079" stopOpacity="0.1"/>
+          <stop offset="100%" stopColor="#b6a079" stopOpacity="0"/>
+        </radialGradient>
+      </defs>
+      <rect width="320" height="180" fill="#0f0d18"/>
+      <rect width="320" height="180" fill="url(#cbGlow)"/>
+
+      {STARS.map(([x,y],i) => (
+        <circle key={i} cx={x} cy={y} r={i%3===0?1:0.65} fill={gold} opacity={0.18+(i%5)*0.06}/>
+      ))}
+
+      <circle cx={cx} cy={cy} r={rOuter} stroke={gold} strokeWidth="1.2"/>
+
+      {Array.from({length:12}).map((_,i) => {
+        const a = (i*30-90)*Math.PI/180;
+        return (
+          <g key={i}>
+            <line
+              x1={cx+(rOuter-1)*Math.cos(a)} y1={cy+(rOuter-1)*Math.sin(a)}
+              x2={cx+(rOuter-8)*Math.cos(a)} y2={cy+(rOuter-8)*Math.sin(a)}
+              stroke={gold} strokeWidth="0.9"/>
+            <circle cx={cx+rInnerRing*Math.cos(a)} cy={cy+rInnerRing*Math.sin(a)} r="1.5" fill={goldA(0.45)}/>
+          </g>
+        );
+      })}
+
+      <circle cx={cx} cy={cy} r={rInnerRing} stroke={goldA(0.32)} strokeWidth="0.6"/>
+      <circle cx={cx} cy={cy} r={rCenterRing} stroke={goldA(0.25)} strokeWidth="0.5"/>
+      <circle cx={cx} cy={cy} r={rSun} stroke={gold} strokeWidth="1.0"/>
+      <circle cx={cx} cy={cy} r={rSun-7} stroke={goldA(0.45)} strokeWidth="0.5"/>
+      <circle cx={cx} cy={cy} r={4.5} fill={goldA(0.3)}/>
+      <circle cx={cx} cy={cy} r={1.8} fill={goldA(0.65)}/>
+
+      {Array.from({length:8}).map((_,i) => {
+        const a = i*45*Math.PI/180;
+        return (
+          <line key={i}
+            x1={cx+(rSun+2)*Math.cos(a)} y1={cy+(rSun+2)*Math.sin(a)}
+            x2={cx+(rCenterRing-2)*Math.cos(a)} y2={cy+(rCenterRing-2)*Math.sin(a)}
+            stroke={gold} strokeWidth="0.6" opacity="0.55"/>
+        );
+      })}
+
+      {SIGNS.map((sign, i) => {
+        const a = (i*30-90)*Math.PI/180;
+        return (
+          <text key={sign}
+            x={cx+rTextRing*Math.cos(a)} y={cy+rTextRing*Math.sin(a)}
+            textAnchor="middle" dominantBaseline="central"
+            fontSize="9" fill={gold} opacity="0.85" fontFamily="Georgia, serif">
+            {sign}
+          </text>
+        );
+      })}
+
+      {([{x:22},{x:298}] as {x:number}[]).map(({x},k) => (
+        <g key={k} stroke={gold} strokeWidth="0.6" opacity="0.26">
+          <line x1={x-11} y1={cy} x2={x+11} y2={cy}/>
+          <line x1={x} y1={cy-11} x2={x} y2={cy+11}/>
+          <circle cx={x-11} cy={cy} r="1.8"/>
+          <circle cx={x+11} cy={cy} r="1.8"/>
+          <circle cx={x} cy={cy-11} r="1.8"/>
+          <circle cx={x} cy={cy+11} r="1.8"/>
+        </g>
+      ))}
+
+      <path d="M0 14L0 0L14 0" stroke={goldA(0.45)} strokeWidth="1.2"/>
+      <path d="M306 0L320 0L320 14" stroke={goldA(0.45)} strokeWidth="1.2"/>
+      <path d="M0 166L0 180L14 180" stroke={goldA(0.45)} strokeWidth="1.2"/>
+      <path d="M306 180L320 180L320 166" stroke={goldA(0.45)} strokeWidth="1.2"/>
+    </svg>
+  );
+}
+
 function archiveRowBadge(item: MemoryItem): { tone: string; text: string } {
   if (item.id === 1 || item.id === 11) return { tone: C.accent, text: "Active" };
   return { tone: C.rose, text: "Saved" };
@@ -405,7 +492,7 @@ function UnifiedProfileCard({
   const pattern = items[2];
   return (
     <div className="rounded-2xl p-3.5" style={{ border: `1px solid ${borderColor}`, background: bgColor }}>
-      <p className="mb-2 text-[10px] uppercase tracking-[.18em]" style={{ color: C.txt3 }}>{label}</p>
+      <p className="mb-2 text-[11px] uppercase tracking-[.18em]" style={{ color: C.txt3 }}>{label}</p>
       {name && (
         <p className={`text-[16px] font-medium leading-tight ${displayFont.className}`} style={{ color: accentColor }}>
           {name.value}
@@ -421,12 +508,12 @@ function UnifiedProfileCard({
         </div>
       )}
       {pattern && (
-        <p className="mt-1.5 text-[10px] leading-snug" style={{ color: C.txt2 }}>{pattern.value}</p>
+        <p className="mt-1.5 text-[12px] leading-snug" style={{ color: C.txt2 }}>{pattern.value}</p>
       )}
       {consult && (
         <div className="mt-2 border-t pt-2" style={{ borderColor: `${borderColor}` }}>
-          <p className="text-[10px] uppercase tracking-[.14em]" style={{ color: C.txt3 }}>{consult.label}</p>
-          <p className="text-[10px] leading-snug" style={{ color: C.txt2 }}>{consult.value}</p>
+          <p className="text-[11px] uppercase tracking-[.14em]" style={{ color: C.txt3 }}>{consult.label}</p>
+          <p className="text-[12px] leading-snug" style={{ color: C.txt2 }}>{consult.value}</p>
         </div>
       )}
     </div>
@@ -445,8 +532,7 @@ function ProfileHoverCard({ memory }: { memory: MemoryItem[] }) {
         boxShadow: "0 8px 32px -8px rgba(80,60,110,0.15)",
       }}>
       <div className="mb-2.5">
-        <p className="text-[10px] tracking-[.18em] uppercase" style={{ color:C.txt3 }}>Astro Profile</p>
-        <p className={`mt-0.5 text-[12px] tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
+        <p className={`text-[12px] tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
           Zodiac Archive
         </p>
       </div>
@@ -471,8 +557,8 @@ function ProfileHoverCard({ memory }: { memory: MemoryItem[] }) {
         )}
       </div>
 
-      <div className="mt-2 rounded-xl px-2.5 py-1.5" style={{ background:"rgba(190,174,193,0.08)" }}>
-        <p className="text-[10px]" style={{ color:C.txt3 }}>Session memory: {liveItems.length} entries</p>
+      <div className="mt-2 rounded-2xl px-2.5 py-1.5" style={{ background:"rgba(190,174,193,0.08)" }}>
+        <p className="text-[12px]" style={{ color:C.txt3 }}>Session memory: {liveItems.length} entries</p>
       </div>
     </div>
   );
@@ -529,14 +615,14 @@ function AstroShareModal({ onClose }: { onClose: () => void }) {
 
         <div className="px-5 py-5">
           <p className="mb-3 text-[12px]" style={{ color: C.txt3 }}>Copy this link and share with anyone</p>
-          <div className="mb-4 rounded-2xl px-3.5 py-3 font-mono text-[10px] break-all leading-[1.55]"
+          <div className="mb-4 rounded-2xl px-3.5 py-3 font-mono text-[11px] break-all leading-[1.55]"
             style={{ background: "rgba(240,236,244,0.6)", color: C.txt2 }}>
             {link}
           </div>
           <motion.button
             type="button"
             onClick={() => void copy()}
-            className="w-full rounded-xl py-2.5 text-[12px] font-semibold text-white"
+            className="w-full rounded-2xl py-2.5 text-[12px] font-semibold text-white"
             style={{ background: copied ? "#6b9e5e" : C.accent, boxShadow: "0 4px 16px -6px rgba(144,115,150,0.38)", transition: "background 0.25s ease" }}
             whileHover={{ filter: "brightness(1.06)" }}
             whileTap={{ scale: 0.97 }}
@@ -576,7 +662,7 @@ function NavIcon({ onClick, active, children, wide }: {
 }) {
   return (
     <button type="button" onClick={onClick}
-      className={`flex items-center gap-1.5 justify-center rounded-xl transition-all duration-150 ${wide ? "px-3.5 h-8" : "h-8 w-8"}`}
+      className={`flex items-center gap-1.5 justify-center rounded-2xl transition-all duration-150 ${wide ? "px-3.5 h-8" : "h-8 w-8"}`}
       style={{
         background: active ? "rgba(144,115,150,0.18)" : "rgba(190,174,193,0.09)",
         border: `1px solid ${active ? "rgba(144,115,150,0.34)" : "rgba(190,174,193,0.14)"}`,
@@ -591,14 +677,10 @@ function NavIcon({ onClick, active, children, wide }: {
 }
 
 // ─── Panel wrapper ────────────────────────────────────────────────────────────
-/** "pinkMist" = restrained pink gradient for zodiac code tools; "default" = soft neutral. */
-function SidePanel({ title, onClose, children, tone = "default", variant = "overlay" }: {
+function SidePanel({ title, onClose, children, variant = "overlay" }: {
   title: string; onClose: ()=>void; children: React.ReactNode;
-  tone?: "default" | "pinkMist";
-  /** dock = in-flow right rail, does not cover chat; overlay = fixed sheet + dim (when backdrop used) */
   variant?: "overlay" | "dock";
 }) {
-  const isPink = tone === "pinkMist";
   const isDock = variant === "dock";
   return (
     <motion.aside
@@ -608,42 +690,25 @@ function SidePanel({ title, onClose, children, tone = "default", variant = "over
       transition={{ duration: DUR.base, ease: EASE }}
       className={
         isDock
-          ? "relative z-20 flex h-full w-[min(100vw,380px)] shrink-0 flex-col overflow-y-auto"
-          : "fixed right-0 top-0 z-40 flex h-full w-[380px] flex-col overflow-y-auto"
+          ? "relative z-20 flex h-full w-[416px] shrink-0 flex-col overflow-y-auto"
+          : "fixed right-0 top-0 z-40 flex h-full w-[416px] flex-col overflow-y-auto"
       }
       style={{
-        background: isPink
-          ? "linear-gradient(175deg, rgba(255,254,253,0.99) 0%, rgba(252,248,250,0.98) 40%, rgba(248,242,248,0.96) 72%, rgba(245,238,244,0.95) 100%)"
-          : "rgba(252,249,247,0.97)",
-        backdropFilter: "blur(8px)",
-        borderLeft: isPink ? "1px solid rgba(210, 184, 200, 0.32)" : `1px solid ${C.cardBdr}`,
-        boxShadow: isPink
-          ? "-14px 0 40px -18px rgba(130, 90, 110, 0.08), inset 1px 0 0 rgba(255,255,255,0.5)"
-          : "-10px 0 30px -10px rgba(90,55,120,0.12)",
+        background: "rgba(254,252,253,0.98)",
+        backdropFilter: "blur(12px)",
+        borderLeft: "1px solid rgba(190,174,193,0.22)",
+        boxShadow: "-12px 0 36px -16px rgba(90,55,120,0.1), inset 1px 0 0 rgba(255,255,255,0.6)",
         scrollbarWidth: "thin",
-        scrollbarColor: isPink ? "rgba(200, 160, 180, 0.22) transparent" : "rgba(144,115,150,0.16) transparent",
+        scrollbarColor: "rgba(144,115,150,0.14) transparent",
       }}>
       <div className="flex shrink-0 items-center justify-between px-5 py-4"
-        style={{
-          borderBottom: isPink
-            ? "1px solid rgba(220, 195, 210, 0.35)"
-            : "1px solid rgba(190,174,193,0.2)",
-        }}>
-        <p className={`text-[12px] font-semibold tracking-[.1em] ${displayFont.className}`}
-          style={{ color: C.txt }}>{title}</p>
+        style={{ borderBottom: "1px solid rgba(190,174,193,0.18)" }}>
+        <p className={`text-[15px] font-semibold ${displayFont.className}`} style={{ color: C.txt }}>{title}</p>
         <button type="button" onClick={onClose}
-          className="flex h-6 w-6 items-center justify-center rounded-full text-[10px] transition-all"
-          style={{
-            background: isPink ? "rgba(200, 160, 188, 0.14)" : "rgba(190,174,193,0.12)",
-            color: C.txt2,
-            border: isPink ? "1px solid rgba(210, 180, 200, 0.35)" : "1px solid rgba(190,174,193,0.22)",
-          }}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = isPink ? "rgba(200, 160, 188, 0.22)" : "rgba(190,174,193,0.18)";
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = isPink ? "rgba(200, 160, 188, 0.14)" : "rgba(190,174,193,0.12)";
-          }}>
+          className="flex h-6 w-6 items-center justify-center rounded-full transition-all"
+          style={{ background: "rgba(190,174,193,0.1)", color: C.txt2, border: "1px solid rgba(190,174,193,0.2)" }}
+          onMouseEnter={e => { e.currentTarget.style.background = "rgba(190,174,193,0.18)"; }}
+          onMouseLeave={e => { e.currentTarget.style.background = "rgba(190,174,193,0.1)"; }}>
           <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
             <path d="M2 2L8 8M8 2L2 8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
           </svg>
@@ -656,7 +721,7 @@ function SidePanel({ title, onClose, children, tone = "default", variant = "over
 
 function SLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[10px] uppercase tracking-[.22em]" style={{ color: C.txt3 }}>{children}</p>
+    <p className="text-[12px] uppercase tracking-[.14em]" style={{ color: C.txt3 }}>{children}</p>
   );
 }
 
@@ -664,11 +729,9 @@ function SLabel({ children }: { children: React.ReactNode }) {
 const InputDock = memo(function InputDock({
   typing,
   onSend,
-  onDrawCard,
 }: {
   typing: boolean;
   onSend: (text: string) => void;
-  onDrawCard: () => void;
 }) {
   const [input, setInput] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -702,7 +765,7 @@ const InputDock = memo(function InputDock({
           {QUICK_REPLIES.map(q => (
             <button key={q} type="button"
               onClick={() => { if (!typing) onSend(q); }} disabled={typing}
-              className="group flex shrink-0 items-center gap-1.5 rounded-full px-4 py-[7px] text-left text-[12px] leading-snug whitespace-nowrap transition-all duration-200 disabled:opacity-35"
+              className="group flex shrink-0 items-center rounded-full px-4 py-[7px] text-left text-[12px] leading-snug whitespace-nowrap transition-all duration-200 disabled:opacity-35"
               style={{
                 background: "rgba(255,252,253,0.88)",
                 border: "1px solid rgba(190,174,193,0.22)",
@@ -719,7 +782,6 @@ const InputDock = memo(function InputDock({
                 e.currentTarget.style.borderColor = "rgba(190,174,193,0.2)";
                 e.currentTarget.style.color = C.txt2;
               }}>
-              <span className="shrink-0"><FourPointStar size={8} color="currentColor"/></span>
               <span className="whitespace-nowrap">{q}</span>
             </button>
           ))}
@@ -744,18 +806,7 @@ const InputDock = memo(function InputDock({
               style={{ color: C.txt, caretColor: C.accent, minHeight: 26, maxHeight: 88, lineHeight: "1.65" }}
             />
             <div className="flex items-center gap-1.5 shrink-0">
-              <span className="text-[10px]" style={{ color: C.txt3 }}>{input.length}</span>
-              <Tip label="Draw an astro card">
-                <button type="button" onClick={onDrawCard} disabled={typing}
-                  className="flex h-6 w-6 items-center justify-center rounded-lg transition-all duration-150 disabled:opacity-30"
-                  style={{ border: `1px solid rgba(144,115,150,0.2)`, background: "transparent", color: C.accentLt }}
-                  onMouseEnter={e => { e.currentTarget.style.background = "rgba(144,115,150,0.1)"; e.currentTarget.style.color = C.accent; }}
-                  onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.accentLt; }}>
-                  <svg width={10} height={10} viewBox="0 0 11 11" fill="none">
-                    <path d="M5.5 0L6.4 4.1L11 5.5L6.4 6.4L5.5 11L4.6 6.4L0 5.5L4.6 4.1Z" fill="currentColor"/>
-                  </svg>
-                </button>
-              </Tip>
+              {input.length > 0 && <span className="text-[11px]" style={{ color: C.txt3 }}>{input.length}</span>}
               <button type="button" onClick={submit}
                 disabled={!input.trim() || typing}
                 className="flex h-6 w-6 items-center justify-center rounded-lg transition-all duration-200 disabled:opacity-28"
@@ -872,7 +923,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
         </div>
 
         {/* Identity */}
-        <p className="mt-5 text-[10px] tracking-[.22em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
+        <p className="mt-5 text-[11px] tracking-[.18em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
         <p className={`mt-1.5 flex items-center gap-1.5 text-[16px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
           <FourPointStar size={11} color={C.accent}/>
           Tao Baibai
@@ -952,14 +1003,14 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
               style={{ background:"rgba(255,250,252,0.55)", border:"0.5px solid rgba(210,184,200,0.4)" }}
             >
               <div className="mb-2.5 flex items-center justify-between">
-                <p className="text-[10px] uppercase tracking-[.18em]" style={{ color:C.txt3 }}>Them · synastry</p>
+                <p className="text-[11px] uppercase tracking-[.18em]" style={{ color:C.txt3 }}>Them · synastry</p>
                 <button type="button" onClick={clearPartner}
-                  className="text-[10px] tracking-[0.02em] transition-opacity hover:opacity-100" style={{ color:C.txt3, opacity:0.7 }}>
+                  className="text-[11px] tracking-[0.02em] transition-opacity hover:opacity-100" style={{ color:C.txt3, opacity:0.7 }}>
                   Remove
                 </button>
               </div>
               <div className="space-y-2.5">
-                <div className="flex h-11 items-center gap-2.5 rounded-xl px-3.5"
+                <div className="flex h-11 items-center gap-2.5 rounded-2xl px-3.5"
                   style={{ background:"rgba(255,252,254,0.7)", border:`0.5px solid ${partnerName.trim() ? "rgba(200,147,158,0.42)" : "rgba(200,188,202,0.45)"}` }}>
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                     style={{ background:"rgba(255,255,255,0.6)", color:C.rose }}>
@@ -974,7 +1025,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                     aria-label="Their name"
                   />
                 </div>
-                <div className="flex h-11 items-center gap-2.5 rounded-xl px-3.5"
+                <div className="flex h-11 items-center gap-2.5 rounded-2xl px-3.5"
                   style={{ background:"rgba(255,252,254,0.7)", border:"0.5px solid rgba(200,188,202,0.45)" }}>
                   <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full"
                     style={{ background:"rgba(255,255,255,0.6)", color:C.accent }}>
@@ -996,7 +1047,7 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
                 </div>
               </div>
               {partnerPartial && !partnerValid && (
-                <p className="mt-2 text-[10px]" style={{ color:"rgba(200,100,120,0.95)" }}>Add both their name and zodiac sign.</p>
+                <p className="mt-2 text-[12px]" style={{ color:"rgba(200,100,120,0.95)" }}>Add both their name and zodiac sign.</p>
               )}
             </motion.div>
           )}
@@ -1016,9 +1067,6 @@ function IntroGate({ onEnter }: { onEnter: (profile: UserProfile) => void }) {
           <FourPointStar size={8} color="currentColor"/>
         </button>
 
-        <p className="mt-4 max-w-[36ch] text-[10px] leading-[1.55]" style={{ color:C.txt3 }}>
-          Not fortune telling. A soft emotional chat shaped by zodiac language.
-        </p>
       </motion.section>
     </form>
   );
@@ -1146,14 +1194,16 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
     closeAll();
   }, []);
 
-  if (!profile) {
-    return (
+  return (
+    <>
+    <AnimatePresence mode="sync">
+      {!profile ? (
       <motion.div
         key="intro"
-        initial={{ opacity: 0, y: 8 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        transition={{ duration: DUR.slow, ease: EASE }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: DUR.base, ease: EASE }}
         className={`relative h-screen flex flex-col overflow-hidden ${uiFont.className}`}
         style={{ background:"linear-gradient(166deg,#fdfaf5 0%,#f8f2ef 44%,#f2ecf8 100%)" }}
       >
@@ -1186,31 +1236,26 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
 
         <IntroGate onEnter={enterChat}/>
       </motion.div>
-    );
-  }
-
-  return (
-    <>
-    <motion.div
-      key="chat"
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: DUR.slow, ease: EASE }}
-      className={`relative flex h-screen w-full min-h-0 flex-row overflow-hidden ${uiFont.className}`}
-      style={{ background:"linear-gradient(166deg,#fdfaf5 0%,#f8f2ef 44%,#f2ecf8 100%)" }}
-    >
+      ) : (
+      <motion.div
+        key="chat"
+        initial={{ opacity: 0, scale: 1.01 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: DUR.slow, ease: EASE }}
+        className={`relative flex h-screen w-full min-h-0 flex-row overflow-hidden ${uiFont.className}`}
+        style={{ background:"linear-gradient(166deg,#fdfaf5 0%,#f8f2ef 44%,#f2ecf8 100%)" }}
+      >
       <div className="flex min-h-0 min-w-0 flex-1 flex-col overflow-hidden">
       <style>{`
         @keyframes twinkle{0%,100%{opacity:.14;transform:scale(.92)}50%{opacity:.38;transform:scale(1.06)}}
         @keyframes orb{0%,100%{opacity:.1;transform:translateY(0)}50%{opacity:.16;transform:translateY(-6px)}}
-        @keyframes orbit-ring{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         @keyframes nav-orbit-a{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
         @keyframes cue-fade{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
-        @keyframes typing-dot{0%,80%,100%{opacity:.35;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}
-        .typing-dot{animation:typing-dot 0.95s ease-in-out infinite}
+        @keyframes typing-dot{0%,60%,100%{transform:scale(0.55);opacity:0.28}30%{transform:scale(1.1);opacity:1}}
+        .typing-dot{animation:typing-dot 1.35s cubic-bezier(0.4,0,0.2,1) infinite}
         .typing-dot:nth-child(1){animation-delay:0s}
-        .typing-dot:nth-child(2){animation-delay:.14s}
-        .typing-dot:nth-child(3){animation-delay:.28s}
+        .typing-dot:nth-child(2){animation-delay:.22s}
+        .typing-dot:nth-child(3){animation-delay:.44s}
         .nav-orbit-shell{position:relative;display:flex;align-items:center;justify-content:center;width:30px;height:30px}
         .nav-orbit-star{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;justify-content:center;opacity:.85}
         .nav-orbit-a{animation:nav-orbit-a 8.5s linear infinite}
@@ -1270,7 +1315,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
       </div>
 
       {/* ══ Nav ══ */}
-      <header className="relative z-20 shrink-0 flex items-center px-8 py-3.5"
+      <header className="relative z-30 shrink-0 flex items-center px-8 py-3.5"
         style={{
           background:"linear-gradient(120deg, rgba(255,250,251,0.94) 0%, rgba(253,243,249,0.92) 54%, rgba(248,240,252,0.9) 100%)",
           backdropFilter:"blur(10px)",
@@ -1290,7 +1335,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
             </div>
           </div>
           <div className="leading-none">
-            <p className="text-[10px] tracking-[.14em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
+            <p className="text-[11px] tracking-[.14em] uppercase" style={{ color:C.txt3 }}>Talk with</p>
             <p className={`flex items-center gap-1.5 text-[14px] font-semibold tracking-[.06em] ${displayFont.className}`} style={{ color:C.accent }}>
               <FourPointStar size={ICON_SIZE - 4} color={C.accent}/>
               Tao Baibai
@@ -1308,7 +1353,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
               <NavIcon onClick={() => setProfileHover(v => !v)} active={profileHover} wide>
                 <FourPointStar size={ICON_SIZE} color="currentColor"/>
                 <span className="text-[12px] font-medium">Profile</span>
-                <span className="text-[10px]" style={{ color:C.txt3 }}>Archive</span>
+                <span className="text-[11px]" style={{ color:C.txt3 }}>Archive</span>
               </NavIcon>
             </Tip>
             {profileHover && <ProfileHoverCard memory={memory}/>}
@@ -1348,7 +1393,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
 
           <Tip label="Onboarding Guide">
             <NavIcon onClick={() => toggle("demo")} active={demoOpen} wide>
-              <span className={`text-[10px] font-semibold tracking-[0.08em] uppercase ${uiFont.className}`}>GUIDE</span>
+              <span className={`text-[11px] font-semibold tracking-[0.08em] uppercase ${uiFont.className}`}>GUIDE</span>
             </NavIcon>
           </Tip>
         </div>
@@ -1367,9 +1412,9 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
           <AnimatePresence initial={false}>
             {messages.map(m => (
               <motion.div key={m.id}
-                initial={reduceMotion ? false : { opacity: 0, y: 6 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: reduceMotion ? 0.01 : DUR.base, ease: EASE }}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.97 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: reduceMotion ? 0.01 : (m.role === "user" ? DUR.fast : DUR.slow), ease: EASE }}
                 className="mb-8">
 
                 {/* Opening */}
@@ -1385,119 +1430,118 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
                       </div>
                       <div className="max-w-[480px]">
-                        <p className={`text-[10px] tracking-[.22em] uppercase mb-2 ${displayFont.className}`}
-                          style={{ color:C.accent }}>
-                          Opening
-                        </p>
                         <p className={`text-[18px] leading-[1.7] ${serifFont.className}`} style={{ color:C.txt }}>
                           {m.text}
                         </p>
-                        <p className="mt-3 text-[10px] leading-[1.65]" style={{ color:C.txt3 }}>
-                          Tao Baibai is a constellation blogger known for his expertise in emotional analysis, adept at dissecting the behaviors of the 12 zodiac signs in relationships through storytelling.
+                        <p className="mt-3 text-[12px] leading-[1.65]" style={{ color:C.txt3 }}>
+                          Reads emotional signals through zodiac lenses. Warm, precise, story-first.
                         </p>
                       </div>
                     </div>
                   </div>
                 )}
 
-                {/* Drawing animation */}
-                {m.isDrawing && (
-                  <div className="flex justify-center">
+                {/* Card: back (drawing) ──flip──▶ front (revealed) */}
+                {(m.isDrawing || m.cardDraw) && (
+                  <motion.div
+                    className="flex justify-center"
+                    initial={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: DUR.base, ease: EASE }}
+                  >
+                    {/* perspective wrapper — shadow lives here so it stays flat beneath the rotating card */}
                     <div
-                      className="relative flex aspect-[170/93] w-[clamp(260px,60vw,480px)] max-w-full items-center justify-center overflow-hidden"
+                      className="relative aspect-[170/93] w-[clamp(260px,60vw,480px)] max-w-full rounded-2xl"
                       style={{
-                        ["--draw-orbit" as string]: "min(3.375rem, min(15.88vw, 54px))",
-                        background: "linear-gradient(168deg, rgba(255,253,253,0.95) 0%, rgba(255,246,250,0.88) 58%, rgba(251,244,254,0.88) 100%)",
-                        borderRadius: 16,
-                        border: "1px solid rgba(200,147,158,0.22)",
-                        boxShadow: "0 12px 28px -18px rgba(180,100,140,0.28)",
+                        perspective: "900px",
+                        boxShadow: m.isDrawing
+                          ? "0 20px 48px -14px rgba(8,6,16,0.52)"
+                          : "0 24px 56px -14px rgba(110,70,130,0.22)",
+                        transition: reduceMotion ? "none" : "box-shadow 0.36s ease 0.32s, transform 0.22s ease",
+                        cursor: m.isDrawing ? "default" : "pointer",
+                      }}
+                      onMouseEnter={m.isDrawing ? undefined : e => {
+                        e.currentTarget.style.transform = "translateY(-4px)";
+                        e.currentTarget.style.boxShadow = "0 32px 64px -14px rgba(110,70,130,0.32)";
+                      }}
+                      onMouseLeave={m.isDrawing ? undefined : e => {
+                        e.currentTarget.style.transform = "";
+                        e.currentTarget.style.boxShadow = "0 24px 56px -14px rgba(110,70,130,0.22)";
                       }}
                     >
-                      <div className="absolute inset-0 flex items-center justify-center"
-                        style={{ animation:"orbit-ring 6.2s linear infinite", transformOrigin:"center" }}>
-                        {ORBIT_ANGLES.map(angle => (
-                          <div key={angle} className="absolute" style={{
-                            top:"50%", left:"50%",
-                            transform:`rotate(${angle}deg) translateX(var(--draw-orbit)) translateY(-50%)`,
-                            opacity:.65,
-                          }}>
-                            <FourPointStar size={8} color={C.accentLt}/>
-                          </div>
-                        ))}
-                      </div>
-                      <p className={`relative z-10 px-3 text-center text-[clamp(12px,3.2vw,14px)] ${serifFont.className}`} style={{ color:C.txt3 }}>
-                        Consulting the stars…
-                      </p>
-                    </div>
-                  </div>
-                )}
+                      {/* flip container — rotates around Y axis */}
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          transformStyle: "preserve-3d",
+                          borderRadius: "inherit",
+                          transform: m.isDrawing ? "rotateY(0deg)" : "rotateY(180deg)",
+                          transition: reduceMotion ? "none" : "transform 0.72s cubic-bezier(0.4,0,0.2,1)",
+                        }}
+                      >
+                        {/* ── Back face ── */}
+                        <div
+                          className="absolute inset-0 overflow-hidden rounded-2xl"
+                          style={{
+                            backfaceVisibility: "hidden",
+                            WebkitBackfaceVisibility: "hidden",
+                          }}
+                        >
+                          <CardBack />
+                        </div>
 
-                {/* Card reveal — gold poker-style landscape */}
-                {m.cardDraw && !m.isDrawing && (
-                  <div className="flex justify-center">
-                    <motion.div
-                      initial={reduceMotion ? { opacity: 0 } : { rotateY: 90, scale: 0.96, opacity: 0 }}
-                      animate={reduceMotion ? { opacity: 1 } : { rotateY: 0, scale: 1, opacity: 1 }}
-                      transition={{ duration: reduceMotion ? 0.12 : DUR.slow, ease: EASE }}
-                      className="relative aspect-[170/93] w-[clamp(260px,60vw,480px)] max-w-full"
-                      style={{
-                        background: "linear-gradient(168deg, rgba(255,253,253,0.97) 0%, rgba(255,246,250,0.9) 58%, rgba(251,244,254,0.9) 100%)",
-                        borderRadius: 16,
-                        boxShadow: "0 24px 56px -14px rgba(180,100,140,0.24), 0 1px 0 rgba(255,255,255,0.72) inset",
-                      }}
-                    >
-                      <GoldCardFrame/>
-                      <div className="relative z-10 flex min-h-0 flex-col items-stretch gap-4 px-[clamp(0.875rem,3vw,1.25rem)] py-[clamp(0.875rem,2.5vw,1rem)] sm:flex-row sm:items-center sm:gap-[clamp(0.75rem,2.5vw,1.25rem)]">
-                        {/* Left: Icon */}
-                        <div className="flex flex-row items-center gap-3 sm:flex-col sm:gap-0">
-                          <motion.div
-                            className="flex h-[clamp(2.5rem,10vmin,3rem)] w-[clamp(2.5rem,10vmin,3rem)] shrink-0 items-center justify-center"
-                            initial={reduceMotion ? { opacity: 0 } : { scale: 0.88, opacity: 0 }}
-                            animate={reduceMotion ? { opacity: 1 } : { scale: 1, opacity: 1 }}
-                            transition={{ delay: reduceMotion ? 0 : 0.1, duration: reduceMotion ? 0.12 : DUR.base, ease: EASE }}
-                          >
-                            <CardSymbolIcon symbol={m.cardDraw.symbol} className="max-h-full max-w-full" />
-                          </motion.div>
-                          <p className="mt-0 text-[clamp(7px,1.8vw,8px)] uppercase tracking-[.2em] sm:mt-2 sm:text-center" style={{ color: "rgba(150,135,105,0.74)" }}>
-                            {m.cardDraw.suit}
-                          </p>
-                        </div>
-                        {/* Vertical divider */}
-                        <div className="hidden self-stretch sm:block" style={{ width: 1, background: "linear-gradient(180deg, transparent 0%, rgba(182,160,121,0.3) 20%, rgba(182,160,121,0.3) 80%, transparent 100%)" }}/>
-                        <div className="h-px w-full shrink-0 sm:hidden" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(182,160,121,0.3) 20%, rgba(182,160,121,0.3) 80%, transparent 100%)" }}/>
-                        {/* Right: Text */}
-                        <div className="min-w-0 flex-1 text-left">
-                          <p className={`text-[clamp(0.95rem,3.6vw,1.0625rem)] font-semibold leading-tight ${serifFont.className}`} style={{ color: "#2a2030" }}>
-                            {m.cardDraw.name}
-                          </p>
-                          <p className={`mt-2.5 text-[clamp(0.75rem,2.8vw,0.84rem)] leading-[1.75] ${serifFont.className}`} style={{ color: "#6e6276" }}>
-                            {m.cardDraw.meaning}
-                          </p>
+                        {/* ── Front face (pre-rendered, hidden until flip) ── */}
+                        <div
+                          className="absolute inset-0 overflow-hidden rounded-2xl"
+                          style={{
+                            transform: "rotateY(180deg)",
+                            backfaceVisibility: "hidden",
+                            WebkitBackfaceVisibility: "hidden",
+                            background: "linear-gradient(168deg, rgba(255,253,253,0.97) 0%, rgba(255,246,250,0.9) 58%, rgba(251,244,254,0.9) 100%)",
+                          }}
+                        >
+                          <GoldCardFrame />
+                          {m.cardDraw && (
+                            <div
+                              className="relative z-10 flex min-h-0 flex-col items-stretch gap-4 px-[clamp(0.875rem,3vw,1.25rem)] py-[clamp(0.875rem,2.5vw,1rem)] sm:flex-row sm:items-center sm:gap-[clamp(0.75rem,2.5vw,1.25rem)]"
+                              style={{
+                                opacity: m.isDrawing ? 0 : 1,
+                                transition: reduceMotion ? "none" : "opacity 0.3s ease 0.68s",
+                              }}
+                            >
+                              {/* Left: Icon */}
+                              <div className="flex flex-row items-center gap-3 sm:flex-col sm:gap-0">
+                                <div className="flex h-[clamp(2.5rem,10vmin,3rem)] w-[clamp(2.5rem,10vmin,3rem)] shrink-0 items-center justify-center">
+                                  <CardSymbolIcon symbol={m.cardDraw.symbol} className="max-h-full max-w-full" />
+                                </div>
+                                <p className="mt-0 text-[clamp(7px,1.8vw,8px)] uppercase tracking-[.2em] sm:mt-2 sm:text-center" style={{ color: "rgba(150,135,105,0.74)" }}>
+                                  {m.cardDraw.suit}
+                                </p>
+                              </div>
+                              {/* Vertical divider */}
+                              <div className="hidden self-stretch sm:block" style={{ width: 1, background: "linear-gradient(180deg, transparent 0%, rgba(182,160,121,0.3) 20%, rgba(182,160,121,0.3) 80%, transparent 100%)" }} />
+                              <div className="h-px w-full shrink-0 sm:hidden" style={{ background: "linear-gradient(90deg, transparent 0%, rgba(182,160,121,0.3) 20%, rgba(182,160,121,0.3) 80%, transparent 100%)" }} />
+                              {/* Right: Text */}
+                              <div className="min-w-0 flex-1 text-left">
+                                <p className={`text-[clamp(0.95rem,3.6vw,1.0625rem)] font-semibold leading-tight ${serifFont.className}`} style={{ color: "#2a2030" }}>
+                                  {m.cardDraw.name}
+                                </p>
+                                <p className={`mt-2.5 text-[clamp(0.75rem,2.8vw,0.84rem)] leading-[1.75] ${serifFont.className}`} style={{ color: "#6e6276" }}>
+                                  {m.cardDraw.meaning}
+                                </p>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       </div>
-                    </motion.div>
-                  </div>
+                    </div>
+                  </motion.div>
                 )}
 
                 {/* Regular assistant */}
                 {!m.isOpening && !m.isDrawing && !m.cardDraw && m.role==="assistant" && (
-                  <div className="flex flex-col gap-2 max-w-[90%]">
-                    {m.mode && (
-                      <div className="flex items-center gap-1.5 pl-[2.375rem]">
-                        <span className="rounded-full px-2.5 py-0.5 text-[10px] tracking-[.12em] uppercase"
-                          style={m.mode==="Astrology Consult"
-                            ? { background:"rgba(144,115,150,0.09)", border:"1px solid rgba(144,115,150,0.18)", color:C.accent }
-                            : { background:"rgba(200,147,158,0.09)", border:"1px solid rgba(200,147,158,0.18)", color:C.rose }}>
-                          {m.mode==="Astrology Consult" ? "Chart" : "Casual"}
-                        </span>
-                        {m.sourceDb && (
-                          <span className="text-[10px]" style={{ color:C.txt3 }}>
-                            {m.sourceDb==="zodiac_memory_db" ? "zodiac db" : "chat db"}
-                          </span>
-                        )}
-                      </div>
-                    )}
-                    <div className="flex items-center gap-3.5">
+                  <div className="group/msg flex flex-col max-w-[90%]" style={{ gap: "6px" }}>
+                    <div className="flex items-start gap-3.5">
                       <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full"
                         style={{ border:"1.5px solid rgba(190,174,193,0.28)", boxShadow:"0 2px 10px -3px rgba(80,50,120,0.18)" }}>
                         <img src="/assets/ai-character/taobaibai-avatar.png" alt="Tao Baibai" className="h-full w-full object-cover"/>
@@ -1512,34 +1556,55 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         </p>
                       </div>
                     </div>
-                    {/* Action icons row */}
-                    <div className="flex items-center gap-1 pl-[2.375rem]">
-                        <button type="button" className="flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150"
-                          style={{ color: C.txt3 }}
-                          onMouseEnter={e => { e.currentTarget.style.background = "rgba(144,115,150,0.1)"; e.currentTarget.style.color = C.accent; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.txt3; }}>
-                          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                            <path d="M2 7.5A5.5 5.5 0 0 1 7.5 2c1.5 0 2.9.6 3.9 1.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-                            <path d="M12 6.5A5.5 5.5 0 0 1 6.5 12c-1.5 0-2.9-.6-3.9-1.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
-                            <path d="M10.5 1.5v2.5h-2.5M3.5 12.5V10H6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                        </button>
-                        <button type="button" className="flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150"
-                          style={{ color: C.txt3 }}
-                          onMouseEnter={e => { e.currentTarget.style.background = "rgba(144,115,150,0.1)"; e.currentTarget.style.color = C.accent; }}
-                          onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.txt3; }}>
-                          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                            <rect x="4" y="4" width="7" height="8" rx="1.2" stroke="currentColor" strokeWidth="1.1"/>
-                            <path d="M4 6H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1" stroke="currentColor" strokeWidth="1.1"/>
-                          </svg>
-                        </button>
-                      </div>
-                      {m.cue && (
-                        <p className="px-1 text-[12px] leading-[1.55]" style={{ color:C.txt3, animation:"cue-fade .4s ease" }}>
+
+                    {/* Metadata row — below bubble, dot-separated, no pill */}
+                    {m.mode && (
+                      <p className="text-[12px] leading-none" style={{ paddingLeft: 42, color: C.txt3 }}>
+                        <span style={{ color: m.mode==="Astrology Consult" ? C.accent : C.txt3 }}>
+                          {m.mode==="Astrology Consult" ? "Chart" : "Casual"}
+                        </span>
+                        {m.sourceDb && (
+                          <> · {m.sourceDb==="zodiac_memory_db" ? "zodiac" : "casual"}</>
+                        )}
+                      </p>
+                    )}
+
+                    {/* Cue — left accent rule + annotation */}
+                    {m.cue && (
+                      <div className="flex items-start gap-2" style={{ paddingLeft: 42 }}>
+                        <div className="mt-[4px] h-[14px] w-[1.5px] shrink-0 rounded-full" style={{ background: C.accentLt }}/>
+                        <p className="text-[12px] leading-[1.65]" style={{ color: C.txt3, animation: "cue-fade .4s ease" }}>
                           {m.cue}
                         </p>
-                      )}
+                      </div>
+                    )}
+
+                    {/* Action icons — hidden at rest, reveal on message row hover (Spotify track row pattern) */}
+                    <div
+                      className="flex items-center gap-0.5 opacity-0 group-hover/msg:opacity-100 transition-opacity duration-150"
+                      style={{ paddingLeft: 40 }}
+                    >
+                      <button type="button" className="flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150"
+                        style={{ color: C.txt3 }}
+                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(144,115,150,0.1)"; e.currentTarget.style.color = C.accent; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.txt3; }}>
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                          <path d="M2 7.5A5.5 5.5 0 0 1 7.5 2c1.5 0 2.9.6 3.9 1.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                          <path d="M12 6.5A5.5 5.5 0 0 1 6.5 12c-1.5 0-2.9-.6-3.9-1.6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/>
+                          <path d="M10.5 1.5v2.5h-2.5M3.5 12.5V10H6" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      </button>
+                      <button type="button" className="flex h-6 w-6 items-center justify-center rounded-md transition-all duration-150"
+                        style={{ color: C.txt3 }}
+                        onMouseEnter={e => { e.currentTarget.style.background = "rgba(144,115,150,0.1)"; e.currentTarget.style.color = C.accent; }}
+                        onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = C.txt3; }}>
+                        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+                          <rect x="4" y="4" width="7" height="8" rx="1.2" stroke="currentColor" strokeWidth="1.1"/>
+                          <path d="M4 6H3a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1h5a1 1 0 0 1 1 1v1" stroke="currentColor" strokeWidth="1.1"/>
+                        </svg>
+                      </button>
                     </div>
+                  </div>
                 )}
 
                 {/* User */}
@@ -1562,10 +1627,10 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
           <AnimatePresence>
             {typing && (
               <motion.div
-                initial={reduceMotion ? false : { opacity: 0, y: 4 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 2 }}
-                transition={{ duration: DUR.fast }}
+                initial={reduceMotion ? false : { opacity: 0, y: 14, scale: 0.97 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.96, transition: { duration: DUR.fast, ease: EASE } }}
+                transition={{ duration: DUR.base, ease: EASE }}
                 className="mb-8 flex items-center gap-3.5">
                 <div className="h-7 w-7 shrink-0 overflow-hidden rounded-full"
                   style={{ border:"1.5px solid rgba(190,174,193,0.28)" }}>
@@ -1576,10 +1641,12 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                     background: "rgba(255,255,255,0.9)",
                     boxShadow: "0 2px 14px -6px rgba(100,80,130,0.1)",
                   }}>
-                  <span className="typing-dot block h-[5px] w-[5px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
-                  <span className="typing-dot block h-[5px] w-[5px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
-                  <span className="typing-dot block h-[5px] w-[5px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
-                  <span className="ml-1.5 text-[12px]" style={{ color:C.txt3 }}>Reading your chart…</span>
+                  <span className="typing-dot block h-[6px] w-[6px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
+                  <span className="typing-dot block h-[6px] w-[6px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
+                  <span className="typing-dot block h-[6px] w-[6px] shrink-0 rounded-full" style={{ background:C.accentLt }}/>
+                  <span className="ml-1.5 text-[12px]" style={{ color:C.txt3 }}>
+                    {latestMode === "Astrology Consult" ? "Reading your chart…" : "Thinking…"}
+                  </span>
                 </div>
               </motion.div>
             )}
@@ -1588,30 +1655,27 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
       </div>
 
       {/* ══ Input dock (state isolated in InputDock) ══ */}
-      <InputDock key={composerKey} typing={typing} onSend={handleOutgoingSend} onDrawCard={drawCard}/>
+      <InputDock key={composerKey} typing={typing} onSend={handleOutgoingSend}/>
 
-      {/* Panel backdrop (developer tools only — onboarding uses docked rail) */}
+      </div>
+
+      {/* Code panel — in-flow, slides open and pushes chat column */}
       <AnimatePresence>
         {codeOpen && (
-          <motion.div className="fixed inset-0 z-30" onClick={closeAll}
-            initial={{ opacity:0 }} animate={{ opacity:1 }} exit={{ opacity:0 }}
-            transition={{ duration: DUR.fast }}
-            style={{ background:"rgba(24,18,34,0.07)", backdropFilter:"none" }}/>
-        )}
-      </AnimatePresence>
-
-      {/* Code panel — Source / Clone / Config (romance-style), Source has bubble sub-pages */}
-      <AnimatePresence>
-        {codeOpen && (
+          <motion.div
+            key="astro-code"
+            initial={{ width: 0 }}
+            animate={{ width: 416 }}
+            exit={{ width: 0 }}
+            transition={{ duration: DUR.slow, ease: EASE }}
+            style={{ overflow: "hidden", flexShrink: 0 }}
+          >
           <SidePanel
             title="Developer Tools"
-            tone="pinkMist"
+            variant="dock"
             onClose={() => { setCodeOpen(false); setCloneCopied(false); }}
           >
-            <p
-              className={`text-[10px] tracking-[.18em] uppercase -mt-1 ${uiFont.className}`}
-              style={{ color: "rgba(120, 96, 118, 0.48)" }}
-            >
+            <p className="text-[12px] tracking-[.12em] uppercase -mt-1" style={{ color: C.txt3 }}>
               Inspect · Clone · Configure
             </p>
 
@@ -1624,7 +1688,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                     key={t}
                     type="button"
                     onClick={() => setCodeToolTab(t)}
-                    className={`flex-1 rounded-full px-3 py-1.5 text-[10px] font-semibold transition-all duration-200 ${uiFont.className}`}
+                    className={`flex-1 rounded-full px-3 py-1.5 text-[13px] font-semibold transition-all duration-200 ${uiFont.className}`}
                     style={{
                       background: on ? "linear-gradient(145deg,rgba(255,250,254,0.98) 0%,rgba(248,238,250,0.92) 100%)" : "transparent",
                       color: on ? C.accent : C.txt3,
@@ -1654,7 +1718,7 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                         key={k}
                         type="button"
                         onClick={() => setAstroSourcePage(k)}
-                        className="rounded-full px-2.5 py-1 text-[10px] font-medium transition-all"
+                        className="rounded-full px-2.5 py-1 text-[12px] font-medium transition-all"
                         style={{
                           background: act
                             ? "linear-gradient(145deg, rgba(255,248,250,0.95) 0%, rgba(244,232,242,0.82) 100%)"
@@ -1676,12 +1740,12 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                   key={astroSourcePage}
                   initial={{ opacity: 0, y: 4 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                  className="overflow-hidden rounded-xl"
+                  transition={{ duration: 0.2, ease: EASE }}
+                  className="overflow-hidden rounded-2xl"
                   style={{
-                    background: "linear-gradient(165deg, rgba(255,252,252,0.92) 0%, rgba(252,245,248,0.82) 55%, rgba(248,240,246,0.78) 100%)",
-                    border: "1px solid rgba(205, 182, 198, 0.32)",
-                    boxShadow: "0 8px 28px -20px rgba(130, 90, 110, 0.12)",
+                    background: "rgba(255,255,255,0.88)",
+                    border: "1px solid rgba(190,174,193,0.22)",
+                    boxShadow: C.shadow,
                   }}
                 >
                   <div
@@ -1691,14 +1755,14 @@ export default function AstroShowroomPrototypeClient({ embed = false }: { embed?
                     {["#c1909a", "#dba67a", "#7ab8a0"].map((c, i) => (
                       <div key={i} className="h-2 w-2 rounded-full opacity-60" style={{ background: c }} />
                     ))}
-                    <span className="ml-1.5 text-[10px]" style={{ color: C.txt3 }}>
+                    <span className="ml-1.5 text-[12px]" style={{ color: C.txt3 }}>
                       {astroSourcePage === "dbs" && "zodiac_routing.yaml"}
                       {astroSourcePage === "router" && "intent_router.ts"}
                       {astroSourcePage === "spec" && "tao_baibai.config.yaml"}
                     </span>
                   </div>
                   {astroSourcePage === "dbs" && (
-                    <pre className="m-0 px-3.5 py-3 text-[10px] leading-[1.8] whitespace-pre-wrap font-mono" style={{ color: C.txt2 }}>{`zodiac_memory_db
+                    <pre className="m-0 px-3.5 py-3 text-[12px] leading-[1.8] whitespace-pre-wrap font-mono" style={{ color: C.txt2 }}>{`zodiac_memory_db
   intent  : consult
   topics  : love · career · self-worth · chart
   tools   : chart_lookup, transit_check
@@ -1709,7 +1773,7 @@ smalltalk_memory_db
   tools   : sentiment_mirror`}</pre>
                   )}
                   {astroSourcePage === "router" && (
-                    <pre className="m-0 px-3.5 py-3 text-[10px] leading-[1.8] whitespace-pre-wrap font-mono" style={{ color: C.txt2 }}>{`intent = classify(msg)
+                    <pre className="m-0 px-3.5 py-3 text-[12px] leading-[1.8] whitespace-pre-wrap font-mono" style={{ color: C.txt2 }}>{`intent = classify(msg)
 
 if intent.type == "consult":
   → zodiac_memory_db
@@ -1717,10 +1781,10 @@ else:
   → smalltalk_memory_db`}</pre>
                   )}
                   {astroSourcePage === "spec" && (
-                    <pre className="m-0 px-3.5 py-3 text-[10px] leading-[1.8] whitespace-pre-wrap font-mono" style={{ color: C.txt2 }}>{ASTRO_PERSONA_SPEC}</pre>
+                    <pre className="m-0 px-3.5 py-3 text-[12px] leading-[1.8] whitespace-pre-wrap font-mono" style={{ color: C.txt2 }}>{ASTRO_PERSONA_SPEC}</pre>
                   )}
                 </motion.div>
-                <p className="text-[10px] leading-relaxed" style={{ color: C.txt3 }}>
+                <p className="text-[14px] leading-relaxed" style={{ color: C.txt3 }}>
                   Switch bubble tabs to hop between data sources, routing, and the Tao Baibai voice stub.
                 </p>
               </div>
@@ -1728,11 +1792,11 @@ else:
 
             {codeToolTab === "clone" && (
               <div className="space-y-3">
-                <p className="text-[12px] leading-[1.65]" style={{ color: C.txt2 }}>
+                <p className="text-[14px] leading-[1.65]" style={{ color: C.txt2 }}>
                   Fork the showroom template: spec, UI shell, and prompt runtime packaged together.
                 </p>
                 <div
-                  className="overflow-hidden rounded-xl"
+                  className="overflow-hidden rounded-2xl"
                   style={{
                     border: "1px solid rgba(190, 165, 185, 0.35)",
                     background: "linear-gradient(180deg, rgba(38, 28, 44, 0.92) 0%, rgba(30, 22, 36, 0.94) 100%)",
@@ -1746,9 +1810,9 @@ else:
                     {["#c1909a", "#dba67a", "#7ab8a0"].map((c, i) => (
                       <div key={i} className="h-2 w-2 rounded-full opacity-60" style={{ background: c }} />
                     ))}
-                    <span className="ml-1.5 text-[10px] text-white/50">Terminal</span>
+                    <span className="ml-1.5 text-[12px] text-white/50">Terminal</span>
                   </div>
-                  <pre className="m-0 px-3.5 py-3.5 text-[10px] leading-[1.9] whitespace-pre-wrap" style={{ color: "rgba(130,200,150,0.92)", fontFamily: "ui-monospace,monospace" }}>{ASTRO_CLONE_SNIPPET}</pre>
+                  <pre className="m-0 px-3.5 py-3.5 text-[12px] leading-[1.9] whitespace-pre-wrap" style={{ color: "rgba(130,200,150,0.92)", fontFamily: "ui-monospace,monospace" }}>{ASTRO_CLONE_SNIPPET}</pre>
                 </div>
                 <button
                   type="button"
@@ -1757,14 +1821,12 @@ else:
                     setCloneCopied(true);
                     window.setTimeout(() => setCloneCopied(false), 2000);
                   }}
-                  className="w-full rounded-full py-2.5 text-[12px] font-medium transition-all"
+                  className="w-full rounded-2xl py-2.5 text-[14px] font-medium transition-all"
                   style={{
-                    border: `1px solid ${cloneCopied ? "rgba(188, 155, 180, 0.55)" : "rgba(205, 185, 200, 0.4)"}`,
-                    background: cloneCopied
-                      ? "linear-gradient(145deg, rgba(255,248,252,0.95) 0%, rgba(245,232,242,0.9) 100%)"
-                      : "linear-gradient(145deg, rgba(255,252,252,0.85) 0%, rgba(250,244,248,0.75) 100%)",
+                    border: `1px solid ${cloneCopied ? "rgba(188, 155, 180, 0.55)" : "rgba(190,174,193,0.22)"}`,
+                    background: "rgba(255,255,255,0.88)",
                     color: cloneCopied ? C.accent : C.txt,
-                    boxShadow: "0 2px 12px -6px rgba(120, 90, 110, 0.1)",
+                    boxShadow: C.shadow,
                   }}
                 >
                   {cloneCopied ? "Copied" : "Copy command"}
@@ -1775,18 +1837,18 @@ else:
             {codeToolTab === "config" && (
               <div className="space-y-3">
                 <div>
-                  <div className="text-[10px] uppercase tracking-[.14em] mb-1.5" style={{ color: "rgba(120, 96, 118, 0.5)" }}>Model</div>
+                  <div className="text-[12px] uppercase tracking-[.1em] mb-1.5" style={{ color: C.txt3 }}>Model</div>
                   <div className="relative">
                     <select
                       value={cfgModel}
                       onChange={e => setCfgModel(e.target.value)}
-                      className="w-full appearance-none rounded-full py-2.5 pl-4 pr-9 text-[12px] outline-none"
+                      className="w-full appearance-none rounded-2xl py-2.5 pl-4 pr-9 text-[13px] outline-none"
                       style={{
-                        border: "1px solid rgba(200, 180, 198, 0.45)",
-                        background: "linear-gradient(180deg, rgba(255,252,253,0.95) 0%, rgba(250,244,248,0.9) 100%)",
+                        border: "1px solid rgba(190,174,193,0.22)",
+                        background: "rgba(255,255,255,0.88)",
                         color: C.txt,
                         fontFamily: uiFont.style.fontFamily,
-                        boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
+                        boxShadow: C.shadow,
                       }}
                     >
                       <option value="qwen-qwq">qwen-qwq — Deep Reasoning</option>
@@ -1800,61 +1862,33 @@ else:
                     </div>
                   </div>
                 </div>
-                <div
-                  className="rounded-2xl p-3"
-                  style={{
-                    background: "linear-gradient(150deg, rgba(255,250,252,0.7) 0%, rgba(246,236,244,0.5) 100%)",
-                    border: "1px solid rgba(205, 185, 200, 0.32)",
-                  }}
-                >
-                  <div className="text-[10px] uppercase tracking-[.12em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>{`Temperature — ${cfgTemp.toFixed(2)}`}</div>
+                <div className="rounded-2xl p-3" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(190,174,193,0.2)" }}>
+                  <div className="text-[12px] uppercase tracking-[.12em] mb-2" style={{ color: C.txt3 }}>{`Temperature — ${cfgTemp.toFixed(2)}`}</div>
                   <input
-                    type="range"
-                    min={0}
-                    max={1}
-                    step={0.01}
-                    value={cfgTemp}
+                    type="range" min={0} max={1} step={0.01} value={cfgTemp}
                     onChange={e => setCfgTemp(parseFloat(e.target.value))}
-                    className="w-full"
-                    style={{ accentColor: "#b892b0" }}
+                    className="w-full" style={{ accentColor: C.accent }}
                   />
                 </div>
-                <div
-                  className="rounded-2xl p-3"
-                  style={{
-                    background: "linear-gradient(150deg, rgba(255,250,252,0.7) 0%, rgba(246,236,244,0.5) 100%)",
-                    border: "1px solid rgba(205, 185, 200, 0.32)",
-                  }}
-                >
-                  <div className="text-[10px] uppercase tracking-[.12em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>{`Max tokens — ${cfgTokens}`}</div>
+                <div className="rounded-2xl p-3" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(190,174,193,0.2)" }}>
+                  <div className="text-[12px] uppercase tracking-[.12em] mb-2" style={{ color: C.txt3 }}>{`Max tokens — ${cfgTokens}`}</div>
                   <input
-                    type="range"
-                    min={256}
-                    max={4096}
-                    step={128}
-                    value={cfgTokens}
+                    type="range" min={256} max={4096} step={128} value={cfgTokens}
                     onChange={e => setCfgTokens(parseInt(e.target.value, 10))}
-                    className="w-full"
-                    style={{ accentColor: "#b892b0" }}
+                    className="w-full" style={{ accentColor: C.accent }}
                   />
                 </div>
-                <div
-                  className="rounded-2xl p-3"
-                  style={{
-                    background: "linear-gradient(165deg, rgba(255,252,252,0.85) 0%, rgba(248,242,246,0.7) 100%)",
-                    border: "1px solid rgba(205, 188, 202, 0.3)",
-                  }}
-                >
-                  <div className="text-[10px] uppercase tracking-[.1em] mb-2" style={{ color: "rgba(120, 96, 118, 0.5)" }}>Feature flags</div>
-                  {["Zodiac memory routing", "Chart & transit tools", "Card draw ritual", "Smalltalk sentiment mirror"].map((label, i) => {
-                    const on = i < 3;
+                <div className="rounded-2xl p-3" style={{ background: "rgba(255,255,255,0.7)", border: "1px solid rgba(190,174,193,0.2)" }}>
+                  <div className="text-[12px] uppercase tracking-[.1em] mb-2" style={{ color: C.txt3 }}>Feature flags</div>
+                  {["Zodiac memory routing", "Chart & transit tools", "Smalltalk sentiment mirror"].map((label, i) => {
+                    const on = i < 2;
                     return (
                       <div
                         key={label}
                         className="flex items-center justify-between border-b last:border-0 py-1.5"
                         style={{ borderColor: "rgba(210, 190, 205, 0.22)" }}
                       >
-                        <span className="text-[12px]" style={{ color: C.txt2 }}>{label}</span>
+                        <span className="text-[13px]" style={{ color: C.txt2 }}>{label}</span>
                         <span
                           className="relative h-3.5 w-7 rounded-full"
                           style={{ background: on ? "rgba(190, 155, 175, 0.42)" : "rgba(180, 165, 178, 0.25)" }}
@@ -1889,7 +1923,7 @@ else:
                         className="h-1.5 w-1.5 rounded-full"
                         style={{ background: latestMode === "Astrology Consult" ? C.accent : C.rose }}
                       />
-                      <span className="text-[12px]" style={{ color: C.txt2 }}>
+                      <span className="text-[13px]" style={{ color: C.txt2 }}>
                         {latestMode === "Astrology Consult" ? "→ zodiac_memory_db" : "→ smalltalk_memory_db"}
                       </span>
                     </motion.div>
@@ -1898,13 +1932,21 @@ else:
               </div>
             )}
           </SidePanel>
+          </motion.div>
         )}
       </AnimatePresence>
-      </div>
 
-      {/* Onboarding — right dock (pushes main column, no full-screen dim) */}
+      {/* Onboarding — right dock (pushes main column) */}
       <AnimatePresence>
         {demoOpen && (
+          <motion.div
+            key="astro-guide"
+            initial={{ width: 0 }}
+            animate={{ width: 416 }}
+            exit={{ width: 0 }}
+            transition={{ duration: DUR.slow, ease: EASE }}
+            style={{ overflow: "hidden", flexShrink: 0 }}
+          >
           <SidePanel variant="dock" title="Onboarding Guide" onClose={() => setDemoOpen(false)}>
             <div>
               <SLabel>Demo Steps</SLabel>
@@ -1913,13 +1955,13 @@ else:
                   const n=idx+1, done=n<activeStep, active=n===activeStep;
                   return (
                     <motion.div key={label} layout
-                      className="flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-[12px]"
+                      className="flex items-center gap-2.5 rounded-2xl px-3.5 py-2.5 text-[13px]"
                       style={{
                         background: active?"rgba(144,115,150,0.09)":"rgba(255,255,255,0.6)",
                         border:`1px solid ${active?"rgba(144,115,150,0.24)":C.cardBdr}`,
                         color: active?C.accent:done?C.txt3:"rgba(140,118,158,0.36)",
                       }}>
-                      <span className="w-4 shrink-0 text-center text-[10px] font-medium">
+                      <span className="w-4 shrink-0 text-center text-[12px] font-medium">
                         {done?"✓":active?"▶":String(n)}
                       </span>
                       <span className={done?"line-through opacity-45":""}>{label}</span>
@@ -1935,16 +1977,19 @@ else:
                 <motion.p key={latestCue}
                   initial={{ opacity:0, y:3 }} animate={{ opacity:1, y:0 }}
                   exit={{ opacity:0, y:-3 }} transition={{ duration:.22 }}
-                  className="mt-2 text-[12px] leading-[1.7]" style={{ color:C.txt2 }}>
+                  className="mt-2 text-[13px] leading-[1.7]" style={{ color:C.txt2 }}>
                   {latestCue}
                 </motion.p>
               </AnimatePresence>
             </div>
           </SidePanel>
+          </motion.div>
         )}
       </AnimatePresence>
     </motion.div>
-    {/* Outside root motion.div so fixed + translate centering is relative to the viewport, not a transformed ancestor */}
+      )}
+    </AnimatePresence>
+    {/* Share modal outside AnimatePresence — fixed centering relative to viewport */}
     <AnimatePresence>
       {showShareModal && <AstroShareModal onClose={() => setShowShareModal(false)} />}
     </AnimatePresence>

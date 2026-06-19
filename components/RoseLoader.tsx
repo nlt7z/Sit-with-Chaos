@@ -138,7 +138,7 @@ export function RoseLoader({
       style={{
         color,
         overflow: "visible",
-        filter: "drop-shadow(0 0 8px rgba(184,229,50,0.45))",
+        filter: "drop-shadow(0 0 8px rgba(210,255,0,0.45))",
       }}
     >
       <g ref={groupRef}>

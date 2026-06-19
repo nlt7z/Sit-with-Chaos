@@ -270,7 +270,7 @@ export function IntroAnimation() {
             className="absolute inset-0 -m-20 rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(184,229,50,0.35) 0%, rgba(184,229,50,0.08) 38%, transparent 68%)",
+                "radial-gradient(circle, rgba(210,255,0,0.35) 0%, rgba(210,255,0,0.08) 38%, transparent 68%)",
               filter: "blur(18px)",
             }}
             initial={{ opacity: 0, scale: 0.6 }}
@@ -316,7 +316,7 @@ export function IntroAnimation() {
               className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-nltLime/60 via-nltLime to-nltLime"
               style={{
                 width: `${percent}%`,
-                boxShadow: "0 0 14px rgba(184,229,50,0.6)",
+                boxShadow: "0 0 14px rgba(210,255,0,0.6)",
                 transition: "width 90ms linear",
               }}
             />

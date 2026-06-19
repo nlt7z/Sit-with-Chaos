@@ -302,7 +302,7 @@ function SparkleButton({ reduced }: { reduced: boolean }) {
         whileTap={reduced ? undefined : { scale: 0.9 }}
         whileHover={reduced ? undefined : { y: -2 }}
         transition={spring}
-        className="relative inline-flex items-center gap-1.5 rounded-full bg-textPrimary px-6 py-2.5 text-sm font-medium text-white shadow-[0_14px_30px_-14px_rgba(184,229,50,0.55)]"
+        className="relative inline-flex items-center gap-1.5 rounded-full bg-textPrimary px-6 py-2.5 text-sm font-medium text-white shadow-[0_14px_30px_-14px_rgba(210,255,0,0.55)]"
       >
         Tap me
         <span aria-hidden>✦</span>
@@ -521,7 +521,7 @@ export function LivingHero() {
               whileHover={reduced ? undefined : { y: -2 }}
               whileTap={reduced ? undefined : { y: 1 }}
               transition={{ type: "spring", stiffness: 480, damping: 28 }}
-              className="group/cta relative inline-flex overflow-hidden rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] transition-[box-shadow] duration-300 hover:shadow-[0_16px_36px_-14px_rgba(184,229,50,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
+              className="group/cta relative inline-flex overflow-hidden rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] transition-[box-shadow] duration-300 hover:shadow-[0_16px_36px_-14px_rgba(210,255,0,0.35)] focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-2"
             >
               <span className="relative z-10 inline-flex items-center gap-1.5">
                 Explore Work
@@ -540,7 +540,7 @@ export function LivingHero() {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/55"
+                  className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/55 sm:inline"
                 >
                   ↑ hover the words — each proves itself →
                 </motion.span>

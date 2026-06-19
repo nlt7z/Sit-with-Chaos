@@ -324,7 +324,18 @@
       "Bash(node /tmp/shot6.js)",
       "Bash(rm /Users/fangyuan/Desktop/newpage/.git/index.lock *)",
       "Bash(echo \"exit:$?\")",
-      "Bash(node /tmp/shot7.js)"
+      "Bash(node /tmp/shot7.js)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/lab/gallery)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/vibe-coding)",
+      "Bash(sort -k5 -rh)",
+      "Bash(identify /Users/fangyuan/Desktop/newpage/public/assets/work/logo.png)",
+      "Bash(sips -g pixelWidth -g pixelHeight /Users/fangyuan/Desktop/newpage/public/assets/work/logo.png)",
+      "Bash(python3 -m json.tool)",
+      "Bash(ls /Users/fangyuan/Desktop/newpage/package.json)",
+      "Bash(python3 -c \"import json; d=json.load\\(open\\('/Users/fangyuan/Desktop/newpage/package.json'\\)\\); [print\\(k,':',v\\) for k,v in d.get\\('scripts',{}\\).items\\(\\)]\")",
+      "Bash(TMPDIR=/tmp grep -rn \"184,229,50\\\\|184, 229, 50\\\\|B8E532\\\\|b8e532\\\\|0xb8e532\" /Users/fangyuan/Desktop/newpage/app /Users/fangyuan/Desktop/newpage/components)",
+      "Bash(TMPDIR=/var/tmp grep -n \"LivingHero\\\\|ImmersiveHero\" /Users/fangyuan/Desktop/newpage/app/page.tsx)",
+      "Bash(git checkout *)"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

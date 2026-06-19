@@ -3,6 +3,7 @@
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useRef } from "react";
 import { LimeMark } from "@/components/LimeMark";
+import { SplitTextChars } from "@/components/SplitBtn";
 
 const ease = [0.25, 0.1, 0.25, 1] as const;
 
@@ -90,7 +91,7 @@ export function Contact() {
     <section
       id="contact"
       ref={ref}
-      className="relative py-32 md:py-44"
+      className="relative py-20 md:py-32 lg:py-44"
       aria-labelledby="contact-heading"
       aria-describedby="contact-subheading"
     >
@@ -124,7 +125,7 @@ export function Contact() {
         <motion.p
           id="contact-subheading"
           variants={prefersReducedMotion ? undefined : itemVariants}
-          className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-textSecondary md:mt-8 md:text-base"
+          className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-textPrimary md:mt-8 md:text-base"
         >
           I&apos;m looking for teams building products where interaction, trust, and system
           thinking matter — and where <LimeMark>one person can take an idea to shipped</LimeMark>.
@@ -136,19 +137,17 @@ export function Contact() {
         >
           <a
             href="mailto:fangyuanzero7@gmail.com"
-            className="inline-flex items-center gap-1.5 rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+            className="group inline-flex items-center rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
           >
-            Say hello
-            <span aria-hidden>↗</span>
+            <SplitTextChars text="Say hello ↗" />
           </a>
           <a
             href="/assets/resume/Product%20Designer%20-%20Yuan%20Fang%20May.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-8 py-3 text-sm font-medium text-textPrimary shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+            className="group inline-flex items-center rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-8 py-3 text-sm font-medium text-textPrimary shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
           >
-            Resume
-            <span aria-hidden>↗</span>
+            <SplitTextChars text="Resume ↗" />
           </a>
         </motion.div>
 

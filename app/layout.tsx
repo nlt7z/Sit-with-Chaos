@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { DM_Sans, JetBrains_Mono, Playfair_Display } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import { LayoutClientChrome } from "@/components/LayoutClientChrome";
 
@@ -63,20 +64,20 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="scroll-smooth" suppressHydrationWarning>
-      <head>
-        {/* Intro veil is only for the homepage. The pathname check keeps the
-            data-intro flag (and therefore the black ::before veil) off every
-            other route so case-study / lab pages don't flash black. */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{if(location.pathname==='/'&&!sessionStorage.getItem('yf-intro-played-v1')){document.documentElement.dataset.intro='pending';setTimeout(function(){if(document.documentElement.dataset.intro==='pending'){delete document.documentElement.dataset.intro;}},4000);}}catch(e){try{delete document.documentElement.dataset.intro;}catch(_){}}})();`,
-          }}
-        />
-      </head>
       <body
         suppressHydrationWarning
         className={`${playfair.variable} ${dmSans.variable} ${jetbrainsMono.variable} font-sans antialiased text-[#1D1D1F] bg-white`}
       >
+        {/* Intro veil is only for the homepage. The pathname check keeps the
+            data-intro flag (and therefore the black ::before veil) off every
+            other route so case-study / lab pages don't flash black. */}
+        <Script
+          id="intro-veil"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if(location.pathname==='/'&&!sessionStorage.getItem('yf-intro-played-v1')){document.documentElement.dataset.intro='pending';setTimeout(function(){if(document.documentElement.dataset.intro==='pending'){delete document.documentElement.dataset.intro;}},4000);}}catch(e){try{delete document.documentElement.dataset.intro;}catch(_){}}})();`,
+          }}
+        />
         <LayoutClientChrome>{children}</LayoutClientChrome>
       </body>
     </html>

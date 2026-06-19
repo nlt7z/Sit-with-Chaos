@@ -865,7 +865,7 @@ function Section({
   return (
     <section
       id={id}
-      className={`scroll-mt-24 py-28 md:scroll-mt-28 md:py-36 ${bordered ? "border-t border-black/[0.05]" : ""}`}
+      className={`scroll-mt-24 py-14 md:scroll-mt-28 md:py-28 ${bordered ? "border-t border-black/[0.05]" : ""}`}
     >
       <motion.div
         className="w-full"

@@ -17,8 +17,8 @@ import { OutputPass } from "three/examples/jsm/postprocessing/OutputPass.js";
  * - Everything idles on slow sine drifts so the frame never feels frozen.
  */
 
-const LIME = 0xb8e532;
-const LIME_DEEP = 0x9bcf14;
+const LIME = 0xd2ff00;
+const LIME_DEEP = 0xaad000;
 
 /** Deterministic rng so the composition is identical on every visit. */
 function mulberry32(seed: number) {

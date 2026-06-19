@@ -30,7 +30,7 @@ function ScrollLine() {
     <motion.div
       aria-hidden
       className="fixed inset-x-0 top-0 z-[60] h-[3px] origin-left"
-      style={{ scaleX, background: LIME, boxShadow: "0 0 12px rgba(184,229,50,0.7)" }}
+      style={{ scaleX, background: LIME, boxShadow: "0 0 12px rgba(210,255,0,0.7)" }}
     />
   );
 }
@@ -141,7 +141,7 @@ export function LimeSignature() {
         </p>
         <button
           type="button"
-          className="mt-8 rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] transition-shadow hover:shadow-[0_16px_36px_-14px_rgba(184,229,50,0.4)]"
+          className="mt-8 rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] transition-shadow hover:shadow-[0_16px_36px_-14px_rgba(210,255,0,0.4)]"
         >
           Hover me
         </button>

@@ -2,7 +2,6 @@ import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
-import { HomeMagicGallery } from "@/components/HomeMagicGallery";
 import { Nav } from "@/components/Nav";
 import { Work } from "@/components/Work";
 
@@ -47,7 +46,6 @@ export default function Home() {
           <Hero />
           <Work />
         </div>
-        <HomeMagicGallery />
         {/* About + Contact share one continuous lime composition, anchored to
          *  the bottom so it flows from About down into the Contact finale —
          *  the mirror of the Hero + Work backdrop at the top of the page. */}

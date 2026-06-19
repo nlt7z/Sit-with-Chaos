@@ -6,10 +6,11 @@ import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import { experienceEntries } from "@/lib/experience";
 import { visualExperimentImages, type VisualExperimentImage } from "@/lib/visualExperimentImages";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import { type ReactNode, useRef } from "react";
+import { type ReactNode, useRef, useState } from "react";
+import { SplitTextChars } from "@/components/SplitBtn";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
@@ -24,7 +25,6 @@ type StoryBeat = {
   period: string;
   image?: string;
   hideImage?: boolean;
-  /** Visual experiments carousel (e.g. under Pratt / NY chapter) */
   visualGallery?: readonly VisualExperimentImage[];
 };
 
@@ -92,6 +92,51 @@ const workPrinciples = [
   },
 ];
 
+// ── Version toggle ────────────────────────────────────────────────────────────
+
+function VersionToggle({
+  long,
+  onChange,
+}: {
+  long: boolean;
+  onChange: (v: boolean) => void;
+}) {
+  return (
+    <div
+      className="inline-flex items-center rounded-full bg-[#f2f2f4] p-1"
+      role="group"
+      aria-label="Page version"
+    >
+      {(["Short", "Long"] as const).map((label) => {
+        const active = (label === "Long") === long;
+        return (
+          <button
+            key={label}
+            onClick={() => onChange(label === "Long")}
+            className="relative rounded-full px-5 py-1.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime focus-visible:ring-offset-1"
+            aria-pressed={active}
+          >
+            {active && (
+              <motion.span
+                layoutId="toggle-bg"
+                className="absolute inset-0 rounded-full bg-white shadow-sm"
+                transition={{ type: "spring", stiffness: 420, damping: 36 }}
+              />
+            )}
+            <span
+              className={`relative z-10 font-mono text-[11px] uppercase tracking-[0.14em] transition-colors duration-200 ${
+                active ? "text-textPrimary" : "text-textSecondary"
+              }`}
+            >
+              {label}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // ── Shared utility ────────────────────────────────────────────────────────────
 
 function SectionReveal({
@@ -122,6 +167,7 @@ function SectionReveal({
 // ── Page ──────────────────────────────────────────────────────────────────────
 
 export default function AboutPage() {
+  const [longVersion, setLongVersion] = useState(false);
   const rm = useReducedMotion();
   const storyRef = useRef(null);
   const storyInView = useInView(storyRef, { once: true, margin: "-10% 0px" });
@@ -135,6 +181,16 @@ export default function AboutPage() {
       <Nav />
       <main className="bg-white">
 
+        {/* ── Sticky toggle bar ───────────────────────────────────────────── */}
+        <div className="sticky top-14 z-20 border-b border-black/[0.06] bg-white/90 px-6 py-2.5 backdrop-blur-sm md:top-16">
+          <div className="mx-auto flex max-w-content items-center justify-between">
+            <span className="font-mono text-[10px] uppercase tracking-widest text-textSecondary">
+              About
+            </span>
+            <VersionToggle long={longVersion} onChange={setLongVersion} />
+          </div>
+        </div>
+
         {/* ── 1. Identity ─────────────────────────────────────────────────── */}
         <section
           id="about-identity"
@@ -143,9 +199,8 @@ export default function AboutPage() {
           <div className="relative z-10 mx-auto grid max-w-content gap-14 lg:grid-cols-12 lg:items-center">
             <div className="lg:col-span-7">
               <SectionReveal>
-                {/* Keyboard caps — a small floating mark sitting above the eyebrow */}
                 <div aria-hidden className="relative mb-5 w-[92px] md:w-[108px]">
-                  <div className="absolute -inset-[28%] rounded-full bg-[radial-gradient(circle,rgba(184,229,50,0.42)_0%,rgba(184,229,50,0.16)_42%,transparent_72%)] blur-2xl" />
+                  <div className="absolute -inset-[28%] rounded-full bg-[radial-gradient(circle,rgba(210,255,0,0.42)_0%,rgba(210,255,0,0.16)_42%,transparent_72%)] blur-2xl" />
                   <motion.div
                     animate={rm ? undefined : { y: [0, -9, 0] }}
                     transition={rm ? undefined : { duration: 8.5, ease: "easeInOut", repeat: Infinity }}
@@ -165,13 +220,29 @@ export default function AboutPage() {
                   Designer, thinker, craftsperson.
                 </h1>
                 <p className="mt-8 max-w-2xl text-lg leading-[1.72] text-textSecondary md:mt-9 md:text-xl md:leading-[1.7]">
-                  I&apos;m Yuan Fang, a UX designer working at the intersection of three strengths: AI-native speed, a fine-art command of craft built over 10+ years, and a relentless drive to build whatever a project needs. I turn ambiguity into clear product direction — and into working, coded prototypes.
+                  I&apos;m Yuan Fang, a UX designer working at the intersection of three strengths: AI-native speed, a fine-art command of craft built over 10+ years, and a relentless drive to build whatever a project needs.
                 </p>
-                <p className="mt-6 max-w-2xl text-base leading-[1.72] text-textSecondary md:leading-[1.7]">
-                  My name literally means &ldquo;Square and Circle.&rdquo; In Chinese culture it represents balance —
-                  the square is logic, systems, and structure; the circle is empathy, flow, and the human experience.
-                  I bridge the gap between rigid technology and soft human needs.
-                </p>
+
+                {/* Long version — name meaning paragraph */}
+                <AnimatePresence>
+                  {longVersion && (
+                    <motion.div
+                      key="identity-long"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: easePortfolio }}
+                      className="overflow-hidden"
+                    >
+                      <p className="mt-6 max-w-2xl text-base leading-[1.72] text-textSecondary md:leading-[1.7]">
+                        My name literally means &ldquo;Square and Circle.&rdquo; In Chinese culture it represents balance —
+                        the square is logic, systems, and structure; the circle is empathy, flow, and the human experience.
+                        I bridge the gap between rigid technology and soft human needs.
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
                 <p className="mt-7 font-mono text-sm leading-relaxed text-textSecondary">
                   MS @{" "}
                   <a
@@ -194,10 +265,12 @@ export default function AboutPage() {
                 </p>
               </SectionReveal>
             </div>
+
+            {/* Photo */}
             <div className="lg:col-span-5">
               <SectionReveal className="relative mx-auto aspect-[4/5] w-full max-w-md overflow-hidden rounded-3xl border border-[rgba(0,0,0,0.08)] bg-neutral-100 lg:ml-auto">
                 <Image
-                  src="/assets/about/profile.jpg"
+                  src="/assets/about/IMG_3830%203.JPG"
                   alt="Yuan Fang"
                   fill
                   className="object-cover"
@@ -209,7 +282,7 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ── 2. Manifesto / How I Work — 2-col editorial rows ────────────── */}
+        {/* ── 2. Manifesto / How I Work ────────────────────────────────────── */}
         <section
           id="about-workflow"
           ref={workRef}
@@ -261,9 +334,25 @@ export default function AboutPage() {
                     <h3 className="font-display text-xl font-light leading-snug text-textPrimary md:text-2xl">
                       {p.title}
                     </h3>
-                    <p className="mt-4 max-w-2xl text-base leading-[1.7] text-textSecondary md:text-[17px]">
-                      {p.body}
-                    </p>
+
+                    {/* Long version — body paragraph */}
+                    <AnimatePresence>
+                      {longVersion && (
+                        <motion.div
+                          key={`principle-body-${p.number}`}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.38, ease: easePortfolio, delay: 0.04 * i }}
+                          className="overflow-hidden"
+                        >
+                          <p className="mt-4 max-w-2xl text-base leading-[1.7] text-textSecondary md:text-[17px]">
+                            {p.body}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     {p.stack ? (
                       <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary md:hidden">
                         {p.stack}
@@ -324,7 +413,23 @@ export default function AboutPage() {
                     <h3 className="mt-2 font-display text-2xl font-light text-textPrimary md:text-3xl">
                       {beat.title}
                     </h3>
-                    <p className="mt-4 leading-relaxed text-textSecondary">{beat.body}</p>
+
+                    {/* Long version — story body */}
+                    <AnimatePresence>
+                      {longVersion && (
+                        <motion.div
+                          key={`beat-body-${i}`}
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.4, ease: easePortfolio, delay: 0.05 * i }}
+                          className="overflow-hidden"
+                        >
+                          <p className="mt-4 leading-relaxed text-textSecondary">{beat.body}</p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     {(beat.image && !beat.hideImage) || beat.visualGallery?.length ? (
                       <div className="mt-8 w-full space-y-10">
                         {beat.visualGallery && beat.visualGallery.length > 0 ? (
@@ -388,17 +493,13 @@ export default function AboutPage() {
               <h2 className="mt-3 font-display text-3xl font-light text-textPrimary md:text-4xl">
                 Previous Artwork
               </h2>
-              <p className="mt-4 max-w-2xl text-textSecondary">
-                Drawing, installation, and spatial experiments that shaped how I think about people and media.
-              </p>
             </SectionReveal>
           </div>
         </section>
 
-        {/* Gallery carousel (includes Alessa Design slides) */}
         <AboutArtGallery noTopBorder noHeading />
 
-        {/* ── 5. Background — Experience + Education side by side ─────── */}
+        {/* ── 5. Background ───────────────────────────────────────────────── */}
         <section
           id="about-background"
           ref={expRef}
@@ -407,7 +508,6 @@ export default function AboutPage() {
         >
           <div className="relative z-10 mx-auto max-w-content">
             <div className="grid gap-12 lg:grid-cols-[1.45fr_1fr] lg:gap-x-16">
-              {/* Experience column */}
               <div>
                 <motion.div
                   initial={rm ? false : { opacity: 0, y: 16 }}
@@ -415,11 +515,7 @@ export default function AboutPage() {
                   transition={{ duration: 0.55, ease: easePortfolio }}
                 >
                   <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Experience</p>
-                  <h2 className="mt-2 font-display text-lg font-light text-textPrimary md:text-xl">
-                    Path and craft.
-                  </h2>
                 </motion.div>
-
                 <div className="mt-6 divide-y divide-black/[0.06] border-t border-black/[0.06]">
                   {experienceEntries.map((item, i) => (
                     <motion.div
@@ -449,7 +545,6 @@ export default function AboutPage() {
                 </div>
               </div>
 
-              {/* Education column */}
               <div>
                 <motion.div
                   initial={rm ? false : { opacity: 0, y: 16 }}
@@ -457,11 +552,7 @@ export default function AboutPage() {
                   transition={{ duration: 0.55, ease: easePortfolio, delay: rm ? 0 : 0.08 }}
                 >
                   <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">Education</p>
-                  <h2 className="mt-2 font-display text-lg font-light text-textPrimary md:text-xl">
-                    Roots.
-                  </h2>
                 </motion.div>
-
                 <div className="mt-6 divide-y divide-black/[0.06] border-t border-black/[0.06]">
                   {educationEntries.map((item, i) => (
                     <motion.div
@@ -493,7 +584,6 @@ export default function AboutPage() {
           id="about-next"
           className="relative isolate scroll-mt-24 overflow-hidden border-t border-[rgba(0,0,0,0.08)] px-6 py-24 md:scroll-mt-28 md:py-32"
         >
-          {/* hero-decor lime backdrop (replaces the flat gray) */}
           <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
             <img
               src="/assets/hero-decor.png"
@@ -501,7 +591,6 @@ export default function AboutPage() {
               draggable={false}
               className="absolute inset-0 h-full w-full select-none object-cover object-center"
             />
-            {/* soft wash so the centered copy stays legible over the busy art */}
             <div className="absolute inset-0 bg-white/45" />
           </div>
           <div className="relative z-10 mx-auto max-w-content text-center">
@@ -513,15 +602,15 @@ export default function AboutPage() {
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
                 <Link
                   href="/#work"
-                  className="rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                  className="group inline-flex items-center rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                 >
-                  View Projects ↗
+                  <SplitTextChars text="View Projects ↗" />
                 </Link>
                 <Link
                   href="/#contact"
-                  className="rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-8 py-3 text-sm font-medium text-textPrimary shadow-sm transition-transform duration-500 ease-portfolio hover:scale-[1.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                  className="group inline-flex items-center rounded-full border border-[rgba(0,0,0,0.08)] bg-white px-8 py-3 text-sm font-medium text-textPrimary shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                 >
-                  Get in Touch ↗
+                  <SplitTextChars text="Get in Touch ↗" />
                 </Link>
               </div>
             </SectionReveal>

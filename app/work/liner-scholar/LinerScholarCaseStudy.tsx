@@ -49,7 +49,7 @@ function CaseNav() {
       className="pointer-events-none fixed left-0 top-0 z-30 hidden h-full w-[11rem] lg:block"
     >
       <div className="pointer-events-auto sticky top-[calc(50vh-9rem)] px-6 pt-28">
-        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">On this page</p>
+        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-nltLime-ink">On this page</p>
         <ul className="mt-5 space-y-0">
           {navItems.map(({ id, label }) => (
             <li key={id}>
@@ -62,8 +62,8 @@ function CaseNav() {
                 }}
                 className={`block border-l border-transparent py-2 pl-4 text-left text-[12px] leading-snug transition-[color,border-color] duration-500 ease-out ${
                   active === id
-                    ? "border-textPrimary/80 font-medium text-textPrimary"
-                    : "text-textSecondary/90 hover:border-textPrimary/15 hover:text-textPrimary"
+                    ? "border-nltLime font-medium text-nltLime-ink"
+                    : "text-textSecondary/90 hover:border-nltLime/40 hover:text-textPrimary"
                 }`}
               >
                 {label}
@@ -103,7 +103,7 @@ function Reveal({
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-textSecondary/70">{children}</p>
+    <p className="font-mono text-[10px] font-normal uppercase tracking-[0.2em] text-nltLime-ink">{children}</p>
   );
 }
 
@@ -226,7 +226,7 @@ export default function LinerScholarCaseStudy() {
     <div className="relative min-h-screen bg-white">
       <CaseNav />
       <CaseStudyMobileToc items={navItems} />
-      <article className="mx-auto max-w-content bg-white px-6 pb-36 pt-24 text-left md:px-10 md:pb-48 md:pt-28 lg:pl-32 lg:pr-10 lg:pt-32">
+      <article className="mx-auto max-w-content bg-white px-6 pb-20 pt-20 text-left md:px-10 md:pb-36 md:pt-28 lg:pl-32 lg:pr-10 lg:pt-32">
         <header id="overview" className="scroll-mt-28">
           <motion.div
             initial={reduce ? false : { opacity: 0, y: 14 }}
@@ -283,7 +283,7 @@ export default function LinerScholarCaseStudy() {
           </motion.div>
         </header>
 
-        <section id="problem" className="scroll-mt-28 space-y-10 pt-24 md:space-y-12 md:pt-32 lg:pt-40">
+        <section id="problem" className="scroll-mt-28 space-y-10 pt-16 md:space-y-12 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>The problem we framed</Eyebrow>
             <SectionTitle className="mt-6">From solo AI research to team collaboration</SectionTitle>
@@ -328,7 +328,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
         </section>
 
-        <section id="strategy" className="scroll-mt-28 space-y-10 pt-24 md:pt-32 lg:pt-40">
+        <section id="strategy" className="scroll-mt-28 space-y-10 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>Research strategy</Eyebrow>
             <SectionTitle className="mt-6">Three phases before conclusions</SectionTitle>
@@ -366,7 +366,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
         </section>
 
-        <section id="expert" className="scroll-mt-28 space-y-10 pt-24 md:pt-32 lg:pt-40">
+        <section id="expert" className="scroll-mt-28 space-y-10 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>Expert interview</Eyebrow>
             <SectionTitle className="mt-6">What the PM conversation changed early</SectionTitle>
@@ -390,7 +390,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
         </section>
 
-        <section id="landscape" className="scroll-mt-28 space-y-10 pt-24 md:pt-32 lg:pt-40">
+        <section id="landscape" className="scroll-mt-28 space-y-10 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>Competitive landscape</Eyebrow>
             <SectionTitle className="mt-6">The ecosystem is fragmented by stage</SectionTitle>
@@ -443,7 +443,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
         </section>
 
-        <section id="insights" className="scroll-mt-28 pt-24 md:pt-32 lg:pt-40">
+        <section id="insights" className="scroll-mt-28 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>Synthesis</Eyebrow>
             <SectionTitle className="mt-6">Five insights from six interviews</SectionTitle>
@@ -475,7 +475,7 @@ export default function LinerScholarCaseStudy() {
           </div>
         </section>
 
-        <section id="direction" className="scroll-mt-28 space-y-10 pt-24 md:pt-32 lg:pt-40">
+        <section id="direction" className="scroll-mt-28 space-y-10 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>From research to direction</Eyebrow>
             <SectionTitle className="mt-6">Liner as connective tissue</SectionTitle>
@@ -493,7 +493,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
         </section>
 
-        <section id="process" className="scroll-mt-28 space-y-10 pt-24 md:pt-32 lg:pt-40">
+        <section id="process" className="scroll-mt-28 space-y-10 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>How I work</Eyebrow>
             <SectionTitle className="mt-6">What this project demonstrates</SectionTitle>
@@ -522,7 +522,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
         </section>
 
-        <section id="status" className="scroll-mt-28 space-y-10 pb-8 pt-24 md:pt-32 lg:pt-40">
+        <section id="status" className="scroll-mt-28 space-y-10 pb-8 pt-16 md:pt-24 lg:pt-32">
           <Reveal>
             <Eyebrow>Status</Eyebrow>
             <SectionTitle className="mt-6">Where the work stands</SectionTitle>
