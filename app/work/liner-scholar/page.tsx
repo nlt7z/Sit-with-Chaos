@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     url: PATH,
     title: TITLE,
     description: DESCRIPTION,
-    siteName: "Yuan Fang — UX Designer",
+    siteName: "Yuan Fang — Product Design Builder",
     images: [{ url: OG_IMAGE, width: 1200, height: 630, alt: TITLE }],
   },
   twitter: {

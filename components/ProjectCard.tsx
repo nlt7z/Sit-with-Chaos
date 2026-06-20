@@ -39,7 +39,9 @@ export type Project = {
     role: string;
     status: string;
   };
-  /** Headline impact metric shown as a chip on the media (e.g. "−97% time"). */
+  /** Impact metrics shown as a row of tag chips in the left copy panel.
+   *  A single "·"-separated string — each segment becomes one chip
+   *  (e.g. "+200% API volume · 4 interactive demos"). */
   impact?: string;
   /** Category tags shown as a divided list in the left panel (e.g. "Capstone Project"). */
   tags?: readonly string[];
@@ -240,6 +242,12 @@ export function ProjectCard({ project }: { project: Project }) {
       ? project.title.slice(titleSplitIndex + titleSeparatorLength).trim()
       : project.title;
 
+  // Impact metrics render as a row of tag chips in the left copy panel. The
+  // data ships as a single string with "·"-separated metrics; split it back out.
+  const impactTags = project.impact
+    ? project.impact.split("·").map((s) => s.trim()).filter(Boolean)
+    : [];
+
   // Soft per-project wash sitting behind the video on the right panel (a
   // fallback before the video paints; the video covers it once playing).
   const mediaPanelBackground = `linear-gradient(145deg, #ffffff 0%, ${project.hoverTint ?? "rgba(0,0,0,0.035)"} 100%)`;
@@ -370,11 +378,16 @@ export function ProjectCard({ project }: { project: Project }) {
           </h3>
 
           <div className="mt-8 md:mt-auto md:pt-10">
-          {project.impact ? (
-            <ul className="border-t border-black/[0.08]">
-              <li className="border-b border-black/[0.08] py-2.5 text-[13px] leading-snug text-textSecondary last:border-b-0 md:py-3">
-                {project.impact}
-              </li>
+          {impactTags.length > 0 ? (
+            <ul className="flex flex-wrap gap-1.5 md:gap-2">
+              {impactTags.map((tag, i) => (
+                <li
+                  key={`${tag}-${i}`}
+                  className="rounded-full border border-black/[0.10] bg-white px-2.5 py-1 text-[11.5px] leading-none text-textPrimary shadow-[0_1px_0_rgba(0,0,0,0.03)] transition-colors duration-500 group-hover:border-black/[0.18]"
+                >
+                  {tag}
+                </li>
+              ))}
             </ul>
           ) : null}
 

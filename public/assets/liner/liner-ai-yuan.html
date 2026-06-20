@@ -37,7 +37,9 @@
     --link:#1a79b8;             /* function/label/link */
     --hl:#dcefdc;              /* add-to-chat highlight */
     /* author colors */
-    --au-you:#197b2e; --au-yuan:#2f6df0; --au-chen:#d9822b; --au-ai:#7c5cff;
+    --au-you:#0369a1; --au-yuan:#2f6df0; --au-chen:#d9822b; --au-ai:#7c5cff;
+    /* AI surface tokens */
+    --ai-subtle:rgba(124,92,255,.07); --ai-border:rgba(124,92,255,.18);
     /* ---- geometry ---- */
     --r-xs:6px; --r-s:8px; --r-m:10px; --r-l:12px;
     --sh-soft:0 4px 12px rgba(0,0,0,.05);
@@ -45,6 +47,9 @@
     --sh-pop:0 6px 24px rgba(0,0,0,.12), 0 1px 3px rgba(0,0,0,.08);
     --font:"Pretendard Variable",Pretendard,Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;
     --font-serif:"Source Serif 4",Charter,Cambria,"Times New Roman",serif;
+    /* ---- type scale ---- */
+    --ts-xs:11px; --ts-s:12px; --ts-sm:13px; --ts-base:14px;
+    --ts-md:15px; --ts-body:16.5px; --ts-lg:18px; --ts-xl:20px; --ts-2xl:25px; --ts-3xl:28px;
     /* ---- motion tokens ---- */
     --ease:cubic-bezier(.4,0,.2,1);          /* standard state changes */
     --ease-out:cubic-bezier(.16,1,.3,1);     /* decelerated entrances */
@@ -76,6 +81,7 @@
     border-right:1px solid var(--border-subtle);
     display:flex;flex-direction:column;align-items:center;
     padding:10px 0;gap:4px;
+    position:relative;z-index:10;
   }
   .rail .logo{
     width:30px;height:30px;border-radius:8px;background:transparent;
@@ -446,16 +452,16 @@
   .menu .h3m{font-size:14px;font-weight:600}
 
   /* document surface */
-  .doc-scroll{flex:1;overflow:auto;background:var(--white);display:flex;justify-content:center;padding:40px 24px 140px}
-  .doc-wrap{position:relative;width:100%;max-width:620px;transition:max-width .25s var(--ease-out)}
+  .doc-scroll{flex:1;overflow:auto;background:var(--white);display:flex;justify-content:flex-start;padding:40px 24px 140px}
+  .doc-wrap{position:relative;width:100%;max-width:620px;margin:0 auto;transition:max-width .25s var(--ease-out)}
   .doc-wrap.wide{max-width:860px}
-  .doc{max-width:600px;outline:none;color:var(--text);line-height:1.7;font-size:16px}
+  .doc{max-width:600px;outline:none;color:var(--text);font-family:var(--font-serif);font-size:var(--ts-body);line-height:1.78;padding-right:2px;}
   .doc:focus{outline:none}
-  .doc h1{font-size:34px;line-height:1.18;font-weight:800;letter-spacing:-.02em;margin:0 0 26px}
-  .doc h2{font-size:23px;font-weight:700;letter-spacing:-.01em;margin:30px 0 12px}
-  .doc h3{font-size:18px;font-weight:700;margin:22px 0 8px}
-  .doc p{margin:0 0 16px;color:#2c2c2e}
-  .doc ul,.doc ol{margin:0 0 16px 22px;color:#2c2c2e}
+  .doc h1{font-family:var(--font);font-size:var(--ts-3xl);line-height:1.22;font-weight:700;letter-spacing:-.028em;margin:0 0 22px;color:var(--text)}
+  .doc h2{font-family:var(--font);font-size:var(--ts-xl);font-weight:700;letter-spacing:-.018em;margin:36px 0 11px;color:var(--text)}
+  .doc h3{font-family:var(--font);font-size:var(--ts-lg);font-weight:600;letter-spacing:-.01em;margin:28px 0 8px;color:var(--text)}
+  .doc p{margin:0 0 18px;color:#2c2c2e}
+  .doc ul,.doc ol{margin:0 0 18px 24px;color:#2c2c2e}
   .doc li{margin-bottom:6px}
   .hl{background:var(--hl);border-radius:3px;padding:1px 0;box-decoration-break:clone;-webkit-box-decoration-break:clone}
 
@@ -647,8 +653,8 @@
 
   /* ---------- Chat panel ---------- */
   /* ---------- combined chat area: one card, AI Chat + Group columns ---------- */
-  .chat-area{flex:0 0 auto;width:35vw;min-width:550px;position:relative}
-  .chat-area.both{width:35vw;min-width:550px}
+  .chat-area{flex:0 0 auto;width:30vw;min-width:400px;position:relative}
+  .chat-area.both{width:46vw;min-width:640px}
   .chat-area.hidden{display:none}
   .chat-cols{flex:1;display:flex;min-height:0}
   .chat-col{flex:1 1 0;min-width:0;display:flex;flex-direction:column;min-height:0;animation:colIn .24s var(--ease-out) both}
@@ -742,6 +748,11 @@
     background:var(--au-yuan);margin-left:2px;vertical-align:-2px;border-radius:1px;animation:caretBlink .9s steps(1) infinite}
   @keyframes caretBlink{0%,50%{opacity:1}50.01%,100%{opacity:0}}
   .gen-stopped{display:flex;align-items:center;gap:6px;color:var(--text-3);font-size:12.5px;font-weight:500;margin-top:8px}
+  /* AI confidence / error states */
+  .ai-err{display:flex;align-items:center;gap:8px;padding:10px 12px;background:#fff5f5;border:1px solid #fcc;border-radius:var(--r-s);font-size:13px;color:#c0392b;margin-top:8px}
+  .ai-err svg{width:15px;height:15px;flex:0 0 15px;stroke:#c0392b;fill:none;stroke-width:1.8;stroke-linecap:round}
+  .ai-low-conf{display:inline-flex;align-items:center;gap:5px;background:var(--ai-subtle);border:1px solid var(--ai-border);border-radius:6px;padding:3px 9px;font-size:11.5px;font-weight:600;color:var(--au-ai);margin-bottom:8px}
+  .ai-low-conf::before{content:"~";font-weight:800;margin-right:1px}
   .gen-stopped svg{width:13px;height:13px}
   .ans-actions{display:flex;gap:7px;margin-top:4px}
   .ans-btn{display:flex;align-items:center;gap:6px;padding:6px 11px;border:1px solid var(--border);border-radius:var(--r-s);
@@ -1544,7 +1555,6 @@
         <!-- hero -->
         <section class="pj-hero">
           <div class="pj-hero-top">
-            <div class="picon"><svg viewBox="0 0 24 24" class="ico" style="width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg></div>
             <div style="flex:1;min-width:0">
               <span class="pj-chip"><span class="pdot"></span>In progress</span>
               <h1 style="margin-top:9px">Paternal Epigenetic Inheritance</h1>
@@ -1779,6 +1789,32 @@
               <h2><span class="auth" data-author="you">IV. Implications and Open Questions</span></h2>
               <p><span class="auth" data-author="you">If acquired traits can be inherited through the paternal germline, the implications reach well beyond molecular biology — into epidemiology, public health, and how we reason about the heritability of complex disease</span><sup class="cite" data-ref="3" contenteditable="false">[3]</sup><span class="auth" data-author="you">. </span><span class="auth" data-author="yuan">Yet major questions remain open: how are these signals first established in the germline, how does a privileged subset of marks evade embryonic reprogramming, and how many generations does the effect realistically persist before it decays?</span></p>
               <p><span class="auth" data-author="ai">A reasonable synthesis is that no single mechanism acts alone. Sperm small RNAs, residual DNA methylation, and retained histone marks most likely operate as a layered, partially redundant system</span><sup class="cite" data-ref="5" contenteditable="false">[5]</sup><sup class="cite" data-ref="6" contenteditable="false">[6]</sup><span class="auth" data-author="ai">. </span><span class="auth" data-author="you">Disentangling their relative contributions, and establishing how faithfully each is transmitted in humans rather than rodents, is the central task for the coming decade of work in this field</span><sup class="cite" data-ref="1" contenteditable="false">[1]</sup><span class="auth" data-author="you">.</span></p>
+
+              <h2><span class="auth" data-author="you">V. Human Epidemiological Evidence</span></h2>
+              <h3><span class="auth" data-author="yuan">A. The Överkalix and Dutch Hunger Winter Cohorts</span></h3>
+              <p><span class="auth" data-author="yuan">Two natural experiments have provided the most influential human evidence. In the Överkalix cohort, paternal-line nutritional availability during a critical prepubertal window predicted cardiovascular and metabolic risk in grandchildren, with effect sizes large enough to survive multiple testing correction</span><sup class="cite" data-ref="3" contenteditable="false">[3]</sup><span class="auth" data-author="yuan">. The Dutch Hunger Winter studies, initially focused on maternal famine exposure, later revealed that paternal famine in childhood also altered offspring methylation at imprinted loci, most notably <em>IGF2</em></span><sup class="cite" data-ref="2" contenteditable="false">[2]</sup><span class="auth" data-author="yuan">.</span></p>
+              <p><span class="auth" data-author="chen">The epidemiological signal is real but noisy. Cohort sizes are modest, environmental confounds are difficult to fully model, and the candidate mechanisms identified in rodents — particularly small-RNA loading — have not yet been directly confirmed to operate in the same way in human sperm under naturalistic conditions</span><sup class="cite" data-ref="4" contenteditable="false">[4]</sup><span class="auth" data-author="chen">. Human in-vitro fertilisation datasets, which allow separation of genetic and epigenetic contributions, offer a promising but underutilised natural experiment.</span></p>
+
+              <h3><span class="auth" data-author="you">B. Occupational and Environmental Exposures</span></h3>
+              <p><span class="auth" data-author="you">Prospective occupational-cohort studies have linked paternal exposure to endocrine disruptors — phthalates, bisphenol A, pesticide residues — with altered sperm epigenomes and increased risk of developmental and reproductive disorders in offspring</span><sup class="cite" data-ref="5" contenteditable="false">[5]</sup><span class="auth" data-author="you">. Effect sizes are generally small, consistent with regulatory rather than deterministic inheritance, but they are coherent across independent cohorts and exposure types.</span></p>
+              <p><span class="auth" data-author="ai">Mechanistically, these exposures appear to act by altering the small-RNA cargo loaded during sperm maturation in the epididymis — a window that remains open until ejaculation and that is therefore far more environmentally responsive than the germline DNA methylome, which is largely locked in by the end of meiosis</span><sup class="cite" data-ref="6" contenteditable="false">[6]</sup><span class="auth" data-author="ai">.</span></p>
+
+              <h2><span class="auth" data-author="you">VI. Methodological Considerations</span></h2>
+              <h3><span class="auth" data-author="yuan">A. Controlling for Genetic Confounds</span></h3>
+              <p><span class="auth" data-author="yuan">A persistent challenge in this literature is separating truly epigenetic inheritance from indirect genetic effects — for instance, a father who transmits both a high-fat-diet phenotype and the genetic variants that predispose to it. Adoptive-father designs and donor-sperm IVF cohorts partially address this, but they are expensive and ethically constrained, leaving most human evidence correlational</span><sup class="cite" data-ref="3" contenteditable="false">[3]</sup><span class="auth" data-author="yuan">.</span></p>
+              <h3><span class="auth" data-author="chen">B. Reproducibility and Effect Magnitudes</span></h3>
+              <p><span class="auth" data-author="chen">A number of landmark rodent findings have proven difficult to replicate at the same effect size across independent laboratories, raising the question of whether epigenetic inheritance is highly sensitive to strain background, husbandry conditions, and cohort size</span><sup class="cite" data-ref="4" contenteditable="false">[4]</sup><span class="auth" data-author="chen">. Pre-registration, larger sample sizes, and cross-laboratory validation are increasingly recognised as necessary standards for the field to mature beyond proof-of-concept studies.</span></p>
+
+              <h2><span class="auth" data-author="you">VII. Discussion</span></h2>
+              <p><span class="auth" data-author="you">The evidence reviewed here supports a model in which the paternal germline encodes a limited but reproducible set of environmentally acquired signals, transmitted primarily through sperm-borne small RNAs and secondarily through residual chromatin marks, that influence offspring phenotype in ways measurable at the level of gene expression, metabolism, and behaviour</span><sup class="cite" data-ref="5" contenteditable="false">[5]</sup><sup class="cite" data-ref="6" contenteditable="false">[6]</sup><span class="auth" data-author="you">.</span></p>
+              <p><span class="auth" data-author="yuan">What the model does not yet support is the stronger neo-Lamarckian claim that any environmental experience can be faithfully and stably transmitted across unlimited generations. The current evidence is consistent with a one-to-two generation window of transmission, after which the signal decays below detectable thresholds — possibly because embryonic reprogramming is imperfect but not absent</span><sup class="cite" data-ref="2" contenteditable="false">[2]</sup><span class="auth" data-author="yuan">.</span></p>
+              <p><span class="auth" data-author="chen">The public-health corollary is sobering in both directions. If paternal lifestyle choices reliably alter offspring health through epigenetic mechanisms, then pre-conception paternal health interventions deserve the same attention currently given to maternal prenatal care. Conversely, overstating the evidence risks both deterministic fatalism — the belief that a grandfather's exposures seal a grandchild's fate — and premature clinical translation of immature science</span><sup class="cite" data-ref="3" contenteditable="false">[3]</sup><span class="auth" data-author="chen">.</span></p>
+              <p><span class="auth" data-author="ai">Integrating multi-omic profiling of sperm (small-RNA sequencing, whole-genome bisulfite sequencing, CUT&amp;RUN for histone marks) with longitudinal offspring phenotyping in well-powered human cohorts represents the most direct path to resolving these open questions. Falling sequencing costs and the maturation of epigenome-wide association study (EWAS) methodology make the next decade an unusually favourable moment for this synthesis</span><sup class="cite" data-ref="1" contenteditable="false">[1]</sup><span class="auth" data-author="ai">.</span></p>
+
+              <h2><span class="auth" data-author="you">VIII. Conclusion</span></h2>
+              <p><span class="auth" data-author="you">Paternal epigenetic inheritance is no longer a theoretical curiosity. Converging evidence from gain-of-function RNA-injection experiments, cross-fostering designs, and human epidemiological cohorts establishes that the male germline transmits environmentally acquired information to offspring via molecular mechanisms that are beginning to be understood in mechanistic detail</span><sup class="cite" data-ref="5" contenteditable="false">[5]</sup><sup class="cite" data-ref="6" contenteditable="false">[6]</sup><span class="auth" data-author="you">.</span></p>
+              <p><span class="auth" data-author="yuan">The field is, however, at an inflection point: early demonstrations of the phenomenon must now be matched by mechanistic specificity, cross-species validation, and effect-size replication adequate to support clinical or public-health recommendations</span><sup class="cite" data-ref="3" contenteditable="false">[3]</sup><span class="auth" data-author="yuan">. The molecular toolkit to do so — high-resolution epigenomics, CRISPR-based mark editing, and longitudinal human cohorts with banked sperm — is now largely in place.</span></p>
+              <p><span class="auth" data-author="ai">Whether the signals identified in rodents translate fully to humans, at what quantitative magnitude, and over how many generations, remain the defining empirical questions. Answering them with rigour will determine whether paternal epigenetic inheritance reshapes our understanding of non-genetic disease transmission — or remains a fascinating but practically limited biological phenomenon</span><sup class="cite" data-ref="1" contenteditable="false">[1]</sup><sup class="cite" data-ref="4" contenteditable="false">[4]</sup><span class="auth" data-author="ai">.</span></p>
             </article>
             <div class="gutter" id="gutter"></div>
             <section class="bib" contenteditable="false">
@@ -1810,7 +1846,7 @@
             <button class="chat-mode-btn on" data-mode="ai" title="Show / hide your AI chat">
               <svg class="ico-xs" viewBox="0 0 24 24" fill="none" stroke="#2f6df0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5C21.0034 12.8199 20.6951 14.1219 20.1 15.3C19.3944 16.7118 18.3098 17.8992 16.9674 18.7293C15.6251 19.5594 14.0782 19.9994 12.5 20C11.1801 20.0035 9.87812 19.6951 8.7 19.1L3 21L4.9 15.3C4.30493 14.1219 3.99656 12.8199 4 11.5C4.00061 9.92179 4.44061 8.37488 5.27072 7.03258C6.10083 5.69028 7.28825 4.6056 8.7 3.90003C9.87812 3.30496 11.1801 2.99659 12.5 3.00003H13C15.0843 3.11502 17.053 3.99479 18.5291 5.47089C20.0052 6.94699 20.885 8.91568 21 11V11.5Z"/></svg>AI Chat
             </button>
-            <button class="chat-mode-btn" data-mode="group" title="Show / hide the team's shared group thread">
+            <button class="chat-mode-btn on" data-mode="group" title="Show / hide the team's shared group thread">
               <svg class="ico-xs" viewBox="0 0 24 24" fill="none" stroke="#197b2e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21"/><path d="M9 11C11.2091 11 13 9.20914 13 7C13 4.79086 11.2091 3 9 3C6.79086 3 5 4.79086 5 7C5 9.20914 6.79086 11 9 11Z"/><path d="M23 20.9999V18.9999C22.9993 18.1136 22.7044 17.2527 22.1614 16.5522C21.6184 15.8517 20.8581 15.3515 20 15.1299"/><path d="M16 3.12988C16.8604 3.35018 17.623 3.85058 18.1676 4.55219C18.7122 5.2538 19.0078 6.11671 19.0078 7.00488C19.0078 7.89305 18.7122 8.75596 18.1676 9.45757C17.623 10.1592 16.8604 10.6596 16 10.8799"/></svg>Group
             </button>
           </div>
@@ -2487,20 +2523,30 @@
   var focusPrev=null;   // remembers panel state so we can restore on exit
   function setFocus(on){
     if(on){
-      if(!focusPrev) focusPrev={ files:filesPanel.classList.contains('hidden'), chat:chatPanel.classList.contains('hidden'), group:document.getElementById('groupPanel').classList.contains('hidden'), editor:editorPanel.classList.contains('hidden') };
-      filesPanel.classList.add('hidden'); chatPanel.classList.add('hidden'); document.getElementById('groupPanel').classList.add('hidden');   // full immersion
-      editorPanel.classList.remove('hidden');   // editor is the focus surface — always shown
+      if(!focusPrev) focusPrev={ files:filesPanel.classList.contains('hidden'), chat:chatPanel.classList.contains('hidden'), group:document.getElementById('groupPanel').classList.contains('hidden'), editor:editorPanel.classList.contains('hidden'), cites:showCites, comments:showComments, authors:document.body.classList.contains('show-authors') };
+      filesPanel.classList.add('hidden'); chatPanel.classList.add('hidden'); document.getElementById('groupPanel').classList.add('hidden');
+      editorPanel.classList.remove('hidden');
+      // deselect annotation overlays so the doc is clean
+      if(showCites){ showCites=false; citesBtn.classList.remove('on'); }
+      if(showComments){ showComments=false; commentsBtn.classList.remove('on'); }
+      if(document.body.classList.contains('show-authors')){ document.body.classList.remove('show-authors'); document.getElementById('authorsBtn').classList.remove('on'); scheduleGutter(); }
+      syncMarginState();
     } else if(focusPrev){
       filesPanel.classList.toggle('hidden', focusPrev.files);
       chatPanel.classList.toggle('hidden', focusPrev.chat);
       document.getElementById('groupPanel').classList.toggle('hidden', focusPrev.group);
       editorPanel.classList.toggle('hidden', focusPrev.editor);
+      // restore annotation overlays
+      showCites=focusPrev.cites; citesBtn.classList.toggle('on', showCites);
+      showComments=focusPrev.comments; commentsBtn.classList.toggle('on', showComments);
+      if(focusPrev.authors){ document.body.classList.add('show-authors'); document.getElementById('authorsBtn').classList.add('on'); }
+      syncMarginState(); layoutGutter();
       focusPrev=null;
     }
     document.body.classList.toggle('focus-mode', on);
     focusBtn.classList.toggle('on', on);
-    setSegState();   // refresh File/Viewer/Chat highlight + relayout margin
-    showToast(on?'Focus mode on — panels & citation margin hidden. Esc or ⌘⇧F to exit.':'Focus mode off');
+    setSegState();
+    showToast(on?'Focus mode on — Esc or ⌘⇧F to exit.':'Focus mode off');
   }
   focusBtn.addEventListener('click', function(){ setFocus(!document.body.classList.contains('focus-mode')); });
   document.addEventListener('keydown', function(e){
@@ -3976,7 +4022,7 @@
   setSegState();   // sync the File/Editor/Chat segments to which panels are actually visible
   fillProjectCollab(); updateProjectStats();
   syncMarginState();
-  setView('project');   // open directly on the project overview (second page), skipping the projects landing
+  setView('editor');   // open directly on the editor with both chat columns visible
   setTimeout(function(){ layoutGutter(); placeAllCarets(); }, 60);
 
   /* ============================================================

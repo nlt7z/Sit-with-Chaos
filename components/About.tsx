@@ -18,7 +18,7 @@ const capabilities = [
     title: "Visual Craft",
     description:
       "When AI surfaces dozens of directions, I spot the right one and refine it until the craft holds.",
-    evidence: { href: "/vibe-coding", label: "See the craft" },
+    evidence: { href: "/work/liner", label: "See the craft" },
   },
   {
     title: "Relentless Builder",

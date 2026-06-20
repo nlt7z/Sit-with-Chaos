@@ -162,7 +162,7 @@ export default function LinerCaseStudy() {
             <header id="overview" className="scroll-mt-28 pb-20 md:pb-28">
               <FadeIn>
                 <img
-                  src="/assets/liner/liner-scholar-logo.png"
+                  src="/assets/liner/linerlogo.png"
                   alt="Liner"
                   className="mb-7 h-7 w-auto object-contain object-left md:h-8"
                 />
@@ -216,25 +216,25 @@ export default function LinerCaseStudy() {
               </FadeIn>
             </header>
 
+            {/* INTERACTIVE PROTOTYPE */}
+            <Section id="prototype" eyebrow="Interactive Prototype" title="Try the editor.">
+              <FadeIn>
+                <ScaledPrototypeFrame
+                  src="/assets/liner/liner-ai-yuan.html"
+                  title="Liner AI capstone — interactive editor prototype"
+                />
+                <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">
+                  Built with Claude Code + Figma MCP
+                </p>
+              </FadeIn>
+            </Section>
+
             {/* PRODUCT VIDEO */}
             <Section id="video" eyebrow="Product Video">
               <FadeIn className="mt-2">
                 <div className="overflow-hidden rounded-2xl bg-black ring-1 ring-black/[0.08] shadow-[0_28px_60px_-30px_rgba(0,0,0,0.28)]">
                   <AutoplayVideo src="/assets/liner/liner-product-video.mp4" />
                 </div>
-              </FadeIn>
-            </Section>
-
-            {/* INTERACTIVE PROTOTYPE */}
-            <Section id="prototype" eyebrow="Interactive Prototype" title="Try the editor.">
-              <FadeIn>
-                <ScaledPrototypeFrame
-                  src="/assets/liner/Liner%20AI%20Capstone%20Prototype.html"
-                  title="Liner AI capstone — interactive editor prototype"
-                />
-                <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">
-                  Built with Claude Code + Figma MCP
-                </p>
               </FadeIn>
             </Section>
 

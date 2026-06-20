@@ -130,7 +130,7 @@ export function CraftModel({
     controls.enableDamping = true;
     controls.dampingFactor = 0.08;
     controls.rotateSpeed = 0.9;
-    controls.autoRotateSpeed = 1.6;
+    controls.autoRotateSpeed = 0.5;
     controls.autoRotate = !reducedRef.current;
 
     const onEnter = () => {
@@ -189,6 +189,10 @@ export function CraftModel({
             const center = box.getCenter(new THREE.Vector3());
             src.position.sub(center);
             src.position.y -= 0.12;
+            // Oblique spin: tilt the model so the slow turntable reads as a
+            // canted axis rather than a flat horizontal spin.
+            src.rotation.z = -0.32;
+            src.rotation.x = 0.16;
             scene.add(src);
             setPhase("ready");
           })

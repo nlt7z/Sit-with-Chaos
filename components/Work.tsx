@@ -39,7 +39,7 @@ const studioEngine: Project = {
   },
   flowSteps: ["basics", "outline", "script", "visuals"],
   meta: { year: "2025", role: "Product Designer", status: "Shipped" },
-  impact: "Usability study (n=6) → version history, checkpoints, unified editor",
+  impact: "Usability study (n=6) · Version history · Checkpoints · Unified editor",
   tags: ["GenAI Workflow", "Product Strategy"],
   logo: {
     src: "/assets/studio-engine/studioengine-logo.png",

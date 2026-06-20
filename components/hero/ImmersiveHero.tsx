@@ -199,6 +199,13 @@ export function ImmersiveHero() {
             initial="hidden"
             animate={play ? "show" : "hidden"}
           >
+            <motion.p
+              variants={itemV}
+              className="mb-3 font-mono text-sm uppercase tracking-[0.18em] text-nltLime-ink md:mb-4"
+            >
+              Hi, I&apos;m Yuan
+            </motion.p>
+
             <motion.h1
               id="hero-heading"
               variants={itemV}
