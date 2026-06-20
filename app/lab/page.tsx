@@ -8,6 +8,22 @@ export const metadata = {
 
 const EXPERIMENTS = [
   {
+    id: "⑨",
+    href: "/lab/bento",
+    title: "Bento desktop homepage",
+    blurb:
+      "Homepage reimagined as a single-screen draggable bento desktop (xiangyidesign.com style). Curiosity / Craft / Code each become a widget; current work (Liner), Qbix, a live clock, now-playing, a skill radar and a Seattle map fill the wall. Drag a window — it stretches on an elastic tether and snaps back.",
+    proves: "the whole homepage as one playful surface",
+  },
+  {
+    id: "⑧",
+    href: "/lab/tiktok",
+    title: "FYP work feed",
+    blurb:
+      "“If I were TikTok’s design lead.” The 5-card white Work list reimagined as a full-screen, scroll-snap feed — near-black canvas, video bleeding edge-to-edge, a count-up metric in signature lime, giant ghost index numerals.",
+    proves: "full-bleed, video-first impact",
+  },
+  {
     id: "①",
     href: "/hero-lab",
     title: "Living hero",
