@@ -28,7 +28,7 @@ export default function PrototypeFullscreenPage() {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        background: "#f9f9f8",
+        background: "#ffffff",
       }}
     >
       <div
