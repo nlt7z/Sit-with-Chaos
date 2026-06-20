@@ -320,6 +320,115 @@ function ShowcaseVideo({
   );
 }
 
+/** Deep-links into the live showroom prototypes — each URL mounts the prototype
+ *  straight into the moment its feature is opened, so the case-study feature
+ *  cards show the real interactive prototype instead of a screen recording. */
+const FEATURE_PROTOTYPES = {
+  heartbeat: "/work/ai-character/prototype?embed=1&muted=1&focus=heartbeat",
+  story: "/work/ai-character/prototype?embed=1&muted=1&focus=story",
+  moments: "/work/ai-character/prototype?embed=1&muted=1&focus=moments",
+  altUniverse: "/work/ai-character/prototype?embed=1&muted=1&focus=alt-universe",
+  inspire: "/work/ai-character/prototype?embed=1&muted=1&focus=inspire",
+  code: "/work/ai-character/prototype?embed=1&muted=1&focus=code",
+  astroProfile: "/work/ai-character/prototype-astro?embed=1&focus=profile",
+  therapyAnalysis: "/work/ai-character/prototype-psych?embed=1&focus=analysis",
+} as const;
+
+/** Edge-to-edge treatment when an embed sits inside another card. */
+const embedInCardClass =
+  "rounded-none shadow-none ring-0 [&>div]:rounded-none [&_iframe]:rounded-none [&>figcaption]:border-black/[0.06]";
+
+// Render the prototype at full desktop size and scale it down to fit, so the
+// embed reads like the full-screen app (just smaller) instead of reflowing into
+// a cramped narrow layout. The frame stays 16:9 at every width — including
+// mobile, where the whole desktop view simply scales down further (never goes
+// portrait).
+const FEATURE_FRAME_W = 1440;
+const FEATURE_FRAME_H = 810; // 16:9
+
+function FeaturePrototypeEmbed({
+  label,
+  src,
+  caption,
+  className = "",
+}: {
+  label: string;
+  src: string;
+  caption?: string;
+  className?: string;
+}) {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+  const [load, setLoad] = useState(false);
+
+  // Track the rendered width so the fixed-size desktop iframe can be scaled to fit.
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  // Don't boot every prototype app at once — mount each iframe only as it nears
+  // the viewport, then leave it running.
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setLoad(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setLoad(true);
+          obs.disconnect();
+        }
+      },
+      { root: null, rootMargin: "300px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const scale = width > 0 ? width / FEATURE_FRAME_W : 0;
+  const displayH = Math.round(FEATURE_FRAME_H * scale);
+
+  return (
+    <figure className={`overflow-hidden bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.08] ${mediaRound} ${className}`}>
+      <div
+        ref={frameRef}
+        className={`relative w-full overflow-hidden bg-[#0b0b10] ${mediaRound}`}
+        style={{ height: displayH || undefined, aspectRatio: displayH ? undefined : `${FEATURE_FRAME_W} / ${FEATURE_FRAME_H}` }}
+      >
+        {load && scale > 0 ? (
+          <iframe
+            title={label}
+            src={src}
+            loading="lazy"
+            className="absolute left-0 top-0 border-0"
+            style={{
+              width: FEATURE_FRAME_W,
+              height: FEATURE_FRAME_H,
+              transform: `scale(${scale})`,
+              transformOrigin: "top left",
+            }}
+          />
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
+          </div>
+        )}
+      </div>
+      {caption ? (
+        <figcaption className="border-t border-black/[0.05] px-5 py-3.5 font-sans text-[12px] leading-relaxed tracking-wide text-textSecondary/95">
+          {caption}
+        </figcaption>
+      ) : null}
+    </figure>
+  );
+}
+
 const SHOWCASE_GALLERY_SLIDE_MS = 9000;
 
 const showcaseGallerySlides = [
@@ -346,17 +455,19 @@ const showcaseGallerySlides = [
 
 function ShowcaseSlideGallery({ reduced }: { reduced: boolean | null }) {
   const [index, setIndex] = useState(0);
+  // Once the visitor picks a tab, stop auto-advancing so they can study it.
+  const [userPicked, setUserPicked] = useState(false);
   const len = showcaseGallerySlides.length;
   const slide = showcaseGallerySlides[index];
   const galleryFigureRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    if (reduced) return;
+    if (reduced || userPicked) return;
     const id = window.setInterval(() => {
       setIndex((v) => (v + 1) % len);
     }, SHOWCASE_GALLERY_SLIDE_MS);
     return () => window.clearInterval(id);
-  }, [reduced, len]);
+  }, [reduced, len, userPicked]);
 
   useEffect(() => {
     if (reduced) return;
@@ -406,7 +517,10 @@ function ShowcaseSlideGallery({ reduced }: { reduced: boolean | null }) {
               role="tab"
               aria-selected={on}
               tabIndex={on ? 0 : -1}
-              onClick={() => setIndex(i)}
+              onClick={() => {
+                setUserPicked(true);
+                setIndex(i);
+              }}
               className={`${roomTab.base} ${on ? roomTab.on : roomTab.off}`}
             >
               {s.tab}
@@ -457,7 +571,7 @@ const additionalShowroomGalleryItems: {
   room: string;
   capability: string;
   body: string;
-  videoSrc: string;
+  prototypeSrc: string;
   videoCaption: string;
 }[] = [
   {
@@ -465,7 +579,7 @@ const additionalShowroomGalleryItems: {
     room: "Astrology Room",
     capability: "Real-time memory updates",
     body: "A personal constellation file updates during conversation — memory becomes transparent and inspectable.",
-    videoSrc: "/assets/ai-character/interactions/other%20showrooms/astro%20profile/astro%20profile-1.mp4",
+    prototypeSrc: FEATURE_PROTOTYPES.astroProfile,
     videoCaption: "Your profile rewrites in real time.",
   },
   {
@@ -473,15 +587,12 @@ const additionalShowroomGalleryItems: {
     room: "Therapy Room",
     capability: "Real-time analysis",
     body: "A live panel surfaces conversation themes — users see what the system understood, not just what it said.",
-    videoSrc: "/assets/ai-character/interactions/other%20showrooms/therapy%20analysis/therapy%20analysis-1.mp4",
+    prototypeSrc: FEATURE_PROTOTYPES.therapyAnalysis,
     videoCaption: "The model's read, visible beside your words.",
   },
 ];
 
 function AdditionalShowroomsGallery() {
-  const videoInCardClass =
-    "rounded-none shadow-none ring-0 [&>div]:rounded-none [&_video]:rounded-none [&>figcaption]:border-black/[0.06]";
-
   return (
     <motion.div
       className="mt-10 space-y-5"
@@ -496,11 +607,11 @@ function AdditionalShowroomsGallery() {
           variants={innovationItem}
           className="block overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] transition-[box-shadow] duration-700 ease-out hover:shadow-[0_24px_64px_-28px_rgba(0,0,0,0.09)]"
         >
-          <ShowcaseVideo
-            label={`${item.room} — screen recording`}
-            src={item.videoSrc}
+          <FeaturePrototypeEmbed
+            label={`${item.room} — live prototype`}
+            src={item.prototypeSrc}
             caption={item.videoCaption}
-            className={videoInCardClass}
+            className={embedInCardClass}
           />
           <div className="border-t border-black/[0.06] bg-white px-7 py-8 md:px-9 md:py-9">
             <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">{item.room}</h3>
@@ -929,7 +1040,7 @@ const innovations: {
   capability: string;
   detail: ReactNode;
   workflowSrc: string;
-  videoSrc: string;
+  prototypeSrc: string;
   videoCaption: string;
   notShipped?: true;
 }[] = [
@@ -938,7 +1049,7 @@ const innovations: {
     name: "Heartbeat Power",
     capability: "Real-time generation + character depth modeling",
     workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow.svg",
-    videoSrc: "/assets/ai-character/interactions/heartbeat/heartbeat-1.mp4",
+    prototypeSrc: FEATURE_PROTOTYPES.heartbeat,
     videoCaption: "One tap. What it was actually thinking.",
     detail: (
       <>
@@ -952,7 +1063,7 @@ const innovations: {
     name: "Story Unlock",
     capability: "Progressive memory building",
     workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow.svg",
-    videoSrc: "/assets/ai-character/interactions/story%20unlocked/story%20unlocked-1.mp4",
+    prototypeSrc: FEATURE_PROTOTYPES.story,
     videoCaption: "Go deeper. The character opens up.",
     detail: (
       <>
@@ -966,7 +1077,7 @@ const innovations: {
     name: "Moments Feed",
     capability: "Generation from memory history",
     workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow.svg",
-    videoSrc: "/assets/ai-character/interactions/moments/moments-1.mp4",
+    prototypeSrc: FEATURE_PROTOTYPES.moments,
     videoCaption: "It keeps living between sessions.",
     detail: (
       <>
@@ -980,7 +1091,7 @@ const innovations: {
     name: "Alternate Universe Events",
     capability: "Long-term memory + generative storytelling",
     workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
-    videoSrc: "/assets/ai-character/interactions/alternative%20universe/alternative%20universe-1.mp4",
+    prototypeSrc: FEATURE_PROTOTYPES.altUniverse,
     videoCaption: "A scene only your history could trigger.",
     notShipped: true,
     detail: (
@@ -1003,8 +1114,6 @@ const innovationItem = {
 
 function InteractionInnovationList() {
   const [openId, setOpenId] = useState<string | null>(null);
-  const videoInCardClass =
-    "rounded-none shadow-none ring-0 [&>div]:rounded-none [&_video]:rounded-none [&>figcaption]:border-black/[0.06]";
 
   return (
     <motion.div
@@ -1022,11 +1131,11 @@ function InteractionInnovationList() {
             variants={innovationItem}
             className="block overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] transition-[box-shadow] duration-700 ease-out hover:shadow-[0_24px_64px_-28px_rgba(0,0,0,0.09)]"
           >
-            <ShowcaseVideo
-              label={`${item.name} — interaction preview`}
-              src={item.videoSrc}
+            <FeaturePrototypeEmbed
+              label={`${item.name} — live prototype`}
+              src={item.prototypeSrc}
               caption={item.videoCaption}
-              className={videoInCardClass}
+              className={embedInCardClass}
             />
             <button
               type="button"
@@ -1693,12 +1802,11 @@ export default function CaseStudyContent() {
             </div>
           </div>
 
-          <ShowcaseVideo
+          <FeaturePrototypeEmbed
             label="Experience loop — inspiration and continue response in flow"
-            src="/assets/ai-character/inspire-continue-response/inspire-continue-response-1.mp4"
+            src={FEATURE_PROTOTYPES.inspire}
             caption="Inspiration reply options and continue response in the romance room"
             className="mt-10"
-            preload="auto"
           />
 
           <div className="mt-10 rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
@@ -1708,9 +1816,9 @@ export default function CaseStudyContent() {
             </p>
           </div>
 
-          <ShowcaseVideo
+          <FeaturePrototypeEmbed
             label="Developer tools — in-product code side panel"
-            src="/assets/ai-character/code/code%20tool.mp4"
+            src={FEATURE_PROTOTYPES.code}
             caption="The prompt is right there. No digging."
             className="mt-10"
           />

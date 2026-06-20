@@ -516,8 +516,8 @@ function HeartbeatMysteryLayer({ w, h }: { w: number; h: number }) {
   );
 }
 
-function HeartbeatTarotCard({ text, hidden }: { text: string; hidden: boolean }) {
-  const [flipped, setFlipped] = useState(false);
+function HeartbeatTarotCard({ text, hidden, initialFlipped = false }: { text: string; hidden: boolean; initialFlipped?: boolean }) {
+  const [flipped, setFlipped] = useState(initialFlipped);
   const gF = useId();
   const hintId = `${gF}-hint`;
   if (hidden) return null;
@@ -1570,7 +1570,7 @@ const FREE_REPLIES = [
   },
 ];
 
-export default function AiCharacterPrototypeClient({ embed = false, muted = false }: { embed?: boolean; muted?: boolean }) {
+export default function AiCharacterPrototypeClient({ embed = false, muted = false, focus }: { embed?: boolean; muted?: boolean; focus?: string }) {
   useEffect(() => { window.scrollTo(0, 0); }, []);
 
   const [messages, setMessages] = useState<Msg[]>([{ id: 1, type: "char", text: GREETING.text, narration: GREETING.narration, heartbeat: GREETING.heartbeat }]);
@@ -1625,6 +1625,41 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
     }
     return () => { m.removeEventListener("play", onPlay); m.removeEventListener("pause", onPause); };
   }, [muted]);
+
+  // Deep-link: when embedded for a specific case-study feature, mount straight
+  // into that feature's opened state (used by the AI-Character case study so a
+  // feature card shows the live prototype already in the relevant moment).
+  const focusAppliedRef = useRef(false);
+  useEffect(() => {
+    if (focusAppliedRef.current || !focus) return;
+    focusAppliedRef.current = true;
+    switch (focus) {
+      case "story":
+        setStoryOpen(true);
+        break;
+      case "moments":
+        setRightPane("moments");
+        break;
+      case "code":
+        setDevOpen(true);
+        break;
+      case "inspire":
+        setHeartbeatHidden(false);
+        setPhase("inspiration");
+        break;
+      case "alt-universe":
+        setAuCardShown(true);
+        setMessages((p) => (p.some((m) => m.type === "au-event") ? p : [...p, { id: Date.now(), type: "au-event", text: "" }]));
+        break;
+      case "heartbeat":
+        // Card already lives on the greeting; just make sure it's visible.
+        // The reveal (flip to the inner thought) is handled via initialFlipped.
+        setHeartbeatHidden(false);
+        break;
+      default:
+        break;
+    }
+  }, [focus]);
 
   const toggleMusic = () => {
     const m = musicRef.current; if (!m) return;
@@ -1968,7 +2003,7 @@ export default function AiCharacterPrototypeClient({ embed = false, muted = fals
                                 </button>
                               </div>
                             )}
-                            {msg.heartbeat && msg.id === heartbeatMsgId && <HeartbeatTarotCard text={msg.heartbeat} hidden={heartbeatHidden} />}
+                            {msg.heartbeat && msg.id === heartbeatMsgId && <HeartbeatTarotCard text={msg.heartbeat} hidden={heartbeatHidden} initialFlipped={focus === "heartbeat"} />}
                           </div>
                         </div>
                       );

@@ -11,6 +11,8 @@ import {
 import { DM_Sans, Inter, JetBrains_Mono } from "next/font/google";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+import BlueGradientBackground from "@/components/BlueGradientBackground";
+
 // ── Fonts ──────────────────────────────────────────────────────────────────────
 const displayFont = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
 const uiFont = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600"] });
@@ -31,10 +33,10 @@ const spring = {
 
 // ── Palette ────────────────────────────────────────────────────────────────────
 const C = {
-  bg:         "linear-gradient(156deg, #f4f8fc 0%, #ecf2f9 40%, #e4ecf6 72%, #dce6f2 100%)",
-  accent:     "#4F6EA0",
-  accentLt:   "#8AACD0",
-  accentSoft: "rgba(79,110,160,0.07)",
+  bg:         "linear-gradient(156deg, #f1f9fb 0%, #e6f4f8 40%, #d9edf3 72%, #cde7f0 100%)",
+  accent:     "#4A9BC9",
+  accentLt:   "#94CBE6",
+  accentSoft: "rgba(74,155,201,0.08)",
   teal:       "#2A7A6B",
   // Surfaces — shadow-based depth, borders nearly invisible
   card:       "rgba(255,255,255,0.90)",
@@ -42,15 +44,15 @@ const C = {
   shadow:     "0 1px 3px rgba(0,0,0,0.04), 0 6px 20px -8px rgba(0,0,0,0.07)",
   shadowMd:   "0 1px 4px rgba(0,0,0,0.05), 0 12px 28px -10px rgba(0,0,0,0.09)",
   shadowLg:   "0 2px 8px rgba(0,0,0,0.06), 0 24px 48px -16px rgba(0,0,0,0.12)",
-  // User bubble — soft blue-slate
-  userBub:    "rgba(214,226,244,0.94)",
-  userTxt:    "#1A2435",
+  // User bubble — milk blue
+  userBub:    "rgba(205,233,246,0.92)",
+  userTxt:    "#1A2A38",
   // Typography
   txt:        "#1C1C1E",
-  txt2:       "#52637A",
-  txt3:       "rgba(82,99,122,0.60)",
+  txt2:       "#4F6678",
+  txt3:       "rgba(79,102,120,0.60)",
   // Nav
-  nav:        "rgba(244,248,252,0.97)",
+  nav:        "rgba(242,250,252,0.97)",
   navBdr:     "rgba(0,0,0,0.07)",
   // Reasoning card — warm amber ink pops nicely against cool bg
   anBg:       "linear-gradient(180deg, #fefcf5 0%, #fdf8e8 100%)",
@@ -103,7 +105,6 @@ const QUICK_PROMPTS = [
   "I can't stop overthinking at night",
   "My partner and I keep arguing",
   "Work stress is overwhelming me",
-  "I feel disconnected lately",
 ];
 
 const PIPE_INIT: PipeStep[] = [
@@ -247,37 +248,37 @@ function IcoRegenerate() {
 }
 function IcoRestart() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M16.5 6A7.5 7.5 0 1 0 17.2 10"/><path d="M17 3.5v3.8h-3.8"/>
+    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M15.4 6.7A6.3 6.3 0 1 0 16.3 10"/><path d="M15.8 4.5v3.1h-3.1"/>
     </svg>
   );
 }
 function IcoShare() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="15" cy="4.5" r="2"/><circle cx="5" cy="10" r="2"/><circle cx="15" cy="15.5" r="2"/>
-      <path d="m7 9 6-3M7 11l6 3"/>
+    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="14.3" cy="5.5" r="1.9"/><circle cx="5.7" cy="10" r="1.9"/><circle cx="14.3" cy="14.5" r="1.9"/>
+      <path d="M7.4 9 12.6 6.4M7.4 11l5.2 2.6"/>
     </svg>
   );
 }
 function IcoExpert() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="10" cy="6" r="2.8"/><path d="M4 17c.9-3 3.3-4.5 6-4.5s5.1 1.5 6 4.5"/>
+    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="10" cy="6.5" r="2.7"/><path d="M4.3 16.5c.7-3 3-4.6 5.7-4.6s5 1.6 5.7 4.6"/>
     </svg>
   );
 }
 function IcoCode() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M7 5L3 10l4 5M13 5l4 5-4 5"/>
     </svg>
   );
 }
 function IcoGuide() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-4 w-4" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="10" cy="10" r="7.5"/><path d="M10 6v5l3 2"/>
+    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="10" cy="10" r="6.3"/><path d="M10 6.6v3.6l2.4 1.5"/>
     </svg>
   );
 }
@@ -594,15 +595,15 @@ function NavBtn({ onClick, active, children, wide }: {
     <motion.button
       type="button"
       onClick={onClick}
-      className={`inline-flex items-center gap-1.5 justify-center rounded-xl ${wide ? "h-8 px-3" : "h-8 w-8"}`}
+      className={`inline-flex items-center gap-1.5 justify-center rounded-xl ${wide ? "h-8 px-2.5" : "h-8 w-8"}`}
       style={{
-        background: active ? "rgba(79,110,160,0.1)" : "rgba(160,140,110,0.06)",
-        border: `1px solid ${active ? "rgba(79,110,160,0.28)" : "rgba(160,140,110,0.16)"}`,
-        color: active ? C.accent : C.txt2,
-        boxShadow: active ? "0 2px 12px -4px rgba(79,110,160,0.22)" : "none",
+        background: "transparent",
+        border: "none",
+        color: active ? C.accent : "#16223A",
+        boxShadow: "none",
       }}
-      whileHover={{ opacity: 0.75 }}
-      whileTap={{ opacity: 0.5 }}
+      whileHover={{ opacity: 0.6 }}
+      whileTap={{ opacity: 0.4 }}
       transition={spring.fade}
     >
       {children}
@@ -964,6 +965,100 @@ function formatMessageParagraphs(text: string) {
   }));
 }
 
+// Welcome illustration — a coral star-creature hugging a soft pink blob,
+// wrapped by a gentle orbit ring with a little star travelling around it.
+// Reconstructed 1:1 from the reference art. The pair bobs up and down.
+function WelcomeHug() {
+  const rm = useReducedMotion();
+  // Star path centred on the origin (outer r≈4.4, inner r≈1.9) — translated
+  // around the tilted orbit ellipse (cx80,cy76, rx56, ry21, −18°).
+  const starX = [133.3, 122.3, 86.5, 46.9, 26.7, 37.8, 73.5, 113.1, 133.3];
+  const starY = [58.7, 77.9, 96.0, 102.4, 93.3, 74.1, 56.0, 49.7, 58.7];
+  return (
+    <div
+      aria-hidden
+      className="relative hidden shrink-0 items-center justify-center sm:flex"
+      style={{ width: 152, height: 142 }}
+    >
+      {/* Same footprint as before; the viewBox is zoomed in ~30% so the
+          artwork renders larger without changing the occupied area. */}
+      <svg viewBox="18.5 17 123 115" width={152} height={142}>
+        {/* orbit ring — back half (behind the pair) */}
+        <ellipse
+          cx="80" cy="76" rx="56" ry="21"
+          fill="none" stroke="#A6D8EC" strokeWidth="2.6" opacity="0.6"
+          transform="rotate(-18 80 76)"
+        />
+
+        {/* the hugging pair — bobs up and down together */}
+        <motion.g
+          animate={rm ? {} : { y: [0, -6, 0] }}
+          transition={rm ? {} : { duration: 2.3, ease: "easeInOut", repeat: Infinity }}
+        >
+          {/* pink's far arm, reaching behind coral */}
+          <path d="M89 83 Q75 93 64 89" stroke="#E2A0CF" strokeWidth="8" strokeLinecap="round" fill="none" />
+
+          {/* pink body — round ball */}
+          <circle cx="100" cy="80" r="21" fill="#E2A0CF" />
+          {/* pink cheeks */}
+          <ellipse cx="91" cy="86" rx="3.2" ry="2.2" fill="#CE73B0" opacity="0.5" />
+          <ellipse cx="109" cy="86" rx="3.2" ry="2.2" fill="#CE73B0" opacity="0.5" />
+          {/* pink sleepy eyes */}
+          <path d="M92 79 Q95 82 98 79" stroke="#9A4F89" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+          <path d="M102 79 Q105 82 108 79" stroke="#9A4F89" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+
+          {/* coral feet */}
+          <ellipse cx="57" cy="104" rx="4.5" ry="3.4" fill="#F47A57" />
+          <ellipse cx="71" cy="105" rx="4.5" ry="3.4" fill="#F47A57" />
+          {/* coral body — round ball */}
+          <circle cx="64" cy="82" r="19" fill="#F47A57" />
+          {/* coral cheeks */}
+          <ellipse cx="55" cy="87" rx="3.2" ry="2.2" fill="#E85C3E" opacity="0.5" />
+          <ellipse cx="73" cy="87" rx="3.2" ry="2.2" fill="#E85C3E" opacity="0.5" />
+          {/* coral sleepy eyes */}
+          <path d="M56 80 Q59 83 62 80" stroke="#A8442A" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+          <path d="M66 80 Q69 83 72 80" stroke="#A8442A" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+
+          {/* coral's arm hugging around pink (in front) */}
+          <path d="M78 82 Q94 95 104 88" stroke="#F47A57" strokeWidth="8" strokeLinecap="round" fill="none" />
+
+          {/* star sitting on coral's head */}
+          <g transform="translate(59 51) rotate(-10)">
+            <motion.path
+              d="M0 -10 L2.59 -3.56 L9.51 -3.09 L4.18 1.36 L5.88 8.09 L0 4.4 L-5.88 8.09 L-4.18 1.36 L-9.51 -3.09 L-2.59 -3.56 Z"
+              fill="#F9C22E"
+              style={{ transformBox: "fill-box", transformOrigin: "center" }}
+              animate={rm ? {} : { scale: [1, 1.16, 1], rotate: [0, 7, 0] }}
+              transition={rm ? {} : { duration: 3, ease: "easeInOut", repeat: Infinity }}
+            />
+          </g>
+        </motion.g>
+
+        {/* orbit ring — front half (crosses in front for the wrapped look) */}
+        <path
+          d="M24 76 A56 21 0 0 0 136 76"
+          fill="none" stroke="#A6D8EC" strokeWidth="2.6" opacity="0.9" strokeLinecap="round"
+          transform="rotate(-18 80 76)"
+        />
+
+        {/* little star travelling around the orbit */}
+        <motion.g
+          animate={rm ? { x: 133.3, y: 58.7 } : { x: starX, y: starY }}
+          transition={rm ? {} : { duration: 11, ease: "linear", repeat: Infinity }}
+        >
+          <motion.path
+            d="M0 -4.4 L1.12 -1.54 L4.18 -1.36 L1.81 0.59 L2.59 3.56 L0 1.9 L-2.59 3.56 L-1.81 0.59 L-4.18 -1.36 L-1.12 -1.54 Z"
+            fill="#F9C22E"
+            style={{ transformBox: "fill-box", transformOrigin: "center" }}
+            animate={rm ? {} : { rotate: [0, 360] }}
+            transition={rm ? {} : { duration: 6, ease: "linear", repeat: Infinity }}
+          />
+        </motion.g>
+      </svg>
+    </div>
+  );
+}
+
 function AssistantMessage({
   msg,
   onToggleAnalysis,
@@ -976,6 +1071,7 @@ function AssistantMessage({
   onCopy: () => void;
 }) {
   const paragraphs = useMemo(() => formatMessageParagraphs(msg.text), [msg.text]);
+  const isWelcome = msg.id === "welcome";
   return (
     <div className="mb-8 flex flex-col items-start">
       {msg.analysis && (
@@ -987,58 +1083,64 @@ function AssistantMessage({
         />
       )}
       <div
-        className="w-full max-w-[72%] rounded-[18px] px-5 py-4"
+        className={`w-full rounded-[18px] ${isWelcome ? "px-6 py-5" : "max-w-[72%] px-5 py-4"}`}
         style={{
-          background: "#ffffff",
-          boxShadow: C.shadowMd,
+          background: isWelcome ? "rgba(198,230,244,0.42)" : "#ffffff",
+          border: "none",
+          boxShadow: isWelcome ? "none" : C.shadowMd,
         }}
       >
-        <div className={`space-y-3 ${uiFont.className}`}>
-          {paragraphs.map((p, i) => (
-            <p
-              key={i}
-              className="text-[14px] leading-[1.80]"
-              style={{
-                color: p.type === "lead" ? C.txt : C.txt2,
-                fontWeight: p.type === "lead" ? 450 : 400,
-              }}
-            >
-              {p.type === "body" && i > 0 && (
-                <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: "rgba(160,140,110,0.50)" }}/>
-              )}
-              {p.text}
-            </p>
-          ))}
+        <div className={isWelcome ? "flex items-center gap-6" : ""}>
+          {isWelcome && <WelcomeHug/>}
+          <div className={`space-y-3 ${uiFont.className} ${isWelcome ? "min-w-0 flex-1" : ""}`}>
+            {paragraphs.map((p, i) => (
+              <p
+                key={i}
+                className="text-[14px] leading-[1.80]"
+                style={{
+                  color: p.type === "lead" ? C.txt : C.txt2,
+                  fontWeight: p.type === "lead" ? 450 : 400,
+                }}
+              >
+                {p.type === "body" && i > 0 && (
+                  <span className="mr-2 inline-block h-1.5 w-1.5 rounded-full align-middle" style={{ background: "rgba(74,155,201,0.55)" }}/>
+                )}
+                {p.text}
+              </p>
+            ))}
+          </div>
         </div>
       </div>
-      <div className="mt-2.5 flex items-center gap-2">
-        <Tip label="Regenerate">
-          <motion.button
-            type="button"
-            onClick={onRegenerate}
-            className="p-1"
-            style={{ color: C.txt3 }}
-            whileHover={{ color: C.accent, opacity: 1 }}
-            whileTap={{ opacity: 0.6 }}
-            transition={spring.fade}
-          >
-            <IcoRegenerate/>
-          </motion.button>
-        </Tip>
-        <Tip label="Copy">
-          <motion.button
-            type="button"
-            onClick={onCopy}
-            className="p-1"
-            style={{ color: C.txt3 }}
-            whileHover={{ color: C.accent, opacity: 1 }}
-            whileTap={{ opacity: 0.6 }}
-            transition={spring.fade}
-          >
-            <IcoCopy/>
-          </motion.button>
-        </Tip>
-      </div>
+      {!isWelcome && (
+        <div className="mt-2.5 flex items-center gap-2">
+          <Tip label="Regenerate">
+            <motion.button
+              type="button"
+              onClick={onRegenerate}
+              className="p-1"
+              style={{ color: C.txt3 }}
+              whileHover={{ color: C.accent, opacity: 1 }}
+              whileTap={{ opacity: 0.6 }}
+              transition={spring.fade}
+            >
+              <IcoRegenerate/>
+            </motion.button>
+          </Tip>
+          <Tip label="Copy">
+            <motion.button
+              type="button"
+              onClick={onCopy}
+              className="p-1"
+              style={{ color: C.txt3 }}
+              whileHover={{ color: C.accent, opacity: 1 }}
+              whileTap={{ opacity: 0.6 }}
+              transition={spring.fade}
+            >
+              <IcoCopy/>
+            </motion.button>
+          </Tip>
+        </div>
+      )}
     </div>
   );
 }
@@ -1100,15 +1202,11 @@ const InputDock = memo(function InputDock({ analyzing, onSend, onRegisterFocus }
   }, [onRegisterFocus]);
 
   return (
-    <div className="relative z-20 shrink-0 px-6 pb-6 pt-4"
-      style={{
-        background: "linear-gradient(180deg, rgba(244,248,252,0.98) 0%, rgba(236,242,250,0.97) 100%)",
-        backdropFilter: "blur(4px)",
-        borderTop: `1px solid ${C.navBdr}`,
-      }}>
-      <div className="mx-auto max-w-[760px]">
+    <div className="relative z-20 shrink-0 px-4 pb-10 pt-3">
+      {/* Composer — no outer frame, just chips + the text input field */}
+      <div className="mx-auto max-w-[720px]">
         {/* Quick prompts */}
-        <div className="mb-3.5 flex flex-nowrap gap-2 overflow-x-auto pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        <div className="mb-2.5 flex flex-nowrap gap-2 overflow-x-auto px-0.5 pt-0.5 pb-0.5 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {QUICK_PROMPTS.map(q => (
             <motion.button
               key={q}
@@ -1117,12 +1215,12 @@ const InputDock = memo(function InputDock({ analyzing, onSend, onRegisterFocus }
               onClick={() => { if (!analyzing) onSend(q); }}
               className="shrink-0 rounded-full px-4 py-2 text-[12px] whitespace-nowrap font-medium disabled:opacity-40"
               style={{
-                background: "rgba(255,255,255,0.88)",
-                border: `1px solid rgba(0,0,0,0.07)`,
+                background: "rgba(255,255,255,0.55)",
+                border: "1px solid rgba(80,110,160,0.16)",
                 color: C.txt2,
-                boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                boxShadow: "0 1px 2px rgba(40,70,120,0.06)",
               }}
-              whileHover={{ color: C.accent, borderColor: "rgba(79,110,160,0.24)", background: "rgba(255,255,255,1)" }}
+              whileHover={{ color: C.accent, borderColor: "rgba(79,110,160,0.34)", background: "rgba(255,255,255,0.9)" }}
               whileTap={{ opacity: 0.7 }}
               transition={spring.fade}
             >
@@ -1131,14 +1229,18 @@ const InputDock = memo(function InputDock({ analyzing, onSend, onRegisterFocus }
           ))}
         </div>
 
-        {/* Composer */}
+        {/* Composer field — self-contained input box */}
         <div
-          className="overflow-hidden rounded-2xl"
+          className="overflow-hidden rounded-[18px]"
           style={{
-            background: "#ffffff",
-            border: `1px solid ${focused ? "rgba(79,110,160,0.28)" : "rgba(0,0,0,0.07)"}`,
-            boxShadow: focused ? `0 0 0 3px rgba(79,110,160,0.07), ${C.shadowMd}` : C.shadow,
-            transition: "border-color 0.18s ease, box-shadow 0.18s ease",
+            background: focused ? "rgba(255,255,255,0.94)" : "rgba(255,255,255,0.80)",
+            backdropFilter: "blur(20px) saturate(1.6)",
+            WebkitBackdropFilter: "blur(20px) saturate(1.6)",
+            border: `1px solid ${focused ? "rgba(74,155,201,0.40)" : "rgba(255,255,255,0.85)"}`,
+            boxShadow: focused
+              ? "0 0 0 3px rgba(74,155,201,0.12), 0 12px 32px -16px rgba(40,90,130,0.26)"
+              : "0 8px 26px -16px rgba(40,90,130,0.20)",
+            transition: "background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease",
           }}
         >
           <div className="flex items-center gap-2 px-4 py-3">
@@ -1189,10 +1291,27 @@ const InputDock = memo(function InputDock({ analyzing, onSend, onRegisterFocus }
 });
 
 // ── Main component ─────────────────────────────────────────────────────────────
-export default function PsychShowroomPrototypeClient({ embed = false }: { embed?: boolean }) {
+export default function PsychShowroomPrototypeClient({ embed = false, focus }: { embed?: boolean; focus?: string }) {
   const rm = useReducedMotion();
 
-  const [messages,  setMessages]  = useState<Msg[]>([WELCOME]);
+  // Deep-link: when embedded for the "visible analysis" case-study feature,
+  // mount with one completed turn so the model's read is already shown beside
+  // the reply (no waiting for the live build animation).
+  const [messages,  setMessages]  = useState<Msg[]>(() =>
+    focus === "analysis"
+      ? [
+          WELCOME,
+          { id: "u-seed", role: "user", text: QUICK_PROMPTS[0], analysisCollapsed: false },
+          {
+            id: "a-seed",
+            role: "assistant",
+            text: buildReply(QUICK_PROMPTS[0]),
+            analysis: generateAnalysis(QUICK_PROMPTS[0]),
+            analysisCollapsed: false,
+          },
+        ]
+      : [WELCOME]
+  );
   const [build,     setBuild]     = useState<BuildState>(null);
   const [analyzing, setAnalyzing] = useState(false);
   const [pipeline,  setPipeline]  = useState<PipeStep[]>(PIPE_INIT);
@@ -1367,25 +1486,19 @@ export default function PsychShowroomPrototypeClient({ embed = false }: { embed?
         }
       `}</style>
 
-      {/* Soft blue ambient radials */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        <div className="absolute inset-0" style={{
-          backgroundImage: [
-            "radial-gradient(circle at 16% 16%, rgba(180,210,240,0.20) 0%, transparent 44%)",
-            "radial-gradient(circle at 84% 20%, rgba(155,195,235,0.16) 0%, transparent 40%)",
-            "radial-gradient(circle at 52% 84%, rgba(175,210,245,0.18) 0%, transparent 44%)",
-          ].join(","),
-        }}/>
-      </div>
+      {/* Flowing soft-blue gradient backdrop — deeper toward the bottom so the
+          floating composer card reads as translucent glass */}
+      <BlueGradientBackground
+        palette="soft"
+        grain={0.06}
+        bottomShade="rgba(255,255,255,0.62)"
+        className="z-0"
+      />
 
       {/* ── Navigation ── */}
       <motion.header
         className="relative z-30 shrink-0 flex items-center gap-3 px-6 py-3"
-        style={{
-          background: C.nav,
-          backdropFilter: "blur(12px)",
-          borderBottom: `1px solid ${C.navBdr}`,
-        }}
+        style={{ background: "transparent" }}
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ ...spring.gentle, delay: 0.1 }}
@@ -1393,7 +1506,7 @@ export default function PsychShowroomPrototypeClient({ embed = false }: { embed?
         {/* Brand */}
         <div className="mr-1 flex min-w-0 flex-col justify-center gap-0.5 py-px">
           <p className={`text-[14px] font-semibold tracking-[-0.01em] ${displayFont.className}`}
-            style={{ color: C.txt }}>Therapy Space</p>
+            style={{ color: "#16223A" }}>Therapy Space</p>
           <p className="text-[9.5px] tracking-[.06em]" style={{ color: C.txt3 }}>
             Backed by clinical reasoning
           </p>

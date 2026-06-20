@@ -10,10 +10,11 @@ export const metadata: Metadata = {
 export default async function AstroShowroomPrototypePage({
   searchParams,
 }: {
-  searchParams: Promise<{ embed?: string }>;
+  searchParams: Promise<{ embed?: string; focus?: string }>;
 }) {
   const params = await searchParams;
   const embed = params.embed === "1";
+  const focus = params.focus;
 
   return (
     <DesktopExperienceGate
@@ -23,7 +24,7 @@ export default async function AstroShowroomPrototypePage({
       description="A consultation showroom — chat, card draw, and a memory archive."
       backHref="/work/ai-character"
     >
-      <AstroShowroomPrototypeClient embed={embed} />
+      <AstroShowroomPrototypeClient embed={embed} focus={focus} />
     </DesktopExperienceGate>
   );
 }

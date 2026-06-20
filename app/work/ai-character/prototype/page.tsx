@@ -11,11 +11,12 @@ export const metadata: Metadata = {
 export default async function AiCharacterPrototypePage({
   searchParams,
 }: {
-  searchParams: Promise<{ embed?: string; muted?: string }>;
+  searchParams: Promise<{ embed?: string; muted?: string; focus?: string }>;
 }) {
   const params = await searchParams;
   const embed = params.embed === "1";
   const embedMuted = params.muted === "1";
+  const focus = params.focus;
 
   return (
     <DesktopExperienceGate
@@ -25,7 +26,7 @@ export default async function AiCharacterPrototypePage({
       description="A one-round chat experience with a centered character presence."
       backHref="/work/ai-character"
     >
-      <AiCharacterPrototypeClient embed={embed} muted={embedMuted} />
+      <AiCharacterPrototypeClient embed={embed} muted={embedMuted} focus={focus} />
     </DesktopExperienceGate>
   );
 }

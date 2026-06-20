@@ -1,0 +1,734 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Therapy Space — Reasoning-first counseling prototype</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%234f6ea0'/%3E%3Cpath d='M16 7a9 9 0 1 0 0 18 9 9 0 0 0 0-18zm0 4v5l3 2' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Inter:wght@300;400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    /* surfaces / type */
+    --txt:  #1c1c1e;
+    --txt2: #52637a;
+    --txt3: rgba(82,99,122,0.60);
+    --accent: #4f6ea0;
+    --accentLt: #8aacd0;
+    --accentSoft: rgba(79,110,160,0.08);
+    --teal: #2a7a6b;
+    --green: #1a7550;
+    --amber: #a66200;
+    --userBub: rgba(214,226,244,0.94);
+    --userTxt: #1a2435;
+
+    /* reasoning (warm amber on cool bg) */
+    --anHd:  #7a6020;
+    --anLbl: #9a7c38;
+    --anVal: #6b5535;
+
+    /* flowing soft-blue background palette */
+    --bgg-canvas: #f0f6fc;
+    --bgg-base: linear-gradient(150deg,#f3f8fc 0%,#eaf2fa 28%,#e0ecf7 52%,#d9e8f6 68%,#e8f2fb 84%,#f4f9fe 96%,#fbfdff 100%);
+    --b1a: rgba(255,255,255,0.85); --b1b: rgba(228,241,252,0.42);
+    --b2a: rgba(180,213,242,0.40); --b2b: rgba(180,213,242,0.14);
+    --b3a: rgba(168,194,230,0.28); --b3b: rgba(190,210,236,0.10);
+    --b4a: rgba(255,255,255,0.82); --b4b: rgba(232,243,252,0.30);
+    --b5a: rgba(200,226,247,0.38); --b5b: rgba(200,226,247,0.14);
+    --shade: rgba(120,158,210,0.55);
+
+    --noise: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.86' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+
+    --ui: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --display: "DM Sans", var(--ui);
+    --mono: "JetBrains Mono", ui-monospace, monospace;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; }
+  body {
+    font-family: var(--ui);
+    color: var(--txt);
+    background: var(--bgg-canvas);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ───────────────────────── flowing background ───────────────────────── */
+  .bg { position: fixed; inset: 0; overflow: hidden; isolation: isolate; z-index: 0; pointer-events: none; background: var(--bgg-canvas); }
+  .bg > div { position: absolute; }
+  .bg-base { inset: -60%; background: var(--bgg-base); background-size: 200% 200%; animation: pan 34s ease-in-out infinite; }
+  .blob { width: 95%; height: 95%; border-radius: 50%; filter: blur(8px); will-change: transform; }
+  .b1 { left: 30%; top: -10%; background: radial-gradient(circle at center, var(--b1a), var(--b1b) 42%, transparent 68%); mix-blend-mode: screen; animation: f1 22s ease-in-out infinite; }
+  .b2 { left: -20%; top: 20%; background: radial-gradient(circle at center, var(--b2a), var(--b2b) 45%, transparent 70%); mix-blend-mode: screen; animation: f2 28s ease-in-out infinite; }
+  .b3 { left: 5%; top: -25%; width: 80%; height: 80%; background: radial-gradient(circle at center, var(--b3a), var(--b3b) 46%, transparent 70%); mix-blend-mode: multiply; animation: f3 31s ease-in-out infinite; }
+  .b4 { left: 20%; top: 55%; background: radial-gradient(circle at center, var(--b4a), var(--b4b) 44%, transparent 70%); mix-blend-mode: screen; animation: f4 19s ease-in-out infinite; }
+  .b5 { left: 55%; top: 35%; width: 70%; height: 70%; background: radial-gradient(circle at center, var(--b5a), var(--b5b) 46%, transparent 72%); mix-blend-mode: screen; animation: f5 25s ease-in-out infinite; }
+  .bg-shade { inset: 0; background: linear-gradient(to bottom, transparent 46%, var(--shade) 100%); }
+  .bg-grain { inset: 0; background-image: var(--noise); background-size: 180px 180px; }
+  .grain-static { opacity: 0.03; mix-blend-mode: overlay; }
+  .grain-boil { opacity: 0.06; mix-blend-mode: soft-light; animation: boil 0.9s steps(4) infinite; }
+
+  @keyframes pan { 0%{background-position:0% 0%} 50%{background-position:100% 100%} 100%{background-position:0% 0%} }
+  @keyframes f1 { 0%{transform:translate(0,0) scale(1)} 33%{transform:translate(-34%,28%) scale(1.25)} 66%{transform:translate(22%,52%) scale(.95)} 100%{transform:translate(0,0) scale(1)} }
+  @keyframes f2 { 0%{transform:translate(0,0) scale(1.05)} 33%{transform:translate(46%,18%) scale(1.3)} 66%{transform:translate(30%,-22%) scale(1)} 100%{transform:translate(0,0) scale(1.05)} }
+  @keyframes f3 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(40%,36%) scale(1.18)} 100%{transform:translate(0,0) scale(1)} }
+  @keyframes f4 { 0%{transform:translate(0,0) scale(1)} 33%{transform:translate(26%,-30%) scale(1.22)} 66%{transform:translate(-30%,-14%) scale(.95)} 100%{transform:translate(0,0) scale(1)} }
+  @keyframes f5 { 0%{transform:translate(0,0) scale(1)} 50%{transform:translate(-44%,-28%) scale(1.28)} 100%{transform:translate(0,0) scale(1)} }
+  @keyframes boil { 0%{transform:translate3d(0,0,0)} 25%{transform:translate3d(-6%,4%,0)} 50%{transform:translate3d(5%,-5%,0)} 75%{transform:translate3d(-4%,-3%,0)} 100%{transform:translate3d(0,0,0)} }
+
+  /* ───────────────────────── app shell ───────────────────────── */
+  .app { position: relative; z-index: 1; display: flex; flex-direction: column; height: 100vh; height: 100dvh; }
+
+  .nav { flex: 0 0 auto; display: flex; align-items: center; gap: 12px; padding: 12px 24px; }
+  .brand-title { font-family: var(--display); font-size: 14px; font-weight: 600; letter-spacing: -0.01em; color: var(--txt); margin: 0; }
+  .brand-sub { font-size: 9.5px; letter-spacing: .06em; color: var(--txt3); margin: 2px 0 0; }
+  .nav-actions { display: flex; align-items: center; gap: 6px; }
+  .nav-div { width: 1px; height: 20px; background: rgba(160,140,110,0.22); margin: 0 4px; }
+
+  .nbtn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    height: 32px; border-radius: 12px; padding: 0; width: 32px;
+    background: rgba(160,140,110,0.06); border: 1px solid rgba(160,140,110,0.16);
+    color: var(--txt2); cursor: pointer; transition: opacity .18s ease, background .18s ease, border-color .18s ease;
+    font-family: var(--ui); font-size: 11px; font-weight: 500;
+  }
+  .nbtn.wide { width: auto; padding: 0 12px; }
+  .nbtn:hover { opacity: .72; }
+  .nbtn.active { background: rgba(79,110,160,0.1); border-color: rgba(79,110,160,0.28); color: var(--accent); box-shadow: 0 2px 12px -4px rgba(79,110,160,0.22); }
+  .nbtn svg { width: 16px; height: 16px; }
+
+  /* ───────────────────────── feed ───────────────────────── */
+  .feed-wrap { flex: 1 1 auto; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(160,140,110,0.14) transparent; }
+  .feed-wrap::-webkit-scrollbar { width: 8px; }
+  .feed-wrap::-webkit-scrollbar-thumb { background: rgba(160,140,110,0.18); border-radius: 8px; }
+  .feed { width: 100%; max-width: 720px; margin: 0 auto; padding: 36px 32px 18px; }
+
+  .turn { margin-bottom: 30px; }
+  .enter { opacity: 0; transform: translateY(6px); animation: enter .34s cubic-bezier(.16,1,.3,1) forwards; }
+  @keyframes enter { to { opacity: 1; transform: none; } }
+
+  .row-user { display: flex; justify-content: flex-end; margin-bottom: 30px; }
+  .bub-user {
+    max-width: 72%; border-radius: 18px; padding: 14px 20px;
+    background: var(--userBub); color: var(--userTxt);
+    font-size: 14px; line-height: 1.7;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04), 0 4px 14px -4px rgba(79,110,160,0.14);
+  }
+
+  .row-bot { display: flex; flex-direction: column; align-items: flex-start; }
+  .bub-bot {
+    width: 100%; max-width: 72%; border-radius: 18px; padding: 16px 20px;
+    background: rgba(255,255,255,0.92);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+    box-shadow: 0 1px 4px rgba(0,0,0,0.05), 0 12px 28px -10px rgba(0,0,0,0.09);
+  }
+  .bub-bot p { margin: 0; font-size: 14px; line-height: 1.8; color: var(--txt2); }
+  .bub-bot p + p { margin-top: 12px; }
+  .bub-bot p.lead { color: var(--txt); font-weight: 450; }
+  .bub-bot p.item .dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: rgba(160,140,110,0.5); vertical-align: middle; margin-right: 8px; }
+  .bot-tools { margin-top: 10px; display: flex; gap: 8px; }
+  .bot-tools button { background: none; border: none; padding: 4px; color: var(--txt3); cursor: pointer; transition: color .18s ease; }
+  .bot-tools button:hover { color: var(--accent); }
+  .bot-tools svg { width: 17px; height: 17px; }
+
+  /* reasoning card */
+  .reason { margin-bottom: 16px; }
+  .reason-head {
+    display: inline-flex; align-items: center; gap: 10px; padding: 8px 14px; border-radius: 999px;
+    cursor: pointer; text-align: left; border: 1px solid rgba(210,185,100,0.24);
+    background: rgba(255,248,230,0.6); box-shadow: 0 4px 14px -10px rgba(120,80,0,0.18);
+    transition: background .15s ease, border-color .15s ease; font-family: var(--ui);
+  }
+  .reason.done .reason-head { background: rgba(255,253,247,0.8); border-color: rgba(210,185,100,0.36); }
+  .reason-head:hover { background: rgba(255,248,230,0.85); }
+  .reason.done .reason-head:hover { background: rgba(255,253,247,0.97); }
+  .reason-title { font-size: 14px; font-weight: 500; color: var(--amber); }
+  .reason.done .reason-title { color: var(--anHd); }
+  .reason-count { font-size: 12px; color: rgba(166,98,0,0.55); }
+  .reason.done .reason-count { color: var(--anLbl); }
+  .reason-chevron { display: flex; color: var(--anLbl); opacity: .4; transition: transform .15s ease; }
+  .reason.done .reason-chevron { opacity: .8; }
+  .reason.open .reason-chevron { transform: rotate(180deg); }
+  .spin { width: 13px; height: 13px; animation: spin 0.9s linear infinite; color: var(--amber); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .reason-check { color: var(--green); display: flex; }
+
+  .reason-body { padding: 12px 0 0 4px; }
+  .reason-list { padding-left: 14px; border-left: 2px solid rgba(210,185,100,0.30); display: flex; flex-direction: column; gap: 10px; }
+  .rfield-label { font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase; color: rgba(120,95,0,0.55); margin: 0 0 2px; }
+  .reason.done .rfield-label { color: var(--anLbl); }
+  .rfield-val { font-size: 14px; line-height: 1.68; color: rgba(42,30,0,0.6); margin: 0; min-height: 1em; }
+  .reason.done .rfield-val { color: var(--anVal); }
+  .reason-body.collapsed { display: none; }
+
+  /* typing indicator */
+  .typing { display: inline-flex; gap: 10px; align-items: center; padding: 14px 20px; border-radius: 18px;
+    background: rgba(255,254,250,0.8); border: 1px solid rgba(0,0,0,0.05); box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 6px 20px -8px rgba(0,0,0,0.07); }
+  .tdot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); opacity: .5; animation: tdot 1.2s ease-in-out infinite; }
+  .tdot:nth-child(2){ animation-delay: .15s; } .tdot:nth-child(3){ animation-delay: .3s; }
+  @keyframes tdot { 0%,80%,100%{opacity:.3;transform:scale(1)} 40%{opacity:1;transform:scale(1.15)} }
+
+  /* ───────────────────────── composer card ───────────────────────── */
+  .composer-wrap { flex: 0 0 auto; padding: 12px 16px 20px; }
+  .card {
+    max-width: 720px; margin: 0 auto; border-radius: 24px; padding: 10px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.60) 0%, rgba(243,249,255,0.52) 100%);
+    -webkit-backdrop-filter: blur(24px) saturate(1.8); backdrop-filter: blur(24px) saturate(1.8);
+    border: 1px solid rgba(255,255,255,0.65);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.7), 0 22px 52px -24px rgba(40,70,120,0.34), 0 4px 16px -10px rgba(40,70,120,0.16);
+  }
+  .chips { display: flex; flex-wrap: nowrap; gap: 8px; overflow-x: auto; padding: 2px 2px 2px; margin-bottom: 10px; scrollbar-width: none; }
+  .chips::-webkit-scrollbar { display: none; }
+  .chip {
+    flex: 0 0 auto; border-radius: 999px; padding: 8px 16px; white-space: nowrap;
+    font-size: 12px; font-weight: 500; font-family: var(--ui); color: var(--txt2); cursor: pointer;
+    background: rgba(255,255,255,0.55); border: 1px solid rgba(80,110,160,0.16);
+    box-shadow: 0 1px 2px rgba(40,70,120,0.06); transition: background .18s, color .18s, border-color .18s;
+  }
+  .chip:hover { color: var(--accent); border-color: rgba(79,110,160,0.34); background: rgba(255,255,255,0.9); }
+  .chip:disabled { opacity: .4; cursor: default; }
+
+  .field {
+    display: flex; align-items: center; gap: 8px; padding: 6px 8px 6px 16px;
+    border-radius: 18px; background: rgba(255,255,255,0.66); border: 1px solid rgba(255,255,255,0.72);
+    box-shadow: inset 0 1px 2px rgba(40,70,120,0.05);
+    transition: background .18s, border-color .18s, box-shadow .18s;
+  }
+  .field.focused { background: rgba(255,255,255,0.85); border-color: rgba(79,110,160,0.34); box-shadow: 0 0 0 3px rgba(79,110,160,0.10); }
+  .field textarea {
+    flex: 1 1 auto; resize: none; border: none; outline: none; background: transparent;
+    font-family: var(--ui); font-size: 14px; line-height: 1.65; color: var(--txt);
+    caret-color: var(--accent); min-height: 24px; max-height: 104px; padding: 8px 0;
+  }
+  .send {
+    flex: 0 0 auto; width: 36px; height: 36px; border-radius: 12px; border: none; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; color: #fff;
+    background: rgba(0,0,0,0.08); transition: background .18s, box-shadow .18s, opacity .18s;
+  }
+  .send.on { background: linear-gradient(135deg, var(--accent), var(--teal)); box-shadow: 0 2px 8px -2px rgba(79,110,160,0.36); }
+  .send:disabled { cursor: default; opacity: .4; }
+  .send svg { width: 16px; height: 16px; }
+
+  /* ───────────────────────── side panel ───────────────────────── */
+  .scrim { position: fixed; inset: 0; z-index: 40; background: rgba(44,55,80,0.18); -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); opacity: 0; pointer-events: none; transition: opacity .3s ease; }
+  .scrim.show { opacity: 1; pointer-events: auto; }
+  .panel {
+    position: fixed; top: 0; right: 0; z-index: 41; height: 100%; width: 380px; max-width: 90vw;
+    display: flex; flex-direction: column; transform: translateX(100%); transition: transform .42s cubic-bezier(.16,1,.3,1);
+    background: linear-gradient(180deg, rgba(247,251,255,0.78), rgba(236,244,252,0.74));
+    -webkit-backdrop-filter: blur(22px) saturate(1.6); backdrop-filter: blur(22px) saturate(1.6);
+    border-left: 1px solid rgba(255,255,255,0.6); box-shadow: -18px 0 50px -20px rgba(40,70,120,0.25);
+  }
+  .panel.show { transform: none; }
+  .panel-head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 20px; border-bottom: 1px solid rgba(255,255,255,0.5); }
+  .panel-head p { margin: 0; font-size: 13px; font-weight: 600; letter-spacing: .04em; color: var(--txt2); }
+  .panel-x { width: 26px; height: 26px; border: none; background: transparent; color: var(--txt2); cursor: pointer; border-radius: 50%; }
+  .panel-body { flex: 1 1 auto; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 14px; }
+
+  .expert { display: flex; gap: 12px; padding: 14px; border-radius: 16px; background: rgba(255,255,255,0.72); border: 1px solid rgba(255,255,255,0.6); box-shadow: 0 6px 20px -12px rgba(40,70,120,0.2); }
+  .expert img, .expert .ava { width: 44px; height: 44px; border-radius: 50%; flex: 0 0 auto; object-fit: cover; box-shadow: 0 1px 3px rgba(0,0,0,0.12); }
+  .ava { display: flex; align-items: center; justify-content: center; color: #fff; font-size: 13px; font-weight: 600; }
+  .expert h4 { margin: 0; font-size: 13px; font-weight: 600; color: var(--txt); }
+  .expert .role { margin: 2px 0 0; font-size: 13px; color: var(--txt2); }
+  .expert .aff { margin: 2px 0 0; font-size: 12px; color: var(--txt3); }
+  .tag { display: inline-block; margin: 8px 6px 0 0; padding: 2px 8px; border-radius: 999px; font-size: 12px; background: rgba(42,122,107,0.07); color: var(--teal); border: 1px solid rgba(42,122,107,0.18); }
+  .panel-lead { margin: 0; font-size: 14px; line-height: 1.68; color: var(--txt2); }
+
+  .gstep { display: flex; gap: 12px; padding: 12px 14px; border-radius: 14px; background: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.55); }
+  .gnum { width: 24px; height: 24px; flex: 0 0 auto; border-radius: 50%; background: var(--accentSoft); color: var(--accent); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; }
+  .gstep h5 { margin: 0; font-size: 13px; font-weight: 600; color: var(--txt); }
+  .gstep p { margin: 3px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--txt2); }
+  .gstep .time { font-size: 11px; color: var(--txt3); }
+
+  /* toast */
+  .toast { position: fixed; left: 50%; bottom: 28px; transform: translate(-50%, 12px); z-index: 60;
+    padding: 10px 18px; border-radius: 999px; font-size: 13px; color: #f5f0e4; background: rgba(44,55,80,0.92);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); box-shadow: 0 10px 30px -12px rgba(0,0,0,0.4);
+    opacity: 0; pointer-events: none; transition: opacity .25s ease, transform .25s ease; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bg-base, .blob, .grain-boil, .tdot { animation: none !important; }
+    .enter { animation: none; opacity: 1; transform: none; }
+  }
+  @media (max-width: 560px) {
+    .feed { padding: 24px 18px 14px; }
+    .bub-user, .bub-bot { max-width: 86%; }
+    .nav { padding: 10px 14px; }
+    .brand-sub { display: none; }
+  }
+</style>
+</head>
+<body>
+  <!-- flowing background -->
+  <div class="bg" aria-hidden="true">
+    <div class="bg-base"></div>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+    <div class="blob b4"></div>
+    <div class="blob b5"></div>
+    <div class="bg-shade"></div>
+    <div class="bg-grain grain-static"></div>
+    <div class="bg-grain grain-boil"></div>
+  </div>
+
+  <div class="app">
+    <!-- nav -->
+    <header class="nav">
+      <div>
+        <p class="brand-title">Therapy Space</p>
+        <p class="brand-sub">Backed by clinical reasoning</p>
+      </div>
+      <div style="flex:1"></div>
+      <nav class="nav-actions">
+        <button class="nbtn wide" id="btnExperts" title="Clinical advisory panel">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="6" r="2.8"/><path d="M4 17c.9-3 3.3-4.5 6-4.5s5.1 1.5 6 4.5"/></svg>
+          <span>Experts</span>
+        </button>
+        <div class="nav-div"></div>
+        <button class="nbtn" id="btnShare" title="Copy link">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="15" cy="4.5" r="2"/><circle cx="5" cy="10" r="2"/><circle cx="15" cy="15.5" r="2"/><path d="m7 9 6-3M7 11l6 3"/></svg>
+        </button>
+        <button class="nbtn" id="btnRestart" title="Restart conversation">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 6A7.5 7.5 0 1 0 17.2 10"/><path d="M17 3.5v3.8h-3.8"/></svg>
+        </button>
+        <button class="nbtn wide" id="btnGuide" title="2-minute guide">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v5l3 2"/></svg>
+          <span>Guide</span>
+        </button>
+      </nav>
+    </header>
+
+    <!-- feed -->
+    <div class="feed-wrap" id="feedWrap">
+      <div class="feed" id="feed"></div>
+    </div>
+
+    <!-- composer -->
+    <div class="composer-wrap">
+      <div class="card">
+        <div class="chips" id="chips"></div>
+        <div class="field" id="field">
+          <textarea id="input" rows="1" placeholder="Share what's on your mind…"></textarea>
+          <button class="send" id="send" disabled aria-label="Send">
+            <svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14V4M4 9l5-5 5 5"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- side panel -->
+  <div class="scrim" id="scrim"></div>
+  <aside class="panel" id="panel" aria-hidden="true">
+    <div class="panel-head">
+      <p id="panelTitle">Expert Panel</p>
+      <button class="panel-x" id="panelX" aria-label="Close">
+        <svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M2.5 2.5l9 9M11.5 2.5l-9 9"/></svg>
+      </button>
+    </div>
+    <div class="panel-body" id="panelBody"></div>
+  </aside>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ── data ──────────────────────────────────────────────────────────────
+  var QUICK_PROMPTS = [
+    "I can't stop overthinking at night",
+    "My partner and I keep arguing",
+    "Work stress is overwhelming me"
+  ];
+
+  var FIELDS = [
+    { key: "emotionalState",      label: "Emotional State" },
+    { key: "coreConcern",         label: "Core Concern" },
+    { key: "knownContext",        label: "Context" },
+    { key: "conversationStage",   label: "Stage" },
+    { key: "unexploredContext",   label: "To Explore" },
+    { key: "therapeuticApproach", label: "Approach" }
+  ];
+
+  var WELCOME = "Hello. I'm glad you're here.\n\nTell me what's on your mind — a situation, a feeling, or something you've been carrying. Before I reply, you'll see my reasoning: the emotional pattern I'm tracking, the context I'm building, and the approach I'm considering.\n\nYou'll see the thinking before the answer.";
+
+  function analyze(input) {
+    var l = input.toLowerCase();
+    var isSleep    = /sleep|insomnia|night|awake|overthink|dream/.test(l);
+    var isStress   = /stress|pressure|anx|burnout|overwhelm|exhaust|nonstop|motions/.test(l);
+    var isRelation = /partner|relationship|argument|fight|communicat|couple/.test(l);
+
+    if (isRelation) return {
+      emotionalState:      "Relational distress — frustration, emotional depletion, possible helplessness",
+      coreConcern:         "Escalating conflict cycles that prevent genuine emotional connection",
+      knownContext:        "Recurring arguments with partner; pattern appears systematic, not isolated",
+      conversationStage:   "Active listening · Goal: map escalation triggers · Strategy: reflective questioning",
+      unexploredContext:   "Specific triggers, communication styles, recent relationship shifts, shared goals",
+      therapeuticApproach: "Identify Gottman escalation patterns first; introduce Nonviolent Communication second"
+    };
+    if (isSleep) return {
+      emotionalState:      "Elevated cognitive arousal with anxiety signal — sleep disruption as downstream effect",
+      coreConcern:         "Involuntary rumination preventing sleep onset; pressure-cognition feedback loop active",
+      knownContext:        "User experiences persistent night-time overthinking affecting sleep quality",
+      conversationStage:   "Assessment phase · Goal: identify rumination type and triggers · Strategy: psychoeducation",
+      unexploredContext:   "Sleep onset vs. maintenance issue, recurring thought themes, daytime stress load",
+      therapeuticApproach: "Cognitive defusion for night-time loops + structured worry-postponement + sleep hygiene"
+    };
+    if (isStress) return {
+      emotionalState:      "Chronic high-pressure state approaching depletion threshold — burnout markers elevated",
+      coreConcern:         "Sustained demands without adequate recovery creating systemic exhaustion",
+      knownContext:        "User reports continuous work pressure with near-burnout severity",
+      conversationStage:   "Validation phase · Goal: assess burnout severity · Strategy: normalize and explore",
+      unexploredContext:   "Work domain, support systems, previous coping patterns, boundary-setting capability",
+      therapeuticApproach: "Maslach burnout informal assessment first; boundary-setting and energy audit second"
+    };
+    return {
+      emotionalState:      "Generalized emotional flatness — low affect, possible existential drift or dissociation",
+      coreConcern:         "Disconnection from meaning; 'going through the motions' indicates deeper depletion",
+      knownContext:        "User feels emotionally disconnected from daily activities without a clear cause",
+      conversationStage:   "Discovery phase · Goal: identify core stressor · Strategy: open, curious exploration",
+      unexploredContext:   "Duration, specific triggers, impact on relationships, values and purpose alignment",
+      therapeuticApproach: "Acceptance-based values exploration first; behavioral activation to restore agency second"
+    };
+  }
+
+  function reply(input) {
+    var l = input.toLowerCase();
+    var isSleep    = /sleep|insomnia|night|awake|overthink|dream/.test(l);
+    var isStress   = /stress|pressure|anx|burnout|overwhelm|exhaust|nonstop/.test(l);
+    var isRelation = /partner|relationship|argument|fight|communicat|couple/.test(l);
+
+    if (isRelation) return "The frustration you're describing has a particular shape — not just the argument itself, but the cycle of trying to connect and ending up further apart.\n\nMost couples in this pattern aren't actually fighting about the surface topic. Each person is signaling an unmet need, but it comes out as criticism or defensiveness instead of vulnerability.\n\nThree things to try:\n1. Before the next difficult conversation, each of you write one sentence: \"I feel ___ when ___, because I need ___.\" Share both before engaging.\n2. Agree on a pause phrase — something neutral like \"I need a moment\" — that either person can use for a 20-minute break without it reading as abandonment.\n3. Start every hard conversation by stating one shared goal you both want for the relationship.\n\nWould it help to walk through what a recent argument looked like, step by step?";
+
+    if (isSleep || isStress) return "That combination of daytime pressure and nighttime overthinking is one of the most draining patterns — your nervous system cannot find the off-switch.\n\nThe core dynamic: unresolved daytime stress gets processed at night when no competing demands exist. The harder you try to force sleep, the more your brain interprets the effort as another problem to solve.\n\nThree practical steps starting tonight:\n1. 90 minutes before bed — do a \"worry dump.\" Write every active concern and add one concrete next action. This signals to your brain that the items are handled.\n2. Keep a notepad by the bed. When a thought intrudes, write it down and say: \"Scheduled for tomorrow at 9am.\" Return to slow breathing.\n3. Tomorrow, protect 90 uninterrupted minutes for your single highest-priority task. Reducing decision load during the day reduces mental noise at night.\n\nWhich of these feels most accessible to start with?";
+
+    return "What you're describing sounds like a kind of low-level disconnection — still functioning, but not quite fully present. That particular exhaustion can be harder to name than acute stress, but it is just as real.\n\nBefore I offer anything, I want to make sure I understand correctly.\n\nWhen you say \"going through the motions\" — is that mostly in one area of your life, or does it feel more general? And when did you last feel genuinely engaged or energized by something?\n\nSometimes one specific answer to that question unlocks the whole picture more quickly than talking about it in general terms.";
+  }
+
+  var EXPERTS = [
+    { img: "expert-1.webp", initials: "AH", color: "linear-gradient(135deg,#4A8A72,#2E6A54)", name: "Dr. Amara Hayes", role: "Clinical Psychologist", aff: "Columbia University", tags: ["CBT", "Stress Recovery"] },
+    { img: "expert-2.webp", initials: "SR", color: "linear-gradient(135deg,#8A6040,#6A4820)", name: "Dr. Sofia Reyes", role: "Counseling Research Lead", aff: "NYU Langone Health", tags: ["Relationship Communication"] },
+    { img: "expert-3.png", initials: "KB", color: "linear-gradient(135deg,#5C6EA8,#3D5090)", name: "Dr. Kate Brennan", role: "Crisis Intervention Specialist", aff: "Weill Cornell Medicine", tags: ["Safety Protocols", "Risk Assessment"] }
+  ];
+
+  var GUIDE = [
+    { n: 1, time: "0:00", label: "Start",    hint: "Choose a prompt or share what's on your mind." },
+    { n: 2, time: "0:20", label: "Observe",  hint: "Watch the clinical reasoning unfold before the reply." },
+    { n: 3, time: "0:45", label: "Review",   hint: "Read the response and its suggested next steps." },
+    { n: 4, time: "1:05", label: "Explore",  hint: "Meet the advisory panel that backs the knowledge base." },
+    { n: 5, time: "1:25", label: "Reflect",  hint: "Try a different prompt to see how the reasoning shifts." },
+    { n: 6, time: "1:45", label: "Complete", hint: "Share this session or start a new one." }
+  ];
+
+  // ── helpers ───────────────────────────────────────────────────────────
+  var $ = function (id) { return document.getElementById(id); };
+  function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+  var feed = $("feed"), feedWrap = $("feedWrap");
+  var busy = false;
+
+  function scrollToEnd() {
+    requestAnimationFrame(function () { feedWrap.scrollTop = feedWrap.scrollHeight; });
+  }
+
+  var ICON_COPY = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="9" height="9" rx="1.6"/><path d="M12 6V4.4c0-.9-.7-1.6-1.6-1.6H4.6C3.7 2.8 3 3.5 3 4.4v5.8c0 .9.7 1.6 1.6 1.6H6"/></svg>';
+  var ICON_REGEN = '<svg viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14.2 6A5.8 5.8 0 1 0 15 9"/><path d="M14 3.7v3.2h-3.2"/></svg>';
+  var ICON_SPIN = '<svg class="spin" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="9" r="6.5" stroke-opacity="0.18"/><path d="M9 2.5a6.5 6.5 0 0 1 6.5 6.5" stroke-linecap="round"/></svg>';
+  var ICON_CHECK = '<svg class="reason-check" viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7.5l3.8 3.5 6.2-7"/></svg>';
+  var ICON_CHEVRON = '<svg viewBox="0 0 14 14" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5l4 4 4-4"/></svg>';
+
+  // render assistant reply paragraphs
+  function renderReply(bub, text) {
+    var paras = text.split(/\n\n+/).filter(Boolean);
+    paras.forEach(function (p, i) {
+      var pe = el("p", i === 0 ? "lead" : "body");
+      var isItem = /^\d+\.\s/.test(p);
+      if (i > 0 && isItem) {
+        pe.className = "item";
+        var dot = el("span", "dot"); pe.appendChild(dot);
+      }
+      pe.appendChild(document.createTextNode(p.replace(/^\d+\.\s/, "")));
+      bub.appendChild(pe);
+    });
+  }
+
+  // build a reasoning card; returns controller
+  function makeReasonCard() {
+    var root = el("div", "reason open");
+    var head = el("div", "reason-head");
+    head.setAttribute("role", "button");
+    var icon = el("span"); icon.style.display = "flex"; icon.innerHTML = ICON_SPIN;
+    var title = el("span", "reason-title"); title.textContent = "Reasoning…";
+    var count = el("span", "reason-count");
+    var chevron = el("span", "reason-chevron"); chevron.innerHTML = ICON_CHEVRON;
+    head.appendChild(icon); head.appendChild(title); head.appendChild(count); head.appendChild(chevron);
+
+    var body = el("div", "reason-body");
+    var list = el("div", "reason-list");
+    body.appendChild(list);
+
+    root.appendChild(head); root.appendChild(body);
+
+    var done = false;
+    head.addEventListener("click", function () {
+      if (!done) return;
+      var open = root.classList.toggle("open");
+      body.classList.toggle("collapsed", !open);
+    });
+
+    return {
+      root: root, list: list, count: count,
+      setProgress: function (i, total) { count.textContent = Math.min(i + 1, total) + "/" + total; },
+      setDone: function () {
+        done = true;
+        root.classList.add("done");
+        icon.innerHTML = ICON_CHECK;
+        title.textContent = "Reasoning";
+        count.textContent = "· hide";
+      }
+    };
+  }
+
+  function addReasonField(list, label) {
+    var wrap = el("div");
+    var lab = el("p", "rfield-label"); lab.textContent = label;
+    var val = el("p", "rfield-val");
+    wrap.appendChild(lab); wrap.appendChild(val);
+    list.appendChild(wrap);
+    return val;
+  }
+
+  // ── conversation flow ─────────────────────────────────────────────────
+  function addUser(text) {
+    var turn = el("div", "turn enter");
+    var row = el("div", "row-user");
+    var bub = el("div", "bub-user");
+    bub.textContent = text;
+    row.appendChild(bub); turn.appendChild(row);
+    feed.appendChild(turn);
+    scrollToEnd();
+  }
+
+  function addWelcome() {
+    var turn = el("div", "turn enter");
+    var row = el("div", "row-bot");
+    var bub = el("div", "bub-bot");
+    renderReply(bub, WELCOME);
+    row.appendChild(bub); turn.appendChild(row);
+    feed.appendChild(turn);
+  }
+
+  function send(text) {
+    if (busy) return;
+    text = (text || "").trim();
+    if (!text) return;
+    busy = true; setSendState();
+
+    addUser(text);
+    var data = analyze(text);
+    var replyText = reply(text);
+
+    var turn = el("div", "turn enter");
+    var row = el("div", "row-bot");
+    var card = makeReasonCard();
+    row.appendChild(card.root);
+    turn.appendChild(row);
+    feed.appendChild(turn);
+    scrollToEnd();
+
+    // type fields one by one
+    var fi = 0;
+    function nextField() {
+      if (fi >= FIELDS.length) { afterReasoning(); return; }
+      card.setProgress(fi, FIELDS.length);
+      var f = FIELDS[fi];
+      var valEl = addReasonField(card.list, f.label);
+      var full = data[f.key];
+      var j = 0;
+      var t = setInterval(function () {
+        valEl.textContent = full.slice(0, j + 1);
+        j++;
+        if (j % 6 === 0) scrollToEnd();
+        if (j >= full.length) {
+          clearInterval(t);
+          fi++;
+          setTimeout(nextField, 110);
+        }
+      }, 11);
+    }
+
+    function afterReasoning() {
+      // typing indicator
+      var typeRow = el("div", "row-bot");
+      var typing = el("div", "typing");
+      typing.innerHTML = '<span class="tdot"></span><span class="tdot"></span><span class="tdot"></span>';
+      typeRow.appendChild(typing);
+      turn.appendChild(typeRow);
+      scrollToEnd();
+
+      setTimeout(function () {
+        turn.removeChild(typeRow);
+        card.setDone();
+        var bub = el("div", "bub-bot");
+        renderReply(bub, replyText);
+        var brow = turn.querySelector(".row-bot");
+        brow.appendChild(bub);
+
+        var tools = el("div", "bot-tools");
+        var regen = el("button"); regen.title = "Regenerate"; regen.innerHTML = ICON_REGEN;
+        var copy = el("button"); copy.title = "Copy"; copy.innerHTML = ICON_COPY;
+        copy.addEventListener("click", function () { copyText(replyText, "Copied"); });
+        regen.addEventListener("click", function () {
+          bub.style.opacity = "0.4";
+          setTimeout(function () { bub.style.transition = "opacity .25s"; bub.style.opacity = "1"; }, 180);
+        });
+        tools.appendChild(regen); tools.appendChild(copy);
+        brow.appendChild(tools);
+
+        busy = false; setSendState();
+        scrollToEnd();
+      }, 950);
+    }
+
+    nextField();
+  }
+
+  // ── composer ──────────────────────────────────────────────────────────
+  var input = $("input"), sendBtn = $("send"), field = $("field"), chips = $("chips");
+
+  function setSendState() {
+    var can = input.value.trim().length > 0 && !busy;
+    sendBtn.disabled = !can;
+    sendBtn.classList.toggle("on", can);
+    input.disabled = busy;
+    input.placeholder = busy ? "Thinking…" : "Share what's on your mind…";
+    Array.prototype.forEach.call(chips.children, function (c) { c.disabled = busy; });
+  }
+
+  input.addEventListener("input", function () {
+    input.style.height = "auto";
+    input.style.height = Math.min(input.scrollHeight, 104) + "px";
+    setSendState();
+  });
+  input.addEventListener("focus", function () { field.classList.add("focused"); });
+  input.addEventListener("blur",  function () { field.classList.remove("focused"); });
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); doSend(); }
+  });
+  sendBtn.addEventListener("click", doSend);
+
+  function doSend() {
+    var t = input.value.trim();
+    if (!t || busy) return;
+    send(t);
+    input.value = "";
+    input.style.height = "auto";
+    setSendState();
+  }
+
+  QUICK_PROMPTS.forEach(function (q) {
+    var b = el("button", "chip");
+    b.type = "button";
+    b.textContent = q;
+    b.addEventListener("click", function () { if (!busy) send(q); });
+    chips.appendChild(b);
+  });
+
+  // ── nav actions ───────────────────────────────────────────────────────
+  function restart() {
+    feed.innerHTML = "";
+    addWelcome();
+    busy = false; setSendState();
+  }
+  $("btnRestart").addEventListener("click", restart);
+
+  function copyText(text, msg) {
+    var ok = function () { toast(msg || "Copied"); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(ok, ok);
+    } else {
+      var ta = el("textarea"); ta.value = text; document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch (e) {}
+      document.body.removeChild(ta); ok();
+    }
+  }
+  $("btnShare").addEventListener("click", function () { copyText(location.href, "Link copied"); });
+
+  // panel
+  var scrim = $("scrim"), panel = $("panel"), panelTitle = $("panelTitle"), panelBody = $("panelBody");
+  function openPanel(which) {
+    panelBody.innerHTML = "";
+    if (which === "experts") {
+      panelTitle.textContent = "Expert Panel";
+      var lead = el("p", "panel-lead");
+      lead.textContent = "Co-designed with clinical professionals whose expertise shapes the knowledge base, review process, and safety constraints.";
+      panelBody.appendChild(lead);
+      EXPERTS.forEach(function (e) {
+        var card = el("div", "expert");
+        var img = el("img");
+        img.src = e.img; img.alt = e.name;
+        img.onerror = function () {
+          var ava = el("div", "ava"); ava.style.background = e.color; ava.textContent = e.initials;
+          card.replaceChild(ava, img);
+        };
+        var info = el("div");
+        var h = el("h4"); h.textContent = e.name;
+        var r = el("p", "role"); r.textContent = e.role;
+        var a = el("p", "aff"); a.textContent = e.aff;
+        info.appendChild(h); info.appendChild(r); info.appendChild(a);
+        e.tags.forEach(function (t) { var tg = el("span", "tag"); tg.textContent = t; info.appendChild(tg); });
+        card.appendChild(img); card.appendChild(info);
+        panelBody.appendChild(card);
+      });
+    } else {
+      panelTitle.textContent = "Quick Guide";
+      var lg = el("p", "panel-lead");
+      lg.textContent = "All key interactions in about 2 minutes.";
+      panelBody.appendChild(lg);
+      GUIDE.forEach(function (g) {
+        var s = el("div", "gstep");
+        var n = el("div", "gnum"); n.textContent = g.n;
+        var info = el("div");
+        var top = el("h5"); top.textContent = g.label + "  ";
+        var tm = el("span", "time"); tm.textContent = g.time; top.appendChild(tm);
+        var hint = el("p"); hint.textContent = g.hint;
+        info.appendChild(top); info.appendChild(hint);
+        s.appendChild(n); s.appendChild(info);
+        panelBody.appendChild(s);
+      });
+    }
+    scrim.classList.add("show");
+    panel.classList.add("show");
+    panel.setAttribute("aria-hidden", "false");
+  }
+  function closePanel() {
+    scrim.classList.remove("show");
+    panel.classList.remove("show");
+    panel.setAttribute("aria-hidden", "true");
+  }
+  $("btnExperts").addEventListener("click", function () { openPanel("experts"); });
+  $("btnGuide").addEventListener("click", function () { openPanel("guide"); });
+  $("panelX").addEventListener("click", closePanel);
+  scrim.addEventListener("click", closePanel);
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape") closePanel(); });
+
+  // toast
+  var toastEl = $("toast"), toastTimer = null;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove("show"); }, 1600);
+  }
+
+  // ── boot ──────────────────────────────────────────────────────────────
+  addWelcome();
+  setSendState();
+})();
+</script>
+</body>
+</html>
