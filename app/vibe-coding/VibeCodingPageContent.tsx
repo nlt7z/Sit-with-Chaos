@@ -2,7 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { RoseLoader } from "@/components/RoseLoader";
 import { SiteWindow } from "@/components/SiteWindow";
@@ -29,20 +29,6 @@ type Entry = {
 
 const entries: Entry[] = [
   {
-    date: "2026.06",
-    title: "lamdre restaurant homepage",
-    description: "Restaurant website homepage design — brand atmosphere, menu showcase, and reservation entry flow.",
-    tags: ["web"],
-    media: { kind: "video", src: "/assets/lab/lamdre.mp4" },
-  },
-  {
-    date: "2026.05",
-    title: "auction × gacha mobile game",
-    description: "Mobile game prototype combining a real-time bidding mechanic with a blind-box reward system.",
-    tags: ["app"],
-    media: { kind: "video", src: "/assets/app-design/bidking.mp4" },
-  },
-  {
     date: "2026.05",
     title: "design agency website",
     description: "Studio website for a creative agency — brand expression, work showcase, and inquiry flow.",
@@ -54,6 +40,51 @@ const entries: Entry[] = [
       href: "https://qbix.space",
       url: "qbix.space",
       label: "Design agency — live site preview",
+    },
+  },
+  {
+    date: "2025.12",
+    title: "ai romance character chat",
+    description: "Conversational prototype for a romance AI character — chat interface, persona pacing, and scene atmosphere.",
+    tags: ["ai", "interaction"],
+    href: "/work/ai-character",
+    hrefLabel: "case study →",
+    media: {
+      kind: "iframe",
+      src: "/work/ai-character/prototype?muted=1",
+      href: "/work/ai-character/prototype",
+      bg: "bg-[#060608]",
+      title: "Romance companion interactive prototype",
+    },
+  },
+  {
+    date: "2025.09",
+    title: "ai therapy companion",
+    description: "Conversational prototype for an emotional-support AI character — ambient room interface as a listening space.",
+    tags: ["ai", "interaction"],
+    href: "/work/ai-character/prototype-psych",
+    hrefLabel: "open →",
+    media: {
+      kind: "iframe",
+      src: "/work/ai-character/prototype-psych?embed=1",
+      href: "/work/ai-character/prototype-psych",
+      bg: "bg-[#f8fcff]",
+      title: "Therapy companion interactive prototype",
+    },
+  },
+  {
+    date: "2025.08",
+    title: "ai astrology character",
+    description: "Conversational prototype for an astrology AI character — zodiac persona system and fortune-dialogue flow.",
+    tags: ["ai", "interaction"],
+    href: "/work/ai-character/prototype-astro",
+    hrefLabel: "open →",
+    media: {
+      kind: "iframe",
+      src: "/work/ai-character/prototype-astro?embed=1",
+      href: "/work/ai-character/prototype-astro",
+      bg: "bg-[#fdfaf5]",
+      title: "Astrology character interactive prototype",
     },
   },
   {
@@ -69,6 +100,20 @@ const entries: Entry[] = [
       url: "hancao.space",
       label: "Personal portfolio — live site preview",
     },
+  },
+  {
+    date: "2026.06",
+    title: "lamdre restaurant homepage",
+    description: "Restaurant website homepage design — brand atmosphere, menu showcase, and reservation entry flow.",
+    tags: ["web"],
+    media: { kind: "video", src: "/assets/lab/lamdre.mp4" },
+  },
+  {
+    date: "2026.05",
+    title: "auction × gacha mobile game",
+    description: "Mobile game prototype combining a real-time bidding mechanic with a blind-box reward system.",
+    tags: ["app"],
+    media: { kind: "video", src: "/assets/app-design/bidking.mp4" },
   },
   {
     date: "2026.04",
@@ -93,21 +138,6 @@ const entries: Entry[] = [
     media: { kind: "custom", node: "turntable" },
   },
   {
-    date: "2025.12",
-    title: "ai romance character chat",
-    description: "Conversational prototype for a romance AI character — chat interface, persona pacing, and scene atmosphere.",
-    tags: ["ai", "interaction"],
-    href: "/work/ai-character",
-    hrefLabel: "case study →",
-    media: {
-      kind: "iframe",
-      src: "/work/ai-character/prototype?muted=1",
-      href: "/work/ai-character/prototype",
-      bg: "bg-[#060608]",
-      title: "Romance companion interactive prototype",
-    },
-  },
-  {
     date: "2025.10",
     title: "gacha portfolio navigation",
     description: "Portfolio navigation built as a gacha experience — randomized reveal as a project-discovery interface.",
@@ -123,41 +153,11 @@ const entries: Entry[] = [
     },
   },
   {
-    date: "2025.09",
-    title: "ai therapy companion",
-    description: "Conversational prototype for an emotional-support AI character — ambient room interface as a listening space.",
-    tags: ["ai", "interaction"],
-    href: "/work/ai-character/prototype-psych",
-    hrefLabel: "open →",
-    media: {
-      kind: "iframe",
-      src: "/work/ai-character/prototype-psych?embed=1",
-      href: "/work/ai-character/prototype-psych",
-      bg: "bg-[#f8fcff]",
-      title: "Therapy companion interactive prototype",
-    },
-  },
-  {
     date: "2025.08",
     title: "saas homepage rebuild",
     description: "Homepage redesign for a SaaS product — narrative flow, motion language, and section rhythm.",
     tags: ["web"],
     media: { kind: "video", src: "/assets/work/apsara.mp4" },
-  },
-  {
-    date: "2025.08",
-    title: "ai astrology character",
-    description: "Conversational prototype for an astrology AI character — zodiac persona system and fortune-dialogue flow.",
-    tags: ["ai", "interaction"],
-    href: "/work/ai-character/prototype-astro",
-    hrefLabel: "open →",
-    media: {
-      kind: "iframe",
-      src: "/work/ai-character/prototype-astro?embed=1",
-      href: "/work/ai-character/prototype-astro",
-      bg: "bg-[#fdfaf5]",
-      title: "Astrology character interactive prototype",
-    },
   },
   {
     date: "2025.05",
@@ -167,8 +167,6 @@ const entries: Entry[] = [
     media: { kind: "image", src: "/assets/lab/tts-workflow.jpg", alt: "TTS reading workflow redesign — moody hero composition" },
   },
 ];
-
-const allTags: Tag[] = ["app", "web", "interaction"];
 
 // ─── Media components ──────────────────────────────────────────────────────
 
@@ -192,7 +190,7 @@ function LazyVideo({
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-md border border-white/[0.08] bg-white/[0.03]">
+    <div className="relative aspect-video overflow-hidden rounded-md bg-white/[0.03]">
       {/* shimmer — fades out once video can play */}
       <div
         className={`absolute inset-0 animate-pulse bg-white/[0.05] transition-opacity duration-500 ${
@@ -239,7 +237,7 @@ function LazyImage({
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-md border border-white/[0.08] bg-white/[0.03]">
+    <div className="relative aspect-video overflow-hidden rounded-md bg-white/[0.03]">
       <div
         className={`absolute inset-0 animate-pulse bg-white/[0.05] transition-opacity duration-500 ${
           loaded ? "pointer-events-none opacity-0" : "opacity-100"
@@ -301,7 +299,7 @@ function ScaledIframe({
   return (
     <div
       ref={wrapperRef}
-      className={`relative overflow-hidden rounded-md border border-white/[0.08] ${bg}`}
+      className={`relative overflow-hidden rounded-md ${bg}`}
       style={{ height: natural.h * scale }}
     >
       {/* shimmer overlay */}
@@ -340,30 +338,6 @@ function TagChip({ tag }: { tag: Tag }) {
   );
 }
 
-function FilterChip({
-  label,
-  active,
-  onClick,
-}: {
-  label: string;
-  active: boolean;
-  onClick: () => void;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      className={`inline-flex items-center rounded-full border px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.1em] transition-colors ${
-        active
-          ? "border-nltLime/40 bg-nltLime/20 text-nltLime"
-          : "border-white/[0.15] text-white/40 hover:border-white/30 hover:text-white/60"
-      }`}
-    >
-      {label}
-    </button>
-  );
-}
-
 // ─── MediaSlot ─────────────────────────────────────────────────────────────
 
 function MediaSlot({
@@ -392,6 +366,7 @@ function MediaSlot({
         label={media.label}
         active={shouldLoad}
         chrome={false}
+        bare
       />
     );
   }
@@ -556,7 +531,7 @@ function ClickWheel({
 // Matches the homepage IntroAnimation visual: RoseLoader + lime halo + progress bar.
 // Only shown on md+ (the carousel). Mobile uses a plain scroll list — no gate needed.
 
-const GATE_TARGET = 2; // wait for 2 actual media loads (the two initial videos)
+const GATE_TARGET = 2; // wait for 2 actual media loads (the first cards near the active slide)
 
 function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }) {
   const reduced = useReducedMotion();
@@ -695,8 +670,7 @@ const entryKey = (e: Entry) => `${e.date}::${e.title}`;
 // ─── Page content ───────────────────────────────────────────────────────────
 
 export function VibeCodingPageContent() {
-  const [filter, setFilter] = useState<Tag | "all">("all");
-  const [active, setActive] = useState(1);
+  const [active, setActive] = useState(0);
   const [loadedKeys, setLoadedKeys] = useState<Set<string>>(new Set());
   const carouselRef = useRef<HTMLDivElement>(null);
   const wheelCooldown = useRef(false);
@@ -719,12 +693,8 @@ export function VibeCodingPageContent() {
     return () => clearTimeout(t);
   }, []);
 
-  // ── Filter / navigation ────────────────────────────────────────────────
-  const visible = useMemo(() => {
-    if (filter === "all") return entries;
-    return entries.filter((e) => e.tags.includes(filter));
-  }, [filter]);
-
+  // ── Navigation ─────────────────────────────────────────────────────────
+  const visible = entries;
   const n = visible.length;
 
   const prev = useCallback(() => {
@@ -734,11 +704,6 @@ export function VibeCodingPageContent() {
   const next = useCallback(() => {
     setActive((i) => (i + 1) % n);
   }, [n]);
-
-  const changeFilter = useCallback((f: Tag | "all") => {
-    setFilter(f);
-    setActive(0);
-  }, []);
 
   // Expand the loaded set whenever the active slide moves. Window is dist ≤ 2
   // so neighbors + neighbors-of-neighbors warm up early.
@@ -788,38 +753,13 @@ export function VibeCodingPageContent() {
     <section className="relative flex flex-col md:h-full">
       <EntryGate ready={entryReady} readyCount={readyCount} />
 
-      {/* Filter */}
-      <header className="mx-auto w-full max-w-content shrink-0 px-6">
-        <div className="flex flex-wrap items-center gap-x-2 gap-y-2">
-          <FilterChip
-            label="all"
-            active={filter === "all"}
-            onClick={() => changeFilter("all")}
-          />
-          {allTags.map((t) => (
-            <FilterChip
-              key={t}
-              label={t}
-              active={filter === t}
-              onClick={() => changeFilter(t)}
-            />
-          ))}
-        </div>
-      </header>
-
       {/* Mobile: stacked list */}
-      <div className="mx-auto mt-6 w-full max-w-content px-6 md:hidden">
-        {n === 0 ? (
-          <p className="py-12 text-center text-sm text-white/40">
-            Nothing here yet under <TagChip tag={filter as Tag} />.
-          </p>
-        ) : (
-          <ul className="flex flex-col gap-10 pb-16">
-            {visible.map((entry) => (
-              <MobilePrototypeListItem key={entryKey(entry)} entry={entry} />
-            ))}
-          </ul>
-        )}
+      <div className="mx-auto w-full max-w-content px-6 md:hidden">
+        <ul className="flex flex-col gap-10 pb-16">
+          {visible.map((entry) => (
+            <MobilePrototypeListItem key={entryKey(entry)} entry={entry} />
+          ))}
+        </ul>
       </div>
 
       {/* Tablet / desktop: carousel */}
@@ -855,11 +795,6 @@ export function VibeCodingPageContent() {
               </div>
             );
           })}
-          {n === 0 && (
-            <p className="text-sm text-white/40">
-              Nothing here yet under <TagChip tag={filter as Tag} />.
-            </p>
-          )}
         </div>
       </div>
 

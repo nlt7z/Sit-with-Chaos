@@ -248,14 +248,14 @@ function IcoRegenerate() {
 }
 function IcoRestart() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 20 20" fill="none" className="h-[20px] w-[20px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M15.4 6.7A6.3 6.3 0 1 0 16.3 10"/><path d="M15.8 4.5v3.1h-3.1"/>
     </svg>
   );
 }
 function IcoShare() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 20 20" fill="none" className="h-[20px] w-[20px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="14.3" cy="5.5" r="1.9"/><circle cx="5.7" cy="10" r="1.9"/><circle cx="14.3" cy="14.5" r="1.9"/>
       <path d="M7.4 9 12.6 6.4M7.4 11l5.2 2.6"/>
     </svg>
@@ -263,21 +263,21 @@ function IcoShare() {
 }
 function IcoExpert() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 20 20" fill="none" className="h-[20px] w-[20px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="10" cy="6.5" r="2.7"/><path d="M4.3 16.5c.7-3 3-4.6 5.7-4.6s5 1.6 5.7 4.6"/>
     </svg>
   );
 }
 function IcoCode() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 20 20" fill="none" className="h-[20px] w-[20px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <path d="M7 5L3 10l4 5M13 5l4 5-4 5"/>
     </svg>
   );
 }
 function IcoGuide() {
   return (
-    <svg viewBox="0 0 20 20" fill="none" className="h-[17px] w-[17px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+    <svg viewBox="0 0 20 20" fill="none" className="h-[20px] w-[20px]" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
       <circle cx="10" cy="10" r="6.3"/><path d="M10 6.6v3.6l2.4 1.5"/>
     </svg>
   );
@@ -965,96 +965,55 @@ function formatMessageParagraphs(text: string) {
   }));
 }
 
-// Welcome illustration — a coral star-creature hugging a soft pink blob,
-// wrapped by a gentle orbit ring with a little star travelling around it.
-// Reconstructed 1:1 from the reference art. The pair bobs up and down.
+// Welcome illustration — the hugging-pair artwork, with one extra star that
+// orbits around it and twinkles. The pair itself gives a gentle float.
 function WelcomeHug() {
   const rm = useReducedMotion();
-  // Star path centred on the origin (outer r≈4.4, inner r≈1.9) — translated
-  // around the tilted orbit ellipse (cx80,cy76, rx56, ry21, −18°).
-  const starX = [133.3, 122.3, 86.5, 46.9, 26.7, 37.8, 73.5, 113.1, 133.3];
-  const starY = [58.7, 77.9, 96.0, 102.4, 93.3, 74.1, 56.0, 49.7, 58.7];
+  const W = 152, H = 134, CX = W / 2, CY = H / 2;
+  // Offsets of an orbiting point around a tilted ellipse (rx66, ry43, −14°),
+  // relative to the illustration centre.
+  const orbitX = [64.0, 52.6, 10.4, -37.9, -64.0, -52.6, -10.4, 37.9, 64.0];
+  const orbitY = [-16.0, 18.2, 41.7, 40.8, 16.0, -18.2, -41.7, -40.8, -16.0];
   return (
     <div
       aria-hidden
       className="relative hidden shrink-0 items-center justify-center sm:flex"
-      style={{ width: 152, height: 142 }}
+      style={{ width: W, height: H, overflow: "visible" }}
     >
-      {/* Same footprint as before; the viewBox is zoomed in ~30% so the
-          artwork renders larger without changing the occupied area. */}
-      <svg viewBox="18.5 17 123 115" width={152} height={142}>
-        {/* orbit ring — back half (behind the pair) */}
-        <ellipse
-          cx="80" cy="76" rx="56" ry="21"
-          fill="none" stroke="#A6D8EC" strokeWidth="2.6" opacity="0.6"
-          transform="rotate(-18 80 76)"
+      {/* gentle float on the whole illustration + orbiting star */}
+      <motion.div
+        className="absolute inset-0"
+        animate={rm ? {} : { y: [0, -5, 0] }}
+        transition={rm ? {} : { duration: 3.4, ease: "easeInOut", repeat: Infinity }}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/assets/psych/psy.png"
+          alt=""
+          className="h-full w-full object-contain"
+          draggable={false}
         />
 
-        {/* the hugging pair — bobs up and down together */}
-        <motion.g
-          animate={rm ? {} : { y: [0, -6, 0] }}
-          transition={rm ? {} : { duration: 2.3, ease: "easeInOut", repeat: Infinity }}
+        {/* extra star — orbits around the pair and twinkles */}
+        <motion.div
+          className="absolute"
+          style={{ left: CX, top: CY }}
+          animate={rm ? { x: orbitX[0], y: orbitY[0] } : { x: orbitX, y: orbitY }}
+          transition={rm ? {} : { duration: 9, ease: "linear", repeat: Infinity }}
         >
-          {/* pink's far arm, reaching behind coral */}
-          <path d="M89 83 Q75 93 64 89" stroke="#E2A0CF" strokeWidth="8" strokeLinecap="round" fill="none" />
-
-          {/* pink body — round ball */}
-          <circle cx="100" cy="80" r="21" fill="#E2A0CF" />
-          {/* pink cheeks */}
-          <ellipse cx="91" cy="86" rx="3.2" ry="2.2" fill="#CE73B0" opacity="0.5" />
-          <ellipse cx="109" cy="86" rx="3.2" ry="2.2" fill="#CE73B0" opacity="0.5" />
-          {/* pink sleepy eyes */}
-          <path d="M92 79 Q95 82 98 79" stroke="#9A4F89" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-          <path d="M102 79 Q105 82 108 79" stroke="#9A4F89" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-
-          {/* coral feet */}
-          <ellipse cx="57" cy="104" rx="4.5" ry="3.4" fill="#F47A57" />
-          <ellipse cx="71" cy="105" rx="4.5" ry="3.4" fill="#F47A57" />
-          {/* coral body — round ball */}
-          <circle cx="64" cy="82" r="19" fill="#F47A57" />
-          {/* coral cheeks */}
-          <ellipse cx="55" cy="87" rx="3.2" ry="2.2" fill="#E85C3E" opacity="0.5" />
-          <ellipse cx="73" cy="87" rx="3.2" ry="2.2" fill="#E85C3E" opacity="0.5" />
-          {/* coral sleepy eyes */}
-          <path d="M56 80 Q59 83 62 80" stroke="#A8442A" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-          <path d="M66 80 Q69 83 72 80" stroke="#A8442A" strokeWidth="2.2" strokeLinecap="round" fill="none" />
-
-          {/* coral's arm hugging around pink (in front) */}
-          <path d="M78 82 Q94 95 104 88" stroke="#F47A57" strokeWidth="8" strokeLinecap="round" fill="none" />
-
-          {/* star sitting on coral's head */}
-          <g transform="translate(59 51) rotate(-10)">
-            <motion.path
-              d="M0 -10 L2.59 -3.56 L9.51 -3.09 L4.18 1.36 L5.88 8.09 L0 4.4 L-5.88 8.09 L-4.18 1.36 L-9.51 -3.09 L-2.59 -3.56 Z"
+          <motion.svg
+            width={19} height={19} viewBox="0 0 18 18"
+            style={{ marginLeft: -9.5, marginTop: -9.5, filter: "drop-shadow(0 1px 2px rgba(200,150,0,0.35))" }}
+            animate={rm ? {} : { scale: [1, 0.55, 1], opacity: [1, 0.4, 1], rotate: [0, 35, 0] }}
+            transition={rm ? {} : { duration: 1.6, ease: "easeInOut", repeat: Infinity }}
+          >
+            <path
+              d="M9 1 L11 6.25 L16.61 6.53 L12.23 10.05 L13.7 15.47 L9 12.4 L4.3 15.47 L5.77 10.05 L1.39 6.53 L7 6.25 Z"
               fill="#F9C22E"
-              style={{ transformBox: "fill-box", transformOrigin: "center" }}
-              animate={rm ? {} : { scale: [1, 1.16, 1], rotate: [0, 7, 0] }}
-              transition={rm ? {} : { duration: 3, ease: "easeInOut", repeat: Infinity }}
             />
-          </g>
-        </motion.g>
-
-        {/* orbit ring — front half (crosses in front for the wrapped look) */}
-        <path
-          d="M24 76 A56 21 0 0 0 136 76"
-          fill="none" stroke="#A6D8EC" strokeWidth="2.6" opacity="0.9" strokeLinecap="round"
-          transform="rotate(-18 80 76)"
-        />
-
-        {/* little star travelling around the orbit */}
-        <motion.g
-          animate={rm ? { x: 133.3, y: 58.7 } : { x: starX, y: starY }}
-          transition={rm ? {} : { duration: 11, ease: "linear", repeat: Infinity }}
-        >
-          <motion.path
-            d="M0 -4.4 L1.12 -1.54 L4.18 -1.36 L1.81 0.59 L2.59 3.56 L0 1.9 L-2.59 3.56 L-1.81 0.59 L-4.18 -1.36 L-1.12 -1.54 Z"
-            fill="#F9C22E"
-            style={{ transformBox: "fill-box", transformOrigin: "center" }}
-            animate={rm ? {} : { rotate: [0, 360] }}
-            transition={rm ? {} : { duration: 6, ease: "linear", repeat: Infinity }}
-          />
-        </motion.g>
-      </svg>
+          </motion.svg>
+        </motion.div>
+      </motion.div>
     </div>
   );
 }

@@ -19,7 +19,7 @@ function Hand({ deg, length, width, color, z = 10 }: { deg: number; length: stri
   );
 }
 
-export function BentoClock() {
+export function BentoClock({ light = false }: { light?: boolean }) {
   const [t, setT] = useState<{ h: number; m: number; s: number } | null>(null);
 
   useEffect(() => {
@@ -42,23 +42,29 @@ export function BentoClock() {
     ? `${String(((h + 11) % 12) + 1).padStart(2, "0")}:${String(m).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`
     : "--:--";
 
+  const faceBg = light ? "#ffffff" : "#131416";
+  const faceBorder = light ? "border-black/10" : "border-white/10";
+  const tickBg = light ? "bg-black/30" : "bg-white/25";
+  const handColor = light ? "#1d1d1f" : "#ededed";
+  const labelColor = light ? "text-black/55" : "text-white/55";
+
   return (
     <div className="flex h-full flex-col items-center justify-center gap-2 p-3">
-      <div className="relative aspect-square w-full max-w-[6.5rem] rounded-full border border-white/10 bg-[#131416] shadow-[inset_0_2px_8px_rgba(0,0,0,0.6)]">
+      <div className={`relative aspect-square w-full max-w-[8.5rem] rounded-full border ${faceBorder} shadow-[inset_0_2px_8px_rgba(0,0,0,0.25)]`} style={{ background: faceBg }}>
         {Array.from({ length: 12 }).map((_, i) => (
           <div key={i} className="absolute inset-0" style={{ transform: `rotate(${i * 30}deg)` }}>
             <span
-              className="absolute left-1/2 top-[6px] -translate-x-1/2 rounded-full bg-white/25"
+              className={`absolute left-1/2 top-[6px] -translate-x-1/2 rounded-full ${tickBg}`}
               style={{ height: i % 3 === 0 ? 6 : 3, width: i % 3 === 0 ? 2 : 1 }}
             />
           </div>
         ))}
-        <Hand deg={hrDeg} length="26%" width={3} color="#ededed" z={12} />
-        <Hand deg={minDeg} length="36%" width={2} color="#ededed" z={11} />
-        <Hand deg={secDeg} length="40%" width={1.5} color="#d2ff00" z={13} />
-        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-white" />
+        <Hand deg={hrDeg} length="26%" width={3} color={handColor} z={12} />
+        <Hand deg={minDeg} length="36%" width={2} color={handColor} z={11} />
+        <Hand deg={secDeg} length="40%" width={1.5} color={light ? "#5A7A12" : "#d2ff00"} z={13} />
+        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full" style={{ background: handColor }} />
       </div>
-      <span className="font-mono text-[10px] tracking-wider text-white/55">{label}</span>
+      <span className={`font-mono text-[10px] tracking-wider ${labelColor}`}>{label}</span>
     </div>
   );
 }

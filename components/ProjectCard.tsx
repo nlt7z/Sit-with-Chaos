@@ -6,18 +6,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-import { Icon } from "@/components/icons/Icon";
-import { SplitTextChars } from "@/components/SplitBtn";
 
 type Media = {
   src: string;
   alt: string;
-  type: "image" | "video" | "embed" | "prototype";
+  type: "image" | "video" | "embed" | "prototype" | "showroom";
   /** Optional poster image (e.g. for cover art before the first frame). */
   poster?: string;
   /** Natural content dimensions for prototype iframes (used to compute scale). */
   naturalW?: number;
   naturalH?: number;
+  /** For type "showroom": embed URLs that auto-cycle through the panel. */
+  showrooms?: readonly string[];
 };
 
 export type Project = {
@@ -196,6 +196,63 @@ function PrototypeMedia({
   );
 }
 
+/** ShowroomCycle — auto-rotates a set of embeddable prototype URLs, each scaled
+ *  to a desktop frame so it reads as a live screenshot. One iframe mounted at a
+ *  time (remounts on switch) to keep the card light. */
+function ShowroomCycle({ srcs }: { srcs: readonly string[] }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.4);
+  const [i, setI] = useState(0);
+  const [loaded, setLoaded] = useState(false);
+  const W = 1280;
+  const H = 800;
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([entry]) => setScale(entry.contentRect.width / W));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (srcs.length <= 1) return;
+    const id = setInterval(() => {
+      setLoaded(false);
+      setI((v) => (v + 1) % srcs.length);
+    }, 6000);
+    return () => clearInterval(id);
+  }, [srcs.length]);
+
+  return (
+    <div ref={containerRef} className="absolute inset-0 overflow-hidden bg-[#0c0d0f]">
+      {!loaded ? (
+        <div className="absolute inset-0 z-10 grid place-items-center bg-[#0c0d0f]">
+          <span className="h-6 w-6 animate-spin rounded-full border-2 border-nltLime border-t-transparent" />
+        </div>
+      ) : null}
+      <iframe
+        key={i}
+        src={srcs[i]}
+        title="Showroom prototype"
+        onLoad={() => setLoaded(true)}
+        loading="lazy"
+        className="pointer-events-none border-0"
+        style={{ position: "absolute", top: 0, left: 0, width: W, height: H, transform: `scale(${scale})`, transformOrigin: "top left" }}
+      />
+      <div className="absolute bottom-2 left-1/2 z-20 flex -translate-x-1/2 gap-1.5">
+        {srcs.map((_, idx) => (
+          <span
+            key={idx}
+            className="h-1.5 rounded-full transition-all duration-300"
+            style={{ width: idx === i ? 14 : 6, background: idx === i ? "#d2ff00" : "rgba(255,255,255,0.4)" }}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
 /** Re-alpha an rgb/rgba() color to a fixed opacity. The per-project hover tints
@@ -212,7 +269,15 @@ function extractRgb(color: string): string {
   return m ? `${m[1]}, ${m[2]}, ${m[3]}` : "210, 255, 0";
 }
 
-export function ProjectCard({ project }: { project: Project }) {
+export function ProjectCard({
+  project,
+  tall = false,
+}: {
+  project: Project;
+  /** Give the card a taller desktop min-height (used in the stacked /work view
+   *  so each layer reads as a generous panel rather than a thin banner). */
+  tall?: boolean;
+}) {
   const prefersReducedMotion = useReducedMotion();
   const comingSoon = project.comingSoon === true;
 
@@ -261,9 +326,10 @@ export function ProjectCard({ project }: { project: Project }) {
   )} 0%, ${boostTintAlpha(tintBase, 0.03)} 50%, rgba(255,255,255,0) 100%)`;
 
   const wrapperBaseClass =
-    "relative flex h-full flex-col overflow-hidden rounded-2xl border border-black/[0.07] bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] md:rounded-[1.5rem]";
-  // No hover frame: the card border stays static. Interactivity is signaled by
-  // the product shot deepening its own shadow + the CTA arrow on hover.
+    "relative flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_2px_22px_-10px_rgba(0,0,0,0.12)] md:rounded-[1.5rem]";
+  // Borderless: the card edge reads from its own soft shadow (and, in the
+  // stacked /work view, the depth shadow on each layer). Interactivity is
+  // signaled by the CTA arrow + the product shot's hover bloom.
   const wrapperLinkClass = `${wrapperBaseClass} transition-[box-shadow] duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-2`;
   const wrapperStaticClass = `${wrapperBaseClass} cursor-default`;
 
@@ -279,6 +345,8 @@ export function ProjectCard({ project }: { project: Project }) {
             poster={project.media.poster}
             alt={project.media.alt}
           />
+        ) : project.media.type === "showroom" ? (
+          <ShowroomCycle srcs={project.media.showrooms ?? []} />
         ) : project.media.type === "prototype" ? (
           <PrototypeMedia
             src={project.media.src}
@@ -334,7 +402,11 @@ export function ProjectCard({ project }: { project: Project }) {
   );
 
   const wrapperContent = (
-    <div className="flex flex-col-reverse md:grid md:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)]">
+    <div
+      className={`flex flex-col-reverse md:grid md:grid-cols-[minmax(0,0.84fr)_minmax(0,1.16fr)]${
+        tall ? " md:min-h-[24rem]" : ""
+      }`}
+    >
       {/* LEFT — copy panel. On hover a faint per-project gradient washes in
           (the right keeps playing video). Cards with leftPanelBg use a solid
           color instead — hover wash is suppressed. */}
@@ -396,8 +468,11 @@ export function ProjectCard({ project }: { project: Project }) {
               Case study coming soon
             </span>
           ) : (
-            <span className="mt-6 inline-flex items-center gap-1 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-textSecondary opacity-60 transition-[opacity,color] duration-500 group-hover:text-textPrimary group-hover:opacity-100 group-focus-within:opacity-100">
-              <SplitTextChars text={project.externalHref ? "Open site ↗" : "Case study ↗"} />
+            // The visible CTA is the circular arrow button that follows the
+            // cursor across the card (rendered as an overlay in the article
+            // below). This stays as the link's accessible label.
+            <span className="sr-only">
+              {project.externalHref ? "Open site" : "View case study"}
             </span>
           )}
           </div>
@@ -422,7 +497,14 @@ export function ProjectCard({ project }: { project: Project }) {
     <motion.article
       whileHover={hover}
       onMouseMove={comingSoon ? undefined : handleMouseMove}
-      onMouseEnter={comingSoon ? undefined : () => setGlowVisible(true)}
+      onMouseEnter={
+        comingSoon
+          ? undefined
+          : (e) => {
+              handleMouseMove(e);
+              setGlowVisible(true);
+            }
+      }
       onMouseLeave={comingSoon ? undefined : () => setGlowVisible(false)}
       className={`relative flex h-full flex-col rounded-2xl md:rounded-[1.5rem] ${comingSoon ? "" : "group"}`}
     >
@@ -469,6 +551,36 @@ export function ProjectCard({ project }: { project: Project }) {
         <Link href={`/work/${project.slug}`} className={wrapperLinkClass}>
           {wrapperContent}
         </Link>
+      )}
+
+      {/* Cursor-following CTA — a plain circular arrow button that tracks the
+          pointer anywhere over the card and only shows on hover. It's purely
+          a visual affordance (pointer-events-none); the whole card is the
+          actual link. */}
+      {!comingSoon && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.35)]"
+          initial={false}
+          animate={{
+            x: mousePos.x - 28,
+            y: mousePos.y - 28,
+            opacity: glowVisible ? 1 : 0,
+            scale: glowVisible ? 1 : 0.4,
+          }}
+          transition={
+            prefersReducedMotion
+              ? { duration: 0 }
+              : {
+                  x: { type: "spring", stiffness: 400, damping: 30, mass: 0.5 },
+                  y: { type: "spring", stiffness: 400, damping: 30, mass: 0.5 },
+                  opacity: { duration: 0.2, ease: easePortfolio },
+                  scale: { duration: 0.2, ease: easePortfolio },
+                }
+          }
+        >
+          <ArrowUpRight className="h-6 w-6" strokeWidth={2.25} />
+        </motion.div>
       )}
     </motion.article>
   );

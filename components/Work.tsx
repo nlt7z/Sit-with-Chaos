@@ -12,8 +12,13 @@ const aiCharacter: Project = {
   description: "0→1 MVP feature for Qwen Character LLM, serving millions of enterprise customers.",
   media: {
     src: "/assets/ai-character/figma-h264.mp4",
-    alt: "Alibaba Qwen AI Character product experience preview",
-    type: "video",
+    alt: "Alibaba Qwen AI Character — interactive showrooms",
+    type: "showroom",
+    showrooms: [
+      "/work/ai-character/prototype-astro?embed=1&muted=1",
+      "/work/ai-character/prototype-psych?embed=1&muted=1",
+      "/work/ai-character/prototype?embed=1&muted=1",
+    ],
   },
   flowSteps: ["showroom", "prompt guide", "live code editor"],
   meta: { year: "2025", role: "Product Design Intern", status: "Shipped" },
@@ -123,6 +128,9 @@ const workRows: WorkRow[] = [
   { kind: "single", project: qbix },
 ];
 
+// Flat order for the stacked /work view — each project becomes one sticky layer.
+const stackProjects: Project[] = [liner, aiCharacter, meituanIm, studioEngine, qbix];
+
 const itemSpring = {
   hidden: { opacity: 0, y: 42 },
   show: {
@@ -146,7 +154,42 @@ const itemReduced = {
   },
 };
 
-export function Work() {
+/** Stacked "file deck" scroll: each project is a sticky layer that pins near the
+ *  top with a small incrementing offset, so the next project slides up and stacks
+ *  over it (the prior cards peek as edges behind). Pure CSS sticky — the page
+ *  doesn't translate, the cards pile up. */
+function WorkStack({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
+  return (
+    <section id="work" className="relative pt-6 md:pt-10" aria-label="Selected projects">
+      {/* Trailing space lets the last layer reach its pinned position so the
+          full deck is visible at the bottom of the scroll. */}
+      <div className="relative z-10 mx-auto max-w-content px-6 pb-[42vh]">
+        {stackProjects.map((project, i) => (
+          <div
+            key={project.slug}
+            className="sticky mb-[7vh] last:mb-0 md:mb-[9vh]"
+            style={{
+              top: `calc(4.5rem + ${i * 1.25}rem)`,
+              zIndex: i + 1,
+            }}
+          >
+            <motion.div
+              initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-18% 0px" }}
+              transition={{ duration: 0.6, ease: easePortfolio }}
+              className="rounded-2xl shadow-[0_-10px_30px_-12px_rgba(0,0,0,0.5),0_18px_48px_-24px_rgba(0,0,0,0.6)] md:rounded-[1.5rem]"
+            >
+              <ProjectCard project={project} tall />
+            </motion.div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export function Work({ stack = false }: { stack?: boolean }) {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-10% 0px" });
   const prefersReducedMotion = useReducedMotion();
@@ -165,6 +208,10 @@ export function Work() {
   );
 
   const itemVariants = prefersReducedMotion ? itemReduced : itemSpring;
+
+  if (stack) {
+    return <WorkStack prefersReducedMotion={Boolean(prefersReducedMotion)} />;
+  }
 
   return (
     <section

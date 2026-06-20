@@ -55,6 +55,7 @@ export function CraftModel({
   reduced,
   active,
   onInteract,
+  zoom = 1,
 }: {
   /** prefers-reduced-motion — suppresses the auto-rotate (drag still works). */
   reduced: boolean;
@@ -64,6 +65,8 @@ export function CraftModel({
   /** Called when the user grabs the model, so the hero can lock the craft
    *  channel (stop auto-cycling away mid-drag). */
   onInteract?: () => void;
+  /** Multiplier on the fitted model size (1 = default; 2 = twice as large). */
+  zoom?: number;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [phase, setPhase] = useState<"idle" | "loading" | "ready" | "error">("idle");
@@ -184,7 +187,7 @@ export function CraftModel({
             const pre = new THREE.Box3().setFromObject(src);
             const preSize = pre.getSize(new THREE.Vector3());
             const maxDim = Math.max(preSize.x, preSize.y, preSize.z) || 1;
-            src.scale.setScalar(3.5 / maxDim);
+            src.scale.setScalar((3.5 * zoom) / maxDim);
             const box = new THREE.Box3().setFromObject(src);
             const center = box.getCenter(new THREE.Vector3());
             src.position.sub(center);

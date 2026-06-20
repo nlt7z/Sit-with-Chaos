@@ -6,10 +6,10 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { SplitTextChars } from "@/components/SplitBtn";
 
+// About is not shipped yet — nav is Work · Lab · Resume.
 const navLinks = [
-  { label: "Work", href: "/#work" },
+  { label: "Work", href: "/work" },
   { label: "Lab", href: "/vibe-coding" },
-  { label: "About", href: "/about" },
 ] as const;
 
 // Resume is pulled out of the text-link row and rendered as a standalone
