@@ -507,7 +507,11 @@
       "Bash(rm -rf /tmp/cdp-shoot2)",
       "Bash(node /tmp/shoot2.mjs)",
       "Bash(curl -s -o /dev/null -w \"first: %{http_code} %{time_total}s\\\\n\" http://localhost:3000/vibe-coding)",
-      "Bash(curl -s -o /dev/null -w \"second: %{http_code} %{time_total}s\\\\n\" http://localhost:3000/vibe-coding)"
+      "Bash(curl -s -o /dev/null -w \"second: %{http_code} %{time_total}s\\\\n\" http://localhost:3000/vibe-coding)",
+      "Bash(pkill -f \"cdp-check\")",
+      "Bash(rm -rf /tmp/cdp-check)",
+      "Bash(node /tmp/check.mjs)",
+      "Bash(pkill -f \"cdp-check\" 2>/dev/null; pkill -f \"cdp-shoot2\" 2>/dev/null; rm -rf /tmp/cdp-check /tmp/cdp-shoot2 /tmp/deck-*.png; echo \"cleaned\")"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

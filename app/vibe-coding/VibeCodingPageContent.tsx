@@ -568,7 +568,7 @@ function GhostIndex({ index }: { index: number }) {
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 flex items-center justify-end overflow-hidden pr-[1vw]"
+      className="pointer-events-none absolute inset-0 z-0 flex items-end justify-end overflow-hidden pb-[2vh] pr-[1vw]"
     >
       <AnimatePresence mode="popLayout">
         <motion.span
@@ -966,7 +966,7 @@ export function VibeCodingPageContent() {
   }, [prev, next]);
 
   return (
-    <section className="relative flex flex-col md:h-full">
+    <section className="relative flex flex-col md:h-full md:justify-center">
       <EntryGate ready={entryReady} readyCount={readyCount} />
 
       {/* Mobile: stacked list */}
@@ -979,11 +979,11 @@ export function VibeCodingPageContent() {
       </div>
 
       {/* Tablet / desktop: kinetic editorial carousel */}
-      <div ref={carouselRef} className="relative hidden min-h-0 flex-1 overflow-hidden md:block">
+      <div ref={carouselRef} className="relative hidden min-h-0 overflow-hidden md:block md:h-[56vh]">
         {/* giant ghost index numeral behind the deck */}
         <GhostIndex index={active} />
 
-        <div className="absolute inset-0 z-10 flex items-center justify-center">
+        <div className="absolute inset-0 z-10 flex items-end justify-center pb-[3vh]">
           {visible.map((entry, i) => {
             const raw = i - active;
             const halfN = n / 2;
@@ -999,8 +999,9 @@ export function VibeCodingPageContent() {
                 onClick={() => !isActive && setActive(i)}
                 className="absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                 style={{
+                  transformOrigin: "bottom center",
                   transform: `translateX(calc(${offset} * 44vw)) scale(${isActive ? 1 : 0.66})`,
-                  opacity: isActive ? 1 : dist === 1 ? 0.22 : 0,
+                  opacity: isActive ? 1 : dist === 1 ? 0.32 : 0,
                   filter: isActive ? "none" : "grayscale(1) blur(2px) brightness(0.7)",
                   cursor: isActive ? "default" : "pointer",
                   zIndex: isActive ? 10 : 5 - dist,
@@ -1018,9 +1019,9 @@ export function VibeCodingPageContent() {
         </div>
       </div>
 
-      {/* Editorial footer — caption + game-style load bar (desktop only).
-          Negative top margin pulls the caption up close to the media. */}
-      <div className="hidden shrink-0 flex-col gap-5 pb-7 md:flex md:-mt-[7vh]">
+      {/* Editorial footer — caption + game-style load bar (desktop only). The
+          carousel is bottom-aligned so the caption sits right under the media. */}
+      <div className="hidden shrink-0 flex-col gap-5 pb-7 pt-4 md:flex">
         <EditorialCaption entry={visible[active]} index={active} total={n} />
         <div className="flex justify-center">
           <LoadBar

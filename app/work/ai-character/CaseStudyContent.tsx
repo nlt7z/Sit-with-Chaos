@@ -268,6 +268,7 @@ const FEATURE_PROTOTYPES = {
   code: "/work/ai-character/prototype?embed=1&muted=1&focus=code",
   astroProfile: "/work/ai-character/prototype-astro?embed=1&focus=profile",
   therapyAnalysis: "/work/ai-character/prototype-psych?embed=1&focus=analysis",
+  therapyCode: "/work/ai-character/prototype-psych?embed=1&focus=code",
 } as const;
 
 // Render the prototype at full desktop size and scale it down to fit, so the
@@ -680,7 +681,6 @@ const heroItem = {
 
 const heroLinks = [
   { href: "/work/ai-character/deck-present", label: "View Presentation Deck" },
-  { href: "/work/ai-character/prototype", label: "Interactive prototype" },
 ] as const;
 
 const introBlockContainer = {
@@ -912,13 +912,9 @@ function Section({
         variants={reduced ? undefined : sectionRoot}
       >
         <motion.p
-          className="flex items-center gap-2.5 max-w-reading font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary"
+          className="max-w-reading font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary"
           variants={reduced ? undefined : sectionPiece}
         >
-          {/* Lime accent tick — quietly carries the brand color through every
-              section header. Doubles as a visual anchor that aligns the eyebrow
-              row with the surrounding content. */}
-          <span className="inline-block h-[2px] w-6 shrink-0 rounded-full bg-nltLime" aria-hidden="true" />
           {eyebrow}
         </motion.p>
         {title?.trim() ? (
@@ -969,6 +965,8 @@ const innovations: {
   prototypeSrc: string;
   videoCaption: string;
   notShipped?: true;
+  /** Collapsed to a header by default; the visitor expands to reveal the prototype. */
+  collapsible?: true;
 }[] = [
   {
     id: "heartbeat-power",
@@ -986,6 +984,7 @@ const innovations: {
   },
   {
     id: "story-unlock",
+    collapsible: true,
     name: "Story Unlock",
     capability: "Progressive memory building",
     workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow.svg",
@@ -1014,6 +1013,7 @@ const innovations: {
   },
   {
     id: "alternate-universe",
+    collapsible: true,
     name: "Alternate Universe Events",
     capability: "Long-term memory + generative storytelling",
     workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
@@ -1040,6 +1040,7 @@ const innovationItem = {
 
 function InteractionInnovationList() {
   const [openId, setOpenId] = useState<string | null>(null);
+  const [expandedIds, setExpandedIds] = useState<string[]>([]);
 
   return (
     <motion.div
@@ -1051,40 +1052,134 @@ function InteractionInnovationList() {
     >
       {innovations.map((item) => {
         const isOpen = openId === item.id;
+
+        const workflowToggle = !item.notShipped ? (
+          <button
+            type="button"
+            aria-expanded={isOpen}
+            aria-controls={`workflow-panel-${item.id}`}
+            id={`innovation-trigger-${item.id}`}
+            onClick={() => setOpenId((prev) => (prev === item.id ? null : item.id))}
+            className="shrink-0 rounded-full border border-black/[0.08] bg-black/[0.02] px-3 py-1.5 font-sans text-[12px] font-medium tracking-wide text-textSecondary transition-colors duration-300 hover:bg-black/[0.04] hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary"
+          >
+            {isOpen ? "Hide workflow" : "LLM workflow"}
+          </button>
+        ) : null;
+
+        const workflowPanel =
+          isOpen && !item.notShipped ? (
+            <div
+              id={`workflow-panel-${item.id}`}
+              role="region"
+              aria-labelledby={`innovation-trigger-${item.id}`}
+              className={`mt-6 overflow-hidden ring-1 ring-black/[0.06] ${mediaRound}`}
+            >
+              <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary md:px-6">LLM workflow</p>
+              <div className="relative overflow-hidden bg-black/[0.02]">
+                <img
+                  src={item.workflowSrc}
+                  alt={`${item.name} — LLM workflow`}
+                  className="h-auto w-full"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </div>
+          ) : null;
+
+        // Story Unlock and the unshipped Alternate Universe concept stay collapsed
+        // until the visitor opts in — they shouldn't compete with the shipped
+        // headline features, and collapsing also defers booting their iframes.
+        if (item.collapsible) {
+          const isExpanded = expandedIds.includes(item.id);
+          return (
+            <motion.article key={item.id} variants={innovationItem} className="block">
+              <button
+                type="button"
+                aria-expanded={isExpanded}
+                aria-controls={`innovation-panel-${item.id}`}
+                onClick={() =>
+                  setExpandedIds((prev) =>
+                    prev.includes(item.id) ? prev.filter((x) => x !== item.id) : [...prev, item.id]
+                  )
+                }
+                className="flex w-full items-center justify-between gap-4 rounded-2xl border border-dashed border-black/[0.16] bg-black/[0.015] px-5 py-4 text-left transition-colors duration-300 hover:bg-black/[0.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary md:px-6 md:py-5"
+              >
+                <span className="flex flex-wrap items-center gap-2.5">
+                  <span className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
+                    {item.name}
+                  </span>
+                  {item.notShipped && (
+                    <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/60">
+                      Not shipped
+                    </span>
+                  )}
+                </span>
+                <span className="flex shrink-0 items-center gap-1.5 font-sans text-[12px] font-medium tracking-wide text-textSecondary">
+                  {isExpanded ? "Hide" : "Preview"}
+                  <motion.svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 12 12"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    animate={{ rotate: isExpanded ? 180 : 0 }}
+                    transition={{ duration: 0.3, ease: easePremium }}
+                    aria-hidden
+                  >
+                    <path d="M2 4l4 4 4-4" />
+                  </motion.svg>
+                </span>
+              </button>
+
+              <AnimatePresence initial={false}>
+                {isExpanded && (
+                  <motion.div
+                    id={`innovation-panel-${item.id}`}
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.42, ease: easePremium }}
+                    className="overflow-hidden"
+                  >
+                    <div className="pt-6">
+                      <p className="font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
+                      <p className="mt-3 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
+                      {item.notShipped && (
+                        <p className="mt-3 font-sans text-[12px] leading-relaxed text-textSecondary/70">
+                          Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
+                        </p>
+                      )}
+                      <FeaturePrototypeEmbed
+                        label={`${item.name} — live prototype`}
+                        src={item.prototypeSrc}
+                        caption={item.videoCaption}
+                        className="mt-6"
+                      />
+                      {workflowToggle && <div className="mt-6">{workflowToggle}</div>}
+                      {workflowPanel}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.article>
+          );
+        }
+
         return (
           <motion.article key={item.id} variants={innovationItem} className="block">
             {/* Description above; the live prototype that proves it sits directly below. */}
             <div className="flex items-start justify-between gap-4">
-              <div className="flex flex-wrap items-center gap-2.5">
-                <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
-                  {item.name}
-                </h3>
-                {item.notShipped && (
-                  <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/60">
-                    Not shipped
-                  </span>
-                )}
-              </div>
-              {!item.notShipped && (
-                <button
-                  type="button"
-                  aria-expanded={isOpen}
-                  aria-controls={`workflow-panel-${item.id}`}
-                  id={`innovation-trigger-${item.id}`}
-                  onClick={() => setOpenId((prev) => (prev === item.id ? null : item.id))}
-                  className="mt-0.5 shrink-0 rounded-full border border-black/[0.08] bg-black/[0.02] px-3 py-1.5 font-sans text-[12px] font-medium tracking-wide text-textSecondary transition-colors duration-300 hover:bg-black/[0.04] hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary"
-                >
-                  {isOpen ? "Hide workflow" : "LLM workflow"}
-                </button>
-              )}
+              <h3 className="mt-0.5 font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
+                {item.name}
+              </h3>
+              {workflowToggle}
             </div>
             <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
             <p className="mt-3 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
-            {item.notShipped && (
-              <p className="mt-3 font-sans text-[12px] leading-relaxed text-textSecondary/70">
-                Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
-              </p>
-            )}
 
             <FeaturePrototypeEmbed
               label={`${item.name} — live prototype`}
@@ -1093,34 +1188,13 @@ function InteractionInnovationList() {
               className="mt-6"
             />
 
-            {isOpen && !item.notShipped && (
-              <div
-                id={`workflow-panel-${item.id}`}
-                role="region"
-                aria-labelledby={`innovation-trigger-${item.id}`}
-                className={`mt-6 overflow-hidden ring-1 ring-black/[0.06] ${mediaRound}`}
-              >
-                <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary md:px-6">LLM workflow</p>
-                <div className="relative overflow-hidden bg-black/[0.02]">
-                  <img
-                    src={item.workflowSrc}
-                    alt={`${item.name} — LLM workflow`}
-                    className="h-auto w-full"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </div>
-            )}
+            {workflowPanel}
           </motion.article>
         );
       })}
     </motion.div>
   );
 }
-
-const memoryVisibilityInsight =
-  "Most AI products treat memory as invisible state. I made it a first-class object in the UI — because in B2B evaluation, what you can see is what you can trust.";
 
 const uxStrategyShowrooms = [
   {
@@ -1201,13 +1275,6 @@ function UxStrategyShowroomTable() {
           {uxStrategyShowrooms.map((s) => (
             <ShowroomStrategyCard key={s.id} {...s} />
           ))}
-        </div>
-
-        <div className="max-w-[36rem] border-l-2 border-nltLime pl-7 py-5 md:pl-8 md:py-6">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-nltLime-ink">Memory in the UI</p>
-          <p className="mt-4 font-display text-[1.2rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:mt-5 md:text-[1.38rem] md:leading-[1.38]">
-            {memoryVisibilityInsight}
-          </p>
         </div>
       </div>
     </div>
@@ -1394,6 +1461,12 @@ function HeroPrototypeGallery() {
     setActivated((prev) => (prev.includes(id) ? prev : [...prev, id]));
   }
 
+  const idx = vibeCodingShowrooms.findIndex((s) => s.id === activeId);
+  function go(dir: number) {
+    const total = vibeCodingShowrooms.length;
+    pick(vibeCodingShowrooms[(idx + dir + total) % total].id);
+  }
+
   return (
     <motion.div
       className="mt-12 md:mt-16"
@@ -1401,24 +1474,32 @@ function HeroPrototypeGallery() {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.9, delay: 0.4, ease: easePremium }}
     >
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex flex-wrap gap-2.5" role="tablist" aria-label="Live showroom prototypes">
-          {vibeCodingShowrooms.map((s) => {
-            const on = s.id === activeId;
-            return (
-              <button
-                key={s.id}
-                type="button"
-                role="tab"
-                aria-selected={on}
-                tabIndex={on ? 0 : -1}
-                onClick={() => pick(s.id)}
-                className={`${roomTab.base} ${on ? roomTab.on : roomTab.off}`}
-              >
-                {s.tab}
-              </button>
-            );
-          })}
+      <div className="flex items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            aria-label="Previous showroom"
+            onClick={() => go(-1)}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.1] bg-white text-textSecondary transition-colors duration-200 hover:border-black/25 hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </button>
+          <p className="min-w-[8.75rem] text-center font-sans text-[13px] font-medium tracking-wide text-textPrimary">
+            {active.tab} showroom
+            <span className="ml-2 font-mono text-[11px] font-normal text-textSecondary/55">{idx + 1} / {vibeCodingShowrooms.length}</span>
+          </p>
+          <button
+            type="button"
+            aria-label="Next showroom"
+            onClick={() => go(1)}
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.1] bg-white text-textSecondary transition-colors duration-200 hover:border-black/25 hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+              <path d="M9 18l6-6-6-6" />
+            </svg>
+          </button>
         </div>
         <Link
           href={active.href}
@@ -1508,10 +1589,24 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
               </div>
 
               <motion.p
-                className="mt-6 max-w-[36rem] font-sans text-[1.0625rem] font-normal leading-[1.68] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.125rem] md:leading-[1.66]"
+                className="mt-6 max-w-[40rem] font-sans text-[1.0625rem] font-normal leading-[1.66] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.15rem]"
                 variants={reduced ? undefined : heroItem}
               >
-                Shipped Interactive Showrooms — the MVP feature for Qwen Character, serving millions of enterprise users. First proof moment dropped from <Em>60+ minutes</Em> of docs to <Em>under 2 minutes</Em>, with a <Em>200%</Em> lift in model API call volume.
+                Led and shipped the <Em>end-to-end design</Em> of Interactive Showrooms, the MVP feature for the Qwen Character LLM serving <Em>millions of enterprise customers</Em>, driving a <Em>200% lift</Em> in model API call volume through <Em>4 hands-on demos</Em>.
+              </motion.p>
+
+              <motion.p
+                className="mt-4 max-w-[40rem] font-sans text-[15px] font-normal leading-[1.7] tracking-[-0.011em] text-textSecondary/90 md:text-[1rem]"
+                variants={reduced ? undefined : heroItem}
+              >
+                Cut time-to-first-value from <Em>60+ minutes</Em> of documentation to <Em>under 2 minutes</Em> with an immersive showroom design, where each showroom surfaces one strength of the Qwen LLM alongside a <Em>prompt guide</Em> and a <Em>live code editor</Em>.
+              </motion.p>
+
+              <motion.p
+                className="mt-4 max-w-[40rem] font-sans text-[15px] font-normal leading-[1.7] tracking-[-0.011em] text-textSecondary/90 md:text-[1rem]"
+                variants={reduced ? undefined : heroItem}
+              >
+                Set the prototyping standard by building in <Em>React</Em> with Cursor and Claude Code, handing engineering working components to improve the Design QA process. Art-directed the visual system across all 4 showrooms, owning motion, state transitions, and a <Em>custom illustration set</Em> that gave each AI character a distinct presence on the page.
               </motion.p>
 
               <motion.div
@@ -1540,19 +1635,6 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                     className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                   >
                     {heroLinks[0].label}
-                  </Link>
-                </motion.div>
-                <motion.div
-                  whileHover={reduced ? undefined : { y: -2 }}
-                  whileTap={reduced ? undefined : { y: 1 }}
-                  transition={{ type: "spring", stiffness: 480, damping: 28 }}
-                  className="inline-block"
-                >
-                  <Link
-                    href={heroLinks[1].href}
-                    className="inline-flex rounded-full border border-[rgba(0,0,0,0.1)] bg-white/95 px-8 py-3 text-sm font-medium text-textPrimary shadow-[0_10px_26px_-18px_rgba(0,0,0,0.22)] backdrop-blur-[2px] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-                  >
-                    {heroLinks[1].label}
                   </Link>
                 </motion.div>
               </motion.nav>
@@ -1737,12 +1819,6 @@ export default function CaseStudyContent() {
 
           <UxStrategyShowroomTable />
 
-          <div className="mt-10 max-w-[34rem] md:mt-12">
-            <p className="font-sans text-[16px] leading-relaxed text-textSecondary">
-              Each room required its own interaction language. Below, a deep-dive on the Romance Room — designed to sustain engagement through long-term memory and parallel narrative threads.
-            </p>
-          </div>
-
           <InteractionInnovationList />
 
           <AdditionalShowroomsGallery />
@@ -1756,9 +1832,6 @@ export default function CaseStudyContent() {
         >
           <p>
             <Em>Inspiration and Continue Response</Em> guide users to the <Em>wow moment</Em>. A slide-out drawer keeps <Em>YAML</Em> and <Em>prompts</Em> next to the <Em>live demo</Em>.
-          </p>
-          <p>
-            The question shifts from <Em>&ldquo;can your model do this&rdquo;</Em> to <Em>&ldquo;how fast can we ship.&rdquo;</Em>
           </p>
 
           {/* Pair 1 — the two reply nudges described, then the prototype that demonstrates both. */}
@@ -1791,9 +1864,15 @@ export default function CaseStudyContent() {
               YAML specs, prompts, and constraints slide open beside the live demo — no context switch. Evaluators inspect the implementation in place, then clone the template as a <Em>reusable starting point</Em> for their own product.
             </p>
             <FeaturePrototypeEmbed
-              label="Developer tools — in-product code side panel"
+              label="Developer tools — romance room code side panel"
               src={FEATURE_PROTOTYPES.code}
-              caption="↑ The YAML and prompt behind the demo — open right there, no digging."
+              caption="↑ Romance room — the YAML and prompt behind the demo, open right there."
+              className="mt-6"
+            />
+            <FeaturePrototypeEmbed
+              label="Developer tools — therapy room code side panel"
+              src={FEATURE_PROTOTYPES.therapyCode}
+              caption="↑ Therapy room — the same code drawer: pipeline spec, prompt, and model config."
               className="mt-6"
             />
           </div>

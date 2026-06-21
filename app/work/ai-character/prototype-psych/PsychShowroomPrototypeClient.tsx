@@ -1257,7 +1257,7 @@ export default function PsychShowroomPrototypeClient({ embed = false, focus }: {
   // mount with one completed turn so the model's read is already shown beside
   // the reply (no waiting for the live build animation).
   const [messages,  setMessages]  = useState<Msg[]>(() =>
-    focus === "analysis"
+    focus === "analysis" || focus === "code"
       ? [
           WELCOME,
           { id: "u-seed", role: "user", text: QUICK_PROMPTS[0], analysisCollapsed: false },
@@ -1275,8 +1275,8 @@ export default function PsychShowroomPrototypeClient({ embed = false, focus }: {
   const [analyzing, setAnalyzing] = useState(false);
   const [pipeline,  setPipeline]  = useState<PipeStep[]>(PIPE_INIT);
 
-  const [panelOpen, setPanelOpen] = useState(false);
-  const [panelTab,  setPanelTab]  = useState<SidebarTab>("expert");
+  const [panelOpen, setPanelOpen] = useState(focus === "code");
+  const [panelTab,  setPanelTab]  = useState<SidebarTab>(focus === "code" ? "code" : "expert");
   const [guideStep, setGuideStep] = useState(0);
   // No splash — enter directly
   const [showRestartConfirm, setShowRestartConfirm] = useState(false);
