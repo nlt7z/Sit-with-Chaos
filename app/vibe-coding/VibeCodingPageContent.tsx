@@ -1,9 +1,19 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+} from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { LimeMark } from "@/components/LimeMark";
 import { RoseLoader } from "@/components/RoseLoader";
 import { SiteWindow } from "@/components/SiteWindow";
 import { TurntableWidget } from "@/components/TurntableWidget";
@@ -328,16 +338,6 @@ function ScaledIframe({
   );
 }
 
-// ─── Tag / filter chips ────────────────────────────────────────────────────
-
-function TagChip({ tag }: { tag: Tag }) {
-  return (
-    <span className="inline-flex items-center rounded-full border border-white/[0.12] bg-white/[0.05] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/50">
-      {tag}
-    </span>
-  );
-}
-
 // ─── MediaSlot ─────────────────────────────────────────────────────────────
 
 function MediaSlot({
@@ -349,9 +349,9 @@ function MediaSlot({
   shouldLoad: boolean;
   onReady?: () => void;
 }) {
-  // onReady is only wired for types that have a real load event (video, image,
-  // iframe). SiteWindow and TurntableWidget manage their own skeletons; counting
-  // them as immediately ready would open the gate before any actual media loads.
+  // onReady is wired for every type with a real load event (video, image,
+  // iframe, live site). Only TurntableWidget (a self-managed canvas) is left
+  // unwired — it never gates the entry, which only waits on the first card.
   if (media.kind === "video") {
     return <LazyVideo src={media.src} shouldLoad={shouldLoad} onReady={onReady} />;
   }
@@ -367,6 +367,7 @@ function MediaSlot({
         active={shouldLoad}
         chrome={false}
         bare
+        onReady={onReady}
       />
     );
   }
@@ -397,6 +398,112 @@ function MediaSlot({
   return null;
 }
 
+// ─── Active card FX (desktop) ──────────────────────────────────────────────
+// Pointer-tracked 3D tilt — rotation ONLY, never scale — plus a lime radial
+// glare and a cursor-following lime arrow button (the same affordance as the
+// /work ProjectCard). The arrow only shows when the card has a destination.
+// Honours prefers-reduced-motion (renders flat, no spring).
+
+const TILT_SPRING = { stiffness: 150, damping: 18, mass: 0.4 } as const;
+const ARROW_SPRING = { stiffness: 400, damping: 30, mass: 0.5 } as const;
+
+function ActiveCardFX({
+  hasLink,
+  children,
+}: {
+  hasLink: boolean;
+  children: React.ReactNode;
+}) {
+  const reduced = useReducedMotion();
+  const [hovered, setHovered] = useState(false);
+
+  // 0..1 pointer position within the card → tilt + glare.
+  const mx = useMotionValue(0.5);
+  const my = useMotionValue(0.5);
+  const rotX = useSpring(useTransform(my, [0, 1], [6.5, -6.5]), TILT_SPRING);
+  const rotY = useSpring(useTransform(mx, [0, 1], [-8.5, 8.5]), TILT_SPRING);
+  const gx = useTransform(mx, (v) => v * 100);
+  const gy = useTransform(my, (v) => v * 100);
+  const glare = useMotionTemplate`radial-gradient(380px circle at ${gx}% ${gy}%, rgba(210,255,0,0.22), transparent 60%)`;
+
+  // Pixel pointer position → cursor-following arrow (offset to centre the 56px button).
+  const ax = useMotionValue(0);
+  const ay = useMotionValue(0);
+  const axs = useSpring(ax, ARROW_SPRING);
+  const ays = useSpring(ay, ARROW_SPRING);
+
+  const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    mx.set((e.clientX - r.left) / r.width);
+    my.set((e.clientY - r.top) / r.height);
+    ax.set(e.clientX - r.left - 28);
+    ay.set(e.clientY - r.top - 28);
+  };
+  const enter = (e: React.MouseEvent<HTMLDivElement>) => {
+    onMove(e);
+    setHovered(true);
+  };
+  const leave = () => {
+    mx.set(0.5);
+    my.set(0.5);
+    setHovered(false);
+  };
+
+  return (
+    <div className="relative" onMouseEnter={enter} onMouseMove={onMove} onMouseLeave={leave}>
+      <motion.div
+        style={
+          reduced
+            ? undefined
+            : {
+                rotateX: rotX,
+                rotateY: rotY,
+                transformPerspective: 1100,
+                transformStyle: "preserve-3d",
+              }
+        }
+        className="relative will-change-transform"
+      >
+        {children}
+        {!reduced && (
+          <>
+            {/* cursor-tracked lime glare */}
+            <motion.div
+              aria-hidden
+              style={{ background: glare }}
+              animate={{ opacity: hovered ? 1 : 0 }}
+              transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
+              className="pointer-events-none absolute inset-0 z-[3] rounded-md mix-blend-screen"
+            />
+            {/* lime hairline edge on hover */}
+            <motion.div
+              aria-hidden
+              animate={{ opacity: hovered ? 1 : 0 }}
+              transition={{ duration: 0.35 }}
+              className="pointer-events-none absolute inset-0 z-[2] rounded-md ring-1 ring-inset ring-nltLime/40"
+            />
+          </>
+        )}
+      </motion.div>
+
+      {/* Cursor-following lime arrow — visual affordance only (the media itself
+          is the link). Shown on hover when the card has a destination. */}
+      {hasLink && (
+        <motion.div
+          aria-hidden
+          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.4)]"
+          style={{ x: reduced ? ax : axs, y: reduced ? ay : ays }}
+          initial={false}
+          animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.4 }}
+          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+        >
+          <ArrowUpRight className="h-6 w-6" strokeWidth={2.25} />
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
 // ─── Cards ─────────────────────────────────────────────────────────────────
 
 function PrototypeCard({
@@ -412,35 +519,184 @@ function PrototypeCard({
   fluid?: boolean;
   onReady?: () => void;
 }) {
+  const media = (
+    <MediaSlot media={entry.media} shouldLoad={shouldLoad} onReady={onReady} />
+  );
+  // Live sites + embedded prototypes have a destination → show the hover arrow.
+  const hasLink = entry.media.kind === "live" || entry.media.kind === "iframe";
+
   return (
     <article
       className={fluid ? "w-full" : "w-[min(62vw,680px)]"}
       style={{ pointerEvents: isActive ? "auto" : "none" }}
     >
-      <div>
-        <MediaSlot media={entry.media} shouldLoad={shouldLoad} onReady={onReady} />
-      </div>
-      <header className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1">
-        <h3 className="font-display text-base lowercase tracking-[-0.01em] text-white md:text-lg">
-          {entry.title}
-        </h3>
-        <span className="flex flex-wrap items-center gap-2">
-          {entry.tags.map((t) => (
-            <TagChip key={t} tag={t} />
-          ))}
-        </span>
-        {entry.href && entry.hrefLabel && (
-          <Link
-            href={entry.href}
-            className="ml-auto font-mono text-[10px] uppercase tracking-[0.12em] text-white/40 transition-opacity hover:opacity-60"
-            target={entry.href.startsWith("http") ? "_blank" : undefined}
-            rel={entry.href.startsWith("http") ? "noopener noreferrer" : undefined}
-          >
-            {entry.hrefLabel}
-          </Link>
-        )}
-      </header>
+      {/* Desktop active card gets the tilt + cursor arrow; neighbours + mobile
+          render flat. The editorial caption below carries the title on desktop. */}
+      {!fluid && isActive ? (
+        <ActiveCardFX hasLink={hasLink}>{media}</ActiveCardFX>
+      ) : (
+        <div>{media}</div>
+      )}
+
+      {/* In-card header — mobile list only. */}
+      {fluid && (
+        <header className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-1">
+          <h3 className="font-display text-base lowercase tracking-[-0.01em] text-white md:text-lg">
+            {entry.title}
+          </h3>
+          {entry.href && entry.hrefLabel && (
+            <Link
+              href={entry.href}
+              className="ml-auto font-mono text-[10px] uppercase tracking-[0.12em] text-white/40 transition-opacity hover:opacity-60"
+              target={entry.href.startsWith("http") ? "_blank" : undefined}
+              rel={entry.href.startsWith("http") ? "noopener noreferrer" : undefined}
+            >
+              {entry.hrefLabel}
+            </Link>
+          )}
+        </header>
+      )}
     </article>
+  );
+}
+
+// ─── Editorial pieces (desktop) ────────────────────────────────────────────
+
+/** Giant ghost index numeral floating behind the active card. */
+function GhostIndex({ index }: { index: number }) {
+  const label = String(index + 1).padStart(2, "0");
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 z-0 flex items-center justify-end overflow-hidden pr-[1vw]"
+    >
+      <AnimatePresence mode="popLayout">
+        <motion.span
+          key={label}
+          className="select-none font-display leading-none tracking-[-0.06em]"
+          style={{
+            fontSize: "min(74vh, 40vw)",
+            color: "transparent",
+            WebkitTextStroke: "1.6px rgba(210,255,0,0.22)",
+            transform: "translateY(-4%)",
+          }}
+          initial={{ opacity: 0, x: 60, filter: "blur(10px)" }}
+          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
+          exit={{ opacity: 0, x: -60, filter: "blur(10px)" }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
+          {label}
+        </motion.span>
+      </AnimatePresence>
+    </div>
+  );
+}
+
+/** Bold editorial caption for the active entry — re-mounts on navigation so the
+ *  LimeMark highlighter re-swipes and the block slides in each time. */
+function EditorialCaption({
+  entry,
+  index,
+  total,
+}: {
+  entry: Entry;
+  index: number;
+  total: number;
+}) {
+  const words = entry.title.split(" ");
+  const last = words.pop() ?? entry.title;
+  const head = words.join(" ");
+
+  return (
+    <motion.div
+      key={`${index}-${entry.title}`}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className="mx-auto w-[min(62vw,680px)] text-left"
+    >
+      <div className="flex items-baseline gap-3 font-mono text-[10px] uppercase tracking-[0.3em]">
+        <span className="tabular-nums text-nltLime">{String(index + 1).padStart(2, "0")}</span>
+        <span className="text-white/25">/</span>
+        <span className="tabular-nums text-white/35">{String(total).padStart(2, "0")}</span>
+      </div>
+
+      <h2 className="mt-3 font-display lowercase leading-[1.05] tracking-[-0.02em] text-white text-[clamp(20px,2.4vw,32px)]">
+        {head ? `${head} ` : ""}
+        <LimeMark>{last}</LimeMark>
+      </h2>
+    </motion.div>
+  );
+}
+
+/** Game-style segmented loading bar — doubles as the carousel index.
+ *  Segments fill up to the active item (lime), the current segment glows, and
+ *  each segment is clickable to jump. */
+function LoadBar({
+  active,
+  total,
+  onPrev,
+  onNext,
+  onJump,
+}: {
+  active: number;
+  total: number;
+  onPrev: () => void;
+  onNext: () => void;
+  onJump: (i: number) => void;
+}) {
+  const pct = Math.round(((active + 1) / total) * 100);
+
+  return (
+    <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45 md:gap-4">
+      <button
+        onClick={onPrev}
+        className="px-1.5 py-2 text-white/45 transition-colors hover:text-nltLime"
+        aria-label="Previous"
+      >
+        ‹
+      </button>
+
+      <span className="text-white/25">[</span>
+
+      {/* segmented bar */}
+      <div className="relative flex items-center gap-[3px]">
+        {Array.from({ length: total }).map((_, i) => {
+          const filled = i <= active;
+          const isActive = i === active;
+          return (
+            <button
+              key={i}
+              onClick={() => onJump(i)}
+              className="group relative py-2"
+              aria-label={`Go to item ${i + 1}`}
+            >
+              <span
+                className={`block h-[12px] w-[13px] -skew-x-[20deg] transition-all duration-300 ease-portfolio ${
+                  isActive
+                    ? "bg-nltLime shadow-[0_0_12px_rgba(210,255,0,0.85)]"
+                    : filled
+                      ? "bg-nltLime/65"
+                      : "bg-white/[0.12] group-hover:bg-white/30"
+                }`}
+              />
+            </button>
+          );
+        })}
+      </div>
+
+      <span className="text-white/25">]</span>
+
+      <span className="tabular-nums text-nltLime">{String(pct).padStart(3, "0")}%</span>
+
+      <button
+        onClick={onNext}
+        className="px-1.5 py-2 text-white/45 transition-colors hover:text-nltLime"
+        aria-label="Next"
+      >
+        ›
+      </button>
+    </div>
   );
 }
 
@@ -474,59 +730,6 @@ function MobilePrototypeListItem({ entry }: { entry: Entry }) {
   );
 }
 
-// ─── Click wheel ────────────────────────────────────────────────────────────
-
-function ClickWheel({
-  onLeft,
-  onRight,
-}: {
-  onLeft: () => void;
-  onRight: () => void;
-}) {
-  return (
-    <div className="relative select-none" style={{ width: 126, height: 126 }}>
-      <div
-        className="absolute inset-0 rounded-full"
-        style={{
-          background: "linear-gradient(150deg, #38383a 0%, #1c1c1e 100%)",
-          boxShadow:
-            "0 10px 32px rgba(0,0,0,0.14), 0 2px 6px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.08)",
-        }}
-      />
-      <button
-        onClick={onLeft}
-        className="absolute left-[10px] top-1/2 z-10 -translate-y-1/2 p-2 opacity-65 transition-opacity hover:opacity-100"
-        aria-label="Previous"
-      >
-        <svg width="13" height="9" viewBox="0 0 14 10" fill="white">
-          <polygon points="7,0 0,5 7,10" />
-          <polygon points="14,0 7,5 14,10" />
-        </svg>
-      </button>
-      <button
-        onClick={onRight}
-        className="absolute right-[10px] top-1/2 z-10 -translate-y-1/2 p-2 opacity-65 transition-opacity hover:opacity-100"
-        aria-label="Next"
-      >
-        <svg width="13" height="9" viewBox="0 0 14 10" fill="white">
-          <polygon points="0,0 7,5 0,10" />
-          <polygon points="7,0 14,5 7,10" />
-        </svg>
-      </button>
-      <div
-        className="absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 rounded-full"
-        style={{
-          width: 50,
-          height: 50,
-          background: "linear-gradient(150deg, #3c3c3e 0%, #2a2a2c 100%)",
-          boxShadow:
-            "0 3px 12px rgba(0,0,0,0.30), inset 0 1px 0 rgba(255,255,255,0.06)",
-        }}
-      />
-    </div>
-  );
-}
-
 // ─── Entry loading gate (desktop-only) ─────────────────────────────────────
 // Matches the homepage IntroAnimation visual: RoseLoader + lime halo + progress bar.
 // Only shown on md+ (the carousel). Mobile uses a plain scroll list — no gate needed.
@@ -539,12 +742,16 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
   const [phase, setPhase] = useState<"playing" | "exit">("playing");
   const [percent, setPercent] = useState(0);
   const countRef = useRef(readyCount);
+  const readyRef = useRef(ready);
   const startRef = useRef(0);
 
-  // Keep ref in sync so the rAF loop reads live progress without resubscribing.
+  // Keep refs in sync so the rAF loop reads live progress without resubscribing.
   useEffect(() => {
     countRef.current = readyCount;
   }, [readyCount]);
+  useEffect(() => {
+    readyRef.current = ready;
+  }, [ready]);
 
   // Trigger the fade-out once assets are ready.
   useEffect(() => {
@@ -564,7 +771,10 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
       const elapsed = now - startRef.current;
       const assetFrac = countRef.current / GATE_TARGET;
       const timeFloor = Math.min(0.9, Math.max(0, (elapsed - 120) / 2000));
-      const target = countRef.current >= GATE_TARGET ? 1 : Math.max(assetFrac, timeFloor);
+      const target =
+        readyRef.current || countRef.current >= GATE_TARGET
+          ? 1
+          : Math.max(assetFrac, timeFloor);
       shown += (target - shown) * 0.14;
       if (target - shown < 0.004) shown = target;
       setPercent(Math.round(shown * 100));
@@ -667,6 +877,10 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
 
 const entryKey = (e: Entry) => `${e.date}::${e.title}`;
 
+// The card shown first (active on mount) — the gate waits for its media to load
+// so the page never reveals on a still-loading placeholder.
+const FIRST_KEY = entryKey(entries[0]);
+
 // ─── Page content ───────────────────────────────────────────────────────────
 
 export function VibeCodingPageContent() {
@@ -676,20 +890,22 @@ export function VibeCodingPageContent() {
   const wheelCooldown = useRef(false);
 
   // ── Entry gate ─────────────────────────────────────────────────────────
+  // Hold the loading animation until the first (active) card's media has
+  // actually loaded; the bar's progress reflects how many nearby cards are ready.
   const [entryReady, setEntryReady] = useState(false);
   const [readyCount, setReadyCount] = useState(0);
-  const readyCountRef = useRef(0);
+  const readyKeysRef = useRef<Set<string>>(new Set());
 
-  const onMediaReady = useCallback(() => {
-    const next = readyCountRef.current + 1;
-    readyCountRef.current = next;
-    setReadyCount(next);
-    if (next >= GATE_TARGET) setEntryReady(true);
+  const onMediaReady = useCallback((key: string) => {
+    if (readyKeysRef.current.has(key)) return;
+    readyKeysRef.current.add(key);
+    setReadyCount(readyKeysRef.current.size);
+    if (key === FIRST_KEY) setEntryReady(true);
   }, []);
 
-  // Hard fallback: open the gate after 5 s no matter what.
+  // Hard fallback: reveal after 9 s even if a (cross-origin) asset never loads.
   useEffect(() => {
-    const t = setTimeout(() => setEntryReady(true), 5000);
+    const t = setTimeout(() => setEntryReady(true), 9000);
     return () => clearTimeout(t);
   }, []);
 
@@ -762,9 +978,12 @@ export function VibeCodingPageContent() {
         </ul>
       </div>
 
-      {/* Tablet / desktop: carousel */}
+      {/* Tablet / desktop: kinetic editorial carousel */}
       <div ref={carouselRef} className="relative hidden min-h-0 flex-1 overflow-hidden md:block">
-        <div className="absolute inset-0 flex items-center justify-center">
+        {/* giant ghost index numeral behind the deck */}
+        <GhostIndex index={active} />
+
+        <div className="absolute inset-0 z-10 flex items-center justify-center">
           {visible.map((entry, i) => {
             const raw = i - active;
             const halfN = n / 2;
@@ -780,8 +999,9 @@ export function VibeCodingPageContent() {
                 onClick={() => !isActive && setActive(i)}
                 className="absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                 style={{
-                  transform: `translateX(calc(${offset} * 42vw)) scale(${isActive ? 1 : 0.62})`,
-                  opacity: isActive ? 1 : dist === 1 ? 0.1 : 0,
+                  transform: `translateX(calc(${offset} * 44vw)) scale(${isActive ? 1 : 0.66})`,
+                  opacity: isActive ? 1 : dist === 1 ? 0.22 : 0,
+                  filter: isActive ? "none" : "grayscale(1) blur(2px) brightness(0.7)",
                   cursor: isActive ? "default" : "pointer",
                   zIndex: isActive ? 10 : 5 - dist,
                 }}
@@ -790,7 +1010,7 @@ export function VibeCodingPageContent() {
                   entry={entry}
                   shouldLoad={shouldLoad}
                   isActive={isActive}
-                  onReady={onMediaReady}
+                  onReady={() => onMediaReady(entryKey(entry))}
                 />
               </div>
             );
@@ -798,9 +1018,19 @@ export function VibeCodingPageContent() {
         </div>
       </div>
 
-      {/* Click wheel — desktop only */}
-      <div className="hidden shrink-0 justify-center pb-8 md:flex">
-        <ClickWheel onLeft={prev} onRight={next} />
+      {/* Editorial footer — caption + game-style load bar (desktop only).
+          Negative top margin pulls the caption up close to the media. */}
+      <div className="hidden shrink-0 flex-col gap-5 pb-7 md:flex md:-mt-[7vh]">
+        <EditorialCaption entry={visible[active]} index={active} total={n} />
+        <div className="flex justify-center">
+          <LoadBar
+            active={active}
+            total={n}
+            onPrev={prev}
+            onNext={next}
+            onJump={setActive}
+          />
+        </div>
       </div>
     </section>
   );

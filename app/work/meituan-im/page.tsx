@@ -184,7 +184,12 @@ function ScaledPrototypeFrame({
     <div className="mx-auto w-full" style={{ maxWidth: effectiveMax }}>
       <div
         ref={wrapperRef}
-        className="relative w-full"
+        // overflow-hidden clips the scaled iframe AND keeps the wrapper's
+        // measured width bounded by its column — without it a not-yet-scaled
+        // 1200px iframe widens the whole document, which then feeds back into
+        // the width measurement and the scale never recovers (the page renders
+        // at desktop width on mobile). Mirrors the homepage ScaledPrototype.
+        className="relative w-full overflow-hidden"
         style={{ height: naturalHeight * scale }}
       >
         <iframe

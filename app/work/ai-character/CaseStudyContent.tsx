@@ -56,70 +56,6 @@ function SitePreviewFrame({
   );
 }
 
-function SiteVideoPreviewFrame({
-  eyebrow,
-  title,
-  src,
-  caption,
-}: {
-  eyebrow: string;
-  title: string;
-  src: string;
-  caption?: string;
-}) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
-
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const hit = entries[0];
-        if (!hit) return;
-        if (hit.isIntersecting) void el.play().catch(() => {});
-        else el.pause();
-      },
-      { root: null, rootMargin: "-10% 0px -12% 0px", threshold: [0, 0.15, 0.35] }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [src]);
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el) return;
-    el.muted = true;
-  }, [src]);
-
-  return (
-    <div className="mt-10 overflow-hidden rounded-2xl ring-1 ring-black/[0.08]">
-      <div className="border-b border-black/[0.06] bg-surfaceAlt/45 px-4 py-3 md:px-5">
-        <p className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary">{eyebrow}</p>
-        <p className="mt-2 font-sans text-[13px] font-medium text-textPrimary">{title}</p>
-      </div>
-      <div className="bg-black">
-        <video
-          ref={videoRef}
-          className="h-auto w-full max-h-[min(72vh,780px)] min-h-[280px] object-contain md:max-h-[min(68vh,860px)] md:min-h-[360px]"
-          controls
-          playsInline
-          muted
-          preload="metadata"
-          aria-label={title}
-        >
-          <source src={src} type="video/mp4" />
-        </video>
-      </div>
-      {caption ? (
-        <p className="border-t border-black/[0.05] bg-surfaceAlt/30 px-4 py-2.5 font-sans text-[11px] leading-relaxed text-textSecondary md:px-5">
-          {caption}
-        </p>
-      ) : null}
-    </div>
-  );
-}
-
 function Em({ children }: { children: React.ReactNode }) {
   return <span className="font-normal text-textPrimary">{children}</span>;
 }
@@ -333,10 +269,6 @@ const FEATURE_PROTOTYPES = {
   astroProfile: "/work/ai-character/prototype-astro?embed=1&focus=profile",
   therapyAnalysis: "/work/ai-character/prototype-psych?embed=1&focus=analysis",
 } as const;
-
-/** Edge-to-edge treatment when an embed sits inside another card. */
-const embedInCardClass =
-  "rounded-none shadow-none ring-0 [&>div]:rounded-none [&_iframe]:rounded-none [&>figcaption]:border-black/[0.06]";
 
 // Render the prototype at full desktop size and scale it down to fit, so the
 // embed reads like the full-screen app (just smaller) instead of reflowing into
@@ -595,29 +527,23 @@ const additionalShowroomGalleryItems: {
 function AdditionalShowroomsGallery() {
   return (
     <motion.div
-      className="mt-10 space-y-5"
+      className="mt-14 space-y-14 md:mt-16 md:space-y-20"
       variants={innovationContainer}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-10% 0px" }}
     >
       {additionalShowroomGalleryItems.map((item) => (
-        <motion.article
-          key={item.id}
-          variants={innovationItem}
-          className="block overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] transition-[box-shadow] duration-700 ease-out hover:shadow-[0_24px_64px_-28px_rgba(0,0,0,0.09)]"
-        >
+        <motion.article key={item.id} variants={innovationItem} className="block">
+          <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">{item.room}</h3>
+          <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
+          <p className="mt-3 max-w-prose font-sans text-[16px] leading-[1.65] text-textSecondary">{item.body}</p>
           <FeaturePrototypeEmbed
             label={`${item.room} — live prototype`}
             src={item.prototypeSrc}
             caption={item.videoCaption}
-            className={embedInCardClass}
+            className="mt-6"
           />
-          <div className="border-t border-black/[0.06] bg-white px-7 py-8 md:px-9 md:py-9">
-            <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">{item.room}</h3>
-            <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
-            <p className="mt-4 max-w-prose font-sans text-[16px] leading-[1.65] text-textSecondary">{item.body}</p>
-          </div>
         </motion.article>
       ))}
     </motion.div>
@@ -1117,7 +1043,7 @@ function InteractionInnovationList() {
 
   return (
     <motion.div
-      className="space-y-5 pt-3"
+      className="space-y-14 pt-3 md:space-y-20"
       variants={innovationContainer}
       initial="hidden"
       whileInView="visible"
@@ -1126,65 +1052,60 @@ function InteractionInnovationList() {
       {innovations.map((item) => {
         const isOpen = openId === item.id;
         return (
-          <motion.article
-            key={item.id}
-            variants={innovationItem}
-            className="block overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] transition-[box-shadow] duration-700 ease-out hover:shadow-[0_24px_64px_-28px_rgba(0,0,0,0.09)]"
-          >
+          <motion.article key={item.id} variants={innovationItem} className="block">
+            {/* Description above; the live prototype that proves it sits directly below. */}
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
+                  {item.name}
+                </h3>
+                {item.notShipped && (
+                  <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/60">
+                    Not shipped
+                  </span>
+                )}
+              </div>
+              {!item.notShipped && (
+                <button
+                  type="button"
+                  aria-expanded={isOpen}
+                  aria-controls={`workflow-panel-${item.id}`}
+                  id={`innovation-trigger-${item.id}`}
+                  onClick={() => setOpenId((prev) => (prev === item.id ? null : item.id))}
+                  className="mt-0.5 shrink-0 rounded-full border border-black/[0.08] bg-black/[0.02] px-3 py-1.5 font-sans text-[12px] font-medium tracking-wide text-textSecondary transition-colors duration-300 hover:bg-black/[0.04] hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary"
+                >
+                  {isOpen ? "Hide workflow" : "LLM workflow"}
+                </button>
+              )}
+            </div>
+            <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
+            <p className="mt-3 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
+            {item.notShipped && (
+              <p className="mt-3 font-sans text-[12px] leading-relaxed text-textSecondary/70">
+                Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
+              </p>
+            )}
+
             <FeaturePrototypeEmbed
               label={`${item.name} — live prototype`}
               src={item.prototypeSrc}
               caption={item.videoCaption}
-              className={embedInCardClass}
+              className="mt-6"
             />
-            <button
-              type="button"
-              aria-expanded={isOpen}
-              aria-controls={`workflow-panel-${item.id}`}
-              id={`innovation-trigger-${item.id}`}
-              onClick={() => setOpenId((prev) => (prev === item.id ? null : item.id))}
-              className="w-full border-t border-black/[0.06] bg-white px-7 py-8 text-left transition-colors duration-300 hover:bg-black/[0.015] focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-textPrimary md:px-9 md:py-9"
-            >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-2.5">
-                  <h3 className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
-                    {item.name}
-                  </h3>
-                  {item.notShipped && (
-                    <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/60">
-                      Not shipped
-                    </span>
-                  )}
-                </div>
-                <span className="mt-0.5 shrink-0 rounded-full border border-black/[0.08] bg-black/[0.02] px-3 py-1.5 font-sans text-[12px] font-medium tracking-wide text-textSecondary">
-                  {isOpen ? "Hide" : "Workflow"}
-                </span>
-              </div>
-              <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
-              <p className="mt-4 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
-              {item.notShipped ? (
-                <p className="mt-4 font-sans text-[12px] leading-relaxed text-textSecondary/70">
-                  Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
-                </p>
-              ) : (
-                !isOpen && (
-                  <p className="mt-4 font-sans text-[12px] tracking-wide text-textSecondary/70">Tap to view LLM workflow</p>
-                )
-              )}
-            </button>
-            {isOpen && (
+
+            {isOpen && !item.notShipped && (
               <div
                 id={`workflow-panel-${item.id}`}
                 role="region"
                 aria-labelledby={`innovation-trigger-${item.id}`}
-                className="border-t border-black/[0.06] px-7 pb-8 pt-8 md:px-9"
+                className={`mt-6 overflow-hidden ring-1 ring-black/[0.06] ${mediaRound}`}
               >
-                <p className="mb-4 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary">LLM workflow</p>
-                <div className={`relative overflow-hidden bg-black/[0.02] ring-1 ring-black/[0.06] ${mediaRound}`}>
+                <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary md:px-6">LLM workflow</p>
+                <div className="relative overflow-hidden bg-black/[0.02]">
                   <img
                     src={item.workflowSrc}
                     alt={`${item.name} — LLM workflow`}
-                    className={`h-auto w-full ${mediaRound}`}
+                    className="h-auto w-full"
                     loading="lazy"
                     decoding="async"
                   />
@@ -1422,6 +1343,128 @@ function HowIWorkedDiagram() {
   );
 }
 
+const HERO_PROTO_W = 1440;
+const HERO_PROTO_H = 900;
+
+/** Hero centerpiece — the three live showroom prototypes the visitor can switch
+ *  between and actually touch. Sits *below* the intro copy so the page reads
+ *  headline → promise → real product. Only the active prototype is visible; each
+ *  room mounts once on first open, then stays warm so switching is instant.
+ *  A full-desktop iframe is scaled to fit, so it reads like the real app. */
+function HeroPrototypeGallery() {
+  const [activeId, setActiveId] = useState<(typeof vibeCodingShowrooms)[number]["id"]>("romance");
+  const [activated, setActivated] = useState<string[]>(["romance"]);
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [width, setWidth] = useState(0);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    const ro = new ResizeObserver(([entry]) => setWidth(entry.contentRect.width));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const el = frameRef.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setMounted(true);
+      return;
+    }
+    const obs = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setMounted(true);
+          obs.disconnect();
+        }
+      },
+      { root: null, rootMargin: "300px 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const active = vibeCodingShowrooms.find((s) => s.id === activeId) ?? vibeCodingShowrooms[0];
+  const scale = width > 0 ? width / HERO_PROTO_W : 0;
+  const displayH = Math.round(HERO_PROTO_H * scale);
+
+  function pick(id: (typeof vibeCodingShowrooms)[number]["id"]) {
+    setActiveId(id);
+    setActivated((prev) => (prev.includes(id) ? prev : [...prev, id]));
+  }
+
+  return (
+    <motion.div
+      className="mt-12 md:mt-16"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.9, delay: 0.4, ease: easePremium }}
+    >
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap gap-2.5" role="tablist" aria-label="Live showroom prototypes">
+          {vibeCodingShowrooms.map((s) => {
+            const on = s.id === activeId;
+            return (
+              <button
+                key={s.id}
+                type="button"
+                role="tab"
+                aria-selected={on}
+                tabIndex={on ? 0 : -1}
+                onClick={() => pick(s.id)}
+                className={`${roomTab.base} ${on ? roomTab.on : roomTab.off}`}
+              >
+                {s.tab}
+              </button>
+            );
+          })}
+        </div>
+        <Link
+          href={active.href}
+          className="font-sans text-[12px] font-medium tracking-wide text-textSecondary underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-textPrimary hover:decoration-textPrimary/35"
+        >
+          Open full page
+        </Link>
+      </div>
+
+      <div
+        ref={frameRef}
+        className={`relative mt-5 w-full overflow-hidden border transition-[border-color,box-shadow] duration-500 ${vibeGalleryChrome[active.id]} ${mediaRound}`}
+        style={{ height: displayH || undefined, aspectRatio: displayH ? undefined : `${HERO_PROTO_W}/${HERO_PROTO_H}` }}
+      >
+        {mounted && scale > 0 ? (
+          vibeCodingShowrooms.map((s) => {
+            if (!activated.includes(s.id)) return null;
+            const on = s.id === activeId;
+            return (
+              <iframe
+                key={s.id}
+                title={s.title}
+                src={s.src}
+                loading="lazy"
+                className={`absolute left-0 top-0 border-0 transition-opacity duration-500 ${vibeIframeBg[s.id]} ${on ? "opacity-100" : "pointer-events-none opacity-0"}`}
+                style={{
+                  width: HERO_PROTO_W,
+                  height: HERO_PROTO_H,
+                  transform: `scale(${scale})`,
+                  transformOrigin: "top left",
+                }}
+              />
+            );
+          })
+        ) : (
+          <div className="absolute inset-0 flex items-center justify-center bg-[#0b0b10]" aria-hidden>
+            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
+          </div>
+        )}
+      </div>
+
+      <p className="mt-3 font-sans text-[12px] leading-relaxed text-textSecondary/90">{active.caption}</p>
+    </motion.div>
+  );
+}
+
 function HeroSection({ reduced }: { reduced: boolean | null }) {
   const heroRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
@@ -1436,37 +1479,6 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
       className="relative scroll-mt-24 overflow-x-hidden pb-32 pt-16 md:scroll-mt-28 md:pb-40 md:pt-24"
     >
       <div className="relative w-full">
-        <motion.div
-          className="mb-10 overflow-hidden rounded-2xl bg-black shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.08] md:mb-12"
-          initial={reduced ? false : { opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, ease: easePremium }}
-        >
-          <div className="relative aspect-video w-full">
-            {reduced ? (
-              <img
-                src="/assets/ai-character/showcase.jpg"
-                alt="Qwen AI Character product showcase preview"
-                className="h-full w-full object-cover"
-                loading="eager"
-                decoding="async"
-              />
-            ) : (
-              <video
-                className="h-full w-full object-cover"
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                aria-label="Qwen AI Character experience overview"
-              >
-                <source src="/assets/ai-character/figma.mp4" type="video/mp4" />
-              </video>
-            )}
-          </div>
-        </motion.div>
-
         <motion.div style={{ y: parallaxLead }}>
           <motion.div
             className="relative"
@@ -1549,6 +1561,8 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
         </motion.div>
 
        
+
+        <HeroPrototypeGallery />
 
         <motion.div
           className="mt-14 md:mt-20"
@@ -1679,12 +1693,6 @@ export default function CaseStudyContent() {
             Enterprise decks faced the same wall: descriptive, not convincing. So I shifted the product from documentation to <Em>proof</Em>.
           </p>
 
-          <SiteVideoPreviewFrame
-            eyebrow="Before"
-            title="Static documentation and generic chat — previous experience (screen recording)"
-            src="/assets/ai-character/before.mp4"
-          />
-
           <blockquote className="my-16 w-full !max-w-none border-l-2 border-nltLime pl-7 not-italic md:my-20 md:pl-8">
             <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-nltLime-ink">How might we</p>
             <p className="mt-4 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
@@ -1714,43 +1722,6 @@ export default function CaseStudyContent() {
           
         </Section>
 
-        {/* Bridge: What makes this hard to design */}
-        <div className="border-y border-black/[0.06] py-20 md:py-24">
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">
-            What makes AI experiences hard
-          </p>
-          <p className="mt-8 max-w-[38rem] font-display text-[1.4rem] font-light leading-[1.42] tracking-[-0.02em] text-textPrimary md:text-[1.6rem] md:leading-[1.38]">
-            My role was to turn invisible model behavior into visible product surfaces.
-          </p>
-          <p className="mt-6 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:mt-7 md:text-[1.0625rem] md:leading-[1.76]">
-            Users don&apos;t only judge the output. They judge whether they understand what the system knows, why it responds, and how much control they still have.
-          </p>
-          <p className="mt-7 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:mt-8 md:text-[1.0625rem] md:leading-[1.76]">
-            So I designed 3 forms of visibility:
-          </p>
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3 md:gap-4">
-            {[
-              {
-                type: "Memory visibility",
-                detail: "The system recalls and updates personal context in the flow.",
-              },
-              {
-                type: "Analysis visibility",
-                detail: "The system shows what it understands while the conversation continues.",
-              },
-              {
-                type: "Implementation visibility",
-                detail: "The system exposes prompts, YAML, and constraints beside the live demo.",
-              },
-            ].map((item) => (
-              <div key={item.type} className="rounded-xl bg-surfaceAlt/30 px-5 py-6 ring-1 ring-black/[0.06]">
-                <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">{item.type}</p>
-                <p className="mt-3 font-sans text-[13px] leading-relaxed text-textSecondary/80">{item.detail}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-
         {/* D2: CAPABILITY MAPPING */}
         <Section
           id="d2-capability"
@@ -1759,6 +1730,9 @@ export default function CaseStudyContent() {
         >
           <p>
             Three model strengths crammed into one chat window. None of them landed. So I split them across rooms — one proof moment per room, legible in 60 seconds, no explainer text.
+          </p>
+          <p>
+            Users don&apos;t only judge the output — they judge whether they can see what the system knows, why it responds, and how much control they keep. So I turned invisible model behavior into <Em>visible surfaces</Em>: each room makes one form of cognition legible — <Em>memory</Em>, <Em>analysis</Em>, or <Em>implementation</Em>.
           </p>
 
           <UxStrategyShowroomTable />
@@ -1787,41 +1761,42 @@ export default function CaseStudyContent() {
             The question shifts from <Em>&ldquo;can your model do this&rdquo;</Em> to <Em>&ldquo;how fast can we ship.&rdquo;</Em>
           </p>
 
-          <div className="mt-8 grid gap-6 md:grid-cols-2 md:gap-8">
-            <div className="rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
-              <p className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Inspiration Response</p>
-              <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-                Three <Em>reply options</Em> — action, emotion, expression. Guides without breaking flow. Feels like gameplay, not messaging.
+          {/* Pair 1 — the two reply nudges described, then the prototype that demonstrates both. */}
+          <div className="mt-10 md:mt-12">
+            <h3 className="font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:text-[1.32rem]">
+              Two nudges toward the wow moment
+            </h3>
+            <div className="mt-4 grid gap-x-8 gap-y-3 md:grid-cols-2">
+              <p className="font-sans text-[15px] leading-relaxed text-textSecondary">
+                <Em>Inspiration Response</Em> — three reply options (action, emotion, expression) guide without breaking flow. Feels like gameplay, not messaging.
+              </p>
+              <p className="font-sans text-[15px] leading-relaxed text-textSecondary">
+                <Em>Continue Response</Em> — one tap extends the story from context. Long-context reasoning, no effort required.
               </p>
             </div>
-            <div className="rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
-              <p className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Continue Response</p>
-              <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-                One tap <Em>extends the story</Em> from context — long-context reasoning, no effort required.
-              </p>
-            </div>
+            <FeaturePrototypeEmbed
+              label="Experience loop — inspiration and continue response in flow"
+              src={FEATURE_PROTOTYPES.inspire}
+              caption="↑ Both live in the romance room — tap a reply option, or continue the story."
+              className="mt-6"
+            />
           </div>
 
-          <FeaturePrototypeEmbed
-            label="Experience loop — inspiration and continue response in flow"
-            src={FEATURE_PROTOTYPES.inspire}
-            caption="Inspiration reply options and continue response in the romance room"
-            className="mt-10"
-          />
-
-          <div className="mt-10 rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
-            <p className="font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Code drawer, not console.</p>
-            <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-              YAML specs, prompts, and constraints slide open beside the live demo — no context switch. Evaluators can inspect implementation without switching context, and clone the template as a <Em>reusable starting point</Em> for their own product.
+          {/* Pair 2 — the code drawer described, then the prototype that shows it open beside the demo. */}
+          <div className="mt-14 md:mt-16">
+            <h3 className="font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:text-[1.32rem]">
+              Code drawer, not console
+            </h3>
+            <p className="mt-4 max-w-prose font-sans text-[15px] leading-relaxed text-textSecondary">
+              YAML specs, prompts, and constraints slide open beside the live demo — no context switch. Evaluators inspect the implementation in place, then clone the template as a <Em>reusable starting point</Em> for their own product.
             </p>
+            <FeaturePrototypeEmbed
+              label="Developer tools — in-product code side panel"
+              src={FEATURE_PROTOTYPES.code}
+              caption="↑ The YAML and prompt behind the demo — open right there, no digging."
+              className="mt-6"
+            />
           </div>
-
-          <FeaturePrototypeEmbed
-            label="Developer tools — in-product code side panel"
-            src={FEATURE_PROTOTYPES.code}
-            caption="The prompt is right there. No digging."
-            className="mt-10"
-          />
         </Section>
 
         {/* HOW I WORKED */}
@@ -1970,41 +1945,6 @@ export default function CaseStudyContent() {
             <Em>visible cognition</Em>, and <Em>inspectable systems</Em>. The designer&apos;s job is to translate model
             behavior into experiences people can feel, trust, and build from.
           </p>
-
-          <div className="mt-14 grid gap-3 sm:grid-cols-2 md:mt-16">
-            {[
-              {
-                icon: "M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z",
-                label: "Memory transparency",
-                note: "Constellation file makes memory readable · not a silent black box",
-              },
-              {
-                icon: "M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z",
-                label: "Analysis visibility",
-                note: "Therapy rail shows what the model understood · not just what it said",
-              },
-              {
-                icon: "M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4",
-                label: "Developer inspectability",
-                note: "YAML + prompt exposed in code drawer · inspect before you build",
-              },
-              {
-                icon: "M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z",
-                label: "Emotional boundary",
-                note: "Therapy room = analysis demo · no clinical claims implied",
-              },
-            ].map((item) => (
-              <div key={item.label} className="flex items-start gap-3 rounded-xl bg-surfaceAlt/35 px-4 py-4 ring-1 ring-black/[0.05]">
-                <svg className="mt-0.5 h-4 w-4 shrink-0 text-textSecondary/45" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5} aria-hidden>
-                  <path strokeLinecap="round" strokeLinejoin="round" d={item.icon} />
-                </svg>
-                <div>
-                  <p className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-textSecondary/60">{item.label}</p>
-                  <p className="mt-1 font-sans text-[13px] leading-snug text-textSecondary">{item.note}</p>
-                </div>
-              </div>
-            ))}
-          </div>
 
           <h3 className="mt-14 font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.28rem]">
             Design principles

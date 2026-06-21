@@ -740,8 +740,8 @@ export default function MuseCaseStudyPage() {
                 {/* BOM */}
                 <FadeIn delay={0.1} className="mt-12">
                   <h4 className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">BOM · Selection rationale</h4>
-                  <div className="overflow-hidden rounded-2xl border border-black/[0.08]">
-                    <div className="grid grid-cols-[120px_1.3fr_2fr] bg-black/[0.04] text-[10px]">
+                  <div className="overflow-x-auto rounded-2xl border border-black/[0.08]">
+                    <div className="grid min-w-[34rem] grid-cols-[120px_1.3fr_2fr] bg-black/[0.04] text-[10px]">
                       {["Role", "Part", "Why this part"].map((h, i) => (
                         <div key={h} className={`px-4 py-3 font-mono uppercase tracking-[0.18em] text-textSecondary/75 ${i < 2 ? "border-r border-black/[0.06]" : ""}`}>{h}</div>
                       ))}
@@ -755,7 +755,7 @@ export default function MuseCaseStudyPage() {
                       ["Divider × 5", "10kΩ 1/4W carbon", "Sensor neutral resistance sits near 10k — divider centers the ADC sweep around mid-rail for max sensitivity."],
                       ["Level shift", "1kΩ + 2kΩ on TX → HC-05 RX", "Cheap resistor divider over a logic-level IC. One-way TX path; HC-05 TX is 3.3V into a 5V-tolerant Nano D0, so no shift needed coming back."],
                     ].map(([role, part, why], i) => (
-                      <div key={i} className="grid grid-cols-[120px_1.3fr_2fr] border-t border-black/[0.06] bg-white">
+                      <div key={i} className="grid min-w-[34rem] grid-cols-[120px_1.3fr_2fr] border-t border-black/[0.06] bg-white">
                         <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/85">{role}</div>
                         <div className="border-r border-black/[0.06] px-4 py-4 text-[13.5px] text-textPrimary">{part}</div>
                         <div className="px-4 py-4 text-[13px] leading-relaxed text-textSecondary">{why}</div>
@@ -929,8 +929,8 @@ void loop() {
                 />
 
                 <FadeIn>
-                  <div className="overflow-hidden rounded-2xl border border-black/[0.08]">
-                    <div className="grid grid-cols-[1.6fr_120px_2fr] bg-black/[0.04] text-[10px]">
+                  <div className="overflow-x-auto rounded-2xl border border-black/[0.08]">
+                    <div className="grid min-w-[34rem] grid-cols-[1.6fr_120px_2fr] bg-black/[0.04] text-[10px]">
                       {["Stage", "Time", "Notes"].map((h, i) => (
                         <div key={h} className={`px-4 py-3 font-mono uppercase tracking-[0.18em] text-textSecondary/75 ${i < 2 ? "border-r border-black/[0.06]" : ""}`}>{h}</div>
                       ))}
@@ -942,13 +942,13 @@ void loop() {
                       ["Python parse + OSC dispatch", "1–5 ms", "Local-network UDP, single hop"],
                       ["TouchDesigner frame @ 60fps", "16 ms", "One frame of render lag"],
                     ].map(([stage, time, notes], i) => (
-                      <div key={i} className="grid grid-cols-[1.6fr_120px_2fr] border-t border-black/[0.06] bg-white">
+                      <div key={i} className="grid min-w-[34rem] grid-cols-[1.6fr_120px_2fr] border-t border-black/[0.06] bg-white">
                         <div className="border-r border-black/[0.06] px-4 py-4 text-[13.5px] text-textPrimary/85">{stage}</div>
                         <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[12px] tabular-nums text-textPrimary">{time}</div>
                         <div className="px-4 py-4 text-[13px] leading-relaxed text-textSecondary">{notes}</div>
                       </div>
                     ))}
-                    <div className="grid grid-cols-[1.6fr_120px_2fr] border-t-2 border-nltLime-ink/40 bg-nltLime-soft/60">
+                    <div className="grid min-w-[34rem] grid-cols-[1.6fr_120px_2fr] border-t-2 border-nltLime-ink/40 bg-nltLime-soft/60">
                       <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-nltLime-ink">Gesture → pixel · total</div>
                       <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[13px] tabular-nums text-nltLime-ink">~50–90 ms</div>
                       <div className="px-4 py-4 text-[13px] leading-relaxed text-nltLime-ink">Under the 100ms feels-live ceiling — but only because TD is local. Adding 30ms of BLE in V4 would still leave headroom.</div>
@@ -973,8 +973,8 @@ void loop() {
               </FadeIn>
 
               <FadeIn delay={0.08} className="mt-12">
-                <div className="overflow-hidden rounded-2xl border border-black/[0.08]">
-                  <div className="grid grid-cols-[56px_1.1fr_1.2fr_1fr_1.4fr] bg-black/[0.04] text-[11px]">
+                <div className="overflow-x-auto rounded-2xl border border-black/[0.08]">
+                  <div className="grid min-w-[40rem] grid-cols-[56px_1.1fr_1.2fr_1fr_1.4fr] bg-black/[0.04] text-[11px]">
                     {["CH", "Sensor", "Finger", "Input", "Visual output"].map((h, i) => (
                       <div
                         key={h}
@@ -986,7 +986,7 @@ void loop() {
                   </div>
 
                   {/* Thumb row — tinted, marks the discrete scene-switch channel */}
-                  <div className="grid grid-cols-[56px_1.1fr_1.2fr_1fr_1.4fr] border-t border-black/[0.06] bg-nltLime-soft/60">
+                  <div className="grid min-w-[40rem] grid-cols-[56px_1.1fr_1.2fr_1fr_1.4fr] border-t border-black/[0.06] bg-nltLime-soft/60">
                     <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[11px] tabular-nums text-nltLime-ink">00</div>
                     <div className="border-r border-black/[0.06] px-4 py-4 text-[14px] text-nltLime-ink">FSR</div>
                     <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[11px] uppercase tracking-[0.12em] text-nltLime-ink">Thumb / palm</div>
@@ -1002,7 +1002,7 @@ void loop() {
                   ].map(([ch, sensor, finger, input, out], i) => (
                     <div
                       key={i}
-                      className="grid grid-cols-[56px_1.1fr_1.2fr_1fr_1.4fr] border-t border-black/[0.06] bg-white"
+                      className="grid min-w-[40rem] grid-cols-[56px_1.1fr_1.2fr_1fr_1.4fr] border-t border-black/[0.06] bg-white"
                     >
                       <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[11px] tabular-nums text-textSecondary/70">{ch}</div>
                       <div className="border-r border-black/[0.06] px-4 py-4 text-[14px] text-textPrimary/85">{sensor}</div>
@@ -1061,20 +1061,24 @@ void loop() {
                   ].map(({ l, name, flow, terminal }) => (
                     <div
                       key={l}
-                      className={`grid grid-cols-[48px_minmax(160px,200px)_1fr] items-center gap-4 rounded-lg border bg-white px-5 py-4 ${
+                      // Stack on mobile; the 3-col grid only kicks in at md where
+                      // there's room. The flow chain is a flex-wrap row so its
+                      // monospace tokens break between steps instead of forming one
+                      // unbreakable ~370px run that would blow out the page width.
+                      className={`grid grid-cols-1 gap-1.5 rounded-lg border bg-white px-5 py-4 md:grid-cols-[48px_minmax(140px,200px)_1fr] md:items-center md:gap-4 ${
                         terminal ? "border-nltLime-ink/40" : "border-black/[0.08]"
                       }`}
                     >
                       <p className={`font-mono text-[10px] uppercase tracking-[0.2em] ${terminal ? "text-nltLime-ink" : "text-textSecondary/70"}`}>{l}</p>
                       <p className="text-[15px] tracking-tight text-textPrimary">{name}</p>
-                      <p className="font-mono text-[11px] tracking-[0.04em] text-textSecondary">
+                      <div className="flex min-w-0 flex-wrap items-center font-mono text-[11px] tracking-[0.04em] text-textSecondary">
                         {flow.map((op, i) => (
-                          <span key={op}>
+                          <span key={op} className="inline-flex items-center">
                             <span className={terminal ? "text-nltLime-ink" : "text-textPrimary/75"}>{op}</span>
                             {i < flow.length - 1 ? <span className="px-2 text-textSecondary/70">{terminal ? "·" : "→"}</span> : null}
                           </span>
                         ))}
-                      </p>
+                      </div>
                     </div>
                   ))}
                 </div>

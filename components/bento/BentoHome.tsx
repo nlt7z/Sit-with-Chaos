@@ -21,7 +21,22 @@ import { RoseLoader } from "@/components/RoseLoader";
 import { SplitTextChars } from "@/components/SplitBtn";
 
 const EMAIL = "fangyuanzero7@gmail.com";
-const BRAND_TAGS = ["UI/UX", "Design Engineer", "AI-Native", "Visual Craft"];
+const BRAND_TAGS = ["Design Engineer", "AI-Native", "Visual Craft"];
+
+/* True below the `md` breakpoint. Layout is handled in CSS; this only gates
+ * runtime behaviour (drag) that CSS can't express. Starts `false` so SSR and
+ * the first client paint agree, then corrects on mount. */
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    const apply = () => setMobile(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  return mobile;
+}
 
 // only the near-square artwork (the others in /about/gallery are panoramas)
 const ARTWORK = [
@@ -32,18 +47,11 @@ const ARTWORK = [
 ];
 
 const JOURNEY = [
-  { org: "Liner", note: "Product Designer · 2025" },
+  { org: "Liner", note: "Product Designer · 2026" },
   { org: "Alibaba Cloud", note: "Product Design Intern · 2025" },
   { org: "Meituan", note: "Product Design Intern · 2025" },
   { org: "UW · HCDE", note: "MS · 2024–26" },
   { org: "Pratt Institute", note: "BFA" },
-];
-
-const SKILL_GROUPS = [
-  { label: "Code & AI", items: ["React", "TypeScript", "Next.js", "Claude Code"] },
-  { label: "Design", items: ["UX/UI", "Interaction", "Design Systems", "Motion"] },
-  { label: "Research", items: ["User Interviews", "Usability Testing", "A/B Testing"] },
-  { label: "Tools", items: ["Figma", "Framer", "After Effects", "Rive"] },
 ];
 
 /* scaled iframe with a lime RoseLoader fallback */
@@ -103,81 +111,132 @@ function ScaledPrototype({
   );
 }
 
+/* the one filled-lime button — the primary call to action */
 function SplitBtn({ href, label }: { href: string; label: string }) {
   return (
-    <a href={href} className="group inline-flex items-center rounded-full bg-nltLime px-4 py-2 text-[12px] font-medium text-[#1d1d1f]">
+    <a
+      href={href}
+      className="group inline-flex items-center rounded-full bg-nltLime px-5 py-2.5 text-[13.5px] font-medium text-[#1d1d1f] transition-transform duration-300 hover:scale-[1.04]"
+    >
       <SplitTextChars text={label} />
     </a>
   );
 }
 
-/* auto-switching artwork — a small centered square thumbnail + tagline */
-function ArtGallery({ reduced, light }: { reduced: boolean; light: boolean }) {
+/* corner ↗ affordance — neutral grey at rest, warms to lime when the card is
+   hovered (the whole BentoCard is the `group`). Purely decorative: clicks fall
+   through to the full-block link beneath it. */
+function CornerArrow({ className = "" }: { className?: string }) {
+  return (
+    <span
+      aria-hidden
+      className={`pointer-events-none absolute z-40 grid h-7 w-7 place-items-center rounded-full bg-white/10 text-[14px] text-white/80 backdrop-blur-sm transition-colors duration-300 group-hover:bg-nltLime group-hover:text-[#1d1d1f] ${className}`}
+    >
+      ↗
+    </span>
+  );
+}
+
+/* identity — name + tags + CTA + tagline, with the moodboard artwork folded in:
+   it lives in the middle of the card and only fades in on hover (always shown on
+   touch, where there is no hover). */
+function IdentityCard({
+  reduced,
+  light,
+  inkDim,
+  isMobile,
+}: {
+  reduced: boolean;
+  light: boolean;
+  inkDim: string;
+  isMobile: boolean;
+}) {
+  const [hover, setHover] = useState(false);
   const [i, setI] = useState(0);
+
   useEffect(() => {
     if (reduced) return;
     const id = setInterval(() => setI((v) => (v + 1) % ARTWORK.length), 4800);
     return () => clearInterval(id);
-  }, []);
+  }, [reduced]);
+
+  const reveal = hover || isMobile;
+
   return (
-    <div className="flex h-full flex-col">
-      <div className="grid min-h-0 flex-1 place-items-center px-2 pt-2">
-        <button
-          type="button"
-          onClick={() => setI((v) => (v + 1) % ARTWORK.length)}
-          aria-label="Next artwork"
-          className="group/art relative aspect-square h-[82%]"
-        >
-          <div className="absolute inset-0 overflow-hidden rounded-lg ring-1 ring-white/5 transition-transform duration-300 group-hover/art:scale-[1.03]">
+    <div
+      className="relative flex h-full flex-col justify-between gap-2 px-4 py-3"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      {/* hover artwork — centered in the middle band, behind the text */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-4 top-1/2 z-0 grid -translate-y-1/2 place-items-center transition-opacity duration-500"
+        style={{ opacity: reveal ? 1 : 0 }}
+      >
+        <div className="relative aspect-square w-[56%] max-w-[190px]">
+          <div className="absolute inset-0 overflow-hidden rounded-xl ring-1 ring-white/10">
             {ARTWORK.map((src, idx) => (
               <Image
                 key={src}
                 src={src}
                 alt=""
                 fill
-                sizes="200px"
+                sizes="220px"
                 className={`object-cover transition-opacity duration-700 ${idx === i ? "opacity-100" : "opacity-0"}`}
               />
             ))}
           </div>
-          {/* oversized quote — its own top layer, never clipped by the image */}
-          <span aria-hidden className="pointer-events-none absolute -left-1 -top-5 z-20 select-none font-display text-[clamp(4rem,13vh,7rem)] italic leading-[0.55] text-nltLime/40">
+          {/* oversized lime quote — its own top layer, never clipped by the image */}
+          <span className="absolute -left-2 -top-6 z-20 select-none font-display text-[clamp(3rem,9vh,5rem)] italic leading-[0.55] text-nltLime/55">
             &ldquo;
           </span>
-        </button>
-      </div>
-      <p className={`shrink-0 px-3.5 pb-2.5 font-display text-[12.5px] font-light italic leading-snug ${light ? "text-[#1d1d1f]" : "text-white"}`}>
-        Love crafting,{" "}
-        <span className="relative inline-block">
-          <span aria-hidden className="absolute inset-x-[-0.14em] bottom-[0.02em] -z-0 h-[0.72em] -rotate-[2.5deg] rounded-[2px] bg-nltLime" />
-          <span className="relative z-10 not-italic text-[#1d1d1f]">but crave creating even more.</span>
-        </span>
-      </p>
-    </div>
-  );
-}
-
-/* my skills — Code & Visual emphasised */
-function SkillsList() {
-  return (
-    <div className="grid h-full grid-cols-2 content-center gap-x-4 gap-y-3 px-4 py-2">
-      {SKILL_GROUPS.map((g) => (
-        <div key={g.label} className="group/sk min-w-0 cursor-default">
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.14em] text-nltLime">{g.label}</p>
-          <p className="mt-1.5 text-[12px] leading-[1.5] text-white/70 transition-colors duration-300 group-hover/sk:text-white">
-            {g.items.join(" · ")}
-          </p>
         </div>
-      ))}
+      </div>
+
+      {/* top — name + tagline */}
+      <div className="relative z-10 leading-none">
+        <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime">Hi, I&apos;m 👋</p>
+        <p className="font-display text-[clamp(2rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
+        <p className="mt-0.5 font-sans text-[clamp(1.1rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/40">
+          Fang
+        </p>
+        <p className="mt-3 font-display text-[12.5px] font-light leading-[1.8]">
+          <span className="relative inline-block px-[0.35em]">
+            {/* only the bar is slanted; the text stays upright, square corners */}
+            <span aria-hidden className="absolute inset-0 -z-0 -rotate-[2deg] bg-nltLime" />
+            <span className="relative z-10 text-[#1d1d1f]">Love crafting, but crave creating even more.</span>
+          </span>
+        </p>
+      </div>
+
+      {/* bottom — tags + CTA */}
+      <div className="relative z-10 flex flex-col gap-4">
+        <div className="flex flex-wrap gap-1.5">
+          {BRAND_TAGS.map((r) => (
+            <span key={r} className={`rounded-full border border-current/20 px-2 py-0.5 text-[10px] ${inkDim}`}>
+              {r}
+            </span>
+          ))}
+        </div>
+        <div>
+          <SplitBtn href={`mailto:${EMAIL}`} label="Say hello ↗" />
+        </div>
+      </div>
     </div>
   );
 }
 
-/* liner — plays a video at rest; reveals the live prototype on hover */
-function LinerMedia({ reduced }: { reduced: boolean }) {
+/* liner — presentational media: plays a video at rest, cross-fades to a (static)
+   prototype preview while the card is hovered. Hover + click are owned by the
+   full-block link in the parent, so this layer is pointer-events-none. */
+function LinerMedia({ reduced, hover }: { reduced: boolean; hover: boolean }) {
   const vref = useRef<HTMLVideoElement>(null);
-  const [hover, setHover] = useState(false);
   const [armed, setArmed] = useState(false);
+
+  useEffect(() => {
+    if (hover) setArmed(true);
+  }, [hover]);
 
   useEffect(() => {
     const v = vref.current;
@@ -201,14 +260,7 @@ function LinerMedia({ reduced }: { reduced: boolean }) {
   }, []);
 
   return (
-    <div
-      className="absolute inset-2 top-12 overflow-hidden rounded-xl border border-white/10 bg-[#141416]"
-      onMouseEnter={() => {
-        setHover(true);
-        setArmed(true);
-      }}
-      onMouseLeave={() => setHover(false)}
-    >
+    <div className="pointer-events-none absolute inset-2 top-12 overflow-hidden rounded-xl border border-white/10 bg-[#141416]">
       <video
         ref={vref}
         muted
@@ -218,21 +270,22 @@ function LinerMedia({ reduced }: { reduced: boolean }) {
         className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-500 ${hover ? "opacity-0" : "opacity-100"}`}
       />
       {armed ? (
-        <div className={`absolute inset-0 transition-opacity duration-500 ${hover ? "opacity-100" : "pointer-events-none opacity-0"}`}>
-          <ScaledPrototype src="/assets/liner/liner-ai-yuan.html" naturalW={1280} naturalH={760} fit="contain" interactive reduced={reduced} />
+        <div className={`absolute inset-0 transition-opacity duration-500 ${hover ? "opacity-100" : "opacity-0"}`}>
+          <ScaledPrototype src="/assets/liner/liner-ai-yuan.html" naturalW={1280} naturalH={760} fit="contain" reduced={reduced} />
         </div>
       ) : null}
       <span
-        className="pointer-events-none absolute bottom-2 left-2.5 z-10 rounded-full bg-black/55 px-2 py-0.5 font-mono text-[8px] uppercase tracking-wider text-white/85 backdrop-blur-sm transition-opacity duration-300"
+        className="absolute bottom-2 left-2.5 z-10 rounded-full bg-black/55 px-2 py-0.5 font-mono text-[8px] uppercase tracking-wider text-white/85 backdrop-blur-sm transition-opacity duration-300"
         style={{ opacity: hover ? 0 : 1 }}
       >
-        Hover to try ↗
+        Hover to preview ↗
       </span>
     </div>
   );
 }
 
-/* vinyl player — autoplay-attempt + click to play / pause */
+/* vinyl player — autoplay-attempt + click to play / pause. The playing state is
+   loud on purpose: spinning art, a pulsing ring, a tall lime equalizer. */
 function VinylAudio() {
   const ref = useRef<HTMLAudioElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -257,22 +310,44 @@ function VinylAudio() {
   return (
     <button type="button" onClick={toggle} aria-label={playing ? "Pause audio" : "Play audio"} className="relative block h-full w-full overflow-hidden text-left">
       <audio ref={ref} src="/assets/vinyl.mp3" loop preload="auto" />
-      <Image src="/assets/record.png" alt="Vinyl record player" fill sizes="280px" className="object-cover object-center" />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/5 to-transparent" />
-      <span className="absolute right-2.5 top-2.5 grid h-6 w-6 place-items-center rounded-full bg-black/45 text-[9px] text-white backdrop-blur-sm">
-        {playing ? "❚❚" : "▶"}
+      <Image
+        src="/assets/record.png"
+        alt="Vinyl record player"
+        fill
+        sizes="280px"
+        className={`object-cover object-center transition-transform duration-700 ${playing ? "scale-105" : "scale-100"}`}
+      />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
+      {/* lime sheen rising from the base while playing */}
+      <div
+        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 transition-opacity duration-500"
+        style={{ opacity: playing ? 1 : 0, background: "radial-gradient(120% 80% at 50% 120%, rgba(210,255,0,0.30), transparent 70%)" }}
+      />
+      {/* play / pause with a pulsing lime ring */}
+      <span className="absolute right-2.5 top-2.5 grid h-9 w-9 place-items-center rounded-full bg-black/55 text-[12px] text-white backdrop-blur-sm">
+        {playing ? <span className="absolute inset-0 animate-ping rounded-full border border-nltLime/70" /> : null}
+        <span className="relative">{playing ? "❚❚" : "▶"}</span>
       </span>
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-3 pb-2.5">
+      {/* bottom — label + tall equalizer */}
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-3 pb-3">
         <div className="min-w-0">
-          <p className="font-mono text-[8px] uppercase tracking-[0.14em] text-nltLime">{playing ? "Now playing" : "Tap to play"}</p>
-          <p className="truncate text-[11px] text-white">On the turntable</p>
+          <p className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.14em] text-nltLime">
+            {playing ? <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-nltLime" /> : null}
+            {playing ? "Now playing" : "Tap to play"}
+          </p>
+          <p className="truncate text-[12px] text-white">On the turntable</p>
         </div>
-        <div className="flex h-4 items-end gap-[3px]">
-          {[0, 1, 2].map((i) => (
+        <div className="flex h-7 items-end gap-[3px]">
+          {[0, 1, 2, 3, 4].map((i) => (
             <span
               key={i}
-              className="w-[3px] rounded-full bg-nltLime"
-              style={{ height: 4, animation: playing ? `soundbar ${0.52 + i * 0.14}s ease-in-out infinite alternate` : "none", animationDelay: `${i * 0.1}s` }}
+              className="w-[4px] rounded-full bg-nltLime"
+              style={{
+                height: 5,
+                opacity: playing ? 1 : 0.35,
+                animation: playing ? `soundbar ${0.5 + i * 0.12}s ease-in-out infinite alternate` : "none",
+                animationDelay: `${i * 0.09}s`,
+              }}
             />
           ))}
         </div>
@@ -287,7 +362,10 @@ function VinylAudio() {
 
 export function BentoHome() {
   const reduced = !!useReducedMotion();
+  const isMobile = useIsMobile();
+  const drag = !isMobile; // dragging fights vertical scroll on touch devices
   const light = false; // light theme locked for now (toggle shows "coming soon")
+  const [linerHover, setLinerHover] = useState(false);
 
   const ink = light ? "text-[#1d1d1f]" : "text-white";
   const inkDim = light ? "text-black/55" : "text-white/55";
@@ -297,7 +375,7 @@ export function BentoHome() {
   const canvas = light ? "#edece6" : "#0a0b0c";
 
   return (
-    <div className="relative h-[100svh] overflow-hidden transition-colors duration-500" style={{ background: canvas, color: light ? "#1d1d1f" : "#fff" }}>
+    <div className="relative min-h-[100svh] transition-colors duration-500 md:h-[100svh] md:overflow-hidden" style={{ background: canvas, color: light ? "#1d1d1f" : "#fff" }}>
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0"
@@ -308,90 +386,92 @@ export function BentoHome() {
           maskImage: "radial-gradient(120% 90% at 85% 4%, black 0%, transparent 62%)",
         }}
       />
+      {/* mirrored corner — faint lime wash + dot-matrix anchored bottom-left */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{ background: `radial-gradient(58% 48% at 6% 100%, rgba(210,255,0,${light ? 0.08 : 0.06}), transparent 70%)` }}
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 z-0"
+        style={{
+          backgroundImage: `radial-gradient(rgba(210,255,0,${light ? 0.16 : 0.13}) 1px, transparent 1.5px)`,
+          backgroundSize: "13px 13px",
+          WebkitMaskImage: "radial-gradient(110% 85% at 8% 97%, black 0%, transparent 60%)",
+          maskImage: "radial-gradient(110% 85% at 8% 97%, black 0%, transparent 60%)",
+        }}
+      />
 
       <SideRail active="home" />
 
-      <div className="relative z-10 mx-auto flex h-full w-full max-w-[1740px] gap-2.5 py-3 pl-10 pr-3 md:pl-14 md:pr-4">
-        <div className="flex min-h-0 flex-1 gap-2.5 overflow-hidden">
-          {/* ===== col 1 — intro(3) · gallery(4) · clock(3) ===== */}
-          <div className="flex min-h-0 flex-[0.9] flex-col gap-2.5">
-            <BentoCard label="Yuan Fang" surface={hero} light={light} index={0} className="min-h-0 flex-[3]">
-              <div className="flex h-full flex-col justify-between gap-1.5 px-4 py-3">
-                <div className="leading-none">
-                  <p className="mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime">Hi, I&apos;m 👋</p>
-                  <p className="font-display text-[clamp(2rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
-                  <p className={`mt-0.5 font-sans text-[clamp(1.1rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] ${light ? "text-black/35" : "text-white/35"}`}>
-                    Fang
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-1.5">
-                  {BRAND_TAGS.map((r) => (
-                    <span key={r} className={`rounded-full border border-current/20 px-2 py-0.5 text-[10px] ${inkDim}`}>
-                      {r}
-                    </span>
-                  ))}
-                </div>
-                <div>
-                  <SplitBtn href={`mailto:${EMAIL}`} label="Say hello ↗" />
-                </div>
-              </div>
-            </BentoCard>
-
-            {/* moodboard — small centered auto-switching artwork */}
-            <BentoCard label="Moodboard" surface={surface} light={light} index={1} className="min-h-0 flex-[4]">
-              <ArtGallery reduced={reduced} light={light} />
+      <div className="relative z-10 mx-auto w-full max-w-[1740px] px-3 pb-24 pt-3 md:flex md:h-full md:gap-2.5 md:py-3 md:pb-3 md:pl-14 md:pr-4">
+        {/* On mobile each column wrapper becomes `display:contents`, so every card
+            flows directly into the grid below; CSS `order-*` then sequences them
+            into a single intentional feed. On md+ the wrappers reassert as the
+            four flex columns of the no-scroll desktop puzzle. */}
+        <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:gap-2.5 md:overflow-hidden">
+          {/* ===== col 1 — identity(7) · clock(3) ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[0.9] md:flex-col md:gap-2.5">
+            {/* identity — name + moodboard (hover) + CTA, merged into one tall card */}
+            <BentoCard label="Yuan Fang" surface={hero} light={light} drag={drag} index={0} className="order-1 col-span-2 h-[400px] min-h-0 flex-[7] md:order-none md:h-auto">
+              <IdentityCard reduced={reduced} light={light} inkDim={inkDim} isMobile={isMobile} />
             </BentoCard>
 
             {/* clock — bigger */}
-            <BentoCard label="PDT" surface={surface} light={light} index={2} className="min-h-0 flex-[3]">
+            <BentoCard label="PDT" surface={surface} light={light} drag={drag} index={2} className="order-9 col-span-1 h-[180px] min-h-0 flex-[3] md:order-none md:h-auto">
               <BentoClock light={light} />
             </BentoCard>
           </div>
 
           {/* ===== col 2 — qbix(4) · meituan(6) ===== */}
-          <div className="flex min-h-0 flex-[1.05] flex-col gap-2.5">
-            {/* qbix — full-block live site, lime arrow CTA */}
-            <BentoCard label="Studio" surface={surface} light={light} accent="#c8e06c" index={3} className="min-h-0 flex-[3.6]">
+          <div className="contents md:flex md:min-h-0 md:flex-[1.05] md:flex-col md:gap-2.5">
+            {/* qbix — whole block is the live site (no label); opens in a new tab */}
+            <BentoCard surface={surface} light={light} drag={drag} accent="#c8e06c" index={3} className="order-4 col-span-2 h-[220px] min-h-0 flex-[3.6] md:order-none md:h-auto">
               <a href="https://qbix.space" target="_blank" rel="noopener noreferrer" aria-label="Open qbix.space" className="absolute inset-0 z-30 block" />
-              <div className="absolute inset-0">
-                <ScaledPrototype src="https://qbix.space" naturalW={1600} naturalH={900} fit="contain" reduced={reduced} />
+              <CornerArrow className="right-2.5 top-2.5" />
+              <div className="pointer-events-none absolute inset-0">
+                <ScaledPrototype src="https://qbix.space" naturalW={1600} naturalH={900} fit="width" reduced={reduced} />
               </div>
             </BentoCard>
 
-            {/* meituan — complete dark prototype shown small + centered, lime CTA */}
-            <BentoCard label="Meituan" surface="dark" light={light} accent="#FFC300" index={4} className="min-h-0 flex-[6.4]">
-              <span className="absolute left-3 top-2.5 z-30 font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime">Design + Build</span>
-              <Link href="/work/meituan-im" aria-label="Meituan case study" className="absolute right-2.5 top-2.5 z-30 grid h-7 w-7 place-items-center rounded-full bg-nltLime text-[14px] text-[#1d1d1f] transition-transform hover:scale-110">
-                ↗
-              </Link>
+            {/* meituan — complete dark prototype; whole block opens the case study */}
+            <BentoCard label="Meituan" surface="dark" light={light} drag={drag} accent="#FFC300" index={4} className="order-2 col-span-2 h-[480px] min-h-0 flex-[6.4] md:order-none md:h-auto">
+              <Link href="/work/meituan-im" aria-label="Meituan case study" className="absolute inset-0 z-30" />
+              <span className="pointer-events-none absolute left-3 top-2.5 z-40 font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime">Design + Build</span>
+              <CornerArrow className="right-2.5 top-2.5" />
               {/* lime gradient behind the phone */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
                 style={{ background: "radial-gradient(58% 52% at 50% 46%, rgba(210,255,0,0.2), transparent 70%)" }}
               />
-              <div className="absolute inset-0 grid place-items-center px-2 pb-2 pt-9">
-                <div className="relative h-full w-[44%] overflow-hidden rounded-[1.2rem] shadow-[0_18px_50px_-18px_rgba(210,255,0,0.35)]">
+              <div className="pointer-events-none absolute inset-0 grid place-items-center px-2 pb-2 pt-9">
+                <div className="relative h-full w-[48%] overflow-hidden rounded-[1.2rem] shadow-[0_18px_50px_-18px_rgba(210,255,0,0.35)] md:w-[44%]">
                   <ScaledPrototype src="/assets/meituan-im/Repair%20Flow%20Dark.html?solo" naturalW={430} naturalH={1000} fit="contain" reduced={reduced} bg="#141416" />
                 </div>
               </div>
             </BentoCard>
           </div>
 
-          {/* ===== col 3 — craft(3) · liner(5) · [motion|skills](2) ===== */}
-          <div className="flex min-h-0 flex-[1.2] flex-col gap-2.5">
-            <BentoCard label="02 · Craft" surface="dark" light={light} index={5} className="min-h-0 flex-[3]">
+          {/* ===== col 3 — craft(3.5) · liner(6.5) ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[1.2] md:flex-col md:gap-2.5">
+            <BentoCard label="02 · Craft" surface="dark" light={light} drag={drag} index={5} className="order-5 col-span-2 h-[200px] min-h-0 flex-[4] md:order-none md:h-auto">
               <div className="absolute inset-0">
                 <CraftModel reduced={reduced} active onInteract={() => {}} zoom={1.2} />
               </div>
             </BentoCard>
 
-            {/* liner — "right now" feel, blinking dot, no "Now · Liner" label */}
-            <BentoCard surface="dark" light={light} index={6} className="min-h-0 flex-[5]">
-              <Link href="/work/liner" aria-label="Liner case study" className="absolute right-2.5 top-1.5 z-30 grid h-7 w-7 place-items-center rounded-full bg-nltLime text-[14px] text-[#1d1d1f] transition-transform hover:scale-110">
-                ↗
-              </Link>
-              <div className="absolute left-2.5 top-2.5 z-30 flex items-center gap-1.5 pr-12">
+            {/* liner — "right now" feel; whole block opens the case study */}
+            <BentoCard surface="dark" light={light} drag={drag} index={6} className="order-3 col-span-2 h-[240px] min-h-0 flex-[6] md:order-none md:h-auto">
+              <Link
+                href="/work/liner"
+                aria-label="Liner case study"
+                className="absolute inset-0 z-30"
+                onMouseEnter={() => setLinerHover(true)}
+                onMouseLeave={() => setLinerHover(false)}
+              />
+              <div className="pointer-events-none absolute left-2.5 top-2.5 z-40 flex items-center gap-1.5 pr-12">
                 <span className="relative flex h-1.5 w-1.5 shrink-0">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nltLime opacity-80" />
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nltLime" />
@@ -400,18 +480,14 @@ export function BentoHome() {
                   Now · shaping Liner&apos;s new AI collaboration feature
                 </span>
               </div>
-              <LinerMedia reduced={reduced} />
-            </BentoCard>
-
-            {/* skills (motion block removed) */}
-            <BentoCard label="Skills" surface={surface} light={light} index={7} className="min-h-0 flex-[2]">
-              <SkillsList />
+              <CornerArrow className="right-2.5 top-1.5" />
+              <LinerMedia reduced={reduced} hover={linerHover} />
             </BentoCard>
           </div>
 
           {/* ===== col 4 — journey(5) · audio(5) ===== */}
-          <div className="flex min-h-0 flex-[0.85] flex-col gap-2.5">
-            <BentoCard label="Journey" surface={surface} light={light} index={9} className="min-h-0 flex-[5]">
+          <div className="contents md:flex md:min-h-0 md:flex-[0.8] md:flex-col md:gap-2.5">
+            <BentoCard label="Journey" surface={surface} light={light} drag={drag} index={9} className="order-8 col-span-2 h-[330px] min-h-0 flex-[5] md:order-none md:h-auto">
               <motion.div
                 className="flex h-full flex-col justify-center px-3.5 py-3"
                 initial="hidden"
@@ -446,7 +522,7 @@ export function BentoHome() {
             </BentoCard>
 
             {/* audio — vinyl record, plays vinyl.mp3 (click to play/pause) */}
-            <BentoCard label="Audio" surface="dark" light={light} index={11} className="min-h-0 flex-[5]">
+            <BentoCard label="Audio" surface="dark" light={light} drag={drag} index={11} className="order-10 col-span-1 h-[180px] min-h-0 flex-[5] md:order-none md:h-auto">
               <VinylAudio />
             </BentoCard>
           </div>

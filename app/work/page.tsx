@@ -24,8 +24,11 @@ export default function WorkPage() {
       />
       <SideRail active="work" />
 
-      <div className="relative z-10 mx-auto max-w-content px-6 pt-16 md:pt-20">
-        <p className="font-mono text-xs uppercase tracking-[0.18em] text-nltLime">Selected work</p>
+      {/* Eyebrow stays fixed at the top while the deck scrolls beneath it. */}
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 pt-16 md:pt-20">
+        <div className="mx-auto max-w-content px-6">
+          <p className="font-mono text-xs uppercase tracking-[0.18em] text-nltLime">Selected work</p>
+        </div>
       </div>
 
       <div className="relative z-10">

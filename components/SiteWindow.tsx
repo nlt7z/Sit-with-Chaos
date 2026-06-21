@@ -30,6 +30,9 @@ type SiteWindowProps = {
   /** Drop the white card frame (border, white bg, shadow) so the preview blends
    *  into a dark surface. Default false. */
   bare?: boolean;
+  /** Fired once when the embedded iframe finishes loading — lets a parent
+   *  loading gate wait on this preview before revealing. */
+  onReady?: () => void;
 };
 
 export function SiteWindow({
@@ -41,6 +44,7 @@ export function SiteWindow({
   className = "",
   chrome = true,
   bare = false,
+  onReady,
 }: SiteWindowProps) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.4);
@@ -144,7 +148,10 @@ export function SiteWindow({
             referrerPolicy="no-referrer"
             sandbox="allow-scripts allow-same-origin"
             tabIndex={-1}
-            onLoad={() => setLoaded(true)}
+            onLoad={() => {
+              setLoaded(true);
+              onReady?.();
+            }}
             style={{
               width: `${IFRAME_WIDTH}px`,
               height: `${IFRAME_HEIGHT}px`,

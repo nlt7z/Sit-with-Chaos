@@ -92,7 +92,9 @@ export function BentoCard({
           className={`flex shrink-0 select-none items-center justify-between px-3.5 pb-1 pt-2.5 ${
             drag ? "cursor-grab active:cursor-grabbing" : ""
           }`}
-          style={{ touchAction: "none" }}
+          // Only claim the touch gesture when the card is actually draggable;
+          // otherwise the header would swallow vertical scroll on mobile.
+          style={{ touchAction: drag ? "none" : "pan-y" }}
         >
           {label ? (
             <span className="font-mono text-[9px] uppercase tracking-[0.16em] opacity-45">{label}</span>

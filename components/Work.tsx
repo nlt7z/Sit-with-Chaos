@@ -1,6 +1,13 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import {
+  motion,
+  useInView,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { useMemo, useRef } from "react";
 import { ProjectCard, type Project } from "./ProjectCard";
 
@@ -154,35 +161,84 @@ const itemReduced = {
   },
 };
 
-/** Stacked "file deck" scroll: each project is a sticky layer that pins near the
- *  top with a small incrementing offset, so the next project slides up and stacks
- *  over it (the prior cards peek as edges behind). Pure CSS sticky — the page
- *  doesn't translate, the cards pile up. */
-function WorkStack({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
+const stackCardShadow =
+  "rounded-2xl shadow-[0_-10px_30px_-12px_rgba(0,0,0,0.5),0_24px_60px_-24px_rgba(0,0,0,0.7)] md:rounded-[1.5rem]";
+
+/** One layer of the deck. Each card lives in a full-viewport sticky section and
+ *  is vertically centered, so the *active* card always rises to the middle of
+ *  the screen. The shared container `progress` drives a small scale-down + lift
+ *  during ONLY this card's hand-off window — the slice of scroll where the next
+ *  card rises to cover it — then holds. Because the recede doesn't keep
+ *  deepening, at most one subtle layer peeks behind the centered card
+ *  (one-covers-one), not a deep five-card fan. */
+function StackCard({
+  project,
+  index,
+  total,
+  progress,
+}: {
+  project: Project;
+  index: number;
+  total: number;
+  progress: MotionValue<number>;
+}) {
+  const isLast = index === total - 1;
+  // Each section pins at progress index/(total-1); the next card covers it over
+  // the following 1/(total-1) slice. Recede across exactly that slice, then hold.
+  const denom = Math.max(total - 1, 1);
+  const start = index / denom;
+  const end = (index + 1) / denom;
+  const scale = useTransform(progress, [start, end], [1, 0.95]);
+  const y = useTransform(progress, [start, end], [0, -36]);
+
   return (
-    <section id="work" className="relative pt-6 md:pt-10" aria-label="Selected projects">
-      {/* Trailing space lets the last layer reach its pinned position so the
-          full deck is visible at the bottom of the scroll. */}
-      <div className="relative z-10 mx-auto max-w-content px-6 pb-[42vh]">
-        {stackProjects.map((project, i) => (
-          <div
-            key={project.slug}
-            className="sticky mb-[7vh] last:mb-0 md:mb-[9vh]"
-            style={{
-              top: `calc(4.5rem + ${i * 1.25}rem)`,
-              zIndex: i + 1,
-            }}
-          >
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 32 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: "-18% 0px" }}
-              transition={{ duration: 0.6, ease: easePortfolio }}
-              className="rounded-2xl shadow-[0_-10px_30px_-12px_rgba(0,0,0,0.5),0_18px_48px_-24px_rgba(0,0,0,0.6)] md:rounded-[1.5rem]"
-            >
+    <div className="sticky top-0 flex h-screen items-center justify-center" style={{ zIndex: index + 1 }}>
+      <motion.div
+        // The last card never recedes (nothing covers it) — keep it static.
+        style={isLast ? undefined : { scale, y }}
+        className={`w-full bg-white ${stackCardShadow}`}
+      >
+        <ProjectCard project={project} tall />
+      </motion.div>
+    </div>
+  );
+}
+
+/** Stacked deck: full-screen sticky sections center each project, and a single
+ *  container scroll progress drives a shallow one-covers-one hand-off.
+ *  Reduced-motion users get a plain vertical list (no sticky, no transforms). */
+function WorkStack({ prefersReducedMotion }: { prefersReducedMotion: boolean }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end end"],
+  });
+
+  if (prefersReducedMotion) {
+    return (
+      <section id="work" className="relative pt-6 md:pt-10" aria-label="Selected projects">
+        <div className="relative z-10 mx-auto flex max-w-content flex-col gap-10 px-6 pb-24">
+          {stackProjects.map((project) => (
+            <div key={project.slug} className={`bg-white ${stackCardShadow}`}>
               <ProjectCard project={project} tall />
-            </motion.div>
-          </div>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section id="work" className="relative" aria-label="Selected projects">
+      <div ref={containerRef} className="relative z-10 mx-auto max-w-content px-6">
+        {stackProjects.map((project, i) => (
+          <StackCard
+            key={project.slug}
+            project={project}
+            index={i}
+            total={stackProjects.length}
+            progress={scrollYProgress}
+          />
         ))}
       </div>
     </section>
