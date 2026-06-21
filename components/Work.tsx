@@ -8,6 +8,7 @@ import {
   useTransform,
   type MotionValue,
 } from "framer-motion";
+import { ChevronDown } from "lucide-react";
 import { useMemo, useRef } from "react";
 import { ProjectCard, type Project } from "./ProjectCard";
 
@@ -65,11 +66,9 @@ const meituanIm: Project = {
   title: "Meituan — 0→1 in-message quotation system on a 770M-user platform",
   description: "Led the 0-to-1 design of an in-message quotation system on a platform with 770M+ annual transacting users and 14.5M active merchants.",
   media: {
-    src: "/assets/meituan-im/Repair%20Flow.html?solo",
-    alt: "Meituan repair flow — interactive prototype preview",
-    type: "prototype",
-    naturalW: 540,
-    naturalH: 1060,
+    src: "/assets/meituan-im/meituan-present/meituan-present-1.mp4",
+    alt: "Meituan repair flow — product walkthrough",
+    type: "video",
   },
   flowSteps: ["diagnose", "quote compare", "confirm"],
   meta: { year: "2025", role: "Product Design Intern", status: "Shipped" },
@@ -204,6 +203,30 @@ function StackCard({
   );
 }
 
+/** A scroll affordance pinned to the bottom of the viewport on the stacked deck.
+ *  At rest the first card fills the screen with no visible cue that four more
+ *  sit below it (each card centers in its own full-height sticky section), so
+ *  this nudges the user to scroll — and fades out the moment the deck moves. */
+function DeckScrollHint({ progress }: { progress: MotionValue<number> }) {
+  const opacity = useTransform(progress, [0, 0.025], [1, 0]);
+  return (
+    <motion.div
+      aria-hidden
+      style={{ opacity }}
+      className="pointer-events-none fixed inset-x-0 bottom-7 z-30 flex flex-col items-center gap-2"
+    >
+      <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/55">Scroll</span>
+      <motion.span
+        animate={{ y: [0, 6, 0] }}
+        transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        className="flex h-7 w-7 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] backdrop-blur-sm"
+      >
+        <ChevronDown className="h-4 w-4 text-nltLime" strokeWidth={2} />
+      </motion.span>
+    </motion.div>
+  );
+}
+
 /** Stacked deck: full-screen sticky sections center each project, and a single
  *  container scroll progress drives a shallow one-covers-one hand-off.
  *  Reduced-motion users get a plain vertical list (no sticky, no transforms). */
@@ -241,6 +264,7 @@ function WorkStack({ prefersReducedMotion }: { prefersReducedMotion: boolean }) 
           />
         ))}
       </div>
+      <DeckScrollHint progress={scrollYProgress} />
     </section>
   );
 }

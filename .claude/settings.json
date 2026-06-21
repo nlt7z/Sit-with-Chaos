@@ -511,7 +511,10 @@
       "Bash(pkill -f \"cdp-check\")",
       "Bash(rm -rf /tmp/cdp-check)",
       "Bash(node /tmp/check.mjs)",
-      "Bash(pkill -f \"cdp-check\" 2>/dev/null; pkill -f \"cdp-shoot2\" 2>/dev/null; rm -rf /tmp/cdp-check /tmp/cdp-shoot2 /tmp/deck-*.png; echo \"cleaned\")"
+      "Bash(pkill -f \"cdp-check\" 2>/dev/null; pkill -f \"cdp-shoot2\" 2>/dev/null; rm -rf /tmp/cdp-check /tmp/cdp-shoot2 /tmp/deck-*.png; echo \"cleaned\")",
+      "Bash(git -c color.ui=never diff --stat)",
+      "Bash(grep -iE \"\\\\.\\(mp4|webm|mov|png|jpg|jpeg\\)$\")",
+      "Bash(git -c color.ui=never diff .claude/settings.json)"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

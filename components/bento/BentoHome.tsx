@@ -111,6 +111,44 @@ function ScaledPrototype({
   );
 }
 
+/* in-view autoplay video for a bento media slot (muted, looping). Loads its
+   source only once the card scrolls near the viewport — mirrors LinerMedia. */
+function BentoVideo({ src }: { src: string }) {
+  const vref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = vref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          if (!v.src) {
+            v.src = src;
+            v.load();
+          }
+          v.play().catch(() => {});
+        } else {
+          v.pause();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, [src]);
+
+  return (
+    <video
+      ref={vref}
+      muted
+      loop
+      playsInline
+      preload="none"
+      className="absolute inset-0 h-full w-full object-cover"
+    />
+  );
+}
+
 /* the one filled-lime button — the primary call to action */
 function SplitBtn({ href, label }: { href: string; label: string }) {
   return (
@@ -440,16 +478,15 @@ export function BentoHome() {
               <Link href="/work/meituan-im" aria-label="Meituan case study" className="absolute inset-0 z-30" />
               <span className="pointer-events-none absolute left-3 top-2.5 z-40 font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime">Design + Build</span>
               <CornerArrow className="right-2.5 top-2.5" />
-              {/* lime gradient behind the phone */}
+              {/* lime gradient bleeds at the framed edges */}
               <div
                 aria-hidden
                 className="pointer-events-none absolute inset-0"
-                style={{ background: "radial-gradient(58% 52% at 50% 46%, rgba(210,255,0,0.2), transparent 70%)" }}
+                style={{ background: "radial-gradient(70% 60% at 50% 45%, rgba(210,255,0,0.18), transparent 72%)" }}
               />
-              <div className="pointer-events-none absolute inset-0 grid place-items-center px-2 pb-2 pt-9">
-                <div className="relative h-full w-[48%] overflow-hidden rounded-[1.2rem] shadow-[0_18px_50px_-18px_rgba(210,255,0,0.35)] md:w-[44%]">
-                  <ScaledPrototype src="/assets/meituan-im/Repair%20Flow%20Dark.html?solo" naturalW={430} naturalH={1000} fit="contain" reduced={reduced} bg="#141416" />
-                </div>
+              {/* product walkthrough fills the card — same treatment as the Liner card */}
+              <div className="pointer-events-none absolute inset-2 top-12 overflow-hidden rounded-xl border border-white/10 bg-[#141416] shadow-[0_18px_50px_-18px_rgba(210,255,0,0.3)]">
+                <BentoVideo src="/assets/meituan-im/meituan-present/meituan-present-1.mp4" />
               </div>
             </BentoCard>
           </div>

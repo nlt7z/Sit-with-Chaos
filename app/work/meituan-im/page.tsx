@@ -524,28 +524,25 @@ export default function MeituanImCaseStudyPage() {
                     </dl>
                   </div>
 
-                  {/* Right — live prototype (Repair Flow). */}
+                  {/* Right — product walkthrough video. */}
                   <div className="hidden lg:flex lg:flex-col lg:items-start">
                     <div
-                      className="relative rounded-xl"
-                      style={{ width: 480, height: 432 }}
+                      className="relative overflow-hidden rounded-2xl border border-black/[0.08] bg-[#141416] shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]"
+                      style={{ width: 500 }}
                     >
-                      <iframe
-                        src="/assets/meituan-im/Repair%20Flow.html"
-                        title="Repair flow — interactive prototype"
-                        style={{
-                          width: 1200,
-                          height: 1080,
-                          border: 0,
-                          display: "block",
-                          transform: "scale(0.4)",
-                          transformOrigin: "top left",
-                        }}
-                        loading="lazy"
+                      <video
+                        src="/assets/meituan-im/meituan-present/meituan-present-1.mp4"
+                        title="Repair flow — product walkthrough"
+                        className="block aspect-video w-full object-cover"
+                        autoPlay
+                        muted
+                        loop
+                        playsInline
+                        preload="metadata"
                       />
                     </div>
                     <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
-                      Live prototype · interact above
+                      Product walkthrough
                     </p>
                   </div>
                 </motion.div>
