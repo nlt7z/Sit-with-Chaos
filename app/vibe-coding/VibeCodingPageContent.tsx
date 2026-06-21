@@ -527,8 +527,13 @@ function PrototypeCard({
 
   return (
     <article
-      className={fluid ? "w-full" : "w-[min(62vw,680px)]"}
-      style={{ pointerEvents: isActive ? "auto" : "none" }}
+      className={fluid ? "w-full" : ""}
+      // Active card scales with the viewport but is height-capped (16:9) so it
+      // always fits the 56vh deck — no fixed px width that strands big screens.
+      style={{
+        pointerEvents: isActive ? "auto" : "none",
+        width: fluid ? undefined : "min(62vw, calc(48vh * 16 / 9))",
+      }}
     >
       {/* Desktop active card gets the tilt + cursor arrow; neighbours + mobile
           render flat. The editorial caption below carries the title on desktop. */}
@@ -578,11 +583,13 @@ function GhostIndex({ index }: { index: number }) {
             fontSize: "min(74vh, 40vw)",
             color: "transparent",
             WebkitTextStroke: "1.6px rgba(210,255,0,0.22)",
-            transform: "translateY(-4%)",
+            willChange: "transform, opacity",
           }}
-          initial={{ opacity: 0, x: 60, filter: "blur(10px)" }}
-          animate={{ opacity: 1, x: 0, filter: "blur(0px)" }}
-          exit={{ opacity: 0, x: -60, filter: "blur(10px)" }}
+          // No blur tween — animating filter:blur on a min(74vh,40vw) text layer
+          // every frame was a major source of the switch jank. Slide + fade only.
+          initial={{ opacity: 0, x: 60 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -60 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           {label}
@@ -613,7 +620,8 @@ function EditorialCaption({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="mx-auto w-[min(62vw,680px)] text-left"
+      className="mx-auto text-left"
+      style={{ width: "min(62vw, calc(48vh * 16 / 9))" }}
     >
       <div className="flex items-baseline gap-3 font-mono text-[10px] uppercase tracking-[0.3em]">
         <span className="tabular-nums text-nltLime">{String(index + 1).padStart(2, "0")}</span>
@@ -885,7 +893,6 @@ const FIRST_KEY = entryKey(entries[0]);
 
 export function VibeCodingPageContent() {
   const [active, setActive] = useState(0);
-  const [loadedKeys, setLoadedKeys] = useState<Set<string>>(new Set());
   const carouselRef = useRef<HTMLDivElement>(null);
   const wheelCooldown = useRef(false);
 
@@ -920,23 +927,6 @@ export function VibeCodingPageContent() {
   const next = useCallback(() => {
     setActive((i) => (i + 1) % n);
   }, [n]);
-
-  // Expand the loaded set whenever the active slide moves. Window is dist ≤ 2
-  // so neighbors + neighbors-of-neighbors warm up early.
-  useEffect(() => {
-    if (n === 0) return;
-    setLoadedKeys((prev) => {
-      const next = new Set(prev);
-      const halfN = n / 2;
-      visible.forEach((entry, i) => {
-        let offset = i - active;
-        if (offset > halfN) offset -= n;
-        if (offset < -halfN) offset += n;
-        if (Math.abs(offset) <= 2) next.add(entryKey(entry));
-      });
-      return next;
-    });
-  }, [active, visible, n]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -992,19 +982,29 @@ export function VibeCodingPageContent() {
             if (offset < -halfN) offset += n;
             const dist = Math.abs(offset);
             const isActive = dist === 0;
-            const shouldLoad = dist <= 2 || loadedKeys.has(entryKey(entry));
+            // Mount media only for the active card + its 2-deep neighbours. Far
+            // cards unmount their iframe/video so we never accumulate a dozen
+            // live embeds all decoding at once (the real cause of switch lag).
+            const shouldLoad = dist <= 2;
             return (
               <div
                 key={entryKey(entry)}
                 onClick={() => !isActive && setActive(i)}
-                className="absolute transition-all duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+                className="absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
                 style={{
                   transformOrigin: "bottom center",
                   transform: `translateX(calc(${offset} * 44vw)) scale(${isActive ? 1 : 0.66})`,
                   opacity: isActive ? 1 : dist === 1 ? 0.32 : 0,
-                  filter: isActive ? "none" : "grayscale(1) blur(2px) brightness(0.7)",
+                  // grayscale only — animating blur on a card-sized layer was the
+                  // main switch-jank cost; the static desaturation is free.
+                  filter: isActive ? "none" : "grayscale(1) brightness(0.7)",
                   cursor: isActive ? "default" : "pointer",
                   zIndex: isActive ? 10 : 5 - dist,
+                  // Promote only the cards that actually move on a switch, and skip
+                  // painting/compositing the off-stage ones entirely.
+                  willChange: dist <= 1 ? "transform, opacity" : undefined,
+                  visibility: dist > 1 ? "hidden" : "visible",
+                  pointerEvents: dist > 1 ? "none" : undefined,
                 }}
               >
                 <PrototypeCard

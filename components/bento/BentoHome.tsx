@@ -332,7 +332,25 @@ function VinylAudio() {
     const a = ref.current;
     if (!a) return;
     a.volume = 0.55;
-    a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
+    let removeGesture = () => {};
+    a.play()
+      .then(() => setPlaying(true))
+      .catch(() => {
+        // Browsers block sound autoplay until the first user gesture, so the
+        // initial play() rejects. Arm a one-shot listener and start the record
+        // the moment the visitor interacts (click / key / scroll / touch).
+        setPlaying(false);
+        const events = ["pointerdown", "keydown", "scroll", "touchstart"] as const;
+        const start = () => {
+          a.play().then(() => setPlaying(true)).catch(() => {});
+          removeGesture();
+        };
+        events.forEach((ev) =>
+          window.addEventListener(ev, start, { once: true, passive: true }),
+        );
+        removeGesture = () => events.forEach((ev) => window.removeEventListener(ev, start));
+      });
+    return () => removeGesture();
   }, []);
 
   const toggle = () => {
@@ -443,7 +461,7 @@ export function BentoHome() {
 
       <SideRail active="home" />
 
-      <div className="relative z-10 mx-auto w-full max-w-[1740px] px-3 pb-24 pt-3 md:flex md:h-full md:gap-2.5 md:py-3 md:pb-3 md:pl-14 md:pr-4">
+      <div className="relative z-10 mx-auto w-full px-3 pb-24 pt-3 md:flex md:h-full md:gap-2.5 md:py-3 md:pb-3 md:pl-14 md:pr-4">
         {/* On mobile each column wrapper becomes `display:contents`, so every card
             flows directly into the grid below; CSS `order-*` then sequences them
             into a single intentional feed. On md+ the wrappers reassert as the
@@ -475,7 +493,7 @@ export function BentoHome() {
 
             {/* meituan — complete dark prototype; whole block opens the case study */}
             <BentoCard label="Meituan" surface="dark" light={light} drag={drag} accent="#FFC300" index={4} className="order-2 col-span-2 h-[480px] min-h-0 flex-[6.4] md:order-none md:h-auto">
-              <Link href="/work/meituan-im" aria-label="Meituan case study" className="absolute inset-0 z-30" />
+              <Link href="/work/meituan-im" target="_blank" rel="noopener noreferrer" aria-label="Meituan case study" className="absolute inset-0 z-30" />
               <span className="pointer-events-none absolute left-3 top-2.5 z-40 font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime">Design + Build</span>
               <CornerArrow className="right-2.5 top-2.5" />
               {/* lime gradient bleeds at the framed edges */}
@@ -503,6 +521,8 @@ export function BentoHome() {
             <BentoCard surface="dark" light={light} drag={drag} index={6} className="order-3 col-span-2 h-[240px] min-h-0 flex-[6] md:order-none md:h-auto">
               <Link
                 href="/work/liner"
+                target="_blank"
+                rel="noopener noreferrer"
                 aria-label="Liner case study"
                 className="absolute inset-0 z-30"
                 onMouseEnter={() => setLinerHover(true)}
