@@ -489,6 +489,15 @@ export default function MeituanImCaseStudyPage() {
                   comparable, bookable decision.
                 </motion.p>
 
+                <motion.div variants={heroItem} className="mt-8">
+                  <a
+                    href="/work/meituan-im/deck-present"
+                    className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                  >
+                    View Presentation Deck
+                  </a>
+                </motion.div>
+
                 <motion.div
                   variants={heroItem}
                   className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-20 md:mt-14 md:gap-14"
