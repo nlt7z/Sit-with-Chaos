@@ -8,6 +8,30 @@ import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 const mediaRound = "rounded-xl";
 const EMSK = [0.76, 0, 0.24, 1] as const;
 
+/** Tracks whether an element is within `rootMargin` of the viewport, flipping
+ *  back to false once it scrolls far away. Heavy prototype iframes use this to
+ *  UNMOUNT when off-screen so this long case study never piles up a dozen live
+ *  embedded apps at once — which would otherwise exhaust memory and eventually
+ *  make the tab unresponsive ("page won't open after a while"). */
+function useNearViewport<T extends HTMLElement>(rootMargin = "600px 0px") {
+  const ref = useRef<T>(null);
+  const [near, setNear] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setNear(true);
+      return;
+    }
+    const obs = new IntersectionObserver(([entry]) => setNear(entry.isIntersecting), {
+      root: null,
+      rootMargin,
+    });
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [rootMargin]);
+  return [ref, near] as const;
+}
+
 /** Room tabs only — compact control, not repeated as "chips" across the page */
 const roomTab = {
   base: "inline-flex items-center justify-center rounded-full border px-4 py-2 font-sans text-[12px] font-medium tracking-[0.02em] transition-all duration-300 ease-out",
@@ -303,8 +327,10 @@ function FeaturePrototypeEmbed({
     return () => ro.disconnect();
   }, []);
 
-  // Don't boot every prototype app at once — mount each iframe only as it nears
-  // the viewport, then leave it running.
+  // Boot the prototype app only while it's near the viewport, and UNMOUNT it
+  // once it scrolls far away — keeping it mounted forever is what let a dozen
+  // live iframes accumulate and crash the tab. The 600px margin keeps it warm
+  // just beyond the fold so light scrolling doesn't thrash the reload.
   useEffect(() => {
     const el = frameRef.current;
     if (!el || typeof IntersectionObserver === "undefined") {
@@ -312,13 +338,8 @@ function FeaturePrototypeEmbed({
       return;
     }
     const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setLoad(true);
-          obs.disconnect();
-        }
-      },
-      { root: null, rootMargin: "300px 0px" }
+      (entries) => setLoad(Boolean(entries[0]?.isIntersecting)),
+      { root: null, rootMargin: "600px 0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -564,18 +585,35 @@ function D1BeforeAfter() {
   const [idx, setIdx] = useState(0);
   const afterRef = useRef<HTMLDivElement>(null);
   const [afterWidth, setAfterWidth] = useState(0);
+  // Only keep the (heavy) showroom iframes alive while the gallery is on screen.
+  const [near, setNear] = useState(false);
 
+  // Auto-cycle only while visible — no point churning idx (or the iframes it
+  // drives) when the section is scrolled away.
   useEffect(() => {
+    if (!near) return;
     const t = setInterval(() => setIdx((i) => (i + 1) % d1CycleOrder.length), 4200);
     return () => clearInterval(t);
-  }, []);
+  }, [near]);
 
   useEffect(() => {
     const el = afterRef.current;
     if (!el) return;
     const ro = new ResizeObserver(([entry]) => setAfterWidth(entry.contentRect.width));
     ro.observe(el);
-    return () => ro.disconnect();
+    let io: IntersectionObserver | undefined;
+    if (typeof IntersectionObserver !== "undefined") {
+      io = new IntersectionObserver(([entry]) => setNear(entry.isIntersecting), {
+        rootMargin: "400px 0px",
+      });
+      io.observe(el);
+    } else {
+      setNear(true);
+    }
+    return () => {
+      ro.disconnect();
+      io?.disconnect();
+    };
   }, []);
 
   const activeId = d1CycleOrder[idx];
@@ -640,7 +678,7 @@ function D1BeforeAfter() {
                   i === idx ? "opacity-100" : "pointer-events-none opacity-0"
                 }`}
               >
-                {scale > 0 && (
+                {near && scale > 0 && (
                   <iframe
                     title={room.title}
                     src={room.src}
@@ -777,6 +815,7 @@ const vibeIframeBg: Record<(typeof vibeCodingShowrooms)[number]["id"], string> =
 function VibeCodingPrototypeGallery() {
   const [activeId, setActiveId] = useState<(typeof vibeCodingShowrooms)[number]["id"]>("romance");
   const item = vibeCodingShowrooms.find((s) => s.id === activeId) ?? vibeCodingShowrooms[0];
+  const [frameRef, near] = useNearViewport<HTMLDivElement>();
 
   return (
     <div className="w-full pt-6 md:pt-8">
@@ -842,14 +881,23 @@ function VibeCodingPrototypeGallery() {
             Open full page
           </Link>
         </div>
-        <div className="overflow-hidden rounded-b-xl">
-          <iframe
-            key={item.id}
-            title={item.title}
-            src={item.src}
-            className={`h-[min(56vh,820px)] min-h-[320px] w-full md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
-            loading="lazy"
-          />
+        <div ref={frameRef} className="overflow-hidden rounded-b-xl">
+          {near ? (
+            <iframe
+              key={item.id}
+              title={item.title}
+              src={item.src}
+              className={`h-[min(56vh,820px)] min-h-[320px] w-full md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
+              loading="lazy"
+            />
+          ) : (
+            <div
+              aria-hidden
+              className={`flex h-[min(56vh,820px)] min-h-[320px] w-full items-center justify-center md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
+            >
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
+            </div>
+          )}
         </div>
       </div>
     </div>
@@ -1433,6 +1481,10 @@ function HeroPrototypeGallery() {
     return () => ro.disconnect();
   }, []);
 
+  // Toggle (not mount-once): the hero can have up to 5 showroom iframes alive at
+  // once after the visitor clicks through the tabs, so unmount the whole set the
+  // moment it scrolls away — otherwise those live apps stay pinned for the entire
+  // (long) case study and the tab eventually runs out of memory.
   useEffect(() => {
     const el = frameRef.current;
     if (!el || typeof IntersectionObserver === "undefined") {
@@ -1440,13 +1492,8 @@ function HeroPrototypeGallery() {
       return;
     }
     const obs = new IntersectionObserver(
-      (entries) => {
-        if (entries[0]?.isIntersecting) {
-          setMounted(true);
-          obs.disconnect();
-        }
-      },
-      { root: null, rootMargin: "300px 0px" }
+      (entries) => setMounted(Boolean(entries[0]?.isIntersecting)),
+      { root: null, rootMargin: "600px 0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();

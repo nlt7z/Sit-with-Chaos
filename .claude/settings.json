@@ -514,7 +514,8 @@
       "Bash(pkill -f \"cdp-check\" 2>/dev/null; pkill -f \"cdp-shoot2\" 2>/dev/null; rm -rf /tmp/cdp-check /tmp/cdp-shoot2 /tmp/deck-*.png; echo \"cleaned\")",
       "Bash(git -c color.ui=never diff --stat)",
       "Bash(grep -iE \"\\\\.\\(mp4|webm|mov|png|jpg|jpeg\\)$\")",
-      "Bash(git -c color.ui=never diff .claude/settings.json)"
+      "Bash(git -c color.ui=never diff .claude/settings.json)",
+      "Bash(grep -o \"solo[^\\\\\"']*\\\\|rail[^\\\\\"']\\\\{0,20\\\\}\" \"/Users/fangyuan/Desktop/newpage/public/assets/meituan-im/Repair Flow.html\")"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

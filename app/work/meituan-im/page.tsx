@@ -524,11 +524,10 @@ export default function MeituanImCaseStudyPage() {
                     </dl>
                   </div>
 
-                  {/* Right — product walkthrough video. */}
-                  <div className="hidden lg:flex lg:flex-col lg:items-start">
+                  {/* Right — product walkthrough video (shown on mobile too). */}
+                  <div className="flex flex-col items-start">
                     <div
-                      className="relative overflow-hidden rounded-2xl border border-black/[0.08] bg-[#141416] shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]"
-                      style={{ width: 500 }}
+                      className="relative w-full max-w-[500px] overflow-hidden rounded-2xl border border-black/[0.08] bg-[#141416] shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]"
                     >
                       <video
                         src="/assets/meituan-im/meituan-present/meituan-present-1.mp4"
@@ -640,9 +639,9 @@ export default function MeituanImCaseStudyPage() {
             <ScaledPrototypeFrame
               src="/assets/meituan-im/Repair%20Flow.html"
               title="Repair flow — interactive prototype"
-              naturalWidth={1200}
+              naturalWidth={480}
               naturalHeight={1080}
-              displayMaxWidth={900}
+              displayMaxWidth={480}
             />
           </FadeIn>
         </Section>
@@ -759,9 +758,9 @@ export default function MeituanImCaseStudyPage() {
             <ScaledPrototypeFrame
               src="/assets/meituan-im/Repair%20Flow.html"
               title="Repair flow — interactive prototype"
-              naturalWidth={1200}
+              naturalWidth={480}
               naturalHeight={1080}
-              displayMaxWidth={900}
+              displayMaxWidth={480}
             />
           </PrototypeReveal>
         </Section>
