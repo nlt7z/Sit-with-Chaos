@@ -3,7 +3,8 @@ import DeckPresentClient from "./DeckPresentClient";
 
 export const metadata = {
   title: "Designing the AI That Feels Alive — Presentation Deck",
-  description: "30-minute presentation deck: from model capability to emotionally immersive AI character experience.",
+  description:
+    "Portfolio deck for Qwen Character (Alibaba Cloud): how Interactive Showrooms replaced documentation with proof — visible cognition, one capability per room, and a path from research to production code.",
 };
 
 function Fallback() {

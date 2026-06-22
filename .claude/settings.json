@@ -515,7 +515,10 @@
       "Bash(git -c color.ui=never diff --stat)",
       "Bash(grep -iE \"\\\\.\\(mp4|webm|mov|png|jpg|jpeg\\)$\")",
       "Bash(git -c color.ui=never diff .claude/settings.json)",
-      "Bash(grep -o \"solo[^\\\\\"']*\\\\|rail[^\\\\\"']\\\\{0,20\\\\}\" \"/Users/fangyuan/Desktop/newpage/public/assets/meituan-im/Repair Flow.html\")"
+      "Bash(grep -o \"solo[^\\\\\"']*\\\\|rail[^\\\\\"']\\\\{0,20\\\\}\" \"/Users/fangyuan/Desktop/newpage/public/assets/meituan-im/Repair Flow.html\")",
+      "Bash(echo \"=== exit: $? ===\")",
+      "Bash(echo \"=== eslint exit: $? ===\")",
+      "Bash(curl -s -o /tmp/deck_out.html -w \"%{http_code}\" --max-time 90 http://localhost:3000/work/ai-character/deck-present)"
     ],
     "additionalDirectories": [
       "/Users/fangyuan/Desktop/newpage/.git",

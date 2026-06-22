@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, type ReactNode, type RefObject } from "react";
 
@@ -12,49 +12,90 @@ const STG  = { hidden: {}, show: { transition: { staggerChildren: 0.09, delayChi
 const UP   = { hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: 0.82, ease: E } } };
 const FADE = { hidden: { opacity: 0 },        show: { opacity: 1,       transition: { duration: 0.55, ease: E } } };
 
-/** Left copy + right video/images: wider row, media-heavy split (was 2fr/3fr ≈ 40/60). */
+const LIME = "#C8FF47";
+
+/** Left copy + right video/images: wider row, media-heavy split. */
 const LR_DECK =
   "mx-auto grid w-full max-w-[min(88rem,100%)] gap-8 md:gap-x-10 md:gap-y-8 md:grid-cols-[minmax(0,0.9fr)_minmax(0,1.58fr)] lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.72fr)]";
 
-// ─── Slide registry (34 slides · 12 chapters) ────────────────────────────────
+// ─── Slide registry — re-sequenced to the live case study narrative ───────────
+//   Opening → Problem → Decision 01 → 02 → 03 → Method → Showcase →
+//   Contribution → Impact → Takeaway → Closing
 const SLIDES = [
-  { id: "cover",              chapter: "Opening",      dark: true  },
-  { id: "hook",               chapter: "Opening",      dark: false },
-  { id: "problem",            chapter: "Problem",      dark: true  },
-  { id: "before",             chapter: "Problem",      dark: true  },
-  { id: "decision-01-title",  chapter: "Decision 01",  dark: true  },
-  { id: "showrooms-thesis",   chapter: "Decision 01",  dark: false },
-  { id: "visibilities",       chapter: "Decision 01",  dark: false },
-  { id: "decision-02-title",  chapter: "Decision 02",  dark: false },
-  { id: "heartbeat",          chapter: "Decision 02",  dark: false },
-  { id: "heartbeat-logic",    chapter: "Decision 02",  dark: false },
-  { id: "altuniv",            chapter: "Decision 02",  dark: false },
-  { id: "altuniv-logic",      chapter: "Decision 02",  dark: false },
-  { id: "storyunlock",        chapter: "Decision 02",  dark: false },
-  { id: "storyunlock-logic",  chapter: "Decision 02",  dark: false },
-  { id: "moments",            chapter: "Decision 02",  dark: false },
-  { id: "moments-logic",      chapter: "Decision 02",  dark: false },
-  { id: "astro-profile",      chapter: "Decision 02",  dark: false },
-  { id: "therapy-analysis",   chapter: "Decision 02",  dark: false },
-  { id: "decision-03-title",  chapter: "Decision 03",  dark: true  },
-  { id: "inspire-continue",   chapter: "Decision 03",  dark: true  },
-  { id: "code-sidebar",       chapter: "Decision 03",  dark: false },
-  { id: "showrooms",          chapter: "Showrooms",    dark: true  },
-  { id: "how-i-worked",       chapter: "Method",       dark: false },
-  { id: "ai-tools",           chapter: "Method",       dark: false },
-  { id: "backend",            chapter: "Craft",        dark: false },
-  { id: "spark-design",       chapter: "Craft",        dark: false },
-  { id: "prototype-romance",  chapter: "Live",         dark: false },
-  { id: "prototype-astro",    chapter: "Live",         dark: false },
-  { id: "prototype-therapy",  chapter: "Live",         dark: false },
-  { id: "metrics",            chapter: "Impact",       dark: true  },
-  { id: "metrics-method",     chapter: "Impact",       dark: true  },
-  { id: "principles",         chapter: "Principles",   dark: false },
-  { id: "takeaways",          chapter: "Principles",   dark: false },
-  { id: "closing",            chapter: "Closing",      dark: false },
+  { id: "cover",             chapter: "Opening",      dark: true  },
+  { id: "overview",          chapter: "Opening",      dark: false },
+  { id: "problem",           chapter: "Problem",      dark: true  },
+  { id: "hmw",               chapter: "Problem",      dark: false },
+  { id: "d1-title",          chapter: "Decision 01",  dark: true  },
+  { id: "d1-before-after",   chapter: "Decision 01",  dark: false },
+  { id: "d2-title",          chapter: "Decision 02",  dark: false },
+  { id: "d2-map",            chapter: "Decision 02",  dark: false },
+  { id: "heartbeat",         chapter: "Decision 02",  dark: false },
+  { id: "heartbeat-logic",   chapter: "Decision 02",  dark: false },
+  { id: "storyunlock",       chapter: "Decision 02",  dark: false },
+  { id: "storyunlock-logic", chapter: "Decision 02",  dark: false },
+  { id: "moments",           chapter: "Decision 02",  dark: false },
+  { id: "moments-logic",     chapter: "Decision 02",  dark: false },
+  { id: "altuniv",           chapter: "Decision 02",  dark: false },
+  { id: "altuniv-logic",     chapter: "Decision 02",  dark: false },
+  { id: "astro-profile",     chapter: "Decision 02",  dark: false },
+  { id: "therapy-analysis",  chapter: "Decision 02",  dark: false },
+  { id: "d3-title",          chapter: "Decision 03",  dark: true  },
+  { id: "inspire-continue",  chapter: "Decision 03",  dark: true  },
+  { id: "code-drawer",       chapter: "Decision 03",  dark: false },
+  { id: "how-i-worked",      chapter: "Method",       dark: false },
+  { id: "ai-tools",          chapter: "Method",       dark: false },
+  { id: "showrooms",         chapter: "Showcase",     dark: true  },
+  { id: "prototype-romance", chapter: "Showcase",     dark: false },
+  { id: "prototype-astro",   chapter: "Showcase",     dark: false },
+  { id: "prototype-therapy", chapter: "Showcase",     dark: false },
+  { id: "backend",           chapter: "Contribution", dark: false },
+  { id: "spark-design",      chapter: "Contribution", dark: false },
+  { id: "metrics",           chapter: "Impact",       dark: true  },
+  { id: "metrics-method",    chapter: "Impact",       dark: true  },
+  { id: "principles",        chapter: "Takeaway",     dark: false },
+  { id: "takeaways",         chapter: "Takeaway",     dark: false },
+  { id: "closing",           chapter: "Closing",      dark: false },
 ] as const;
 
 type SlideId = (typeof SLIDES)[number]["id"];
+
+// ─── Living aura — slow breathing accent blobs (the "feels alive" motif) ──────
+function LivingAura({ reduced, tint = LIME }: { reduced: boolean | null; tint?: string }) {
+  if (reduced) return null;
+  return (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: 540, height: 540, left: "6%", top: "10%",
+          background: `radial-gradient(circle, ${hexA(tint, 0.1)}, transparent 68%)`,
+          filter: "blur(44px)",
+        }}
+        animate={{ x: [0, 46, -12, 0], y: [0, -34, 22, 0], scale: [1, 1.14, 0.95, 1], opacity: [0.5, 0.9, 0.6, 0.5] }}
+        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute rounded-full"
+        style={{
+          width: 440, height: 440, right: "8%", bottom: "6%",
+          background: "radial-gradient(circle, rgba(123,108,244,0.1), transparent 70%)",
+          filter: "blur(52px)",
+        }}
+        animate={{ x: [0, -38, 14, 0], y: [0, 26, -18, 0], scale: [1, 1.1, 0.93, 1], opacity: [0.4, 0.72, 0.5, 0.4] }}
+        transition={{ duration: 23, repeat: Infinity, ease: "easeInOut", delay: 2.4 }}
+      />
+    </div>
+  );
+}
+
+/** rgba() from a 3- or 6-digit hex. */
+function hexA(hex: string, a: number) {
+  const h = hex.replace("#", "");
+  const f = h.length === 3 ? h.split("").map((c) => c + c).join("") : h;
+  const n = parseInt(f, 16);
+  return `rgba(${(n >> 16) & 255}, ${(n >> 8) & 255}, ${n & 255}, ${a})`;
+}
 
 // ─── Spotlight (cover bg) ─────────────────────────────────────────────────────
 function Spotlight({ containerRef }: { containerRef: RefObject<HTMLElement | null> }) {
@@ -70,7 +111,7 @@ function Spotlight({ containerRef }: { containerRef: RefObject<HTMLElement | nul
   }, [containerRef]);
   return (
     <div className="pointer-events-none absolute inset-0"
-      style={{ background: `radial-gradient(900px circle at ${pos.x} ${pos.y}, rgba(200,255,71,0.06), transparent 72%)` }} />
+      style={{ background: `radial-gradient(900px circle at ${pos.x} ${pos.y}, rgba(200,255,71,0.07), transparent 72%)` }} />
   );
 }
 
@@ -170,7 +211,6 @@ function DarkVid({
 }
 
 // ─── Workflow SVG viewer ──────────────────────────────────────────────────────
-/** Scales to the flex slot only (max-h-full) — avoids svh caps that exceed the slot and get cropped by overflow. */
 function WorkflowImg({ src, alt, className = "" }: { src: string; alt: string; className?: string }) {
   return (
     <div className={`flex min-h-0 w-full min-w-0 flex-1 basis-0 flex-col ${className}`}>
@@ -194,22 +234,28 @@ function WorkflowImg({ src, alt, className = "" }: { src: string; alt: string; c
 // ─────────────────────────────────────────────────────────────────────────────
 
 // §00 Cover
-function SlideCover() {
+function SlideCover({ reduced }: { reduced: boolean | null }) {
   const ref = useRef<HTMLElement>(null);
   const meta = [
-    { k: "Company",  v: "Alibaba Cloud · TONGYI Xingchen" },
-    { k: "Role",     v: "UX Designer Intern — E2E, research to code" },
+    { k: "Company",  v: "Alibaba Cloud · Qwen Character" },
+    { k: "Role",     v: "Sole UX Designer — research to production code" },
     { k: "Duration", v: "4 weeks · July–August 2025" },
     { k: "Outcome",  v: "Shipped · ~2× model traffic · B2B adopted" },
   ];
   return (
     <section ref={ref} className="relative flex h-full min-h-0 items-stretch overflow-hidden bg-[#050507]">
+      <LivingAura reduced={reduced} />
       <Spotlight containerRef={ref} />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[40vh] bg-gradient-to-b from-[#C8FF47]/[0.025] to-transparent" />
       <div className="pointer-events-none absolute inset-y-0 right-0 hidden w-[46%] select-none lg:block">
-        <img src="/assets/ai-character/eternal-vow-character.png" alt="" aria-hidden
+        <motion.img
+          src="/assets/ai-character/eternal-vow-character.png" alt="" aria-hidden
           className="h-full w-full object-cover object-top"
-          style={{ maskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.45) 22%, rgba(0,0,0,0.75) 55%)", opacity: 0.6 }} />
+          style={{ maskImage: "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.45) 22%, rgba(0,0,0,0.75) 55%)", opacity: 0.6 }}
+          initial={reduced ? false : { scale: 1.06, opacity: 0 }}
+          animate={reduced ? undefined : { scale: 1, opacity: 0.6 }}
+          transition={{ duration: 2.2, ease: E }}
+        />
         <div className="absolute inset-0" style={{ background: "linear-gradient(to right, #050507 0%, #050507bb 20%, transparent 55%)" }} />
       </div>
       <motion.div className="relative z-10 flex min-h-0 w-full max-w-5xl flex-col justify-center px-8 py-6 sm:px-12 md:px-16 lg:px-20"
@@ -226,7 +272,7 @@ function SlideCover() {
               ))}
             </div>
             <motion.p variants={UP} className={`mt-5 max-w-xl ${BODY} text-[14px] leading-[1.65] text-white/[0.96] md:mt-6 md:text-[15px]`}>
-              Turned static cloud docs into 4 interactive showrooms — guided workflows for enterprise buyers. Post-launch model API call volume lifted ~2× over the four-week pre-launch baseline, validated through internal usage analytics.
+              Led and shipped Interactive Showrooms — the MVP for the Qwen Character LLM. Four hands-on demos that turned static cloud docs into proof an enterprise buyer could feel in minutes.
             </motion.p>
           </div>
           <div className="min-w-0 lg:flex lg:flex-col lg:justify-end">
@@ -246,49 +292,70 @@ function SlideCover() {
   );
 }
 
-// §01 Hook
-function SlideHook() {
+// §01 Overview — the promise + design principle
+function SlideOverview() {
+  const pillars = [
+    { stat: "60+ min → <2 min", label: "Time to first value", detail: "Static docs → first proof moment" },
+    { stat: "~2×",              label: "Model API call volume", detail: "vs the 4-week pre-launch baseline" },
+    { stat: "4 demos",          label: "Hands-on showrooms",   detail: "One model strength proven per room" },
+  ];
   return (
     <section className="flex h-full items-center bg-[#F7F5F0] px-12 md:px-20">
-      <div className="max-w-3xl">
-        <motion.div variants={STG} initial="hidden" animate="show">
-          <motion.div variants={FADE}><Eye>The Starting Point</Eye></motion.div>
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE} className="flex items-center gap-4">
+          <img src="/assets/ai-character/alibaba-cloud-logo.png" alt="Alibaba Cloud"
+            className="h-6 w-auto max-w-[10rem] object-contain object-left opacity-90" decoding="async" />
+          <span className="h-3.5 w-px bg-black/15" />
+          <Eye>Overview · Interactive Showrooms</Eye>
         </motion.div>
-        <Mask delay={0.12} className="mt-7">
-          <h2 className="font-display font-light leading-[1.06] tracking-[-0.036em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(2.4rem, 5.5vw, 4.8rem)" }}>
-            The model was good.<br />Nobody knew it.
+        <Mask delay={0.12} className="mt-6">
+          <h2 className="font-display font-light leading-[1.08] tracking-[-0.032em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.7rem, 3.6vw, 2.8rem)" }}>
+            A working version of their product — in under two minutes.
           </h2>
         </Mask>
-        <motion.div initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.85, ease: E, delay: 0.38 }} className="mt-10 max-w-xl space-y-4">
-          <p className={`${BODY} text-[16px] text-[#5A5A5A]`}>
-            Alibaba Cloud&apos;s AI character product had long-term memory, emotional depth, and genuine personalization. The interface showed none of it.
-          </p>
-          <p className={`${BODY} text-[16px] text-[#5A5A5A]`}>
-            Trial users churned before they felt the difference. Enterprise prospects depended on imagination to see the value.
+        <motion.p variants={UP} className={`mt-6 max-w-2xl ${BODY} text-[15px] text-[#5A5A5A]`}>
+          Interactive Showrooms is the MVP feature for the Qwen Character LLM, serving millions of enterprise customers. Each showroom surfaces one strength of the model alongside a prompt guide and a live code editor — proof, not documentation.
+        </motion.p>
+        <motion.div variants={UP} className="mt-9 grid gap-px overflow-hidden rounded-2xl bg-black/[0.06] ring-1 ring-black/[0.06] md:grid-cols-3">
+          {pillars.map((p, i) => (
+            <motion.div key={p.label} className="bg-white px-6 py-6"
+              initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: E, delay: 0.28 + i * 0.1 }}>
+              <p className="font-display font-light tracking-[-0.02em] text-[#0A0A0A]"
+                style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.9rem)" }}>{p.stat}</p>
+              <p className="mt-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]/75">{p.label}</p>
+              <p className="mt-1.5 font-sans text-[12.5px] leading-relaxed text-[#6A6A6A]">{p.detail}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+        <motion.div variants={UP} className="mt-7 flex items-start gap-3 border-l-2 border-[#C8FF47] pl-4">
+          <p className="font-sans text-[13.5px] leading-relaxed text-[#6A6A6A]">
+            <span className="text-[11px] font-medium uppercase tracking-[0.12em] text-[#7e9a1f]">Design principle</span>
+            <span className="mt-1.5 block text-[#3A3A3A]">AI systems need <em className="not-italic font-medium text-[#0A0A0A]">visible cognition</em>, not just outputs — I design to make model state inspectable.</span>
           </p>
         </motion.div>
-      </div>
+      </motion.div>
     </section>
   );
 }
 
 // §02 Problem
-function SlideProblem() {
+function SlideProblem({ reduced }: { reduced: boolean | null }) {
   return (
-    <section className="flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
-      <motion.div className="grid w-full max-w-5xl gap-10 md:grid-cols-2" variants={STG} initial="hidden" animate="show">
+    <section className="relative flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
+      <LivingAura reduced={reduced} />
+      <motion.div className="relative z-10 grid w-full max-w-5xl gap-10 md:grid-cols-2" variants={STG} initial="hidden" animate="show">
         <div>
           <motion.div variants={FADE}><Eye dark>The Problem</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-6 font-display font-light leading-[1.08] tracking-[-0.03em] text-white"
               style={{ fontSize: "clamp(1.8rem, 3.6vw, 3rem)" }}>
-              60+ minutes<br />to first value.<br />Most never got there.
+              The first hour was killing trial conversion.
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-7 ${BODY} text-[15px] text-white/[0.96]`}>
-            Users had to read, set up, run samples, and interpret output on their own. Most trial users left before reaching the moment of value.
+            The docs explained everything. But feeling the model meant configuring, running samples, and interpreting output alone — a loop that routinely stretched past an hour. Most trial users left before reaching the moment of value.
           </motion.p>
           <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light italic leading-relaxed text-[#C8FF47]/85">
             So I shifted the product from documentation to proof.
@@ -304,7 +371,7 @@ function SlideProblem() {
           <div className="rounded-2xl border border-white/[0.1] bg-white/[0.04] px-6 py-6">
             <p className={`${EYE} text-[#C8FF47] mb-3`}>Enterprise wall</p>
             <p className="font-sans text-[14px] leading-[1.74] text-white/[0.94]">
-              Prospects received decks that described capability. Nothing on the surface compressed time-to-trust or replaced that slow first hour with tangible proof.
+              Prospects received decks that described capability — descriptive, not convincing. Nothing on the surface compressed time-to-trust or replaced that slow first hour with tangible proof.
             </p>
           </div>
         </motion.div>
@@ -313,84 +380,47 @@ function SlideProblem() {
   );
 }
 
-// §03 Before
-function SlideBefore() {
-  return (
-    <section className="flex h-full flex-col justify-center overflow-hidden bg-[#050507] px-10 md:px-16">
-      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
-        <motion.div variants={FADE}><Eye dark>Before · Static Documentation + Generic Chat</Eye></motion.div>
-        <Mask delay={0.08}>
-          <h2 className="mt-4 font-display font-light leading-[1.1] tracking-[-0.028em] text-white"
-            style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.1rem)" }}>
-            Read, set up, run, interpret. Repeat.
-          </h2>
-        </Mask>
-        <motion.div variants={FADE} className="mt-5">
-          <figure>
-            <div className="overflow-hidden rounded-xl bg-[#0A0A0A]">
-              <video muted playsInline loop autoPlay preload="metadata"
-                className="w-full object-contain max-h-[50vh]">
-                <source src="/assets/ai-character/before.mp4" type="video/mp4" />
-              </video>
-            </div>
-            <figcaption className={`mt-2.5 px-0 py-0 ${EYE} text-white/92 tracking-[0.08em]`}>
-              Previous experience — documentation-led trial flow
-            </figcaption>
-          </figure>
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §05 Showrooms Thesis (merges research + HMW)
-function SlideShowroomsThesis() {
+// §03 How Might We
+function SlideHmw() {
   const rows = [
-    { finding: "Feels like another ChatGPT",        evidence: "6 apps · 40+ reviews",      response: "Two-layer immersion" },
-    { finding: "Feel it, don't read about it",      evidence: "Memory & pacing invisible",  response: "Visible proof moments" },
-    { finding: "Trust = fast time-to-value",        evidence: "Trial users dropped early",  response: "Compressed proof loop" },
-    { finding: "Enterprise: tell vs try wall",      evidence: "Decks don't create belief",  response: "Try-first showroom" },
-    { finding: "Different markets, different proof", evidence: "4 verticals · 4 needs",     response: "One capability → one room" },
+    { finding: "Every competitor felt like another ChatGPT", evidence: "6 apps · 40+ comments" },
+    { finding: "Memory & pacing were invisible",             evidence: "Users churned before the difference landed" },
+    { finding: "Trust = fast time-to-value",                 evidence: "Trial users dropped in the first hour" },
+    { finding: "Enterprise: tell-vs-try wall",               evidence: "Decks describe, they don't convince" },
   ];
   return (
     <section className="flex h-full items-center justify-center bg-[#F7F5F0] px-10 md:px-16 lg:px-20">
       <motion.div
-        className="mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.08fr)] md:gap-x-16 lg:gap-x-24"
+        className="mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)] md:gap-x-16 lg:gap-x-24"
         variants={STG} initial="hidden" animate="show">
-        <div className="min-w-0 max-w-xl md:max-w-none md:pr-2">
-          <motion.div variants={FADE}><Eye>Research · 6 Apps · 40+ Reviews</Eye></motion.div>
+        <div className="min-w-0 max-w-xl md:max-w-none">
+          <motion.div variants={FADE}><Eye>Research · 6 Apps · 40+ Comments</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-6 font-display font-light leading-[1.1] tracking-[-0.032em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.5rem)" }}>
               Users want to feel AI, not read about it.
             </h2>
           </Mask>
-          <motion.p variants={UP} className={`mt-5 ${BODY} text-[14px] text-[#5A5A5A]`}>
-            6 apps, 40+ reviews — every competitor felt like another ChatGPT. The answer was one vertical per room, built for the evaluator who already works there.
-          </motion.p>
-          <motion.div variants={UP} className="mt-7 border-l-2 border-[#0A0A0A]/15 pl-4">
+          <motion.div variants={UP} className="mt-8 rounded-2xl border-l-2 border-[#C8FF47] bg-white px-6 py-7 ring-1 ring-black/[0.05]">
             <p className={`${EYE} text-[#9A9A9A]`}>How might we</p>
-            <p className="mt-3 font-display text-[16.5px] font-light italic leading-[1.4] tracking-[-0.012em] text-[#0A0A0A]">
-              Make model capabilities visible, testable, and trustworthy — within minutes?
+            <p className="mt-4 font-display text-[1.25rem] font-light leading-[1.4] tracking-[-0.018em] text-[#0A0A0A] md:text-[1.4rem]">
+              Make model capabilities <em className="not-italic text-[#7e9a1f]">visible</em>, <em className="not-italic text-[#7e9a1f]">testable</em>, and <em className="not-italic text-[#7e9a1f]">trustworthy</em> — within minutes?
             </p>
           </motion.div>
         </div>
         <motion.div variants={UP} className="min-w-0">
           <div className="overflow-hidden rounded-xl bg-white ring-1 ring-black/[0.07]">
-            <div className="hidden border-b border-black/[0.06] bg-black/[0.02] px-5 py-2.5 md:grid md:grid-cols-[1fr_1fr] md:gap-x-4">
-              {["Finding", "Design Response"].map(h => (
-                <p key={h} className={`${EYE} text-[#BDBDBD]`}>{h}</p>
-              ))}
+            <div className="border-b border-black/[0.06] bg-black/[0.02] px-5 py-2.5">
+              <p className={`${EYE} text-[#BDBDBD]`}>What the research surfaced</p>
             </div>
             <div className="divide-y divide-black/[0.05]">
               {rows.map((row, i) => (
-                <div key={i} className="grid grid-cols-1 gap-1 px-5 py-3.5 md:grid-cols-[1fr_1fr] md:items-center md:gap-x-4">
-                  <div>
-                    <p className="font-sans text-[12.5px] font-medium text-[#333]">{row.finding}</p>
-                    <p className="font-sans text-[11px] text-[#B0B0B0] mt-0.5">{row.evidence}</p>
-                  </div>
-                  <p className="font-sans text-[13px] font-semibold text-[#0A0A0A]">{row.response}</p>
-                </div>
+                <motion.div key={i} className="px-5 py-3.5"
+                  initial={{ opacity: 0, x: 12 }} animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.55, ease: E, delay: 0.3 + i * 0.08 }}>
+                  <p className="font-sans text-[13px] font-medium text-[#222]">{row.finding}</p>
+                  <p className="mt-0.5 font-sans text-[11px] text-[#A0A0A0]">{row.evidence}</p>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -401,53 +431,91 @@ function SlideShowroomsThesis() {
 }
 
 // §04 Decision 01 Title
-function SlideDecision01Title() {
+function SlideD1Title({ reduced }: { reduced: boolean | null }) {
   return (
-    <section className="flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="max-w-4xl">
+    <section className="relative flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
+      <LivingAura reduced={reduced} />
+      <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 max-w-4xl">
         <motion.div variants={FADE}><Eye dark>Decision 01</Eye></motion.div>
         <Mask delay={0.1}>
           <h2 className="mt-6 font-display font-light leading-[1.08] tracking-[-0.032em] text-white"
             style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>
-            I designed 4 interactive web showrooms — guided workflows for enterprise buyers.
+            I replaced documentation with market-specific showrooms.
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-8 max-w-2xl ${BODY} text-[15.5px] text-white/[0.92]`}>
-          Instead of improving documentation, I built 4 market-specific showrooms — companionship, psychotherapy, character cloning, IP licensing — that let evaluators experience a working version of their own future product.
+          Instead of improving the docs, I designed 4 market-specific showrooms — companionship, psychotherapy, character cloning, IP licensing — that let evaluators experience a working version of their own future product.
+        </motion.p>
+        <motion.p variants={UP} className="mt-5 font-display text-[15px] font-light italic leading-relaxed text-[#C8FF47]/85">
+          Users don&apos;t believe descriptions — so the first message had to prove the capability.
         </motion.p>
       </motion.div>
     </section>
   );
 }
 
-// §06 Visibilities (bridge — what makes AI hard)
-function SlideVisibilities() {
-  const items = [
-    { type: "Memory visibility",          detail: "The system recalls and updates personal context in the flow." },
-    { type: "Analysis visibility",        detail: "The system shows what it understands while the conversation continues." },
-    { type: "Implementation visibility",  detail: "The system exposes prompts, YAML, and constraints beside the live demo." },
+// §05 Decision 01 — Before → After
+function SlideD1BeforeAfter() {
+  const verticals = ["Companionship", "Psychotherapy", "Character cloning", "IP licensing"];
+  return (
+    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
+      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
+        <div className="flex min-w-0 flex-col justify-center">
+          <motion.div variants={FADE}><Eye>Before → After · Documentation to Proof</Eye></motion.div>
+          <Mask delay={0.1}>
+            <h2 className="mt-5 font-display font-light leading-[1.1] tracking-[-0.028em] text-[#0A0A0A]"
+              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+              One vertical per room — built for the evaluator who already works there.
+            </h2>
+          </Mask>
+          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
+            6 apps, 40+ comments — every competitor felt like another ChatGPT. The answer was market-specific showrooms, each one a working version of a real buyer&apos;s product.
+          </motion.p>
+          <motion.div variants={UP} className="mt-5 flex flex-wrap gap-2">
+            {verticals.map((v) => (
+              <span key={v} className="rounded-full bg-white px-3 py-1.5 font-sans text-[11.5px] font-medium text-[#3A3A3A] ring-1 ring-black/[0.07]">
+                {v}
+              </span>
+            ))}
+          </motion.div>
+        </div>
+        <motion.div variants={FADE} className="min-w-0">
+          <Vid src="/assets/ai-character/before.mp4"
+            caption="Before — static documentation + generic chat" maxH="max-h-[min(64vh,52rem)]" />
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §06 Decision 02 Title
+function SlideD2Title() {
+  const visibilities = [
+    { type: "Memory",         detail: "What the system recalls and updates about you, in the flow." },
+    { type: "Analysis",       detail: "What the system understood, shown while you keep talking." },
+    { type: "Implementation", detail: "The prompts, YAML, and constraints, exposed beside the demo." },
   ];
   return (
-    <section className="flex h-full items-center justify-center bg-[#F7F5F0] px-12 md:px-20">
+    <section className="flex h-full flex-col justify-center bg-[#F7F5F0] px-12 md:px-20">
       <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
-        <motion.div variants={FADE}><Eye>What makes AI experiences hard</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>Decision 02</Eye></motion.div>
         <Mask delay={0.1}>
-          <h2 className="mt-6 font-display font-light leading-[1.1] tracking-[-0.03em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.5rem)" }}>
-            My job was to turn invisible model behavior into visible product surfaces.
+          <h2 className="mt-5 font-display font-light leading-[1.1] tracking-[-0.03em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.7rem, 3.4vw, 2.7rem)" }}>
+            I designed each room to prove one capability in 60 seconds.
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-6 max-w-2xl ${BODY} text-[14.5px] text-[#5A5A5A]`}>
-          Users judge whether they understand what the system knows, why it responds, and how much control they still have. So I designed three forms of visibility:
+          Three model strengths crammed into one chat window — none landed. So I split them across rooms: one proof moment per room, legible in 60 seconds, no explainer text. My job was to turn invisible model behavior into visible surfaces.
         </motion.p>
         <motion.div variants={UP} className="mt-8 grid gap-4 md:grid-cols-3">
-          {items.map((it, i) => (
+          {visibilities.map((it, i) => (
             <motion.div key={it.type}
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.72, ease: E, delay: 0.24 + i * 0.1 }}
+              transition={{ duration: 0.72, ease: E, delay: 0.26 + i * 0.1 }}
               className="rounded-2xl bg-white px-6 py-6 ring-1 ring-black/[0.06]">
-              <p className={`${EYE} text-[#C8FF47]`}>{String(i + 1).padStart(2, "0")}</p>
-              <p className="mt-3 font-display text-[1rem] font-light text-[#0A0A0A]">{it.type}</p>
+              <p className={`${EYE} text-[#7e9a1f]`}>{String(i + 1).padStart(2, "0")}</p>
+              <p className="mt-3 font-display text-[1.05rem] font-light text-[#0A0A0A]">{it.type} visibility</p>
               <p className="mt-2.5 font-sans text-[13px] leading-[1.72] text-[#5A5A5A]">{it.detail}</p>
             </motion.div>
           ))}
@@ -457,400 +525,222 @@ function SlideVisibilities() {
   );
 }
 
-// §07 Decision 02 Title — 5 features overview
-function SlideDecision02Title() {
-  const features = [
-    { n: "01", scope: "Decision 02 / Romance",   name: "Romance suite",                  detail: "Long-term memory · 4 design moments" },
-    { n: "02", scope: "Decision 02 / Astrology", name: "Astro constellation profile",    detail: "Live memory updates" },
-    { n: "03", scope: "Decision 02 / Therapy",   name: "Therapy analysis rail",          detail: "Real-time visible reasoning" },
-    { n: "04", scope: "Decision 03 / Global",    name: "Guided scenario flow",           detail: "Inspire + Continue Response" },
-    { n: "05", scope: "Decision 03 / Global",    name: "Developer-facing code sidebar",  detail: "YAML + prompts beside the demo" },
+// §07 Decision 02 — capability map (Showroom → proof → in-product)
+function SlideD2Map() {
+  const rooms = [
+    { tab: "Romance",   cap: "Long-term memory",        feel: "Character recalls conversation specifics across sessions", src: "/assets/ai-character/ux-strategy-romance-proof.png",   accent: "#C8FF47" },
+    { tab: "Astrology", cap: "Real-time memory updates", feel: "Live constellation profile updates mid-conversation",      src: "/assets/ai-character/ux-strategy-astrology-proof.png", accent: "#7B6CF4" },
+    { tab: "Therapy",   cap: "Real-time analysis",       feel: "Expert panel surfaces conversation themes as you chat",    src: "/assets/ai-character/ux-strategy-therapy-proof.png",   accent: "#4ABFBF" },
   ];
   return (
-    <section className="flex h-full flex-col justify-center overflow-hidden bg-[#F7F5F0] px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
-        <motion.div variants={FADE}><Eye>Decision 02</Eye></motion.div>
+    <section className="flex h-full flex-col justify-center bg-white px-10 pb-6 pt-7 md:px-14">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-6xl">
+        <motion.div variants={FADE}><Eye>Showroom → One Proof → In-Product Behavior</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className="mt-5 font-display font-light leading-[1.1] tracking-[-0.03em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.8rem, 3.6vw, 2.8rem)" }}>
-            5 supporting features cut time-to-first-value from 60+ minutes to under 2 minutes.
+          <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+            Each room makes one form of cognition legible.
           </h2>
         </Mask>
-        <motion.p variants={UP} className={`mt-6 max-w-2xl ${BODY} text-[14.5px] text-[#5A5A5A]`}>
-          Three model strengths in one chat window — none landed. So I split them across rooms: Romance for memory callbacks, Astrology for live updates, Therapy for real-time analysis. One proof moment per room, plus two global features.
-        </motion.p>
-        <motion.div variants={UP} className="mt-7 overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.07]">
-          <div className="divide-y divide-black/[0.05]">
-            {features.map((f, i) => (
-              <motion.div key={f.n}
-                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, ease: E, delay: 0.28 + i * 0.07 }}
-                className="grid grid-cols-[2.5rem_minmax(0,1fr)_minmax(0,1.2fr)_minmax(0,1.4fr)] items-center gap-3 px-5 py-3 md:gap-5 md:px-7">
-                <span className="font-mono text-[12px] font-medium text-[#C8FF47]">{f.n}</span>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#9A9A9A]">{f.scope}</p>
-                <p className="font-display text-[14.5px] font-light tracking-tight text-[#0A0A0A]">{f.name}</p>
-                <p className="font-sans text-[12.5px] leading-snug text-[#6A6A6A]">{f.detail}</p>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
       </motion.div>
+      <div className="mx-auto mt-5 grid w-full max-w-6xl flex-1 grid-cols-3 gap-3 md:gap-4" style={{ maxHeight: "62vh" }}>
+        {rooms.map((r, i) => (
+          <motion.article key={r.tab}
+            className="flex min-h-0 flex-col overflow-hidden rounded-2xl bg-white ring-1 ring-black/[0.07]"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: E, delay: 0.2 + i * 0.1 }}>
+            <div className="relative min-h-0 flex-1 overflow-hidden bg-black/[0.05]">
+              <img src={r.src} alt={`${r.tab} proof`} className="h-full w-full object-cover object-left-top" loading="lazy" decoding="async" />
+            </div>
+            <div className="shrink-0 px-4 py-4">
+              <span className="rounded-md px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em]"
+                style={{ background: r.accent, color: r.accent === "#7B6CF4" ? "#fff" : "#0A0A0A" }}>{r.tab}</span>
+              <p className="mt-2.5 font-display text-[0.98rem] font-light leading-snug text-[#0A0A0A]">{r.cap}</p>
+              <p className="mt-2 font-sans text-[11.5px] leading-relaxed text-[#6A6A6A]">{r.feel}</p>
+            </div>
+          </motion.article>
+        ))}
+      </div>
     </section>
   );
 }
 
-// §23 How I Worked — AI workflow
-function SlideHowIWorked() {
-  const steps = [
-    { n: "01", label: "Strategy",         body: "Stress-test market positioning against competitor patterns and team capacity.", tool: "Claude · ChatGPT" },
-    { n: "02", label: "Visual direction", body: "40+ generated concepts → 3 character directions in 72 hours.",                  tool: "Wan · Kling · Dreamnia · SeeDance" },
-    { n: "03", label: "Motion",           body: "Looping video over 3D avatar — lighter, more alive, crash-free.",                tool: "After Effects · AI loops" },
-    { n: "04", label: "Code-ready",       body: "Components engineers merged with minimal revision — design to PR.",              tool: "Cursor · Claude Code · React" },
-  ];
+// ── Feature template: copy left, video right ──────────────────────────────────
+function FeatureSlide({
+  eye, title, body, badges, videoSrc, caption, dark = false, notShipped = false,
+}: {
+  eye: string; title: string; body: string;
+  badges: { k: string; v: string }[];
+  videoSrc: string; caption: string; dark?: boolean; notShipped?: boolean;
+}) {
+  const bg = dark ? "bg-white" : "bg-[#F7F5F0]";
   return (
-    <section className="flex h-full flex-col justify-center bg-white px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
-        <motion.div variants={FADE}><Eye>How I Worked</Eye></motion.div>
-        <Mask delay={0.1}>
-          <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.2rem)" }}>
-            AI changed how I shipped — not just how I made assets.
-          </h2>
-        </Mask>
-        <motion.p variants={UP} className={`mt-5 max-w-2xl ${BODY} text-[14.5px] text-[#5A5A5A]`}>
-          AI compressed the distance between strategy, visual direction, motion, and implementation — and let one designer deliver production-adjacent interfaces to engineers.
-        </motion.p>
-        <motion.div variants={UP} className="mt-9 grid gap-0 md:grid-cols-4">
-          {steps.map((s, i) => (
-            <motion.div key={s.n}
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, ease: E, delay: 0.2 + i * 0.1 }}
-              className="border-l border-black/[0.07] px-5 py-1 first:border-l-0 first:pl-0">
-              <p className={`${EYE} text-[#C8FF47]`}>{s.n}</p>
-              <p className="mt-3 font-sans text-[12px] font-semibold uppercase tracking-[0.1em] text-[#0A0A0A]">{s.label}</p>
-              <p className="mt-2 font-sans text-[13px] leading-[1.72] text-[#5A5A5A]">{s.body}</p>
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.14em] text-[#9A9A9A]">{s.tool}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §09 Heartbeat — video
-function SlideHeartbeat() {
-  return (
-    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
+    <section className={`flex h-full items-center px-10 md:px-14 ${bg}`}>
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 1 of 4 · Heartbeat Power</Eye></motion.div>
-          <Mask delay={0.1}>
-            <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              The inner-monologue reveal.
-            </h2>
-          </Mask>
-          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            A tap-to-reveal flip card surfaces the character&apos;s inner monologue — emotional privilege without breaking the surface illusion.
-          </motion.p>
-          <motion.div variants={UP} className="mt-5 grid grid-cols-2 gap-3">
-            <div className="rounded-xl bg-[#E8E8E8] px-4 py-4 opacity-55">
-              <span className={`${EYE} text-[#999]`}>Option A</span>
-              <p className="mt-2 font-sans text-[12px] leading-snug text-[#6A6A6A]">Tooltip on hover — passive</p>
-            </div>
-            <div className="rounded-xl bg-white px-4 py-4 ring-1 ring-[#C8FF47]/60">
-              <span className={`${EYE} text-[#C8FF47]`}>Option B ✓</span>
-              <p className="mt-2 font-sans text-[12px] leading-snug text-[#0A0A0A]">Flip card — user discovers</p>
-            </div>
+          <motion.div variants={FADE} className="flex items-center gap-2.5">
+            <Eye>{eye}</Eye>
+            {notShipped && (
+              <span className="rounded-full border border-black/[0.1] bg-black/[0.03] px-2 py-0.5 font-mono text-[8.5px] uppercase tracking-[0.12em] text-[#9A9A9A]">
+                Not shipped
+              </span>
+            )}
           </motion.div>
-          <motion.p variants={UP} className="mt-4 border-l-2 border-[#C8FF47] pl-3 font-sans text-[12px] italic leading-relaxed text-[#8A8A8A]">
-            Too much exposure breaks mystery. Too little loses depth. The flip card held both simultaneously.
-          </motion.p>
-        </div>
-        <motion.div variants={FADE} className="min-w-0">
-          <Vid src="/assets/ai-character/interactions/heartbeat/heartbeat-1.mp4" caption="Heartbeat — inner-monologue reveal on tap" maxH="max-h-[min(72vh,64rem)]" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §10 Heartbeat — model logic
-function SlideHeartbeatLogic() {
-  return (
-    <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
-      <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
-        <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 1 of 4 · Model Workflow</Eye></motion.div>
-          <Mask delay={0.08}>
-            <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
-              Real-time generation + character depth modeling
-            </h2>
-          </Mask>
-        </div>
-        <motion.div variants={FADE} className="mt-2 flex min-h-0 flex-1 basis-0 flex-col md:mt-3">
-          <WorkflowImg
-            src="/assets/ai-character/interaction/heartbeat_power_workflow.svg"
-            alt="Heartbeat Power — LLM workflow diagram" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §11 Alternate Universe — video
-function SlideAltUniv() {
-  return (
-    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
-      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 2 of 4 · Alternate Universe</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Memory-driven scene shift.
+              {title}
             </h2>
           </Mask>
-          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            Scenes triggered by personal history recontextualize the relationship — variable rewards from real shared context.
-          </motion.p>
+          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>{body}</motion.p>
           <motion.div variants={UP} className="mt-5 space-y-3">
-            <div className="border-l-2 border-[#C8FF47] pl-3">
-              <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Model capabilities</p>
-              <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Long-term memory + generative storytelling</p>
-            </div>
-            <div className="border-l-2 border-black/[0.1] pl-3">
-              <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Design principle</p>
-              <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Reward users with surprises rooted in what they actually shared</p>
-            </div>
-          </motion.div>
-        </div>
-        <motion.div variants={FADE} className="min-w-0">
-          <Vid src="/assets/ai-character/interactions/alternative%20universe/alternative%20universe-1.mp4"
-            caption="Alternate universe — memory-driven scene shift" maxH="max-h-[min(72vh,64rem)]" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §12 Alternate Universe — logic
-function SlideAltUnivLogic() {
-  return (
-    <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
-      <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
-        <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 2 of 4 · Model Workflow</Eye></motion.div>
-          <Mask delay={0.08}>
-            <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
-              From shared history to branching narrative
-            </h2>
-          </Mask>
-        </div>
-        <motion.div variants={FADE} className="mt-2 flex min-h-0 flex-1 basis-0 flex-col md:mt-3">
-          <WorkflowImg
-            src="/assets/ai-character/interaction/alternate_universe_events_workflow.svg"
-            alt="Alternate Universe Events — LLM workflow diagram" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §13 Story Unlock — video
-function SlideStoryUnlock() {
-  return (
-    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
-      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 3 of 4 · Story Unlock</Eye></motion.div>
-          <Mask delay={0.1}>
-            <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Backstory revealed through depth.
-            </h2>
-          </Mask>
-          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            Backstory milestones unlock through conversation depth — one knowledge base revealing progressively across two interaction layers.
-          </motion.p>
-          <motion.div variants={UP} className="mt-5 space-y-3">
-            <div className="border-l-2 border-[#C8FF47] pl-3">
-              <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Model capability</p>
-              <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Progressive memory building</p>
-            </div>
-            <div className="border-l-2 border-black/[0.1] pl-3">
-              <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Effect</p>
-              <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Conversation depth becomes intrinsically rewarding — users stay longer to unlock more</p>
-            </div>
-          </motion.div>
-        </div>
-        <motion.div variants={FADE} className="min-w-0">
-          <Vid src="/assets/ai-character/interactions/story%20unlocked/story%20unlocked-1.mp4"
-            caption="Story unlock — milestone progression in conversation" maxH="max-h-[min(72vh,64rem)]" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §14 Story Unlock — logic
-function SlideStoryUnlockLogic() {
-  return (
-    <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
-      <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
-        <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 3 of 4 · Model Workflow</Eye></motion.div>
-          <Mask delay={0.08}>
-            <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
-              Progressive context building
-            </h2>
-          </Mask>
-        </div>
-        <motion.div variants={FADE} className="mt-2 flex min-h-0 flex-1 basis-0 flex-col md:mt-3">
-          <WorkflowImg
-            src="/assets/ai-character/interaction/story_unlock_workflow.svg"
-            alt="Story Unlock — LLM workflow diagram" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §15 Moments Feed — video
-function SlideMoments() {
-  return (
-    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
-      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 4 of 4 · Moments Feed</Eye></motion.div>
-          <Mask delay={0.1}>
-            <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              The character lives between conversations.
-            </h2>
-          </Mask>
-          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            Instagram-style posts generated from interaction history sustain off-session presence. The biggest churn happened when users were away.
-          </motion.p>
-          <motion.div variants={UP} className="mt-5 space-y-3">
-            <div className="border-l-2 border-[#C8FF47] pl-3">
-              <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Model capability</p>
-              <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Generation from memory history</p>
-            </div>
-            <div className="border-l-2 border-black/[0.1] pl-3">
-              <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Business impact</p>
-              <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Reduces cold-start on re-entry — character maintains presence outside of sessions</p>
-            </div>
-          </motion.div>
-        </div>
-        <motion.div variants={FADE} className="min-w-0">
-          <Vid src="/assets/ai-character/interactions/moments/moments-1.mp4"
-            caption="Moments — posts generated from memory history" maxH="max-h-[min(72vh,64rem)]" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §16 Moments Feed — logic
-function SlideMomentsLogic() {
-  return (
-    <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
-      <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
-        <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Feature 01 / 5 · Romance Suite · 4 of 4 · Model Workflow</Eye></motion.div>
-          <Mask delay={0.08}>
-            <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
-              Memory to generated content
-            </h2>
-          </Mask>
-        </div>
-        <motion.div variants={FADE} className="mt-2 flex min-h-0 flex-1 basis-0 flex-col md:mt-3">
-          <WorkflowImg
-            src="/assets/ai-character/interaction/moments_feed_workflow.svg"
-            alt="Moments Feed — LLM workflow diagram" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §19 Inspire / Continue · Feature 04 / 5
-function SlideInspireContinue() {
-  return (
-    <section className="flex h-full items-center overflow-hidden bg-[#050507] px-10 md:px-14">
-      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye dark>Feature 04 / 5 · Guided Scenario Flow</Eye></motion.div>
-          <Mask delay={0.1}>
-            <h2 className="mt-5 font-display font-light leading-[1.1] tracking-[-0.028em] text-white"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Making the model legible before users know to look.
-            </h2>
-          </Mask>
-          <motion.div variants={UP} className="mt-7 space-y-4">
-            {[
-              { n: "01", t: "Inspiration Response", b: "Three context-grounded reply options — action, emotion, expression. Feels like gameplay, not messaging." },
-              { n: "02", t: "Continue Response",    b: "One tap extends the active storyline — revealing long-context reasoning without any prompting." },
-            ].map((f) => (
-              <div key={f.n} className="border-l-2 border-[#C8FF47] pl-3">
-                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-white/[0.94]">{f.t}</p>
-                <p className="mt-1.5 font-sans text-[13px] leading-relaxed text-white/[0.94]">{f.b}</p>
+            {badges.map((b, i) => (
+              <div key={b.k} className={`border-l-2 pl-3 ${i === 0 ? "border-[#C8FF47]" : "border-black/[0.1]"}`}>
+                <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">{b.k}</p>
+                <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">{b.v}</p>
               </div>
             ))}
           </motion.div>
         </div>
         <motion.div variants={FADE} className="min-w-0">
-          <DarkVid src="/assets/ai-character/conversation engine.mp4"
-            caption="Option generation and narrative continuation" maxH="max-h-[min(72vh,64rem)]" />
+          <Vid src={videoSrc} caption={caption} maxH="max-h-[min(72vh,64rem)]" />
         </motion.div>
       </motion.div>
     </section>
   );
 }
 
-// §16 Astro Profile · Feature 02 / 5
-function SlideAstroProfile() {
+// ── Feature template: model-workflow diagram full-bleed ───────────────────────
+function LogicSlide({ eye, title, src, alt }: { eye: string; title: string; src: string; alt: string }) {
   return (
-    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
-      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Feature 02 / 5 · Astrology · Live Memory Updates</Eye></motion.div>
-          <Mask delay={0.1}>
-            <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Every word updates what it knows about you.
+    <section className="flex h-full min-h-0 flex-col bg-white px-10 py-3 md:px-14 md:py-4">
+      <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
+        <div className="shrink-0">
+          <motion.div variants={FADE}><Eye>{eye}</Eye></motion.div>
+          <Mask delay={0.08}>
+            <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
+              style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
+              {title}
             </h2>
           </Mask>
-          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            A personal constellation file updates during conversation — memory becomes transparent and inspectable. Users see the model assembling them in real time.
-          </motion.p>
-          <motion.div variants={UP} className="mt-5 border-l-2 border-[#7B6CF4] pl-3">
-            <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Design focus</p>
-            <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">One persistent surface that mirrors live memory writes — readable at a glance without opening secondary panels</p>
-          </motion.div>
         </div>
-        <motion.div variants={FADE} className="min-w-0">
-          <Vid src="/assets/ai-character/interactions/other%20showrooms/astro%20profile/astro%20profile-1.mp4"
-            caption="Astrology — constellation profile and live memory file" maxH="max-h-[min(72vh,64rem)]" />
+        <motion.div variants={FADE} className="mt-2 flex min-h-0 flex-1 basis-0 flex-col md:mt-3">
+          <WorkflowImg src={src} alt={alt} />
         </motion.div>
       </motion.div>
     </section>
   );
 }
 
-// §17 Therapy Analysis · Feature 03 / 5
+// §08 Heartbeat
+function SlideHeartbeat() {
+  return (
+    <FeatureSlide
+      eye="Romance · 1 of 4 · Heartbeat Power"
+      title="The inner-monologue reveal."
+      body="A tap-to-reveal flip card surfaces the character's inner monologue — emotional privilege, without breaking the surface illusion."
+      badges={[
+        { k: "Model capability", v: "Real-time generation + character depth modeling" },
+        { k: "Design tension",   v: "Too much exposure breaks the mystery; too little loses depth. The flip card holds both." },
+      ]}
+      videoSrc="/assets/ai-character/interactions/heartbeat/heartbeat-1.mp4"
+      caption="Heartbeat — inner-monologue reveal on tap"
+    />
+  );
+}
+function SlideHeartbeatLogic() {
+  return <LogicSlide eye="Heartbeat Power · Model Workflow" title="Real-time generation + character depth modeling"
+    src="/assets/ai-character/interaction/heartbeat_power_workflow.svg" alt="Heartbeat Power — LLM workflow diagram" />;
+}
+
+// §10 Story Unlock
+function SlideStoryUnlock() {
+  return (
+    <FeatureSlide
+      eye="Romance · 2 of 4 · Story Unlock"
+      title="Backstory revealed through depth."
+      body="Backstory milestones unlock through conversation depth — one knowledge base revealing progressively across two interaction layers."
+      badges={[
+        { k: "Model capability", v: "Progressive memory building" },
+        { k: "Effect",           v: "Conversation depth becomes intrinsically rewarding — users stay longer to unlock more." },
+      ]}
+      videoSrc="/assets/ai-character/interactions/story%20unlocked/story%20unlocked-1.mp4"
+      caption="Story unlock — milestone progression in conversation"
+    />
+  );
+}
+function SlideStoryUnlockLogic() {
+  return <LogicSlide eye="Story Unlock · Model Workflow" title="Progressive context building"
+    src="/assets/ai-character/interaction/story_unlock_workflow.svg" alt="Story Unlock — LLM workflow diagram" />;
+}
+
+// §12 Moments Feed
+function SlideMoments() {
+  return (
+    <FeatureSlide
+      eye="Romance · 3 of 4 · Moments Feed"
+      title="The character lives between conversations."
+      body="Instagram-style posts generated from interaction history sustain off-session presence — the character keeps existing between conversations."
+      badges={[
+        { k: "Model capability", v: "Generation from memory history" },
+        { k: "Business impact",  v: "Reduces cold-start on re-entry — presence is maintained outside of sessions." },
+      ]}
+      videoSrc="/assets/ai-character/interactions/moments/moments-1.mp4"
+      caption="Moments — posts generated from memory history"
+    />
+  );
+}
+function SlideMomentsLogic() {
+  return <LogicSlide eye="Moments Feed · Model Workflow" title="Memory to generated content"
+    src="/assets/ai-character/interaction/moments_feed_workflow.svg" alt="Moments Feed — LLM workflow diagram" />;
+}
+
+// §14 Alternate Universe (not shipped)
+function SlideAltUniv() {
+  return (
+    <FeatureSlide
+      eye="Romance · 4 of 4 · Alternate Universe"
+      title="A scene only your history could trigger."
+      body="Scenes triggered by personal history recontextualize the relationship — variable rewards drawn from real shared context."
+      notShipped
+      badges={[
+        { k: "Model capability", v: "Long-term memory + generative storytelling" },
+        { k: "Why not shipped",  v: "Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped." },
+      ]}
+      videoSrc="/assets/ai-character/interactions/alternative%20universe/alternative%20universe-1.mp4"
+      caption="Alternate universe — memory-driven scene shift"
+    />
+  );
+}
+function SlideAltUnivLogic() {
+  return <LogicSlide eye="Alternate Universe · Model Workflow" title="From shared history to branching narrative"
+    src="/assets/ai-character/interaction/alternate_universe_events_workflow.svg" alt="Alternate Universe Events — LLM workflow diagram" />;
+}
+
+// §16 Astro Profile
+function SlideAstroProfile() {
+  return (
+    <FeatureSlide
+      eye="Astrology · Real-Time Memory Updates"
+      title="Every word updates what it knows about you."
+      body="A personal constellation file updates during conversation — memory becomes transparent and inspectable. Users watch the model assembling them in real time."
+      badges={[
+        { k: "Model capability", v: "Real-time memory updates" },
+        { k: "Design focus",     v: "One persistent surface that mirrors live memory writes — readable at a glance, no secondary panels." },
+      ]}
+      videoSrc="/assets/ai-character/interactions/other%20showrooms/astro%20profile/astro%20profile-1.mp4"
+      caption="Astrology — constellation profile and live memory file"
+    />
+  );
+}
+
+// §17 Therapy Analysis
 function SlideTherapyAnalysis() {
   return (
     <section className="flex h-full items-center bg-white px-10 md:px-14">
       <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Feature 03 / 5 · Therapy · Real-Time Analysis</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>Therapy · Real-Time Analysis</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
@@ -858,15 +748,15 @@ function SlideTherapyAnalysis() {
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            A live analysis rail surfaces conversation themes the model parsed — visible reasoning alongside conversation, not just visible reply.
+            A live analysis rail surfaces the conversation themes the model parsed — visible reasoning alongside the conversation, not just a visible reply.
           </motion.p>
           <motion.div variants={UP} className="mt-5 border-l-2 border-[#4ABFBF] pl-3">
             <p className="font-sans text-[10.5px] font-semibold uppercase tracking-[0.12em] text-[#0A0A0A]">Design focus</p>
-            <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Parallel transcript + analysis rail so legibility stays high — no static screenshots required</p>
+            <p className="mt-1 font-sans text-[13px] text-[#5A5A5A]">Parallel transcript + analysis rail so legibility stays high — no static screenshots required.</p>
           </motion.div>
           <motion.div variants={UP} className="mt-4 rounded-lg border border-black/[0.08] bg-[#F7F5F0] px-3.5 py-2.5">
             <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#9A9A9A]">Emotional boundary</p>
-            <p className="mt-1.5 font-sans text-[11.5px] leading-snug text-[#6A6A6A]">Therapy room is an analysis-visibility demo. The rail surfaces themes the model parsed — no clinical claims are implied.</p>
+            <p className="mt-1.5 font-sans text-[11.5px] leading-snug text-[#6A6A6A]">The therapy room is an analysis-visibility demo. The rail surfaces themes the model parsed — no clinical claims are implied.</p>
           </motion.div>
         </div>
         <motion.div variants={FADE} className="min-w-0">
@@ -878,28 +768,209 @@ function SlideTherapyAnalysis() {
   );
 }
 
-// §20 Showrooms overview (2×2)
-function SlideShowrooms() {
-  const rooms = [
-    { label: "Romance",    cap: "Long-term memory",         src: "/assets/ai-character/new-cover.mp4",   color: "#C8FF47", fg: "#0A0A0A" },
-    { label: "Astrology",  cap: "Real-time memory updates", src: "/assets/ai-character/taobaibai-1.mp4", color: "#7B6CF4", fg: "#fff"    },
-    { label: "Therapy",    cap: "Real-time analysis",       src: "/assets/ai-character/therapy-1.mp4",   color: "#4ABFBF", fg: "#0A0A0A" },
-    { label: "Multi-char", cap: "Multi-agent coordination", src: "/assets/ai-character/pre-1.mp4",       color: "#FF9B6A", fg: "#0A0A0A" },
-  ];
+// §18 Decision 03 Title
+function SlideD3Title({ reduced }: { reduced: boolean | null }) {
   return (
-    <section className="flex h-full flex-col bg-[#050507] px-8 pb-6 pt-8 md:px-12">
-      <motion.div variants={STG} initial="hidden" animate="show">
-        <div>
-          <motion.div variants={FADE}><Eye dark>4 Showrooms · 4 Proof Moments · 1 Template</Eye></motion.div>
-          <Mask delay={0.08}>
-            <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-white"
-              style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
-              Each room turns one model capability into a guided workflow.
+    <section className="relative flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
+      <LivingAura reduced={reduced} />
+      <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 max-w-4xl">
+        <motion.div variants={FADE}><Eye dark>Decision 03</Eye></motion.div>
+        <Mask delay={0.1}>
+          <h2 className="mt-6 font-display font-light leading-[1.08] tracking-[-0.03em] text-white"
+            style={{ fontSize: "clamp(1.8rem, 3.6vw, 2.9rem)" }}>
+            I made demos emotional for users and inspectable for builders.
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-7 max-w-2xl ${BODY} text-[15px] text-white/[0.92]`}>
+          Inspiration and Continue Response guide users to the wow moment. A slide-out drawer keeps YAML and prompts right next to the live demo.
+        </motion.p>
+        <motion.p variants={UP} className="mt-5 font-display text-[16px] font-light italic leading-relaxed text-[#C8FF47]/85">
+          The question shifts from &ldquo;can your model do this&rdquo; to &ldquo;how fast can we ship.&rdquo;
+        </motion.p>
+      </motion.div>
+    </section>
+  );
+}
+
+// §19 Inspire / Continue
+function SlideInspireContinue({ reduced }: { reduced: boolean | null }) {
+  return (
+    <section className="relative flex h-full items-center overflow-hidden bg-[#050507] px-10 md:px-14">
+      <LivingAura reduced={reduced} />
+      <motion.div className={`relative z-10 ${LR_DECK}`} variants={STG} initial="hidden" animate="show">
+        <div className="flex min-w-0 flex-col justify-center">
+          <motion.div variants={FADE}><Eye dark>Two nudges toward the wow moment</Eye></motion.div>
+          <Mask delay={0.1}>
+            <h2 className="mt-5 font-display font-light leading-[1.1] tracking-[-0.028em] text-white"
+              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+              Making the model legible before users know to look.
             </h2>
           </Mask>
+          <motion.div variants={UP} className="mt-7 space-y-4">
+            {[
+              { t: "Inspiration Response", b: "Three reply options — action, emotion, expression — guide without breaking flow. Feels like gameplay, not messaging." },
+              { t: "Continue Response",    b: "One tap extends the story from context — long-context reasoning, no effort required." },
+            ].map((f) => (
+              <div key={f.t} className="border-l-2 border-[#C8FF47] pl-3">
+                <p className="font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-white/[0.94]">{f.t}</p>
+                <p className="mt-1.5 font-sans text-[13px] leading-relaxed text-white/[0.94]">{f.b}</p>
+              </div>
+            ))}
+          </motion.div>
         </div>
+        <motion.div variants={FADE} className="min-w-0">
+          <DarkVid src="/assets/ai-character/conversation engine.mp4"
+            caption="Tap a reply option, or continue the story" maxH="max-h-[min(72vh,64rem)]" />
+        </motion.div>
       </motion.div>
-      <div className="mt-5 grid flex-1 grid-cols-2 gap-3 min-h-0" style={{ maxHeight: "72vh" }}>
+    </section>
+  );
+}
+
+// §20 Code drawer
+function SlideCodeDrawer() {
+  return (
+    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
+      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
+        <div className="flex min-w-0 flex-col justify-center">
+          <motion.div variants={FADE}><Eye>Code Drawer, Not Console</Eye></motion.div>
+          <Mask delay={0.1}>
+            <h2 className="mt-5 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
+              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+              YAML, prompts, and constraints slide open beside the live demo.
+            </h2>
+          </Mask>
+          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
+            Evaluators inspect the implementation in place — no context switch — then clone the template as a reusable starting point for their own product. The room ships as code.
+          </motion.p>
+          <motion.div variants={UP} className="mt-5 space-y-2.5">
+            <div className="rounded-xl bg-[#E8E8E8] px-4 py-3.5">
+              <span className={`${EYE} text-[#999]`}>Rejected</span>
+              <p className="mt-1.5 font-sans text-[12px] text-[#6A6A6A]">× Separate developer console — breaks demo flow, requires a tab switch.</p>
+            </div>
+            <div className="rounded-xl bg-white px-4 py-3.5 ring-1 ring-[#C8FF47]/60">
+              <span className={`${EYE} text-[#7e9a1f]`}>Chosen ✓</span>
+              <p className="mt-1.5 font-sans text-[12px] text-[#0A0A0A]">Slide-out drawer beside the live demo — one coherent demo-to-review flow.</p>
+            </div>
+          </motion.div>
+        </div>
+        <motion.div variants={FADE} className="min-w-0">
+          <Vid src="/assets/ai-character/code/code%20tool.mp4"
+            caption="Code drawer — spec and prompt context alongside the demo" maxH="max-h-[min(72vh,64rem)]" />
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §21 How I Worked — 4-stage AI matrix
+const WORK_STAGES = [
+  { n: "01", phase: "Research",                bg: "#EEEDFE", num: "#534AB7", name: "#3C3489", tools: "Notion · Memo · ChatGPT · Claude", body: "Synthesized scattered research — 6 apps, 40+ comments — into strategy patterns in one session." },
+  { n: "02", phase: "UX Strategy",             bg: "#E1F5EE", num: "#0F6E56", name: "#085041", tools: "Qwen · ChatGPT · Figma",           body: "Stress-tested competing design decisions as structured arguments. Resolved debates before stakeholder meetings." },
+  { n: "03", phase: "Visual Identity & UI",    bg: "#FAECE7", num: "#993C1D", name: "#712B13", tools: "Figma · MasterGo · Dreamnia · Wan · Kling", body: "Generated character art, scene backgrounds, and motion loops — work that would have needed a 3D production team." },
+  { n: "04", phase: "Motion & Production Code", bg: "#FAEEDA", num: "#854F0B", name: "#633806", tools: "CodePen · Cursor · Claude Code",   body: "Shipped motion, state logic, and live interaction designs — without a dedicated frontend engineer." },
+] as const;
+
+function SlideHowIWorked() {
+  return (
+    <section className="flex h-full flex-col justify-center bg-white px-10 md:px-14">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-6xl">
+        <motion.div variants={FADE}><Eye>How I Worked</Eye></motion.div>
+        <Mask delay={0.1}>
+          <h2 className="mt-4 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.2rem)" }}>
+            AI changed how I shipped — not just how I made assets.
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-4 max-w-3xl ${BODY} text-[14px] text-[#5A5A5A]`}>
+          AI compressed the distance between strategy, visual direction, motion, and implementation — letting one designer deliver production-adjacent interfaces engineers could merge with minimal revision.
+        </motion.p>
+        <motion.div variants={UP} className="mt-8 grid gap-3 md:grid-cols-4">
+          {WORK_STAGES.map((s, i) => (
+            <motion.div key={s.n} className="flex flex-col overflow-hidden rounded-xl ring-1 ring-black/[0.06]"
+              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, ease: E, delay: 0.22 + i * 0.1 }}>
+              <div className="flex items-center gap-2.5 px-4 py-3" style={{ background: s.bg }}>
+                <span className="font-mono text-[11px]" style={{ color: s.num }}>{s.n}</span>
+                <span className="text-[13px] font-medium leading-tight" style={{ color: s.name }}>{s.phase}</span>
+              </div>
+              <div className="flex flex-1 flex-col bg-white px-4 py-4">
+                <p className="font-mono text-[9.5px] uppercase tracking-[0.12em] text-[#A0A0A0]">Tools</p>
+                <p className="mt-1.5 font-sans text-[12px] leading-snug text-[#0A0A0A]">{s.tools}</p>
+                <p className="mt-4 font-mono text-[9.5px] uppercase tracking-[0.12em] text-[#A0A0A0]">Output</p>
+                <p className="mt-1.5 font-sans text-[12px] leading-[1.6] text-[#5A5A5A]">{s.body}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §22 AI Tools — process glimpse
+function SlideAITools() {
+  return (
+    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
+      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
+        <div className="flex min-w-0 flex-col justify-center">
+          <motion.div variants={FADE}><Eye>A Glimpse Into the Process</Eye></motion.div>
+          <Mask delay={0.1}>
+            <h2 className="mt-5 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
+              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+              Four weeks.<br />Research to production.
+            </h2>
+          </Mask>
+          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
+            Inspired by <em>Love and Deepspace</em>. Visual identity built with Wan, Kling, Dreamnia, and SeeDance. Interactions built with Cursor and Claude Code.
+          </motion.p>
+          <motion.div variants={UP} className="mt-5 border-l-2 border-[#C8FF47] pl-3">
+            <p className="font-sans text-[12px] italic leading-relaxed text-[#7A7A7A]">
+              The 3D avatar crashed mid-interaction → replaced with an AI-looping video. Small motions — a blink, a nod — felt more alive than complex rigged animation.
+            </p>
+          </motion.div>
+        </div>
+        <motion.div variants={UP} className="grid min-w-0 grid-cols-2 gap-3">
+          {[
+            { src: "/assets/ai-character/design.jpg",             label: "Character direction exploration" },
+            { src: "/assets/ai-character/uivisual.jpg",           label: "UI visual system" },
+            { src: "/assets/ai-character/characterdirection.jpg", label: "Character directions" },
+            { src: "/assets/ai-character/innovation.jpg",         label: "Scene, music & motion concept" },
+          ].map(({ src, label }, i) => (
+            <motion.div key={src} className="group aspect-video overflow-hidden rounded-xl ring-1 ring-black/[0.07]"
+              initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.6, ease: E, delay: 0.3 + i * 0.08 }}>
+              <img src={src} alt={label} loading="lazy"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.05]" />
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §23 Showrooms 2×2
+function SlideShowrooms({ reduced }: { reduced: boolean | null }) {
+  const rooms = [
+    { label: "Romance",   cap: "Long-term memory",         src: "/assets/ai-character/new-cover.mp4",   color: "#C8FF47", fg: "#0A0A0A" },
+    { label: "Astrology", cap: "Real-time memory updates", src: "/assets/ai-character/taobaibai-1.mp4", color: "#7B6CF4", fg: "#fff"    },
+    { label: "Therapy",   cap: "Real-time analysis",       src: "/assets/ai-character/therapy-1.mp4",   color: "#4ABFBF", fg: "#0A0A0A" },
+    { label: "Character", cap: "Multi-agent coordination", src: "/assets/ai-character/pre-1.mp4",       color: "#FF9B6A", fg: "#0A0A0A" },
+  ];
+  return (
+    <section className="relative flex h-full flex-col overflow-hidden bg-[#050507] px-8 pb-6 pt-8 md:px-12">
+      <LivingAura reduced={reduced} />
+      <motion.div className="relative z-10" variants={STG} initial="hidden" animate="show">
+        <motion.div variants={FADE}><Eye dark>Product Showcase · 4 Showrooms · 1 Template</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className="mt-3 font-display font-light tracking-[-0.026em] text-white"
+            style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
+            Each room turns one model capability into a guided workflow.
+          </h2>
+        </Mask>
+      </motion.div>
+      <div className="relative z-10 mt-5 grid min-h-0 flex-1 grid-cols-2 gap-3" style={{ maxHeight: "72vh" }}>
         {rooms.map((r, i) => (
           <motion.div key={r.label} className="relative overflow-hidden rounded-2xl bg-[#0A0A0A]"
             initial={{ opacity: 0, y: 22 }} animate={{ opacity: 1, y: 0 }}
@@ -920,167 +991,12 @@ function SlideShowrooms() {
   );
 }
 
-// §20 Code Sidebar · Feature 05 / 5
-function SlideCodeSidebar() {
-  return (
-    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
-      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>Feature 05 / 5 · Developer-Facing Live Code Sidebar</Eye></motion.div>
-          <Mask delay={0.1}>
-            <h2 className="mt-5 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              YAML, prompts, and constraints slide open beside the live demo.
-            </h2>
-          </Mask>
-          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            Evaluators inspect implementation without switching context, then clone the template as a reusable starting point. The room ships as code.
-          </motion.p>
-          <motion.div variants={UP} className="mt-5 space-y-2.5">
-            <div className="rounded-xl bg-[#E8E8E8] px-4 py-3.5">
-              <span className={`${EYE} text-[#999]`}>Rejected</span>
-              <p className="mt-1.5 font-sans text-[12px] text-[#6A6A6A]">× Separate developer console — breaks demo flow, requires tab switch</p>
-            </div>
-            <div className="rounded-xl bg-white px-4 py-3.5 ring-1 ring-[#C8FF47]/60">
-              <span className={`${EYE} text-[#C8FF47]`}>Chosen ✓</span>
-              <p className="mt-1.5 font-sans text-[12px] text-[#0A0A0A]">Slide-out drawer beside live demo — coherent demo-to-review flow</p>
-            </div>
-          </motion.div>
-        </div>
-        <motion.div variants={FADE} className="min-w-0">
-          <Vid src="/assets/ai-character/code/code%20tool.mp4"
-            caption="Code drawer — spec and prompt context alongside the demo" maxH="max-h-[min(72vh,64rem)]" />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §18 Decision 03 Title
-function SlideDecision03Title() {
-  return (
-    <section className="flex h-full items-center overflow-hidden bg-[#050507] px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="max-w-4xl">
-        <motion.div variants={FADE}><Eye dark>Decision 03</Eye></motion.div>
-        <Mask delay={0.1}>
-          <h2 className="mt-6 font-display font-light leading-[1.08] tracking-[-0.03em] text-white"
-            style={{ fontSize: "clamp(1.7rem, 3.4vw, 2.8rem)" }}>
-            The remaining 2 features run across every room — emotional for users, inspectable for builders.
-          </h2>
-        </Mask>
-        <motion.p variants={UP} className={`mt-7 max-w-2xl ${BODY} text-[15px] text-white/[0.92]`}>
-          Inspiration and Continue Response guide users to the wow moment. A slide-out drawer keeps YAML and prompts next to the live demo.
-        </motion.p>
-        <motion.p variants={UP} className="mt-5 font-display text-[16px] font-light italic leading-relaxed text-[#C8FF47]/85">
-          The question shifts from &ldquo;can your model do this&rdquo; to &ldquo;how fast can we ship.&rdquo;
-        </motion.p>
-      </motion.div>
-    </section>
-  );
-}
-
-// §24 AI Tools · A glimpse into the process
-function SlideAITools() {
-  return (
-    <section className="flex h-full items-center bg-[#F7F5F0] px-10 md:px-14">
-      <motion.div className={LR_DECK} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center">
-          <motion.div variants={FADE}><Eye>A Glimpse Into the Process</Eye></motion.div>
-          <Mask delay={0.1}>
-            <h2 className="mt-5 font-display font-light tracking-[-0.026em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Four weeks.<br />Research to production.
-            </h2>
-          </Mask>
-          <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            Inspired by <em>Love and Deepspace</em>. Visual identity built with Wan, Kling, Dreamnia, SeeDance. Interactions built with Cursor and Claude Code. Direction validated with ChatGPT.
-          </motion.p>
-          <motion.div variants={UP} className="mt-5 border-l-2 border-[#C8FF47] pl-3">
-            <p className="font-sans text-[12px] italic leading-relaxed text-[#7A7A7A]">
-              3D avatar crashed mid-interaction → replaced with AI-looping video. Small motions (blink, nod) felt more alive than complex rigged animation.
-            </p>
-          </motion.div>
-        </div>
-        <motion.div variants={UP} className="grid min-w-0 grid-cols-2 gap-3">
-          {[
-            { src: "/assets/ai-character/design.jpg",             label: "Character direction exploration" },
-            { src: "/assets/ai-character/uivisual.jpg",           label: "UI visual system" },
-            { src: "/assets/ai-character/characterdirection.jpg", label: "Character directions" },
-            { src: "/assets/ai-character/innovation.jpg",         label: "AI-generated visual" },
-          ].map(({ src, label }) => (
-            <div key={src} className="group aspect-video overflow-hidden rounded-xl ring-1 ring-black/[0.07]">
-              <img src={src} alt={label} loading="lazy"
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]" />
-            </div>
-          ))}
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §24 Backend Redesign
-function SlideBackend() {
-  return (
-    <section className="flex h-full flex-col justify-center bg-white px-10 md:px-14">
-      <motion.div variants={STG} initial="hidden" animate="show" className="w-full max-w-5xl mx-auto">
-        <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Backend Redesign · B2B Console</Eye></motion.div>
-          <Mask delay={0.08}>
-            <h2 className="mt-4 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Four B2B pages. One principle: easy to try, find, edit, track.
-            </h2>
-          </Mask>
-          <motion.p variants={UP} className={`mt-3 ${BODY} text-[13.5px] text-[#5A5A5A]`}>
-            Mapped missing scope to P0–P3 and aligned timelines in 24 hours. Redesigned Knowledge Base, Extended Capability, API Center, and homepage.
-          </motion.p>
-        </div>
-        <motion.div variants={UP} className="mt-6 grid grid-cols-3 gap-3">
-          {[
-            { src: "/assets/ai-character/updateddesign1.jpg", label: "Knowledge Base redesign",           tag: "P0" },
-            { src: "/assets/ai-character/updateddesign2.jpg", label: "Extended Capability redesign",      tag: "P1" },
-            { src: "/assets/ai-character/updatedesign3.jpg",  label: "Knowledge Base detail redesign",    tag: "P0" },
-          ].map(({ src, label, tag }) => (
-            <div key={src} className="group overflow-hidden rounded-xl ring-1 ring-black/[0.07]">
-              <div className="relative overflow-hidden bg-black/[0.02]">
-                <img src={src} alt={label} loading="lazy"
-                  className="h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
-              </div>
-              <div className="border-t border-black/[0.06] bg-[#F7F5F0] px-3 py-2 flex items-center gap-2">
-                <span className="rounded px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] bg-[#0A0A0A] text-[#C8FF47]">{tag}</span>
-                <span className="font-sans text-[11px] text-[#5A5A5A]">{label}</span>
-              </div>
-            </div>
-          ))}
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §25–27 Live Prototypes (one showroom per slide)
+// §24–26 Live Prototypes
 const LIVE_PROTOTYPE_PAGES = {
-  "prototype-romance": {
-    i: 1,
-    title: "Romance",
-    src: "/work/ai-character/prototype?muted=1",
-    caption: "Long-term memory and emotional pacing in one flow",
-  },
-  "prototype-astro": {
-    i: 2,
-    title: "Astrology",
-    src: "/work/ai-character/prototype-astro?embed=1",
-    caption: "Live constellation-file updates while chatting",
-  },
-  "prototype-therapy": {
-    i: 3,
-    title: "Therapy",
-    src: "/work/ai-character/prototype-psych?embed=1",
-    caption: "Visible analysis layer beside the conversation",
-  },
+  "prototype-romance": { i: 1, title: "Romance",   src: "/work/ai-character/prototype?muted=1",        caption: "Long-term memory and emotional pacing in one flow" },
+  "prototype-astro":   { i: 2, title: "Astrology", src: "/work/ai-character/prototype-astro?embed=1",  caption: "Live constellation-file updates while chatting" },
+  "prototype-therapy": { i: 3, title: "Therapy",   src: "/work/ai-character/prototype-psych?embed=1",  caption: "Visible analysis layer beside the conversation" },
 } as const;
-
 type LivePrototypeSlideId = keyof typeof LIVE_PROTOTYPE_PAGES;
 
 function SlideLivePrototype({ id }: { id: LivePrototypeSlideId }) {
@@ -1092,19 +1008,12 @@ function SlideLivePrototype({ id }: { id: LivePrototypeSlideId }) {
       </div>
       <div className="flex min-h-0 flex-1 flex-col bg-[#F7F5F0] p-2 md:p-3">
         <div className="flex min-h-0 flex-1 flex-col overflow-hidden rounded-lg bg-white ring-1 ring-black/[0.07]">
-          <iframe
-            src={p.src}
-            title={`${p.title} prototype`}
-            className="min-h-0 w-full flex-1 border-0"
-            loading="lazy"
-          />
+          <iframe src={p.src} title={`${p.title} prototype`} className="min-h-0 w-full flex-1 border-0" loading="lazy" />
         </div>
       </div>
       <div className="shrink-0 border-t border-black/[0.05] px-6 py-2 md:px-10">
         <p className="font-sans text-[10px] leading-relaxed text-[#6A6A6A] md:text-[11px]">
-          <span className="font-medium text-[#0A0A0A]/80">{p.title}</span>
-          {" — "}
-          {p.caption}
+          <span className="font-medium text-[#0A0A0A]/80">{p.title}</span>{" — "}{p.caption}
         </p>
         <p className={`mt-1.5 ${EYE} text-[#B0B0B0]`}>
           Click inside to interact · click outside the deck to resume keyboard navigation
@@ -1114,9 +1023,88 @@ function SlideLivePrototype({ id }: { id: LivePrototypeSlideId }) {
   );
 }
 
-// §26 Metrics — staged AI-style reveal
+// §27 Additional Contribution — SaaS console refresh
+function SlideBackend() {
+  return (
+    <section className="flex h-full flex-col justify-center bg-white px-10 md:px-14">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <div className="shrink-0">
+          <motion.div variants={FADE}><Eye>Additional Contribution · B2B Console</Eye></motion.div>
+          <Mask delay={0.08}>
+            <h2 className="mt-4 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
+              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+              Full refresh of the Qwen Character SaaS console.
+            </h2>
+          </Mask>
+          <motion.p variants={UP} className={`mt-3 max-w-3xl ${BODY} text-[13.5px] text-[#5A5A5A]`}>
+            An end-to-end update spanning API surfaces, Studio — Applications, Workflows, Knowledge Base, Characters — and the nested flows beneath: empty and error states, plus analytics views for invocation metrics and call volume.
+          </motion.p>
+        </div>
+        <motion.div variants={UP} className="mt-6 grid grid-cols-3 gap-3">
+          {[
+            { src: "/assets/ai-character/updateddesign1.jpg", label: "Studio surfaces",     tag: "Studio" },
+            { src: "/assets/ai-character/updateddesign2.jpg", label: "Nested flows",        tag: "Flows" },
+            { src: "/assets/ai-character/updatedesign3.jpg",  label: "Knowledge Base",      tag: "KB" },
+          ].map(({ src, label, tag }, i) => (
+            <motion.div key={src} className="group overflow-hidden rounded-xl ring-1 ring-black/[0.07]"
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: E, delay: 0.3 + i * 0.09 }}>
+              <div className="relative overflow-hidden bg-black/[0.02]">
+                <img src={src} alt={label} loading="lazy"
+                  className="h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
+              </div>
+              <div className="flex items-center gap-2 border-t border-black/[0.06] bg-[#F7F5F0] px-3 py-2">
+                <span className="rounded bg-[#0A0A0A] px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] text-[#C8FF47]">{tag}</span>
+                <span className="font-sans text-[11px] text-[#5A5A5A]">{label}</span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §28 Spark Design — adoption
+function SlideSparkDesign() {
+  return (
+    <section className="flex h-full flex-col justify-center bg-white px-10 md:px-14">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>Adoption · Spark Design</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className="mt-4 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+            The showroom system became the published B2B design framework.
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[14px] text-[#5A5A5A]`}>
+          Components, interactions, and motion patterns built for the showrooms became the Spark Design templates used by external Agentscope partners — these decisions outlived the showroom releases.
+        </motion.p>
+        <motion.div variants={UP} className="mt-6 overflow-hidden rounded-2xl bg-[#F7F5F0] ring-1 ring-black/[0.06]">
+          <div className="flex items-center justify-between gap-3 border-b border-black/[0.06] bg-white px-4 py-3 md:px-5">
+            <div>
+              <p className={`${EYE} text-[#9A9A9A]`}>Adoption</p>
+              <p className="mt-1.5 font-sans text-[12.5px] font-medium text-[#0A0A0A]">Spark Design templates — Agentscope</p>
+            </div>
+            <a href="https://sparkdesign.agentscope.io/#/templates" target="_blank" rel="noopener noreferrer"
+              className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6A6A6A] underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-[#0A0A0A]">
+              Open ↗
+            </a>
+          </div>
+          <iframe title="Spark Design templates" src="https://sparkdesign.agentscope.io/#/templates" loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="h-[min(56vh,540px)] min-h-[320px] w-full border-0 bg-white" />
+          <p className="border-t border-black/[0.05] bg-white px-4 py-2 font-sans text-[10.5px] leading-relaxed text-[#9A9A9A] md:px-5">
+            If the frame is empty, the host blocks embedding — open in browser.
+          </p>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §29 Metrics — staged AI-style reveal
 function DataStreamBg() {
-  // Horizontal "thinking" lines — small dots scan left → right at varied speeds.
   const lines = [
     { top: "8%",  width: "32%", dur: 5.4, delay: 0.0, opacity: 0.18 },
     { top: "19%", width: "26%", dur: 6.2, delay: 1.1, opacity: 0.14 },
@@ -1129,14 +1117,10 @@ function DataStreamBg() {
   return (
     <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
       {lines.map((l, i) => (
-        <motion.div key={i}
-          className="absolute h-px"
-          style={{
-            top: l.top, width: l.width, left: 0,
-            background: `linear-gradient(90deg, transparent 0%, rgba(200,255,71,${l.opacity}) 50%, transparent 100%)`,
-          }}
-          initial={{ x: "-30%" }}
-          animate={{ x: "360%" }}
+        <motion.div key={i} className="absolute h-px"
+          style={{ top: l.top, width: l.width, left: 0,
+            background: `linear-gradient(90deg, transparent 0%, rgba(200,255,71,${l.opacity}) 50%, transparent 100%)` }}
+          initial={{ x: "-30%" }} animate={{ x: "360%" }}
           transition={{ duration: l.dur, repeat: Infinity, delay: l.delay, ease: "linear" }} />
       ))}
     </div>
@@ -1150,8 +1134,7 @@ function TimeBar({
     <motion.div
       initial={{ opacity: 0, y: 14, filter: "blur(10px)" }}
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-      transition={{ duration: 0.75, ease: E, delay }}
-      className="min-w-0">
+      transition={{ duration: 0.75, ease: E, delay }} className="min-w-0">
       <div className="flex items-baseline justify-between gap-3">
         <p className={`${EYE} ${highlight ? "text-[#C8FF47]" : "text-white/60"}`}>{label}</p>
         <motion.span
@@ -1159,29 +1142,22 @@ function TimeBar({
           animate={{ opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.55, ease: E, delay: delay + 0.7 }}
           className="font-display font-light tabular-nums tracking-tight"
-          style={{
-            fontSize: "clamp(1.2rem, 2.1vw, 1.7rem)",
+          style={{ fontSize: "clamp(1.2rem, 2.1vw, 1.7rem)",
             color: highlight ? "#C8FF47" : "rgba(255,255,255,0.55)",
-            textShadow: highlight ? "0 0 18px rgba(200,255,71,0.22)" : "none",
-          }}>
+            textShadow: highlight ? "0 0 18px rgba(200,255,71,0.22)" : "none" }}>
           {value}
         </motion.span>
       </div>
       <div className="relative mt-2 h-[6px] w-full overflow-hidden rounded-full bg-white/[0.06]">
         <motion.div
-          initial={{ width: "0%" }}
-          animate={{ width: `${pct}%` }}
+          initial={{ width: "0%" }} animate={{ width: `${pct}%` }}
           transition={{ duration: 1.05, ease: E, delay: delay + 0.15 }}
           className="absolute inset-y-0 left-0 rounded-full"
-          style={{
-            background: highlight
+          style={{ background: highlight
               ? "linear-gradient(90deg, #C8FF47 0%, #d8ff6a 100%)"
               : "linear-gradient(90deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.34) 100%)",
-            boxShadow: highlight ? "0 0 14px rgba(200,255,71,0.35)" : "none",
-          }} />
-        {/* Scanning highlight that sweeps as the bar fills — calculation feel */}
-        <motion.div
-          className="pointer-events-none absolute inset-y-0 w-12 rounded-full"
+            boxShadow: highlight ? "0 0 14px rgba(200,255,71,0.35)" : "none" }} />
+        <motion.div className="pointer-events-none absolute inset-y-0 w-12 rounded-full"
           style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent)" }}
           initial={{ x: "-100%", opacity: 0 }}
           animate={{ x: ["-100%", `${pct * 4}%`], opacity: [0, 1, 0] }}
@@ -1193,43 +1169,29 @@ function TimeBar({
 
 function SlideMetrics() {
   const stats = [
-    { to: 4,   suffix: "",   prefix: "",  label: "Showrooms shipped",       detail: "Each proving a distinct capability" },
-    { to: 100, suffix: "%",  prefix: "+", label: "Model API call volume",   detail: "~2× the 4-week pre-launch baseline" },
-    { to: 87,  suffix: "%",  prefix: "",  label: "Fewer clone-to-try steps", detail: "Spec + configure chain → template entry" },
-    { to: 60,  suffix: "%",  prefix: "",  label: "Faster delivery",          detail: "Engineering estimate · spec+code handoff" },
+    { to: 4,   suffix: "",  prefix: "",  label: "Showrooms shipped",       detail: "Romance · astrology · therapy · character" },
+    { to: 100, suffix: "%", prefix: "+", label: "Model API call volume",    detail: "~2× the 4-week pre-launch baseline" },
+    { to: 87,  suffix: "%", prefix: "",  label: "Fewer clone-to-try steps", detail: "Spec + configure chain → template entry" },
+    { to: 60,  suffix: "%", prefix: "",  label: "Faster delivery",          detail: "Engineering estimate · spec + code handoff" },
   ];
-  // Staged delays — 0.0 title · 0.3 subtitle · 0.6 chart · 0.9 numbers · 1.2 insight
-  const T_TITLE  = 0.0;
-  const T_SUB    = 0.3;
-  const T_CHART  = 0.6;
-  const T_STATS  = 0.9;
-  const T_OUTRO  = 1.4;
-
+  const T_TITLE = 0.0, T_SUB = 0.3, T_CHART = 0.6, T_STATS = 0.9, T_OUTRO = 1.4;
   return (
     <section className="relative flex h-full flex-col justify-center overflow-hidden bg-[#050507] px-12 md:px-20">
       <DataStreamBg />
-
       <div className="relative z-10 mx-auto w-full max-w-6xl">
-        {/* Eye — 0.0s */}
         <motion.div
-          initial={{ opacity: 0, y: 12, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 12, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.7, ease: E, delay: T_TITLE }}>
-          <Eye dark>Outcome · Shipped in 4 weeks · Validated post-release through usage analytics</Eye>
+          <Eye dark>Impact · Shipped · Converted · Adopted</Eye>
         </motion.div>
-
-        {/* Subtitle — 0.3s */}
         <Mask delay={T_SUB}>
           <h2 className="mt-4 font-display font-light tracking-[-0.03em] text-white"
             style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.6rem)" }}>
             What shipped. What changed.
           </h2>
         </Mask>
-
-        {/* Chart — 0.6s · Before/After time-to-value progress bars */}
         <motion.div
-          initial={{ opacity: 0, y: 14, filter: "blur(10px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 14, filter: "blur(10px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.75, ease: E, delay: T_CHART }}
           className="mt-7 rounded-2xl border border-white/[0.08] bg-white/[0.02] px-5 py-5 md:px-7 md:py-6">
           <div className="flex items-baseline justify-between gap-6">
@@ -1241,8 +1203,6 @@ function SlideMetrics() {
             <TimeBar label="After · Interactive showroom"      value="<2 min"  pct={6}   delay={T_CHART + 0.45} highlight />
           </div>
         </motion.div>
-
-        {/* Stats — 0.9s · count-up with blur+scale reveal, key number glows */}
         <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/[0.08] bg-white/[0.06] md:grid-cols-4">
           {stats.map((s, i) => {
             const cardDelay = T_STATS + i * 0.12;
@@ -1250,9 +1210,8 @@ function SlideMetrics() {
             return (
               <motion.div key={s.label} className="relative bg-[#050507] px-6 py-6"
                 initial={{ opacity: 0, y: 14, scale: 0.97, filter: "blur(10px)" }}
-                animate={{ opacity: 1, y: 0, scale: 1,    filter: "blur(0px)" }}
+                animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                 transition={{ duration: 0.7, ease: E, delay: cardDelay }}>
-                {/* underline draws in as the card lands */}
                 <motion.div className="mb-3 h-[1.5px] bg-[#C8FF47]/65"
                   initial={{ width: 0 }} animate={{ width: "1.5rem" }}
                   transition={{ duration: 0.55, ease: E, delay: cardDelay + 0.15 }} />
@@ -1262,15 +1221,9 @@ function SlideMetrics() {
                     animate={isKey
                       ? { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 26px rgba(200,255,71,0.55)", "0 0 10px rgba(200,255,71,0.22)"] }
                       : { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 14px rgba(200,255,71,0.3)",  "0 0 0px rgba(200,255,71,0)"] }}
-                    transition={{ duration: 2.2, ease: "easeOut",
-                      delay: cardDelay + 0.55,
-                      times: [0, 0.55, 1],
-                      repeat: isKey ? Infinity : 0,
-                      repeatDelay: isKey ? 2.4 : 0 }}>
-                    <CountUp
-                      to={s.to} suffix={s.suffix} prefix={s.prefix}
-                      startDelay={cardDelay * 1000 + 350}
-                      duration={1100} />
+                    transition={{ duration: 2.2, ease: "easeOut", delay: cardDelay + 0.55, times: [0, 0.55, 1],
+                      repeat: isKey ? Infinity : 0, repeatDelay: isKey ? 2.4 : 0 }}>
+                    <CountUp to={s.to} suffix={s.suffix} prefix={s.prefix} startDelay={cardDelay * 1000 + 350} duration={1100} />
                   </motion.span>
                 </p>
                 <p className="mt-3 font-sans text-[12px] font-medium text-white/[0.94]">{s.label}</p>
@@ -1279,138 +1232,24 @@ function SlideMetrics() {
             );
           })}
         </div>
-
-        {/* Insight — 1.4s */}
         <motion.p
-          initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
-          animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+          initial={{ opacity: 0, y: 14, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.8, ease: E, delay: T_OUTRO }}
           className={`mt-6 max-w-xl ${BODY} text-[13.5px] text-white/[0.78]`}>
-          The B2B framework was adopted into Spark Design templates, turning the showroom pattern into a reusable foundation across enterprise verticals.
+          The showroom pattern was adopted into Spark Design templates — a reusable foundation across enterprise verticals.
         </motion.p>
       </div>
     </section>
   );
 }
 
-// §32 Principles
-function SlidePrinciples() {
-  const principles = [
-    { n: "01", t: "Design is the translation layer.",
-      body: "In AI products, the hardest problem isn’t the model — it’s helping people imagine what to build." },
-    { n: "02", t: "The best demo is future-self proof.",
-      body: "Show a working version of their product, then let them clone it." },
-  ];
-  return (
-    <section className="flex h-full flex-col justify-center bg-white px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
-        <motion.div variants={FADE}><Eye>Principles</Eye></motion.div>
-        <Mask delay={0.08}>
-          <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
-            Two things I&apos;ll keep doing.
-          </h2>
-        </Mask>
-        <motion.div variants={UP} className="mt-8 grid gap-5 md:grid-cols-2 md:gap-6">
-          {principles.map((p, i) => (
-            <motion.div key={p.n}
-              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.75, ease: E, delay: 0.24 + i * 0.12 }}
-              className="rounded-2xl bg-[#F7F5F0] px-7 py-8 ring-1 ring-black/[0.06] md:px-8 md:py-9">
-              <p className={`${EYE} text-[#9A9A9A]`}>Principle {p.n}</p>
-              <p className="mt-4 font-display text-[1.2rem] font-light leading-[1.25] tracking-[-0.02em] text-[#0A0A0A] md:text-[1.32rem]">{p.t}</p>
-              <p className="mt-4 font-sans text-[14.5px] leading-[1.72] text-[#5A5A5A]">{p.body}</p>
-            </motion.div>
-          ))}
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §28 Closing
-function SlideClosing() {
-  return (
-    <section className="flex h-full flex-col items-start justify-center bg-[#F7F5F0] px-12 md:px-20">
-      <motion.div variants={STG} initial="hidden" animate="show" className="max-w-2xl">
-        <motion.div variants={FADE} className="mb-8 h-px w-12 bg-[#0A0A0A]" />
-        <Mask delay={0.08}>
-          <h2 className="font-display font-light tracking-[-0.04em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
-            Yuan Fang
-          </h2>
-        </Mask>
-        <motion.p variants={UP} className={`mt-3 ${EYE} text-[#9A9A9A]`}>
-          Product Designer · UW HCDE · Pratt Institute
-        </motion.p>
-        <motion.p variants={UP} className={`mt-8 max-w-md ${BODY} text-[15px] text-[#5A5A5A]`}>
-          Design is the translation layer. The hardest problem in AI products isn&apos;t model quality — it&apos;s helping customers imagine what they can build. The strongest demo is future-self proof.
-        </motion.p>
-        <motion.div variants={UP} className="mt-10 flex flex-wrap items-center gap-5">
-          <a href="https://tongyi.aliyun.com/character" target="_blank" rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2.5 rounded-full bg-[#0A0A0A] px-7 py-3.5 font-sans text-[13px] font-medium text-white transition-all duration-500 hover:bg-[#C8FF47] hover:text-[#0A0A0A]">
-            View live showrooms
-            <span className="transition-transform duration-500 group-hover:translate-x-0.5" aria-hidden>→</span>
-          </a>
-          <Link href="/work/ai-character"
-            className={`${EYE} text-[#9A9A9A] underline underline-offset-4 decoration-black/[0.1] transition-colors hover:text-[#0A0A0A]`}>
-            Case study
-          </Link>
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §26 Spark Design — adoption + art direction
-function SlideSparkDesign() {
-  return (
-    <section className="flex h-full flex-col justify-center bg-white px-10 md:px-14">
-      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
-        <motion.div variants={FADE}><Eye>Adoption · Spark Design</Eye></motion.div>
-        <Mask delay={0.08}>
-          <h2 className="mt-4 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
-            style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-            Art-directed the visual system across 4 showrooms — adopted as the B2B design framework.
-          </h2>
-        </Mask>
-        <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[14px] text-[#5A5A5A]`}>
-          Components, interactions, and motion patterns built for the showrooms became the published Spark Design system used by external Agentscope partners — meaning these decisions outlived the showroom releases.
-        </motion.p>
-        <motion.div variants={UP} className="mt-6 overflow-hidden rounded-2xl bg-[#F7F5F0] ring-1 ring-black/[0.06]">
-          <div className="flex items-center justify-between gap-3 border-b border-black/[0.06] bg-white px-4 py-3 md:px-5">
-            <div>
-              <p className={`${EYE} text-[#9A9A9A]`}>Adoption</p>
-              <p className="mt-1.5 font-sans text-[12.5px] font-medium text-[#0A0A0A]">Spark Design templates — Agentscope</p>
-            </div>
-            <a href="https://sparkdesign.agentscope.io/#/templates" target="_blank" rel="noopener noreferrer"
-              className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-[#6A6A6A] underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-[#0A0A0A]">
-              Open ↗
-            </a>
-          </div>
-          <iframe
-            title="Spark Design templates"
-            src="https://sparkdesign.agentscope.io/#/templates"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            className="h-[min(56vh,540px)] min-h-[320px] w-full border-0 bg-white"
-          />
-          <p className="border-t border-black/[0.05] bg-white px-4 py-2 font-sans text-[10.5px] leading-relaxed text-[#9A9A9A] md:px-5">
-            If the frame is empty, the host blocks embedding — open in browser.
-          </p>
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §30 Metrics Method — How the numbers are defined
+// §30 Metrics Method
 function SlideMetricsMethod() {
   const rows = [
     { metric: "+100% / ~2×", label: "Model API call volume",
       baseline: "Four-week rolling avg of internal product analytics before showroom launch.",
       result: "Four-week rolling avg after go-live, same pipeline and org scope.",
-      note: "Shorthand for +100% lift / ~2× total. Not +200%, not a third-party benchmark." },
+      note: "Shorthand for +100% lift / ~2× total. Pre vs post on one pipeline, not a third-party benchmark." },
     { metric: "87%", label: "Setup reduction",
       baseline: "~7 enumerated steps in the internal clone-to-try checklist — repo review through endpoint wiring.",
       result: "Pre-seeded template + copy-ready YAML — setup collapses to a short checklist.",
@@ -1458,13 +1297,49 @@ function SlideMetricsMethod() {
   );
 }
 
-// §33 Takeaways — 4 cards
+// §31 Principles
+function SlidePrinciples() {
+  const principles = [
+    { n: "01", t: "Design is the translation layer.",
+      body: "In AI products, the hardest problem isn’t the model — it’s helping people imagine what to build." },
+    { n: "02", t: "The best demo is future-self proof.",
+      body: "Show a working version of their product, then let them clone it." },
+  ];
+  return (
+    <section className="flex h-full flex-col justify-center bg-white px-12 md:px-20">
+      <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-5xl">
+        <motion.div variants={FADE}><Eye>Takeaway · Principles</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className="mt-5 font-display font-light tracking-[-0.028em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
+            AI products don&apos;t sell themselves through capability lists.
+          </h2>
+        </Mask>
+        <motion.div variants={UP} className="mt-8 grid gap-5 md:grid-cols-2 md:gap-6">
+          {principles.map((p, i) => (
+            <motion.div key={p.n}
+              initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.75, ease: E, delay: 0.24 + i * 0.12 }}
+              whileHover={{ y: -4 }}
+              className="rounded-2xl bg-[#F7F5F0] px-7 py-8 ring-1 ring-black/[0.06] md:px-8 md:py-9">
+              <p className={`${EYE} text-[#9A9A9A]`}>Principle {p.n}</p>
+              <p className="mt-4 font-display text-[1.2rem] font-light leading-[1.25] tracking-[-0.02em] text-[#0A0A0A] md:text-[1.32rem]">{p.t}</p>
+              <p className="mt-4 font-sans text-[14.5px] leading-[1.72] text-[#5A5A5A]">{p.body}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
+// §32 Takeaways — what I learned
 function SlideTakeaways() {
   const items = [
-    { label: "Memory transparency",      note: "Constellation file makes memory readable · not a silent black box" },
-    { label: "Analysis visibility",      note: "Therapy rail shows what the model understood · not just what it said" },
-    { label: "Developer inspectability", note: "YAML + prompt exposed in code drawer · inspect before you build" },
-    { label: "Emotional boundary",       note: "Therapy room = analysis demo · no clinical claims implied" },
+    { label: "Memory transparency",      note: "The constellation file makes memory readable — not a silent black box." },
+    { label: "Analysis visibility",      note: "The therapy rail shows what the model understood — not just what it said." },
+    { label: "Developer inspectability", note: "YAML + prompt exposed in the code drawer — inspect before you build." },
+    { label: "Emotional boundary",       note: "The therapy room is an analysis demo — no clinical claims implied." },
   ];
   return (
     <section className="flex h-full flex-col justify-center bg-[#F7F5F0] px-12 md:px-20">
@@ -1481,6 +1356,7 @@ function SlideTakeaways() {
             <motion.div key={it.label}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: E, delay: 0.2 + i * 0.08 }}
+              whileHover={{ y: -3 }}
               className="rounded-xl bg-white px-5 py-5 ring-1 ring-black/[0.06]">
               <p className="font-mono text-[10px] font-medium uppercase tracking-[0.15em] text-[#9A9A9A]">{it.label}</p>
               <p className="mt-2 font-sans text-[13.5px] leading-[1.65] text-[#5A5A5A]">{it.note}</p>
@@ -1492,38 +1368,72 @@ function SlideTakeaways() {
   );
 }
 
+// §33 Closing
+function SlideClosing() {
+  return (
+    <section className="flex h-full flex-col items-start justify-center bg-[#F7F5F0] px-12 md:px-20">
+      <motion.div variants={STG} initial="hidden" animate="show" className="max-w-2xl">
+        <motion.div variants={FADE} className="mb-8 h-px w-12 bg-[#0A0A0A]" />
+        <Mask delay={0.08}>
+          <h2 className="font-display font-light tracking-[-0.04em] text-[#0A0A0A]"
+            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+            Yuan Fang
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-3 ${EYE} text-[#9A9A9A]`}>
+          Product Designer · Pratt Institute
+        </motion.p>
+        <motion.p variants={UP} className={`mt-8 max-w-md ${BODY} text-[15px] text-[#5A5A5A]`}>
+          Design is the translation layer. The hardest problem in AI products isn&apos;t model quality — it&apos;s helping customers imagine what they can build. The strongest demo is future-self proof.
+        </motion.p>
+        <motion.div variants={UP} className="mt-10 flex flex-wrap items-center gap-5">
+          <a href="https://tongyi.aliyun.com/character" target="_blank" rel="noopener noreferrer"
+            className="group inline-flex items-center gap-2.5 rounded-full bg-[#0A0A0A] px-7 py-3.5 font-sans text-[13px] font-medium text-white transition-all duration-500 hover:bg-[#C8FF47] hover:text-[#0A0A0A]">
+            View live showrooms
+            <span className="transition-transform duration-500 group-hover:translate-x-0.5" aria-hidden>→</span>
+          </a>
+          <Link href="/work/ai-character"
+            className={`${EYE} text-[#9A9A9A] underline underline-offset-4 decoration-black/[0.1] transition-colors hover:text-[#0A0A0A]`}>
+            Case study
+          </Link>
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
 // ─── Slide renderer ───────────────────────────────────────────────────────────
-function SlideRenderer({ id }: { id: SlideId }) {
+function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }) {
   switch (id) {
-    case "cover":             return <SlideCover />;
-    case "hook":              return <SlideHook />;
-    case "problem":           return <SlideProblem />;
-    case "before":            return <SlideBefore />;
-    case "decision-01-title": return <SlideDecision01Title />;
-    case "showrooms-thesis":  return <SlideShowroomsThesis />;
-    case "visibilities":      return <SlideVisibilities />;
-    case "decision-02-title": return <SlideDecision02Title />;
+    case "cover":             return <SlideCover reduced={reduced} />;
+    case "overview":          return <SlideOverview />;
+    case "problem":           return <SlideProblem reduced={reduced} />;
+    case "hmw":               return <SlideHmw />;
+    case "d1-title":          return <SlideD1Title reduced={reduced} />;
+    case "d1-before-after":   return <SlideD1BeforeAfter />;
+    case "d2-title":          return <SlideD2Title />;
+    case "d2-map":            return <SlideD2Map />;
     case "heartbeat":         return <SlideHeartbeat />;
     case "heartbeat-logic":   return <SlideHeartbeatLogic />;
-    case "altuniv":           return <SlideAltUniv />;
-    case "altuniv-logic":     return <SlideAltUnivLogic />;
     case "storyunlock":       return <SlideStoryUnlock />;
     case "storyunlock-logic": return <SlideStoryUnlockLogic />;
     case "moments":           return <SlideMoments />;
     case "moments-logic":     return <SlideMomentsLogic />;
+    case "altuniv":           return <SlideAltUniv />;
+    case "altuniv-logic":     return <SlideAltUnivLogic />;
     case "astro-profile":     return <SlideAstroProfile />;
     case "therapy-analysis":  return <SlideTherapyAnalysis />;
-    case "decision-03-title": return <SlideDecision03Title />;
-    case "inspire-continue":  return <SlideInspireContinue />;
-    case "code-sidebar":      return <SlideCodeSidebar />;
-    case "showrooms":         return <SlideShowrooms />;
+    case "d3-title":          return <SlideD3Title reduced={reduced} />;
+    case "inspire-continue":  return <SlideInspireContinue reduced={reduced} />;
+    case "code-drawer":       return <SlideCodeDrawer />;
     case "how-i-worked":      return <SlideHowIWorked />;
     case "ai-tools":          return <SlideAITools />;
-    case "backend":           return <SlideBackend />;
-    case "spark-design":      return <SlideSparkDesign />;
+    case "showrooms":         return <SlideShowrooms reduced={reduced} />;
     case "prototype-romance": return <SlideLivePrototype id="prototype-romance" />;
     case "prototype-astro":   return <SlideLivePrototype id="prototype-astro" />;
     case "prototype-therapy": return <SlideLivePrototype id="prototype-therapy" />;
+    case "backend":           return <SlideBackend />;
+    case "spark-design":      return <SlideSparkDesign />;
     case "metrics":           return <SlideMetrics />;
     case "metrics-method":    return <SlideMetricsMethod />;
     case "principles":        return <SlidePrinciples />;
@@ -1539,12 +1449,7 @@ const CH_START = CHAPTERS.map(ch => SLIDES.findIndex(s => s.chapter === ch));
 
 function DeckSlideScrubber({
   idx, total, dark, onChange,
-}: {
-  idx: number;
-  total: number;
-  dark: boolean;
-  onChange: (i: number) => void;
-}) {
+}: { idx: number; total: number; dark: boolean; onChange: (i: number) => void }) {
   if (total <= 1) return null;
   const max = total - 1;
   const pct = max > 0 ? (idx / max) * 100 : 100;
@@ -1554,19 +1459,10 @@ function DeckSlideScrubber({
       <div className={`pointer-events-none relative h-1.5 w-full overflow-hidden rounded-full ${track}`} aria-hidden>
         <div className="absolute left-0 top-0 h-full rounded-full bg-[#C8FF47]" style={{ width: `${pct}%` }} />
       </div>
-      <input
-        type="range"
-        min={0}
-        max={max}
-        step={1}
-        value={idx}
-        aria-label="Slide position"
-        aria-valuemin={1}
-        aria-valuemax={total}
-        aria-valuenow={idx + 1}
+      <input type="range" min={0} max={max} step={1} value={idx}
+        aria-label="Slide position" aria-valuemin={1} aria-valuemax={total} aria-valuenow={idx + 1}
         className="absolute inset-0 m-0 h-full w-full cursor-pointer opacity-0"
-        onChange={(e) => onChange(Number(e.target.value))}
-      />
+        onChange={(e) => onChange(Number(e.target.value))} />
     </div>
   );
 }
@@ -1592,17 +1488,40 @@ function ChapterPills({ current, dark, onJump }: { current: string; dark: boolea
   );
 }
 
+// ─── Directional slide transition ─────────────────────────────────────────────
+const slideVariants = {
+  enter:  (dir: number) => ({ opacity: 0, x: dir >= 0 ? 56 : -56 }),
+  center: { opacity: 1, x: 0 },
+  exit:   (dir: number) => ({ opacity: 0, x: dir >= 0 ? -56 : 56 }),
+};
+
 // ─── Main shell ───────────────────────────────────────────────────────────────
 export default function DeckPresentClient() {
-  const [idx, setIdx] = useState(0);
+  const reduced = useReducedMotion();
+  // Track index + travel direction together so AnimatePresence can push slides.
+  const [[idx, dir], setState] = useState<[number, number]>([0, 0]);
   const total    = SLIDES.length;
   const slide    = SLIDES[idx];
   const dark     = slide.dark;
   const progress = total > 1 ? (idx / (total - 1)) * 100 : 0;
   const minsLeft = Math.max(1, Math.ceil(((total - 1 - idx) * 50) / 60));
 
-  const prev = useCallback(() => setIdx(i => Math.max(0, i - 1)), []);
-  const next = useCallback(() => setIdx(i => Math.min(total - 1, i + 1)), [total]);
+  const paginate = useCallback((step: number) => {
+    setState(([i]) => {
+      const n = Math.min(total - 1, Math.max(0, i + step));
+      return [n, n === i ? 0 : n > i ? 1 : -1];
+    });
+  }, [total]);
+
+  const jump = useCallback((target: number) => {
+    setState(([i]) => {
+      const n = Math.min(total - 1, Math.max(0, target));
+      return [n, n === i ? 0 : n > i ? 1 : -1];
+    });
+  }, [total]);
+
+  const prev = useCallback(() => paginate(-1), [paginate]);
+  const next = useCallback(() => paginate(1),  [paginate]);
 
   useEffect(() => {
     const h = (e: KeyboardEvent) => {
@@ -1616,10 +1535,9 @@ export default function DeckPresentClient() {
   // ── Dark-aware chrome tokens ──
   const headerBg  = dark ? "bg-[#050507]/96 border-white/[0.14]"  : "bg-white/75 border-black/[0.06]";
   const footerBg  = dark ? "bg-[#050507]/96 border-white/[0.14]"  : "bg-white/75 border-black/[0.05]";
-  /** Dark chrome: same secondary gray for header + footer (was mixed /90–/96). */
   const navChromeDark = "text-white/92";
   const navLink   = dark ? `${navChromeDark} hover:text-white` : "text-[#6B6B6B] hover:text-[#0A0A0A]";
-  const navMeta   = dark ? navChromeDark                   : "text-[#BDBDBD]";
+  const navMeta   = dark ? navChromeDark                       : "text-[#BDBDBD]";
   const navBtn    = dark ? `${navChromeDark} hover:text-white` : "text-[#6B6B6B] hover:text-[#0A0A0A]";
 
   return (
@@ -1644,23 +1562,26 @@ export default function DeckPresentClient() {
           </span>
         </div>
         <div className="flex items-center gap-5">
-          <span className={`hidden font-mono text-[10px] md:inline ${navMeta}`}>
-            ~{minsLeft} min left
-          </span>
+          <span className={`hidden font-mono text-[10px] md:inline ${navMeta}`}>~{minsLeft} min left</span>
           <span className={`font-mono text-[10px] tabular-nums ${navMeta}`}>
             {String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </span>
         </div>
       </header>
 
-      {/* Slide area */}
-      <main className="h-full min-h-0 overflow-hidden pt-14 pb-14">
-        <AnimatePresence mode="wait">
-          <motion.div key={slide.id}
-            initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-            transition={{ duration: 0.22, ease: E }}
-            className="h-full">
-            <SlideRenderer id={slide.id} />
+      {/* Slide area — overlapping directional transition. Each slide is
+          absolutely positioned to fill the gap between the 14-high header and
+          footer, so successive slides can cross-fade/push without layout shift. */}
+      <main className="relative h-full min-h-0 overflow-hidden">
+        <AnimatePresence custom={dir} initial={false}>
+          <motion.div key={slide.id} custom={dir}
+            variants={reduced ? undefined : slideVariants}
+            initial={reduced ? false : "enter"}
+            animate={reduced ? undefined : "center"}
+            exit={reduced ? undefined : "exit"}
+            transition={{ duration: 0.5, ease: E }}
+            className="absolute inset-x-0 bottom-14 top-14">
+            <SlideRenderer id={slide.id} reduced={reduced} />
           </motion.div>
         </AnimatePresence>
       </main>
@@ -1679,9 +1600,9 @@ export default function DeckPresentClient() {
             Prev
           </button>
           <div className="flex min-w-0 flex-1 flex-col items-stretch justify-center gap-2.5">
-            <DeckSlideScrubber idx={idx} total={total} dark={dark} onChange={setIdx} />
+            <DeckSlideScrubber idx={idx} total={total} dark={dark} onChange={jump} />
             <div className="flex justify-center overflow-x-auto">
-              <ChapterPills current={slide.chapter} dark={dark} onJump={setIdx} />
+              <ChapterPills current={slide.chapter} dark={dark} onJump={jump} />
             </div>
           </div>
           <button type="button" onClick={next} disabled={idx === total - 1}
