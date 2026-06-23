@@ -9,7 +9,7 @@
  * previews than the page <meta> tags alone.
  */
 
-const SITE_URL = "https://fangyuan7.com";
+const SITE_URL = "https://www.nltstudio7.space";
 const AUTHOR = { "@type": "Person", name: "Yuan Fang", url: SITE_URL } as const;
 
 function absolutize(pathOrUrl: string): string {
