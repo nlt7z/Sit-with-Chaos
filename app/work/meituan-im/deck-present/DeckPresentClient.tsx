@@ -181,20 +181,30 @@ function BPLane({ lane }: { lane: (typeof BP_LANES)[number] }) {
   return (
     <div className="grid min-h-0 flex-1" style={{ gridTemplateColumns: BP_COLS, background: lane.band ? U.bg : U.surface }}>
       <div className="flex items-center px-4" style={{ borderRight: `1px solid ${U.hairline}` }}>
-        <span className="text-[9.5px] font-semibold uppercase tracking-[0.13em]" style={{ color: U.inkLight }}>{lane.name}</span>
+        <span className="text-[11px] font-semibold uppercase tracking-[0.13em]" style={{ color: U.inkLight }}>{lane.name}</span>
       </div>
-      {lane.cells.map((c, i) => (
-        <div key={i} className="flex items-center px-4">
-          {c && (c.decision ? (
-            <span className="inline-flex items-center gap-2 text-[11.5px] font-medium" style={{ color: U.ink }}>
-              <span className="inline-block h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: U.accent }} />
-              {c.t}
-            </span>
-          ) : (
-            <span className="text-[11.5px] font-light leading-snug" style={{ color: U.inkLight }}>{c.t}</span>
-          ))}
-        </div>
-      ))}
+      {lane.cells.map((c, i) => {
+        const linkNext = !!c && !!lane.cells[i + 1]; // both this and the next step exist
+        return (
+          <div key={i} className="relative flex items-center px-4">
+            {c && (c.decision ? (
+              <span className="inline-flex items-center gap-2 text-[14px] font-medium leading-snug" style={{ color: U.ink }}>
+                <span className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: U.accent }} />
+                {c.t}
+              </span>
+            ) : (
+              <span className="text-[14px] font-normal leading-snug" style={{ color: U.inkSoft }}>{c.t}</span>
+            ))}
+            {linkNext && (
+              <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2" aria-hidden style={{ color: U.mutedSoft }}>
+                <svg width="15" height="10" viewBox="0 0 15 10" fill="none">
+                  <path d="M1 5h12M9.5 1.5 13 5l-3.5 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -202,7 +212,7 @@ function BPLane({ lane }: { lane: (typeof BP_LANES)[number] }) {
 function BPLine({ label }: { label: string }) {
   return (
     <div className="shrink-0 px-4 py-1" style={{ borderTop: `1px dashed ${U.hairline}` }}>
-      <span className="text-[8px] font-semibold uppercase tracking-[0.16em]" style={{ color: U.mutedSoft }}>{label}</span>
+      <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em]" style={{ color: U.mutedSoft }}>{label}</span>
     </div>
   );
 }
@@ -216,8 +226,8 @@ function SystemDiagram() {
         <div className="px-4 py-2.5" style={{ borderRight: `1px solid ${U.hairline}` }} />
         {SYS_STAGES.map((s) => (
           <div key={s.n} className="flex items-baseline gap-1.5 px-4 py-2.5">
-            <span className="text-[9px] font-medium tabular-nums" style={{ color: U.mutedSoft }}>{s.n}</span>
-            <span className="truncate text-[11px] font-medium tracking-tight" style={{ color: U.ink }}>{s.name}</span>
+            <span className="text-[10px] font-medium tabular-nums" style={{ color: U.mutedSoft }}>{s.n}</span>
+            <span className="truncate text-[13px] font-semibold tracking-tight" style={{ color: U.ink }}>{s.name}</span>
           </div>
         ))}
       </div>
