@@ -1470,6 +1470,32 @@ const slideVariants = {
   exit:   { opacity: 0, x: 0 },
 };
 
+// ─── 竖屏提示(移动端竖屏时引导横屏)──────────────────────────────────────────
+function RotateOverlay({ onDismiss }: { onDismiss: () => void }) {
+  return (
+    <div className="fixed inset-0 z-[80] flex h-screen flex-col items-center justify-center gap-7 bg-[#08090A] px-10 text-center">
+      <svg width="78" height="78" viewBox="0 0 78 78" fill="none" aria-hidden>
+        <g transform="rotate(-20 39 39)">
+          <rect x="28" y="17" width="22" height="44" rx="5" stroke="#FF6A00" strokeWidth="2.5" />
+          <line x1="35" y1="55" x2="43" y2="55" stroke="#FF6A00" strokeWidth="2.5" strokeLinecap="round" />
+        </g>
+        <path d="M58 21 A 28 28 0 0 1 64 46" stroke="#FF6A00" strokeWidth="2.5" strokeLinecap="round" />
+        <path d="M64 46 L59 44.5 M64 46 L65.7 41" stroke="#FF6A00" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+      </svg>
+      <div>
+        <p className="font-display text-[1.5rem] font-light tracking-[-0.02em] text-[#F7F8F8]">请横屏观看</p>
+        <p className="mx-auto mt-2.5 max-w-xs font-sans text-[13.5px] leading-relaxed text-white/55">
+          这份演示是为宽屏设计的 —— 把手机横过来,体验最佳。
+        </p>
+      </div>
+      <button type="button" onClick={onDismiss}
+        className="font-mono text-[11px] uppercase tracking-[0.18em] text-white/45 underline decoration-white/20 underline-offset-4 transition-colors hover:text-white/80">
+        仍要竖屏查看 →
+      </button>
+    </div>
+  );
+}
+
 // ─── Main shell ───────────────────────────────────────────────────────────────
 export default function DeckPresentClientZh() {
   const reduced = useReducedMotion();
@@ -1511,8 +1537,22 @@ export default function DeckPresentClientZh() {
     };
   }, [next, prev, paginate]);
 
+  // 移动端竖屏 → 引导横屏(deck 是宽屏格式)。
+  const [portrait, setPortrait] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(orientation: portrait) and (max-width: 820px) and (pointer: coarse)");
+    const update = () => setPortrait(mq.matches);
+    update();
+    mq.addEventListener?.("change", update);
+    return () => mq.removeEventListener?.("change", update);
+  }, []);
+
   const navChrome = "text-white/[0.82] hover:text-white";
   const navMeta   = "text-white/[0.5]";
+
+  if (portrait && !dismissed) return <RotateOverlay onDismiss={() => setDismissed(true)} />;
 
   return (
     <div className="font-alibaba relative h-screen select-none overflow-hidden bg-[#08090A]">
