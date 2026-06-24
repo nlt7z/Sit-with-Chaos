@@ -76,23 +76,20 @@ const SLIDES = [
 type SlideId = (typeof SLIDES)[number]["id"];
 
 // ─── Living glow ──────────────────────────────────────────────────────────────
-function LivingAura({ reduced }: { reduced: boolean | null }) {
-  if (reduced) return null;
+// 静态光晕 —— 把 lime 氛围烘焙进 CSS 渐变里。原来给模糊色块做 scale/opacity 动画,
+// 而对一个 blur 元素做动画会让浏览器每帧重新栅格化模糊,导致翻页卡顿。静态 = GPU
+// 只栅格化一次,切换就顺滑了。
+function LivingAura({ reduced: _reduced }: { reduced: boolean | null }) {
   return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden>
-      <motion.div
-        className="absolute left-1/2 top-[-20%] h-[40rem] w-[60rem] -translate-x-1/2 rounded-full"
-        style={{ background: "radial-gradient(ellipse at center, rgba(200,255,71,0.10), transparent 62%)", filter: "blur(72px)" }}
-        animate={{ opacity: [0.45, 0.78, 0.45], scale: [1, 1.06, 1] }}
-        transition={{ duration: 19, repeat: Infinity, ease: "easeInOut" }}
-      />
-      <motion.div
-        className="absolute bottom-[-12%] right-[5%] h-[26rem] w-[26rem] rounded-full"
-        style={{ background: "radial-gradient(circle, rgba(200,255,71,0.055), transparent 68%)", filter: "blur(60px)" }}
-        animate={{ opacity: [0.3, 0.55, 0.3], x: [0, -20, 0], y: [0, 16, 0] }}
-        transition={{ duration: 23, repeat: Infinity, ease: "easeInOut", delay: 2.4 }}
-      />
-    </div>
+    <div
+      className="pointer-events-none absolute inset-0"
+      aria-hidden
+      style={{
+        background:
+          "radial-gradient(46rem 30rem at 50% -8%, rgba(200,255,71,0.07), transparent 60%)," +
+          "radial-gradient(24rem 24rem at 94% 108%, rgba(200,255,71,0.045), transparent 66%)",
+      }}
+    />
   );
 }
 
@@ -219,7 +216,7 @@ function DeckPrototype({ src, label }: { src: string; label: string }) {
 function WorkflowImg({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="flex min-h-0 w-full min-w-0 flex-1 basis-0 flex-col">
-      <div className="relative box-border min-h-0 w-full max-w-[min(80rem,100%)] flex-1 self-center rounded-lg bg-white px-2 py-1.5 md:px-3 md:py-2">
+      <div className="relative box-border min-h-0 w-full max-w-[min(80rem,100%)] flex-1 self-center">
         <img
           src={src}
           alt={alt}
@@ -1467,9 +1464,10 @@ function ChapterPills({ current, onJump }: { current: string; onJump: (i: number
 
 // ─── Directional slide transition ─────────────────────────────────────────────
 const slideVariants = {
-  enter:  (dir: number) => ({ opacity: 0, x: dir >= 0 ? 56 : -56 }),
+  enter:  (dir: number) => ({ opacity: 0, x: dir >= 0 ? 32 : -32 }),
   center: { opacity: 1, x: 0 },
-  exit:   (dir: number) => ({ opacity: 0, x: dir >= 0 ? -56 : 56 }),
+  // 退出只淡出(不平移)—— 平移一个挂着实时原型 iframe 的页面最卡;纯淡出合成更便宜。
+  exit:   { opacity: 0, x: 0 },
 };
 
 // ─── Main shell ───────────────────────────────────────────────────────────────
@@ -1527,7 +1525,7 @@ export default function DeckPresentClientZh() {
       </div>
 
       {/* Header */}
-      <header className="absolute inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-white/[0.08] bg-[#08090A]/80 px-6 backdrop-blur-md md:px-10">
+      <header className="absolute inset-x-0 top-0 z-40 flex h-14 items-center justify-between border-b border-white/[0.08] bg-[#08090A]/95 px-6 md:px-10">
         <div className="flex items-center gap-5">
           <Link href="/work/ai-character"
             className={`font-mono text-[10px] uppercase tracking-[0.22em] transition-colors duration-150 ${navChrome}`}>
@@ -1557,8 +1555,8 @@ export default function DeckPresentClientZh() {
             initial={reduced ? false : "enter"}
             animate={reduced ? undefined : "center"}
             exit={reduced ? undefined : "exit"}
-            transition={{ duration: 0.5, ease: E }}
-            className="absolute inset-x-0 bottom-14 top-14">
+            transition={{ duration: 0.3, ease: E }}
+            className="absolute inset-x-0 bottom-14 top-14 will-change-[opacity,transform]">
             <SlideRenderer id={slide.id} reduced={reduced} />
           </motion.div>
         </AnimatePresence>
@@ -1571,7 +1569,7 @@ export default function DeckPresentClientZh() {
         className="fixed bottom-14 right-0 top-14 z-30 hidden w-[10%] cursor-e-resize disabled:pointer-events-none md:block" />
 
       {/* Footer */}
-      <footer className="absolute inset-x-0 bottom-0 z-40 border-t border-white/[0.08] bg-[#08090A]/80 backdrop-blur-md">
+      <footer className="absolute inset-x-0 bottom-0 z-40 border-t border-white/[0.08] bg-[#08090A]/95">
         <div className="flex items-center gap-3 px-4 py-3 md:gap-5 md:px-10">
           <button type="button" onClick={prev} disabled={idx === 0}
             className={`flex shrink-0 items-center gap-1.5 rounded-[6px] px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors duration-150 disabled:opacity-20 md:px-3 ${navChrome}`}>
