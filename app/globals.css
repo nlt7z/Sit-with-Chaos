@@ -54,3 +54,22 @@
     pointer-events: none;
   }
 }
+
+/* ── Alibaba design-system typography (scoped to the presentation decks) ──────
+   The brand face is Alibaba PuHuiTi (阿里巴巴普惠体); it degrades to the Ant
+   Design system stack — PingFang SC on macOS, Microsoft YaHei on Windows — so
+   headlines and body render as one clean geometric sans with zero webfont
+   download. Adding `font-alibaba` to a container just re-points the Tailwind
+   `font-display` / `font-sans` CSS variables, so every existing utility inside
+   it (font-display, font-sans) picks up the new family automatically. Mono is
+   left untouched. */
+.font-alibaba {
+  --font-playfair: "Alibaba PuHuiTi 3.0", "Alibaba PuHuiTi 2.0", "Alibaba PuHuiTi",
+    "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+  --font-dm-sans: "Alibaba PuHuiTi 3.0", "Alibaba PuHuiTi 2.0", "Alibaba PuHuiTi",
+    "PingFang SC", "HarmonyOS Sans SC", "Source Han Sans SC", -apple-system,
+    BlinkMacSystemFont, "Segoe UI", "Microsoft YaHei", "Helvetica Neue", Helvetica,
+    Arial, sans-serif;
+}

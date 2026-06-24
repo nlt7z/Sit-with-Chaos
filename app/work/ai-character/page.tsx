@@ -5,9 +5,9 @@ import CaseStudyContent from "./CaseStudyContent";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
 const PATH = "/work/ai-character";
-const TITLE = "Qwen Character — Designing the AI That Feels Alive";
+const TITLE = "Qwen Character — Interactive Showrooms, End-to-End Design";
 const DESCRIPTION =
-  "Shipped Interactive Showrooms, the MVP for Qwen Character — cut time-to-first-value from 60+ minutes of docs to under 2 minutes and drove a 200% lift in model API call volume across enterprise users.";
+  "Shipped Interactive Showrooms, the MVP for Qwen Character — cut time-to-first-value from hours of docs to minutes and drove a 200% lift in model API call volume across enterprise users.";
 const OG_IMAGE = "/assets/og/ai-character.jpg";
 
 export const metadata: Metadata = {

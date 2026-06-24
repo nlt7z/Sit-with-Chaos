@@ -1556,6 +1556,18 @@ const STAGE_BY_SCENARIO = {
   'expired-modal': 4, 'expired-chat': 4, 'return-visit': 4,
 };
 
+// When a deep-link carries ?seek=1 (the deck's flow slides), fast-forward each
+// scenario to the step index below — its key state — and pause there instead of
+// replaying the whole conversation from the first message.
+const SEEK = {
+  default:         16, // the drafted repair-order (service) card, awaiting "get quotes"
+  'cat-litter':    14, // the self-serve product bundle card
+  'off-hours':      3, // the after-hours message
+  'expired-modal':  3, // live quotes + the expired modal
+  'expired-chat':   4, // stale quotes + the re-quote order
+  'return-visit':   2, // the return-visit question
+};
+
 // ─── Player ─────────────────────────────────────────────────────────
 function Player({ scenario, onSceneEnd }) {
   CUR_EXPERT = scenario === 'cat-litter' ? EXPERTS.local : EXPERTS.default;
@@ -1577,7 +1589,8 @@ function Player({ scenario, onSceneEnd }) {
     setStage(STAGE_BY_SCENARIO[scenario] || 1);
     stepIdx.current = 0;
     cancelled.current = false;
-    runFrom(0);
+    const fu = __seekRequested() ? SEEK[scenario] : undefined;
+    runFrom(0, (fu != null) ? { fastUntil: fu } : undefined);
     // eslint-disable-next-line
   }, [scenario]);
 
@@ -1624,25 +1637,41 @@ function Player({ scenario, onSceneEnd }) {
     });
   }
 
-  function runFrom(idx) {
+  function runFrom(idx, opts) {
     const script = SCRIPTS[scenario];
     if (!script) return;
+    // fastUntil: when seeking (deck deep-links), apply every step up to and
+    // including this index instantly — no delays, and auto-pass any wait — so the
+    // flow lands on its key state. Normal playback resumes at the next step.
+    const fastUntil = (opts && opts.fastUntil != null) ? opts.fastUntil : -1;
     let i = idx;
     const next = () => {
       if (cancelled.current) return;
       if (i >= script.length) { onSceneEnd && onSceneEnd(); return; }
       const step = script[i];
+      const fast = i <= fastUntil;
       if (step.wait) {
+        if (fast) {
+          // Seeking past an answered question — drop its tappable options so the
+          // built-up state reads as already replied, then continue without pausing.
+          setMessages(prev => prev.map(m => (m.id === step.wait ? { ...m, options: [] } : m)));
+          i++;
+          stepIdx.current = i;
+          next();
+          return;
+        }
         setWaiting(step.wait);
         return;
       }
-      setTimeout(() => {
+      const run = () => {
         if (cancelled.current) return;
         applyStep(step);
         i++;
         stepIdx.current = i;
         next();
-      }, __RM ? Math.min(step.delay || 0, 100) : (step.delay || 0));
+      };
+      if (fast) run();
+      else setTimeout(run, __RM ? Math.min(step.delay || 0, 100) : (step.delay || 0));
     };
     next();
   }
@@ -1981,6 +2010,10 @@ function __initialScenario() {
 function __railHidden() {
   var p = __flowParams();
   return p.get('rail') === '0' || p.has('solo');
+}
+function __seekRequested() {
+  var p = __flowParams();
+  return p.has('seek') && p.get('seek') !== '0';
 }
 
 function App() {

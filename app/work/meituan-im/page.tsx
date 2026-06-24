@@ -18,6 +18,7 @@ const navItems = [
   { id: "solution", label: "System" },
   { id: "chat", label: "Chat" },
   { id: "quote", label: "Quote" },
+  { id: "merchant", label: "Merchant" },
   { id: "prototype", label: "Prototype" },
   { id: "scenarios", label: "Extensions" },
   { id: "impact", label: "Impact" },
@@ -207,6 +208,48 @@ function ScaledPrototypeFrame({
         />
       </div>
     </div>
+  );
+}
+
+/**
+ * Showcase video that lazy-loads and autoplays only once scrolled into view —
+ * mirrors the homepage work-card video behavior so the heavy clip never loads
+ * until it nears the viewport. Muted + looped, pauses when scrolled away.
+ */
+function ShowcaseVideo({ src, title }: { src: string; title: string }) {
+  const vref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = vref.current;
+    if (!v) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) {
+          if (!v.src) {
+            v.src = src;
+            v.load();
+          }
+          v.play().catch(() => {});
+        } else {
+          v.pause();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(v);
+    return () => io.disconnect();
+  }, [src]);
+
+  return (
+    <video
+      ref={vref}
+      title={title}
+      muted
+      loop
+      playsInline
+      preload="none"
+      className="block aspect-video w-full object-cover"
+    />
   );
 }
 
@@ -488,13 +531,31 @@ export default function MeituanImCaseStudyPage() {
                   14.5M merchants — turning uncertain local-service pricing into a guided,
                   comparable, bookable decision.
                 </motion.p>
+                <motion.p
+                  variants={heroItem}
+                  className="mt-5 max-w-xl text-[14px] leading-[1.7] text-textSecondary/80"
+                >
+                  <span className="text-textPrimary/80">For context:</span> Meituan local services is a super-app
+                  marketplace — think Uber, Yelp and TaskRabbit in one. Its core interaction is{" "}
+                  <span className="text-textPrimary/80">IM — in-message</span>, where deals close inside the chat.
+                  This project ran the whole journey — diagnose, compare merchants, book, pay, review — without ever
+                  leaving the conversation.
+                </motion.p>
 
-                <motion.div variants={heroItem} className="mt-8">
+                <motion.div variants={heroItem} className="mt-8 flex flex-wrap items-center gap-3">
                   <a
                     href="/work/meituan-im/deck-present"
                     className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                   >
                     View Presentation Deck
+                  </a>
+                  <a
+                    href="/work/meituan-im/prototype"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex rounded-full bg-white px-8 py-3 text-sm font-medium text-textPrimary ring-1 ring-black/[0.12] transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                  >
+                    Try Prototype ↗
                   </a>
                 </motion.div>
 
@@ -522,8 +583,8 @@ export default function MeituanImCaseStudyPage() {
                     <dl className="grid grid-cols-1 gap-x-8 gap-y-6 border-t border-black/[0.08] pt-7 sm:grid-cols-3 sm:gap-y-0">
                       {[
                         { label: "Timeline", value: "4 weeks · 2025" },
-                        { label: "Ownership", value: "End-to-end · sole designer" },
-                        { label: "Impact", value: "+5% conversion · validated via user-level A/B" },
+                        { label: "Team", value: "Sole designer · 2 PMs · 2 engineers" },
+                        { label: "Impact", value: "+5% conversion (measured) · A/B with the team" },
                       ].map(({ label, value }) => (
                         <div key={label} className="min-w-0">
                           <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
@@ -559,12 +620,37 @@ export default function MeituanImCaseStudyPage() {
 
         <Section id="turning-point" eyebrow="Context · Signal" title="The brief asked for price visibility. The evidence pointed deeper.">
           <FadeIn>
-            <p className="max-w-3xl text-[16px] leading-[1.6] text-textPrimary/85">
-              Users visit <span className="text-textPrimary">10 merchants</span>, consult{" "}
-              <span className="text-textPrimary">6</span>, spend <span className="text-textPrimary">30 minutes</span> comparing — and still don&apos;t trust the price.
+            <figure className="relative max-w-3xl">
+              <span aria-hidden className="absolute -left-2 -top-7 font-display text-[6rem] font-light leading-none text-nltLime-ink/15 md:text-[8rem]">
+                &ldquo;
+              </span>
+              <blockquote className="relative font-display text-[1.5rem] font-light leading-[1.3] tracking-tight text-textPrimary md:text-[1.9rem] md:leading-[1.28]">
+                I needed a plumber. I messaged ten shops, actually talked to six, and spent half an hour
+                comparing — and I still had no idea what it would cost. Every number felt like something
+                they&apos;d change once they showed up.
+              </blockquote>
+              <figcaption className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
+                A pattern from user research — and my own experience
+              </figcaption>
+            </figure>
+          </FadeIn>
+
+          <FadeIn className="mt-12">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">The first attempt</p>
+            <p className="mt-4 max-w-3xl text-[17px] leading-[1.6] tracking-tight text-textPrimary">
+              The brief&apos;s obvious answer was to show the price up front — so that&apos;s what we shipped first: a standalone quote page.
             </p>
-            <p className="mt-5 text-[18px] leading-[1.55] tracking-tight text-textPrimary">
-              Price was not a number problem. It was a <span className="text-nltLime-ink">process trust</span> problem.
+            <div className="mt-6 max-w-3xl rounded-2xl border border-black/[0.08] bg-black/[0.015] px-6 py-5">
+              <div className="flex items-baseline justify-between">
+                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">v1 · standalone quote page</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/60">no measurable lift</p>
+              </div>
+              <p className="mt-3 text-[14.5px] leading-relaxed text-textSecondary">
+                Conversion didn&apos;t budge. The quote was rarely the final price, so users didn&apos;t believe the number and merchants didn&apos;t maintain it. It became decoration — a label that said &ldquo;we offer this&rdquo; on a figure no one trusted.
+              </p>
+            </div>
+            <p className="mt-7 max-w-3xl text-[18px] leading-[1.55] tracking-tight text-textPrimary">
+              That failure was the insight. Price was not a number problem — it was a <span className="text-nltLime-ink">process-trust</span> problem. Trust can&apos;t be <span className="text-textSecondary line-through decoration-textSecondary/40">declared</span> on a page; it has to be built in the conversation.
             </p>
           </FadeIn>
 
@@ -645,13 +731,12 @@ export default function MeituanImCaseStudyPage() {
 
         <Section id="chat" eyebrow="IM Experience" title="Three entry states, one interaction model.">
           <FadeIn className="mt-2">
-            <ScaledPrototypeFrame
-              src="/assets/meituan-im/Repair%20Flow.html"
-              title="Repair flow — interactive prototype"
-              naturalWidth={480}
-              naturalHeight={1080}
-              displayMaxWidth={480}
-            />
+            <div className="mx-auto w-full max-w-[760px] overflow-hidden rounded-2xl border border-black/[0.08] bg-[#141416] shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]">
+              <ShowcaseVideo
+                src="/assets/meituan-im/im.mp4"
+                title="IM experience — three entry states walkthrough"
+              />
+            </div>
           </FadeIn>
         </Section>
 
@@ -740,6 +825,33 @@ export default function MeituanImCaseStudyPage() {
               </div>
             </div>
           </div>
+        </Section>
+
+        <Section id="merchant" eyebrow="The Other Side" title="Merchants quote against the same order — on equal footing.">
+          <FadeIn>
+            <p className="max-w-[42rem] text-[16px] leading-[1.7] text-textSecondary">
+              Every merchant receives the same structured service order and submits one quote — a fixed price, or a
+              strictly-bounded guide range that varies only by parts, never open-ended. Because they never see each
+              other&apos;s numbers, they compete on the same brief instead of undercutting. For local repair, an exact
+              price usually isn&apos;t knowable until the on-site visit, so a bounded range is the honest unit — not a
+              number that breaks at the door.
+            </p>
+          </FadeIn>
+          <FadeIn className="mt-10">
+            <ScaledPrototypeFrame
+              src="/assets/meituan-im/Repair%20Flow.html#flow=merchant&rail=0"
+              title="Merchant quote desk — interactive prototype"
+              naturalWidth={1110}
+              naturalHeight={820}
+              displayMaxWidth={1000}
+            />
+          </FadeIn>
+          <FadeIn className="mt-6">
+            <p className="max-w-[42rem] text-[13.5px] leading-relaxed text-textSecondary/80">
+              Today a merchant&apos;s only action is to quote — there&apos;s no race-to-the-bottom, but also little beyond
+              the quote itself. A next pass would design more merchant actions and incentives to keep quotes fast and honest.
+            </p>
+          </FadeIn>
         </Section>
 
         <Section id="prototype" eyebrow="Interactive Prototype" title="Try the full flow.">
@@ -925,7 +1037,10 @@ export default function MeituanImCaseStudyPage() {
                 <span className="text-[0.5em] text-nltLime-ink/70">%</span>
               </p>
               <div className="max-w-md">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Conversion lift</p>
+                <div className="flex items-center gap-2">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Conversion lift</p>
+                  <span className="rounded-full border border-nltLime-ink/30 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-nltLime-ink/80">Measured</span>
+                </div>
                 <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
                   Measured on a new in-message entry point — users who went all the way through this workflow converted +5% over the traditional path. User-level randomized A/B.
                 </p>
@@ -940,21 +1055,29 @@ export default function MeituanImCaseStudyPage() {
               <p className="font-display text-[2rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
                 ~<CountUp to={2000} format={(n) => Math.round(n / 1000).toString() + "k"} />
               </p>
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
-              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Incremental volume at projected rollout coverage.</p>
+              <div className="mt-3 flex items-center gap-2">
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
+                <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Projected</span>
+              </div>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Incremental volume modeled for wider rollout.</p>
             </div>
             <div>
               <p className="font-display text-[2rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
                 −<CountUp to={50} />
                 <span className="text-[0.55em] text-textPrimary/70">%</span>
               </p>
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
+              <div className="mt-3 flex items-center gap-2">
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
+                <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Measured</span>
+              </div>
               <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Post-service complaints in this flow.</p>
             </div>
           </FadeIn>
-          <p className="mt-10 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/65">
-            User-level randomized A/B · Meituan + Dianping
-          </p>
+          <FadeIn delay={0.15}>
+            <p className="mt-10 max-w-2xl text-[13.5px] leading-relaxed text-textSecondary/80">
+              The flow is a floating window triggered on search, so every searcher was in the sample. It launched in Hangzhou and select Zhejiang cities — bounded by where our certified-expert supply was — and these are real June–August numbers from a user-level randomized A/B.
+            </p>
+          </FadeIn>
         </Section>
 
         <Section id="reflection" eyebrow="Reflection" title="Next time, I would push on four fronts.">

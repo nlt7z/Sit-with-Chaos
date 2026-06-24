@@ -2,11 +2,117 @@
 
 import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  useState,
+  type ReactNode,
+} from "react";
+import { createPortal } from "react-dom";
 import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
 
 const mediaRound = "rounded-xl";
 const EMSK = [0.76, 0, 0.24, 1] as const;
+
+/* ── Image lightbox ─────────────────────────────────────────────────────────
+ * One full-screen overlay shared by every static image on the page. Any image
+ * wrapped in a Zoomable* control calls open() to view itself large; click the
+ * backdrop, the close button, or press Esc to dismiss. */
+type LightboxImage = { src: string; alt: string };
+const LightboxContext = createContext<(img: LightboxImage) => void>(() => {});
+const useLightbox = () => useContext(LightboxContext);
+
+function LightboxProvider({ children }: { children: ReactNode }) {
+  const [img, setImg] = useState<LightboxImage | null>(null);
+  const [mounted, setMounted] = useState(false);
+  const reduced = useReducedMotion();
+
+  // Portals need the document — only render the overlay after mount (SSR-safe).
+  useEffect(() => setMounted(true), []);
+
+  const open = useCallback((next: LightboxImage) => setImg(next), []);
+  const close = useCallback(() => setImg(null), []);
+
+  // While open: Esc closes, and lock body scroll so the page behind stays put.
+  useEffect(() => {
+    if (!img) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") close();
+    };
+    window.addEventListener("keydown", onKey);
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = prevOverflow;
+    };
+  }, [img, close]);
+
+  return (
+    <LightboxContext.Provider value={open}>
+      {children}
+      {mounted &&
+        createPortal(
+          <AnimatePresence>
+            {img && (
+              <motion.div
+                key="lightbox"
+                className="fixed inset-0 z-[120] flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm md:p-10"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.28, ease: easePremium }}
+                onClick={close}
+                role="dialog"
+                aria-modal="true"
+                aria-label={img.alt}
+              >
+                <button
+                  type="button"
+                  onClick={close}
+                  aria-label="Close image"
+                  className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full border border-white/20 bg-white/10 text-white/90 backdrop-blur transition-colors duration-200 hover:bg-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/60 md:right-6 md:top-6"
+                >
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                    <path d="M6 6l12 12M18 6L6 18" />
+                  </svg>
+                </button>
+                <motion.img
+                  src={img.src}
+                  alt={img.alt}
+                  className="max-h-[90vh] max-w-[92vw] rounded-lg object-contain shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
+                  initial={reduced ? false : { scale: 0.96, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  exit={reduced ? undefined : { scale: 0.97, opacity: 0 }}
+                  transition={{ duration: 0.3, ease: easePremium }}
+                  onClick={(e) => e.stopPropagation()}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>,
+          document.body
+        )}
+    </LightboxContext.Provider>
+  );
+}
+
+/** Hover affordance shown on a zoomable image — a corner "expand" glyph that
+ *  fades in, signalling the image opens full-screen on click. */
+function ZoomHint() {
+  return (
+    <span
+      className="pointer-events-none absolute bottom-3 right-3 flex h-9 w-9 translate-y-1 items-center justify-center rounded-full bg-black/50 text-white opacity-0 shadow-sm backdrop-blur-sm transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100"
+      aria-hidden
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+      </svg>
+    </span>
+  );
+}
 
 /** Tracks whether an element is within `rootMargin` of the viewport, flipping
  *  back to false once it scrolls far away. Heavy prototype iframes use this to
@@ -191,14 +297,18 @@ function CaseStudyNav() {
 type PlaceholderProps = { label: string; src: string; className?: string };
 
 function ImagePlaceholder({ label, src, className = "" }: PlaceholderProps) {
+  const open = useLightbox();
   return (
-    <div
-      className={`group relative overflow-hidden bg-black/[0.02] shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] ${mediaRound} ${className}`}
-      role="img"
-      aria-label={label}
+    <button
+      type="button"
+      onClick={() => open({ src, alt: label })}
+      aria-label={`${label} — view larger`}
+      className={`group relative block w-full cursor-zoom-in overflow-hidden ${mediaRound} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2`}
     >
-      <img src={src} alt={label} className={`h-auto w-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.03] ${mediaRound}`} loading="lazy" />
-    </div>
+      <img src={src} alt={label} className={`h-auto w-full object-contain transition-transform duration-[800ms] ease-out group-hover:scale-[1.06] ${mediaRound}`} loading="lazy" />
+      <span className={`pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/[0.05] ${mediaRound}`} aria-hidden />
+      <ZoomHint />
+    </button>
   );
 }
 
@@ -254,7 +364,7 @@ function ShowcaseVideo({
   }, [src, startMuted]);
 
   return (
-    <figure className={`overflow-hidden bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.08] transition-shadow duration-700 ease-out hover:shadow-[0_20px_60px_-24px_rgba(0,0,0,0.13)] ${mediaRound} ${className}`}>
+    <figure className={`overflow-hidden ${mediaRound} ${className}`}>
       <div className={`bg-black ${mediaRound}`}>
         <video
           ref={videoRef}
@@ -349,7 +459,7 @@ function FeaturePrototypeEmbed({
   const displayH = Math.round(FEATURE_FRAME_H * scale);
 
   return (
-    <figure className={`overflow-hidden bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.08] ${mediaRound} ${className}`}>
+    <figure className={`overflow-hidden ${mediaRound} ${className}`}>
       <div
         ref={frameRef}
         className={`relative w-full overflow-hidden bg-[#0b0b10] ${mediaRound}`}
@@ -485,7 +595,7 @@ function ShowcaseSlideGallery({ reduced }: { reduced: boolean | null }) {
 
       <figure
         ref={galleryFigureRef}
-        className={`mt-8 overflow-hidden bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.08] ${mediaRound}`}
+        className={`mt-8 overflow-hidden ${mediaRound}`}
       >
         <div className={`relative aspect-video bg-black md:min-h-[min(52vw,28rem)] ${mediaRound}`}>
           <AnimatePresence initial={false} mode="wait">
@@ -532,7 +642,7 @@ const additionalShowroomGalleryItems: {
     id: "astrology",
     room: "Astrology Room",
     capability: "Real-time memory updates",
-    body: "A personal constellation file updates during conversation — memory becomes transparent and inspectable.",
+    body: "A personal constellation file updates during conversation — memory becomes transparent and inspectable. Watching the model assemble you is intrinsically compelling, and visible memory quietly converts into trust.",
     prototypeSrc: FEATURE_PROTOTYPES.astroProfile,
     videoCaption: "Your profile rewrites in real time.",
   },
@@ -540,7 +650,7 @@ const additionalShowroomGalleryItems: {
     id: "therapy",
     room: "Therapy Room",
     capability: "Real-time analysis",
-    body: "A live panel surfaces conversation themes — users see what the system understood, not just what it said.",
+    body: "A live panel surfaces conversation themes — users see what the system understood, not just what it said. Feeling understood is exactly what builds trust and brings people back.",
     prototypeSrc: FEATURE_PROTOTYPES.therapyAnalysis,
     videoCaption: "The model's read, visible beside your words.",
   },
@@ -628,7 +738,7 @@ function D1BeforeAfter() {
         <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">
           Before — Generic chat
         </p>
-        <div className="overflow-hidden rounded-xl bg-black ring-1 ring-black/[0.08]">
+        <div className="overflow-hidden rounded-xl bg-black">
           <video
             className="w-full h-auto"
             autoPlay
@@ -717,9 +827,6 @@ const heroItem = {
   visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.98, ease: easeHero } },
 };
 
-const heroLinks = [
-  { href: "/work/ai-character/deck-present", label: "View Presentation Deck" },
-] as const;
 
 const introBlockContainer = {
   hidden: {},
@@ -1009,6 +1116,8 @@ const innovations: {
   name: string;
   capability: string;
   detail: ReactNode;
+  /** The user psychology / retention lever this feature is designed around. */
+  psychology?: string;
   workflowSrc: string;
   prototypeSrc: string;
   videoCaption: string;
@@ -1020,6 +1129,7 @@ const innovations: {
     id: "heartbeat-power",
     name: "Heartbeat Power",
     capability: "Real-time generation + character depth modeling",
+    psychology: "Intimacy|Being let into the character's hidden thoughts.",
     workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.heartbeat,
     videoCaption: "One tap. What it was actually thinking.",
@@ -1035,6 +1145,7 @@ const innovations: {
     collapsible: true,
     name: "Story Unlock",
     capability: "Progressive memory building",
+    psychology: "Progression|An open loop pulls you forward.",
     workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.story,
     videoCaption: "Go deeper. The character opens up.",
@@ -1049,6 +1160,7 @@ const innovations: {
     id: "moments-feed",
     name: "Moments Feed",
     capability: "Generation from memory history",
+    psychology: "Off-session presence|A reason to return.",
     workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.moments,
     videoCaption: "It keeps living between sessions.",
@@ -1064,6 +1176,7 @@ const innovations: {
     collapsible: true,
     name: "Alternate Universe Events",
     capability: "Long-term memory + generative storytelling",
+    psychology: "Variable reward|The strongest habit driver.",
     workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.altUniverse,
     videoCaption: "A scene only your history could trigger.",
@@ -1089,6 +1202,7 @@ const innovationItem = {
 function InteractionInnovationList() {
   const [openId, setOpenId] = useState<string | null>(null);
   const [expandedIds, setExpandedIds] = useState<string[]>([]);
+  const openLightbox = useLightbox();
 
   return (
     <motion.div
@@ -1120,18 +1234,24 @@ function InteractionInnovationList() {
               id={`workflow-panel-${item.id}`}
               role="region"
               aria-labelledby={`innovation-trigger-${item.id}`}
-              className={`mt-6 overflow-hidden ring-1 ring-black/[0.06] ${mediaRound}`}
+              className={`mt-6 overflow-hidden ${mediaRound}`}
             >
               <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary md:px-6">LLM workflow</p>
-              <div className="relative overflow-hidden bg-black/[0.02]">
+              <button
+                type="button"
+                onClick={() => openLightbox({ src: item.workflowSrc, alt: `${item.name} — LLM workflow` })}
+                aria-label={`${item.name} — LLM workflow — view larger`}
+                className="group relative block w-full cursor-zoom-in overflow-hidden bg-black/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-inset"
+              >
                 <img
                   src={item.workflowSrc}
                   alt={`${item.name} — LLM workflow`}
-                  className="h-auto w-full"
+                  className="h-auto w-full transition-transform duration-[800ms] ease-out group-hover:scale-[1.04]"
                   loading="lazy"
                   decoding="async"
                 />
-              </div>
+                <ZoomHint />
+              </button>
             </div>
           ) : null;
 
@@ -1196,6 +1316,11 @@ function InteractionInnovationList() {
                     <div className="pt-6">
                       <p className="font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
                       <p className="mt-3 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
+                      {item.psychology && (
+                        <p className="mt-3 max-w-prose font-sans text-[15px] leading-[1.6] text-textSecondary">
+                          <span className="font-medium text-textPrimary">{item.psychology.split("|")[0]} — </span>{item.psychology.split("|")[1]}
+                        </p>
+                      )}
                       {item.notShipped && (
                         <p className="mt-3 font-sans text-[12px] leading-relaxed text-textSecondary/70">
                           Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
@@ -1228,6 +1353,11 @@ function InteractionInnovationList() {
             </div>
             <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
             <p className="mt-3 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
+            {item.psychology && (
+              <p className="mt-3 max-w-prose font-sans text-[15px] leading-[1.6] text-textSecondary">
+                <span className="font-medium text-textPrimary">{item.psychology.split("|")[0]} — </span>{item.psychology.split("|")[1]}
+              </p>
+            )}
 
             <FeaturePrototypeEmbed
               label={`${item.name} — live prototype`}
@@ -1284,25 +1414,33 @@ function ShowroomStrategyCard({
   proofSrc: string;
   proofAlt: string;
 }) {
+  const open = useLightbox();
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.07]">
-      <div className="relative aspect-[10/13] w-full shrink-0 overflow-hidden bg-black/[0.05]">
+    <article className="flex h-full flex-col">
+      <button
+        type="button"
+        onClick={() => open({ src: proofSrc, alt: proofAlt })}
+        aria-label={`${proofAlt} — view larger`}
+        className="group relative aspect-[10/13] w-full shrink-0 cursor-zoom-in overflow-hidden rounded-2xl bg-black/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+      >
         <img
           src={proofSrc}
           alt={proofAlt}
-          className="h-full w-full object-cover object-left-top"
+          className="h-full w-full object-cover object-left-top transition-transform duration-[800ms] ease-out group-hover:scale-[1.06]"
           loading="lazy"
           decoding="async"
         />
-      </div>
-      <div className="flex flex-1 flex-col px-4 py-5 md:px-4 md:py-5">
+        <span className="pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/[0.06]" aria-hidden />
+        <ZoomHint />
+      </button>
+      <div className="flex flex-1 flex-col pt-4">
         <p className="font-sans text-[11px] font-medium leading-snug tracking-[0.06em] text-textSecondary/65">
           {tab} Room
         </p>
         <p className="mt-2 font-display text-[0.98rem] font-light leading-snug tracking-tight text-textPrimary md:text-[1.05rem]">
           {capability}
         </p>
-        <div className="mt-4 border-t border-black/[0.07] pt-4">
+        <div className="mt-3">
           <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">In experience</p>
           <p className="mt-2 font-sans text-[13px] leading-relaxed text-textSecondary/90 md:text-[13.5px] md:leading-[1.5]">{feel}</p>
         </div>
@@ -1624,6 +1762,10 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                   className="h-7 w-auto max-w-[11rem] object-contain object-left opacity-[0.92] md:h-8"
                   decoding="async"
                 />
+                <span className="h-4 w-px bg-black/15" aria-hidden />
+                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary">
+                  Qwen Character
+                </span>
               </motion.div>
 
               <div className="mt-7 overflow-hidden py-[0.18em] md:mt-8">
@@ -1631,7 +1773,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                   className="text-pretty font-display text-[2.2rem] font-light leading-[1.12] tracking-[-0.038em] text-textPrimary md:text-[clamp(2.35rem,4.5vw,2.85rem)] md:leading-[1.1]"
                   variants={reduced ? undefined : { hidden: { y: "106%" }, visible: { y: "0%", transition: { duration: 0.92, ease: EMSK } } }}
                 >
-                  Designing the AI That Feels Alive
+                  Interactive Showrooms — End-to-End Design
                 </motion.h1>
               </div>
 
@@ -1639,52 +1781,9 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 className="mt-6 max-w-[40rem] font-sans text-[1.0625rem] font-normal leading-[1.66] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.15rem]"
                 variants={reduced ? undefined : heroItem}
               >
-                Led and shipped the <Em>end-to-end design</Em> of Interactive Showrooms, the MVP feature for the Qwen Character LLM serving <Em>millions of enterprise customers</Em>, driving a <Em>200% lift</Em> in model API call volume through <Em>4 hands-on demos</Em>.
+                Led and shipped the <Em>end-to-end design</Em> of Interactive Showrooms, the MVP for the Qwen Character LLM — cutting time-to-first-value from <Em>hours</Em> of docs to <Em>minutes</Em>, and driving a <Em>200% lift</Em> in model API calls.
               </motion.p>
 
-              <motion.p
-                className="mt-4 max-w-[40rem] font-sans text-[15px] font-normal leading-[1.7] tracking-[-0.011em] text-textSecondary/90 md:text-[1rem]"
-                variants={reduced ? undefined : heroItem}
-              >
-                Cut time-to-first-value from <Em>60+ minutes</Em> of documentation to <Em>under 2 minutes</Em> with an immersive showroom design, where each showroom surfaces one strength of the Qwen LLM alongside a <Em>prompt guide</Em> and a <Em>live code editor</Em>.
-              </motion.p>
-
-              <motion.p
-                className="mt-4 max-w-[40rem] font-sans text-[15px] font-normal leading-[1.7] tracking-[-0.011em] text-textSecondary/90 md:text-[1rem]"
-                variants={reduced ? undefined : heroItem}
-              >
-                Set the prototyping standard by building in <Em>React</Em> with Cursor and Claude Code, handing engineering working components to improve the Design QA process. Art-directed the visual system across all 4 showrooms, owning motion, state transitions, and a <Em>custom illustration set</Em> that gave each AI character a distinct presence on the page.
-              </motion.p>
-
-              <motion.div
-                className="mt-6 flex items-start gap-3 border-l-2 border-nltLime pl-4 md:mt-7"
-                variants={reduced ? undefined : heroItem}
-              >
-                <p className="font-sans text-[13.5px] leading-relaxed text-textSecondary/65">
-                  <span className="font-medium uppercase tracking-[0.12em] text-nltLime-ink text-[11px]">Design principle</span>
-                  <span className="block mt-1.5">AI systems need <Em>visible cognition</Em>, not just outputs — I design to make model state inspectable.</span>
-                </p>
-              </motion.div>
-
-              <motion.nav
-                aria-label="Case study links"
-                variants={reduced ? undefined : heroItem}
-                className="mt-9 flex flex-wrap items-center gap-4 md:mt-11"
-              >
-                <motion.div
-                  whileHover={reduced ? undefined : { y: -2 }}
-                  whileTap={reduced ? undefined : { y: 1 }}
-                  transition={{ type: "spring", stiffness: 480, damping: 28 }}
-                  className="inline-block"
-                >
-                  <Link
-                    href={heroLinks[0].href}
-                    className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-                  >
-                    {heroLinks[0].label}
-                  </Link>
-                </motion.div>
-              </motion.nav>
             </div>
           </motion.div>
         </motion.div>
@@ -1717,23 +1816,23 @@ const metricRows = [
   {
     stat: "~2×",
     label: "Model tokens & calls",
-    before: "Four-week rolling average before showroom launch — generic chat and documentation-led trials (internal product analytics).",
-    after: "Four-week rolling average after go-live — showroom-led sessions, same metrics and org scope on the dashboard.",
-    note: "Pre vs post launch on one pipeline, not a third-party benchmark: compares the same internal reporting window immediately before and after the showroom release.",
+    before: "Generic chat and docs-led trials — 4-week average before launch.",
+    after: "Showroom-led sessions — 4-week average after go-live, same dashboard scope.",
+    note: "Same internal pipeline, pre vs post launch.",
   },
   {
     stat: "87%",
     label: "Clone-to-try setup",
-    before: "~7 enumerated steps for B2B evaluators to take the published character template from reading the repo/spec through local install, keys, model endpoint, prompt wiring, and a first runnable session — before opening the showroom chat thread.",
-    after: "Collapsed path: template entry with pre-seeded scenario context plus copy-ready YAML/prompt — external setup becomes a short checklist. The in-room proof moment still requires normal conversation after entry.",
-    note: "Internal clone-to-try checklist only — counts setup actions from code review to local configure/run, not taps inside the live demo or a single-click “instant wow.”",
+    before: "~7 steps for B2B evaluators — repo/spec, install, keys, model endpoint, prompt wiring, first run.",
+    after: "Template entry with pre-seeded context and copy-ready YAML/prompt — setup becomes a short checklist.",
+    note: "Internal clone-to-try checklist, setup actions only.",
   },
   {
     stat: "60%",
     label: "Faster delivery",
     before: "Spec-only handoff",
     after: "Code + spec together",
-    note: "Verbal engineering estimate — spec + code delivered together across 3 showroom releases. Not from ticket or cycle-time dashboards.",
+    note: "Engineering estimate across 3 showroom releases.",
   },
 ];
 
@@ -1803,6 +1902,7 @@ export default function CaseStudyContent() {
   const reduced = useReducedMotion();
 
   return (
+    <LightboxProvider>
     <div className="relative min-h-screen bg-white pt-24 md:pt-28">
       <CaseStudyNav />
       <CaseStudyMobileToc items={caseNavItems} />
@@ -1818,8 +1918,7 @@ export default function CaseStudyContent() {
         >
           
           <p>
-            The docs explained everything. But <Em>feeling</Em> the model meant configuring, running samples, and interpreting output alone — a loop that <Em>routinely stretched past an hour</Em>. Most trial users left before reaching the moment of value. 
-            Enterprise decks faced the same wall: descriptive, not convincing. So I shifted the product from documentation to <Em>proof</Em>.
+            <Em>Qwen Character is an LLM API</Em> — teams build their own character products on it, the way they build on Claude. But feeling the model meant configuring, running samples, and reading output alone — a loop that <Em>routinely stretched into hours</Em>, and most trial users left before the moment of value. So I redesigned its site into a <Em>storefront</Em>: a shift from documentation to <Em>proof</Em>.
           </p>
 
           <blockquote className="my-16 w-full !max-w-none border-l-2 border-nltLime pl-7 not-italic md:my-20 md:pl-8">
@@ -1837,18 +1936,10 @@ export default function CaseStudyContent() {
           title="I replaced documentation with market-specific showrooms."
         >
           <p>
-            Instead of improving the documentation, I designed 4 market-specific showrooms that let users experience a working version of their own future product. Companionship, psychotherapy, character cloning, IP licensing.
+            The showroom strategy came from our PM — a familiar consumer-product play. My leverage was pushing it to its limit and owning the build: rather than improving the documentation, I designed 4 market-specific showrooms — companionship, psychotherapy, character cloning, IP licensing — that let users experience a working version of their own future product. On a 10-person team, <Em>every feature decision across all 4 rooms was mine</Em>, and all of it shipped on the live site. Users don&apos;t believe descriptions, so the first message had to <Em>prove the capability</Em>.
           </p>
 
           <D1BeforeAfter />
-
-          <p>
-            6 apps, 40 + comments — every competitor felt like <Em>another ChatGPT</Em>. The answer was market-specific showrooms: one vertical per room, built for the evaluator who already works there.
-          </p>
-          <p>
-            Users don&apos;t believe descriptions. So the first message had to <Em>prove the capability</Em>.
-          </p>
-          
         </Section>
 
         {/* D2: CAPABILITY MAPPING */}
@@ -1858,13 +1949,14 @@ export default function CaseStudyContent() {
           title="I designed each room to prove one capability in 60 seconds."
         >
           <p>
-            Three model strengths crammed into one chat window. None of them landed. So I split them across rooms — one proof moment per room, legible in 60 seconds, no explainer text.
-          </p>
-          <p>
-            Users don&apos;t only judge the output — they judge whether they can see what the system knows, why it responds, and how much control they keep. So I turned invisible model behavior into <Em>visible surfaces</Em>: each room makes one form of cognition legible — <Em>memory</Em>, <Em>analysis</Em>, or <Em>implementation</Em>.
+            Three model strengths crammed into one chat window — none landed. So I split them across rooms: each makes one form of cognition <Em>visible</Em> — <Em>memory</Em>, <Em>analysis</Em>, or <Em>implementation</Em> — with one proof moment legible in 60 seconds, no explainer text.
           </p>
 
           <UxStrategyShowroomTable />
+
+          <p className="pt-2">
+            From here, each feature up close — the <Em>user psychology</Em> it&apos;s built on, and the <Em>model capability</Em> it makes visible.
+          </p>
 
           <InteractionInnovationList />
 
@@ -1877,23 +1969,11 @@ export default function CaseStudyContent() {
           eyebrow="Decision 03"
           title="I made demos emotional for users and inspectable for builders."
         >
-          <p>
-            <Em>Inspiration and Continue Response</Em> guide users to the <Em>wow moment</Em>. A slide-out drawer keeps <Em>YAML</Em> and <Em>prompts</Em> next to the <Em>live demo</Em>.
-          </p>
-
-          {/* Pair 1 — the two reply nudges described, then the prototype that demonstrates both. */}
-          <div className="mt-10 md:mt-12">
-            <h3 className="font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:text-[1.32rem]">
-              Two nudges toward the wow moment
-            </h3>
-            <div className="mt-4 grid gap-x-8 gap-y-3 md:grid-cols-2">
-              <p className="font-sans text-[15px] leading-relaxed text-textSecondary">
-                <Em>Inspiration Response</Em> — three reply options (action, emotion, expression) guide without breaking flow. Feels like gameplay, not messaging.
-              </p>
-              <p className="font-sans text-[15px] leading-relaxed text-textSecondary">
-                <Em>Continue Response</Em> — one tap extends the story from context. Long-context reasoning, no effort required.
-              </p>
-            </div>
+          {/* Pair 1 — both reply nudges in one line, then the prototype that demonstrates them. */}
+          <div>
+            <p className="max-w-prose font-sans text-[15px] leading-relaxed text-textSecondary">
+              Two nudges guide users to the <Em>wow moment</Em> without breaking flow: <Em>Inspiration Response</Em> offers three reply options — action, emotion, expression — that feel like gameplay, not messaging; <Em>Continue Response</Em> extends the story from context in one tap, no effort required.
+            </p>
             <FeaturePrototypeEmbed
               label="Experience loop — inspiration and continue response in flow"
               src={FEATURE_PROTOTYPES.inspire}
@@ -1961,9 +2041,7 @@ export default function CaseStudyContent() {
         >
           <ShowcaseSlideGallery reduced={reduced} />
 
-          <RevealLine className="mt-14" />
-
-          <h3 className="mt-12 font-display text-[1.25rem] font-light tracking-tight text-textPrimary md:text-[1.35rem]">
+          <h3 className="mt-16 font-display text-[1.25rem] font-light tracking-tight text-textPrimary md:text-[1.35rem]">
             Live interactive prototypes
           </h3>
           <p className="mt-4 font-sans text-[16px] leading-relaxed text-textSecondary">
@@ -2021,9 +2099,9 @@ export default function CaseStudyContent() {
                 detail: "token & call volume vs 4-wk pre-launch avg",
               },
               {
-                n: "60+ min → <2 min",
+                n: "hours → minutes",
                 label: "Onboarding",
-                detail: "static docs to first proof moment",
+                detail: "static docs to a felt first moment · observed",
               },
               { n: "4 weeks", label: "Research to production", detail: "intern project, shipped" },
             ].map((stat, i) => (
@@ -2072,30 +2150,41 @@ export default function CaseStudyContent() {
             behavior into experiences people can feel, trust, and build from.
           </p>
 
-          <h3 className="mt-14 font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:mt-16 md:text-[1.28rem]">
-            Design principles
-          </h3>
-          <div className="mt-8 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6">
-            <div className="flex flex-col rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] md:px-7 md:py-9">
-              <p className="font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
-                Design is the translation layer.
-              </p>
-              <p className="mt-4 font-sans text-[15px] leading-relaxed text-textSecondary">
-                In AI products, the hardest problem isn&apos;t the model — it&apos;s helping people <Em>imagine what to build</Em>.
+          {/* Presentation deck entry — moved here from the hero so the page ends
+              on the full narrative, then offers it as a guided walkthrough. */}
+          <div className="mt-16 flex flex-col items-start gap-5 border-t border-black/[0.06] pt-10 md:mt-20 md:flex-row md:items-center md:justify-between md:pt-12">
+            <div>
+              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-textSecondary/60">Presentation</p>
+              <p className="mt-2.5 font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
+                Walk the whole story as a deck.
               </p>
             </div>
-            <div className="flex flex-col rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] md:px-7 md:py-9">
-              <p className="font-display text-[1.18rem] font-light leading-[1.22] tracking-[-0.02em] text-textPrimary md:text-[1.28rem] md:leading-[1.18]">
-                The best demo is future-self proof.
-              </p>
-              <p className="mt-4 font-sans text-[15px] leading-relaxed text-textSecondary">
-                Show a <Em>working version of their product</Em>, then let them <Em>clone it</Em>.
-              </p>
+            <div className="flex flex-wrap items-center gap-5">
+              <motion.div
+                whileHover={reduced ? undefined : { y: -2 }}
+                whileTap={reduced ? undefined : { y: 1 }}
+                transition={{ type: "spring", stiffness: 480, damping: 28 }}
+                className="inline-block"
+              >
+                <Link
+                  href="/work/ai-character/deck-present"
+                  className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
+                >
+                  View Presentation Deck
+                </Link>
+              </motion.div>
+              <Link
+                href="/work/ai-character/deck-present-zh"
+                className="font-sans text-[13px] font-medium tracking-wide text-textSecondary underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-textPrimary hover:decoration-textPrimary/35"
+              >
+                中文演示文稿 →
+              </Link>
             </div>
           </div>
         </Section>
         </article>
       </main>
     </div>
+    </LightboxProvider>
   );
 }

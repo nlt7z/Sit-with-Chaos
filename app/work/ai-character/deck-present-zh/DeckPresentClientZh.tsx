@@ -12,24 +12,17 @@ const STG  = { hidden: {}, show: { transition: { staggerChildren: 0.09, delayChi
 const UP   = { hidden: { opacity: 0, y: 18 }, show: { opacity: 1, y: 0, transition: { duration: 0.82, ease: E } } };
 const FADE = { hidden: { opacity: 0 },        show: { opacity: 1,       transition: { duration: 0.55, ease: E } } };
 
-// ─── Linear-flavored dark tokens ──────────────────────────────────────────────
-// Near-black canvas, one hairline weight, a single chromatic accent (lime).
-// Surfaces are reduced to whitespace + hairlines; raised panels carry a glassy
-// 1px inner highlight so they read as machined rather than drawn.
-const CANVAS    = "bg-[#08090A]";
-const HEAD      = "text-[#F7F8F8]";                 // off-white headlines, never pure white
-const HAIR      = "border-white/[0.08]";            // the one hairline weight
-const INSET     = "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]";
-// The lone chromatic accent is lime (#C8FF47), applied via literal classes so
-// Tailwind can see it; everything else is whitespace + hairlines.
+// ─── Linear-flavored dark tokens(与英文版完全一致的视觉语言) ──────────────────
+const CANVAS = "bg-[#08090A]";
+const HEAD   = "text-[#F7F8F8]";
+const HAIR   = "border-white/[0.08]";
+const INSET  = "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]";
+// 唯一的强调色是 lime (#C8FF47),其余皆为留白 + 发丝线。
 
-/** Left copy + right media: wide media-heavy split used by the feature slides. */
 const SPLIT =
   "relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col gap-6 md:flex-row md:items-stretch md:gap-12";
 
-// ─── Live prototype deep-links — each URL mounts the real showroom straight into
-//     the moment its feature is open, so the deck shows the interactive prototype
-//     instead of a screen recording (mirrors the case study's FEATURE_PROTOTYPES).
+// ─── Live prototype deep-links — 与英文版一致,直接内嵌真实可交互原型 ──────────
 const PROTO = {
   romanceFull:     "/work/ai-character/prototype?embed=1&muted=1",
   heartbeat:       "/work/ai-character/prototype?embed=1&muted=1&focus=heartbeat",
@@ -42,49 +35,47 @@ const PROTO = {
   therapyAnalysis: "/work/ai-character/prototype-psych?embed=1&focus=analysis",
 } as const;
 
-// ─── Slide registry — re-sequenced to the live case study narrative ───────────
-//   Opening → Problem → Decision 01 → 02 → 03 → Method → Showcase →
-//   Contribution → Impact → Takeaway → Closing. Every slide is dark.
+// ─── Slide registry ───────────────────────────────────────────────────────────
 const SLIDES = [
-  { id: "cover",            chapter: "Opening"      },
-  { id: "overview",         chapter: "Opening"      },
-  { id: "problem",          chapter: "Problem"      },
-  { id: "hmw",              chapter: "Problem"      },
-  { id: "howmightwe",       chapter: "Problem"      },
-  { id: "d1-title",         chapter: "Decision 01"  },
-  { id: "d1-showrooms",     chapter: "Decision 01"  },
-  { id: "d2-title",         chapter: "Decision 02"  },
-  { id: "d2-map",           chapter: "Decision 02"  },
-  { id: "heartbeat",        chapter: "Decision 02"  },
-  { id: "heartbeat-logic",  chapter: "Decision 02"  },
-  { id: "story",            chapter: "Decision 02"  },
-  { id: "story-logic",      chapter: "Decision 02"  },
-  { id: "moments",          chapter: "Decision 02"  },
-  { id: "moments-logic",    chapter: "Decision 02"  },
-  { id: "altuniv",          chapter: "Decision 02"  },
-  { id: "altuniv-logic",    chapter: "Decision 02"  },
-  { id: "astro-profile",    chapter: "Decision 02"  },
-  { id: "therapy-analysis", chapter: "Decision 02"  },
-  { id: "d3-title",         chapter: "Decision 03"  },
-  { id: "inspire-continue", chapter: "Decision 03"  },
-  { id: "code-drawer",      chapter: "Decision 03"  },
-  { id: "exploration",      chapter: "Method"       },
-  { id: "how-i-worked",     chapter: "Method"       },
-  { id: "process",          chapter: "Method"       },
-  { id: "showrooms",        chapter: "Showcase"     },
-  { id: "showcase-live",    chapter: "Showcase"     },
-  { id: "backend",          chapter: "Contribution" },
-  { id: "spark-design",     chapter: "Contribution" },
-  { id: "metrics",          chapter: "Impact"       },
-  { id: "metrics-method",   chapter: "Impact"       },
-  { id: "principles",       chapter: "Takeaway"     },
-  { id: "takeaways",        chapter: "Takeaway"     },
-  { id: "closing",          chapter: "Closing"      },
+  { id: "cover",            chapter: "开场"     },
+  { id: "overview",         chapter: "开场"     },
+  { id: "problem",          chapter: "问题"     },
+  { id: "hmw",              chapter: "问题"     },
+  { id: "howmightwe",       chapter: "问题"     },
+  { id: "d1-title",         chapter: "决策 01"  },
+  { id: "d1-showrooms",     chapter: "决策 01"  },
+  { id: "d2-title",         chapter: "决策 02"  },
+  { id: "d2-map",           chapter: "决策 02"  },
+  { id: "heartbeat",        chapter: "决策 02"  },
+  { id: "heartbeat-logic",  chapter: "决策 02"  },
+  { id: "story",            chapter: "决策 02"  },
+  { id: "story-logic",      chapter: "决策 02"  },
+  { id: "moments",          chapter: "决策 02"  },
+  { id: "moments-logic",    chapter: "决策 02"  },
+  { id: "altuniv",          chapter: "决策 02"  },
+  { id: "altuniv-logic",    chapter: "决策 02"  },
+  { id: "astro-profile",    chapter: "决策 02"  },
+  { id: "therapy-analysis", chapter: "决策 02"  },
+  { id: "d3-title",         chapter: "决策 03"  },
+  { id: "inspire-continue", chapter: "决策 03"  },
+  { id: "code-drawer",      chapter: "决策 03"  },
+  { id: "exploration",      chapter: "方法"     },
+  { id: "how-i-worked",     chapter: "方法"     },
+  { id: "process",          chapter: "方法"     },
+  { id: "showrooms",        chapter: "产品展示" },
+  { id: "showcase-live",    chapter: "产品展示" },
+  { id: "backend",          chapter: "额外贡献" },
+  { id: "spark-design",     chapter: "额外贡献" },
+  { id: "metrics",          chapter: "成效"     },
+  { id: "metrics-method",   chapter: "成效"     },
+  { id: "principles",       chapter: "总结"     },
+  { id: "takeaways",        chapter: "总结"     },
+  { id: "closing",          chapter: "结束"     },
 ] as const;
 
 type SlideId = (typeof SLIDES)[number]["id"];
 
-// ─── Living glow — a single soft lime radial (the "indigo glow", done in lime) ─
+// ─── Living glow ──────────────────────────────────────────────────────────────
 function LivingAura({ reduced }: { reduced: boolean | null }) {
   if (reduced) return null;
   return (
@@ -156,13 +147,12 @@ function CountUp({
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
 const EYE  = "font-mono text-[10px] uppercase tracking-[0.24em]";
-const BODY = "font-sans leading-[1.72]";
+const BODY = "font-sans leading-[1.85]";
 
 function Eye({ children }: { children: ReactNode }) {
   return <p className={`${EYE} text-white/[0.42]`}>{children}</p>;
 }
 
-/** Tiny mono key chip — Linear treats keyboard hints as first-class chrome. */
 function Kbd({ children }: { children: ReactNode }) {
   return (
     <span className={`inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-[4px] border border-white/[0.12] bg-white/[0.04] px-1 font-mono text-[10px] leading-none text-white/55 ${INSET}`}>
@@ -172,10 +162,6 @@ function Kbd({ children }: { children: ReactNode }) {
 }
 
 // ─── Live prototype, scaled to fit ────────────────────────────────────────────
-// Renders the full-desktop showroom (1440×810) and scales it to fit the box it's
-// given, letterboxed and centered, so the embed reads like the real app — just
-// smaller. The deck only mounts the active slide, so each iframe boots when its
-// slide opens and unmounts when it leaves (no stack of live apps piling up).
 const PROTO_W = 1440;
 const PROTO_H = 810;
 
@@ -205,9 +191,8 @@ function DeckPrototype({ src, label }: { src: string; label: string }) {
             className="absolute left-0 top-0 border-0"
             style={{ width: PROTO_W, height: PROTO_H, transform: `scale(${scale})`, transformOrigin: "top left" }}
             onLoad={(e) => {
-              // The prototype is same-origin, so forward deck nav keys (arrows /
-              // space / page) out of the iframe — otherwise once it grabs focus
-              // the deck's keyboard navigation goes dead. Skip while typing.
+              // 原型与本页同源,把方向键 / 空格 / 翻页键从 iframe 里转发出去——
+              // 否则一旦 iframe 抢走焦点,deck 的键盘翻页就失灵了。输入时跳过。
               try {
                 const doc = (e.currentTarget as HTMLIFrameElement).contentDocument;
                 if (!doc) return;
@@ -217,20 +202,20 @@ function DeckPrototype({ src, label }: { src: string; label: string }) {
                   if (["ArrowRight", " ", "PageDown"].includes(ev.key)) { ev.preventDefault(); window.dispatchEvent(new CustomEvent("deck-nav", { detail: 1 })); }
                   else if (["ArrowLeft", "PageUp"].includes(ev.key)) { ev.preventDefault(); window.dispatchEvent(new CustomEvent("deck-nav", { detail: -1 })); }
                 });
-              } catch { /* cross-origin / unavailable — ignore */ }
+              } catch { /* 跨域 / 不可用 — 忽略 */ }
             }}
           />
         </div>
       ) : (
         <div className="flex h-full w-full items-center justify-center" aria-hidden>
-          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
+          <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">原型加载中…</span>
         </div>
       )}
     </div>
   );
 }
 
-// ─── Workflow SVG viewer — diagrams stay on white "paper" so dark ink reads ───
+// ─── Workflow SVG viewer ──────────────────────────────────────────────────────
 function WorkflowImg({ src, alt }: { src: string; alt: string }) {
   return (
     <div className="flex min-h-0 w-full min-w-0 flex-1 basis-0 flex-col">
@@ -251,14 +236,14 @@ function WorkflowImg({ src, alt }: { src: string; alt: string }) {
 // SLIDES
 // ─────────────────────────────────────────────────────────────────────────────
 
-// §00 Cover
+// §00 封面
 function SlideCover({ reduced }: { reduced: boolean | null }) {
   const ref = useRef<HTMLElement>(null);
   const meta = [
-    { k: "Role",     v: "Sole UX designer — research to production code" },
-    { k: "Timeline", v: "4 weeks · July–August 2025" },
-    { k: "Team",     v: "Me · 2 supervisors · 2 PM · 1 engineer" },
-    { k: "Owned",    v: "UX strategy · 4 showrooms · design-system templates" },
+    { k: "角色", v: "唯一 UX 设计师,从调研一路做到生产代码" },
+    { k: "周期", v: "4 周 · 2025 年 7–8 月" },
+    { k: "团队", v: "我 · 2 位导师 · 2 位产品 · 1 位工程师" },
+    { k: "负责", v: "UX 策略 · 4 个 showroom · 设计系统模板" },
   ];
   return (
     <section ref={ref} className={`relative flex h-full min-h-0 items-stretch overflow-hidden ${CANVAS}`}>
@@ -280,21 +265,21 @@ function SlideCover({ reduced }: { reduced: boolean | null }) {
         <div className="min-h-0 shrink-0 space-y-5 lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,22rem)] lg:gap-x-12 lg:space-y-0">
           <div className="min-w-0">
             <motion.div variants={FADE} className="flex items-center gap-4">
-              <img src="/assets/ai-character/alibaba-cloud-logo-new.png" alt="Alibaba Cloud"
+              <img src="/assets/ai-character/alibaba-cloud-logo-new.png" alt="阿里云"
                 className="h-6 w-auto max-w-[10rem] object-contain object-left opacity-95" decoding="async" />
               <span className="h-3.5 w-px bg-white/15" />
               <Eye>Qwen Character · 2025</Eye>
             </motion.div>
             <div className="mt-5 space-y-0.5 md:mt-6">
-              {["Interactive Showrooms", "End-to-End Design"].map((line, i) => (
+              {["Interactive Showrooms", "端到端设计"].map((line, i) => (
                 <Mask key={i} delay={0.1 + i * 0.12}>
-                  <h1 className={`text-balance font-display font-light leading-[1.08] tracking-[-0.03em] ${HEAD}`}
-                    style={{ fontSize: "clamp(1.95rem, 3.8vw + 0.4rem, 3.5rem)" }}>{line}</h1>
+                  <h1 className={`text-balance font-display font-light leading-[1.1] tracking-[-0.01em] ${HEAD}`}
+                    style={{ fontSize: "clamp(1.9rem, 3.8vw + 0.4rem, 3.5rem)" }}>{line}</h1>
                 </Mask>
               ))}
             </div>
-            <motion.p variants={UP} className={`mt-5 max-w-xl ${BODY} text-[14px] leading-[1.62] text-white/[0.62] md:mt-6 md:text-[15px]`}>
-              Led and shipped the end-to-end design of Interactive Showrooms — the MVP feature for the Qwen Character LLM, serving millions of enterprise customers — driving a 200% lift in model API call volume through 4 hands-on demos.
+            <motion.p variants={UP} className={`mt-5 max-w-xl ${BODY} text-[14px] leading-[1.8] text-white/[0.62] md:mt-6 md:text-[15px]`}>
+              独立主导并交付了 Interactive Showrooms 的端到端设计——通义千问 Character 大模型的 MVP 功能,服务数百万企业客户;并用 4 个能上手的 Demo,带动模型 API 调用量增长了 200%。
             </motion.p>
           </div>
           <div className="min-w-0 lg:flex lg:flex-col lg:justify-end">
@@ -303,7 +288,7 @@ function SlideCover({ reduced }: { reduced: boolean | null }) {
               {meta.map(({ k, v }) => (
                 <div key={k} className="min-w-0">
                   <dt className={`${EYE} text-white/[0.42]`}>{k}</dt>
-                  <dd className="mt-1 font-sans text-[12px] leading-snug text-white/[0.8] sm:text-[13px]">{v}</dd>
+                  <dd className="mt-1 font-sans text-[12px] leading-relaxed text-white/[0.8] sm:text-[13px]">{v}</dd>
                 </div>
               ))}
             </motion.dl>
@@ -314,26 +299,26 @@ function SlideCover({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §01 Overview — the promise + design principle (three columns, hairline-divided)
+// §01 概览
 function SlideOverview({ reduced }: { reduced: boolean | null }) {
   const pillars = [
-    { stat: "Hours → minutes", label: "Time to first value", detail: "Docs you couldn't feel → a felt first moment · observed" },
-    { stat: "~2×",              label: "Model API call volume", detail: "vs the 4-week pre-launch baseline" },
-    { stat: "4 demos",          label: "Hands-on showrooms",   detail: "One model strength proven per room" },
+    { stat: "数小时 → 几分钟", label: "首次感受到价值的耗时", detail: "从翻文档,到第一次真正被打动 · 观测值" },
+    { stat: "~2×",            label: "模型 API 调用量",     detail: "相比上线前 4 周基线" },
+    { stat: "4 个 Demo",      label: "能上手的 showroom",   detail: "一个房间,讲透一项模型能力" },
   ];
   return (
     <section className={`relative flex h-full items-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>Overview · Interactive Showrooms</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>概览 · Interactive Showrooms</Eye></motion.div>
         <Mask delay={0.12} className="mt-6">
-          <h2 className={`text-balance font-display font-light leading-[1.08] tracking-[-0.032em] ${HEAD}`}
-            style={{ fontSize: "clamp(1.7rem, 3.6vw, 2.8rem)" }}>
-            Finally, you can see what people build on the model.
+          <h2 className={`text-balance font-display font-light leading-[1.2] tracking-[-0.018em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.5rem)" }}>
+            终于,能看见别人用这个模型做出了什么。
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-6 max-w-2xl ${BODY} text-[15px] text-white/[0.68]`}>
-          Qwen Character is an LLM API — enterprises, developers, and game studios build their own character products on it, the way you&apos;d build on Claude. I redesigned its official site and showrooms: the storefront where those products, once invisible, became visible and playable. Each room surfaces one model strength alongside a prompt guide and a live code editor.
+          通义千问 Character 是一个大模型 API——企业、开发者、游戏团队在它之上做自己的角色产品,就像在 Claude 上做开发一样。我重做了它的官网和里面的 showroom:这是一个门店,让那些原本看不见的产品,第一次变得可见、可玩。每个房间聚焦模型的一项能力,配上提示词指南和在线代码编辑器。
         </motion.p>
         <motion.div variants={UP} className={`mt-9 grid border-t ${HAIR} sm:grid-cols-3`}>
           {pillars.map((p, i) => (
@@ -343,7 +328,7 @@ function SlideOverview({ reduced }: { reduced: boolean | null }) {
               transition={{ duration: 0.7, ease: E, delay: 0.28 + i * 0.1 }}>
               <p className="font-display font-light tracking-[-0.02em] text-[#C8FF47]"
                 style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.9rem)" }}>{p.stat}</p>
-              <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-white/[0.72]">{p.label}</p>
+              <p className="mt-3 font-sans text-[12px] font-medium text-white/[0.74]">{p.label}</p>
               <p className="mt-1.5 font-sans text-[12.5px] leading-relaxed text-white/[0.5]">{p.detail}</p>
             </motion.div>
           ))}
@@ -353,25 +338,25 @@ function SlideOverview({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §02 Problem
+// §02 问题
 function SlideProblem({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full items-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className="relative z-10 grid w-full max-w-6xl gap-10 md:grid-cols-2 md:gap-x-16" variants={STG} initial="hidden" animate="show">
         <div>
-          <motion.div variants={FADE}><Eye>The Problem</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>问题</Eye></motion.div>
           <Mask delay={0.1}>
-            <h2 className={`text-balance mt-6 font-display font-light leading-[1.08] tracking-[-0.03em] ${HEAD}`}
-              style={{ fontSize: "clamp(1.8rem, 3.6vw, 3rem)" }}>
-              The first hour was killing trial conversion.
+            <h2 className={`text-balance mt-6 font-display font-light leading-[1.2] tracking-[-0.018em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.7rem)" }}>
+              头一个小时,就劝退了大半试用用户。
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-7 ${BODY} text-[15px] text-white/[0.72]`}>
-            The docs explained everything. But feeling the model meant configuring, running samples, and interpreting output alone — a loop that routinely stretched past an hour. Most trial users left before reaching the moment of value.
+            文档把一切都写清楚了,可要真正「感受」到模型,用户得自己配置、跑样例、再解读结果——这一圈下来常常一个多小时。大多数人还没等到价值出现,就已经走了。
           </motion.p>
-          <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/85">
-            So I shifted the product from documentation to proof.
+          <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/90">
+            所以我把产品的重心,从「讲清楚」转向「证明给你看」。
           </motion.p>
         </div>
         <motion.div variants={UP} className="flex flex-col gap-4 self-center">
@@ -379,11 +364,11 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
             <video className="block w-full" autoPlay muted loop playsInline preload="metadata">
               <source src="/assets/ai-character/before.mp4" type="video/mp4" />
             </video>
-            <figcaption className={`border-t ${HAIR} px-4 py-2.5 ${EYE} text-white/45 tracking-[0.08em]`}>Before — generic chat &amp; static docs</figcaption>
+            <figcaption className={`border-t ${HAIR} px-4 py-2.5 ${EYE} text-white/45 tracking-[0.08em]`}>之前 — 通用聊天 &amp; 静态文档</figcaption>
           </figure>
           <div className="border-l-2 border-[#C8FF47]/40 pl-5">
-            <p className={`${EYE} text-white/[0.42]`}>Enterprise wall</p>
-            <p className="mt-2 font-sans text-[13px] leading-[1.7] text-white/[0.78]">Prospects received decks that described capability — descriptive, not convincing. Nothing compressed time-to-trust or replaced that slow first hour with proof.</p>
+            <p className={`${EYE} text-white/[0.42]`}>企业侧同样卡住</p>
+            <p className="mt-2 font-sans text-[13px] leading-[1.8] text-white/[0.78]">给企业客户的也只是一份罗列能力的 PPT——能说明,却说服不了人。没有任何东西能缩短建立信任的时间,更别说用看得见的证据替代那漫长的第一个小时。</p>
           </div>
         </motion.div>
       </motion.div>
@@ -394,10 +379,10 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
 // §03 How Might We
 function SlideHmw({ reduced }: { reduced: boolean | null }) {
   const rows = [
-    { finding: "Every competitor felt like another ChatGPT", evidence: "6 apps · 40+ comments" },
-    { finding: "Memory & pacing were invisible",             evidence: "Users churned before the difference landed" },
-    { finding: "Trust = fast time-to-value",                 evidence: "Trial users dropped in the first hour" },
-    { finding: "Enterprise: tell-vs-try wall",               evidence: "Decks describe, they don't convince" },
+    { finding: "每个竞品都像是又一个 ChatGPT", evidence: "6 款应用 · 40+ 评论" },
+    { finding: "记忆和节奏,用户根本看不见",   evidence: "还没感受到差异,人就走了" },
+    { finding: "信任,来自更快拿到价值",       evidence: "试用用户在第一小时内流失" },
+    { finding: "企业侧:能说,不能试",         evidence: "PPT 只能描述,说服不了人" },
   ];
   return (
     <section className={`relative flex h-full items-center justify-center overflow-hidden px-10 md:px-16 lg:px-20 ${CANVAS}`}>
@@ -406,16 +391,16 @@ function SlideHmw({ reduced }: { reduced: boolean | null }) {
         className="relative z-10 mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)] md:gap-x-16 lg:gap-x-24"
         variants={STG} initial="hidden" animate="show">
         <div className="min-w-0 max-w-xl md:max-w-none">
-          <motion.div variants={FADE}><Eye>Research · 6 Apps · 40+ Comments</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>调研 · 6 款应用 · 40+ 条评论</Eye></motion.div>
           <Mask delay={0.1}>
-            <h2 className={`text-balance mt-6 font-display font-light leading-[1.1] tracking-[-0.032em] ${HEAD}`}
-              style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.5rem)" }}>
-              Users want to feel AI, not read about it.
+            <h2 className={`text-balance mt-6 font-display font-light leading-[1.2] tracking-[-0.018em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
+              用户想亲自感受 AI,而不是读它的说明书。
             </h2>
           </Mask>
         </div>
         <motion.div variants={UP} className="min-w-0 self-center">
-          <p className={`${EYE} text-white/[0.42]`}>What the research surfaced</p>
+          <p className={`${EYE} text-white/[0.42]`}>调研告诉我们什么</p>
           <div className={`mt-4 divide-y divide-white/[0.08] border-t ${HAIR}`}>
             {rows.map((row, i) => (
               <motion.div key={i} className="flex items-baseline justify-between gap-4 py-3.5"
@@ -432,18 +417,18 @@ function SlideHmw({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §03.5 How Might We — standalone statement (after the research slide)
+// §03.5 How Might We — 单独成页(放在调研之后)
 function SlideHmwStatement({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full items-center overflow-hidden px-10 md:px-16 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show"
         className="relative z-10 mx-auto w-full max-w-6xl border-l-2 border-[#C8FF47] pl-6 md:pl-8">
-        <motion.div variants={FADE}><Eye>How might we</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>我们如何能</Eye></motion.div>
         <Mask delay={0.12} className="mt-5">
-          <h2 className={`text-balance font-display font-light leading-[1.18] tracking-[-0.02em] ${HEAD}`}
-            style={{ fontSize: "clamp(1.9rem, 4.2vw, 3.4rem)" }}>
-            Make model capabilities <em className="not-italic text-[#C8FF47]">visible</em>, <em className="not-italic text-[#C8FF47]">testable</em>, and <em className="not-italic text-[#C8FF47]">trustworthy</em> — within minutes?
+          <h2 className={`text-balance font-display font-light leading-[1.3] tracking-[-0.01em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.7rem, 3.8vw, 3rem)" }}>
+            在几分钟内,就让模型的能力变得<em className="not-italic text-[#C8FF47]">看得见</em>、<em className="not-italic text-[#C8FF47]">试得到</em>、<em className="not-italic text-[#C8FF47]">信得过</em>?
           </h2>
         </Mask>
       </motion.div>
@@ -451,7 +436,7 @@ function SlideHmwStatement({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// ─── Decision title template ──────────────────────────────────────────────────
+// ─── 决策标题模板 ─────────────────────────────────────────────────────────────
 function TitleSlide({
   reduced, chapter, title, body, kicker,
 }: { reduced: boolean | null; chapter: string; title: string; body: string; kicker: string }) {
@@ -461,15 +446,15 @@ function TitleSlide({
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 max-w-6xl">
         <motion.div variants={FADE}><Eye>{chapter}</Eye></motion.div>
         <Mask delay={0.1}>
-          <h2 className={`text-balance mt-6 font-display font-light leading-[1.08] tracking-[-0.032em] ${HEAD}`}
-            style={{ fontSize: "clamp(2rem, 4vw, 3.2rem)" }}>
+          <h2 className={`text-balance mt-6 font-display font-light leading-[1.18] tracking-[-0.02em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.8rem, 3.8vw, 3rem)" }}>
             {title}
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-8 max-w-2xl ${BODY} text-[15.5px] text-white/[0.72]`}>
           {body}
         </motion.p>
-        <motion.p variants={UP} className="mt-5 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/85">
+        <motion.p variants={UP} className="mt-5 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/90">
           {kicker}
         </motion.p>
       </motion.div>
@@ -477,23 +462,23 @@ function TitleSlide({
   );
 }
 
-// §05 Decision 01 — showrooms (live romance prototype as the "after")
+// §05 决策 01 — showroom(右侧内嵌实时恋爱原型作为「之后」)
 function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
-  const verticals = ["Companionship", "Psychotherapy", "Character cloning", "IP licensing"];
+  const verticals = ["情感陪伴", "心理咨询", "角色克隆", "IP 授权"];
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className={SPLIT} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center md:w-[34%] md:shrink-0">
-          <motion.div variants={FADE}><Eye>Before → After · Documentation to Proof</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>之前 → 之后 · 从文档到上手</Eye></motion.div>
           <Mask delay={0.1}>
-            <h2 className={`text-balance mt-5 font-display font-light leading-[1.1] tracking-[-0.028em] ${HEAD}`}
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              One vertical per room — built for the evaluator who already works there.
+            <h2 className={`text-balance mt-5 font-display font-light leading-[1.25] tracking-[-0.016em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.25rem, 2.4vw, 1.85rem)" }}>
+              一个房间,对应一个行业——为正身处其中的评估者而做。
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            6 apps, 40+ comments — every competitor felt like another ChatGPT. The answer was market-specific showrooms, each one a working version of a real buyer&apos;s product.
+            6 款应用、40+ 条评论,得出的结论是:每个竞品都像又一个 ChatGPT。于是答案变成分场景的 showroom——每一个,都是某位真实客户产品的可用版本。
           </motion.p>
           <motion.div variants={UP} className="mt-5 flex flex-wrap gap-2">
             {verticals.map((v) => (
@@ -502,39 +487,39 @@ function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
               </span>
             ))}
           </motion.div>
-          <motion.p variants={UP} className="mt-5 font-display text-[13px] font-light leading-relaxed text-[#C8FF47]/85">
-            Before: 60+ minutes of generic chat &amp; docs. After: the real room, right here →
+          <motion.p variants={UP} className="mt-5 font-display text-[13px] font-light leading-relaxed text-[#C8FF47]/90">
+            之前:60+ 分钟的通用聊天和文档。之后:真实的房间,就在右边 →
           </motion.p>
         </div>
         <motion.div variants={FADE} className="flex h-full min-h-0 flex-1 flex-col justify-center">
-          <DeckPrototype src={PROTO.romanceFull} label="Romance showroom — live prototype" />
-          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>Live romance showroom — long-term memory &amp; emotional pacing</p>
+          <DeckPrototype src={PROTO.romanceFull} label="恋爱 showroom — 实时原型" />
+          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>实时恋爱房间 · 长期记忆与情感节奏</p>
         </motion.div>
       </motion.div>
     </section>
   );
 }
 
-// §06 Decision 02 Title — three visibility columns, hairline-divided
+// §06 决策 02 标题
 function SlideD2Title({ reduced }: { reduced: boolean | null }) {
   const visibilities = [
-    { type: "Memory",         detail: "What the system recalls and updates about you, in the flow." },
-    { type: "Analysis",       detail: "What the system understood, shown while you keep talking." },
-    { type: "Implementation", detail: "The prompts, YAML, and constraints, exposed beside the demo." },
+    { type: "记忆", detail: "对话里,系统记住并更新了关于你的哪些信息。" },
+    { type: "分析", detail: "你边聊,系统边把它理解到的东西呈现出来。" },
+    { type: "实现", detail: "提示词、YAML 和约束,就摆在 Demo 旁边。" },
   ];
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>Decision 02</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>决策 02</Eye></motion.div>
         <Mask delay={0.1}>
-          <h2 className={`text-balance mt-5 font-display font-light leading-[1.1] tracking-[-0.03em] ${HEAD}`}
-            style={{ fontSize: "clamp(1.7rem, 3.4vw, 2.7rem)" }}>
-            I designed each room to prove one capability in 60 seconds.
+          <h2 className={`text-balance mt-5 font-display font-light leading-[1.2] tracking-[-0.018em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.5rem)" }}>
+            我让每个房间,用 60 秒证明一项能力。
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-6 max-w-2xl ${BODY} text-[14.5px] text-white/[0.68]`}>
-          Three model strengths crammed into one chat window — none landed. So I split them across rooms, each built around an engagement lever a companion product lives on (intimacy, progression, off-session presence, variable reward): one proof moment per room, legible in 60 seconds, while turning invisible model behavior into visible surfaces.
+          三项模型能力挤在一个聊天窗里,结果一项都没让人记住。于是我把它们拆进不同房间,每个房间都围绕一个社交产品赖以生存的留存杠杆来设计(亲密感、进度感、离线存在感、不确定奖励):一个房间一个证明时刻,60 秒看懂,同时把看不见的模型行为变成看得见的界面。
         </motion.p>
         <motion.div variants={UP} className={`mt-9 grid border-t ${HAIR} md:grid-cols-3`}>
           {visibilities.map((it, i) => (
@@ -543,8 +528,8 @@ function SlideD2Title({ reduced }: { reduced: boolean | null }) {
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.72, ease: E, delay: 0.26 + i * 0.1 }}>
               <p className={`${EYE} text-[#C8FF47]`}>{String(i + 1).padStart(2, "0")}</p>
-              <p className={`mt-3 font-display text-[1.05rem] font-light ${HEAD}`}>{it.type} visibility</p>
-              <p className="mt-2.5 font-sans text-[13px] leading-[1.7] text-white/[0.6]">{it.detail}</p>
+              <p className={`mt-3 font-display text-[1.1rem] font-light ${HEAD}`}>{it.type}可见</p>
+              <p className="mt-2.5 font-sans text-[13px] leading-[1.8] text-white/[0.6]">{it.detail}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -553,22 +538,22 @@ function SlideD2Title({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §07 Decision 02 — capability map (Showroom → proof → in-product)
+// §07 决策 02 — 能力地图
 function SlideD2Map({ reduced }: { reduced: boolean | null }) {
   const rooms = [
-    { tab: "Romance",   cap: "Long-term memory",        feel: "Character recalls conversation specifics across sessions", src: "/assets/ai-character/ux-strategy-romance-proof.png" },
-    { tab: "Astrology", cap: "Real-time memory updates", feel: "Live constellation profile updates mid-conversation",      src: "/assets/ai-character/ux-strategy-astrology-proof.png" },
-    { tab: "Therapy",   cap: "Real-time analysis",       feel: "Expert panel surfaces conversation themes as you chat",    src: "/assets/ai-character/ux-strategy-therapy-proof.png" },
+    { tab: "恋爱", cap: "长期记忆",     feel: "跨会话,角色仍记得聊过的细节",   src: "/assets/ai-character/ux-strategy-romance-proof.png" },
+    { tab: "星座", cap: "实时记忆更新", feel: "聊天时,星盘档案实时更新",       src: "/assets/ai-character/ux-strategy-astrology-proof.png" },
+    { tab: "心理", cap: "实时分析",     feel: "你聊着,专家面板就浮现出对话主题", src: "/assets/ai-character/ux-strategy-therapy-proof.png" },
   ];
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 pb-6 pt-7 md:px-14 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>Showroom → One Proof → In-Product Behavior</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>Showroom → 一个证明 → 产品里的行为</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.026em] ${HEAD}`}
+          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.016em] ${HEAD}`}
             style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-            Each room makes one form of cognition legible.
+            每个房间,让一种「认知」变得看得见。
           </h2>
         </Mask>
       </motion.div>
@@ -579,11 +564,11 @@ function SlideD2Map({ reduced }: { reduced: boolean | null }) {
             initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: E, delay: 0.2 + i * 0.1 }}>
             <div className="relative min-h-0 flex-1 overflow-hidden bg-black/40">
-              <img src={r.src} alt={`${r.tab} proof`} className="h-full w-full object-cover object-left-top" loading="lazy" decoding="async" />
+              <img src={r.src} alt={`${r.tab} 证明`} className="h-full w-full object-cover object-left-top" loading="lazy" decoding="async" />
             </div>
             <div className={`shrink-0 border-t ${HAIR} px-4 py-4`}>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-white/[0.4]">{r.tab} Room</p>
-              <p className={`mt-2 font-display text-[0.98rem] font-light leading-snug ${HEAD}`}>{r.cap}</p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-white/[0.4]">{r.tab}房间</p>
+              <p className={`mt-2 font-display text-[1.02rem] font-light leading-snug ${HEAD}`}>{r.cap}</p>
               <p className="mt-2 font-sans text-[11.5px] leading-relaxed text-white/[0.58]">{r.feel}</p>
             </div>
           </motion.article>
@@ -593,7 +578,7 @@ function SlideD2Map({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// ── Feature template: copy left, live prototype right ─────────────────────────
+// ── 功能模板:左文案 + 右实时原型 ─────────────────────────────────────────────
 function ProtoFeatureSlide({
   reduced, eye, title, lead, src, caption, notShipped = false,
 }: {
@@ -609,14 +594,14 @@ function ProtoFeatureSlide({
           <motion.div variants={FADE} className="flex items-center gap-2.5">
             <Eye>{eye}</Eye>
             {notShipped && (
-              <span className="rounded-[4px] border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 font-mono text-[8.5px] uppercase tracking-[0.12em] text-white/50">
-                Not shipped
+              <span className="rounded-[4px] border border-white/[0.12] bg-white/[0.04] px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.1em] text-white/50">
+                未上线
               </span>
             )}
           </motion.div>
           <Mask delay={0.1}>
-            <h2 className={`text-balance mt-5 font-display font-light tracking-[-0.028em] ${HEAD}`}
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+            <h2 className={`text-balance mt-5 font-display font-light leading-[1.25] tracking-[-0.016em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.25rem, 2.4vw, 1.85rem)" }}>
               {title}
             </h2>
           </Mask>
@@ -631,7 +616,7 @@ function ProtoFeatureSlide({
   );
 }
 
-// ── Feature template: model-workflow diagram full-bleed ───────────────────────
+// ── 模型工作流图 ──────────────────────────────────────────────────────────────
 function LogicSlide({ reduced, eye, title, src, alt }: { reduced: boolean | null; eye: string; title: string; src: string; alt: string }) {
   return (
     <section className={`relative flex h-full min-h-0 flex-col overflow-hidden px-10 py-4 md:px-14 md:py-5 ${CANVAS}`}>
@@ -640,8 +625,8 @@ function LogicSlide({ reduced, eye, title, src, alt }: { reduced: boolean | null
         <div className="shrink-0">
           <motion.div variants={FADE}><Eye>{eye}</Eye></motion.div>
           <Mask delay={0.08}>
-            <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.026em] ${HEAD}`}
-              style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.75rem)" }}>
+            <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.016em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.15rem, 2.2vw, 1.65rem)" }}>
               {title}
             </h2>
           </Mask>
@@ -654,85 +639,85 @@ function LogicSlide({ reduced, eye, title, src, alt }: { reduced: boolean | null
   );
 }
 
-// §08–17 Decision 02 feature slides
+// §08–17 决策 02 功能页
 function SlideHeartbeat({ reduced }: { reduced: boolean | null }) {
   return (
     <ProtoFeatureSlide
       reduced={reduced}
-      eye="Romance · 1 of 4 · Heartbeat Power"
-      title="The inner-monologue reveal."
-      lead="Curiosity gap + emotional privilege — glimpsing hidden thoughts feels like being let in. The intimacy hook that turns a chat into attachment."
+      eye="恋爱 · 1/4 · Heartbeat Power"
+      title="翻开角色的内心独白。"
+      lead="好奇缺口 + 情感特权——窥见角色的内心,像是『被允许靠近』。这正是把聊天变成依恋的亲密钩子。"
       src={PROTO.heartbeat}
-      caption="Live romance room — tap the heart to reveal the inner monologue"
+      caption="实时恋爱房间 · 点一下爱心,看见它的心里话"
     />
   );
 }
 function SlideHeartbeatLogic({ reduced }: { reduced: boolean | null }) {
-  return <LogicSlide reduced={reduced} eye="Heartbeat Power · Model Workflow" title="Real-time generation + character depth modeling"
-    src="/assets/ai-character/interaction/heartbeat_power_workflow.svg" alt="Heartbeat Power — LLM workflow diagram" />;
+  return <LogicSlide reduced={reduced} eye="Heartbeat Power · 模型工作流" title="实时生成 + 角色深度建模"
+    src="/assets/ai-character/interaction/heartbeat_power_workflow.svg" alt="Heartbeat Power — LLM 工作流图" />;
 }
 
 function SlideStoryUnlock({ reduced }: { reduced: boolean | null }) {
   return (
     <ProtoFeatureSlide
       reduced={reduced}
-      eye="Romance · 2 of 4 · Story Unlock"
-      title="Backstory revealed through depth."
-      lead="Open loops + progression — an unfinished backstory pulls you forward, so depth itself becomes the reward that lengthens every session."
+      eye="恋爱 · 2/4 · Story Unlock"
+      title="聊得越深,背景故事越解锁。"
+      lead="未闭合的故事 + 进度感——没讲完的背景牵着你往前,于是『深度』本身成了奖励,把每次会话拉长。"
       src={PROTO.story}
-      caption="Live romance room — go deeper, the character opens up"
+      caption="实时恋爱房间 · 聊得越深,角色越敞开"
     />
   );
 }
 function SlideStoryUnlockLogic({ reduced }: { reduced: boolean | null }) {
-  return <LogicSlide reduced={reduced} eye="Story Unlock · Model Workflow" title="Progressive context building"
-    src="/assets/ai-character/interaction/story_unlock_workflow.svg" alt="Story Unlock — LLM workflow diagram" />;
+  return <LogicSlide reduced={reduced} eye="Story Unlock · 模型工作流" title="渐进式上下文构建"
+    src="/assets/ai-character/interaction/story_unlock_workflow.svg" alt="Story Unlock — LLM 工作流图" />;
 }
 
 function SlideMoments({ reduced }: { reduced: boolean | null }) {
   return (
     <ProtoFeatureSlide
       reduced={reduced}
-      eye="Romance · 3 of 4 · Moments Feed"
-      title="The character lives between conversations."
-      lead="Object permanence + FOMO — the character keeps living while you're gone, which manufactures a reason to come back."
+      eye="恋爱 · 3/4 · Moments Feed"
+      title="不聊天时,角色也在过自己的生活。"
+      lead="存在的连续性 + 错失焦虑——你离开时角色仍在生活,这就给了你一个回来的理由。"
       src={PROTO.moments}
-      caption="Live romance room — a feed generated from your shared history"
+      caption="实时恋爱房间 · 由你们的共同记忆生成的动态"
     />
   );
 }
 function SlideMomentsLogic({ reduced }: { reduced: boolean | null }) {
-  return <LogicSlide reduced={reduced} eye="Moments Feed · Model Workflow" title="Memory to generated content"
-    src="/assets/ai-character/interaction/moments_feed_workflow.svg" alt="Moments Feed — LLM workflow diagram" />;
+  return <LogicSlide reduced={reduced} eye="Moments Feed · 模型工作流" title="从记忆到生成内容"
+    src="/assets/ai-character/interaction/moments_feed_workflow.svg" alt="Moments Feed — LLM 工作流图" />;
 }
 
 function SlideAltUniv({ reduced }: { reduced: boolean | null }) {
   return (
     <ProtoFeatureSlide
       reduced={reduced}
-      eye="Romance · 4 of 4 · Alternate Universe"
-      title="A scene only your history could trigger."
+      eye="恋爱 · 4/4 · Alternate Universe"
+      title="只有你的经历才能触发的剧情。"
       notShipped
-      lead="Variable reward — unpredictable, personal payoffs are the single strongest driver of a habit loop. (Prototyped, not shipped — real-time generation was too heavy for the timeline.)"
+      lead="不确定奖励——不可预期、又专属于你的回报,是习惯回路里最强的那根杠杆。(已完成原型,未上线——实时生成对当时的排期太重。)"
       src={PROTO.altUniverse}
-      caption="Live prototype — a memory-driven scene shift"
+      caption="实时原型 · 一段由记忆触发的剧情"
     />
   );
 }
 function SlideAltUnivLogic({ reduced }: { reduced: boolean | null }) {
-  return <LogicSlide reduced={reduced} eye="Alternate Universe · Model Workflow" title="From shared history to branching narrative"
-    src="/assets/ai-character/interaction/alternate_universe_events_workflow.svg" alt="Alternate Universe Events — LLM workflow diagram" />;
+  return <LogicSlide reduced={reduced} eye="Alternate Universe · 模型工作流" title="从共同经历到分支叙事"
+    src="/assets/ai-character/interaction/alternate_universe_events_workflow.svg" alt="Alternate Universe Events — LLM 工作流图" />;
 }
 
 function SlideAstroProfile({ reduced }: { reduced: boolean | null }) {
   return (
     <ProtoFeatureSlide
       reduced={reduced}
-      eye="Astrology · Real-Time Memory Updates"
-      title="Every word updates what it knows about you."
-      lead="Self-relevance — watching the model assemble you is intrinsically compelling, and visible memory quietly converts into trust."
+      eye="星座 · 实时记忆更新"
+      title="你说的每句话,都在更新它对你的认知。"
+      lead="自我相关——看着模型把『你』一点点拼出来本身就很上头,而可见的记忆会悄悄转化成信任。"
       src={PROTO.astroProfile}
-      caption="Live astrology room — your profile rewrites in real time"
+      caption="实时星座房间 · 你的档案,实时改写"
     />
   );
 }
@@ -741,24 +726,24 @@ function SlideTherapyAnalysis({ reduced }: { reduced: boolean | null }) {
   return (
     <ProtoFeatureSlide
       reduced={reduced}
-      eye="Therapy · Real-Time Analysis"
-      title="You see what it understood, not just what it said."
-      lead="Feeling seen — visible reasoning makes users feel understood, and that is what builds trust and brings them back. (An analysis demo — no clinical claims implied.)"
+      eye="心理 · 实时分析"
+      title="你看到的,是它「听懂」了什么,而不只是它「说」了什么。"
+      lead="被看见的感觉——可见的推理让用户觉得被理解,而『被理解』正是建立信任、让人回来的原因。(这是分析演示,不代表任何临床诊断。)"
       src={PROTO.therapyAnalysis}
-      caption="Live therapy room — the model's read, beside your words"
+      caption="实时心理房间 · 模型的理解,就在你的话旁边"
     />
   );
 }
 
-// §18 Decision 03 Title
+// §18 决策 03 标题
 function SlideD3Title({ reduced }: { reduced: boolean | null }) {
   return (
     <TitleSlide
       reduced={reduced}
-      chapter="Decision 03"
-      title="I made demos emotional for users and inspectable for builders."
-      body="Inspiration and Continue Response guide users to the wow moment. A slide-out drawer keeps YAML and prompts right next to the live demo."
-      kicker="The question shifts from “can your model do this” to “how fast can we ship.”"
+      chapter="决策 03"
+      title="我让 Demo 对用户有情感,对开发者可检视。"
+      body="Inspiration 和 Continue Response 把用户一步步带到惊艳时刻;一个抽屉式面板,把 YAML 和提示词就放在实时 Demo 旁边。"
+      kicker="问题从「你的模型能不能做到」,变成了「我们多快能上线」。"
     />
   );
 }
@@ -770,94 +755,94 @@ function SlideInspireContinue({ reduced }: { reduced: boolean | null }) {
       <LivingAura reduced={reduced} />
       <motion.div className={SPLIT} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center md:w-[34%] md:shrink-0">
-          <motion.div variants={FADE}><Eye>Two nudges toward the wow moment</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>通往惊艳时刻的两个小助推</Eye></motion.div>
           <Mask delay={0.1}>
-            <h2 className={`text-balance mt-5 font-display font-light leading-[1.1] tracking-[-0.028em] ${HEAD}`}
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Making the model legible before users know to look.
+            <h2 className={`text-balance mt-5 font-display font-light leading-[1.25] tracking-[-0.016em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.25rem, 2.4vw, 1.85rem)" }}>
+              在用户还没意识到该看哪儿之前,先让模型变得可读。
             </h2>
           </Mask>
           <motion.dl variants={UP} className={`mt-6 divide-y divide-white/[0.08] border-t ${HAIR}`}>
             {[
-              { t: "Inspiration Response", b: "Three reply options — action, emotion, expression — guide without breaking flow. Feels like gameplay, not messaging." },
-              { t: "Continue Response",    b: "One tap extends the story from context — long-context reasoning, no effort required." },
+              { t: "Inspiration Response", b: "三个回复选项——动作、情绪、表达——不打断心流地给出引导。像在玩游戏,而不是发消息。" },
+              { t: "Continue Response",    b: "轻点一下,故事就顺着上下文继续——长上下文推理,用户毫不费力。" },
             ].map((f) => (
               <div key={f.t} className="py-3.5">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/[0.42]">{f.t}</dt>
+                <dt className="font-mono text-[10px] uppercase tracking-[0.12em] text-white/[0.42]">{f.t}</dt>
                 <dd className="mt-1.5 font-sans text-[13px] leading-relaxed text-white/[0.74]">{f.b}</dd>
               </div>
             ))}
           </motion.dl>
         </div>
         <motion.div variants={FADE} className="flex h-full min-h-0 flex-1 flex-col justify-center">
-          <DeckPrototype src={PROTO.inspire} label="Romance showroom — inspiration & continue" />
-          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>Live romance room — tap a reply option, or continue the story</p>
+          <DeckPrototype src={PROTO.inspire} label="恋爱 showroom — Inspiration & Continue" />
+          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>实时恋爱房间 · 点一个回复选项,或者让故事继续</p>
         </motion.div>
       </motion.div>
     </section>
   );
 }
 
-// §20 Code drawer
+// §20 代码抽屉
 function SlideCodeDrawer({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className={SPLIT} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center md:w-[34%] md:shrink-0">
-          <motion.div variants={FADE}><Eye>Code Drawer, Not Console</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>代码抽屉,而非控制台</Eye></motion.div>
           <Mask delay={0.1}>
-            <h2 className={`text-balance mt-5 font-display font-light tracking-[-0.026em] ${HEAD}`}
-              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              YAML, prompts, and constraints slide open beside the live demo.
+            <h2 className={`text-balance mt-5 font-display font-light leading-[1.25] tracking-[-0.016em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.25rem, 2.4vw, 1.85rem)" }}>
+              YAML、提示词和约束,就在实时 Demo 边上滑出来。
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            Evaluators inspect the implementation in place — no context switch — then clone the template as a reusable starting point for their own product. The room ships as code.
+            评估者当场就能查看实现,不用切走;再把模板克隆下来,作为自己产品的可复用起点。这个房间本身,就是可交付的代码。
           </motion.p>
           <motion.div variants={UP} className="mt-6 space-y-2">
             <div className={`flex items-baseline gap-3 border-t ${HAIR} pt-3`}>
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/[0.38]">Rejected</span>
-              <p className="font-sans text-[12.5px] leading-snug text-white/[0.55]">Separate developer console — breaks demo flow, requires a tab switch.</p>
+              <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-white/[0.38]">放弃</span>
+              <p className="font-sans text-[12.5px] leading-snug text-white/[0.55]">另开一个开发者控制台——打断 Demo 心流,还得切标签页。</p>
             </div>
             <div className="flex items-baseline gap-3 border-t border-[#C8FF47]/30 pt-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#C8FF47]">Chosen</span>
-              <p className="font-sans text-[12.5px] leading-snug text-white/[0.84]">Slide-out drawer beside the live demo — one coherent demo-to-review flow.</p>
+              <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-[#C8FF47]">选用</span>
+              <p className="font-sans text-[12.5px] leading-snug text-white/[0.84]">在实时 Demo 旁滑出的抽屉——演示到审阅,一气呵成。</p>
             </div>
           </motion.div>
         </div>
         <motion.div variants={FADE} className="flex h-full min-h-0 flex-1 flex-col justify-center">
-          <DeckPrototype src={PROTO.code} label="Romance showroom — code drawer" />
-          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>Live romance room — the YAML &amp; prompt behind the demo, open right there</p>
+          <DeckPrototype src={PROTO.code} label="恋爱 showroom — 代码抽屉" />
+          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>实时恋爱房间 · Demo 背后的 YAML 和提示词,就在这儿展开</p>
         </motion.div>
       </motion.div>
     </section>
   );
 }
 
-// §20.5 Early process — placeholder for early exploration artifacts (to be added)
+// §20.5 早期过程 — 早期探索素材的占位页(待补充)
 function SlideExploration({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className={SPLIT} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center md:w-[34%] md:shrink-0">
-          <motion.div variants={FADE}><Eye>Early Process · Exploration</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>早期过程 · 探索</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className={`text-balance mt-5 font-display font-light leading-[1.2] tracking-[-0.016em] ${HEAD}`}
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Before the four rooms — the scrappy early work.
+              四个房间之前——那些粗糙的早期工作。
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            Research, sketches, and the directions I rejected on the way to the showrooms.
-            <span className="mt-2 block text-white/[0.4]">Placeholder — early artifacts to be added.</span>
+            调研、草图,以及我在通往 showroom 路上否决掉的方向。
+            <span className="mt-2 block text-white/[0.4]">占位 — 早期素材待补充。</span>
           </motion.p>
         </div>
         <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
           {[1, 2, 3, 4].map((n) => (
             <div key={n} className="flex min-h-0 items-center justify-center rounded-lg border border-dashed border-white/[0.16] bg-white/[0.015]">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Early artifact 0{n}</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">早期素材 0{n}</span>
             </div>
           ))}
         </motion.div>
@@ -866,12 +851,12 @@ function SlideExploration({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §21 How I Worked — 4-stage AI matrix (monochrome, lime phase numbers)
+// §21 我如何工作 — 四阶段 AI 矩阵
 const WORK_STAGES = [
-  { n: "01", phase: "Research",                 tools: "Notion · Memo · ChatGPT · Claude",         body: "Synthesized scattered research — 6 apps, 40+ comments — into strategy patterns in one session." },
-  { n: "02", phase: "UX Strategy",              tools: "Qwen · ChatGPT · Figma",                   body: "Stress-tested competing design decisions as structured arguments. Resolved debates before stakeholder meetings." },
-  { n: "03", phase: "Visual Identity & UI",     tools: "Figma · MasterGo · Dreamnia · Wan · Kling", body: "Generated character art, scene backgrounds, and motion loops — work that would have needed a 3D production team." },
-  { n: "04", phase: "Motion & Production Code", tools: "CodePen · Cursor · Claude Code",           body: "Shipped motion, state logic, and live interaction designs — without a dedicated frontend engineer." },
+  { n: "01", phase: "研究",            tools: "Notion · Memo · ChatGPT · Claude",          body: "把零散的调研——6 款应用、40+ 条评论——一个回合就归纳成策略模式。" },
+  { n: "02", phase: "UX 策略",         tools: "Qwen · ChatGPT · Figma",                    body: "把彼此冲突的设计决策当成结构化论证来反复推敲,在评审会之前就把分歧解决掉。" },
+  { n: "03", phase: "视觉识别 & UI",   tools: "Figma · MasterGo · Dreamnia · Wan · Kling", body: "生成角色原画、场景背景和循环动效——这些原本得靠一支 3D 团队才能做出来。" },
+  { n: "04", phase: "动效 & 生产代码", tools: "CodePen · Cursor · Claude Code",            body: "在没有专职前端的情况下,交付了动效、状态逻辑和可交互的设计。" },
 ] as const;
 
 function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
@@ -879,15 +864,15 @@ function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>How I Worked</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>我如何工作</Eye></motion.div>
         <Mask delay={0.1}>
-          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.028em] ${HEAD}`}
+          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.018em] ${HEAD}`}
             style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.2rem)" }}>
-            AI changed how I shipped — not just how I made assets.
+            AI 改变的不只是我做素材的方式,更是我交付的方式。
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-4 max-w-3xl ${BODY} text-[14px] text-white/[0.68]`}>
-          AI compressed the distance between strategy, visual direction, motion, and implementation — letting one designer deliver production-adjacent interfaces engineers could merge with minimal revision.
+          AI 把策略、视觉、动效到实现之间的距离压短了——一个设计师就能交付接近生产水准的界面,工程师几乎不用改就能合入。
         </motion.p>
         <motion.div variants={UP} className={`mt-9 grid border-t ${HAIR} md:grid-cols-4`}>
           {WORK_STAGES.map((s, i) => (
@@ -899,10 +884,10 @@ function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
                 <span className="font-mono text-[12px] text-[#C8FF47]">{s.n}</span>
                 <span className={`text-[13.5px] font-medium leading-tight ${HEAD}`}>{s.phase}</span>
               </div>
-              <p className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.12em] text-white/40">Tools</p>
+              <p className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.12em] text-white/40">工具</p>
               <p className="mt-1.5 font-sans text-[12px] leading-snug text-white/[0.82]">{s.tools}</p>
-              <p className="mt-4 font-mono text-[9.5px] uppercase tracking-[0.12em] text-white/40">Output</p>
-              <p className="mt-1.5 font-sans text-[12px] leading-[1.6] text-white/[0.6]">{s.body}</p>
+              <p className="mt-4 font-mono text-[9.5px] uppercase tracking-[0.12em] text-white/40">产出</p>
+              <p className="mt-1.5 font-sans text-[12px] leading-[1.7] text-white/[0.6]">{s.body}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -911,35 +896,35 @@ function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §22 Process — visual identity glimpse
+// §22 过程
 function SlideProcess({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className={SPLIT} variants={STG} initial="hidden" animate="show">
         <div className="flex min-w-0 flex-col justify-center md:w-[34%] md:shrink-0">
-          <motion.div variants={FADE}><Eye>A Glimpse Into the Process</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>过程一瞥</Eye></motion.div>
           <Mask delay={0.1}>
-            <h2 className={`text-balance mt-5 font-display font-light tracking-[-0.026em] ${HEAD}`}
+            <h2 className={`text-balance mt-5 font-display font-light leading-[1.2] tracking-[-0.016em] ${HEAD}`}
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Four weeks.<br />Research to production.
+              四周。<br />从调研到上线。
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            Inspired by Love and Deepspace. Visual identity built with Wan, Kling, Dreamnia, and SeeDance. Interactions built with Cursor and Claude Code.
+            灵感来自《恋与深空》。视觉部分用 Wan、Kling、Dreamnia 和 SeeDance 完成,交互用 Cursor 和 Claude Code 搭起来。
           </motion.p>
           <motion.div variants={UP} className="mt-5 border-l-2 border-[#C8FF47]/40 pl-4">
             <p className="font-sans text-[12px] leading-relaxed text-white/[0.58]">
-              The 3D avatar crashed mid-interaction → replaced with an AI-looping video. Small motions — a blink, a nod — felt more alive than complex rigged animation.
+              3D 形象在交互中途崩了 → 改用 AI 循环视频。一个眨眼、一次点头这样的小动作,反而比复杂的骨骼动画更显鲜活。
             </p>
           </motion.div>
         </div>
         <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
           {[
-            { src: "/assets/ai-character/design.jpg",             label: "Character direction exploration" },
-            { src: "/assets/ai-character/uivisual.jpg",           label: "UI visual system" },
-            { src: "/assets/ai-character/characterdirection.jpg", label: "Character directions" },
-            { src: "/assets/ai-character/innovation.jpg",         label: "Scene, music & motion concept" },
+            { src: "/assets/ai-character/design.jpg",             label: "角色方向探索" },
+            { src: "/assets/ai-character/uivisual.jpg",           label: "UI 视觉系统" },
+            { src: "/assets/ai-character/characterdirection.jpg", label: "角色方向" },
+            { src: "/assets/ai-character/innovation.jpg",         label: "场景、音乐与动效概念" },
           ].map(({ src, label }, i) => (
             <motion.div key={src} className={`group min-h-0 overflow-hidden rounded-lg`}
               initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
@@ -954,23 +939,23 @@ function SlideProcess({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §23 Showrooms 2×2 — product showcase montage
+// §23 Showroom 2×2 — 产品展示集锦
 function SlideShowrooms({ reduced }: { reduced: boolean | null }) {
   const rooms = [
-    { label: "Romance",   cap: "Long-term memory",         src: "/assets/ai-character/new-cover.mp4"   },
-    { label: "Astrology", cap: "Real-time memory updates", src: "/assets/ai-character/taobaibai-1.mp4" },
-    { label: "Therapy",   cap: "Real-time analysis",       src: "/assets/ai-character/therapy-1.mp4"   },
-    { label: "Character", cap: "Multi-agent coordination", src: "/assets/ai-character/pre-1.mp4"       },
+    { label: "恋爱", cap: "长期记忆",     src: "/assets/ai-character/new-cover.mp4"   },
+    { label: "星座", cap: "实时记忆更新", src: "/assets/ai-character/taobaibai-1.mp4" },
+    { label: "心理", cap: "实时分析",     src: "/assets/ai-character/therapy-1.mp4"   },
+    { label: "角色", cap: "多智能体协同", src: "/assets/ai-character/pre-1.mp4"       },
   ];
   return (
     <section className={`relative flex h-full flex-col overflow-hidden px-8 pb-6 pt-8 md:px-12 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className="relative z-10" variants={STG} initial="hidden" animate="show">
-        <motion.div variants={FADE}><Eye>Product Showcase · 4 Showrooms · 1 Template</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>产品展示 · 4 个 Showroom · 1 套模板</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.026em] ${HEAD}`}
+          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.016em] ${HEAD}`}
             style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
-            Each room turns one model capability into a guided workflow.
+            每个房间,都把一项模型能力变成一条有引导的工作流。
           </h2>
         </Mask>
       </motion.div>
@@ -984,8 +969,8 @@ function SlideShowrooms({ reduced }: { reduced: boolean | null }) {
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#C8FF47]">{r.label}</p>
-              <p className="mt-1 font-sans text-[11px] text-white/[0.88]">{r.cap}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#C8FF47]">{r.label}</p>
+              <p className="mt-1 font-sans text-[11.5px] text-white/[0.88]">{r.cap}</p>
             </div>
           </motion.div>
         ))}
@@ -994,48 +979,48 @@ function SlideShowrooms({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §24 Showcase — full live romance prototype
+// §24 产品展示 — 完整实时恋爱原型
 function SlideShowcaseLive({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full min-h-0 flex-col overflow-hidden px-8 py-5 md:px-12 md:py-6 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <div className="relative z-10 shrink-0">
-        <Eye>Product Showcase · Live Prototype · Romance</Eye>
-        <h2 className={`text-balance mt-2 font-display font-light tracking-[-0.026em] ${HEAD}`}
+        <Eye>产品展示 · 实时原型 · 恋爱</Eye>
+        <h2 className={`text-balance mt-2 font-display font-light tracking-[-0.016em] ${HEAD}`}
           style={{ fontSize: "clamp(1.2rem, 2.4vw, 1.7rem)" }}>
-          The real, built-in-React showroom — running right here.
+          用 React 做的真实 showroom——此刻就在这里跑着。
         </h2>
       </div>
       <div className="relative z-10 mt-4 flex min-h-0 flex-1 flex-col">
-        <DeckPrototype src={PROTO.romanceFull} label="Romance showroom — full live prototype" />
+        <DeckPrototype src={PROTO.romanceFull} label="恋爱 showroom — 完整实时原型" />
       </div>
     </section>
   );
 }
 
-// §25 Additional Contribution — SaaS console refresh
+// §25 额外贡献 — SaaS 控制台焕新
 function SlideBackend({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
         <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>Additional Contribution · B2B Console</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>额外贡献 · B2B 控制台</Eye></motion.div>
           <Mask delay={0.08}>
-            <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.028em] ${HEAD}`}
+            <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.018em] ${HEAD}`}
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Full refresh of the Qwen Character SaaS console.
+              通义千问 Character SaaS 控制台的全面焕新。
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-3 max-w-3xl ${BODY} text-[13.5px] text-white/[0.66]`}>
-            An end-to-end update spanning API surfaces, Studio — Applications, Workflows, Knowledge Base, Characters — and the nested flows beneath: empty and error states, plus analytics views for invocation metrics and call volume.
+            一次端到端的改版,覆盖 API 界面、Studio(应用、工作流、知识库、角色),以及下面的各级流程:空状态、错误态,还有调用指标和调用量的数据看板。
           </motion.p>
         </div>
         <motion.div variants={UP} className="mt-6 grid grid-cols-3 gap-3">
           {[
-            { src: "/assets/ai-character/updateddesign1.jpg", label: "Studio surfaces", tag: "Studio" },
-            { src: "/assets/ai-character/updateddesign2.jpg", label: "Nested flows",    tag: "Flows" },
-            { src: "/assets/ai-character/updatedesign3.jpg",  label: "Knowledge Base",  tag: "KB" },
+            { src: "/assets/ai-character/updateddesign1.jpg", label: "Studio 界面", tag: "Studio" },
+            { src: "/assets/ai-character/updateddesign2.jpg", label: "多级流程",    tag: "流程" },
+            { src: "/assets/ai-character/updatedesign3.jpg",  label: "知识库",      tag: "知识库" },
           ].map(({ src, label, tag }, i) => (
             <motion.div key={src} className={`group overflow-hidden rounded-lg`}
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
@@ -1045,7 +1030,7 @@ function SlideBackend({ reduced }: { reduced: boolean | null }) {
                   className="h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
               </div>
               <div className={`flex items-center gap-2 border-t ${HAIR} px-3 py-2`}>
-                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#C8FF47]">{tag}</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#C8FF47]">{tag}</span>
                 <span className="font-sans text-[11px] text-white/[0.66]">{label}</span>
               </div>
             </motion.div>
@@ -1056,38 +1041,38 @@ function SlideBackend({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §26 Spark Design — adoption
+// §26 Spark Design — 被采用
 function SlideSparkDesign({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>Adoption · Spark Design</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>被采用 · Spark Design</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.028em] ${HEAD}`}
+          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.018em] ${HEAD}`}
             style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-            The showroom system became the published B2B design framework.
+            Showroom 这套体系,最后成了对外发布的 B2B 设计框架。
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[14px] text-white/[0.66]`}>
-          Components, interactions, and motion patterns built for the showrooms became the Spark Design templates used by external Agentscope partners — these decisions outlived the showroom releases.
+          当初为 showroom 做的组件、交互和动效,后来变成了外部 Agentscope 伙伴在用的 Spark Design 模板——这些设计,比 showroom 本身活得更久。
         </motion.p>
         <motion.div variants={UP} className={`mt-6 overflow-hidden rounded-lg`}>
           <div className={`flex items-center justify-between gap-3 border-b ${HAIR} bg-white/[0.02] px-4 py-3 md:px-5`}>
             <div>
-              <p className={`${EYE} text-white/[0.42]`}>Adoption</p>
+              <p className={`${EYE} text-white/[0.42]`}>采用</p>
               <p className={`mt-1.5 font-sans text-[12.5px] font-medium ${HEAD}`}>Spark Design templates — Agentscope</p>
             </div>
             <a href="https://sparkdesign.agentscope.io/#/templates" target="_blank" rel="noopener noreferrer"
               className="shrink-0 font-mono text-[10px] uppercase tracking-[0.16em] text-white/[0.55] underline decoration-white/[0.18] underline-offset-[5px] transition-colors hover:text-white">
-              Open ↗
+              打开 ↗
             </a>
           </div>
           <iframe title="Spark Design templates" src="https://sparkdesign.agentscope.io/#/templates" loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
             className="h-[min(56vh,540px)] min-h-[320px] w-full border-0 bg-white" />
           <p className={`border-t ${HAIR} bg-white/[0.02] px-4 py-2 font-sans text-[10.5px] leading-relaxed text-white/40 md:px-5`}>
-            If the frame is empty, the host blocks embedding — open in browser.
+            如果下面是空白,说明站点不允许内嵌——请在浏览器里打开。
           </p>
         </motion.div>
       </motion.div>
@@ -1095,7 +1080,7 @@ function SlideSparkDesign({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §27 Metrics — staged AI-style reveal
+// §27 成效 — 分阶段揭示
 function DataStreamBg() {
   const lines = [
     { top: "8%",  width: "32%", dur: 5.4, delay: 0.0, opacity: 0.16 },
@@ -1161,10 +1146,10 @@ function TimeBar({
 
 function SlideMetrics() {
   const stats = [
-    { to: 4,   suffix: "",  prefix: "",  label: "Showrooms shipped",       detail: "Romance · astrology · therapy · character" },
-    { to: 100, suffix: "%", prefix: "+", label: "Model API call volume",    detail: "~2× the 4-week pre-launch baseline" },
-    { to: 87,  suffix: "%", prefix: "",  label: "Fewer clone-to-try steps", detail: "Spec + configure chain → template entry" },
-    { to: 60,  suffix: "%", prefix: "",  label: "Faster delivery",          detail: "Engineering estimate · spec + code handoff" },
+    { to: 4,   suffix: "",  prefix: "",  label: "上线 showroom",     detail: "恋爱 · 星座 · 心理 · 角色" },
+    { to: 100, suffix: "%", prefix: "+", label: "模型 API 调用量",   detail: "约为上线前 4 周基线的 2 倍" },
+    { to: 87,  suffix: "%", prefix: "",  label: "克隆即试的步骤减少", detail: "从规格 + 配置一长串,缩成模板入口" },
+    { to: 60,  suffix: "%", prefix: "",  label: "交付提速",          detail: "工程估算 · 规格与代码一起交付" },
   ];
   const T_TITLE = 0.0, T_SUB = 0.3, T_CHART = 0.6, T_STATS = 0.9, T_OUTRO = 1.4;
   return (
@@ -1174,12 +1159,12 @@ function SlideMetrics() {
         <motion.div
           initial={{ opacity: 0, y: 12, filter: "blur(8px)" }} animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
           transition={{ duration: 0.7, ease: E, delay: T_TITLE }}>
-          <Eye>Impact · Shipped · Converted · Adopted</Eye>
+          <Eye>成效 · 已上线 · 已转化 · 被采用</Eye>
         </motion.div>
         <Mask delay={T_SUB}>
-          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.03em] ${HEAD}`}
+          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.018em] ${HEAD}`}
             style={{ fontSize: "clamp(1.5rem, 3.2vw, 2.6rem)" }}>
-            What shipped. What changed.
+            交付了什么。改变了什么。
           </h2>
         </Mask>
         <motion.div
@@ -1187,18 +1172,18 @@ function SlideMetrics() {
           transition={{ duration: 0.75, ease: E, delay: T_CHART }}
           className={`mt-7 rounded-lg bg-white/[0.02] px-5 py-5 md:px-7 md:py-6`}>
           <div className="flex items-baseline justify-between gap-6">
-            <p className={`${EYE} text-white/55`}>Time to first value</p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]/85">Observed in testing</p>
+            <p className={`${EYE} text-white/55`}>首次感受到价值的耗时</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]/85">测试中的观测</p>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2 md:gap-x-10">
-            <TimeBar label="Before · Documentation onboarding" value="60+ min"   pct={100} delay={T_CHART + 0.2} />
-            <TimeBar label="After · Interactive showroom"      value="a few min" pct={10}  delay={T_CHART + 0.45} highlight />
+            <TimeBar label="之前 · 文档式上手"      value="60+ 分钟" pct={100} delay={T_CHART + 0.2} />
+            <TimeBar label="之后 · 交互式 showroom" value="几分钟"   pct={10}  delay={T_CHART + 0.45} highlight />
           </div>
         </motion.div>
         <div className="mt-6 grid grid-cols-2 gap-px overflow-hidden rounded-lg bg-white/[0.06] md:grid-cols-4">
           {stats.map((s, i) => {
             const cardDelay = T_STATS + i * 0.12;
-            const isKey = s.label === "Model API call volume";
+            const isKey = s.label === "模型 API 调用量";
             return (
               <motion.div key={s.label} className="relative bg-[#08090A] px-6 py-6"
                 initial={{ opacity: 0, y: 14, scale: 0.97, filter: "blur(10px)" }}
@@ -1229,35 +1214,35 @@ function SlideMetrics() {
   );
 }
 
-// §28 Metrics Method
+// §28 成效口径
 function SlideMetricsMethod() {
   const rows = [
-    { metric: "+100% / ~2×", label: "Model API call volume",
-      baseline: "Four-week rolling avg of internal product analytics before showroom launch.",
-      result: "Four-week rolling avg after go-live, same pipeline and org scope.",
-      note: "Shorthand for +100% lift / ~2× total. Pre vs post on one pipeline, not a third-party benchmark." },
-    { metric: "87%", label: "Setup reduction",
-      baseline: "~7 enumerated steps in the internal clone-to-try checklist — repo review through endpoint wiring.",
-      result: "Pre-seeded template + copy-ready YAML — setup collapses to a short checklist.",
-      note: "Counts setup actions, not taps inside the live demo." },
-    { metric: "60%", label: "Faster delivery",
-      baseline: "Spec-only handoff to engineers.",
-      result: "Spec + code delivered together.",
-      note: "Verbal engineering estimate across 3 showroom releases. Not from a cycle-time dashboard." },
+    { metric: "+100% / ~2×", label: "模型 API 调用量",
+      baseline: "showroom 上线前,内部产品分析的 4 周滚动平均值。",
+      result: "上线后的 4 周滚动平均值,口径、管线都不变。",
+      note: "也就是 +100% / 约 2× 的简写。同一管线上线前后的对比,不是第三方基准。" },
+    { metric: "87%", label: "配置步骤缩减",
+      baseline: "内部「克隆即试」清单里约 7 步——从看仓库一直到接好接口。",
+      result: "预置模板 + 可直接复制的 YAML,配置缩成短短一份清单。",
+      note: "统计的是配置动作,不含实时 Demo 里的点击。" },
+    { metric: "60%", label: "交付提速",
+      baseline: "只把规格交给工程师。",
+      result: "规格和代码一起交付。",
+      note: "来自 3 次 showroom 发布中工程师的口头估算,不是周期看板的数据。" },
   ];
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
       <motion.div variants={STG} initial="hidden" animate="show" className="mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>How the numbers are defined</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>这些数字是怎么算出来的</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.028em] ${HEAD}`}
+          <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.018em] ${HEAD}`}
             style={{ fontSize: "clamp(1.4rem, 2.8vw, 2.2rem)" }}>
-            Honest about the baselines.
+            把基线讲清楚。
           </h2>
         </Mask>
         <motion.div variants={UP} className={`mt-7 border-t ${HAIR}`}>
           <div className={`hidden border-b ${HAIR} px-1 py-2.5 md:grid md:grid-cols-[10rem_1fr_1fr_1fr] md:gap-x-6`}>
-            {["Metric", "Baseline", "Result", "Note"].map(h => (
+            {["指标", "基线", "结果", "说明"].map(h => (
               <p key={h} className={`${EYE} text-white/[0.42]`}>{h}</p>
             ))}
           </div>
@@ -1269,11 +1254,11 @@ function SlideMetricsMethod() {
                 className="grid grid-cols-1 gap-2 px-1 py-4 md:grid-cols-[10rem_1fr_1fr_1fr] md:items-start md:gap-x-6">
                 <div>
                   <p className="font-display text-[1.5rem] font-light tracking-tight text-[#C8FF47]">{row.metric}</p>
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/[0.5]">{row.label}</p>
+                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-white/[0.5]">{row.label}</p>
                 </div>
-                <p className="font-sans text-[12.5px] leading-snug text-white/[0.72]">{row.baseline}</p>
-                <p className="font-sans text-[12.5px] leading-snug text-white/[0.88]">{row.result}</p>
-                <p className="font-sans text-[12px] leading-snug text-white/[0.55]">{row.note}</p>
+                <p className="font-sans text-[12.5px] leading-relaxed text-white/[0.72]">{row.baseline}</p>
+                <p className="font-sans text-[12.5px] leading-relaxed text-white/[0.88]">{row.result}</p>
+                <p className="font-sans text-[12px] leading-relaxed text-white/[0.55]">{row.note}</p>
               </motion.div>
             ))}
           </div>
@@ -1283,23 +1268,23 @@ function SlideMetricsMethod() {
   );
 }
 
-// §29 Principles — two columns, hairline-divided
+// §29 设计原则
 function SlidePrinciples({ reduced }: { reduced: boolean | null }) {
   const principles = [
-    { n: "01", t: "Design is the translation layer.",
-      body: "In AI products, the hardest problem isn’t the model — it’s helping people imagine what to build." },
-    { n: "02", t: "The best demo is future-self proof.",
-      body: "Show a working version of their product, then let them clone it." },
+    { n: "01", t: "设计,是那层翻译。",
+      body: "在 AI 产品里,最难的从来不是模型,而是帮人想清楚:拿它能做出什么。" },
+    { n: "02", t: "最好的 Demo,是「未来的你」的证据。",
+      body: "先把他们产品的可用版本摆出来,再让他们直接克隆走。" },
   ];
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>Takeaway · Principles</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>总结 · 设计原则</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className={`text-balance mt-5 font-display font-light tracking-[-0.028em] ${HEAD}`}
+          <h2 className={`text-balance mt-5 font-display font-light tracking-[-0.018em] ${HEAD}`}
             style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
-            AI products don&apos;t sell themselves through capability lists.
+            AI 产品,不会靠一张能力清单就卖出去。
           </h2>
         </Mask>
         <motion.div variants={UP} className={`mt-9 grid border-t ${HAIR} md:grid-cols-2`}>
@@ -1308,9 +1293,9 @@ function SlidePrinciples({ reduced }: { reduced: boolean | null }) {
               className={`py-8 md:px-8 ${i > 0 ? `border-t ${HAIR} md:border-l md:border-t-0` : "md:pl-0"}`}
               initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, ease: E, delay: 0.24 + i * 0.12 }}>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]">Principle {p.n}</p>
-              <p className={`mt-4 font-display text-[1.2rem] font-light leading-[1.25] tracking-[-0.02em] ${HEAD} md:text-[1.34rem]`}>{p.t}</p>
-              <p className="mt-4 font-sans text-[14.5px] leading-[1.7] text-white/[0.64]">{p.body}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]">原则 {p.n}</p>
+              <p className={`mt-4 font-display text-[1.2rem] font-light leading-[1.35] tracking-[-0.01em] ${HEAD} md:text-[1.34rem]`}>{p.t}</p>
+              <p className="mt-4 font-sans text-[14.5px] leading-[1.8] text-white/[0.64]">{p.body}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -1319,27 +1304,27 @@ function SlidePrinciples({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §30 Takeaways — what I learned (2×2 hairline grid)
+// §30 我学到了什么
 function SlideTakeaways({ reduced }: { reduced: boolean | null }) {
   const items = [
-    { label: "Memory transparency",      note: "The constellation file makes memory readable — not a silent black box." },
-    { label: "Analysis visibility",      note: "The therapy rail shows what the model understood — not just what it said." },
-    { label: "Developer inspectability", note: "YAML + prompt exposed in the code drawer — inspect before you build." },
-    { label: "Emotional boundary",       note: "The therapy room is an analysis demo — no clinical claims implied." },
+    { label: "记忆透明",     note: "星盘档案让记忆变得可读,而不是一个闷声的黑箱。" },
+    { label: "分析可见",     note: "心理分析栏让你看见模型理解了什么,而不只是它说了什么。" },
+    { label: "开发者可检视", note: "代码抽屉里摊开 YAML 和提示词——先看明白,再动手搭。" },
+    { label: "情感边界",     note: "心理房间只是分析演示,不代表任何临床结论。" },
   ];
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
-        <motion.div variants={FADE}><Eye>What I learned</Eye></motion.div>
+        <motion.div variants={FADE}><Eye>我学到了什么</Eye></motion.div>
         <Mask delay={0.08}>
-          <h2 className={`text-balance mt-5 font-display font-light tracking-[-0.028em] ${HEAD}`}
+          <h2 className={`text-balance mt-5 font-display font-light tracking-[-0.018em] ${HEAD}`}
             style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
-            Visible cognition over capability lists.
+            可见的认知,胜过能力清单。
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-5 max-w-2xl ${BODY} text-[14px] text-white/[0.68]`}>
-          AI products need proof moments, visible cognition, and inspectable systems. The designer&apos;s job is to translate model behavior into experiences people can feel, trust, and build from.
+          AI 产品真正需要的,是能打动人的时刻、看得见的认知,和可检视的系统。设计师要做的,是把模型的行为,翻译成人们能感受、能信任、也能照着搭建的体验。
         </motion.p>
         <motion.div variants={UP} className={`mt-8 grid border-t ${HAIR} sm:grid-cols-2`}>
           {items.map((it, i) => (
@@ -1347,8 +1332,8 @@ function SlideTakeaways({ reduced }: { reduced: boolean | null }) {
               className={`border-white/[0.08] py-5 sm:px-6 ${i > 0 ? "border-t" : ""} ${i === 1 ? "sm:border-l sm:border-t-0" : ""} ${i === 3 ? "sm:border-l" : ""}`}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: E, delay: 0.2 + i * 0.08 }}>
-              <p className={`font-mono text-[10px] font-medium uppercase tracking-[0.15em] ${HEAD}`}>{it.label}</p>
-              <p className="mt-2 font-sans text-[13.5px] leading-[1.62] text-white/[0.62]">{it.note}</p>
+              <p className={`font-sans text-[13.5px] font-medium ${HEAD}`}>{it.label}</p>
+              <p className="mt-2 font-sans text-[13px] leading-[1.75] text-white/[0.62]">{it.note}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -1357,7 +1342,7 @@ function SlideTakeaways({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §31 Closing
+// §31 结束
 function SlideClosing({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full flex-col items-start justify-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
@@ -1365,26 +1350,26 @@ function SlideClosing({ reduced }: { reduced: boolean | null }) {
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 max-w-2xl">
         <motion.div variants={FADE} className="mb-8 h-px w-12 bg-[#C8FF47]" />
         <Mask delay={0.08}>
-          <h2 className={`font-display font-light tracking-[-0.04em] ${HEAD}`}
-            style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
+          <h2 className={`font-display font-light tracking-[-0.02em] ${HEAD}`}
+            style={{ fontSize: "clamp(2.4rem, 5.6vw, 4.6rem)" }}>
             Yuan Fang
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-3 ${EYE} text-white/45`}>
-          Product Designer · Pratt Institute
+          产品设计师 · Pratt 普瑞特艺术学院
         </motion.p>
         <motion.p variants={UP} className={`mt-8 max-w-md ${BODY} text-[15px] text-white/[0.7]`}>
-          Design is the translation layer. The hardest problem in AI products isn&apos;t model quality — it&apos;s helping customers imagine what they can build. The strongest demo is future-self proof.
+          设计,是那层翻译。AI 产品里最难的不是模型好不好,而是帮客户想清楚:他们能拿它造出什么。最强的 Demo,就是「未来的你」的证据。
         </motion.p>
         <motion.div variants={UP} className="mt-10 flex flex-wrap items-center gap-5">
           <a href="https://tongyi.aliyun.com/character" target="_blank" rel="noopener noreferrer"
             className="group inline-flex items-center gap-2.5 rounded-[6px] bg-[#C8FF47] px-7 py-3.5 font-sans text-[13px] font-medium text-[#0A0A0A] transition-all duration-150 hover:bg-white">
-            View live showrooms
+            查看线上 showroom
             <span className="transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden>→</span>
           </a>
           <Link href="/work/ai-character"
             className={`${EYE} text-white/45 underline underline-offset-4 decoration-white/[0.18] transition-colors hover:text-white`}>
-            Case study
+            案例研究
           </Link>
         </motion.div>
       </motion.div>
@@ -1400,10 +1385,10 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "problem":          return <SlideProblem reduced={reduced} />;
     case "hmw":              return <SlideHmw reduced={reduced} />;
     case "howmightwe":       return <SlideHmwStatement reduced={reduced} />;
-    case "d1-title":         return <TitleSlide reduced={reduced} chapter="Decision 01"
-                                      title="Bet on experience over documentation — taken to its limit."
-                                      body="The showroom strategy came from our PM — a familiar consumer-product play. My leverage was pushing it all the way: a doc you can only read proves nothing; the felt experience is the product. On a 10-person team I owned every feature decision across all 4 rooms — companionship, psychotherapy, character cloning, IP licensing."
-                                      kicker="Users don&apos;t believe descriptions — the first message had to prove the capability." />;
+    case "d1-title":         return <TitleSlide reduced={reduced} chapter="决策 01"
+                                      title="把体验置于文档之上——并做到极致。"
+                                      body="showroom 这个策略是 PM 提的——一个常见的 C 端打法。我的价值在于把它推到极致:只能读的文档证明不了任何东西,可被感受的体验才是产品本身。在一个 10 人的小团队里,4 个房间里的每一个功能决策,都由我来定——情感陪伴、心理咨询、角色克隆、IP 授权。"
+                                      kicker="用户不会因为描述就相信你——第一句话就得证明能力。" />;
     case "d1-showrooms":     return <SlideD1Showrooms reduced={reduced} />;
     case "d2-title":         return <SlideD2Title reduced={reduced} />;
     case "d2-map":           return <SlideD2Map reduced={reduced} />;
@@ -1452,7 +1437,7 @@ function DeckSlideScrubber({
         <div className="absolute left-0 top-0 h-full rounded-full bg-[#C8FF47]" style={{ width: `${pct}%` }} />
       </div>
       <input type="range" min={0} max={max} step={1} value={idx}
-        aria-label="Slide position" aria-valuemin={1} aria-valuemax={total} aria-valuenow={idx + 1}
+        aria-label="幻灯片位置" aria-valuemin={1} aria-valuemax={total} aria-valuenow={idx + 1}
         className="absolute inset-0 m-0 h-full w-full cursor-pointer opacity-0"
         onChange={(e) => onChange(Number(e.target.value))} />
     </div>
@@ -1468,10 +1453,10 @@ function ChapterPills({ current, onJump }: { current: string; onJump: (i: number
           <button key={ch} type="button" onClick={() => onJump(CH_START[i])}
             className={`rounded-full transition-all duration-300 ease-out ${
               on
-                ? "bg-[#C8FF47] px-3 py-[3px] font-mono text-[9px] uppercase tracking-[0.18em] text-[#0A0A0A]"
+                ? "bg-[#C8FF47] px-3 py-[3px] font-mono text-[10px] tracking-[0.1em] text-[#0A0A0A]"
                 : "h-1.5 w-1.5 bg-white/[0.32] hover:bg-white/60"
             }`}
-            aria-label={`Go to chapter: ${ch}`}>
+            aria-label={`跳转到章节:${ch}`}>
             {on ? ch : null}
           </button>
         );
@@ -1488,9 +1473,8 @@ const slideVariants = {
 };
 
 // ─── Main shell ───────────────────────────────────────────────────────────────
-export default function DeckPresentClient() {
+export default function DeckPresentClientZh() {
   const reduced = useReducedMotion();
-  // Track index + travel direction together so AnimatePresence can push slides.
   const [[idx, dir], setState] = useState<[number, number]>([0, 0]);
   const total    = SLIDES.length;
   const slide    = SLIDES[idx];
@@ -1519,7 +1503,7 @@ export default function DeckPresentClient() {
       if (["ArrowRight", " ", "PageDown"].includes(e.key)) { e.preventDefault(); next(); }
       if (["ArrowLeft",  "PageUp"].includes(e.key))        { e.preventDefault(); prev(); }
     };
-    // Nav keys forwarded out of focused prototype iframes arrive as this event.
+    // 从聚焦的原型 iframe 里转发出来的翻页键,会以这个事件到达。
     const nav = (e: Event) => paginate((e as CustomEvent<number>).detail);
     window.addEventListener("keydown", h);
     window.addEventListener("deck-nav", nav as EventListener);
@@ -1547,27 +1531,25 @@ export default function DeckPresentClient() {
         <div className="flex items-center gap-5">
           <Link href="/work/ai-character"
             className={`font-mono text-[10px] uppercase tracking-[0.22em] transition-colors duration-150 ${navChrome}`}>
-            ← Case Study
+            ← 案例研究
           </Link>
-          <span className={`hidden font-mono text-[10px] uppercase tracking-[0.18em] md:inline ${navMeta}`}>
+          <span className={`hidden font-mono text-[10px] uppercase tracking-[0.16em] md:inline ${navMeta}`}>
             {slide.chapter}
           </span>
         </div>
         <div className="flex items-center gap-5">
-          <Link href="/work/ai-character/deck-present-zh"
+          <Link href="/work/ai-character/deck-present"
             className={`hidden font-mono text-[10px] uppercase tracking-[0.18em] transition-colors duration-150 md:inline ${navChrome}`}>
-            中文
+            EN
           </Link>
-          <span className={`hidden font-mono text-[10px] md:inline ${navMeta}`}>~{minsLeft} min left</span>
+          <span className={`hidden font-mono text-[10px] md:inline ${navMeta}`}>剩余约 {minsLeft} 分钟</span>
           <span className={`font-mono text-[10px] tabular-nums ${navMeta}`}>
             {String(idx + 1).padStart(2, "0")} / {String(total).padStart(2, "0")}
           </span>
         </div>
       </header>
 
-      {/* Slide area — overlapping directional transition. Each slide is
-          absolutely positioned to fill the gap between the 14-high header and
-          footer, so successive slides can cross-fade/push without layout shift. */}
+      {/* Slide area */}
       <main className="relative h-full min-h-0 select-text overflow-hidden">
         <AnimatePresence custom={dir} initial={false} mode="wait">
           <motion.div key={slide.id} custom={dir}
@@ -1583,9 +1565,9 @@ export default function DeckPresentClient() {
       </main>
 
       {/* Click zones */}
-      <button type="button" aria-label="Previous slide" onClick={prev} disabled={idx === 0}
+      <button type="button" aria-label="上一页" onClick={prev} disabled={idx === 0}
         className="fixed bottom-14 left-0 top-14 z-30 hidden w-[10%] cursor-w-resize disabled:pointer-events-none md:block" />
-      <button type="button" aria-label="Next slide" onClick={next} disabled={idx === total - 1}
+      <button type="button" aria-label="下一页" onClick={next} disabled={idx === total - 1}
         className="fixed bottom-14 right-0 top-14 z-30 hidden w-[10%] cursor-e-resize disabled:pointer-events-none md:block" />
 
       {/* Footer */}
@@ -1593,7 +1575,7 @@ export default function DeckPresentClient() {
         <div className="flex items-center gap-3 px-4 py-3 md:gap-5 md:px-10">
           <button type="button" onClick={prev} disabled={idx === 0}
             className={`flex shrink-0 items-center gap-1.5 rounded-[6px] px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors duration-150 disabled:opacity-20 md:px-3 ${navChrome}`}>
-            <Kbd>←</Kbd> Prev
+            <Kbd>←</Kbd> 上一页
           </button>
           <div className="flex min-w-0 flex-1 flex-col items-stretch justify-center gap-2.5">
             <DeckSlideScrubber idx={idx} total={total} onChange={jump} />
@@ -1603,7 +1585,7 @@ export default function DeckPresentClient() {
           </div>
           <button type="button" onClick={next} disabled={idx === total - 1}
             className={`flex shrink-0 items-center gap-1.5 rounded-[6px] px-2 py-1.5 font-mono text-[10px] uppercase tracking-[0.16em] transition-colors duration-150 disabled:opacity-20 md:px-3 ${navChrome}`}>
-            Next <Kbd>→</Kbd>
+            下一页 <Kbd>→</Kbd>
           </button>
         </div>
       </footer>
