@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 700" fill="none" role="img" font-family="'PingFang SC', 'Microsoft YaHei', Inter, sans-serif">
+  <title>心动一击 — LLM 工作流</title>
+  <defs>
+    <marker id="ah" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
+      <path d="M1 1 L9 4 L1 7 Z" fill="#FFFFFF" fill-opacity="0.34"/>
+    </marker>
+  </defs>
+
+  <rect width="1280" height="700" fill="#08090A"/>
+
+  <text x="36" y="56" font-size="15" font-weight="700" letter-spacing="2" fill="#FFFFFF" fill-opacity="0.42">02 · HEARTBEAT POWER</text>
+  <line x1="36" y1="74" x2="246" y2="74" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.5"/>
+
+  <g stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2">
+    <path d="M246 340 H288" marker-end="url(#ah)"/>
+    <path d="M498 340 C 519 340 519 222 540 222" marker-end="url(#ah)"/>
+    <path d="M498 340 C 519 340 519 462 540 462" marker-end="url(#ah)"/>
+    <path d="M750 222 H792" marker-end="url(#ah)"/>
+    <path d="M750 462 H792" marker-end="url(#ah)"/>
+    <path d="M1002 462 H1044" marker-end="url(#ah)"/>
+  </g>
+  <text x="645" y="348" font-size="12.5" font-weight="600" fill="#FF6A00" text-anchor="middle">并行 LLM 调用</text>
+
+  <rect x="36" y="300" width="210" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
+  <text x="54" y="334" font-size="14" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">用户发消息</text>
+  <text x="54" y="356" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">任意一轮对话</text>
+
+  <rect x="288" y="300" width="210" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
+  <text x="306" y="334" font-size="14" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">读取记忆 + 情绪</text>
+  <text x="306" y="356" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">关系阶段 · 近期语气</text>
+
+  <rect x="540" y="182" width="210" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
+  <text x="558" y="216" font-size="14" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">生成台面回复</text>
+  <text x="558" y="238" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">冷静、克制、贴角色</text>
+
+  <rect x="792" y="182" width="210" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
+  <text x="810" y="216" font-size="14" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">显示在对话里</text>
+  <text x="810" y="238" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">立即可见</text>
+
+  <rect x="540" y="422" width="210" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
+  <text x="558" y="456" font-size="14" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">生成内心独白</text>
+  <text x="558" y="478" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">柔软、脆弱、占有欲</text>
+
+  <rect x="792" y="422" width="210" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
+  <text x="810" y="456" font-size="14" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">藏在卡片后</text>
+  <text x="810" y="478" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">已存储,暂不显示</text>
+
+  <rect x="1044" y="422" width="210" height="80" rx="14" fill="#FF6A00" fill-opacity="0.10" stroke="#FF6A00" stroke-opacity="0.40" stroke-width="1.5"/>
+  <text x="1062" y="456" font-size="14" font-weight="700" fill="#FF6A00">翻卡 → 揭示 + 写记忆</text>
+  <text x="1062" y="478" font-size="11.5" fill="#FF6A00" fill-opacity="0.62">用户点开卡片</text>
+
+  <rect x="36" y="638" width="9" height="9" rx="2" fill="#FF6A00"/>
+  <text x="56" y="647" font-size="13" fill="#FFFFFF" fill-opacity="0.55">两条回复共享同一个上下文窗口 —— 反差由此得到保证。</text>
+</svg>

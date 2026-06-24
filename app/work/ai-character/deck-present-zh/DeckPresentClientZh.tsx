@@ -17,7 +17,7 @@ const CANVAS = "bg-[#08090A]";
 const HEAD   = "text-[#F7F8F8]";
 const HAIR   = "border-white/[0.08]";
 const INSET  = "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]";
-// 唯一的强调色是 lime (#C8FF47),其余皆为留白 + 发丝线。
+// 唯一的强调色是 lime (#FF6A00),其余皆为留白 + 发丝线。
 
 const SPLIT =
   "relative z-10 flex h-full min-h-0 w-full max-w-6xl flex-col gap-6 md:flex-row md:items-stretch md:gap-12";
@@ -86,8 +86,8 @@ function LivingAura({ reduced: _reduced }: { reduced: boolean | null }) {
       aria-hidden
       style={{
         background:
-          "radial-gradient(46rem 30rem at 50% -8%, rgba(200,255,71,0.07), transparent 60%)," +
-          "radial-gradient(24rem 24rem at 94% 108%, rgba(200,255,71,0.045), transparent 66%)",
+          "radial-gradient(46rem 30rem at 50% -8%, rgba(255,106,0,0.07), transparent 60%)," +
+          "radial-gradient(24rem 24rem at 94% 108%, rgba(255,106,0,0.045), transparent 66%)",
       }}
     />
   );
@@ -107,7 +107,7 @@ function Spotlight({ containerRef }: { containerRef: RefObject<HTMLElement | nul
   }, [containerRef]);
   return (
     <div className="pointer-events-none absolute inset-0"
-      style={{ background: `radial-gradient(820px circle at ${pos.x} ${pos.y}, rgba(200,255,71,0.06), transparent 72%)` }} />
+      style={{ background: `radial-gradient(820px circle at ${pos.x} ${pos.y}, rgba(255,106,0,0.06), transparent 72%)` }} />
   );
 }
 
@@ -323,7 +323,7 @@ function SlideOverview({ reduced }: { reduced: boolean | null }) {
               className={`py-6 sm:px-6 ${i > 0 ? `border-t ${HAIR} sm:border-l sm:border-t-0` : "sm:pl-0"}`}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: E, delay: 0.28 + i * 0.1 }}>
-              <p className="font-display font-light tracking-[-0.02em] text-[#C8FF47]"
+              <p className="font-display font-light tracking-[-0.02em] text-[#FF6A00]"
                 style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.9rem)" }}>{p.stat}</p>
               <p className="mt-3 font-sans text-[12px] font-medium text-white/[0.74]">{p.label}</p>
               <p className="mt-1.5 font-sans text-[12.5px] leading-relaxed text-white/[0.5]">{p.detail}</p>
@@ -352,7 +352,7 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
           <motion.p variants={UP} className={`mt-7 ${BODY} text-[15px] text-white/[0.72]`}>
             文档把一切都写清楚了,可要真正「感受」到模型,用户得自己配置、跑样例、再解读结果——这一圈下来常常一个多小时。大多数人还没等到价值出现,就已经走了。
           </motion.p>
-          <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/90">
+          <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light leading-relaxed text-[#FF6A00]/90">
             所以我把产品的重心,从「讲清楚」转向「证明给你看」。
           </motion.p>
         </div>
@@ -363,7 +363,7 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
             </video>
             <figcaption className={`border-t ${HAIR} px-4 py-2.5 ${EYE} text-white/45 tracking-[0.08em]`}>之前 — 通用聊天 &amp; 静态文档</figcaption>
           </figure>
-          <div className="border-l-2 border-[#C8FF47]/40 pl-5">
+          <div className="border-l-2 border-[#FF6A00]/40 pl-5">
             <p className={`${EYE} text-white/[0.42]`}>企业侧同样卡住</p>
             <p className="mt-2 font-sans text-[13px] leading-[1.8] text-white/[0.78]">给企业客户的也只是一份罗列能力的 PPT——能说明,却说服不了人。没有任何东西能缩短建立信任的时间,更别说用看得见的证据替代那漫长的第一个小时。</p>
           </div>
@@ -420,12 +420,12 @@ function SlideHmwStatement({ reduced }: { reduced: boolean | null }) {
     <section className={`relative flex h-full items-center overflow-hidden px-10 md:px-16 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show"
-        className="relative z-10 mx-auto w-full max-w-6xl border-l-2 border-[#C8FF47] pl-6 md:pl-8">
+        className="relative z-10 mx-auto w-full max-w-6xl border-l-2 border-[#FF6A00] pl-6 md:pl-8">
         <motion.div variants={FADE}><Eye>我们如何能</Eye></motion.div>
         <Mask delay={0.12} className="mt-5">
           <h2 className={`text-balance font-display font-light leading-[1.3] tracking-[-0.01em] ${HEAD}`}
             style={{ fontSize: "clamp(1.7rem, 3.8vw, 3rem)" }}>
-            在几分钟内,就让模型的能力变得<em className="not-italic text-[#C8FF47]">看得见</em>、<em className="not-italic text-[#C8FF47]">试得到</em>、<em className="not-italic text-[#C8FF47]">信得过</em>?
+            在几分钟内,就让模型的能力变得<em className="not-italic text-[#FF6A00]">看得见</em>、<em className="not-italic text-[#FF6A00]">试得到</em>、<em className="not-italic text-[#FF6A00]">信得过</em>?
           </h2>
         </Mask>
       </motion.div>
@@ -451,7 +451,7 @@ function TitleSlide({
         <motion.p variants={UP} className={`mt-8 max-w-2xl ${BODY} text-[15.5px] text-white/[0.72]`}>
           {body}
         </motion.p>
-        <motion.p variants={UP} className="mt-5 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/90">
+        <motion.p variants={UP} className="mt-5 font-display text-[15px] font-light leading-relaxed text-[#FF6A00]/90">
           {kicker}
         </motion.p>
       </motion.div>
@@ -484,7 +484,7 @@ function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
               </span>
             ))}
           </motion.div>
-          <motion.p variants={UP} className="mt-5 font-display text-[13px] font-light leading-relaxed text-[#C8FF47]/90">
+          <motion.p variants={UP} className="mt-5 font-display text-[13px] font-light leading-relaxed text-[#FF6A00]/90">
             之前:60+ 分钟的通用聊天和文档。之后:真实的房间,就在右边 →
           </motion.p>
         </div>
@@ -524,7 +524,7 @@ function SlideD2Title({ reduced }: { reduced: boolean | null }) {
               className={`py-6 md:px-6 ${i > 0 ? `border-t ${HAIR} md:border-l md:border-t-0` : "md:pl-0"}`}
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.72, ease: E, delay: 0.26 + i * 0.1 }}>
-              <p className={`${EYE} text-[#C8FF47]`}>{String(i + 1).padStart(2, "0")}</p>
+              <p className={`${EYE} text-[#FF6A00]`}>{String(i + 1).padStart(2, "0")}</p>
               <p className={`mt-3 font-display text-[1.1rem] font-light ${HEAD}`}>{it.type}可见</p>
               <p className="mt-2.5 font-sans text-[13px] leading-[1.8] text-white/[0.6]">{it.detail}</p>
             </motion.div>
@@ -651,7 +651,7 @@ function SlideHeartbeat({ reduced }: { reduced: boolean | null }) {
 }
 function SlideHeartbeatLogic({ reduced }: { reduced: boolean | null }) {
   return <LogicSlide reduced={reduced} eye="Heartbeat Power · 模型工作流" title="实时生成 + 角色深度建模"
-    src="/assets/ai-character/interaction/heartbeat_power_workflow.svg" alt="Heartbeat Power — LLM 工作流图" />;
+    src="/assets/ai-character/interaction/heartbeat_power_workflow_zh.svg" alt="Heartbeat Power — LLM 工作流图" />;
 }
 
 function SlideStoryUnlock({ reduced }: { reduced: boolean | null }) {
@@ -668,7 +668,7 @@ function SlideStoryUnlock({ reduced }: { reduced: boolean | null }) {
 }
 function SlideStoryUnlockLogic({ reduced }: { reduced: boolean | null }) {
   return <LogicSlide reduced={reduced} eye="Story Unlock · 模型工作流" title="渐进式上下文构建"
-    src="/assets/ai-character/interaction/story_unlock_workflow.svg" alt="Story Unlock — LLM 工作流图" />;
+    src="/assets/ai-character/interaction/story_unlock_workflow_zh.svg" alt="Story Unlock — LLM 工作流图" />;
 }
 
 function SlideMoments({ reduced }: { reduced: boolean | null }) {
@@ -685,7 +685,7 @@ function SlideMoments({ reduced }: { reduced: boolean | null }) {
 }
 function SlideMomentsLogic({ reduced }: { reduced: boolean | null }) {
   return <LogicSlide reduced={reduced} eye="Moments Feed · 模型工作流" title="从记忆到生成内容"
-    src="/assets/ai-character/interaction/moments_feed_workflow.svg" alt="Moments Feed — LLM 工作流图" />;
+    src="/assets/ai-character/interaction/moments_feed_workflow_zh.svg" alt="Moments Feed — LLM 工作流图" />;
 }
 
 function SlideAltUniv({ reduced }: { reduced: boolean | null }) {
@@ -703,7 +703,7 @@ function SlideAltUniv({ reduced }: { reduced: boolean | null }) {
 }
 function SlideAltUnivLogic({ reduced }: { reduced: boolean | null }) {
   return <LogicSlide reduced={reduced} eye="Alternate Universe · 模型工作流" title="从共同经历到分支叙事"
-    src="/assets/ai-character/interaction/alternate_universe_events_workflow.svg" alt="Alternate Universe Events — LLM 工作流图" />;
+    src="/assets/ai-character/interaction/alternate_universe_events_workflow_zh.svg" alt="Alternate Universe Events — LLM 工作流图" />;
 }
 
 function SlideAstroProfile({ reduced }: { reduced: boolean | null }) {
@@ -802,8 +802,8 @@ function SlideCodeDrawer({ reduced }: { reduced: boolean | null }) {
               <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-white/[0.38]">放弃</span>
               <p className="font-sans text-[12.5px] leading-snug text-white/[0.55]">另开一个开发者控制台——打断 Demo 心流,还得切标签页。</p>
             </div>
-            <div className="flex items-baseline gap-3 border-t border-[#C8FF47]/30 pt-3">
-              <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-[#C8FF47]">选用</span>
+            <div className="flex items-baseline gap-3 border-t border-[#FF6A00]/30 pt-3">
+              <span className="shrink-0 font-mono text-[10px] uppercase tracking-[0.12em] text-[#FF6A00]">选用</span>
               <p className="font-sans text-[12.5px] leading-snug text-white/[0.84]">在实时 Demo 旁滑出的抽屉——演示到审阅,一气呵成。</p>
             </div>
           </motion.div>
@@ -878,7 +878,7 @@ function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
               initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: E, delay: 0.22 + i * 0.1 }}>
               <div className="flex items-baseline gap-2.5">
-                <span className="font-mono text-[12px] text-[#C8FF47]">{s.n}</span>
+                <span className="font-mono text-[12px] text-[#FF6A00]">{s.n}</span>
                 <span className={`text-[13.5px] font-medium leading-tight ${HEAD}`}>{s.phase}</span>
               </div>
               <p className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.12em] text-white/40">工具</p>
@@ -910,7 +910,7 @@ function SlideProcess({ reduced }: { reduced: boolean | null }) {
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
             灵感来自《恋与深空》。视觉部分用 Wan、Kling、Dreamnia 和 SeeDance 完成,交互用 Cursor 和 Claude Code 搭起来。
           </motion.p>
-          <motion.div variants={UP} className="mt-5 border-l-2 border-[#C8FF47]/40 pl-4">
+          <motion.div variants={UP} className="mt-5 border-l-2 border-[#FF6A00]/40 pl-4">
             <p className="font-sans text-[12px] leading-relaxed text-white/[0.58]">
               3D 形象在交互中途崩了 → 改用 AI 循环视频。一个眨眼、一次点头这样的小动作,反而比复杂的骨骼动画更显鲜活。
             </p>
@@ -966,7 +966,7 @@ function SlideShowrooms({ reduced }: { reduced: boolean | null }) {
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#C8FF47]">{r.label}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#FF6A00]">{r.label}</p>
               <p className="mt-1 font-sans text-[11.5px] text-white/[0.88]">{r.cap}</p>
             </div>
           </motion.div>
@@ -1027,7 +1027,7 @@ function SlideBackend({ reduced }: { reduced: boolean | null }) {
                   className="h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
               </div>
               <div className={`flex items-center gap-2 border-t ${HAIR} px-3 py-2`}>
-                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#C8FF47]">{tag}</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-[#FF6A00]">{tag}</span>
                 <span className="font-sans text-[11px] text-white/[0.66]">{label}</span>
               </div>
             </motion.div>
@@ -1093,7 +1093,7 @@ function DataStreamBg() {
       {lines.map((l, i) => (
         <motion.div key={i} className="absolute h-px"
           style={{ top: l.top, width: l.width, left: 0,
-            background: `linear-gradient(90deg, transparent 0%, rgba(200,255,71,${l.opacity}) 50%, transparent 100%)` }}
+            background: `linear-gradient(90deg, transparent 0%, rgba(255,106,0,${l.opacity}) 50%, transparent 100%)` }}
           initial={{ x: "-30%" }} animate={{ x: "360%" }}
           transition={{ duration: l.dur, repeat: Infinity, delay: l.delay, ease: "linear" }} />
       ))}
@@ -1110,15 +1110,15 @@ function TimeBar({
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.75, ease: E, delay }} className="min-w-0">
       <div className="flex items-baseline justify-between gap-3">
-        <p className={`${EYE} ${highlight ? "text-[#C8FF47]" : "text-white/55"}`}>{label}</p>
+        <p className={`${EYE} ${highlight ? "text-[#FF6A00]" : "text-white/55"}`}>{label}</p>
         <motion.span
           initial={{ opacity: 0, filter: "blur(8px)" }}
           animate={{ opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.55, ease: E, delay: delay + 0.7 }}
           className="font-display font-light tabular-nums tracking-tight"
           style={{ fontSize: "clamp(1.2rem, 2.1vw, 1.7rem)",
-            color: highlight ? "#C8FF47" : "rgba(255,255,255,0.55)",
-            textShadow: highlight ? "0 0 18px rgba(200,255,71,0.22)" : "none" }}>
+            color: highlight ? "#FF6A00" : "rgba(255,255,255,0.55)",
+            textShadow: highlight ? "0 0 18px rgba(255,106,0,0.22)" : "none" }}>
           {value}
         </motion.span>
       </div>
@@ -1128,9 +1128,9 @@ function TimeBar({
           transition={{ duration: 1.05, ease: E, delay: delay + 0.15 }}
           className="absolute inset-y-0 left-0 rounded-full"
           style={{ background: highlight
-              ? "linear-gradient(90deg, #C8FF47 0%, #d8ff6a 100%)"
+              ? "linear-gradient(90deg, #FF6A00 0%, #FF9A4D 100%)"
               : "linear-gradient(90deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.34) 100%)",
-            boxShadow: highlight ? "0 0 14px rgba(200,255,71,0.35)" : "none" }} />
+            boxShadow: highlight ? "0 0 14px rgba(255,106,0,0.35)" : "none" }} />
         <motion.div className="pointer-events-none absolute inset-y-0 w-12 rounded-full"
           style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent)" }}
           initial={{ x: "-100%", opacity: 0 }}
@@ -1170,7 +1170,7 @@ function SlideMetrics() {
           className={`mt-7 rounded-lg bg-white/[0.02] px-5 py-5 md:px-7 md:py-6`}>
           <div className="flex items-baseline justify-between gap-6">
             <p className={`${EYE} text-white/55`}>首次感受到价值的耗时</p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]/85">测试中的观测</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#FF6A00]/85">测试中的观测</p>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2 md:gap-x-10">
             <TimeBar label="之前 · 文档式上手"      value="60+ 分钟" pct={100} delay={T_CHART + 0.2} />
@@ -1186,15 +1186,15 @@ function SlideMetrics() {
                 initial={{ opacity: 0, y: 14, scale: 0.97, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                 transition={{ duration: 0.7, ease: E, delay: cardDelay }}>
-                <motion.div className="mb-3 h-[1.5px] bg-[#C8FF47]/65"
+                <motion.div className="mb-3 h-[1.5px] bg-[#FF6A00]/65"
                   initial={{ width: 0 }} animate={{ width: "1.5rem" }}
                   transition={{ duration: 0.55, ease: E, delay: cardDelay + 0.15 }} />
-                <p className="relative font-display font-light leading-none text-[#C8FF47]"
+                <p className="relative font-display font-light leading-none text-[#FF6A00]"
                   style={{ fontSize: "clamp(2.4rem, 4.6vw, 3.9rem)" }}>
                   <motion.span
                     animate={isKey
-                      ? { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 26px rgba(200,255,71,0.55)", "0 0 10px rgba(200,255,71,0.22)"] }
-                      : { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 14px rgba(200,255,71,0.3)",  "0 0 0px rgba(200,255,71,0)"] }}
+                      ? { textShadow: ["0 0 0px rgba(255,106,0,0)", "0 0 26px rgba(255,106,0,0.55)", "0 0 10px rgba(255,106,0,0.22)"] }
+                      : { textShadow: ["0 0 0px rgba(255,106,0,0)", "0 0 14px rgba(255,106,0,0.3)",  "0 0 0px rgba(255,106,0,0)"] }}
                     transition={{ duration: 2.2, ease: "easeOut", delay: cardDelay + 0.55, times: [0, 0.55, 1],
                       repeat: isKey ? Infinity : 0, repeatDelay: isKey ? 2.4 : 0 }}>
                     <CountUp to={s.to} suffix={s.suffix} prefix={s.prefix} startDelay={cardDelay * 1000 + 350} duration={1100} />
@@ -1250,7 +1250,7 @@ function SlideMetricsMethod() {
                 transition={{ duration: 0.65, ease: E, delay: 0.24 + i * 0.08 }}
                 className="grid grid-cols-1 gap-2 px-1 py-4 md:grid-cols-[10rem_1fr_1fr_1fr] md:items-start md:gap-x-6">
                 <div>
-                  <p className="font-display text-[1.5rem] font-light tracking-tight text-[#C8FF47]">{row.metric}</p>
+                  <p className="font-display text-[1.5rem] font-light tracking-tight text-[#FF6A00]">{row.metric}</p>
                   <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.1em] text-white/[0.5]">{row.label}</p>
                 </div>
                 <p className="font-sans text-[12.5px] leading-relaxed text-white/[0.72]">{row.baseline}</p>
@@ -1290,7 +1290,7 @@ function SlidePrinciples({ reduced }: { reduced: boolean | null }) {
               className={`py-8 md:px-8 ${i > 0 ? `border-t ${HAIR} md:border-l md:border-t-0` : "md:pl-0"}`}
               initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, ease: E, delay: 0.24 + i * 0.12 }}>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]">原则 {p.n}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#FF6A00]">原则 {p.n}</p>
               <p className={`mt-4 font-display text-[1.2rem] font-light leading-[1.35] tracking-[-0.01em] ${HEAD} md:text-[1.34rem]`}>{p.t}</p>
               <p className="mt-4 font-sans text-[14.5px] leading-[1.8] text-white/[0.64]">{p.body}</p>
             </motion.div>
@@ -1345,7 +1345,7 @@ function SlideClosing({ reduced }: { reduced: boolean | null }) {
     <section className={`relative flex h-full flex-col items-start justify-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 max-w-2xl">
-        <motion.div variants={FADE} className="mb-8 h-px w-12 bg-[#C8FF47]" />
+        <motion.div variants={FADE} className="mb-8 h-px w-12 bg-[#FF6A00]" />
         <Mask delay={0.08}>
           <h2 className={`font-display font-light tracking-[-0.02em] ${HEAD}`}
             style={{ fontSize: "clamp(2.4rem, 5.6vw, 4.6rem)" }}>
@@ -1360,7 +1360,7 @@ function SlideClosing({ reduced }: { reduced: boolean | null }) {
         </motion.p>
         <motion.div variants={UP} className="mt-10 flex flex-wrap items-center gap-5">
           <a href="https://tongyi.aliyun.com/character" target="_blank" rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2.5 rounded-[6px] bg-[#C8FF47] px-7 py-3.5 font-sans text-[13px] font-medium text-[#0A0A0A] transition-all duration-150 hover:bg-white">
+            className="group inline-flex items-center gap-2.5 rounded-[6px] bg-[#FF6A00] px-7 py-3.5 font-sans text-[13px] font-medium text-[#0A0A0A] transition-all duration-150 hover:bg-white">
             查看线上 showroom
             <span className="transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden>→</span>
           </a>
@@ -1431,7 +1431,7 @@ function DeckSlideScrubber({
   return (
     <div className="relative mx-auto min-h-[1.75rem] w-full max-w-md px-1 py-1.5">
       <div className="pointer-events-none relative h-1.5 w-full overflow-hidden rounded-full bg-white/[0.1]" aria-hidden>
-        <div className="absolute left-0 top-0 h-full rounded-full bg-[#C8FF47]" style={{ width: `${pct}%` }} />
+        <div className="absolute left-0 top-0 h-full rounded-full bg-[#FF6A00]" style={{ width: `${pct}%` }} />
       </div>
       <input type="range" min={0} max={max} step={1} value={idx}
         aria-label="幻灯片位置" aria-valuemin={1} aria-valuemax={total} aria-valuenow={idx + 1}
@@ -1450,7 +1450,7 @@ function ChapterPills({ current, onJump }: { current: string; onJump: (i: number
           <button key={ch} type="button" onClick={() => onJump(CH_START[i])}
             className={`rounded-full transition-all duration-300 ease-out ${
               on
-                ? "bg-[#C8FF47] px-3 py-[3px] font-mono text-[10px] tracking-[0.1em] text-[#0A0A0A]"
+                ? "bg-[#FF6A00] px-3 py-[3px] font-mono text-[10px] tracking-[0.1em] text-[#0A0A0A]"
                 : "h-1.5 w-1.5 bg-white/[0.32] hover:bg-white/60"
             }`}
             aria-label={`跳转到章节:${ch}`}>
@@ -1519,7 +1519,7 @@ export default function DeckPresentClientZh() {
 
       {/* Progress line */}
       <div className="absolute inset-x-0 top-0 z-50 h-[1.5px] bg-transparent">
-        <motion.div className="h-full bg-[#C8FF47]"
+        <motion.div className="h-full bg-[#FF6A00]"
           initial={false} animate={{ width: `${progress}%` }}
           transition={{ duration: 0.4, ease: E }} />
       </div>

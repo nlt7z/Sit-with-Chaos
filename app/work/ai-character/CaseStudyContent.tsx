@@ -1130,7 +1130,7 @@ const innovations: {
     name: "Heartbeat Power",
     capability: "Real-time generation + character depth modeling",
     psychology: "Intimacy|Being let into the character's hidden thoughts.",
-    workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow.svg",
+    workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow_lime.svg",
     prototypeSrc: FEATURE_PROTOTYPES.heartbeat,
     videoCaption: "One tap. What it was actually thinking.",
     detail: (
@@ -1146,7 +1146,7 @@ const innovations: {
     name: "Story Unlock",
     capability: "Progressive memory building",
     psychology: "Progression|An open loop pulls you forward.",
-    workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow.svg",
+    workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow_lime.svg",
     prototypeSrc: FEATURE_PROTOTYPES.story,
     videoCaption: "Go deeper. The character opens up.",
     detail: (
@@ -1161,7 +1161,7 @@ const innovations: {
     name: "Moments Feed",
     capability: "Generation from memory history",
     psychology: "Off-session presence|A reason to return.",
-    workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow.svg",
+    workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow_lime.svg",
     prototypeSrc: FEATURE_PROTOTYPES.moments,
     videoCaption: "It keeps living between sessions.",
     detail: (
@@ -1177,7 +1177,7 @@ const innovations: {
     name: "Alternate Universe Events",
     capability: "Long-term memory + generative storytelling",
     psychology: "Variable reward|The strongest habit driver.",
-    workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
+    workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow_lime.svg",
     prototypeSrc: FEATURE_PROTOTYPES.altUniverse,
     videoCaption: "A scene only your history could trigger.",
     notShipped: true,

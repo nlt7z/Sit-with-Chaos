@@ -18,7 +18,7 @@
     <path d="M905 350 H960" marker-end="url(#ah)"/>
     <path d="M600 420 V460" marker-end="url(#ah)"/>
   </g>
-  <text x="690" y="338" font-size="12.5" font-weight="700" fill="#FF6A00">Yes</text>
+  <text x="690" y="338" font-size="12.5" font-weight="700" fill="#B8E532">Yes</text>
   <text x="614" y="446" font-size="12.5" font-weight="700" fill="#FFFFFF" fill-opacity="0.5">No</text>
 
   <rect x="40" y="310" width="205" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
@@ -37,20 +37,20 @@
   <text x="718" y="344" font-size="13.5" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Generate chapter (LLM)</text>
   <text x="718" y="366" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">backstory from history</text>
 
-  <rect x="960" y="310" width="205" height="80" rx="14" fill="#FF6A00" fill-opacity="0.10" stroke="#FF6A00" stroke-opacity="0.40" stroke-width="1.5"/>
-  <text x="978" y="344" font-size="13.5" font-weight="700" fill="#FF6A00">Push card + write</text>
-  <text x="978" y="366" font-size="11.5" fill="#FF6A00" fill-opacity="0.62">“a new chapter unlocked”</text>
+  <rect x="960" y="310" width="205" height="80" rx="14" fill="#B8E532" fill-opacity="0.10" stroke="#B8E532" stroke-opacity="0.40" stroke-width="1.5"/>
+  <text x="978" y="344" font-size="13.5" font-weight="700" fill="#B8E532">Push card + write</text>
+  <text x="978" y="366" font-size="11.5" fill="#B8E532" fill-opacity="0.62">“a new chapter unlocked”</text>
 
   <rect x="497" y="460" width="205" height="74" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
   <text x="515" y="492" font-size="13.5" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Normal reply only</text>
   <text x="515" y="513" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">continue conversation</text>
 
   <g>
-    <rect x="40" y="632" width="9" height="9" rx="2" fill="#FF6A00"/>
+    <rect x="40" y="632" width="9" height="9" rx="2" fill="#B8E532"/>
     <text x="60" y="641" font-size="12.5" fill="#FFFFFF" fill-opacity="0.55">Chapter 1 · unlocked at turn 5</text>
-    <rect x="470" y="632" width="9" height="9" rx="2" fill="#FF6A00"/>
+    <rect x="470" y="632" width="9" height="9" rx="2" fill="#B8E532"/>
     <text x="490" y="641" font-size="12.5" fill="#FFFFFF" fill-opacity="0.55">Chapter 2 · depth threshold</text>
-    <rect x="870" y="632" width="9" height="9" rx="2" fill="#FF6A00"/>
+    <rect x="870" y="632" width="9" height="9" rx="2" fill="#B8E532"/>
     <text x="890" y="641" font-size="12.5" fill="#FFFFFF" fill-opacity="0.55">Chapter 3 · topic flag triggered</text>
   </g>
 </svg>

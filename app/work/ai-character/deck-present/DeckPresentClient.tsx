@@ -20,7 +20,7 @@ const CANVAS    = "bg-[#08090A]";
 const HEAD      = "text-[#F7F8F8]";                 // off-white headlines, never pure white
 const HAIR      = "border-white/[0.08]";            // the one hairline weight
 const INSET     = "shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]";
-// The lone chromatic accent is lime (#C8FF47), applied via literal classes so
+// The lone chromatic accent is lime (#FF6A00), applied via literal classes so
 // Tailwind can see it; everything else is whitespace + hairlines.
 
 /** Left copy + right media: wide media-heavy split used by the feature slides. */
@@ -96,8 +96,8 @@ function LivingAura({ reduced: _reduced }: { reduced: boolean | null }) {
       aria-hidden
       style={{
         background:
-          "radial-gradient(46rem 30rem at 50% -8%, rgba(200,255,71,0.07), transparent 60%)," +
-          "radial-gradient(24rem 24rem at 94% 108%, rgba(200,255,71,0.045), transparent 66%)",
+          "radial-gradient(46rem 30rem at 50% -8%, rgba(255,106,0,0.07), transparent 60%)," +
+          "radial-gradient(24rem 24rem at 94% 108%, rgba(255,106,0,0.045), transparent 66%)",
       }}
     />
   );
@@ -117,7 +117,7 @@ function Spotlight({ containerRef }: { containerRef: RefObject<HTMLElement | nul
   }, [containerRef]);
   return (
     <div className="pointer-events-none absolute inset-0"
-      style={{ background: `radial-gradient(820px circle at ${pos.x} ${pos.y}, rgba(200,255,71,0.06), transparent 72%)` }} />
+      style={{ background: `radial-gradient(820px circle at ${pos.x} ${pos.y}, rgba(255,106,0,0.06), transparent 72%)` }} />
   );
 }
 
@@ -339,7 +339,7 @@ function SlideOverview({ reduced }: { reduced: boolean | null }) {
               className={`py-6 sm:px-6 ${i > 0 ? `border-t ${HAIR} sm:border-l sm:border-t-0` : "sm:pl-0"}`}
               initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: E, delay: 0.28 + i * 0.1 }}>
-              <p className="font-display font-light tracking-[-0.02em] text-[#C8FF47]"
+              <p className="font-display font-light tracking-[-0.02em] text-[#FF6A00]"
                 style={{ fontSize: "clamp(1.3rem, 2.4vw, 1.9rem)" }}>{p.stat}</p>
               <p className="mt-3 font-sans text-[11px] font-medium uppercase tracking-[0.12em] text-white/[0.72]">{p.label}</p>
               <p className="mt-1.5 font-sans text-[12.5px] leading-relaxed text-white/[0.5]">{p.detail}</p>
@@ -368,7 +368,7 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
           <motion.p variants={UP} className={`mt-7 ${BODY} text-[15px] text-white/[0.72]`}>
             The docs explained everything. But feeling the model meant configuring, running samples, and interpreting output alone — a loop that routinely stretched past an hour. Most trial users left before reaching the moment of value.
           </motion.p>
-          <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/85">
+          <motion.p variants={UP} className="mt-6 font-display text-[15px] font-light leading-relaxed text-[#FF6A00]/85">
             So I shifted the product from documentation to proof.
           </motion.p>
         </div>
@@ -379,7 +379,7 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
             </video>
             <figcaption className={`border-t ${HAIR} px-4 py-2.5 ${EYE} text-white/45 tracking-[0.08em]`}>Before — generic chat &amp; static docs</figcaption>
           </figure>
-          <div className="border-l-2 border-[#C8FF47]/40 pl-5">
+          <div className="border-l-2 border-[#FF6A00]/40 pl-5">
             <p className={`${EYE} text-white/[0.42]`}>Enterprise wall</p>
             <p className="mt-2 font-sans text-[13px] leading-[1.7] text-white/[0.78]">Prospects received decks that described capability — descriptive, not convincing. Nothing compressed time-to-trust or replaced that slow first hour with proof.</p>
           </div>
@@ -436,12 +436,12 @@ function SlideHmwStatement({ reduced }: { reduced: boolean | null }) {
     <section className={`relative flex h-full items-center overflow-hidden px-10 md:px-16 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show"
-        className="relative z-10 mx-auto w-full max-w-6xl border-l-2 border-[#C8FF47] pl-6 md:pl-8">
+        className="relative z-10 mx-auto w-full max-w-6xl border-l-2 border-[#FF6A00] pl-6 md:pl-8">
         <motion.div variants={FADE}><Eye>How might we</Eye></motion.div>
         <Mask delay={0.12} className="mt-5">
           <h2 className={`text-balance font-display font-light leading-[1.18] tracking-[-0.02em] ${HEAD}`}
             style={{ fontSize: "clamp(1.9rem, 4.2vw, 3.4rem)" }}>
-            Make model capabilities <em className="not-italic text-[#C8FF47]">visible</em>, <em className="not-italic text-[#C8FF47]">testable</em>, and <em className="not-italic text-[#C8FF47]">trustworthy</em> — within minutes?
+            Make model capabilities <em className="not-italic text-[#FF6A00]">visible</em>, <em className="not-italic text-[#FF6A00]">testable</em>, and <em className="not-italic text-[#FF6A00]">trustworthy</em> — within minutes?
           </h2>
         </Mask>
       </motion.div>
@@ -467,7 +467,7 @@ function TitleSlide({
         <motion.p variants={UP} className={`mt-8 max-w-2xl ${BODY} text-[15.5px] text-white/[0.72]`}>
           {body}
         </motion.p>
-        <motion.p variants={UP} className="mt-5 font-display text-[15px] font-light leading-relaxed text-[#C8FF47]/85">
+        <motion.p variants={UP} className="mt-5 font-display text-[15px] font-light leading-relaxed text-[#FF6A00]/85">
           {kicker}
         </motion.p>
       </motion.div>
@@ -500,7 +500,7 @@ function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
               </span>
             ))}
           </motion.div>
-          <motion.p variants={UP} className="mt-5 font-display text-[13px] font-light leading-relaxed text-[#C8FF47]/85">
+          <motion.p variants={UP} className="mt-5 font-display text-[13px] font-light leading-relaxed text-[#FF6A00]/85">
             Before: 60+ minutes of generic chat &amp; docs. After: the real room, right here →
           </motion.p>
         </div>
@@ -540,7 +540,7 @@ function SlideD2Title({ reduced }: { reduced: boolean | null }) {
               className={`py-6 md:px-6 ${i > 0 ? `border-t ${HAIR} md:border-l md:border-t-0` : "md:pl-0"}`}
               initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.72, ease: E, delay: 0.26 + i * 0.1 }}>
-              <p className={`${EYE} text-[#C8FF47]`}>{String(i + 1).padStart(2, "0")}</p>
+              <p className={`${EYE} text-[#FF6A00]`}>{String(i + 1).padStart(2, "0")}</p>
               <p className={`mt-3 font-display text-[1.05rem] font-light ${HEAD}`}>{it.type} visibility</p>
               <p className="mt-2.5 font-sans text-[13px] leading-[1.7] text-white/[0.6]">{it.detail}</p>
             </motion.div>
@@ -818,8 +818,8 @@ function SlideCodeDrawer({ reduced }: { reduced: boolean | null }) {
               <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/[0.38]">Rejected</span>
               <p className="font-sans text-[12.5px] leading-snug text-white/[0.55]">Separate developer console — breaks demo flow, requires a tab switch.</p>
             </div>
-            <div className="flex items-baseline gap-3 border-t border-[#C8FF47]/30 pt-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#C8FF47]">Chosen</span>
+            <div className="flex items-baseline gap-3 border-t border-[#FF6A00]/30 pt-3">
+              <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-[#FF6A00]">Chosen</span>
               <p className="font-sans text-[12.5px] leading-snug text-white/[0.84]">Slide-out drawer beside the live demo — one coherent demo-to-review flow.</p>
             </div>
           </motion.div>
@@ -894,7 +894,7 @@ function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
               initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: E, delay: 0.22 + i * 0.1 }}>
               <div className="flex items-baseline gap-2.5">
-                <span className="font-mono text-[12px] text-[#C8FF47]">{s.n}</span>
+                <span className="font-mono text-[12px] text-[#FF6A00]">{s.n}</span>
                 <span className={`text-[13.5px] font-medium leading-tight ${HEAD}`}>{s.phase}</span>
               </div>
               <p className="mt-5 font-mono text-[9.5px] uppercase tracking-[0.12em] text-white/40">Tools</p>
@@ -926,7 +926,7 @@ function SlideProcess({ reduced }: { reduced: boolean | null }) {
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
             Inspired by Love and Deepspace. Visual identity built with Wan, Kling, Dreamnia, and SeeDance. Interactions built with Cursor and Claude Code.
           </motion.p>
-          <motion.div variants={UP} className="mt-5 border-l-2 border-[#C8FF47]/40 pl-4">
+          <motion.div variants={UP} className="mt-5 border-l-2 border-[#FF6A00]/40 pl-4">
             <p className="font-sans text-[12px] leading-relaxed text-white/[0.58]">
               The 3D avatar crashed mid-interaction → replaced with an AI-looping video. Small motions — a blink, a nod — felt more alive than complex rigged animation.
             </p>
@@ -982,7 +982,7 @@ function SlideShowrooms({ reduced }: { reduced: boolean | null }) {
             </video>
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
             <div className="absolute bottom-0 left-0 right-0 p-4">
-              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#C8FF47]">{r.label}</p>
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#FF6A00]">{r.label}</p>
               <p className="mt-1 font-sans text-[11px] text-white/[0.88]">{r.cap}</p>
             </div>
           </motion.div>
@@ -1043,7 +1043,7 @@ function SlideBackend({ reduced }: { reduced: boolean | null }) {
                   className="h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
               </div>
               <div className={`flex items-center gap-2 border-t ${HAIR} px-3 py-2`}>
-                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#C8FF47]">{tag}</span>
+                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-[#FF6A00]">{tag}</span>
                 <span className="font-sans text-[11px] text-white/[0.66]">{label}</span>
               </div>
             </motion.div>
@@ -1109,7 +1109,7 @@ function DataStreamBg() {
       {lines.map((l, i) => (
         <motion.div key={i} className="absolute h-px"
           style={{ top: l.top, width: l.width, left: 0,
-            background: `linear-gradient(90deg, transparent 0%, rgba(200,255,71,${l.opacity}) 50%, transparent 100%)` }}
+            background: `linear-gradient(90deg, transparent 0%, rgba(255,106,0,${l.opacity}) 50%, transparent 100%)` }}
           initial={{ x: "-30%" }} animate={{ x: "360%" }}
           transition={{ duration: l.dur, repeat: Infinity, delay: l.delay, ease: "linear" }} />
       ))}
@@ -1126,15 +1126,15 @@ function TimeBar({
       animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
       transition={{ duration: 0.75, ease: E, delay }} className="min-w-0">
       <div className="flex items-baseline justify-between gap-3">
-        <p className={`${EYE} ${highlight ? "text-[#C8FF47]" : "text-white/55"}`}>{label}</p>
+        <p className={`${EYE} ${highlight ? "text-[#FF6A00]" : "text-white/55"}`}>{label}</p>
         <motion.span
           initial={{ opacity: 0, filter: "blur(8px)" }}
           animate={{ opacity: 1, filter: "blur(0px)" }}
           transition={{ duration: 0.55, ease: E, delay: delay + 0.7 }}
           className="font-display font-light tabular-nums tracking-tight"
           style={{ fontSize: "clamp(1.2rem, 2.1vw, 1.7rem)",
-            color: highlight ? "#C8FF47" : "rgba(255,255,255,0.55)",
-            textShadow: highlight ? "0 0 18px rgba(200,255,71,0.22)" : "none" }}>
+            color: highlight ? "#FF6A00" : "rgba(255,255,255,0.55)",
+            textShadow: highlight ? "0 0 18px rgba(255,106,0,0.22)" : "none" }}>
           {value}
         </motion.span>
       </div>
@@ -1144,9 +1144,9 @@ function TimeBar({
           transition={{ duration: 1.05, ease: E, delay: delay + 0.15 }}
           className="absolute inset-y-0 left-0 rounded-full"
           style={{ background: highlight
-              ? "linear-gradient(90deg, #C8FF47 0%, #d8ff6a 100%)"
+              ? "linear-gradient(90deg, #FF6A00 0%, #FF9A4D 100%)"
               : "linear-gradient(90deg, rgba(255,255,255,0.18) 0%, rgba(255,255,255,0.34) 100%)",
-            boxShadow: highlight ? "0 0 14px rgba(200,255,71,0.35)" : "none" }} />
+            boxShadow: highlight ? "0 0 14px rgba(255,106,0,0.35)" : "none" }} />
         <motion.div className="pointer-events-none absolute inset-y-0 w-12 rounded-full"
           style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.32), transparent)" }}
           initial={{ x: "-100%", opacity: 0 }}
@@ -1186,7 +1186,7 @@ function SlideMetrics() {
           className={`mt-7 rounded-lg bg-white/[0.02] px-5 py-5 md:px-7 md:py-6`}>
           <div className="flex items-baseline justify-between gap-6">
             <p className={`${EYE} text-white/55`}>Time to first value</p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]/85">Observed in testing</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#FF6A00]/85">Observed in testing</p>
           </div>
           <div className="mt-4 grid gap-4 md:grid-cols-2 md:gap-x-10">
             <TimeBar label="Before · Documentation onboarding" value="60+ min"   pct={100} delay={T_CHART + 0.2} />
@@ -1202,15 +1202,15 @@ function SlideMetrics() {
                 initial={{ opacity: 0, y: 14, scale: 0.97, filter: "blur(10px)" }}
                 animate={{ opacity: 1, y: 0, scale: 1, filter: "blur(0px)" }}
                 transition={{ duration: 0.7, ease: E, delay: cardDelay }}>
-                <motion.div className="mb-3 h-[1.5px] bg-[#C8FF47]/65"
+                <motion.div className="mb-3 h-[1.5px] bg-[#FF6A00]/65"
                   initial={{ width: 0 }} animate={{ width: "1.5rem" }}
                   transition={{ duration: 0.55, ease: E, delay: cardDelay + 0.15 }} />
-                <p className="relative font-display font-light leading-none text-[#C8FF47]"
+                <p className="relative font-display font-light leading-none text-[#FF6A00]"
                   style={{ fontSize: "clamp(2.4rem, 4.6vw, 3.9rem)" }}>
                   <motion.span
                     animate={isKey
-                      ? { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 26px rgba(200,255,71,0.55)", "0 0 10px rgba(200,255,71,0.22)"] }
-                      : { textShadow: ["0 0 0px rgba(200,255,71,0)", "0 0 14px rgba(200,255,71,0.3)",  "0 0 0px rgba(200,255,71,0)"] }}
+                      ? { textShadow: ["0 0 0px rgba(255,106,0,0)", "0 0 26px rgba(255,106,0,0.55)", "0 0 10px rgba(255,106,0,0.22)"] }
+                      : { textShadow: ["0 0 0px rgba(255,106,0,0)", "0 0 14px rgba(255,106,0,0.3)",  "0 0 0px rgba(255,106,0,0)"] }}
                     transition={{ duration: 2.2, ease: "easeOut", delay: cardDelay + 0.55, times: [0, 0.55, 1],
                       repeat: isKey ? Infinity : 0, repeatDelay: isKey ? 2.4 : 0 }}>
                     <CountUp to={s.to} suffix={s.suffix} prefix={s.prefix} startDelay={cardDelay * 1000 + 350} duration={1100} />
@@ -1266,7 +1266,7 @@ function SlideMetricsMethod() {
                 transition={{ duration: 0.65, ease: E, delay: 0.24 + i * 0.08 }}
                 className="grid grid-cols-1 gap-2 px-1 py-4 md:grid-cols-[10rem_1fr_1fr_1fr] md:items-start md:gap-x-6">
                 <div>
-                  <p className="font-display text-[1.5rem] font-light tracking-tight text-[#C8FF47]">{row.metric}</p>
+                  <p className="font-display text-[1.5rem] font-light tracking-tight text-[#FF6A00]">{row.metric}</p>
                   <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.14em] text-white/[0.5]">{row.label}</p>
                 </div>
                 <p className="font-sans text-[12.5px] leading-snug text-white/[0.72]">{row.baseline}</p>
@@ -1306,7 +1306,7 @@ function SlidePrinciples({ reduced }: { reduced: boolean | null }) {
               className={`py-8 md:px-8 ${i > 0 ? `border-t ${HAIR} md:border-l md:border-t-0` : "md:pl-0"}`}
               initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.75, ease: E, delay: 0.24 + i * 0.12 }}>
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#C8FF47]">Principle {p.n}</p>
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-[#FF6A00]">Principle {p.n}</p>
               <p className={`mt-4 font-display text-[1.2rem] font-light leading-[1.25] tracking-[-0.02em] ${HEAD} md:text-[1.34rem]`}>{p.t}</p>
               <p className="mt-4 font-sans text-[14.5px] leading-[1.7] text-white/[0.64]">{p.body}</p>
             </motion.div>
@@ -1361,7 +1361,7 @@ function SlideClosing({ reduced }: { reduced: boolean | null }) {
     <section className={`relative flex h-full flex-col items-start justify-center overflow-hidden px-12 md:px-20 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 max-w-2xl">
-        <motion.div variants={FADE} className="mb-8 h-px w-12 bg-[#C8FF47]" />
+        <motion.div variants={FADE} className="mb-8 h-px w-12 bg-[#FF6A00]" />
         <Mask delay={0.08}>
           <h2 className={`font-display font-light tracking-[-0.04em] ${HEAD}`}
             style={{ fontSize: "clamp(2.5rem, 6vw, 5rem)" }}>
@@ -1376,7 +1376,7 @@ function SlideClosing({ reduced }: { reduced: boolean | null }) {
         </motion.p>
         <motion.div variants={UP} className="mt-10 flex flex-wrap items-center gap-5">
           <a href="https://tongyi.aliyun.com/character" target="_blank" rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2.5 rounded-[6px] bg-[#C8FF47] px-7 py-3.5 font-sans text-[13px] font-medium text-[#0A0A0A] transition-all duration-150 hover:bg-white">
+            className="group inline-flex items-center gap-2.5 rounded-[6px] bg-[#FF6A00] px-7 py-3.5 font-sans text-[13px] font-medium text-[#0A0A0A] transition-all duration-150 hover:bg-white">
             View live showrooms
             <span className="transition-transform duration-150 group-hover:translate-x-0.5" aria-hidden>→</span>
           </a>
@@ -1447,7 +1447,7 @@ function DeckSlideScrubber({
   return (
     <div className="relative mx-auto min-h-[1.75rem] w-full max-w-md px-1 py-1.5">
       <div className="pointer-events-none relative h-1.5 w-full overflow-hidden rounded-full bg-white/[0.1]" aria-hidden>
-        <div className="absolute left-0 top-0 h-full rounded-full bg-[#C8FF47]" style={{ width: `${pct}%` }} />
+        <div className="absolute left-0 top-0 h-full rounded-full bg-[#FF6A00]" style={{ width: `${pct}%` }} />
       </div>
       <input type="range" min={0} max={max} step={1} value={idx}
         aria-label="Slide position" aria-valuemin={1} aria-valuemax={total} aria-valuenow={idx + 1}
@@ -1466,7 +1466,7 @@ function ChapterPills({ current, onJump }: { current: string; onJump: (i: number
           <button key={ch} type="button" onClick={() => onJump(CH_START[i])}
             className={`rounded-full transition-all duration-300 ease-out ${
               on
-                ? "bg-[#C8FF47] px-3 py-[3px] font-mono text-[9px] uppercase tracking-[0.18em] text-[#0A0A0A]"
+                ? "bg-[#FF6A00] px-3 py-[3px] font-mono text-[9px] uppercase tracking-[0.18em] text-[#0A0A0A]"
                 : "h-1.5 w-1.5 bg-white/[0.32] hover:bg-white/60"
             }`}
             aria-label={`Go to chapter: ${ch}`}>
@@ -1537,7 +1537,7 @@ export default function DeckPresentClient() {
 
       {/* Progress line */}
       <div className="absolute inset-x-0 top-0 z-50 h-[1.5px] bg-transparent">
-        <motion.div className="h-full bg-[#C8FF47]"
+        <motion.div className="h-full bg-[#FF6A00]"
           initial={false} animate={{ width: `${progress}%` }}
           transition={{ duration: 0.4, ease: E }} />
       </div>

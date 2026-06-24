@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 700" fill="none" role="img" font-family="Inter, 'Helvetica Neue', Arial, sans-serif">
-  <title>Alternate Universe Events — LLM workflow</title>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 700" fill="none" role="img" font-family="'PingFang SC', 'Microsoft YaHei', Inter, sans-serif">
+  <title>平行宇宙事件 — LLM 工作流</title>
   <defs>
     <marker id="ah" markerWidth="12" markerHeight="12" refX="9" refY="4" orient="auto" markerUnits="userSpaceOnUse">
       <path d="M1 1 L9 4 L1 7 Z" fill="#FFFFFF" fill-opacity="0.34"/>
@@ -11,11 +11,11 @@
 
   <rect width="1280" height="700" fill="#08090A"/>
 
-  <text x="36" y="56" font-size="15" font-weight="700" letter-spacing="2.5" fill="#FFFFFF" fill-opacity="0.42">01 · ALTERNATE UNIVERSE EVENTS</text>
+  <text x="36" y="56" font-size="15" font-weight="700" letter-spacing="2" fill="#FFFFFF" fill-opacity="0.42">01 · ALTERNATE UNIVERSE EVENTS</text>
   <line x1="36" y1="74" x2="384" y2="74" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.5"/>
 
   <path d="M1110 395 V565 H375 V400" stroke="#FF6A00" stroke-opacity="0.32" stroke-width="2" stroke-dasharray="5 6" marker-end="url(#ahl)"/>
-  <text x="742" y="557" font-size="12.5" font-weight="600" fill="#FF6A00" text-anchor="middle">↻ writes back to long-term memory</text>
+  <text x="742" y="557" font-size="12.5" font-weight="600" fill="#FF6A00" text-anchor="middle">↻ 回写长期记忆</text>
 
   <g stroke="#FFFFFF" stroke-opacity="0.22" stroke-width="2">
     <path d="M230 265 C 252 265 252 355 275 355" marker-end="url(#ah)"/>
@@ -28,37 +28,37 @@
     <path d="M965 355 H1010" marker-end="url(#ah)"/>
     <path d="M965 505 C 988 505 988 355 1010 355" marker-end="url(#ah)"/>
   </g>
-  <text x="865" y="150" font-size="12" font-weight="600" fill="#FF6A00" text-anchor="middle">pick one archetype</text>
+  <text x="865" y="150" font-size="12" font-weight="600" fill="#FF6A00" text-anchor="middle">三选一原型</text>
 
   <rect x="30" y="230" width="200" height="70" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
-  <text x="48" y="262" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Idle timer fires</text>
-  <text x="48" y="282" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">≥ N min without reply</text>
+  <text x="48" y="262" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">空闲计时触发</text>
+  <text x="48" y="282" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">≥ N 分钟无回复</text>
 
   <rect x="30" y="400" width="200" height="70" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
-  <text x="48" y="432" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">User draws card</text>
-  <text x="48" y="452" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">gacha mechanic tapped</text>
+  <text x="48" y="432" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">用户抽卡</text>
+  <text x="48" y="452" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">点了抽卡玩法</text>
 
   <rect x="275" y="315" width="200" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
-  <text x="293" y="349" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Read long-term memory</text>
-  <text x="293" y="371" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">events · preferences · history</text>
+  <text x="293" y="349" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">读取长期记忆</text>
+  <text x="293" y="371" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">事件 · 偏好 · 历史</text>
 
   <rect x="520" y="315" width="200" height="80" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
-  <text x="538" y="349" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Scenario classifier (LLM)</text>
-  <text x="538" y="371" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">pick archetype from signal</text>
+  <text x="538" y="349" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">场景分类器 (LLM)</text>
+  <text x="538" y="371" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">依信号挑选原型</text>
 
   <rect x="765" y="170" width="200" height="70" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
-  <text x="783" y="202" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Fantasy</text>
-  <text x="783" y="222" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">vampire · spirit · guardian</text>
+  <text x="783" y="202" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">奇幻</text>
+  <text x="783" y="222" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">吸血鬼 · 精灵 · 守护者</text>
 
   <rect x="765" y="320" width="200" height="70" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
-  <text x="783" y="352" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Alternate setting</text>
-  <text x="783" y="372" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">Tibet · countryside · abroad</text>
+  <text x="783" y="352" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">异域设定</text>
+  <text x="783" y="372" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">西藏 · 乡村 · 海外</text>
 
   <rect x="765" y="470" width="200" height="70" rx="14" fill="#FFFFFF" fill-opacity="0.04" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="1.25"/>
-  <text x="783" y="502" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">Role reversal</text>
-  <text x="783" y="522" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">cat-butler · student · chef</text>
+  <text x="783" y="502" font-size="13" font-weight="600" fill="#FFFFFF" fill-opacity="0.92">角色反转</text>
+  <text x="783" y="522" font-size="11.5" fill="#FFFFFF" fill-opacity="0.55">猫管家 · 学生 · 厨师</text>
 
   <rect x="1010" y="315" width="200" height="80" rx="14" fill="#FF6A00" fill-opacity="0.10" stroke="#FF6A00" stroke-opacity="0.40" stroke-width="1.5"/>
-  <text x="1028" y="349" font-size="13" font-weight="700" fill="#FF6A00">Generate scene + dialogue</text>
-  <text x="1028" y="371" font-size="11.5" fill="#FF6A00" fill-opacity="0.62">character + archetype + memory</text>
+  <text x="1028" y="349" font-size="13" font-weight="700" fill="#FF6A00">生成场景 + 对白</text>
+  <text x="1028" y="371" font-size="11.5" fill="#FF6A00" fill-opacity="0.62">角色 + 原型 + 记忆</text>
 </svg>
