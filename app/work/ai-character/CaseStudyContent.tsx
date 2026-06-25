@@ -702,7 +702,10 @@ function D1BeforeAfter() {
   // drives) when the section is scrolled away.
   useEffect(() => {
     if (!near) return;
-    const t = setInterval(() => setIdx((i) => (i + 1) % d1CycleOrder.length), 4200);
+    // 6.5s (was 4.2s): the active room iframe now fully reloads each cycle
+    // instead of cross-fading a pre-mounted one, so give each app room to boot
+    // and be seen for a beat before swapping.
+    const t = setInterval(() => setIdx((i) => (i + 1) % d1CycleOrder.length), 6500);
     return () => clearInterval(t);
   }, [near]);
 
@@ -779,32 +782,24 @@ function D1BeforeAfter() {
           className={`relative overflow-hidden rounded-xl border transition-[border-color,box-shadow] duration-500 ${vibeGalleryChrome[activeId]}`}
           style={{ height: displayH || undefined, aspectRatio: displayH ? undefined : `${PROTO_W}/${PROTO_H}` }}
         >
-          {d1CycleOrder.map((id, i) => {
-            const room = vibeCodingShowrooms.find((s) => s.id === id)!;
-            return (
-              <div
-                key={id}
-                className={`absolute inset-0 transition-opacity duration-500 ${
-                  i === idx ? "opacity-100" : "pointer-events-none opacity-0"
-                }`}
-              >
-                {near && scale > 0 && (
-                  <iframe
-                    title={room.title}
-                    src={room.src}
-                    loading="lazy"
-                    className={`absolute top-0 left-0 border-0 ${vibeIframeBg[id]}`}
-                    style={{
-                      width: PROTO_W,
-                      height: PROTO_H,
-                      transform: `scale(${scale})`,
-                      transformOrigin: "top left",
-                    }}
-                  />
-                )}
-              </div>
-            );
-          })}
+          {/* Only the active room is mounted — one live app at a time. Stacking
+              all three (even hidden) kept three full prototypes painting their
+              canvas/video loops at once, which fed the memory crash. */}
+          {near && scale > 0 && (
+            <iframe
+              key={activeId}
+              title={activeRoom.title}
+              src={activeRoom.src}
+              loading="lazy"
+              className={`absolute top-0 left-0 border-0 ${vibeIframeBg[activeId]}`}
+              style={{
+                width: PROTO_W,
+                height: PROTO_H,
+                transform: `scale(${scale})`,
+                transformOrigin: "top left",
+              }}
+            />
+          )}
         </div>
       </div>
     </div>
@@ -1606,7 +1601,6 @@ const HERO_PROTO_H = 900;
  *  A full-desktop iframe is scaled to fit, so it reads like the real app. */
 function HeroPrototypeGallery() {
   const [activeId, setActiveId] = useState<(typeof vibeCodingShowrooms)[number]["id"]>("romance");
-  const [activated, setActivated] = useState<string[]>(["romance"]);
   const frameRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const [mounted, setMounted] = useState(false);
@@ -1619,10 +1613,12 @@ function HeroPrototypeGallery() {
     return () => ro.disconnect();
   }, []);
 
-  // Toggle (not mount-once): the hero can have up to 5 showroom iframes alive at
-  // once after the visitor clicks through the tabs, so unmount the whole set the
-  // moment it scrolls away — otherwise those live apps stay pinned for the entire
-  // (long) case study and the tab eventually runs out of memory.
+  // Only ONE showroom iframe is ever mounted (the active tab) and the whole
+  // thing unmounts the moment it scrolls away. Each showroom is a full app with
+  // forever-running canvas/video loops, so keeping several warm — even hidden at
+  // opacity:0, where rAF keeps firing — steadily climbed memory until the
+  // renderer crashed ("page won't open after a while"). Swapping the single
+  // iframe on tab change costs a ~1s reload; that's the right trade.
   useEffect(() => {
     const el = frameRef.current;
     if (!el || typeof IntersectionObserver === "undefined") {
@@ -1643,7 +1639,6 @@ function HeroPrototypeGallery() {
 
   function pick(id: (typeof vibeCodingShowrooms)[number]["id"]) {
     setActiveId(id);
-    setActivated((prev) => (prev.includes(id) ? prev : [...prev, id]));
   }
 
   const idx = vibeCodingShowrooms.findIndex((s) => s.id === activeId);
@@ -1700,25 +1695,19 @@ function HeroPrototypeGallery() {
         style={{ height: displayH || undefined, aspectRatio: displayH ? undefined : `${HERO_PROTO_W}/${HERO_PROTO_H}` }}
       >
         {mounted && scale > 0 ? (
-          vibeCodingShowrooms.map((s) => {
-            if (!activated.includes(s.id)) return null;
-            const on = s.id === activeId;
-            return (
-              <iframe
-                key={s.id}
-                title={s.title}
-                src={s.src}
-                loading="lazy"
-                className={`absolute left-0 top-0 border-0 transition-opacity duration-500 ${vibeIframeBg[s.id]} ${on ? "opacity-100" : "pointer-events-none opacity-0"}`}
-                style={{
-                  width: HERO_PROTO_W,
-                  height: HERO_PROTO_H,
-                  transform: `scale(${scale})`,
-                  transformOrigin: "top left",
-                }}
-              />
-            );
-          })
+          <iframe
+            key={active.id}
+            title={active.title}
+            src={active.src}
+            loading="lazy"
+            className={`absolute left-0 top-0 border-0 ${vibeIframeBg[active.id]}`}
+            style={{
+              width: HERO_PROTO_W,
+              height: HERO_PROTO_H,
+              transform: `scale(${scale})`,
+              transformOrigin: "top left",
+            }}
+          />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-[#0b0b10]" aria-hidden>
             <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
