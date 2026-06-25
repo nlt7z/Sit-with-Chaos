@@ -713,22 +713,23 @@ function MobilePrototypeListItem({ entry }: { entry: Entry }) {
   const ref = useRef<HTMLLIElement>(null);
   const [shouldLoad, setShouldLoad] = useState(false);
 
+  // Toggle (not mount-once): unmount the row's media once it scrolls away, so a
+  // top-to-bottom scroll never leaves every heavy prototype iframe pinned in
+  // memory at the same time — that accumulation is what crashed the tab on
+  // mobile. Cards re-boot on scroll-back (~1s), which is the right trade.
   useEffect(() => {
-    if (shouldLoad) return;
     const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") return;
+    if (!el || typeof IntersectionObserver === "undefined") {
+      setShouldLoad(true);
+      return;
+    }
     const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          setShouldLoad(true);
-          io.disconnect();
-        }
-      },
+      ([e]) => setShouldLoad(e.isIntersecting),
       { rootMargin: "240px 0px" },
     );
     io.observe(el);
     return () => io.disconnect();
-  }, [shouldLoad]);
+  }, []);
 
   return (
     <li ref={ref} className="min-w-0">
@@ -982,10 +983,14 @@ export function VibeCodingPageContent() {
             if (offset < -halfN) offset += n;
             const dist = Math.abs(offset);
             const isActive = dist === 0;
-            // Mount media only for the active card + its 2-deep neighbours. Far
-            // cards unmount their iframe/video so we never accumulate a dozen
-            // live embeds all decoding at once (the real cause of switch lag).
-            const shouldLoad = dist <= 2;
+            // Heavy embeds (full-app iframes + live external sites) mount ONLY
+            // while active. Three prototype cards sit adjacent in the deck, so
+            // the old dist<=2 window kept up to five live apps painting their
+            // canvas/video loops at once — which exhausted memory and crashed
+            // the tab. Lightweight video/image still preload 2-deep so carousel
+            // switches stay smooth; heavy cards boot on arrival (~1s).
+            const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
+            const shouldLoad = heavy ? isActive : dist <= 2;
             return (
               <div
                 key={entryKey(entry)}
