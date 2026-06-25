@@ -597,7 +597,7 @@ export default function MeituanImCaseStudyPage() {
                   {/* Right — product walkthrough video (shown on mobile too). */}
                   <div className="flex flex-col items-start">
                     <div
-                      className="relative w-full max-w-[500px] overflow-hidden rounded-2xl border border-black/[0.08] bg-[#141416] shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]"
+                      className="relative w-full max-w-[500px] overflow-hidden rounded-2xl shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]"
                     >
                       <video
                         src="/assets/meituan-im/meituan-present/meituan-present-1.mp4"
@@ -733,7 +733,7 @@ export default function MeituanImCaseStudyPage() {
           <FadeIn className="mt-2">
             <div className="mx-auto w-full max-w-[760px] overflow-hidden rounded-2xl border border-black/[0.08] bg-[#141416] shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]">
               <ShowcaseVideo
-                src="/assets/meituan-im/im.mp4"
+                src="/assets/meituan-im/meituan-present/meituan-present-1.mp4"
                 title="IM experience — three entry states walkthrough"
               />
             </div>
