@@ -242,7 +242,7 @@ export const DECK_SLIDES: Slide[] = [
     title: "端到端体验节奏",
     caption: "从咨询发起、诊断转译、报价竞争到回访闭环，验证叙事连续性。",
     media: "video",
-    src: "/assets/meituan-im/im.mp4",
+    src: "/assets/meituan-im/meituan-present/meituan-present-1.mp4",
     alt: "美团 IM 询价系统交互演示视频",
     speakerNotes: "视频主要展示节奏和信息层级，不重复细节解释。",
   },
