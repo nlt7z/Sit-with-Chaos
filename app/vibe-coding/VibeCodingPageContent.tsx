@@ -708,34 +708,58 @@ function LoadBar({
   );
 }
 
-/** Mobile list item — mounts media only after the row scrolls into view. */
-function MobilePrototypeListItem({ entry }: { entry: Entry }) {
-  const ref = useRef<HTMLLIElement>(null);
-  const [shouldLoad, setShouldLoad] = useState(false);
+/** Mobile feed — a single most-visible row owns the live heavy embed.
+ *  Three prototype cards sit adjacent, so mounting heavy iframes by a scroll
+ *  margin could pin three live apps at once and OOM the phone. Heavy embeds
+ *  (full-app iframes + live sites) mount ONLY for the active (most-visible) row
+ *  and unmount the instant another row takes over; lightweight video/image
+ *  preload for the active row and its immediate neighbours. */
+function MobileFeed({ enabled }: { enabled: boolean }) {
+  const ref = useRef<HTMLUListElement>(null);
+  const [activeIdx, setActiveIdx] = useState(0);
 
-  // Toggle (not mount-once): unmount the row's media once it scrolls away, so a
-  // top-to-bottom scroll never leaves every heavy prototype iframe pinned in
-  // memory at the same time — that accumulation is what crashed the tab on
-  // mobile. Cards re-boot on scroll-back (~1s), which is the right trade.
   useEffect(() => {
-    const el = ref.current;
-    if (!el || typeof IntersectionObserver === "undefined") {
-      setShouldLoad(true);
-      return;
-    }
+    if (!enabled) return;
+    const root = ref.current;
+    if (!root || typeof IntersectionObserver === "undefined") return;
+    const items = Array.from(root.querySelectorAll<HTMLElement>("li[data-idx]"));
+    const ratios = new Map<number, number>();
     const io = new IntersectionObserver(
-      ([e]) => setShouldLoad(e.isIntersecting),
-      { rootMargin: "240px 0px" },
+      (obsEntries) => {
+        for (const e of obsEntries) {
+          const idx = Number((e.target as HTMLElement).dataset.idx);
+          ratios.set(idx, e.isIntersecting ? e.intersectionRatio : 0);
+        }
+        let best = 0;
+        let bestRatio = -1;
+        ratios.forEach((r, idx) => {
+          if (r > bestRatio) {
+            bestRatio = r;
+            best = idx;
+          }
+        });
+        setActiveIdx(best);
+      },
+      { threshold: [0, 0.25, 0.5, 0.75, 1] },
     );
-    io.observe(el);
+    items.forEach((el) => io.observe(el));
     return () => io.disconnect();
-  }, []);
+  }, [enabled]);
 
   return (
-    <li ref={ref} className="min-w-0">
-      {/* onReady not wired on mobile — the entry gate is desktop-only */}
-      <PrototypeCard entry={entry} shouldLoad={shouldLoad} isActive fluid />
-    </li>
+    <ul ref={ref} className="flex flex-col gap-10 pb-16">
+      {entries.map((entry, i) => {
+        const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
+        const dist = Math.abs(i - activeIdx);
+        const shouldLoad = enabled && (heavy ? dist === 0 : dist <= 1);
+        return (
+          <li key={entryKey(entry)} data-idx={i} className="min-w-0">
+            {/* onReady not wired on mobile — the entry gate is desktop-only */}
+            <PrototypeCard entry={entry} shouldLoad={shouldLoad} isActive fluid />
+          </li>
+        );
+      })}
+    </ul>
   );
 }
 
@@ -897,6 +921,25 @@ export function VibeCodingPageContent() {
   const carouselRef = useRef<HTMLDivElement>(null);
   const wheelCooldown = useRef(false);
 
+  // Which layout is live. Both the carousel and the mobile list always render in
+  // the React tree (only CSS hides one), so without this gate the hidden tree
+  // still mounts its heavy prototype iframes — on a phone the invisible desktop
+  // carousel was loading embeds on top of the mobile list and OOM-ing the tab.
+  // Starts null so neither tree loads media until we know the viewport (no SSR
+  // mismatch, no wasted first-paint load).
+  const [view, setView] = useState<"mobile" | "desktop" | null>(null);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) {
+      setView("desktop");
+      return;
+    }
+    const mq = window.matchMedia("(min-width: 768px)");
+    const apply = () => setView(mq.matches ? "desktop" : "mobile");
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
   // ── Entry gate ─────────────────────────────────────────────────────────
   // Hold the loading animation until the first (active) card's media has
   // actually loaded; the bar's progress reflects how many nearby cards are ready.
@@ -962,11 +1005,7 @@ export function VibeCodingPageContent() {
 
       {/* Mobile: stacked list */}
       <div className="mx-auto w-full max-w-content px-6 md:hidden">
-        <ul className="flex flex-col gap-10 pb-16">
-          {visible.map((entry) => (
-            <MobilePrototypeListItem key={entryKey(entry)} entry={entry} />
-          ))}
-        </ul>
+        <MobileFeed enabled={view === "mobile"} />
       </div>
 
       {/* Tablet / desktop: kinetic editorial carousel */}
@@ -990,7 +1029,10 @@ export function VibeCodingPageContent() {
             // the tab. Lightweight video/image still preload 2-deep so carousel
             // switches stay smooth; heavy cards boot on arrival (~1s).
             const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
-            const shouldLoad = heavy ? isActive : dist <= 2;
+            // view==="desktop" guard: this carousel is display:none on mobile but
+            // still mounted, so without it the iframes would load invisibly and
+            // stack onto the mobile list's memory.
+            const shouldLoad = view === "desktop" && (heavy ? isActive : dist <= 2);
             return (
               <div
                 key={entryKey(entry)}
