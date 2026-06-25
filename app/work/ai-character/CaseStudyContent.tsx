@@ -7,6 +7,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useId,
   useRef,
   useState,
   type ReactNode,
@@ -119,7 +120,7 @@ function ZoomHint() {
  *  UNMOUNT when off-screen so this long case study never piles up a dozen live
  *  embedded apps at once — which would otherwise exhaust memory and eventually
  *  make the tab unresponsive ("page won't open after a while"). */
-function useNearViewport<T extends HTMLElement>(rootMargin = "600px 0px") {
+function useNearViewport<T extends HTMLElement>(rootMargin = "150px 0px") {
   const ref = useRef<T>(null);
   const [near, setNear] = useState(false);
   useEffect(() => {
@@ -136,6 +137,72 @@ function useNearViewport<T extends HTMLElement>(rootMargin = "600px 0px") {
     return () => obs.disconnect();
   }, [rootMargin]);
   return [ref, near] as const;
+}
+
+/** True on phone-width viewports. Heavy prototype iframes use this to fall back
+ *  to a one-at-a-time mount on mobile, where several live apps OOM the tab. */
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined" || !window.matchMedia) return;
+    const mq = window.matchMedia("(max-width: 767px)");
+    const apply = () => setMobile(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+  return mobile;
+}
+
+/* ── Mobile single-embed slot ────────────────────────────────────────────────
+ * Several heavy prototype iframes can share one phone screen (the stacked code
+ * drawer pair, neighbouring feature embeds). Booting them all at once is what
+ * crashes the tab on mobile. Each embed reports how much of itself is on screen;
+ * only the single most-visible one is granted the slot and mounts its iframe.
+ * Desktop ignores this entirely and keeps every visible embed live. */
+type MobileSlot = {
+  claim: (id: string, ratio: number) => void;
+  release: (id: string) => void;
+  activeId: string | null;
+};
+const MobileSlotContext = createContext<MobileSlot | null>(null);
+
+function MobileSlotProvider({ children }: { children: ReactNode }) {
+  const ratios = useRef<Map<string, number>>(new Map());
+  const [activeId, setActiveId] = useState<string | null>(null);
+
+  const recompute = useCallback(() => {
+    let best: string | null = null;
+    let bestRatio = 0;
+    ratios.current.forEach((r, id) => {
+      if (r > bestRatio) {
+        bestRatio = r;
+        best = id;
+      }
+    });
+    setActiveId(best);
+  }, []);
+
+  const claim = useCallback(
+    (id: string, ratio: number) => {
+      ratios.current.set(id, ratio);
+      recompute();
+    },
+    [recompute]
+  );
+  const release = useCallback(
+    (id: string) => {
+      ratios.current.delete(id);
+      recompute();
+    },
+    [recompute]
+  );
+
+  return (
+    <MobileSlotContext.Provider value={{ claim, release, activeId }}>
+      {children}
+    </MobileSlotContext.Provider>
+  );
 }
 
 /** Room tabs only — compact control, not repeated as "chips" across the page */
@@ -424,9 +491,13 @@ function FeaturePrototypeEmbed({
   caption?: string;
   className?: string;
 }) {
+  const id = useId();
+  const isMobile = useIsMobile();
+  const slot = useContext(MobileSlotContext);
   const frameRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
-  const [load, setLoad] = useState(false);
+  const [near, setNear] = useState(false);
+  const [ratio, setRatio] = useState(0);
 
   // Track the rendered width so the fixed-size desktop iframe can be scaled to fit.
   useEffect(() => {
@@ -437,26 +508,44 @@ function FeaturePrototypeEmbed({
     return () => ro.disconnect();
   }, []);
 
-  // Boot the prototype app only while it's near the viewport, and UNMOUNT it
-  // once it scrolls far away — keeping it mounted forever is what let a dozen
-  // live iframes accumulate and crash the tab. The 600px margin keeps it warm
-  // just beyond the fold so light scrolling doesn't thrash the reload.
+  // Track on-screen visibility (and how much). Mount/unmount the prototype app
+  // with the viewport so dozens of live iframes never accumulate and crash the
+  // tab. `ratio` feeds the mobile slot so the most-visible embed wins.
   useEffect(() => {
     const el = frameRef.current;
     if (!el || typeof IntersectionObserver === "undefined") {
-      setLoad(true);
+      setNear(true);
       return;
     }
     const obs = new IntersectionObserver(
-      (entries) => setLoad(Boolean(entries[0]?.isIntersecting)),
-      { root: null, rootMargin: "600px 0px" }
+      (entries) => {
+        const e = entries[0];
+        const on = Boolean(e?.isIntersecting);
+        setNear(on);
+        setRatio(on && e ? e.intersectionRatio : 0);
+      },
+      { root: null, threshold: [0, 0.2, 0.5, 0.8, 1] }
     );
     obs.observe(el);
     return () => obs.disconnect();
   }, []);
 
+  // Mobile only: report visibility to the shared slot and release it on unmount,
+  // so just one heavy embed is ever live on a phone.
+  useEffect(() => {
+    if (!isMobile || !slot) return;
+    slot.claim(id, ratio);
+  }, [isMobile, slot, id, ratio]);
+  useEffect(() => {
+    if (!slot) return;
+    return () => slot.release(id);
+  }, [slot, id]);
+
   const scale = width > 0 ? width / FEATURE_FRAME_W : 0;
   const displayH = Math.round(FEATURE_FRAME_H * scale);
+  // Desktop: any visible embed loads. Mobile: only the slot winner loads.
+  const visible = isMobile && slot ? slot.activeId === id : near;
+  const showFrame = visible && scale > 0;
 
   return (
     <figure className={`overflow-hidden ${mediaRound} ${className}`}>
@@ -465,7 +554,7 @@ function FeaturePrototypeEmbed({
         className={`relative w-full overflow-hidden bg-[#0b0b10] ${mediaRound}`}
         style={{ height: displayH || undefined, aspectRatio: displayH ? undefined : `${FEATURE_FRAME_W} / ${FEATURE_FRAME_H}` }}
       >
-        {load && scale > 0 ? (
+        {showFrame ? (
           <iframe
             title={label}
             src={src}
@@ -717,7 +806,7 @@ function D1BeforeAfter() {
     let io: IntersectionObserver | undefined;
     if (typeof IntersectionObserver !== "undefined") {
       io = new IntersectionObserver(([entry]) => setNear(entry.isIntersecting), {
-        rootMargin: "400px 0px",
+        rootMargin: "150px 0px",
       });
       io.observe(el);
     } else {
@@ -1627,7 +1716,7 @@ function HeroPrototypeGallery() {
     }
     const obs = new IntersectionObserver(
       (entries) => setMounted(Boolean(entries[0]?.isIntersecting)),
-      { root: null, rootMargin: "600px 0px" }
+      { root: null, rootMargin: "150px 0px" }
     );
     obs.observe(el);
     return () => obs.disconnect();
@@ -1892,6 +1981,7 @@ export default function CaseStudyContent() {
 
   return (
     <LightboxProvider>
+    <MobileSlotProvider>
     <div className="relative min-h-screen bg-white pt-24 md:pt-28">
       <CaseStudyNav />
       <CaseStudyMobileToc items={caseNavItems} />
@@ -2174,6 +2264,7 @@ export default function CaseStudyContent() {
         </article>
       </main>
     </div>
+    </MobileSlotProvider>
     </LightboxProvider>
   );
 }
