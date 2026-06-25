@@ -162,13 +162,14 @@ const entries: Entry[] = [
       title: "Gacha portfolio interactive prototype",
     },
   },
-  {
-    date: "2025.08",
-    title: "saas homepage rebuild",
-    description: "Homepage redesign for a SaaS product — narrative flow, motion language, and section rhythm.",
-    tags: ["web"],
-    media: { kind: "video", src: "/assets/work/apsara.mp4" },
-  },
+  // Hidden for now (not deleted) — restore by uncommenting.
+  // {
+  //   date: "2025.08",
+  //   title: "saas homepage rebuild",
+  //   description: "Homepage redesign for a SaaS product — narrative flow, motion language, and section rhythm.",
+  //   tags: ["web"],
+  //   media: { kind: "video", src: "/assets/work/apsara.mp4" },
+  // },
   {
     date: "2025.05",
     title: "tts reading workflow",
