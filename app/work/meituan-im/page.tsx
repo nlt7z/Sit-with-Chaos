@@ -717,7 +717,7 @@ export default function MeituanImCaseStudyPage() {
           <div className="mt-16 md:mt-24">
             <SubsectionHeader
               label="Transaction blueprint"
-              hint="Zoom out from the conversation to the whole deal — how a quote request becomes a booking, an on-site service, and a settled order across platform, user and merchant."
+              hint="How a quote request becomes a booking, an on-site visit, and a settled order — across platform, user and merchant."
             />
             <FadeIn>
               <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
@@ -780,7 +780,7 @@ export default function MeituanImCaseStudyPage() {
           <div className="mt-20 md:mt-28">
             <SubsectionHeader
               label="Competitive quoting"
-              hint="Each merchant receives the diagnosis and quotes independently — they never see each other's prices. So what you compare is each merchant's own guide price against the same service order, not a platform-set final number."
+              hint="Merchants quote the same diagnosis independently — so you compare guide prices against one order, never a platform-set final."
             />
             <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
               <PhoneFrame
@@ -846,11 +846,10 @@ export default function MeituanImCaseStudyPage() {
         <Section id="merchant" eyebrow="The Other Side" title="Merchants quote against the same order — on equal footing.">
           <FadeIn>
             <p className="max-w-[42rem] text-[16px] leading-[1.7] text-textSecondary">
-              Every merchant receives the same structured service order and submits one quote — a fixed price, or a
-              strictly-bounded guide range that varies only by parts, never open-ended. Because they never see each
-              other&apos;s numbers, they compete on the same brief instead of undercutting. For local repair, an exact
-              price usually isn&apos;t knowable until the on-site visit, so a bounded range is the honest unit — not a
-              number that breaks at the door.
+              Every merchant gets the same structured order and submits one quote — a fixed price or a tightly-bounded
+              range, never open-ended. Since they can&apos;t see each other&apos;s numbers, they compete on the brief
+              instead of undercutting — and for local repair, where the exact price isn&apos;t knowable until the visit,
+              a bounded range is the honest unit.
             </p>
           </FadeIn>
           <FadeIn className="mt-10">
@@ -937,7 +936,7 @@ export default function MeituanImCaseStudyPage() {
                   <span className="rounded-full border border-nltLime-ink/30 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-nltLime-ink/80">Measured</span>
                 </div>
                 <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
-                  ~60% of users ask about price before buying, so I routed them through a diagnose → quote → order flow. On that channel, intent→order converted ~1.3× the old path (9%→11.7% on toilet repair, 17%→22% on pipe clearing) — pulling the whole search entry up +0.5pp. User-level randomized A/B.
+                  ~60% of users ask about price before buying, so I routed them through a diagnose → quote → order flow. On it, intent→order converted ~1.3× the old path (9%→11.7% toilet repair, 17%→22% pipe clearing) — lifting the whole search entry +0.5pp.
                 </p>
               </div>
             </div>
@@ -970,7 +969,7 @@ export default function MeituanImCaseStudyPage() {
           </FadeIn>
           <FadeIn delay={0.15}>
             <p className="mt-10 max-w-2xl text-[13.5px] leading-relaxed text-textSecondary/80">
-              The flow is a floating window triggered on search, so every searcher in the piloted categories was in the sample. We piloted two repair categories — toilet repair and pipe clearing — in Hangzhou and select Zhejiang cities, bounded by where our certified-expert supply was. The conversion figures are real June–August numbers from a user-level randomized A/B; the daily-orders and disputes figures above are modeled forward from them for a wider rollout.
+              A floating window triggered on search, piloted on two categories — toilet repair and pipe clearing — in Hangzhou and select Zhejiang cities, bounded by certified-expert supply. Conversion is real June–August A/B data; the daily-orders and disputes figures are modeled forward from it for a wider rollout.
             </p>
           </FadeIn>
         </Section>

@@ -842,7 +842,7 @@ function SlideImpact() {
           initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: E, delay: T_OUTRO }}
           className="mt-7 max-w-2xl text-[13px] font-light leading-[1.76]" style={{ color: "rgba(255,255,255,0.7)" }}>
-          它是搜索时触发的浮窗,在马桶维修、管道疏通两个品类试点,上线于杭州及浙江部分城市。转化数据是 6–8 月的真实 A/B;上面的订单量与纠纷数据,是据此向更大范围外推的预测。
+          它是搜索时触发的浮窗,试点上线于杭州及浙江部分城市。转化是 6–8 月的真实 A/B;订单量与纠纷数据则是据此向更大范围外推的预测。
         </motion.p>
       </div>
     </section>
