@@ -44,7 +44,6 @@ const SLIDES = [
   { id: "signal",              chapter: "背景",     dark: true  },
   { id: "first-try",           chapter: "背景",     dark: false },
   { id: "before-after",        chapter: "背景",     dark: false },
-  { id: "system-flow",         chapter: "系统",      dark: false },
   { id: "txn-flow",            chapter: "系统",      dark: false },
   { id: "entry-states",        chapter: "系统",      dark: false },
   { id: "flow-standard",       chapter: "流程",    dark: false },
@@ -125,120 +124,6 @@ function Mark({ children }: { children: ReactNode }) {
     }}>
       {children}
     </span>
-  );
-}
-
-// ─── System flow — SERVICE BLUEPRINT (lanes by visibility, stages left→right) ──
-//   Redrawn as a proper service blueprint: customer actions sit above the line
-//   of interaction, the frontstage contact between the two canonical lines, and
-//   the backstage platform systems below the line of visibility. Mono Uber Base,
-//   clean cells (no decorative left strips); the one customer decision is yellow.
-const SYS_STAGES = [
-  { n: "01", name: "发现" },
-  { n: "02", name: "对话与录入" },
-  { n: "03", name: "匹配" },
-  { n: "04", name: "履约" },
-  { n: "05", name: "反馈" },
-] as const;
-
-type BPCell = { t: string; decision?: boolean } | null;
-
-const BP_LANES: { name: string; band?: boolean; cells: BPCell[] }[] = [
-  {
-    name: "用户", band: true,
-    cells: [
-      { t: "搜索维修需求" },
-      { t: "描述问题" },
-      { t: "对比并选定商家", decision: true },
-      { t: "服务后付款" },
-      { t: "评价并打标" },
-    ],
-  },
-  {
-    name: "前台",
-    cells: [
-      null,
-      { t: "专家在对话中诊断" },
-      { t: "商家实时报价" },
-      { t: "上门服务完成" },
-      null,
-    ],
-  },
-  {
-    name: "后台",
-    cells: [
-      { t: "推出诊断卡片" },
-      { t: "生成服务工单" },
-      { t: "排序并推送报价" },
-      { t: "绑定定金与尾款" },
-      { t: "更新排序模型" },
-    ],
-  },
-];
-
-const BP_COLS = "minmax(92px,108px) repeat(5, minmax(0,1fr))";
-
-function BPLane({ lane }: { lane: (typeof BP_LANES)[number] }) {
-  return (
-    <div className="grid min-h-0 flex-1" style={{ gridTemplateColumns: BP_COLS, background: lane.band ? U.bg : U.surface }}>
-      <div className="flex items-center px-4" style={{ borderRight: `1px solid ${U.hairline}` }}>
-        <span className="text-[11px] font-semibold uppercase tracking-[0.13em]" style={{ color: U.inkLight }}>{lane.name}</span>
-      </div>
-      {lane.cells.map((c, i) => {
-        const linkNext = !!c && !!lane.cells[i + 1]; // both this and the next step exist
-        return (
-          <div key={i} className="relative flex items-center px-4">
-            {c && (c.decision ? (
-              <span className="inline-flex items-center gap-2 text-[14px] font-medium leading-snug" style={{ color: U.ink }}>
-                <span className="inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: U.accent }} />
-                {c.t}
-              </span>
-            ) : (
-              <span className="text-[14px] font-normal leading-snug" style={{ color: U.inkSoft }}>{c.t}</span>
-            ))}
-            {linkNext && (
-              <span className="pointer-events-none absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2" aria-hidden style={{ color: U.mutedSoft }}>
-                <svg width="15" height="10" viewBox="0 0 15 10" fill="none">
-                  <path d="M1 5h12M9.5 1.5 13 5l-3.5 3.5" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </span>
-            )}
-          </div>
-        );
-      })}
-    </div>
-  );
-}
-
-function BPLine({ label }: { label: string }) {
-  return (
-    <div className="shrink-0 px-4 py-1" style={{ borderTop: `1px dashed ${U.hairline}` }}>
-      <span className="text-[9.5px] font-semibold uppercase tracking-[0.16em]" style={{ color: U.mutedSoft }}>{label}</span>
-    </div>
-  );
-}
-
-function SystemDiagram() {
-  return (
-    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-xl"
-      style={{ border: `1px solid ${U.hairline}`, background: U.surface }}>
-      {/* Stage header — the timeline (light, no chips) */}
-      <div className="grid shrink-0" style={{ gridTemplateColumns: BP_COLS, borderBottom: `1px solid ${U.hairline}` }}>
-        <div className="px-4 py-2.5" style={{ borderRight: `1px solid ${U.hairline}` }} />
-        {SYS_STAGES.map((s) => (
-          <div key={s.n} className="flex items-baseline gap-1.5 px-4 py-2.5">
-            <span className="text-[10px] font-medium tabular-nums" style={{ color: U.mutedSoft }}>{s.n}</span>
-            <span className="truncate text-[13px] font-semibold tracking-tight" style={{ color: U.ink }}>{s.name}</span>
-          </div>
-        ))}
-      </div>
-      {/* Three lanes, separated only by the two canonical lines + whitespace */}
-      <BPLane lane={BP_LANES[0]} />
-      <BPLine label="交互线" />
-      <BPLane lane={BP_LANES[1]} />
-      <BPLine label="可见线" />
-      <BPLane lane={BP_LANES[2]} />
-    </div>
   );
 }
 
@@ -382,8 +267,11 @@ function SlideOverview() {
             把不确定的价格,变成有引导、可下单的决策。
           </h2>
         </Mask>
+        <motion.p variants={UP} className="mt-5 max-w-2xl text-[13.5px] font-light leading-[1.72]" style={{ color: U.inkLight }}>
+          范围说明:本次试点先<Mark>只聚焦马桶维修与管道疏通</Mark>两个高频维修品类——把信任闭环在这里跑通,再向更多本地服务延展。
+        </motion.p>
         {/* Three results, de-tabled: simple stat blocks split by hairlines */}
-        <motion.div variants={UP} className="mt-10 grid gap-x-10 gap-y-6 sm:grid-cols-3">
+        <motion.div variants={UP} className="mt-8 grid gap-x-10 gap-y-6 sm:grid-cols-3">
           {pillars.map((p, i) => (
             <motion.div key={p.label} className={`sm:pl-8 ${i > 0 ? "sm:border-l" : ""}`}
               style={{ borderColor: U.divider }}
@@ -552,28 +440,7 @@ function SlideBeforeAfter() {
   );
 }
 
-// §04 System flow map
-function SlideSystemFlow() {
-  return (
-    <section className="flex h-full min-h-0 flex-col px-10 py-4 md:px-14 md:py-5" style={{ background: U.surface }}>
-      <motion.div variants={STG} initial="hidden" animate="show" className="flex h-full min-h-0 flex-col overflow-hidden">
-        <div className="shrink-0">
-          <motion.div variants={FADE}><Eye>系统设计</Eye></motion.div>
-          <Mask delay={0.08}>
-            <h2 className="mt-3 font-light tracking-[-0.026em]" style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)", color: U.ink }}>
-              一条端到端的流程,信任在每个阶段累积。
-            </h2>
-          </Mask>
-        </div>
-        <motion.div variants={FADE} className="mt-3 flex min-h-0 flex-1 basis-0 flex-col">
-          <SystemDiagram />
-        </motion.div>
-      </motion.div>
-    </section>
-  );
-}
-
-// §04b 交易蓝图 —— 平台 / 用户 / 商家三方的完整询价报价交易链路。
+// §04 交易蓝图 —— 平台 / 用户 / 商家三方的完整询价报价交易链路。
 //   自包含的 Uber Base 流程图(自带标题与图例),在同色浅灰底上全幅展示,
 //   横版泳道居中、上下留白与底色无缝衔接。
 function SlideTxnFlow() {
@@ -1059,7 +926,6 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "signal":              return <SlideSignal />;
     case "first-try":           return <SlideFirstTry />;
     case "before-after":        return <SlideBeforeAfter />;
-    case "system-flow":         return <SlideSystemFlow />;
     case "txn-flow":            return <SlideTxnFlow />;
     case "entry-states":        return <SlideEntryStates />;
     case "flow-standard":       return <SlideFlowStandard />;

@@ -535,11 +535,7 @@ export default function MeituanImCaseStudyPage() {
                   variants={heroItem}
                   className="mt-5 max-w-xl text-[14px] leading-[1.7] text-textSecondary/80"
                 >
-                  <span className="text-textPrimary/80">For context:</span> Meituan local services is a super-app
-                  marketplace — think Uber, Yelp and TaskRabbit in one. Its core interaction is{" "}
-                  <span className="text-textPrimary/80">IM — in-message</span>, where deals close inside the chat.
-                  This project ran the whole journey — diagnose, compare merchants, book, pay, review — without ever
-                  leaving the conversation.
+                  <span className="text-textPrimary/80">For context:</span> it&apos;s a super-app marketplace — Uber, Yelp and TaskRabbit in one — where deals close inside in-app chat (<span className="text-textPrimary/80">IM</span>). This project ran the whole journey there: diagnose, compare, book, pay, review.
                 </motion.p>
 
                 <motion.div variants={heroItem} className="mt-8 flex flex-wrap items-center gap-3">
@@ -638,19 +634,10 @@ export default function MeituanImCaseStudyPage() {
           <FadeIn className="mt-12">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">The first attempt</p>
             <p className="mt-4 max-w-3xl text-[17px] leading-[1.6] tracking-tight text-textPrimary">
-              The brief&apos;s obvious answer was to show the price up front — so that&apos;s what we shipped first: a standalone quote page.
+              The obvious fix was to show price up front — so we shipped a standalone quote page first. Conversion didn&apos;t budge: the quote was rarely the final price, so users didn&apos;t believe it and merchants didn&apos;t maintain it.
             </p>
-            <div className="mt-6 max-w-3xl rounded-2xl border border-black/[0.08] bg-black/[0.015] px-6 py-5">
-              <div className="flex items-baseline justify-between">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">v1 · standalone quote page</p>
-                <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/60">no measurable lift</p>
-              </div>
-              <p className="mt-3 text-[14.5px] leading-relaxed text-textSecondary">
-                Conversion didn&apos;t budge. The quote was rarely the final price, so users didn&apos;t believe the number and merchants didn&apos;t maintain it. It became decoration — a label that said &ldquo;we offer this&rdquo; on a figure no one trusted.
-              </p>
-            </div>
             <p className="mt-7 max-w-3xl text-[18px] leading-[1.55] tracking-tight text-textPrimary">
-              That failure was the insight. Price was not a number problem — it was a <span className="text-nltLime-ink">process-trust</span> problem. Trust can&apos;t be <span className="text-textSecondary line-through decoration-textSecondary/40">declared</span> on a page; it has to be built in the conversation.
+              That failure was the insight. Price wasn&apos;t a <span className="text-textSecondary line-through decoration-textSecondary/40">number</span> problem — it was a <span className="text-nltLime-ink">process-trust</span> problem. Trust can&apos;t be declared on a page; it&apos;s built in the conversation.
             </p>
           </FadeIn>
 
@@ -875,18 +862,12 @@ export default function MeituanImCaseStudyPage() {
               displayMaxWidth={1000}
             />
           </FadeIn>
-          <FadeIn className="mt-6">
-            <p className="max-w-[42rem] text-[13.5px] leading-relaxed text-textSecondary/80">
-              Today a merchant&apos;s only action is to quote — there&apos;s no race-to-the-bottom, but also little beyond
-              the quote itself. A next pass would design more merchant actions and incentives to keep quotes fast and honest.
-            </p>
-          </FadeIn>
         </Section>
 
         <Section id="prototype" eyebrow="Interactive Prototype" title="Try the full flow.">
           <p className="mb-4 max-w-[40rem] text-[14px] leading-relaxed text-textSecondary">
-            Switch scenarios from the rail under the phone, or tap the suggested replies to play a flow through.
-            <span className="text-textSecondary/65"> This build is re-skinned in English with USD placeholders for a non-Chinese audience — the shipped product is in Chinese with RMB pricing.</span>
+            Switch scenarios from the rail, or tap the suggested replies to play a flow through.
+            <span className="text-textSecondary/65"> Re-skinned in English with USD placeholders; shipped in Chinese with RMB.</span>
           </p>
           <div className="mb-10 flex items-center justify-between gap-4">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
@@ -921,138 +902,23 @@ export default function MeituanImCaseStudyPage() {
           title="The same loop scales: education, banquet, maternity care."
         >
           <FadeIn className="mt-2">
-            {/* Desktop / tablet — 4-column matrix */}
-            <div className="hidden overflow-hidden rounded-2xl border border-black/[0.08] sm:block">
-              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] bg-black/[0.025] text-[12px]">
-                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/75">
-                  Domain
-                </div>
-                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-nltLime-ink">
-                  01 · Diagnose
-                </div>
-                <div className="border-r border-black/[0.06] px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-nltLime-ink">
-                  02 · Structure
-                </div>
-                <div className="px-5 py-4 font-mono text-[10px] uppercase tracking-[0.2em] text-nltLime-ink">
-                  03 · Commit
-                </div>
-              </div>
-
-              <div className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06] bg-nltLime-soft/40">
-                <div className="border-r border-black/[0.06] px-5 py-5">
-                  <p className="text-[15px] tracking-tight text-nltLime-ink">Home repair</p>
-                  <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink/80">Reference case</p>
-                </div>
-                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
-                  Certified expert defines the issue.
-                </div>
-                <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
-                  Chat → structured service-order card.
-                </div>
-                <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">
-                  Live competitive quote → checkout.
-                </div>
-              </div>
-
+            <p className="max-w-2xl text-[17px] leading-[1.6] tracking-tight text-textPrimary">
+              Home repair was the reference build. The same{" "}
+              <span className="text-nltLime-ink">Diagnose → Structure → Commit</span> loop maps cleanly onto other
+              high-stakes, non-standard services — the substrate changes, the trust mechanics don&apos;t.
+            </p>
+            <dl className="mt-8 max-w-2xl divide-y divide-black/[0.07] border-t border-black/[0.07]">
               {[
-                {
-                  domain: "Education",
-                  tagline: "Parents · advisors · plans",
-                  d: "Goals, grade, budget.",
-                  s: "Constraints → learning brief.",
-                  c: "Plan comparison.",
-                },
-                {
-                  domain: "Banquet",
-                  tagline: "Event · venue · quote lock-in",
-                  d: "Size, date, menu, must-haves.",
-                  s: "Non-negotiables → requirement card.",
-                  c: "Venues quote on equal terms.",
-                },
-                {
-                  domain: "Maternity care",
-                  tagline: "Family · caregiver · continuity",
-                  d: "Need and risk; credentials first.",
-                  s: "Care scope → service brief.",
-                  c: "Package in trust context.",
-                },
-              ].map((row, i) => (
-                <div key={i} className="grid grid-cols-[1.1fr_1fr_1fr_1.05fr] border-t border-black/[0.06]">
-                  <div className="border-r border-black/[0.06] px-5 py-5">
-                    <p className="text-[15px] tracking-tight text-textPrimary">{row.domain}</p>
-                    <p className="mt-1 text-[12px] leading-snug text-textSecondary">{row.tagline}</p>
-                  </div>
-                  <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.d}</div>
-                  <div className="border-r border-black/[0.06] px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.s}</div>
-                  <div className="px-5 py-5 text-[14px] leading-relaxed text-textSecondary">{row.c}</div>
+                { d: "Education", t: "Goals & constraints → learning brief → compare plans." },
+                { d: "Banquet", t: "Size, date, must-haves → requirement card → venues quote on equal terms." },
+                { d: "Maternity care", t: "Need & credentials → care brief → package in trust context." },
+              ].map(({ d, t }) => (
+                <div key={d} className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-8">
+                  <dt className="w-44 shrink-0 text-[15px] tracking-tight text-textPrimary">{d}</dt>
+                  <dd className="text-[14px] leading-relaxed text-textSecondary">{t}</dd>
                 </div>
               ))}
-            </div>
-
-            {/* Mobile — stacked cards: each domain becomes a definition list */}
-            <div className="space-y-4 sm:hidden">
-              {[
-                {
-                  domain: "Home repair",
-                  tagline: "Reference case",
-                  ref: true,
-                  d: "Certified expert defines the issue.",
-                  s: "Chat → structured service-order card.",
-                  c: "Live competitive quote → checkout.",
-                },
-                {
-                  domain: "Education",
-                  tagline: "Parents · advisors · plans",
-                  d: "Goals, grade, budget.",
-                  s: "Constraints → learning brief.",
-                  c: "Plan comparison.",
-                },
-                {
-                  domain: "Banquet",
-                  tagline: "Event · venue · quote lock-in",
-                  d: "Size, date, menu, must-haves.",
-                  s: "Non-negotiables → requirement card.",
-                  c: "Venues quote on equal terms.",
-                },
-                {
-                  domain: "Maternity care",
-                  tagline: "Family · caregiver · continuity",
-                  d: "Need and risk; credentials first.",
-                  s: "Care scope → service brief.",
-                  c: "Package in trust context.",
-                },
-              ].map((row, i) => (
-                <div
-                  key={i}
-                  className={`overflow-hidden rounded-xl border border-black/[0.08] ${
-                    row.ref ? "bg-nltLime-soft/60" : "bg-white"
-                  }`}
-                >
-                  <div className="border-b border-black/[0.06] px-4 py-3">
-                    <p className={`text-[15px] tracking-tight ${row.ref ? "text-nltLime-ink" : "text-textPrimary"}`}>
-                      {row.domain}
-                    </p>
-                    <p className={`mt-0.5 font-mono text-[10px] uppercase tracking-[0.18em] ${row.ref ? "text-nltLime-ink/80" : "text-textSecondary/70"}`}>
-                      {row.tagline}
-                    </p>
-                  </div>
-                  <dl className="divide-y divide-black/[0.05] text-[13.5px] leading-relaxed">
-                    {(
-                      [
-                        ["01 · Diagnose", row.d],
-                        ["02 · Structure", row.s],
-                        ["03 · Commit", row.c],
-                      ] as const
-                    ).map(([k, v]) => (
-                      <div key={k} className="px-4 py-3">
-                        <dt className="font-mono text-[9px] uppercase tracking-[0.2em] text-nltLime-ink">{k}</dt>
-                        <dd className="mt-1 text-textSecondary">{v}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </div>
-              ))}
-            </div>
+            </dl>
           </FadeIn>
         </Section>
 

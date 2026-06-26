@@ -60,11 +60,11 @@ const SLIDES = [
   { id: "inspire-continue", chapter: "决策 03"  },
   { id: "code-drawer",      chapter: "决策 03"  },
   { id: "exploration",      chapter: "方法"     },
-  { id: "how-i-worked",     chapter: "方法"     },
   { id: "process",          chapter: "方法"     },
+  { id: "how-i-worked",     chapter: "方法"     },
   { id: "showrooms",        chapter: "产品展示" },
   { id: "showcase-live",    chapter: "产品展示" },
-  { id: "backend-compare",  chapter: "额外贡献" },
+  { id: "backend-before",   chapter: "额外贡献" },
   { id: "backend",          chapter: "额外贡献" },
   { id: "spark-design",     chapter: "额外贡献" },
   { id: "metrics",          chapter: "成效"     },
@@ -870,19 +870,13 @@ function SlideExploration({ reduced }: { reduced: boolean | null }) {
             调研、草图,以及我在通往 showroom 路上否决掉的方向。
           </motion.p>
         </div>
-        <motion.div variants={UP} className="flex min-h-0 flex-1 flex-col gap-3">
-          <div className="relative min-h-0 flex-[2] basis-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
-            <img src={earlyWork[0].src} alt={earlyWork[0].alt}
-              className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
-          </div>
-          <div className="grid min-h-0 flex-[1] basis-0 grid-cols-2 gap-3">
-            {earlyWork.slice(1).map((img) => (
-              <div key={img.src} className="relative min-h-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
-                <img src={img.src} alt={img.alt}
-                  className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
-              </div>
-            ))}
-          </div>
+        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-3 content-center gap-3">
+          {earlyWork.map((img) => (
+            <div key={img.src} className="relative aspect-[16/9] min-h-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
+              <img src={img.src} alt={img.alt}
+                className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
+            </div>
+          ))}
         </motion.div>
       </motion.div>
     </section>
@@ -1037,46 +1031,43 @@ function SlideShowcaseLive({ reduced }: { reduced: boolean | null }) {
 }
 
 // §25 额外贡献 — SaaS 控制台焕新
-function SlideBackendCompare({ reduced }: { reduced: boolean | null }) {
-  const before = [
-    "/assets/ai-character/previous-api/previous-api-1.png",
-    "/assets/ai-character/previous-api/previous-api-2.png",
-    "/assets/ai-character/previous-api/previous-api-3.png",
-  ];
-  const after = [
-    "/assets/ai-character/updateddesign1.jpg",
-    "/assets/ai-character/updateddesign2.jpg",
-    "/assets/ai-character/updatedesign3.jpg",
-  ];
-  const Row = ({ imgs, kicker, accent }: { imgs: string[]; kicker: string; accent: boolean }) => (
-    <div className="flex min-h-0 flex-1 flex-col">
-      <p className={`mb-2 shrink-0 ${EYE} ${accent ? "text-[#FF6A00]" : "text-white/[0.5]"}`}>{kicker}</p>
-      <div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-1 gap-3">
-        {imgs.map((src) => (
-          <div key={src}
-            className={`relative min-h-0 overflow-hidden rounded-md border bg-white/[0.015] ${accent ? "border-[#FF6A00]/[0.2]" : "border-white/[0.07]"}`}>
-            <img src={src} alt={kicker} loading="lazy" decoding="async"
-              className="absolute inset-0 h-full w-full object-contain object-center" />
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+function SlideBackendBefore({ reduced }: { reduced: boolean | null }) {
   return (
-    <section className={`relative flex h-full min-h-0 flex-col overflow-hidden px-8 pb-6 pt-8 md:px-12 ${CANVAS}`}>
+    <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
-      <motion.div className="relative z-10 shrink-0" variants={STG} initial="hidden" animate="show">
-        <motion.div variants={FADE}><Eye>额外贡献 · B2B 控制台 · 改版前后</Eye></motion.div>
-        <Mask delay={0.08}>
-          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.016em] ${HEAD}`}
-            style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
-            接手时的控制台 → 我重做之后的样子。
-          </h2>
-        </Mask>
-      </motion.div>
-      <motion.div variants={FADE} initial="hidden" animate="show" className="relative z-10 mt-4 flex min-h-0 flex-1 flex-col gap-4">
-        <Row imgs={before} kicker="之前 · 旧版 API 控制台" accent={false} />
-        <Row imgs={after}  kicker="之后 · 焕新后的控制台"  accent />
+      <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="shrink-0">
+          <motion.div variants={FADE}><Eye>额外贡献 · B2B 控制台 · 改版前</Eye></motion.div>
+          <Mask delay={0.08}>
+            <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.018em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+              我接手时的样子:旧版控制台。
+            </h2>
+          </Mask>
+          <motion.p variants={UP} className={`mt-3 max-w-3xl ${BODY} text-[13.5px] text-white/[0.66]`}>
+            原本的控制台信息密集、层级混乱,空状态和错误态几乎没有设计——这是我重做之前的起点。
+          </motion.p>
+        </div>
+        <motion.div variants={UP} className="mt-6 grid grid-cols-3 gap-3">
+          {[
+            { src: "/assets/ai-character/previous-api/previous-api-1.png", label: "知识库列表",   tag: "改版前" },
+            { src: "/assets/ai-character/previous-api/previous-api-2.png", label: "新建知识仓库", tag: "改版前" },
+            { src: "/assets/ai-character/previous-api/previous-api-3.png", label: "知识库模板",   tag: "改版前" },
+          ].map(({ src, label, tag }, i) => (
+            <motion.div key={src} className={`group overflow-hidden rounded-lg`}
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: E, delay: 0.3 + i * 0.09 }}>
+              <div className="relative overflow-hidden bg-black/40">
+                <img src={src} alt={label} loading="lazy"
+                  className="h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
+              </div>
+              <div className={`flex items-center gap-2 border-t ${HAIR} px-3 py-2`}>
+                <span className="font-mono text-[9px] uppercase tracking-[0.12em] text-white/40">{tag}</span>
+                <span className="font-sans text-[11px] text-white/[0.66]">{label}</span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
       </motion.div>
     </section>
   );
@@ -1487,7 +1478,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "process":          return <SlideProcess reduced={reduced} />;
     case "showrooms":        return <SlideShowrooms reduced={reduced} />;
     case "showcase-live":    return <SlideShowcaseLive reduced={reduced} />;
-    case "backend-compare":  return <SlideBackendCompare reduced={reduced} />;
+    case "backend-before":   return <SlideBackendBefore reduced={reduced} />;
     case "backend":          return <SlideBackend reduced={reduced} />;
     case "spark-design":     return <SlideSparkDesign reduced={reduced} />;
     case "metrics":          return <SlideMetrics />;
