@@ -64,6 +64,7 @@ const SLIDES = [
   { id: "process",          chapter: "方法"     },
   { id: "showrooms",        chapter: "产品展示" },
   { id: "showcase-live",    chapter: "产品展示" },
+  { id: "backend-compare",  chapter: "额外贡献" },
   { id: "backend",          chapter: "额外贡献" },
   { id: "spark-design",     chapter: "额外贡献" },
   { id: "metrics",          chapter: "成效"     },
@@ -376,7 +377,6 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
 // §03 How Might We
 function SlideHmw({ reduced }: { reduced: boolean | null }) {
   const rows = [
-    { finding: "每个竞品都像是又一个 ChatGPT", evidence: "6 款应用 · 40+ 评论" },
     { finding: "记忆和节奏,用户根本看不见",   evidence: "还没感受到差异,人就走了" },
     { finding: "信任,来自更快拿到价值",       evidence: "试用用户在第一小时内流失" },
     { finding: "企业侧:能说,不能试",         evidence: "PPT 只能描述,说服不了人" },
@@ -388,7 +388,7 @@ function SlideHmw({ reduced }: { reduced: boolean | null }) {
         className="relative z-10 mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)] md:gap-x-16 lg:gap-x-24"
         variants={STG} initial="hidden" animate="show">
         <div className="min-w-0 max-w-xl md:max-w-none">
-          <motion.div variants={FADE}><Eye>调研 · 6 款应用 · 40+ 条评论</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>用户洞察</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className={`text-balance mt-6 font-display font-light leading-[1.2] tracking-[-0.018em] ${HEAD}`}
               style={{ fontSize: "clamp(1.5rem, 3vw, 2.3rem)" }}>
@@ -462,6 +462,17 @@ function TitleSlide({
 // §05 决策 01 — showroom(右侧内嵌实时恋爱原型作为「之后」)
 function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
   const verticals = ["情感陪伴", "心理咨询", "角色克隆", "IP 授权"];
+  const showrooms = [
+    { src: PROTO.romanceFull,     label: "恋爱 showroom — 实时原型", caption: "实时恋爱房间 · 长期记忆与情感节奏" },
+    { src: PROTO.astroProfile,    label: "星座 showroom — 实时原型", caption: "实时星座房间 · 星盘档案实时更新" },
+    { src: PROTO.therapyAnalysis, label: "心理 showroom — 实时原型", caption: "实时心理房间 · 对话主题实时分析" },
+  ];
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (reduced) return; // 减少动态时不自动轮换,但仍可点击切换
+    const t = setInterval(() => setActive((i) => (i + 1) % showrooms.length), 9000);
+    return () => clearInterval(t);
+  }, [reduced, showrooms.length]);
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
@@ -475,7 +486,7 @@ function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            6 款应用、40+ 条评论,得出的结论是:每个竞品都像又一个 ChatGPT。于是答案变成分场景的 showroom——每一个,都是某位真实客户产品的可用版本。
+            答案是分场景的 showroom——每一个,都是某位真实客户产品的可用版本,而不是又一个通用聊天框。
           </motion.p>
           <motion.div variants={UP} className="mt-5 flex flex-wrap gap-2">
             {verticals.map((v) => (
@@ -489,8 +500,21 @@ function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
           </motion.p>
         </div>
         <motion.div variants={FADE} className="flex h-full min-h-0 flex-1 flex-col justify-center">
-          <DeckPrototype src={PROTO.romanceFull} label="恋爱 showroom — 实时原型" />
-          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>实时恋爱房间 · 长期记忆与情感节奏</p>
+          <DeckPrototype src={showrooms[active].src} label={showrooms[active].label} />
+          <div className="mt-2.5 flex shrink-0 items-center justify-between gap-3">
+            <p className={`${EYE} text-white/40 tracking-[0.08em]`}>{showrooms[active].caption}</p>
+            <div className="flex items-center gap-1.5">
+              {showrooms.map((s, i) => (
+                <button
+                  key={s.src}
+                  type="button"
+                  aria-label={s.label}
+                  onClick={() => setActive(i)}
+                  className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-[#FF6A00]" : "w-1.5 bg-white/25 hover:bg-white/45"}`}
+                />
+              ))}
+            </div>
+          </div>
         </motion.div>
       </motion.div>
     </section>
@@ -577,11 +601,11 @@ function SlideD2Map({ reduced }: { reduced: boolean | null }) {
 
 // ── 功能模板:左文案 + 右实时原型 ─────────────────────────────────────────────
 function ProtoFeatureSlide({
-  reduced, eye, title, lead, src, caption, notShipped = false,
+  reduced, eye, title, lead, src, caption, notShipped = false, note,
 }: {
   reduced: boolean | null;
   eye: string; title: string; lead: string;
-  src: string; caption: string; notShipped?: boolean;
+  src: string; caption: string; notShipped?: boolean; note?: string;
 }) {
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
@@ -603,6 +627,11 @@ function ProtoFeatureSlide({
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-5 ${BODY} text-[14px] text-white/[0.72]`}>{lead}</motion.p>
+          {note && (
+            <motion.p variants={UP} className={`mt-3.5 border-l-2 border-white/[0.12] pl-3 ${BODY} text-[12.5px] leading-relaxed text-white/[0.5]`}>
+              {note}
+            </motion.p>
+          )}
         </div>
         <motion.div variants={FADE} className="flex h-full min-h-0 flex-1 flex-col justify-center">
           <DeckPrototype src={src} label={title} />
@@ -676,8 +705,8 @@ function SlideMoments({ reduced }: { reduced: boolean | null }) {
     <ProtoFeatureSlide
       reduced={reduced}
       eye="恋爱 · 3/4 · Moments Feed"
-      title="不聊天时,角色也在过自己的生活。"
-      lead="存在的连续性 + 错失焦虑——你离开时角色仍在生活,这就给了你一个回来的理由。"
+      title="角色的朋友圈,记得你们聊过的一切。"
+      lead="右边的朋友圈会根据你们之前的对话实时生成新的 moments——让你真切感到,Ta 是真的记住了你。"
       src={PROTO.moments}
       caption="实时恋爱房间 · 由你们的共同记忆生成的动态"
     />
@@ -695,7 +724,8 @@ function SlideAltUniv({ reduced }: { reduced: boolean | null }) {
       eye="恋爱 · 4/4 · Alternate Universe"
       title="只有你的经历才能触发的剧情。"
       notShipped
-      lead="不确定奖励——不可预期、又专属于你的回报,是习惯回路里最强的那根杠杆。(已完成原型,未上线——实时生成对当时的排期太重。)"
+      lead="不确定奖励——不可预期、又专属于你的回报,是习惯回路里最强的那根杠杆。剧情由用户行为触发:只要你一小段时间没回复,系统就会自动弹出一段新剧情,始终保有新鲜感。"
+      note="为什么没上线:要做到逐人实时生成剧情,技术上太难、模型推理成本也太高;加上我们也不想把体验堆得太花哨。原型已完成,作为方向验证保留。"
       src={PROTO.altUniverse}
       caption="实时原型 · 一段由记忆触发的剧情"
     />
@@ -819,6 +849,11 @@ function SlideCodeDrawer({ reduced }: { reduced: boolean | null }) {
 
 // §20.5 早期过程 — 早期探索素材的占位页(待补充)
 function SlideExploration({ reduced }: { reduced: boolean | null }) {
+  const earlyWork = [
+    { src: "/assets/ai-character/previous/previous-version.jpg",    alt: "早期版本 — 调研与方向探索 01" },
+    { src: "/assets/ai-character/previous/previous--version-2.jpg", alt: "早期版本 — 调研与方向探索 02" },
+    { src: "/assets/ai-character/previous/previous-version-3.png",  alt: "早期版本 — 调研与方向探索 03" },
+  ];
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
@@ -833,15 +868,21 @@ function SlideExploration({ reduced }: { reduced: boolean | null }) {
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
             调研、草图,以及我在通往 showroom 路上否决掉的方向。
-            <span className="mt-2 block text-white/[0.4]">占位 — 早期素材待补充。</span>
           </motion.p>
         </div>
-        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
-          {[1, 2, 3, 4].map((n) => (
-            <div key={n} className="flex min-h-0 items-center justify-center rounded-lg border border-dashed border-white/[0.16] bg-white/[0.015]">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">早期素材 0{n}</span>
-            </div>
-          ))}
+        <motion.div variants={UP} className="flex min-h-0 flex-1 flex-col gap-3">
+          <div className="relative min-h-0 flex-[2] basis-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
+            <img src={earlyWork[0].src} alt={earlyWork[0].alt}
+              className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
+          </div>
+          <div className="grid min-h-0 flex-[1] basis-0 grid-cols-2 gap-3">
+            {earlyWork.slice(1).map((img) => (
+              <div key={img.src} className="relative min-h-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
+                <img src={img.src} alt={img.alt}
+                  className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
+              </div>
+            ))}
+          </div>
         </motion.div>
       </motion.div>
     </section>
@@ -852,8 +893,8 @@ function SlideExploration({ reduced }: { reduced: boolean | null }) {
 const WORK_STAGES = [
   { n: "01", phase: "研究",            tools: "Notion · Memo · ChatGPT · Claude",          body: "把零散的调研——6 款应用、40+ 条评论——一个回合就归纳成策略模式。" },
   { n: "02", phase: "UX 策略",         tools: "Qwen · ChatGPT · Figma",                    body: "把彼此冲突的设计决策当成结构化论证来反复推敲,在评审会之前就把分歧解决掉。" },
-  { n: "03", phase: "视觉识别 & UI",   tools: "Figma · MasterGo · Dreamnia · Wan · Kling", body: "生成角色原画、场景背景和循环动效——这些原本得靠一支 3D 团队才能做出来。" },
-  { n: "04", phase: "动效 & 生产代码", tools: "CodePen · Cursor · Claude Code",            body: "在没有专职前端的情况下,交付了动效、状态逻辑和可交互的设计。" },
+  { n: "03", phase: "视觉识别 & UI",   tools: "Figma · MasterGo · Midjourney · Dreamnia · Wan · Kling", body: "生成角色原画、场景背景和循环动效——这些原本得靠一支 3D 团队才能做出来。" },
+  { n: "04", phase: "动效 & 生产代码", tools: "CodePen · ChatGPT · Cursor · Claude Code",  body: "在没有专职前端的情况下,交付了动效、状态逻辑和可交互的设计。当时 vibe design 还不成熟,所以后来我又用 Cursor 和 Claude Code 把 showroom 的页面重新设计了一遍。" },
 ] as const;
 
 function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
@@ -908,7 +949,7 @@ function SlideProcess({ reduced }: { reduced: boolean | null }) {
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            灵感来自《恋与深空》。视觉部分用 Wan、Kling、Dreamnia 和 SeeDance 完成,交互用 Cursor 和 Claude Code 搭起来。
+            灵感来自《恋与深空》和《恋与制作人》。视觉部分用 Wan、Kling、Dreamnia 完成。
           </motion.p>
           <motion.div variants={UP} className="mt-5 border-l-2 border-[#FF6A00]/40 pl-4">
             <p className="font-sans text-[12px] leading-relaxed text-white/[0.58]">
@@ -916,14 +957,14 @@ function SlideProcess({ reduced }: { reduced: boolean | null }) {
             </p>
           </motion.div>
         </div>
-        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
+        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 content-center gap-3">
           {[
             { src: "/assets/ai-character/design.jpg",             label: "角色方向探索" },
             { src: "/assets/ai-character/uivisual.jpg",           label: "UI 视觉系统" },
             { src: "/assets/ai-character/characterdirection.jpg", label: "角色方向" },
             { src: "/assets/ai-character/innovation.jpg",         label: "场景、音乐与动效概念" },
           ].map(({ src, label }, i) => (
-            <motion.div key={src} className={`group min-h-0 overflow-hidden rounded-lg`}
+            <motion.div key={src} className={`group aspect-[16/9] min-h-0 overflow-hidden rounded-lg bg-white/[0.02]`}
               initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: E, delay: 0.3 + i * 0.08 }}>
               <img src={src} alt={label} loading="lazy"
@@ -996,6 +1037,51 @@ function SlideShowcaseLive({ reduced }: { reduced: boolean | null }) {
 }
 
 // §25 额外贡献 — SaaS 控制台焕新
+function SlideBackendCompare({ reduced }: { reduced: boolean | null }) {
+  const before = [
+    "/assets/ai-character/previous-api/previous-api-1.png",
+    "/assets/ai-character/previous-api/previous-api-2.png",
+    "/assets/ai-character/previous-api/previous-api-3.png",
+  ];
+  const after = [
+    "/assets/ai-character/updateddesign1.jpg",
+    "/assets/ai-character/updateddesign2.jpg",
+    "/assets/ai-character/updatedesign3.jpg",
+  ];
+  const Row = ({ imgs, kicker, accent }: { imgs: string[]; kicker: string; accent: boolean }) => (
+    <div className="flex min-h-0 flex-1 flex-col">
+      <p className={`mb-2 shrink-0 ${EYE} ${accent ? "text-[#FF6A00]" : "text-white/[0.5]"}`}>{kicker}</p>
+      <div className="grid min-h-0 flex-1 grid-cols-3 grid-rows-1 gap-3">
+        {imgs.map((src) => (
+          <div key={src}
+            className={`relative min-h-0 overflow-hidden rounded-md border bg-white/[0.015] ${accent ? "border-[#FF6A00]/[0.2]" : "border-white/[0.07]"}`}>
+            <img src={src} alt={kicker} loading="lazy" decoding="async"
+              className="absolute inset-0 h-full w-full object-contain object-center" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+  return (
+    <section className={`relative flex h-full min-h-0 flex-col overflow-hidden px-8 pb-6 pt-8 md:px-12 ${CANVAS}`}>
+      <LivingAura reduced={reduced} />
+      <motion.div className="relative z-10 shrink-0" variants={STG} initial="hidden" animate="show">
+        <motion.div variants={FADE}><Eye>额外贡献 · B2B 控制台 · 改版前后</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.016em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
+            接手时的控制台 → 我重做之后的样子。
+          </h2>
+        </Mask>
+      </motion.div>
+      <motion.div variants={FADE} initial="hidden" animate="show" className="relative z-10 mt-4 flex min-h-0 flex-1 flex-col gap-4">
+        <Row imgs={before} kicker="之前 · 旧版 API 控制台" accent={false} />
+        <Row imgs={after}  kicker="之后 · 焕新后的控制台"  accent />
+      </motion.div>
+    </section>
+  );
+}
+
 function SlideBackend({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
@@ -1051,9 +1137,6 @@ function SlideSparkDesign({ reduced }: { reduced: boolean | null }) {
             Showroom 这套体系,最后成了对外发布的 B2B 设计框架。
           </h2>
         </Mask>
-        <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[14px] text-white/[0.66]`}>
-          当初为 showroom 做的组件、交互和动效,后来变成了外部 Agentscope 伙伴在用的 Spark Design 模板——这些设计,比 showroom 本身活得更久。
-        </motion.p>
         <motion.div variants={UP} className={`mt-6 overflow-hidden rounded-lg`}>
           <div className={`flex items-center justify-between gap-3 border-b ${HAIR} bg-white/[0.02] px-4 py-3 md:px-5`}>
             <div>
@@ -1353,10 +1436,7 @@ function SlideClosing({ reduced }: { reduced: boolean | null }) {
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-3 ${EYE} text-white/45`}>
-          产品设计师 · Pratt 普瑞特艺术学院
-        </motion.p>
-        <motion.p variants={UP} className={`mt-8 max-w-md ${BODY} text-[15px] text-white/[0.7]`}>
-          设计,是那层翻译。AI 产品里最难的不是模型好不好,而是帮客户想清楚:他们能拿它造出什么。最强的 Demo,就是「未来的你」的证据。
+          产品设计师 · Pratt 普瑞特艺术学院 · UW 华盛顿大学
         </motion.p>
         <motion.div variants={UP} className="mt-10 flex flex-wrap items-center gap-5">
           <a href="https://tongyi.aliyun.com/character" target="_blank" rel="noopener noreferrer"
@@ -1384,7 +1464,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "howmightwe":       return <SlideHmwStatement reduced={reduced} />;
     case "d1-title":         return <TitleSlide reduced={reduced} chapter="决策 01"
                                       title="把体验置于文档之上——并做到极致。"
-                                      body="showroom 这个策略是 PM 提的——一个常见的 C 端打法。我的价值在于把它推到极致:只能读的文档证明不了任何东西,可被感受的体验才是产品本身。在一个 10 人的小团队里,4 个房间里的每一个功能决策,都由我来定——情感陪伴、心理咨询、角色克隆、IP 授权。"
+                                      body="showroom 这个策略是 PM 提的——一个常见的 C 端打法。这四个房间不是随意划分的——我们选取了市场上角色模型被应用最广的四个主题:情感陪伴、心理咨询、角色克隆、IP 授权,基于此设计专属的 showroom,每个房间里的功能决策都由我来定。"
                                       kicker="用户不会因为描述就相信你——第一句话就得证明能力。" />;
     case "d1-showrooms":     return <SlideD1Showrooms reduced={reduced} />;
     case "d2-title":         return <SlideD2Title reduced={reduced} />;
@@ -1407,6 +1487,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "process":          return <SlideProcess reduced={reduced} />;
     case "showrooms":        return <SlideShowrooms reduced={reduced} />;
     case "showcase-live":    return <SlideShowcaseLive reduced={reduced} />;
+    case "backend-compare":  return <SlideBackendCompare reduced={reduced} />;
     case "backend":          return <SlideBackend reduced={reduced} />;
     case "spark-design":     return <SlideSparkDesign reduced={reduced} />;
     case "metrics":          return <SlideMetrics />;

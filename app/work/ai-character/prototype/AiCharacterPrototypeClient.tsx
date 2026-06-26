@@ -1245,7 +1245,6 @@ function AlternateUniverseMessageCard({ onEnterNewWorld }: { onEnterNewWorld: ()
             autoPlay loop muted playsInline preload="auto" aria-hidden tabIndex={-1}
             style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center center", filter: "brightness(0.6) contrast(1.08) saturate(0.74) hue-rotate(-8deg)" }}
           />
-          <RainCanvas density={88} />
           {/* moonlight grade + left fade so dialogue stays legible */}
           <div style={{ position: "absolute", inset: 0, zIndex: 2, background: "linear-gradient(90deg, rgba(3,5,12,1) 0%, rgba(3,5,12,0.9) 18%, rgba(4,11,26,0.5) 42%, rgba(8,18,40,0.1) 72%, rgba(3,6,16,0.42) 100%), radial-gradient(ellipse 78% 120% at 0% 50%, rgba(0,0,0,0.78), transparent 70%), linear-gradient(to top, rgba(3,5,12,0.84), transparent 56%)", pointerEvents: "none" }} />
           <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 3, opacity: 0.5 }}>
