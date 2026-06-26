@@ -6,8 +6,9 @@ import { useCallback, useEffect, useRef, useState, type ReactNode } from "react"
 
 // ─── Liner · light tokens (mirror the liner-ui design language) ────────────────
 //   Warm paper canvas, cream surfaces, ink-on-paper type, the lime highlighter as
-//   the single restrained accent, dotted-line citation motif. The few "dark"
-//   slides use a warm near-black as dramatic punctuation, not a dark-mode theme.
+//   the single restrained accent. Dividers are solid warm hairlines (no dotted
+//   lines, per direction). The few "dark" slides use a warm near-black as dramatic
+//   punctuation, not a dark-mode theme.
 const L = {
   page:       "#FAFAF7", // warm paper
   canvas:     "#F7F5EE",
@@ -29,8 +30,6 @@ const L = {
   bSubtle:    "rgba(60,50,30,0.08)",
   bDefault:   "rgba(60,50,30,0.12)",
   bStrong:    "rgba(60,50,30,0.2)",
-  dotted:     "rgba(60,50,30,0.32)",
-  dottedStr:  "rgba(26,26,26,0.5)",
   dark:       "#17150F", // warm near-black — punctuation slides
 };
 
@@ -55,10 +54,11 @@ const SLIDES = [
   { id: "landscape",  chapter: "研究", dark: false },
   { id: "insights",   chapter: "洞察", dark: false },
   { id: "spotlight",  chapter: "洞察", dark: true  },
-  { id: "direction",  chapter: "产品", dark: false },
-  { id: "patterns",   chapter: "产品", dark: false },
-  { id: "prototype",  chapter: "产品", dark: false },
-  { id: "video",      chapter: "产品", dark: false },
+  { id: "direction",    chapter: "产品", dark: false },
+  { id: "feat-editor",  chapter: "产品", dark: false },
+  { id: "feat-group",   chapter: "产品", dark: false },
+  { id: "feat-library", chapter: "产品", dark: false },
+  { id: "video",        chapter: "产品", dark: false },
   { id: "impact",     chapter: "成效", dark: true  },
   { id: "reflection", chapter: "结语", dark: false },
   { id: "closing",    chapter: "结语", dark: true  },
@@ -103,20 +103,13 @@ function CountUp({
   return <>{prefix}{Math.round(n)}{suffix}</>;
 }
 
-// ─── Eyebrow with dotted lead line ────────────────────────────────────────────
+// ─── Eyebrow with a small lime tick + solid lead rule ─────────────────────────
 function Eye({ children, dark }: { children: ReactNode; dark?: boolean }) {
   const col = dark ? "rgba(255,255,255,0.6)" : L.subtle;
   return (
     <div className="flex items-center gap-3">
-      <span
-        aria-hidden
-        className="block h-px w-7 shrink-0"
-        style={{
-          backgroundImage: `linear-gradient(to right, ${dark ? "rgba(255,255,255,0.45)" : L.dotted} 50%, transparent 50%)`,
-          backgroundSize: "5px 1px",
-          backgroundRepeat: "repeat-x",
-        }}
-      />
+      <span aria-hidden className="block h-[3px] w-[3px] shrink-0 rounded-full" style={{ background: L.lime }} />
+      <span aria-hidden className="block h-px w-6 shrink-0" style={{ background: dark ? "rgba(255,255,255,0.32)" : L.bStrong }} />
       <p className="text-[10px] font-semibold uppercase tracking-[0.24em]" style={{ color: col, fontFamily: SANS }}>
         {children}
       </p>
@@ -147,23 +140,18 @@ function Hl({ children, dark, tone = "lime" }: { children: ReactNode; dark?: boo
   );
 }
 
-// ─── Dotted divider ───────────────────────────────────────────────────────────
-function Dotted({ className = "", dark }: { className?: string; dark?: boolean }) {
+// ─── Solid hairline rule ──────────────────────────────────────────────────────
+function Rule({ className = "", dark }: { className?: string; dark?: boolean }) {
   return (
     <div
       className={className}
       aria-hidden
-      style={{
-        height: 1,
-        backgroundImage: `linear-gradient(to right, ${dark ? "rgba(255,255,255,0.28)" : L.dotted} 50%, transparent 50%)`,
-        backgroundSize: "6px 1px",
-        backgroundRepeat: "repeat-x",
-      }}
+      style={{ height: 1, background: dark ? "rgba(255,255,255,0.2)" : L.bDefault }}
     />
   );
 }
 
-// ─── Citation chip + dotted-underline phrase ──────────────────────────────────
+// ─── Citation chip + cited phrase (solid underline) ───────────────────────────
 function Cite({ children, dark }: { children: ReactNode; dark?: boolean }) {
   return (
     <span
@@ -182,7 +170,7 @@ function Cite({ children, dark }: { children: ReactNode; dark?: boolean }) {
 
 function Cited({ children, dark }: { children: ReactNode; dark?: boolean }) {
   return (
-    <span style={{ borderBottom: `1px dotted ${dark ? "rgba(255,255,255,0.6)" : L.dottedStr}`, paddingBottom: 1 }}>
+    <span style={{ borderBottom: `1px solid ${dark ? "rgba(255,255,255,0.4)" : L.bStrong}`, paddingBottom: 1 }}>
       {children}
     </span>
   );
@@ -199,51 +187,131 @@ function useAfterEnter(delay = 460) {
   return ready;
 }
 
-// ─── Landscape prototype frame — scales the 1440×900 editor to fit the slide ───
-function ScaledProto({ src, title }: { src: string; title: string }) {
-  const W = 1440, H = 900;
-  const boxRef = useRef<HTMLDivElement>(null);
+// ─── Feature-focused live embed ───────────────────────────────────────────────
+//   Boots the bundled Liner prototype, drives it into one feature's view via its
+//   own controls (the File/Editor/Chat segmented switch + the Group toggle +
+//   file→TL;DR hover), and crops/scales the 1440×900 canvas to that feature's
+//   region — so each slide frames exactly the part of the product it narrates.
+//   Same-origin, so we operate on the iframe document directly after it boots.
+const PROTO_SRC = "/assets/liner/liner-ai-yuan.html";
+const PW = 1440, PH = 900;
+
+type Feature = "editor" | "group" | "library";
+
+// Focus rectangles measured in the prototype's 1440×900 canvas, per driven state.
+const FEATURE_FOCUS: Record<Feature, { x: number; y: number; w: number; h: number }> = {
+  editor:  { x: 0,    y: 0,   w: 1440, h: 900 }, // editor fills the canvas (Chat off)
+  group:   { x: 1096, y: 52,  w: 344,  h: 838 }, // the Group chat column (3-col view)
+  library: { x: 44,   y: 296, w: 524,  h: 470 }, // Files sidebar + the TL;DR popover
+};
+
+function segSet(doc: Document, label: string, want: boolean) {
+  const el = Array.from(doc.querySelectorAll<HTMLElement>(".seg > *")).find((e) => e.textContent?.trim() === label);
+  if (el && el.className.includes("on") !== want) el.click();
+}
+
+function driveFeature(doc: Document, feature: Feature) {
+  try {
+    if (feature === "editor") {
+      segSet(doc, "File", false); segSet(doc, "Editor", true); segSet(doc, "Chat", false);
+    } else if (feature === "group") {
+      segSet(doc, "File", false); segSet(doc, "Editor", true); segSet(doc, "Chat", true);
+      const g = doc.querySelector<HTMLElement>('.chat-mode-btn[data-mode="group"]');
+      if (g && !g.className.includes("on")) g.click();
+    } else {
+      segSet(doc, "File", true);
+      const view = doc.defaultView;
+      const row = Array.from(doc.querySelectorAll<HTMLElement>(".file-row")).find((e) => /Rando|Carone/.test(e.textContent || ""));
+      if (row && view) {
+        const r = row.getBoundingClientRect();
+        const opts = { bubbles: true, clientX: r.x + r.width / 2, clientY: r.y + r.height / 2, view };
+        row.dispatchEvent(new view.PointerEvent("pointerover", opts));
+        row.dispatchEvent(new view.MouseEvent("mouseover", opts));
+        row.dispatchEvent(new view.MouseEvent("mouseenter", opts));
+        row.dispatchEvent(new view.MouseEvent("mousemove", opts));
+      }
+    }
+  } catch {
+    /* prototype not booted yet or its shape changed — leave the default view */
+  }
+}
+
+function LinerFeatureFrame({ feature, label }: { feature: Feature; label?: string }) {
+  const focus = FEATURE_FOCUS[feature];
+  const slotRef = useRef<HTMLDivElement>(null);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
   const [scale, setScale] = useState(0);
-  const ready = useAfterEnter();
+  const ready = useAfterEnter(520);
+
+  // Fit the focus region (contain) inside the available slot.
   useEffect(() => {
-    const el = boxRef.current;
+    const el = slotRef.current;
     if (!el) return;
-    const apply = () => { const w = el.clientWidth; if (w > 0) setScale(w / W); };
+    const apply = () => {
+      const cw = el.clientWidth, ch = el.clientHeight;
+      if (cw > 0 && ch > 0) setScale(Math.min(cw / focus.w, ch / focus.h));
+    };
     apply();
     if (typeof ResizeObserver === "undefined") return;
     const ro = new ResizeObserver(apply);
     ro.observe(el);
     return () => ro.disconnect();
-  }, []);
+  }, [focus.w, focus.h]);
+
+  // Drive the prototype into the feature view once its app has mounted.
+  const onLoad = useCallback(() => {
+    let n = 0;
+    const id = window.setInterval(() => {
+      n += 1;
+      const doc = iframeRef.current?.contentDocument;
+      const booted = doc && doc.querySelector(".seg");
+      if (booted) driveFeature(doc, feature);
+      if (booted || n > 40) window.clearInterval(id); // poll up to ~6s
+    }, 150);
+  }, [feature]);
+
+  const dw = focus.w * scale, dh = focus.h * scale;
+
   return (
-    <div className="flex min-h-0 w-full flex-1 items-center justify-center">
-      <div
-        ref={boxRef}
-        className="relative overflow-hidden"
-        style={{
-          aspectRatio: `${W} / ${H}`,
-          height: "100%",
-          maxWidth: "100%",
-          borderRadius: 14,
-          border: `1px solid ${L.bDefault}`,
-          boxShadow: "0 24px 60px rgba(60,50,30,0.10), 0 6px 16px rgba(60,50,30,0.05)",
-          background: L.card,
-        }}
-      >
-        {scale > 0 && ready ? (
-          <iframe
-            src={src}
-            title={title}
-            loading="lazy"
-            className="absolute left-0 top-0 block bg-white"
-            style={{ width: W, height: H, border: 0, transform: `scale(${scale})`, transformOrigin: "top left" }}
-          />
-        ) : (
-          <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
-            <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: L.subtle }}>原型加载中…</span>
-          </div>
-        )}
-      </div>
+    <div ref={slotRef} className="flex min-h-0 w-full flex-1 items-center justify-center">
+      <figure className="flex max-h-full max-w-full flex-col items-center">
+        <div
+          className="relative overflow-hidden"
+          style={{
+            width: dw || "auto", height: dh || "auto",
+            borderRadius: 14,
+            border: `1px solid ${L.bDefault}`,
+            boxShadow: "0 24px 60px rgba(60,50,30,0.10), 0 6px 16px rgba(60,50,30,0.05)",
+            background: L.card,
+          }}
+        >
+          {ready && scale > 0 ? (
+            <iframe
+              ref={iframeRef}
+              src={PROTO_SRC}
+              title={label || "Liner 原型"}
+              loading="lazy"
+              onLoad={onLoad}
+              className="absolute left-0 top-0 block bg-white"
+              style={{
+                width: PW, height: PH, border: 0,
+                transform: `scale(${scale}) translate(${-focus.x}px, ${-focus.y}px)`,
+                transformOrigin: "top left",
+              }}
+            />
+          ) : (
+            <div className="absolute inset-0 flex items-center justify-center" aria-hidden style={{ width: dw || 280, height: dh || 360 }}>
+              <span className="text-[10px] uppercase tracking-[0.2em]" style={{ color: L.subtle }}>原型加载中…</span>
+            </div>
+          )}
+        </div>
+        {label ? (
+          <figcaption className="mt-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em]" style={{ color: L.muted }}>
+            <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: L.lime }} />
+            {label}
+          </figcaption>
+        ) : null}
+      </figure>
     </div>
   );
 }
@@ -335,11 +403,38 @@ const INSIGHTS = [
   { n: "05", t: "修订是状态管理问题", imp: "Liner 需要「审阅状态」概念:谁、在何时、核验了哪一部分。" },
 ] as const;
 
-const PATTERNS = [
-  { tag: "chat-switch", t: "对话切换", b: "在私密 AI 推理与共享团队视图之间无缝切换——prompt 留在私域,产物进入共享。" },
-  { tag: "multi-user editor", t: "多人编辑器", b: "把审阅状态、署名与信任信号织进协作写作:谁审过哪一段,一眼可见。" },
-  { tag: "shared library", t: "共享文献库", b: "团队级的来源与证据库,引用跨工具迁移不再断链。" },
-] as const;
+const FEATURES: {
+  feature: Feature; eyebrow: string; title: ReactNode; tag: string;
+  desc: ReactNode; chip: string; frameLabel: string;
+}[] = [
+  {
+    feature: "editor",
+    eyebrow: "产品方向 · 多人编辑器",
+    title: "把审阅状态,织进协作写作",
+    tag: "multi-user editor",
+    desc: <>署名、评论与「谁审过哪一段」的信任信号直接长在文档里:引用 <Cite>1</Cite><Cite>2</Cite> 内联可溯,Dr. Chen 的评论锚定到具体句子,多人光标实时可见——正是洞察 02、05 的落点。</>,
+    chip: "实时多人光标 · 句级评论 · 内联引用",
+    frameLabel: "Editor · multi-user",
+  },
+  {
+    feature: "group",
+    eyebrow: "产品方向 · 群组协作",
+    title: "把团队上下文,留在群聊里",
+    tag: "group chat",
+    desc: <>私密的 AI 推理留在「AI Chat」,团队共享的产物进入「Group」群聊:在群里分享文档、机器人推送更新、@成员跟进——<Hl>产出透明,过程私密</Hl>,正是洞察 04 的隐私边界。</>,
+    chip: "AI Chat ↔ Group · 文档卡片 · 机器人更新",
+    frameLabel: "Group chat",
+  },
+  {
+    feature: "library",
+    eyebrow: "产品方向 · 共享文献库",
+    title: "团队级来源,引用不再断链",
+    tag: "shared library",
+    desc: <>1 份文档 + 6 篇来源 + Zotero,团队共享同一证据库。悬停任一来源即弹出 AI 生成的 <Hl tone="cream">TL;DR 摘要</Hl>——把缺失的「迁移层」补上,正是洞察 01 的产品启示。</>,
+    chip: "悬停来源 → TL;DR 摘要",
+    frameLabel: "Shared library · TL;DR",
+  },
+];
 
 const REFLECTION = [
   { h: "把 AI 当研究加速器,而非捷径", b: "综合阶段用 AI 交叉比对访谈模式、生成相互竞争的解读、压力测试 framing——再由我做编辑判断,定夺什么是信号。" },
@@ -405,7 +500,7 @@ function SlideCover() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, ease: E, delay: 0.8 }}
           className="mt-12 flex items-center gap-4"
         >
-          <Dotted dark className="w-10" />
+          <Rule dark className="w-10" />
           <span className="text-[11px] font-medium uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.5)" }}>
             Liner AI · UW HCDE Capstone · North4 Studio
           </span>
@@ -516,14 +611,14 @@ function SlideTension() {
                 <motion.div
                   initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: E, delay: 0.2 + i * 0.1 }}
                   className="px-6 py-5 text-[15px] leading-snug"
-                  style={{ borderRight: `1px solid ${L.bSubtle}`, borderTop: i ? `1px dotted ${L.dotted}` : undefined, color: L.muted }}
+                  style={{ borderRight: `1px solid ${L.bSubtle}`, borderTop: i ? `1px solid ${L.bSubtle}` : undefined, color: L.muted }}
                 >
                   {a}
                 </motion.div>
                 <motion.div
                   initial={{ opacity: 0, x: 10 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: E, delay: 0.26 + i * 0.1 }}
                   className="px-6 py-5 text-[15px] font-medium leading-snug"
-                  style={{ borderTop: i ? `1px dotted ${L.dotted}` : undefined, color: L.ink }}
+                  style={{ borderTop: i ? `1px solid ${L.bSubtle}` : undefined, color: L.ink }}
                 >
                   {b}
                 </motion.div>
@@ -569,7 +664,7 @@ function SlideReframe() {
           initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.9, ease: E, delay: 0.8 }}
           className="mt-10 flex items-center gap-4"
         >
-          <Dotted dark className="w-10" />
+          <Rule dark className="w-10" />
           <span className="text-[11px] font-medium uppercase tracking-[0.18em]" style={{ color: "rgba(255,255,255,0.5)" }}>
             六场访谈综合后,锁定的真问题
           </span>
@@ -603,7 +698,7 @@ function SlideStrategy() {
                 <span className="font-light tabular-nums" style={{ fontFamily: SERIF, color: L.limeDeep, fontSize: "1.7rem" }}>{p.n}</span>
                 <span className="text-[15px] font-semibold" style={{ color: L.ink }}>{p.title}</span>
               </div>
-              <Dotted className="mt-4 w-full" />
+              <Rule className="mt-4 w-full" />
               <p className="mt-4 text-[13.5px] font-light leading-[1.7]" style={{ color: L.body }}>{p.body}</p>
             </motion.div>
           ))}
@@ -639,7 +734,7 @@ function SlideExpert() {
               key={e.h}
               initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.6, ease: E, delay: 0.18 + i * 0.1 }}
               className="flex items-start gap-5 py-5"
-              style={{ borderTop: `1px dotted ${L.dotted}` }}
+              style={{ borderTop: `1px solid ${L.bSubtle}` }}
             >
               <span className="mt-1.5 inline-block h-2 w-2 shrink-0 rounded-full" style={{ background: L.lime }} />
               <div>
@@ -679,7 +774,7 @@ function SlideLandscape() {
             <p className="text-[10px] font-semibold uppercase tracking-[0.16em]" style={{ color: L.subtle }}>各阶段的真实工具栈</p>
             <div className="mt-4 overflow-hidden rounded-xl" style={{ border: `1px solid ${L.bSubtle}`, background: L.card }}>
               {TOOLS.map(([stage, tools], i) => (
-                <div key={stage} className="flex items-center gap-3 px-5 py-3" style={{ borderTop: i ? `1px dotted ${L.dotted}` : undefined }}>
+                <div key={stage} className="flex items-center gap-3 px-5 py-3" style={{ borderTop: i ? `1px solid ${L.bSubtle}` : undefined }}>
                   <span className="w-16 shrink-0 text-[12.5px] font-semibold" style={{ color: L.ink }}>{stage}</span>
                   <span className="text-[12px] font-light" style={{ color: L.muted }}>{tools}</span>
                 </div>
@@ -723,7 +818,7 @@ function SlideInsights() {
               key={ins.n}
               initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.55, ease: E, delay: 0.16 + i * 0.07 }}
               className="grid grid-cols-[2rem_1fr] items-start gap-x-4 gap-y-1 py-3.5 md:grid-cols-[2.2rem_0.9fr_1.2fr]"
-              style={{ borderTop: `1px dotted ${L.dotted}` }}
+              style={{ borderTop: `1px solid ${L.bSubtle}` }}
             >
               <span className="font-light tabular-nums" style={{ fontFamily: SERIF, color: L.limeDeep, fontSize: "1.25rem" }}>{ins.n}</span>
               <p className="text-[14.5px] font-semibold leading-snug" style={{ color: L.ink }}>{ins.t}</p>
@@ -807,65 +902,49 @@ function SlideDirection() {
 }
 
 // §11 Three interaction patterns
-function SlidePatterns() {
+// §11–13 Feature slides — each frames the live prototype on the feature it narrates.
+function FeatureSlide({ data, index }: { data: (typeof FEATURES)[number]; index: number }) {
   return (
-    <Shell bg={L.canvas}>
-      <div className="mx-auto w-full max-w-5xl">
-        <Eye>产品方向 · 三种交互模式</Eye>
-        <Mask delay={0.08} className="mt-5">
-          <h2 className="font-light" style={{ fontFamily: SERIF, color: L.ink, fontSize: "clamp(1.55rem, 3.3vw, 2.4rem)", letterSpacing: "-0.018em" }}>
-            把「连接组织」落成可触摸的交互。
-          </h2>
-        </Mask>
-
-        <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">
-          {PATTERNS.map((p, i) => (
-            <motion.div
-              key={p.tag}
-              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.65, ease: E, delay: 0.18 + i * 0.1 }}
-              className="relative rounded-xl px-6 py-7"
-              style={{ background: L.card, border: `1px solid ${L.bSubtle}` }}
-            >
-              <span
-                aria-hidden
-                className="absolute left-6 right-6 top-0 block"
-                style={{ height: 2, backgroundImage: `linear-gradient(to right, ${L.dotted} 50%, transparent 50%)`, backgroundSize: "4px 2px", backgroundRepeat: "repeat-x" }}
-              />
-              <span className="font-light tabular-nums" style={{ fontFamily: SERIF, color: L.limeDeep, fontSize: "1.4rem" }}>0{i + 1}</span>
-              <p className="mt-3 text-[16px] font-semibold" style={{ color: L.ink }}>{p.t}</p>
-              <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.1em]" style={{ color: L.subtle }}>{p.tag}</p>
-              <p className="mt-4 text-[13px] font-light leading-[1.7]" style={{ color: L.body }}>{p.b}</p>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </Shell>
-  );
-}
-
-// §12 Live prototype
-function SlidePrototype() {
-  return (
-    <Shell bg={L.page} className="!justify-start">
-      <div className="mx-auto flex h-full w-full max-w-6xl flex-col pb-3 pt-8 md:pt-10">
-        <div className="flex shrink-0 items-end justify-between">
-          <div>
-            <Eye>可交互原型</Eye>
-            <h2 className="mt-3 font-light" style={{ fontFamily: SERIF, color: L.ink, fontSize: "clamp(1.3rem, 2.8vw, 2rem)", letterSpacing: "-0.018em" }}>
-              上手试试这个编辑器。
+    <Shell bg={L.canvas} className="!justify-start">
+      <div className="mx-auto grid h-full w-full max-w-6xl grid-cols-1 items-center gap-6 pb-3 pt-7 md:grid-cols-[0.74fr_1.26fr] md:gap-10 md:pb-4 md:pt-9">
+        {/* narrative */}
+        <div className="min-w-0">
+          <Eye>{data.eyebrow}</Eye>
+          <Mask delay={0.08} className="mt-4">
+            <h2 className="font-light" style={{ fontFamily: SERIF, color: L.ink, fontSize: "clamp(1.45rem, 2.9vw, 2.2rem)", lineHeight: 1.18, letterSpacing: "-0.018em" }}>
+              {data.title}
             </h2>
-          </div>
-          <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] md:inline" style={{ color: L.subtle }}>
-            Claude Code + Figma MCP
-          </span>
+          </Mask>
+          <p className="mt-2 font-mono text-[10.5px] uppercase tracking-[0.14em]" style={{ color: L.subtle }}>{data.tag}</p>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: E, delay: 0.25 }}
+            className="mt-6 max-w-md text-[14.5px] font-light leading-[1.78]" style={{ color: L.body }}
+          >
+            {data.desc}
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: E, delay: 0.4 }}
+            className="mt-7 inline-flex items-center gap-2 rounded-full px-3.5 py-2" style={{ background: L.cream }}
+          >
+            <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: L.limeDeep }} />
+            <span className="text-[12px] font-medium" style={{ color: L.ink }}>{data.chip}</span>
+          </motion.div>
         </div>
-        <div className="mt-5 flex min-h-0 flex-1">
-          <ScaledProto src="/assets/liner/liner-ai-yuan.html" title="Liner AI — 可交互编辑器原型" />
-        </div>
+        {/* live embed framed to this feature */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} transition={{ duration: 0.8, ease: E, delay: 0.18 }}
+          className="flex h-full min-h-0"
+        >
+          <LinerFeatureFrame feature={data.feature} label={`${String(index + 1).padStart(2, "0")} · ${data.frameLabel}`} />
+        </motion.div>
       </div>
     </Shell>
   );
 }
+
+function SlideFeatEditor()  { return <FeatureSlide data={FEATURES[0]} index={0} />; }
+function SlideFeatGroup()   { return <FeatureSlide data={FEATURES[1]} index={1} />; }
+function SlideFeatLibrary() { return <FeatureSlide data={FEATURES[2]} index={2} />; }
 
 // §13 Product video
 function SlideVideo() {
@@ -1048,10 +1127,11 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "landscape":  return <SlideLandscape />;
     case "insights":   return <SlideInsights />;
     case "spotlight":  return <SlideSpotlight />;
-    case "direction":  return <SlideDirection />;
-    case "patterns":   return <SlidePatterns />;
-    case "prototype":  return <SlidePrototype />;
-    case "video":      return <SlideVideo />;
+    case "direction":    return <SlideDirection />;
+    case "feat-editor":  return <SlideFeatEditor />;
+    case "feat-group":   return <SlideFeatGroup />;
+    case "feat-library": return <SlideFeatLibrary />;
+    case "video":        return <SlideVideo />;
     case "impact":     return <SlideImpact />;
     case "reflection": return <SlideReflection />;
     case "closing":    return <SlideClosing />;
