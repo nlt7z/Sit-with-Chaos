@@ -69,10 +69,11 @@ const SLIDES = [
   { id: "inspire-continue", chapter: "Decision 03"  },
   { id: "code-drawer",      chapter: "Decision 03"  },
   { id: "exploration",      chapter: "Method"       },
-  { id: "how-i-worked",     chapter: "Method"       },
   { id: "process",          chapter: "Method"       },
+  { id: "how-i-worked",     chapter: "Method"       },
   { id: "showrooms",        chapter: "Showcase"     },
   { id: "showcase-live",    chapter: "Showcase"     },
+  { id: "backend-before",   chapter: "Contribution" },
   { id: "backend",          chapter: "Contribution" },
   { id: "spark-design",     chapter: "Contribution" },
   { id: "metrics",          chapter: "Impact"       },
@@ -392,7 +393,6 @@ function SlideProblem({ reduced }: { reduced: boolean | null }) {
 // §03 How Might We
 function SlideHmw({ reduced }: { reduced: boolean | null }) {
   const rows = [
-    { finding: "Every competitor felt like another ChatGPT", evidence: "6 apps · 40+ comments" },
     { finding: "Memory & pacing were invisible",             evidence: "Users churned before the difference landed" },
     { finding: "Trust = fast time-to-value",                 evidence: "Trial users dropped in the first hour" },
     { finding: "Enterprise: tell-vs-try wall",               evidence: "Decks describe, they don't convince" },
@@ -404,7 +404,7 @@ function SlideHmw({ reduced }: { reduced: boolean | null }) {
         className="relative z-10 mx-auto grid w-full max-w-6xl gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,1.04fr)] md:gap-x-16 lg:gap-x-24"
         variants={STG} initial="hidden" animate="show">
         <div className="min-w-0 max-w-xl md:max-w-none">
-          <motion.div variants={FADE}><Eye>Research · 6 Apps · 40+ Comments</Eye></motion.div>
+          <motion.div variants={FADE}><Eye>User Insights</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className={`text-balance mt-6 font-display font-light leading-[1.1] tracking-[-0.032em] ${HEAD}`}
               style={{ fontSize: "clamp(1.6rem, 3.2vw, 2.5rem)" }}>
@@ -478,6 +478,17 @@ function TitleSlide({
 // §05 Decision 01 — showrooms (live romance prototype as the "after")
 function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
   const verticals = ["Companionship", "Psychotherapy", "Character cloning", "IP licensing"];
+  const showrooms = [
+    { src: PROTO.romanceFull,     label: "Romance showroom — live prototype",   caption: "Live romance room — long-term memory & emotional pacing" },
+    { src: PROTO.astroProfile,    label: "Astrology showroom — live prototype", caption: "Live astrology room — chart profile updating in real time" },
+    { src: PROTO.therapyAnalysis, label: "Therapy showroom — live prototype",   caption: "Live therapy room — conversation themes analyzed in real time" },
+  ];
+  const [active, setActive] = useState(0);
+  useEffect(() => {
+    if (reduced) return; // don't auto-rotate under reduced motion; dots still clickable
+    const t = setInterval(() => setActive((i) => (i + 1) % showrooms.length), 9000);
+    return () => clearInterval(t);
+  }, [reduced, showrooms.length]);
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
@@ -491,7 +502,7 @@ function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            6 apps, 40+ comments — every competitor felt like another ChatGPT. The answer was market-specific showrooms, each one a working version of a real buyer&apos;s product.
+            The answer was market-specific showrooms — each one a working version of a real customer&apos;s product, not another generic chat box.
           </motion.p>
           <motion.div variants={UP} className="mt-5 flex flex-wrap gap-2">
             {verticals.map((v) => (
@@ -505,8 +516,21 @@ function SlideD1Showrooms({ reduced }: { reduced: boolean | null }) {
           </motion.p>
         </div>
         <motion.div variants={FADE} className="flex h-full min-h-0 flex-1 flex-col justify-center">
-          <DeckPrototype src={PROTO.romanceFull} label="Romance showroom — live prototype" />
-          <p className={`mt-2.5 shrink-0 ${EYE} text-white/40 tracking-[0.08em]`}>Live romance showroom — long-term memory &amp; emotional pacing</p>
+          <DeckPrototype src={showrooms[active].src} label={showrooms[active].label} />
+          <div className="mt-2.5 flex shrink-0 items-center justify-between gap-3">
+            <p className={`${EYE} text-white/40 tracking-[0.08em]`}>{showrooms[active].caption}</p>
+            <div className="flex items-center gap-1.5">
+              {showrooms.map((s, i) => (
+                <button
+                  key={s.src}
+                  type="button"
+                  aria-label={s.label}
+                  onClick={() => setActive(i)}
+                  className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-[#FF6A00]" : "w-1.5 bg-white/25 hover:bg-white/45"}`}
+                />
+              ))}
+            </div>
+          </div>
         </motion.div>
       </motion.div>
     </section>
@@ -593,11 +617,11 @@ function SlideD2Map({ reduced }: { reduced: boolean | null }) {
 
 // ── Feature template: copy left, live prototype right ─────────────────────────
 function ProtoFeatureSlide({
-  reduced, eye, title, lead, src, caption, notShipped = false,
+  reduced, eye, title, lead, src, caption, notShipped = false, note,
 }: {
   reduced: boolean | null;
   eye: string; title: string; lead: string;
-  src: string; caption: string; notShipped?: boolean;
+  src: string; caption: string; notShipped?: boolean; note?: string;
 }) {
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
@@ -619,6 +643,11 @@ function ProtoFeatureSlide({
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-5 ${BODY} text-[14px] text-white/[0.72]`}>{lead}</motion.p>
+          {note && (
+            <motion.p variants={UP} className={`mt-3.5 border-l-2 border-white/[0.12] pl-3 ${BODY} text-[12.5px] leading-relaxed text-white/[0.5]`}>
+              {note}
+            </motion.p>
+          )}
         </div>
         <motion.div variants={FADE} className="flex h-full min-h-0 flex-1 flex-col justify-center">
           <DeckPrototype src={src} label={title} />
@@ -692,8 +721,8 @@ function SlideMoments({ reduced }: { reduced: boolean | null }) {
     <ProtoFeatureSlide
       reduced={reduced}
       eye="Romance · 3 of 4 · Moments Feed"
-      title="The character lives between conversations."
-      lead="Object permanence + FOMO — the character keeps living while you're gone, which manufactures a reason to come back."
+      title="The character's feed remembers everything you've talked about."
+      lead="The feed on the right generates new moments in real time from your past conversations — so you genuinely feel remembered."
       src={PROTO.moments}
       caption="Live romance room — a feed generated from your shared history"
     />
@@ -711,7 +740,8 @@ function SlideAltUniv({ reduced }: { reduced: boolean | null }) {
       eye="Romance · 4 of 4 · Alternate Universe"
       title="A scene only your history could trigger."
       notShipped
-      lead="Variable reward — unpredictable, personal payoffs are the single strongest driver of a habit loop. (Prototyped, not shipped — real-time generation was too heavy for the timeline.)"
+      lead="Variable reward — unpredictable, personal payoffs are the single strongest driver of a habit loop. The scene is user-triggered: go quiet for a little while and a new scene surfaces on its own, keeping it fresh."
+      note="Why it wasn't shipped: generating a scene per user in real time was too hard and too costly in model inference — and we didn't want to over-engineer the experience. The prototype was finished and kept as a direction."
       src={PROTO.altUniverse}
       caption="Live prototype — a memory-driven scene shift"
     />
@@ -835,6 +865,11 @@ function SlideCodeDrawer({ reduced }: { reduced: boolean | null }) {
 
 // §20.5 Early process — placeholder for early exploration artifacts (to be added)
 function SlideExploration({ reduced }: { reduced: boolean | null }) {
+  const earlyWork = [
+    { src: "/assets/ai-character/previous/previous-version.jpg",    alt: "Early version — research & direction exploration 01" },
+    { src: "/assets/ai-character/previous/previous--version-2.jpg", alt: "Early version — research & direction exploration 02" },
+    { src: "/assets/ai-character/previous/previous-version-3.png",  alt: "Early version — research & direction exploration 03" },
+  ];
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
@@ -849,13 +884,13 @@ function SlideExploration({ reduced }: { reduced: boolean | null }) {
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
             Research, sketches, and the directions I rejected on the way to the showrooms.
-            <span className="mt-2 block text-white/[0.4]">Placeholder — early artifacts to be added.</span>
           </motion.p>
         </div>
-        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
-          {[1, 2, 3, 4].map((n) => (
-            <div key={n} className="flex min-h-0 items-center justify-center rounded-lg border border-dashed border-white/[0.16] bg-white/[0.015]">
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">Early artifact 0{n}</span>
+        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-3 content-center gap-3">
+          {earlyWork.map((img) => (
+            <div key={img.src} className="relative aspect-[16/9] min-h-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
+              <img src={img.src} alt={img.alt}
+                className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
             </div>
           ))}
         </motion.div>
@@ -868,8 +903,8 @@ function SlideExploration({ reduced }: { reduced: boolean | null }) {
 const WORK_STAGES = [
   { n: "01", phase: "Research",                 tools: "Notion · Memo · ChatGPT · Claude",         body: "Synthesized scattered research — 6 apps, 40+ comments — into strategy patterns in one session." },
   { n: "02", phase: "UX Strategy",              tools: "Qwen · ChatGPT · Figma",                   body: "Stress-tested competing design decisions as structured arguments. Resolved debates before stakeholder meetings." },
-  { n: "03", phase: "Visual Identity & UI",     tools: "Figma · MasterGo · Dreamnia · Wan · Kling", body: "Generated character art, scene backgrounds, and motion loops — work that would have needed a 3D production team." },
-  { n: "04", phase: "Motion & Production Code", tools: "CodePen · Cursor · Claude Code",           body: "Shipped motion, state logic, and live interaction designs — without a dedicated frontend engineer." },
+  { n: "03", phase: "Visual Identity & UI",     tools: "Figma · MasterGo · Midjourney · Dreamnia · Wan · Kling", body: "Generated character art, scene backgrounds, and motion loops — work that would have needed a 3D production team." },
+  { n: "04", phase: "Motion & Production Code", tools: "CodePen · ChatGPT · Cursor · Claude Code", body: "Shipped motion, state logic, and live interaction designs — without a dedicated frontend engineer. Vibe design wasn't mature yet, so I later rebuilt the showroom pages myself with Cursor and Claude Code." },
 ] as const;
 
 function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
@@ -924,7 +959,7 @@ function SlideProcess({ reduced }: { reduced: boolean | null }) {
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            Inspired by Love and Deepspace. Visual identity built with Wan, Kling, Dreamnia, and SeeDance. Interactions built with Cursor and Claude Code.
+            Inspired by Love and Deepspace and Mr Love: Queen&apos;s Choice. Visual identity built with Wan, Kling, and Dreamnia.
           </motion.p>
           <motion.div variants={UP} className="mt-5 border-l-2 border-[#FF6A00]/40 pl-4">
             <p className="font-sans text-[12px] leading-relaxed text-white/[0.58]">
@@ -932,14 +967,14 @@ function SlideProcess({ reduced }: { reduced: boolean | null }) {
             </p>
           </motion.div>
         </div>
-        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 grid-rows-2 gap-3">
+        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 content-center gap-3">
           {[
             { src: "/assets/ai-character/design.jpg",             label: "Character direction exploration" },
             { src: "/assets/ai-character/uivisual.jpg",           label: "UI visual system" },
             { src: "/assets/ai-character/characterdirection.jpg", label: "Character directions" },
             { src: "/assets/ai-character/innovation.jpg",         label: "Scene, music & motion concept" },
           ].map(({ src, label }, i) => (
-            <motion.div key={src} className={`group min-h-0 overflow-hidden rounded-lg`}
+            <motion.div key={src} className={`group aspect-[16/9] min-h-0 overflow-hidden rounded-lg bg-white/[0.02]`}
               initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.6, ease: E, delay: 0.3 + i * 0.08 }}>
               <img src={src} alt={label} loading="lazy"
@@ -1012,6 +1047,48 @@ function SlideShowcaseLive({ reduced }: { reduced: boolean | null }) {
 }
 
 // §25 Additional Contribution — SaaS console refresh
+function SlideBackendBefore({ reduced }: { reduced: boolean | null }) {
+  return (
+    <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
+      <LivingAura reduced={reduced} />
+      <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
+        <div className="shrink-0">
+          <motion.div variants={FADE}><Eye>Additional Contribution · B2B Console · Before</Eye></motion.div>
+          <Mask delay={0.08}>
+            <h2 className={`text-balance mt-4 font-display font-light tracking-[-0.028em] ${HEAD}`}
+              style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
+              What I inherited: the old console.
+            </h2>
+          </Mask>
+          <motion.p variants={UP} className={`mt-3 max-w-3xl ${BODY} text-[13.5px] text-white/[0.66]`}>
+            The original console was dense and hard to navigate, with almost no design for empty or error states — the starting point before my redesign.
+          </motion.p>
+        </div>
+        <motion.div variants={UP} className="mt-6 grid grid-cols-3 gap-3">
+          {[
+            { src: "/assets/ai-character/previous-api/previous-api-1.png", label: "Knowledge Base list",     tag: "Before" },
+            { src: "/assets/ai-character/previous-api/previous-api-2.png", label: "Create knowledge repo",   tag: "Before" },
+            { src: "/assets/ai-character/previous-api/previous-api-3.png", label: "Knowledge Base template", tag: "Before" },
+          ].map(({ src, label, tag }, i) => (
+            <motion.div key={src} className={`group overflow-hidden rounded-lg`}
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: E, delay: 0.3 + i * 0.09 }}>
+              <div className="relative overflow-hidden bg-black/40">
+                <img src={src} alt={label} loading="lazy"
+                  className="h-auto w-full object-contain transition-transform duration-700 group-hover:scale-[1.02]" />
+              </div>
+              <div className={`flex items-center gap-2 border-t ${HAIR} px-3 py-2`}>
+                <span className="font-mono text-[9px] uppercase tracking-[0.14em] text-white/40">{tag}</span>
+                <span className="font-sans text-[11px] text-white/[0.66]">{label}</span>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
 function SlideBackend({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-14 ${CANVAS}`}>
@@ -1067,9 +1144,6 @@ function SlideSparkDesign({ reduced }: { reduced: boolean | null }) {
             The showroom system became the published B2B design framework.
           </h2>
         </Mask>
-        <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[14px] text-white/[0.66]`}>
-          Components, interactions, and motion patterns built for the showrooms became the Spark Design templates used by external Agentscope partners — these decisions outlived the showroom releases.
-        </motion.p>
         <motion.div variants={UP} className={`mt-6 overflow-hidden rounded-lg`}>
           <div className={`flex items-center justify-between gap-3 border-b ${HAIR} bg-white/[0.02] px-4 py-3 md:px-5`}>
             <div>
@@ -1369,10 +1443,7 @@ function SlideClosing({ reduced }: { reduced: boolean | null }) {
           </h2>
         </Mask>
         <motion.p variants={UP} className={`mt-3 ${EYE} text-white/45`}>
-          Product Designer · Pratt Institute
-        </motion.p>
-        <motion.p variants={UP} className={`mt-8 max-w-md ${BODY} text-[15px] text-white/[0.7]`}>
-          Design is the translation layer. The hardest problem in AI products isn&apos;t model quality — it&apos;s helping customers imagine what they can build. The strongest demo is future-self proof.
+          Product Designer · Pratt Institute · University of Washington
         </motion.p>
         <motion.div variants={UP} className="mt-10 flex flex-wrap items-center gap-5">
           <a href="https://tongyi.aliyun.com/character" target="_blank" rel="noopener noreferrer"
@@ -1400,7 +1471,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "howmightwe":       return <SlideHmwStatement reduced={reduced} />;
     case "d1-title":         return <TitleSlide reduced={reduced} chapter="Decision 01"
                                       title="Bet on experience over documentation — taken to its limit."
-                                      body="The showroom strategy came from our PM — a familiar consumer-product play. My leverage was pushing it all the way: a doc you can only read proves nothing; the felt experience is the product. On a 10-person team I owned every feature decision across all 4 rooms — companionship, psychotherapy, character cloning, IP licensing."
+                                      body="The showroom strategy came from our PM — a familiar consumer-product play. The four rooms weren't arbitrary — we chose the four themes where character models are most widely applied in the market: companionship, psychotherapy, character cloning, and IP licensing, and designed a dedicated showroom around each. Every feature decision inside those rooms was mine."
                                       kicker="Users don&apos;t believe descriptions — the first message had to prove the capability." />;
     case "d1-showrooms":     return <SlideD1Showrooms reduced={reduced} />;
     case "d2-title":         return <SlideD2Title reduced={reduced} />;
@@ -1423,6 +1494,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "process":          return <SlideProcess reduced={reduced} />;
     case "showrooms":        return <SlideShowrooms reduced={reduced} />;
     case "showcase-live":    return <SlideShowcaseLive reduced={reduced} />;
+    case "backend-before":   return <SlideBackendBefore reduced={reduced} />;
     case "backend":          return <SlideBackend reduced={reduced} />;
     case "spark-design":     return <SlideSparkDesign reduced={reduced} />;
     case "metrics":          return <SlideMetrics />;
