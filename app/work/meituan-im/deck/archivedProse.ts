@@ -91,12 +91,12 @@ export const ARCHIVED_PROSE: ArchivedSection[] = [
   {
     sectionId: "impact",
     eyebrow: "Impact & Validation",
-    title: "Higher conversion and fewer disputes validated the trust-first direction.",
+    title: "A higher-converting diagnostic channel, plus projected order and dispute gains, validated the direction.",
     paragraphs: [
       "Experiment design: user-level randomization, merchant whitelisting, and parallel runs on Meituan and Dianping in test and production.",
-      "Conversion lift: search-to-purchase, validated via user-level A/B.",
-      "Additional daily orders: incremental volume at projected rollout coverage.",
-      "Pricing disputes: post-service complaints in this flow.",
+      "Channel conversion: intent→order on the diagnostic channel ran ~1.3× the old path, lifting overall search conversion +0.5pp, validated via user-level A/B.",
+      "Additional daily orders: incremental volume projected at rollout coverage.",
+      "Pricing disputes: projected reduction in post-service complaints for this flow.",
     ],
   },
   {

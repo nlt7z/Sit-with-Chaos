@@ -570,10 +570,10 @@ export default function MeituanImCaseStudyPage() {
                         can carry equal visual weight. */}
                     <div>
                       <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[3.75rem] lg:text-[5rem]">
-                        +5<span className="text-[0.5em] text-textPrimary/70">%</span>
+                        +30<span className="text-[0.5em] text-textPrimary/70">%</span>
                       </p>
                       <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-textSecondary">
-                        Conversion lift · ~2k extra daily orders · −50% disputes.
+                        Intent→order conversion on the diagnostic channel — ~1.3× the old path. Routing price-anxious users into it lifted overall search conversion <span className="text-textPrimary">+0.5pp</span>.
                       </p>
                     </div>
 
@@ -584,7 +584,7 @@ export default function MeituanImCaseStudyPage() {
                       {[
                         { label: "Timeline", value: "4 weeks · 2025" },
                         { label: "Team", value: "Sole designer · 2 PMs · 2 engineers" },
-                        { label: "Impact", value: "+5% conversion (measured) · A/B with the team" },
+                        { label: "Impact", value: "+30% channel conversion · +0.5pp overall (A/B with the team)" },
                       ].map(({ label, value }) => (
                         <div key={label} className="min-w-0">
                           <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
@@ -726,6 +726,35 @@ export default function MeituanImCaseStudyPage() {
               </div>
             </div>
           </FadeIn>
+
+          <div className="mt-16 md:mt-24">
+            <SubsectionHeader
+              label="Transaction blueprint"
+              hint="Zoom out from the conversation to the whole deal — how a quote request becomes a booking, an on-site service, and a settled order across platform, user and merchant."
+            />
+            <FadeIn>
+              <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
+                <div className="relative w-full aspect-[3/2] sm:aspect-[12/5]">
+                  <iframe
+                    src="/assets/meituan-im/quote-to-service-flow-en.html"
+                    title="Quote-to-service transaction flow"
+                    className="absolute inset-0 h-full w-full border-0"
+                    loading="lazy"
+                  />
+                </div>
+              </div>
+            </FadeIn>
+            <p className="mt-3 text-right">
+              <a
+                href="/assets/meituan-im/quote-to-service-flow-en.html"
+                target="_blank"
+                rel="noreferrer"
+                className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80 underline-offset-4 hover:underline"
+              >
+                Open full diagram ↗
+              </a>
+            </p>
+          </div>
 
         </Section>
 
@@ -1028,21 +1057,21 @@ export default function MeituanImCaseStudyPage() {
         </Section>
 
         <Section id="impact" eyebrow="Impact & Validation" title="Trust-first won the A/B.">
-          {/* Hero metric — +5% conversion is the headline. Saffron-tinted so the
-              primary result reads first, supporting metrics step down below. */}
+          {/* Hero metric — +30% diagnostic-channel conversion is the headline. Lime-tinted
+              so the primary result reads first; the projected outcomes step down below. */}
           <FadeIn className="border-t border-black/[0.06] pt-12 md:pt-16">
             <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4">
               <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-nltLime-ink md:text-[5.5rem] lg:text-[8rem]">
-                +<CountUp to={5} />
+                +<CountUp to={30} />
                 <span className="text-[0.5em] text-nltLime-ink/70">%</span>
               </p>
               <div className="max-w-md">
                 <div className="flex items-center gap-2">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Conversion lift</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Conversion lift · diagnostic channel</p>
                   <span className="rounded-full border border-nltLime-ink/30 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-nltLime-ink/80">Measured</span>
                 </div>
                 <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
-                  Measured on a new in-message entry point — users who went all the way through this workflow converted +5% over the traditional path. User-level randomized A/B.
+                  ~60% of users ask about price before buying, so I routed them through a diagnose → quote → order flow. On that channel, intent→order converted ~1.3× the old path (9%→11.7% on toilet repair, 17%→22% on pipe clearing) — pulling the whole search entry up +0.5pp. User-level randomized A/B.
                 </p>
               </div>
             </div>
@@ -1068,14 +1097,14 @@ export default function MeituanImCaseStudyPage() {
               </p>
               <div className="mt-3 flex items-center gap-2">
                 <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
-                <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Measured</span>
+                <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Projected</span>
               </div>
-              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Post-service complaints in this flow.</p>
+              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Modeled reduction in post-service complaints for this flow.</p>
             </div>
           </FadeIn>
           <FadeIn delay={0.15}>
             <p className="mt-10 max-w-2xl text-[13.5px] leading-relaxed text-textSecondary/80">
-              The flow is a floating window triggered on search, so every searcher was in the sample. It launched in Hangzhou and select Zhejiang cities — bounded by where our certified-expert supply was — and these are real June–August numbers from a user-level randomized A/B.
+              The flow is a floating window triggered on search, so every searcher in the piloted categories was in the sample. We piloted two repair categories — toilet repair and pipe clearing — in Hangzhou and select Zhejiang cities, bounded by where our certified-expert supply was. The conversion figures are real June–August numbers from a user-level randomized A/B; the daily-orders and disputes figures above are modeled forward from them for a wider rollout.
             </p>
           </FadeIn>
         </Section>

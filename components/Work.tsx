@@ -72,7 +72,7 @@ const meituanIm: Project = {
   },
   flowSteps: ["diagnose", "quote compare", "confirm"],
   meta: { year: "2025", role: "Product Design Intern", status: "Shipped" },
-  impact: "+5% conversion · −50% pricing disputes (A/B validated)",
+  impact: "+30% channel conversion · +0.5pp overall · ~2k orders / −50% disputes (projected)",
   tags: ["Conversational Commerce", "A/B Validated"],
   logo: {
     src: "/assets/meituan-im/meituan-logo.png",

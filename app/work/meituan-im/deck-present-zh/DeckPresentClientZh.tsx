@@ -45,6 +45,7 @@ const SLIDES = [
   { id: "first-try",           chapter: "背景",     dark: false },
   { id: "before-after",        chapter: "背景",     dark: false },
   { id: "system-flow",         chapter: "系统",      dark: false },
+  { id: "txn-flow",            chapter: "系统",      dark: false },
   { id: "entry-states",        chapter: "系统",      dark: false },
   { id: "flow-standard",       chapter: "流程",    dark: false },
   { id: "flow-selfserve",      chapter: "流程",    dark: false },
@@ -317,7 +318,7 @@ function SlideCover() {
     { k: "公司",  v: "美团 · 本地生活" },
     { k: "角色",     v: "唯一设计师 · 搭档 2 名 PM + 2 名工程师" },
     { k: "周期", v: "4 周 · 2025" },
-    { k: "成果",  v: "+5% 转化(实测)· 与团队共同跑 A/B" },
+    { k: "成果",  v: "诊断渠道转化 +30% · 整体净增 +0.5pp(实测)" },
   ];
   return (
     <section className="relative flex h-full min-h-0 items-stretch overflow-hidden" style={{ background: U.dark }}>
@@ -363,9 +364,9 @@ function SlideCover() {
 // §01 Overview
 function SlideOverview() {
   const pillars = [
-    { stat: "+5%",  label: "转化提升",   detail: "用户级随机 A/B,对比传统路径" },
-    { stat: "~2k",  label: "每日新增订单", detail: "按预计覆盖推算的增量" },
-    { stat: "−50%", label: "价格纠纷",   detail: "该流程内的售后投诉" },
+    { stat: "+30%", label: "渠道转化",   detail: "诊断渠道意向→交易,约为原路径 1.3×;整体净增 +0.5pp" },
+    { stat: "~2k",  label: "每日新增订单", detail: "按推广覆盖推算的增量(预测)" },
+    { stat: "−50%", label: "价格纠纷",   detail: "该流程内售后投诉的预计下降" },
   ];
   return (
     <section className="flex h-full items-center px-12 md:px-20" style={{ background: U.surface }}>
@@ -568,6 +569,23 @@ function SlideSystemFlow() {
           <SystemDiagram />
         </motion.div>
       </motion.div>
+    </section>
+  );
+}
+
+// §04b 交易蓝图 —— 平台 / 用户 / 商家三方的完整询价报价交易链路。
+//   自包含的 Uber Base 流程图(自带标题与图例),在同色浅灰底上全幅展示,
+//   横版泳道居中、上下留白与底色无缝衔接。
+function SlideTxnFlow() {
+  return (
+    <section className="relative h-full min-h-0 overflow-hidden" style={{ background: U.bg }}>
+      <iframe
+        src="/assets/meituan-im/quote-to-service-flow-zh.html"
+        title="询价报价 · 上门服务交易流程"
+        loading="lazy"
+        className="absolute inset-0 h-full w-full"
+        style={{ border: 0 }}
+      />
     </section>
   );
 }
@@ -914,9 +932,9 @@ function SlideExtensions() {
 // §14 Impact
 function SlideImpact() {
   const stats = [
-    { to: 5,    suffix: "%", prefix: "+", label: "转化提升",    tag: "实测",  detail: "走完该流程的用户 vs 传统路径", key: true },
+    { to: 30,   suffix: "%", prefix: "+", label: "渠道转化",   tag: "实测",  detail: "诊断渠道意向→交易,约为原路径 1.3×;整体净增 +0.5pp", key: true },
     { to: 2000, suffix: "",  prefix: "~", label: "每日新增订单", tag: "预测", detail: "按更大范围推广建模的增量", fmt: (n: number) => Math.round(n / 1000) + "k" },
-    { to: 50,   suffix: "%", prefix: "−", label: "价格纠纷",   tag: "实测",  detail: "该流程内的售后投诉" },
+    { to: 50,   suffix: "%", prefix: "−", label: "价格纠纷",   tag: "预测",  detail: "该流程内售后投诉的预计下降" },
   ];
   const T_TITLE = 0.0, T_SUB = 0.3, T_STATS = 0.7, T_OUTRO = 1.3;
   return (
@@ -957,7 +975,7 @@ function SlideImpact() {
           initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: E, delay: T_OUTRO }}
           className="mt-7 max-w-2xl text-[13px] font-light leading-[1.76]" style={{ color: "rgba(255,255,255,0.7)" }}>
-          它是搜索时触发的浮窗,所以每个搜索用户都在样本里。上线于杭州及浙江部分城市——是 6–8 月的真实 A/B 数据。
+          它是搜索时触发的浮窗,在马桶维修、管道疏通两个品类试点,上线于杭州及浙江部分城市。转化数据是 6–8 月的真实 A/B;上面的订单量与纠纷数据,是据此向更大范围外推的预测。
         </motion.p>
       </div>
     </section>
@@ -1042,6 +1060,7 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "first-try":           return <SlideFirstTry />;
     case "before-after":        return <SlideBeforeAfter />;
     case "system-flow":         return <SlideSystemFlow />;
+    case "txn-flow":            return <SlideTxnFlow />;
     case "entry-states":        return <SlideEntryStates />;
     case "flow-standard":       return <SlideFlowStandard />;
     case "flow-selfserve":      return <SlideFlowSelfserve />;

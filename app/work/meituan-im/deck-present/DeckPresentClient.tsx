@@ -45,6 +45,7 @@ const SLIDES = [
   { id: "first-try",           chapter: "Context",     dark: false },
   { id: "before-after",        chapter: "Context",     dark: false },
   { id: "system-flow",         chapter: "System",      dark: false },
+  { id: "txn-flow",            chapter: "System",      dark: false },
   { id: "entry-states",        chapter: "System",      dark: false },
   { id: "flow-standard",       chapter: "The Flow",    dark: false },
   { id: "flow-selfserve",      chapter: "The Flow",    dark: false },
@@ -317,7 +318,7 @@ function SlideCover() {
     { k: "Company",  v: "Meituan · Local Services" },
     { k: "Role",     v: "Sole designer · with 2 PMs + 2 engineers" },
     { k: "Duration", v: "4 weeks · 2025" },
-    { k: "Outcome",  v: "+5% conversion (measured) · A/B run with the team" },
+    { k: "Outcome",  v: "+30% channel conversion · +0.5pp overall (measured)" },
   ];
   return (
     <section className="relative flex h-full min-h-0 items-stretch overflow-hidden" style={{ background: U.dark }}>
@@ -363,9 +364,9 @@ function SlideCover() {
 // §01 Overview
 function SlideOverview() {
   const pillars = [
-    { stat: "+5%",  label: "Conversion lift",   detail: "User-level randomized A/B vs the traditional path" },
-    { stat: "~2k",  label: "Extra daily orders", detail: "Incremental volume at projected coverage" },
-    { stat: "−50%", label: "Pricing disputes",   detail: "Post-service complaints in this flow" },
+    { stat: "+30%",  label: "Channel conversion",  detail: "Intent→order on the diagnostic channel — ~1.3× the old path; +0.5pp overall" },
+    { stat: "~2k",   label: "Extra daily orders",  detail: "Incremental volume projected at rollout coverage" },
+    { stat: "−50%",  label: "Pricing disputes",    detail: "Projected drop in post-service complaints in this flow" },
   ];
   return (
     <section className="flex h-full items-center px-12 md:px-20" style={{ background: U.surface }}>
@@ -568,6 +569,23 @@ function SlideSystemFlow() {
           <SystemDiagram />
         </motion.div>
       </motion.div>
+    </section>
+  );
+}
+
+// §04b Transaction blueprint — the full quote-to-service deal across 3 parties.
+//   Self-contained Uber Base diagram (its own title + legend); shown full-bleed on
+//   the matching gray field so the wide swimlane letterboxes seamlessly.
+function SlideTxnFlow() {
+  return (
+    <section className="relative h-full min-h-0 overflow-hidden" style={{ background: U.bg }}>
+      <iframe
+        src="/assets/meituan-im/quote-to-service-flow-en.html"
+        title="Quote-to-service transaction flow"
+        loading="lazy"
+        className="absolute inset-0 h-full w-full"
+        style={{ border: 0 }}
+      />
     </section>
   );
 }
@@ -914,9 +932,9 @@ function SlideExtensions() {
 // §14 Impact
 function SlideImpact() {
   const stats = [
-    { to: 5,    suffix: "%", prefix: "+", label: "Conversion lift",    tag: "Measured",  detail: "Users who went through this flow vs the traditional path", key: true },
-    { to: 2000, suffix: "",  prefix: "~", label: "Extra daily orders", tag: "Projected", detail: "Incremental volume modeled for wider rollout", fmt: (n: number) => Math.round(n / 1000) + "k" },
-    { to: 50,   suffix: "%", prefix: "−", label: "Pricing disputes",   tag: "Measured",  detail: "Post-service complaints in this flow" },
+    { to: 30,   suffix: "%", prefix: "+", label: "Channel conversion",  tag: "Measured",  detail: "Intent→order on the diagnostic channel — ~1.3× the old path; +0.5pp overall", key: true },
+    { to: 2000, suffix: "",  prefix: "~", label: "Extra daily orders",  tag: "Projected", detail: "Incremental volume modeled for wider rollout", fmt: (n: number) => Math.round(n / 1000) + "k" },
+    { to: 50,   suffix: "%", prefix: "−", label: "Pricing disputes",    tag: "Projected", detail: "Modeled drop in post-service complaints in this flow" },
   ];
   const T_TITLE = 0.0, T_SUB = 0.3, T_STATS = 0.7, T_OUTRO = 1.3;
   return (
@@ -957,7 +975,7 @@ function SlideImpact() {
           initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, ease: E, delay: T_OUTRO }}
           className="mt-7 max-w-2xl text-[13px] font-light leading-[1.76]" style={{ color: "rgba(255,255,255,0.7)" }}>
-          A floating window on search, so every searcher was in the sample. Live in Hangzhou + select Zhejiang cities — real June–August A/B numbers.
+          A floating window on search, piloted on two repair categories — toilet repair and pipe clearing — in Hangzhou + select Zhejiang. The conversion figures are real June–August A/B numbers; the order and dispute figures are modeled forward for a wider rollout.
         </motion.p>
       </div>
     </section>
@@ -1042,6 +1060,7 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "first-try":           return <SlideFirstTry />;
     case "before-after":        return <SlideBeforeAfter />;
     case "system-flow":         return <SlideSystemFlow />;
+    case "txn-flow":            return <SlideTxnFlow />;
     case "entry-states":        return <SlideEntryStates />;
     case "flow-standard":       return <SlideFlowStandard />;
     case "flow-selfserve":      return <SlideFlowSelfserve />;
