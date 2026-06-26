@@ -1234,7 +1234,7 @@ function TimeBar({
 function SlideMetrics() {
   const stats = [
     { to: 4,   suffix: "",  prefix: "",  label: "Showrooms shipped",       detail: "Romance · astrology · therapy · character" },
-    { to: 100, suffix: "%", prefix: "+", label: "Model API call volume",    detail: "~2× the 4-week pre-launch baseline" },
+    { to: 200, suffix: "%", prefix: "+", label: "Model API call volume",    detail: "~2× the 4-week pre-launch baseline" },
     { to: 87,  suffix: "%", prefix: "",  label: "Fewer clone-to-try steps", detail: "Spec + configure chain → template entry" },
     { to: 60,  suffix: "%", prefix: "",  label: "Faster delivery",          detail: "Engineering estimate · spec + code handoff" },
   ];
@@ -1304,10 +1304,10 @@ function SlideMetrics() {
 // §28 Metrics Method
 function SlideMetricsMethod() {
   const rows = [
-    { metric: "+100% / ~2×", label: "Model API call volume",
+    { metric: "+200% / ~2×", label: "Model API call volume",
       baseline: "Four-week rolling avg of internal product analytics before showroom launch.",
       result: "Four-week rolling avg after go-live, same pipeline and org scope.",
-      note: "Shorthand for +100% lift / ~2× total. Pre vs post on one pipeline, not a third-party benchmark." },
+      note: "Shorthand for ~2× total — call volume reached ~200% of the pre-launch baseline. Pre vs post on one pipeline, not a third-party benchmark." },
     { metric: "87%", label: "Setup reduction",
       baseline: "~7 enumerated steps in the internal clone-to-try checklist — repo review through endpoint wiring.",
       result: "Pre-seeded template + copy-ready YAML — setup collapses to a short checklist.",

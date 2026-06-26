@@ -1218,7 +1218,7 @@ function TimeBar({
 function SlideMetrics() {
   const stats = [
     { to: 4,   suffix: "",  prefix: "",  label: "上线 showroom",     detail: "恋爱 · 星座 · 心理 · 角色" },
-    { to: 100, suffix: "%", prefix: "+", label: "模型 API 调用量",   detail: "约为上线前 4 周基线的 2 倍" },
+    { to: 200, suffix: "%", prefix: "+", label: "模型 API 调用量",   detail: "约为上线前 4 周基线的 2 倍" },
     { to: 87,  suffix: "%", prefix: "",  label: "克隆即试的步骤减少", detail: "从规格 + 配置一长串,缩成模板入口" },
     { to: 60,  suffix: "%", prefix: "",  label: "交付提速",          detail: "工程估算 · 规格与代码一起交付" },
   ];
@@ -1288,10 +1288,10 @@ function SlideMetrics() {
 // §28 成效口径
 function SlideMetricsMethod() {
   const rows = [
-    { metric: "+100% / ~2×", label: "模型 API 调用量",
+    { metric: "+200% / ~2×", label: "模型 API 调用量",
       baseline: "showroom 上线前,内部产品分析的 4 周滚动平均值。",
       result: "上线后的 4 周滚动平均值,口径、管线都不变。",
-      note: "也就是 +100% / 约 2× 的简写。同一管线上线前后的对比,不是第三方基准。" },
+      note: "也就是约 2× 的简写——调用量约为上线前基线的 200%。同一管线上线前后的对比,不是第三方基准。" },
     { metric: "87%", label: "配置步骤缩减",
       baseline: "内部「克隆即试」清单里约 7 步——从看仓库一直到接好接口。",
       result: "预置模板 + 可直接复制的 YAML,配置缩成短短一份清单。",
