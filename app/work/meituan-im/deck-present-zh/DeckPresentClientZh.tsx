@@ -44,9 +44,8 @@ const SLIDES = [
   { id: "signal",              chapter: "背景",     dark: true  },
   { id: "first-try",           chapter: "背景",     dark: false },
   { id: "before-after",        chapter: "背景",     dark: false },
-  { id: "txn-flow",            chapter: "系统",      dark: false },
-  { id: "entry-states",        chapter: "系统",      dark: false },
   { id: "flow-standard",       chapter: "流程",    dark: false },
+  { id: "txn-flow",            chapter: "流程",    dark: false },
   { id: "flow-selfserve",      chapter: "流程",    dark: false },
   { id: "flow-offhours",       chapter: "流程",    dark: false },
   { id: "flow-expired-before", chapter: "流程",    dark: false },
@@ -54,6 +53,7 @@ const SLIDES = [
   { id: "flow-return",         chapter: "流程",    dark: false },
   { id: "merchant",            chapter: "流程",    dark: false },
   { id: "prototype-full",      chapter: "流程",    dark: false },
+  { id: "entry-states",        chapter: "流程",    dark: false },
   { id: "extensions",          chapter: "延展",  dark: false },
   { id: "impact",              chapter: "成效",      dark: true  },
   { id: "reflection",          chapter: "复盘",  dark: false },
@@ -145,7 +145,7 @@ function useAfterEnter(delay = 480) {
 //   into a single scenario with its switcher rail hidden, so each slide shows
 //   exactly the workflow it's narrating. The bundle hints a 480×1000 canvas.
 //   Only the active slide is mounted, so one heavy iframe is alive at a time.
-function DeckPhone({ flow, caption }: { flow: string; caption?: string }) {
+function DeckPhone({ flow, caption, seek = true }: { flow: string; caption?: string; seek?: boolean }) {
   const PW = 480, PH = 1000;
   const ref = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0);
@@ -168,7 +168,7 @@ function DeckPhone({ flow, caption }: { flow: string; caption?: string }) {
       <div ref={ref} className="relative min-h-0 w-full flex-1 overflow-hidden">
         {scale > 0 && ready ? (
           <iframe
-            src={`/assets/meituan-im/Repair%20Flow.html#flow=${flow}&rail=0&seek=1`}
+            src={`/assets/meituan-im/Repair%20Flow.html#flow=${flow}&rail=0&seek=${seek ? 1 : 0}`}
             title={`${flow} flow — live prototype`}
             loading="lazy"
             style={{
@@ -496,11 +496,11 @@ function SlideEntryStates() {
 
 // ── Flow slide template: copy left, live deep-linked phone right ──────────────
 function FlowSlide({
-  eye, title, points, flow, caption,
+  eye, title, points, flow, caption, seek,
 }: {
   eye: string; title: string;
   points?: { k: string; v: string }[];
-  flow: string; caption: string;
+  flow: string; caption: string; seek?: boolean;
 }) {
   return (
     <section className="flex h-full items-center px-10 md:px-14" style={{ background: U.surface }}>
@@ -526,7 +526,7 @@ function FlowSlide({
         <motion.div className="h-[min(74vh,42rem)] min-w-0"
           initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7, ease: E, delay: 0.22 }}>
-          <DeckPhone flow={flow} caption={caption} />
+          <DeckPhone flow={flow} caption={caption} seek={seek} />
         </motion.div>
       </div>
     </section>
@@ -543,6 +543,7 @@ function SlideFlowStandard() {
         { k: "先给进度,再给价格", v: "实时竞价让等待变得可读。" },
       ]}
       flow="default"
+      seek={false}
       caption="实时 · 默认流程"
     />
   );
@@ -557,6 +558,7 @@ function SlideFlowSelfserve() {
         { k: "信任红利", v: "诚实的『劝退』正是用户回头的原因。" },
       ]}
       flow="cat-litter"
+      seek={false}
       caption="实时 · 自助流程"
     />
   );
