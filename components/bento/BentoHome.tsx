@@ -175,19 +175,17 @@ function CornerArrow({ className = "" }: { className?: string }) {
   );
 }
 
-/* identity — name + tags + CTA + tagline, with the moodboard artwork folded in:
-   it lives in the middle of the card and only fades in on hover (always shown on
-   touch, where there is no hover). */
+/* identity — name + tags + CTA + tagline, with a profile photo fixed in the
+   middle of the card; on hover it cross-fades to the rotating moodboard artwork
+   (on touch, where there is no hover, the photo simply stays). */
 function IdentityCard({
   reduced,
   light,
   inkDim,
-  isMobile,
 }: {
   reduced: boolean;
   light: boolean;
   inkDim: string;
-  isMobile: boolean;
 }) {
   const [hover, setHover] = useState(false);
   const [i, setI] = useState(0);
@@ -198,22 +196,29 @@ function IdentityCard({
     return () => clearInterval(id);
   }, [reduced]);
 
-  const reveal = hover || isMobile;
-
   return (
     <div
       className="relative flex h-full flex-col justify-between gap-2 px-4 py-3"
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      {/* hover artwork — centered in the middle band, behind the text */}
+      {/* center moodboard — profile photo fixed at rest, cross-fades to the
+          rotating artwork gallery on hover; sits behind the text. */}
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-x-4 top-1/2 z-0 grid -translate-y-1/2 place-items-center transition-opacity duration-500"
-        style={{ opacity: reveal ? 1 : 0 }}
+        className="pointer-events-none absolute inset-x-4 top-1/2 z-0 grid -translate-y-1/2 place-items-center"
       >
         <div className="relative aspect-square w-[56%] max-w-[190px]">
           <div className="absolute inset-0 overflow-hidden rounded-xl ring-1 ring-white/10">
+            {/* profile photo — base layer, always visible; hidden while hovering */}
+            <Image
+              src="/assets/about/yuan-portrait.jpg"
+              alt="Yuan Fang"
+              fill
+              sizes="220px"
+              className={`object-cover transition-opacity duration-700 ${hover ? "opacity-0" : "opacity-100"}`}
+            />
+            {/* artwork gallery — revealed (and rotates) on hover */}
             {ARTWORK.map((src, idx) => (
               <Image
                 key={src}
@@ -221,7 +226,7 @@ function IdentityCard({
                 alt=""
                 fill
                 sizes="220px"
-                className={`object-cover transition-opacity duration-700 ${idx === i ? "opacity-100" : "opacity-0"}`}
+                className={`object-cover transition-opacity duration-700 ${hover && idx === i ? "opacity-100" : "opacity-0"}`}
               />
             ))}
           </div>
@@ -471,7 +476,7 @@ export function BentoHome() {
           <div className="contents md:flex md:min-h-0 md:flex-[0.9] md:flex-col md:gap-2.5">
             {/* identity — name + moodboard (hover) + CTA, merged into one tall card */}
             <BentoCard label="Yuan Fang" surface={hero} light={light} drag={drag} index={0} className="order-1 col-span-2 h-[400px] min-h-0 flex-[7] md:order-none md:h-auto">
-              <IdentityCard reduced={reduced} light={light} inkDim={inkDim} isMobile={isMobile} />
+              <IdentityCard reduced={reduced} light={light} inkDim={inkDim} />
             </BentoCard>
 
             {/* clock — bigger */}

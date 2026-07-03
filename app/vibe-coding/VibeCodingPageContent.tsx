@@ -53,6 +53,15 @@ const entries: Entry[] = [
     },
   },
   {
+    date: "2026.06",
+    title: "tiktok shared feed",
+    description: "Self-initiated concept redesigning how friends' shared videos surface on TikTok — a Shared Feed tab, Smart Reactions, and reply-value ranking.",
+    tags: ["app", "interaction"],
+    href: "/work/tiktok",
+    hrefLabel: "case study →",
+    media: { kind: "video", src: "/assets/TikTok/showcase.mp4" },
+  },
+  {
     date: "2025.12",
     title: "ai romance character chat",
     description: "Conversational prototype for a romance AI character — chat interface, persona pacing, and scene atmosphere.",

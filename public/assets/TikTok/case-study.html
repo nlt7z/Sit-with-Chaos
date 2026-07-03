@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Shared with You · TikTok Friend-Sharing Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=TikTok+Sans:opsz,wght@12..36,400..700&display=swap" rel="stylesheet" />
+<style>
+:root{
+  --bg:#050507;
+  --line:rgba(255,255,255,0.10); --line-soft:rgba(255,255,255,0.06);
+  --t-1:#F8F8FA; --t-2:#C2C5CF; --t-3:#8A8E9C; --t-4:#5B5F6B;
+  --cyan:#FE2C55; --pink:#FE2C55;
+  --cyan-glow:rgba(254,44,85,0.30); --pink-glow:rgba(254,44,85,0.28);
+  --font:'TikTok Sans','PingFang SC','Hiragino Sans GB','Microsoft YaHei',ui-sans-serif,system-ui,sans-serif;
+  --display:'TikTok Sans','PingFang SC','Hiragino Sans GB',ui-sans-serif,system-ui,sans-serif;
+  --mono:'TikTok Sans','PingFang SC','Hiragino Sans GB',ui-sans-serif,system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--t-2);font-family:var(--font);font-size:16px;line-height:1.85;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;font-feature-settings:'cv11','ss01';position:relative;overflow-x:hidden;}
+body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(46% 40% at 8% 4%,rgba(255,255,255,0.05),transparent 60%),radial-gradient(50% 44% at 94% 98%,rgba(255,255,255,0.035),transparent 62%);}
+body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.4;
+  background-image:repeating-linear-gradient(to bottom,rgba(255,255,255,0.02) 0,rgba(255,255,255,0.02) 1px,transparent 1px,transparent 5px);}
+.grain{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:0.02;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");}
+.progress{position:fixed;top:0;left:0;height:2px;width:0;z-index:60;background:var(--t-2);}
+
+.wrap{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:0 40px;}
+
+.ttlogo{display:inline-flex;align-items:center;gap:10px;}
+.tt-note{width:34px;height:34px;overflow:visible;display:block;flex:none;}
+.tt-word{font-family:var(--display);font-weight:600;font-size:22px;color:var(--t-1);letter-spacing:-0.03em;}
+
+.glitch{position:relative;display:inline-block;color:var(--t-1);}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;left:0;top:0;width:100%;pointer-events:none;}
+.glitch::before{color:var(--cyan);transform:translate(-2px,0);opacity:.6;mix-blend-mode:screen;}
+.glitch::after{color:var(--pink);transform:translate(2px,0);opacity:.55;mix-blend-mode:screen;}
+@media (prefers-reduced-motion:no-preference){.glitch::before{animation:gC 7s infinite steps(2,end);}.glitch::after{animation:gP 7s infinite steps(2,end);}}
+@keyframes gC{0%,90%,100%{transform:translate(-2px,0)}92%{transform:translate(-4px,-1px);clip-path:inset(20% 0 50% 0)}94%{transform:translate(-1px,1px);clip-path:inset(60% 0 10% 0)}96%{transform:translate(-2px,0);clip-path:none}}
+@keyframes gP{0%,90%,100%{transform:translate(2px,0)}92%{transform:translate(4px,1px);clip-path:inset(55% 0 20% 0)}94%{transform:translate(1px,-1px);clip-path:inset(10% 0 60% 0)}96%{transform:translate(2px,0);clip-path:none}}
+
+.eyebrow{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--cyan);display:flex;align-items:center;gap:11px;text-shadow:0 0 18px rgba(254,44,85,0.35);}
+.eyebrow .dot{width:6px;height:6px;border-radius:2px;background:var(--cyan);box-shadow:0 0 10px var(--cyan-glow);flex:none;}
+.eyebrow .en{color:var(--t-4);letter-spacing:0.12em;}
+h1{font-family:var(--display);font-size:58px;font-weight:600;line-height:1.1;letter-spacing:-0.015em;color:var(--t-1);}
+h1 .hl{color:var(--t-1);}
+h2{font-family:var(--display);font-size:30px;font-weight:600;line-height:1.25;letter-spacing:-0.01em;color:var(--t-1);}
+h3{font-family:var(--display);font-size:20px;font-weight:600;color:var(--t-1);letter-spacing:-0.01em;}
+strong,b{color:var(--t-1);font-weight:600;}
+.kicker{font-family:var(--mono);font-size:13px;letter-spacing:0.02em;color:var(--t-3);margin-top:16px;}
+.hero-vid{display:block;width:100%;margin-top:38px;border-radius:16px;background:#000;}
+.small{font-size:13.5px;line-height:1.7;color:var(--t-4);}
+
+section.block{padding:74px 0;border-top:1px solid var(--line-soft);}
+section.block.hero{border-top:none;padding:70px 0 50px;}
+
+.region{margin-top:96px;padding-top:40px;border-top:1px solid var(--line);}
+.region:first-of-type{margin-top:58px;}
+.region-head{display:flex;align-items:center;gap:22px;margin-bottom:8px;}
+.region-head .rn{font-family:var(--display);font-size:42px;font-weight:600;line-height:1;background:linear-gradient(135deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;flex:none;}
+.region-head .ren{font-family:var(--mono);font-size:11px;letter-spacing:0.16em;text-transform:uppercase;color:var(--t-4);margin-bottom:3px;}
+.region-head .rt{font-family:var(--display);font-size:26px;font-weight:600;color:var(--t-1);letter-spacing:-0.01em;line-height:1.1;}
+.region > section.block{border-top:none;padding:30px 0;}
+.region > section.block:first-of-type{padding-top:22px;}
+@media (max-width:780px){.region{margin-top:70px;}}
+
+.sec-head{margin-bottom:22px;}
+.sec-head .eyebrow{margin-bottom:14px;}
+
+/* problem paragraphs — verbatim, hierarchy via type + spacing */
+.para{font-size:16.5px;line-height:1.95;color:var(--t-2);max-width:760px;}
+.para + .para{margin-top:24px;}
+.para b{color:var(--t-1);font-weight:600;}
+.para .cy{color:var(--t-1);} .para .pk{color:var(--t-1);}
+
+.pull{border-left:3px solid var(--t-4);padding:4px 0 4px 26px;margin:30px 0;max-width:820px;}
+.pull p{font-family:var(--display);font-size:24px;line-height:1.4;font-weight:600;letter-spacing:-0.01em;color:var(--t-1);}
+.pull .cy{color:var(--t-1);} .pull .pk{color:var(--t-1);}
+.bridge{margin:120px 0;max-width:860px;}
+.bridge p{font-family:var(--display);font-size:24px;line-height:1.55;font-weight:600;letter-spacing:-0.01em;color:var(--t-1);}
+.hmw-bridge{margin:6px 0 20px;}
+.hmw-lead{font-size:16.5px;line-height:1.9;font-weight:400;color:var(--t-2);max-width:840px;}
+.hmw-list{display:flex;flex-direction:column;gap:14px;max-width:880px;margin-top:26px;}
+.hmw-q{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;}
+.hmw-q .k{width:7px;height:7px;border-radius:50%;background:var(--t-3);margin-top:13px;flex:none;}
+.hmw-q p{font-family:var(--display);font-size:17px;line-height:1.6;font-weight:400;color:var(--t-1);}
+.hmw-close{font-size:16.5px;line-height:1.9;color:var(--t-2);max-width:840px;margin-top:28px;}
+.qgroup{margin-top:56px;padding-top:10px;}
+.q-label{font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:16px;text-shadow:0 0 18px rgba(254,44,85,0.35);}
+.q-text{font-family:var(--font);font-size:16.5px;line-height:1.9;font-weight:400;color:var(--t-1);max-width:840px;}
+.q-thought{font-size:16.5px;line-height:1.9;font-weight:400;color:var(--t-2);max-width:820px;margin-top:16px;}
+.qgroup .ib:first-of-type{padding-top:28px;border-top:none;}
+@media (max-width:780px){.hmw-q{grid-template-columns:1fr;gap:6px;}}
+
+/* HMW */
+.hmw{border-left:3px solid;border-image:linear-gradient(180deg,var(--cyan),var(--pink)) 1;padding:6px 0 6px 24px;margin:6px 0 30px;max-width:840px;}
+.hmw .hl{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:9px;}
+.hmw p{font-family:var(--display);font-size:21px;line-height:1.5;font-weight:600;color:var(--t-1);letter-spacing:-0.005em;}
+
+/* idea + fields */
+.idea{padding:30px 0;border-top:1px solid var(--line-soft);}
+.idea:first-of-type{border-top:none;padding-top:6px;}
+.idea-h{display:flex;align-items:baseline;gap:14px;margin-bottom:4px;flex-wrap:wrap;}
+.idea-n{font-family:var(--mono);font-size:12px;letter-spacing:0.06em;color:var(--pink);white-space:nowrap;}
+.idea-h h3{font-size:20px;}
+.field{display:grid;grid-template-columns:104px 1fr;gap:26px;margin-top:16px;align-items:baseline;}
+.field .fl{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--t-4);padding-top:3px;}
+.ft{font-size:15px;line-height:1.85;color:var(--t-2);max-width:720px;}
+.ft b{color:var(--t-1);} .ft .cy{color:var(--t-1);} .ft .pk{color:var(--t-1);}
+
+/* phone */
+.show{display:grid;grid-template-columns:230px 1fr;gap:46px;align-items:center;margin-top:26px;}
+.show.rev{grid-template-columns:1fr 230px;}
+.show.rev .ph{order:2;}
+.show.vtop{align-items:center;}
+.show + .show{margin-top:54px;}
+.phone{position:relative;width:230px;border-radius:46px;padding:8px;justify-self:center;
+  background:linear-gradient(155deg,#3b3e48,#0b0c10 56%);
+  box-shadow:0 30px 70px rgba(0,0,0,0.6),0 0 0 1px rgba(0,0,0,0.7),inset 0 0 0 1.5px rgba(255,255,255,0.06);}
+.phone .screen{position:relative;border-radius:39px;overflow:hidden;background:#000;display:block;line-height:0;}
+.phone .screen img{width:100%;display:block;}
+.phone .screen video{width:100%;display:block;background:#000;}
+.phone .screen.vid{cursor:pointer;}
+.vplay{position:absolute;inset:0;z-index:4;display:flex;align-items:center;justify-content:center;background:rgba(5,6,8,0.34);transition:opacity .25s ease;}
+.vplay::after{content:"";width:0;height:0;border-left:24px solid rgba(255,255,255,.95);border-top:15px solid transparent;border-bottom:15px solid transparent;margin-left:7px;filter:drop-shadow(0 3px 10px rgba(0,0,0,.6));}
+.screen.vid.playing .vplay{opacity:0;pointer-events:none;}
+.phone .island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:78px;height:22px;background:#000;border-radius:99px;z-index:3;}
+.phone .bz{position:absolute;background:linear-gradient(180deg,#43464f,#191b20);border-radius:3px;}
+.phone .bz.l1{left:-2px;top:124px;width:3px;height:30px;} .phone .bz.l2{left:-2px;top:168px;width:3px;height:50px;}
+.phone .bz.l3{left:-2px;top:230px;width:3px;height:50px;} .phone .bz.r1{right:-2px;top:190px;width:3px;height:76px;}
+.cap{margin-top:14px;font-size:13px;line-height:1.5;color:var(--t-3);}
+.cap .now{font-family:var(--mono);font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--t-4);margin-right:8px;}
+.show .body .fl{font-family:var(--mono);font-size:11px;letter-spacing:0.06em;text-transform:uppercase;color:var(--t-4);margin-bottom:9px;}
+
+/* standalone centered video, dropped in after a full-width paragraph */
+.vsolo{margin:36px auto 8px;max-width:760px;display:flex;flex-direction:column;align-items:center;}
+.vsolo .cap{text-align:center;max-width:580px;margin-top:17px;}
+
+/* drawn prototypes inside the phone */
+.screen.proto{height:472px;line-height:normal;background:linear-gradient(180deg,#0c0d11,#080a0d);padding:34px 15px 16px;display:flex;flex-direction:column;}
+.sheet{display:flex;flex-direction:column;height:100%;}
+.sheet .sv{height:114px;border-radius:12px;background:linear-gradient(140deg,#1c1f28,#0d0f14);border:1px solid var(--line-soft);margin-bottom:16px;position:relative;flex:none;}
+.sheet .sv::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-40%,-50%);border-left:13px solid rgba(255,255,255,.6);border-top:8px solid transparent;border-bottom:8px solid transparent;}
+.sheet .slabel{font-family:var(--mono);font-size:11px;letter-spacing:.04em;color:var(--t-3);margin-bottom:13px;}
+.sheet .savs{display:grid;grid-template-columns:repeat(4,1fr);gap:15px 11px;}
+.sheet .sav{width:100%;aspect-ratio:1;border-radius:50%;background:linear-gradient(135deg,#2c303b,#171a21);position:relative;}
+.sheet .sav.ck::after{content:"";position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-radius:50%;background:var(--cyan);border:2px solid #0a0b0e;box-shadow:0 0 7px var(--cyan-glow);}
+.sheet .ssend{margin-top:auto;display:flex;gap:8px;align-items:center;}
+.sheet .si{flex:1;height:36px;border-radius:99px;border:1px solid var(--line);font-size:11px;color:var(--t-4);display:flex;align-items:center;padding:0 13px;}
+.sheet .sb{height:36px;padding:0 17px;border-radius:99px;background:linear-gradient(135deg,var(--cyan),var(--pink));color:#08090b;font-size:12px;font-weight:600;display:flex;align-items:center;flex:none;}
+.inbox{display:flex;flex-direction:column;height:100%;}
+.inbox .ih{font-family:var(--display);font-size:15px;font-weight:600;color:var(--t-1);margin-bottom:12px;flex:none;}
+.inbox .irow{display:flex;align-items:center;gap:11px;padding:8px 0;border-top:1px solid var(--line-soft);}
+.inbox .irow:first-of-type{border-top:none;}
+.inbox .it{width:38px;height:50px;border-radius:7px;background:linear-gradient(140deg,#1c1f28,#0d0f14);border:1px solid var(--line-soft);flex:none;position:relative;}
+.inbox .it::after{content:"";position:absolute;left:50%;top:50%;transform:translate(-35%,-50%);border-left:8px solid rgba(255,255,255,.45);border-top:5px solid transparent;border-bottom:5px solid transparent;}
+.inbox .im{flex:1;display:flex;flex-direction:column;gap:7px;}
+.inbox .im .l1{height:8px;width:74%;border-radius:3px;background:rgba(255,255,255,.16);}
+.inbox .im .l2{height:7px;width:46%;border-radius:3px;background:rgba(255,255,255,.07);}
+.inbox .itm{font-family:var(--mono);font-size:10px;color:var(--t-4);flex:none;}
+
+/* interactive prototype embed */
+.proto{margin-top:0;position:relative;background:transparent;}
+.proto-bar{display:flex;align-items:center;gap:8px;padding:9px 14px;
+  border-bottom:1px solid var(--line-soft);background:rgba(255,255,255,0.02);}
+.proto-bar .dots{display:flex;gap:7px;}
+.proto-bar .dots i{width:11px;height:11px;border-radius:50%;display:block;}
+.proto-bar .dots i:nth-child(1){background:#fe5f57;} .proto-bar .dots i:nth-child(2){background:#febc2e;} .proto-bar .dots i:nth-child(3){background:#28c840;}
+.proto-bar .ttl{font-family:var(--mono);font-size:11.5px;letter-spacing:0.05em;color:var(--t-3);margin-left:8px;}
+.proto-bar .live{margin-left:auto;display:flex;align-items:center;gap:7px;font-family:var(--mono);font-size:10px;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);}
+.proto-bar .live span{width:6px;height:6px;border-radius:50%;background:var(--cyan);box-shadow:0 0 8px var(--cyan-glow);}
+.proto-frame{display:block;width:100%;height:520px;border:0;background:transparent;}
+.proto-hint{font-size:13.5px;line-height:1.62;color:var(--t-3);margin-top:15px;max-width:760px;padding-left:16px;position:relative;}
+.proto-hint::before{content:"";position:absolute;left:0;top:9px;width:7px;height:2px;border-radius:2px;background:var(--pink);box-shadow:0 0 8px var(--pink-glow);}
+.proto-hint b{color:var(--t-1);}
+
+/* ideation: prototype (left) + synced explanation (right, vertically centered) */
+.ideabox{display:grid;grid-template-columns:minmax(0,1.7fr) minmax(0,1fr);gap:34px;align-items:center;margin-top:18px;}
+.ideabox-l{min-width:0;}
+.ideabox .proto{margin-top:0;}
+.proto-cap{margin-top:12px;text-align:center;font-family:var(--display);font-size:14.5px;font-weight:600;color:var(--t-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-height:18px;}
+.proto-cap .pc-n{font-family:var(--mono);font-size:11px;font-weight:500;color:var(--pink);margin-right:9px;letter-spacing:0.04em;}
+.proto-cap .pc-en{color:var(--t-4);font-size:12px;font-weight:400;margin-left:9px;}
+
+/* synced explanation panel — swaps with the concept selected in the prototype */
+.proto-doc{min-width:0;}
+.pdoc{display:none;}
+.pdoc.on{display:block;animation:pdocIn .32s cubic-bezier(.16,1,.3,1);}
+@keyframes pdocIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+.pdoc-h{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line-soft);}
+.pdoc-n{font-family:var(--mono);font-size:11.5px;letter-spacing:0.05em;color:var(--t-4);white-space:nowrap;}
+.pdoc-h h3{font-size:20px;}
+.pdoc-en{font-family:var(--mono);font-size:11px;letter-spacing:0.03em;color:var(--t-4);width:100%;}
+.pdoc-row{display:grid;grid-template-columns:52px 1fr;gap:13px;align-items:baseline;padding:9px 0;border-top:1px solid var(--line-soft);}
+.pdoc-row:first-of-type{border-top:none;padding-top:0;}
+.pdoc-row .pl{font-family:var(--mono);font-size:10.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--t-4);padding-top:2px;}
+.pdoc-row p,.pdoc-row li{font-size:13.5px;line-height:1.6;color:var(--t-2);}
+.pdoc-row .cy{color:var(--t-1);} .pdoc-row .pk{color:var(--t-1);}
+.pdoc-row ul{list-style:none;display:flex;flex-direction:column;gap:5px;}
+.pdoc-row li{padding-left:15px;position:relative;}
+.pdoc-row li::before{content:"";position:absolute;left:0;top:9px;width:5px;height:5px;border-radius:50%;background:var(--t-4);}
+.pdoc code{font-family:var(--mono);font-size:12px;background:rgba(255,255,255,0.06);border:1px solid var(--line-soft);border-radius:5px;padding:1px 5px;color:var(--t-1);white-space:nowrap;}
+@media (max-width:980px){.ideabox{grid-template-columns:1fr;gap:16px;align-items:stretch;}}
+@media (max-width:780px){.pdoc-row{grid-template-columns:1fr;gap:4px;}}
+
+/* ideation: one block per idea (header + phone + explanation) */
+.ib{padding:44px 0;border-top:1px solid var(--line-soft);}
+.ib:first-of-type{border-top:none;padding-top:6px;}
+.ib-hd{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:2px;}
+.ib-num{font-family:var(--mono);font-size:13px;letter-spacing:0.06em;color:var(--t-4);}
+.ib-name{font-size:22px;}
+.ib-tag{font-family:var(--mono);font-size:10.5px;letter-spacing:0.05em;text-transform:uppercase;color:var(--t-3);border:1px solid var(--line);border-radius:20px;padding:3px 11px;}
+.ib-tag.alt{color:var(--t-1);font-weight:700;background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.2);}
+.ib-final{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#fff;background:var(--pink);padding:3px 9px;border-radius:4px;display:inline-block;transform:rotate(-5deg);box-shadow:0 3px 10px rgba(254,44,85,0.45);}
+.ib-hmw{font-family:var(--mono);font-size:10.5px;font-weight:600;letter-spacing:0.05em;color:var(--t-4);border:1px dashed var(--line);border-radius:20px;padding:2px 9px;}
+.ib-replay{margin-top:22px;display:inline-flex;align-items:center;gap:8px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--t-2);background:rgba(255,255,255,0.04);border:1px solid var(--line);border-radius:22px;padding:9px 16px;cursor:pointer;transition:background .16s ease,color .16s ease;}
+.ib-replay:hover{background:rgba(255,255,255,0.08);color:var(--t-1);}
+.final-box{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:48px;align-items:center;margin-top:8px;}
+.final-ph{text-align:center;min-width:0;}
+.final-frame{display:block;width:100%;height:640px;border:0;background:transparent;}
+.final-ph .ib-replay{margin-top:14px;}
+.final-txt{min-width:0;}
+.final-part + .final-part{margin-top:28px;padding-top:26px;border-top:1px solid var(--line-soft);}
+.final-label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--t-4);margin-bottom:12px;}
+@media (max-width:820px){.final-box{grid-template-columns:1fr;gap:24px;}.final-frame{height:560px;}}
+.ib .show{align-items:center;margin-top:20px;}
+.ib-frame{display:block;width:100%;height:500px;border:0;background:transparent;}
+.ib-cn{font-family:var(--display);font-size:15px;font-weight:600;color:var(--t-2);margin-bottom:14px;}
+.proto-live{display:inline-flex;align-items:center;gap:8px;margin-top:12px;font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--t-2);}
+.proto-live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--pink);box-shadow:0 0 8px var(--pink-glow);animation:proto-pulse 1.8s ease-in-out infinite;}
+@keyframes proto-pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.45;transform:scale(0.7);}}
+.final-ph .proto-live{margin-top:14px;}
+@media (max-width:780px){.ib .show{grid-template-columns:1fr;}.ib-frame{height:440px;}}
+
+@media (max-width:780px){.proto-frame{height:480px;}}
+
+/* blank placeholder for the not-yet-built Direction section */
+.ph-empty{margin-top:14px;border:1px dashed var(--line);border-radius:14px;min-height:200px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--mono);font-size:11.5px;letter-spacing:0.1em;text-transform:uppercase;color:var(--t-4);
+  background:rgba(255,255,255,0.012);}
+
+.foot-link{font-family:var(--mono);font-size:12px;letter-spacing:0.02em;color:var(--t-3);text-decoration:none;transition:color .16s ease;}
+.foot-link:hover{color:var(--t-1);}
+
+footer{padding:56px 0 84px;border-top:1px solid var(--line-soft);margin-top:18px;}
+footer .f{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
+footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-transform:uppercase;color:var(--t-4);}
+
+.nav{position:fixed;left:26px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:5px;z-index:40;}
+.nav a{display:flex;align-items:center;gap:10px;justify-content:flex-start;text-decoration:none;padding:4px 0;}
+.nav a .lab{font-family:var(--font);font-weight:500;font-size:12px;opacity:1;transition:color .2s ease;white-space:nowrap;color:var(--t-3);}
+.nav a .tick{width:18px;height:2px;border-radius:2px;background:var(--t-4);transition:all .2s ease;}
+.nav a:hover .lab{color:var(--t-1);}
+.nav a.on .tick{width:28px;background:var(--t-1);}
+.nav a.on .lab{opacity:1;transform:translateX(0);color:var(--t-1);}
+
+@media (max-width:1180px){.nav{display:none;}}
+@media (max-width:780px){
+  .wrap{padding:0 22px;} h1{font-size:40px;}
+  .show,.show.rev{grid-template-columns:1fr;gap:22px;} .show.rev .ph{order:0;}
+  .field{grid-template-columns:1fr;gap:6px;}
+  section.block{padding:52px 0;} section.block.hero{padding:48px 0 34px;}
+  .region-head{gap:16px;} .region-head .rn{font-size:34px;} .region-head .rt{font-size:22px;}
+  .bridge{margin:64px 0;} .bridge p{font-size:20px;}
+  .pull{margin:24px 0;} .pull p{font-size:20px;}
+  .hmw p{font-size:18px;}
+  .qgroup{margin-top:40px;}
+  .ib{padding:32px 0;}
+  .hero-vid{margin-top:26px;border-radius:14px;}
+}
+@media (max-width:480px){
+  .wrap{padding:0 18px;}
+  h1{font-size:32px;} h2{font-size:24px;}
+  .eyebrow{font-size:11px;letter-spacing:0.12em;}
+  .region-head{gap:13px;} .region-head .rn{font-size:27px;} .region-head .rt{font-size:19px;}
+  section.block{padding:44px 0;} section.block.hero{padding:40px 0 30px;}
+  .para,.hmw-lead,.hmw-close,.q-text,.q-thought{font-size:15.5px;line-height:1.85;}
+  .bridge{margin:52px 0;} .bridge p{font-size:18px;}
+  .pull p{font-size:18px;} .hmw p{font-size:17px;} .hmw-q p{font-size:16px;}
+  .ib-name{font-size:19px;} .ib-frame{height:420px;} .final-frame{height:520px;}
+  .about-photo img{max-width:100%;}
+}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="progress" id="progress"></div>
+<nav class="nav" id="nav"></nav>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+  <path id="ttn" d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/>
+</defs></svg>
+
+<div class="wrap">
+
+  <!-- HERO -->
+  <section class="block hero" id="s0" data-nav="Cover">
+    <div class="ttlogo" style="margin-bottom:28px">
+      <svg class="tt-note" viewBox="0 0 24 24" aria-hidden="true">
+        <use href="#ttn" transform="translate(-1 -0.3)" fill="#25F4EE" style="mix-blend-mode:screen"/>
+        <use href="#ttn" transform="translate(1 0.3)" fill="#FE2C55" style="mix-blend-mode:screen"/>
+        <use href="#ttn" fill="#F8F8FA"/>
+      </svg>
+      <span class="tt-word">TikTok</span>
+    </div>
+    <div class="eyebrow"><span class="dot"></span>Product Case Study</div>
+    <h1 style="margin-top:16px">Shared with You</h1>
+    <video class="hero-vid" src="showcase.mp4" autoplay muted loop playsinline webkit-playsinline preload="auto"></video>
+  </section>
+
+  <!-- ===== USER SCENARIO & INSIGHTS ===== -->
+  <div class="region" id="r1" data-nav="Scenario">
+  <div class="region-head"><div><div class="ren">01 / Context</div><div class="rt">User Scenario &amp; Insights</div></div></div>
+
+  <section class="block" id="s1" data-nav="Problem">
+    <div class="show vtop">
+      <div class="ph">
+        <div class="phone"><span class="island"></span><span class="bz l1"></span><span class="bz l2"></span><span class="bz l3"></span><span class="bz r1"></span>
+          <div class="screen vid"><video src="previous/problem1.mp4" muted playsinline preload="metadata"></video><span class="vplay"></span></div>
+        </div>
+        <div class="cap">Sharing a video takes less than a second.</div>
+      </div>
+      <div class="body">
+        <p class="para">On TikTok, sharing a video with a friend is treated as a default way to express love and care, and sharing one costs almost nothing. But for the receiver, opening the inbox to a red badge of 20 new messages brings a feeling that mixes "being cared about" with "pressure." Watching a friend's shared videos isn't only about enjoying them — it comes bundled with a task: responding. I describe the whole process as "<b class="cy">clearing a stack of paperwork</b>".</p>
+      </div>
+    </div>
+
+    <div class="bridge">
+      <p>User A shared 20 videos with User B, but User B only watched 2. So why is that?</p>
+    </div>
+
+    <div class="show vtop">
+      <div class="ph">
+        <div class="phone"><span class="island"></span><span class="bz l1"></span><span class="bz l2"></span><span class="bz l3"></span><span class="bz r1"></span>
+          <div class="screen vid"><video src="previous/problem2.mp4" muted playsinline preload="metadata"></video><span class="vplay"></span></div>
+        </div>
+        <div class="cap">You want to respond lightly, but the available reactions are limited.</div>
+      </div>
+      <div class="body">
+        <p class="para">First, there's an <b>asymmetry in interaction cost</b>. For the sender it's almost free — I can share in the gaps between videos, or even blast one video to 9 friends at once, all without interrupting my FYP scroll. But the receiver's cost is even higher than the sender's. Today, signaling "I watched this" requires the receiver to reply manually — meaning they have to watch the video (sometimes the sender didn't even finish it), interpret the content, guess the sender's intent, and then reply with text or an emoji.</p>
+        <p class="para">This high cost pushes receivers to skip the "type a reply" action whenever they can, responding only to the highest-priority videos — for example, ones where the sender explicitly asked a question. But it also means that even when a receiver finishes all 20 and replies to the two they found interesting, the sender <b>can't see where the receiver is</b>. When only two of twenty appear to have been "seen," <b>it leaves the sender feeling let down</b>.</p>
+      </div>
+    </div>
+
+    <div class="show vtop">
+      <div class="ph">
+        <div class="phone"><span class="island"></span><span class="bz l1"></span><span class="bz l2"></span><span class="bz l3"></span><span class="bz r1"></span>
+          <div class="screen vid"><video src="previous/problem3.mp4" muted playsinline preload="metadata"></video><span class="vplay"></span></div>
+        </div>
+        <div class="cap">To revisit earlier shared videos you have to scroll back up.</div>
+      </div>
+      <div class="body">
+        <p class="para">But the deeper reason isn't cost — it's a <b>mismatch in mental models</b>. Everything on TikTok's home feed is an infinite, algorithm-fed stream you scroll forward through. The verbs of this container are "watch, like, swipe away." But the moment a video is shared, it's pulled out of its native container and dropped into one with completely different rules. Videos in DMs are finite; the receiver has to scroll backward to revisit earlier content, which runs directly against the original habit. Here the verbs become "watch, read the message, reply."</p>
+        <p class="para">The video itself hasn't changed — what changed is the container it sits in. So the receiver faces this situation: <b>content built to be swiped, packed into a container that demands a reply</b>. They bring an FYP mindset (laugh, swipe away) to DM content (which signals you owe a reply), and users can't reconcile that shift.</p>
+      </div>
+    </div>
+
+    <div class="show vtop">
+      <div class="ph">
+        <div class="phone"><span class="island"></span><span class="bz l1"></span><span class="bz l2"></span><span class="bz l3"></span><span class="bz r1"></span>
+          <div class="screen vid"><video src="previous/problem4.mp4" muted playsinline preload="metadata"></video><span class="vplay"></span></div>
+        </div>
+        <div class="cap">The home FYP is far more carefully curated content.</div>
+      </div>
+      <div class="body">
+        <p class="para">At the same time — and more importantly — everything you see on the home FYP is carefully prepared for you by the algorithm. Whether it's the content, the length, or the creators you follow, you have expectations as you scroll. Content from friends, on the other hand, is based on their understanding of you and their algorithm. Sure, users find moments of resonance in it — but it's just as easy to find divergence. This content isn't organized for you by the algorithm and has <b>no priority order</b>; it's all treated identically, arranged by time. It's very easy to <b class="pk">lose patience</b> partway through.</p>
+      </div>
+    </div>
+
+    <div class="show vtop">
+      <div class="ph">
+        <div class="phone"><span class="island"></span><span class="bz l1"></span><span class="bz l2"></span><span class="bz l3"></span><span class="bz r1"></span>
+          <div class="screen"><img src="previous/sharewithyou%20in%20normal%20feed.PNG" alt="A friend's shared video appears in the normal feed with a share tag" loading="lazy"/></div>
+        </div>
+        <div class="cap">Shared videos already appear in the normal feed.</div>
+      </div>
+      <div class="body">
+        <p class="para">Users can now come across a friend's shared video in the FYP, but content-based sharing shouldn't stop at "watched" — the point is the social connection built on top of it. Simply watching the video doesn't resolve the sender/receiver positions between A and B: the sender doesn't know the receiver watched, and the receiver still has a message sitting in their DMs. What we need to build is <b>a response that works for both sides</b>.</p>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ===== IDEATION & WHY IT WORKS ===== -->
+  <div class="region" id="rp" data-nav="Ideation">
+  <div class="region-head"><div><div class="ren">02 / Explore</div><div class="rt">Ideation &amp; Why it works</div></div></div>
+
+  <section class="block" id="s6" data-nav="Ideation">
+        <p class="hmw-lead">From this analysis, I identified the core problems in the video-sharing experience today — <b>the receiver's cost is too high, the mental models are mismatched, and the two sides' positions are out of sync</b> — and broke them into three How-Might-We questions:</p>
+        <div class="hmw-list">
+          <div class="hmw-q"><span class="k"></span><p>How might we let the receiver signal “I got it” and let the sender feel “my share was seen” — without binding the response solely to typing a reply?</p></div>
+          <div class="hmw-q"><span class="k"></span><p>How might we turn a friend's shares from an “inbox that demands you process each one” back into a “stream you can simply scroll through”?</p></div>
+          <div class="hmw-q"><span class="k"></span><p>How might we help the receiver, faced with 20 undifferentiated shares, first see “which few are most worth watching right now”?</p></div>
+        </div>
+        <p class="hmw-lead" style="margin-top:28px">For each question, I <b>studied the mental models of TikTok and comparable products in depth</b>, thinking through both the sender's and the receiver's perspective to imagine possible solutions. Here are my candidate solutions for each question:</p>
+
+    <div class="qgroup">
+      <div class="q-label">01 HMW</div>
+      <p class="q-text">How might we let the receiver signal “I got it” and let the sender feel “my share was seen” — without binding the response solely to typing a reply?</p>
+      <p class="q-thought"><b>“I got it” shouldn't be expressible only by typing.</b> I want receivers to respond with one-tap reactions that fit the content's context, and to let natural behaviors like liking and bookmarking automatically become receipts — so the sender can feel the share was seen without waiting for a text.</p>
+
+      <div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">01</span>
+        <h3 class="ib-name">Smart Reactions</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=1&amp;bare=1" loading="lazy" title="Smart Reactions"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">Contextual quick reactions</div>
+          <p class="para">AI reads the video's tags (e.g. food) and the sender's comment, then shows 3 dynamic “emoji + text” reactions in the existing bottom reply bar — for example Yum😋 / Let's go😄 / I'm in — replacing the fixed emoji. <b>One tap sends it, no keyboard required.</b> For the receiver, even without finishing the whole video, they can land a lightweight, context-appropriate response; for the sender, they instantly get feedback closer to what they hoped for — a meme gets “lol dead,” a restaurant gets “I'm in.”</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+
+<div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">02</span>
+        <h3 class="ib-name">Interaction Receipts</h3>
+        <span class="ib-tag alt">Sender</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=2&amp;bare=1" loading="lazy" title="Interaction Receipts"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">Behavior-synced receipts</div>
+          <p class="para">Let strong interactions like bookmarking count as a response too. When a receiver bookmarks a friend's shared video, the system automatically posts a lightweight receipt bubble in the DM — e.g. <code>[Name] bookmarked your video</code>. <b>Only strong interactions like bookmarking show up — likes don't</b> — because a bookmark means “I want to go check this out with you.” For the sender, no need to wait for a text to see that the other person genuinely cares about this content; for the receiver, no deliberate typing — a natural browsing behavior already conveys interest.</p>
+<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="qgroup">
+      <div class="q-label">02 HMW</div>
+      <p class="q-text">How might we turn a friend's shares from an “inbox that demands you process each one” back into a “stream you can simply scroll through”?</p>
+      <p class="q-thought">A shared video is still TikTok at heart, yet it's boxed into a DM you have to scroll backward through. I want to put it back into a container consistent with the FYP scroll — <b>a Shared Feed that only shows friends' shares and scrolls downward</b> — so “watching” becomes effortless again.</p>
+
+      <div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">01</span>
+        <h3 class="ib-name">Shared Feed Tab</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=3&amp;bare=1" loading="lazy" title="Shared Feed Tab"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">“Shared with Me” Feed (Friends tab)</div>
+          <p class="para">Put shared content into a container that matches the mental model. Next to the For You Page, add a “Shared with You” tab — a vertical scrolling player that shows only friends' shares. A floating quick-reply button at the bottom lets you reply while watching. Users still see friends' shared videos in the normal feed, but there's an entry point at the bottom to jump to the Friends page. For the receiver, the same interactions as scrolling the FYP now handle shares — <b>turning the “scroll up to revisit” into a “scroll down to browse”</b> — with no need to open each friend's DM one by one; for the sender, the receiver's barrier to processing shares is lower, so a response is more likely to happen.</p>
+<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="qgroup">
+      <div class="q-label">03 HMW</div>
+      <p class="q-text">How might we help the receiver, faced with 20 undifferentiated shares, first see “which few are most worth watching right now”?</p>
+      <p class="q-thought">In a stack of 20 undifferentiated shares, attention is limited. I want to <b>let the most worth-watching-now surface first</b>: rank by reply value, dedupe and sync “seen” status, turn the Inbox from a task notification into a content draw, and use summaries to help the receiver catch up at a glance.</p>
+
+      <div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">01</span>
+        <h3 class="ib-name">Priority Slot Queue</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=4&amp;bare=1" loading="lazy" title="Priority Slot Queue"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">Reply-value ranking</div>
+          <p class="para">Rank shared content by “how worth responding to it is,” not by time. When you open a friend's shares, the player uses a ranking algorithm to <b>arrange the queue into a deliberate emotional flow</b>. Highest priority goes to action / high-intent content (a friend commented, a location tag, an event invite, or a shopping link); second, quick dopamine (a short, fun meme to shift the mood); third, deep engagement (longer, more information-rich videos). The profile on the left shows which friend shared it, and commented content is surfaced first. For the receiver, limited energy goes first to the most important, most response-worthy content, and mixing content types avoids the fatigue of watching the same kind back-to-back; for the sender, high-intent content like restaurant recommendations and event invites gets seen first, making the genuinely hoped-for response — “let's go together this weekend” — more likely.</p>
+<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+
+<div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">02</span>
+        <h3 class="ib-name">Seen Sync</h3>
+        <span class="ib-tag alt">Both</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=5&amp;bare=1" loading="lazy" title="Seen Sync"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">Dedupe &amp; seen-sync</div>
+          <p class="para">Stop duplicate content from taking up the receiver's attention. For the sender, content the receiver already saw on the FYP is marked “seen” in the message; for the receiver, when an FYP recommendation overlaps with a friend's share, a share tag appears on the video along with a one-tap reply entry. When a video in the DM is a duplicate, <b>the system automatically skips it for you and marks it read</b>. For the receiver, no need to process the same content twice; for the sender, they learn the other person actually already watched it, avoiding the false impression of being ignored.</p>
+<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+
+<div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">03</span>
+        <h3 class="ib-name">Inbox Value</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=6&amp;bare=1" loading="lazy" title="Inbox Value"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">Content value, front and center</div>
+          <p class="para">Turn the Inbox from a “task notification” into a “content draw.” The Inbox shows the content itself and uses a summary to invite the tap — e.g. <code>shared XXX doing XXX</code>. When you open it, it doesn't start from the earliest message but <b>plays from the most response-worthy video first</b>. Videos are also no longer shown as messages — they split into a separate channel from text; a small pill on the video side lets users clearly see the count of texts vs. videos. If there's no text message, AI helps summarize the key points. For the receiver, you can judge before entering whether this is worth watching now — the sense of obligation becomes appeal; for the sender, the content's value is surfaced up front, raising the odds it gets opened.</p>
+<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+
+<div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">04</span>
+        <h3 class="ib-name">Thread Summary</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=8&amp;bare=1" loading="lazy" title="Thread Summary"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">Thread summary</div>
+          <p class="para">When the user opens the message page, they <b>jump straight to where the unread begins</b>, and AI condenses the pile of shares into a categorized summary. On entering the DM it scrolls to the top and gives a summary of the unread videos, which can be browsed by category. For the receiver, a full overview — pick the topics you care about instead of paging through one by one; for the sender, even if the other person didn't watch everything, the key points still come across.</p>
+<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="qgroup" style="display:none">
+      <p class="q-text">How might we introduce a bit of intent or cost at the moment of sending, so shares are more precise and the receiver's burden is reduced at the source?</p>
+
+      <div class="ib" style="display:none">
+      <div class="ib-hd">
+        <span class="ib-num">01</span>
+        <h3 class="ib-name">Intent Shortcut</h3>
+        <span class="ib-tag alt">Sender</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=7&amp;bare=1&amp;still=1" loading="lazy" title="Intent Shortcut"></iframe><div class="proto-live">Interactive prototype · tap to try</div></div>
+        <div class="body">
+          <div class="ib-cn">Send-intent shortcut</div>
+          <p class="para">Let the sender express “why I'm sending this to you” at the moment of sharing. While sharing, the user sees shortcuts relevant to the video's context — a restaurant video shows “Go together?” “Check it out?” “I'm in.” Once the sender taps one, <b>the receiver sees not just the video but this intent tag</b>. For the sender, a lightweight way to express sharing intent with no extra typing; for the receiver, faster to understand why this video was sent to them, making an appropriate response easier.</p>
+<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+    </div>
+  </section>
+  </div>
+
+  <!-- ===== DIRECTION & FINAL PROTOTYPE ===== -->
+  <div class="region" id="rd" data-nav="Final Decision">
+  <div class="region-head"><div><div class="ren">03 / Decide</div><div class="rt">Final Decision</div></div></div>
+
+  <section class="block" id="s7" data-nav="Direction">
+    <div class="final-box">
+      <div class="final-ph">
+        <iframe class="final-frame" src="prototype/03-shared-feed-tab.html?bare=1" loading="lazy" title="Shared Feed Tab — final prototype"></iframe>
+        <div class="proto-live">Interactive prototype · tap to try</div>
+        <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+      </div>
+      <div class="final-txt">
+        <div class="final-part">
+          <div class="final-label">Why this one</div>
+          <p class="para">Shared Feed solves the most fatal problem: messages in the DM scroll upward, you scroll to the bottom, and you hit duplicates and things you've already seen. By consolidating friends' shared videos, Shared Feed shapes a new, socially-driven video stream, and the low-cost interactions this page offers best fit users' mental models and habits. Users no longer have to exit a video in the DM to read a friend's comment — in the Shared Feed they can watch and read the friend's comment at the same time and casually tap a reaction, sharply lowering the cost of watching shared videos. And Smart Reactions, auto-matched to the video's tags and the sender's comment, is the context-fitting, one-tap response action inside this container. <b>The video stream lowers the cost of “watching”; the context-appropriate reply lowers the cost of “responding.”</b> It solves both problems at once.</p>
+        </div>
+        <div class="final-part">
+          <div class="final-label">My design approach</div>
+          <p class="para">Unlike the ordinary video layout, the Shared with You page centers the video on <b>the friend and the act of sharing</b>. I deliberately downplayed the original video's title and caption, compressing them into a single line, and emphasized the friend who shared it, the time, and the comment they left you. For the sender, the odds that a shared video gets watched and replied to go up.</p>
+          <p class="para">At the same time, a video shared by multiple people won't appear repeatedly, and videos no longer exist as DM messages — the new inbox only shows the count of text messages. Once the two are separated, users can enjoy this friend-shared video stream far more; <b>they actually start hoping friends share as many videos as possible</b>. And after finishing the feed, users are guided back to the FYP to share new videos, bridging them from receiver into sender.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <footer>
+    <div class="f">
+      <div class="ttlogo">
+        <svg class="tt-note" viewBox="0 0 24 24" aria-hidden="true" style="width:26px;height:26px">
+          <use href="#ttn" transform="translate(-0.8 -0.25)" fill="#25F4EE" style="mix-blend-mode:screen"/>
+          <use href="#ttn" transform="translate(0.8 0.25)" fill="#FE2C55" style="mix-blend-mode:screen"/>
+          <use href="#ttn" fill="#F8F8FA"/>
+        </svg>
+        <span class="tt-word" style="font-size:16px">TikTok</span>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:7px;">
+        <a class="foot-link" href="https://github.com/nlt7z/Shared-with-You-Feed-Design" target="_blank" rel="noopener">GitHub · Prototype ↗</a>
+        <div class="brand">Shared with You · Case Study · Yuan Fang</div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+(function(){
+  var sections=[].slice.call(document.querySelectorAll('.region'));
+  var nav=document.getElementById('nav');
+  sections.forEach(function(s){
+    var a=document.createElement('a');a.href='#'+s.id;
+    a.innerHTML='<span class="tick"></span><span class="lab">'+(s.getAttribute('data-nav')||'')+'</span>';
+    nav.appendChild(a);
+  });
+  var prog=document.getElementById('progress');
+  function onScroll(){var st=window.scrollY,h=document.documentElement.scrollHeight-window.innerHeight;prog.style.width=(h>0?(st/h*100):0)+'%';}
+  window.addEventListener('scroll',onScroll,{passive:true});onScroll();
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var i=sections.indexOf(e.target);[].forEach.call(nav.children,function(l,j){l.classList.toggle('on',j===i);});}});},{rootMargin:'-45% 0px -45% 0px'});
+    sections.forEach(function(s){io.observe(s);});
+  }
+
+  // sync the explanation panel + one-line caption with the concept selected inside the prototype
+  var docBlocks=[].slice.call(document.querySelectorAll('#protoDoc .pdoc'));
+  var protoCap=document.getElementById('protoCap');
+  function syncCap(){
+    var act=document.querySelector('#protoDoc .pdoc.on'); if(!act||!protoCap) return;
+    var nEl=act.querySelector('.pdoc-n'), tEl=act.querySelector('h3'), eEl=act.querySelector('.pdoc-en');
+    protoCap.innerHTML=(nEl?'<span class="pc-n">'+nEl.textContent+'</span>':'')+(tEl?tEl.textContent:'')+(eEl?'<span class="pc-en">'+eEl.textContent+'</span>':'');
+  }
+  syncCap();
+  window.addEventListener('message',function(e){
+    var d=e&&e.data; if(!d||d.type!=='dc-idea') return;
+    var n=String(d.n);
+    docBlocks.forEach(function(b){ b.classList.toggle('on', b.getAttribute('data-n')===n); });
+    syncCap();
+  });
+
+  // replay button (under each idea's text) → tell that block's prototype iframe to replay
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest && e.target.closest('.ib-replay'); if(!btn) return;
+    var box=btn.closest('.ib')||btn.closest('.final-proto'); if(!box) return;
+    var f=box.querySelector('iframe');
+    if(f&&f.contentWindow){ f.contentWindow.postMessage({type:'dc-replay'},'*'); }
+  });
+})();
+</script>
+<script>/*vidctl*/
+(function(){
+  var vids=[].slice.call(document.querySelectorAll(".screen.vid"));
+  vids.forEach(function(sc){
+    var v=sc.querySelector("video"); if(!v) return;
+    // iOS Safari: muted inline autoplay only works if these are enforced as properties/attrs
+    v.muted=true; v.defaultMuted=true; v.playsInline=true;
+    v.setAttribute("muted",""); v.setAttribute("playsinline",""); v.setAttribute("webkit-playsinline","");
+    var plays=0, done=false;
+    function mark(){ sc.classList.toggle("playing", !v.paused); }
+    function tryPlay(){ v.muted=true; var p=v.play(); if(p&&p.catch)p.catch(function(){}); }
+    function go(){ v.muted=true; try{v.currentTime=0;}catch(e){} tryPlay(); }
+    v.addEventListener("play", mark);
+    v.addEventListener("pause", mark);
+    v.addEventListener("ended", function(){ plays++; if(plays<2){ go(); } else { done=true; v.pause(); } });
+    sc.addEventListener("click", function(){ if(v.paused){ plays=0; done=false; go(); } else { v.pause(); } });
+    if("IntersectionObserver" in window){
+      var io=new IntersectionObserver(function(es){ es.forEach(function(e){
+        if(e.isIntersecting){ if(!done && v.paused){ tryPlay(); } }
+        else { if(!v.paused) v.pause(); }
+      }); },{threshold:0.35});
+      io.observe(sc);
+    }
+  });
+  // hero: force muted inline autoplay on mobile (iOS can ignore the attribute after load)
+  var hero=document.querySelector(".hero-vid");
+  if(hero){
+    hero.muted=true; hero.defaultMuted=true; hero.playsInline=true;
+    function kick(){ var p=hero.play(); if(p&&p.catch)p.catch(function(){}); }
+    hero.addEventListener("loadedmetadata", kick); kick();
+    document.addEventListener("touchstart", function once(){ kick(); document.removeEventListener("touchstart", once); }, {passive:true});
+  }
+})();
+</script>
+</body>
+</html>

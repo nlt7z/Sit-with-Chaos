@@ -14,6 +14,27 @@ import { ProjectCard, type Project } from "./ProjectCard";
 
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
+const tiktok: Project = {
+  slug: "tiktok",
+  title: "TikTok — Redesigned how friends' shared videos surface in a Shared with You feed",
+  description:
+    "Self-initiated product case study: turning the DM inbox of friend-shared videos into a scrollable Shared Feed with one-tap Smart Reactions and reply-value ranking.",
+  media: {
+    src: "/assets/TikTok/showcase.mp4",
+    alt: "TikTok Shared with You — feed design walkthrough",
+    type: "video",
+  },
+  flowSteps: ["smart reactions", "shared feed", "reply-value ranking"],
+  meta: { year: "2026", role: "Self-initiated", status: "Concept" },
+  tags: ["Social · UX", "Interaction Design"],
+  logo: {
+    src: "/assets/TikTok/tiktok-logo.svg",
+    alt: "TikTok",
+    className: "h-5 w-auto md:h-6",
+  },
+  hoverTint: "rgba(254, 44, 85, 0.12)",
+};
+
 const aiCharacter: Project = {
   slug: "ai-character",
   title: "Alibaba Cloud — Shipped Qwen Character's Interactive Showrooms MVP",
@@ -126,6 +147,9 @@ type WorkRow =
   | { kind: "single"; project: Project }
   | { kind: "pair"; left: Project; right: Project };
 
+// NOTE: `tiktok` is intentionally hidden for now — the case study, its route
+// (/work/tiktok), and assets all still exist; add `tiktok` back into the two
+// arrays below to re-surface the card.
 const workRows: WorkRow[] = [
   { kind: "single", project: liner },
   { kind: "single", project: aiCharacter },
@@ -136,6 +160,8 @@ const workRows: WorkRow[] = [
 
 // Flat order for the stacked /work view — each project becomes one sticky layer.
 const stackProjects: Project[] = [liner, aiCharacter, meituanIm, studioEngine, qbix];
+
+void tiktok; // referenced to keep the hidden project defined without an unused-var warning
 
 const itemSpring = {
   hidden: { opacity: 0, y: 42 },
