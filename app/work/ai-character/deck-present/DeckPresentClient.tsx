@@ -55,6 +55,7 @@ const SLIDES = [
   { id: "d1-showrooms",     chapter: "Decision 01"  },
   { id: "d2-title",         chapter: "Decision 02"  },
   { id: "d2-map",           chapter: "Decision 02"  },
+  { id: "d2-choice",        chapter: "Decision 02"  },
   { id: "heartbeat",        chapter: "Decision 02"  },
   { id: "heartbeat-logic",  chapter: "Decision 02"  },
   { id: "story",            chapter: "Decision 02"  },
@@ -71,6 +72,7 @@ const SLIDES = [
   { id: "exploration",      chapter: "Method"       },
   { id: "process",          chapter: "Method"       },
   { id: "how-i-worked",     chapter: "Method"       },
+  { id: "visual-language",  chapter: "Method"       },
   { id: "showrooms",        chapter: "Showcase"     },
   { id: "showcase-live",    chapter: "Showcase"     },
   { id: "backend-before",   chapter: "Contribution" },
@@ -615,6 +617,75 @@ function SlideD2Map({ reduced }: { reduced: boolean | null }) {
   );
 }
 
+// §07.5 Decision 02 — direction trade-off: why moments became the core template
+function SlideD2Choice({ reduced }: { reduced: boolean | null }) {
+  const candidates = [
+    { name: "Heartbeat",    zh: "Inner monologue",  chosen: false },
+    { name: "Story",        zh: "Story unlock",     chosen: false },
+    { name: "Alt Universe", zh: "Branching events", chosen: false },
+    { name: "Moments",      zh: "Feed",             chosen: true  },
+  ];
+  const reasons = [
+    { k: "Highest capability density", v: "One feature proves two abilities at once — long-term memory and real-time reaction." },
+    { k: "Most controllable cost",     v: "Lightest on both model inference and engineering — unlike Alt Universe's per-user live generation." },
+    { k: "Fully reusable",             v: "Touches no part of the chat UI — it reuses the existing conversation layout as-is." },
+    { k: "Structurally consistent",    v: "Lives in the right-side drawer, matching the side-panel structure every showroom already has." },
+    { k: "Easiest to grasp",           v: "No extra interaction cost — users understand what it is at a glance." },
+    { k: "Most direct mental model",   v: "A “moments feed” is the most immediate, relatable metaphor for the user." },
+  ];
+  return (
+    <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-16 ${CANVAS}`}>
+      <LivingAura reduced={reduced} />
+      <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
+        <motion.div variants={FADE}><Eye>Decision 02 · Direction Trade-off</Eye></motion.div>
+        <Mask delay={0.1}>
+          <h2 className={`text-balance mt-4 font-display font-light leading-[1.2] tracking-[-0.026em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.4rem, 2.9vw, 2.3rem)" }}>
+            I built four feature directions for the romance room — and made <em className="not-italic text-[#FF6A00]">moments</em> the core.
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[13.5px] text-white/[0.66]`}>
+          I prototyped all four. Moments became the reusable core template — not because it was the flashiest, but because one feature satisfied the most constraints at once.
+        </motion.p>
+
+        {/* Four candidates — moments highlighted as “chosen” */}
+        <motion.div variants={UP} className="mt-6 flex flex-wrap gap-2.5">
+          {candidates.map((c) => (
+            <span key={c.name}
+              className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 font-sans text-[12px] font-medium ${
+                c.chosen
+                  ? "bg-[#FF6A00] text-[#0A0A0A]"
+                  : "bg-white/[0.05] text-white/[0.6]"
+              }`}>
+              <span>{c.name}</span>
+              <span className={c.chosen ? "text-[#0A0A0A]/70" : "text-white/40"}>· {c.zh}</span>
+              {c.chosen && <span className="font-mono text-[10px] uppercase tracking-[0.12em]">✓ Chosen</span>}
+            </span>
+          ))}
+        </motion.div>
+
+        {/* Why moments — six constraints */}
+        <motion.div variants={UP} className={`mt-8 grid border-t ${HAIR} sm:grid-cols-2`}>
+          {reasons.map((r, i) => (
+            <motion.div key={r.k}
+              className={`flex gap-3.5 py-4 sm:px-6 ${
+                i > 0 ? `border-t ${HAIR}` : ""
+              } ${i === 1 ? "sm:border-t-0" : ""} ${i % 2 === 1 ? "sm:border-l" : "sm:pl-0"}`}
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: E, delay: 0.3 + i * 0.07 }}>
+              <span className="shrink-0 font-mono text-[11px] text-[#FF6A00]">{String(i + 1).padStart(2, "0")}</span>
+              <div className="min-w-0">
+                <p className={`font-sans text-[13px] font-medium ${HEAD}`}>{r.k}</p>
+                <p className="mt-1 font-sans text-[12.5px] leading-[1.7] text-white/[0.58]">{r.v}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
 // ── Feature template: copy left, live prototype right ─────────────────────────
 function ProtoFeatureSlide({
   reduced, eye, title, lead, src, caption, notShipped = false, note,
@@ -688,7 +759,9 @@ function SlideHeartbeat({ reduced }: { reduced: boolean | null }) {
       reduced={reduced}
       eye="Romance · 1 of 4 · Heartbeat Power"
       title="The inner-monologue reveal."
+      notShipped
       lead="Curiosity gap + emotional privilege — glimpsing hidden thoughts feels like being let in. The intimacy hook that turns a chat into attachment."
+      note="Why it didn't ship: prototyped as an intimacy hook — Moments Feed shipped as the reusable core instead."
       src={PROTO.heartbeat}
       caption="Live romance room — tap the heart to reveal the inner monologue"
     />
@@ -705,7 +778,9 @@ function SlideStoryUnlock({ reduced }: { reduced: boolean | null }) {
       reduced={reduced}
       eye="Romance · 2 of 4 · Story Unlock"
       title="Backstory revealed through depth."
+      notShipped
       lead="Open loops + progression — an unfinished backstory pulls you forward, so depth itself becomes the reward that lengthens every session."
+      note="Why it didn't ship: prototyped as a progression hook — Moments Feed shipped as the reusable core instead."
       src={PROTO.story}
       caption="Live romance room — go deeper, the character opens up"
     />
@@ -863,35 +938,54 @@ function SlideCodeDrawer({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §20.5 Early process — placeholder for early exploration artifacts (to be added)
+// §20.5 Early process — the directions I rejected / iterated past (each with a reason)
 function SlideExploration({ reduced }: { reduced: boolean | null }) {
-  const earlyWork = [
-    { src: "/assets/ai-character/previous/previous-version.jpg",    alt: "Early version — research & direction exploration 01" },
-    { src: "/assets/ai-character/previous/previous--version-2.jpg", alt: "Early version — research & direction exploration 02" },
-    { src: "/assets/ai-character/previous/previous-version-3.png",  alt: "Early version — research & direction exploration 03" },
+  const tried = [
+    {
+      src: "/assets/ai-character/research-character-ai-screenshot.png",
+      tag: "Rejected · Generic chat box",
+      title: "Just another chat box.",
+      reason: "Memory and difference stay buried in the conversation — users scroll and feel nothing new. It couldn't prove capability. Rejected.",
+    },
+    {
+      src: "/assets/ai-character/previous/previous-version.jpg",
+      tag: "Iterated · Early romance room",
+      title: "Capability hidden in the chat.",
+      reason: "The first version kept “cognition” inside the conversation flow — still invisible. → It pushed me to move it into the right-side panel, as visible proof.",
+    },
   ];
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className={SPLIT} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center md:w-[34%] md:shrink-0">
-          <motion.div variants={FADE}><Eye>Early Process · Exploration</Eye></motion.div>
+        <div className="flex min-w-0 flex-col justify-center md:w-[32%] md:shrink-0">
+          <motion.div variants={FADE}><Eye>Early Process · Rejected Directions</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className={`text-balance mt-5 font-display font-light leading-[1.2] tracking-[-0.016em] ${HEAD}`}
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              Before the four rooms — the scrappy early work.
+              Before the four rooms — the directions I rejected and iterated past.
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            Research, sketches, and the directions I rejected on the way to the showrooms.
+            Every rejection was answering the same question: how do you make the model's capability visible?
           </motion.p>
         </div>
-        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-3 content-center gap-3">
-          {earlyWork.map((img) => (
-            <div key={img.src} className="relative aspect-[16/9] min-h-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
-              <img src={img.src} alt={img.alt}
-                className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
-            </div>
+        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 content-center gap-4">
+          {tried.map((t, i) => (
+            <motion.figure key={t.src}
+              className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]"
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: E, delay: 0.3 + i * 0.1 }}>
+              <div className="relative aspect-[16/10] min-h-0 overflow-hidden bg-black/40">
+                <img src={t.src} alt={t.title}
+                  className="absolute inset-0 h-full w-full object-cover object-top" loading="lazy" decoding="async" />
+              </div>
+              <figcaption className={`shrink-0 border-t ${HAIR} px-4 py-3.5`}>
+                <p className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-[#FF6A00]/85">{t.tag}</p>
+                <p className={`mt-2 font-display text-[0.98rem] font-light ${HEAD}`}>{t.title}</p>
+                <p className="mt-1.5 font-sans text-[12px] leading-[1.7] text-white/[0.58]">{t.reason}</p>
+              </figcaption>
+            </motion.figure>
           ))}
         </motion.div>
       </motion.div>
@@ -945,6 +1039,74 @@ function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
 }
 
 // §22 Process — visual identity glimpse
+// §21.5 Visual language — each room's palette / type / icon follows its emotional theme
+function SlideVisualLanguage({ reduced }: { reduced: boolean | null }) {
+  const rooms = [
+    {
+      room: "Romance",
+      src: "/assets/ai-character/ux-strategy-romance-proof.png",
+      swatches: ["#2A1E17", "#C9A227", "#6E5A47"],
+      note: "Warm dark · Serif",
+      body: "Referencing Chinese romance games (Love and Deepspace, Mr Love) — warm dark tones with serif headlines, writing “refined and intricate” into the letterforms.",
+    },
+    {
+      room: "Astrology",
+      src: "/assets/ai-character/interaction-astrology-room.png",
+      swatches: ["#4B3F7A", "#D4AF37", "#E4A6C4"],
+      note: "Blue-violet · Gold · a touch of pink",
+      body: "Blue-violet and gold for the mystique of tarot and star charts; a touch of pink keeps a girlish note — fitting a room where you ask the stars about love.",
+    },
+    {
+      room: "Therapy",
+      src: "/assets/ai-character/interaction-therapy-room.png",
+      swatches: ["#7FA8D6", "#EAF1FA", "#F0C7DA"],
+      note: "Healing blue · Hug icon",
+      body: "Built with a university psychology professor: a layer of blue over a warm, gentle base — healing yet rigorous. A visible analysis panel plus a hug icon make “being understood” something you can see.",
+    },
+  ];
+  return (
+    <section className={`relative flex h-full flex-col overflow-hidden px-8 pb-6 pt-8 md:px-12 ${CANVAS}`}>
+      <LivingAura reduced={reduced} />
+      <motion.div className="relative z-10 mx-auto w-full max-w-6xl" variants={STG} initial="hidden" animate="show">
+        <motion.div variants={FADE}><Eye>Design · Visual Language</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.026em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
+            One room, one visual language — color and type follow each room's mood.
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-3 max-w-2xl ${BODY} text-[13px] text-white/[0.62]`}>
+          The showrooms don't share one template. Each room's palette, type, and icons are chosen for its emotional theme.
+        </motion.p>
+      </motion.div>
+      <div className="relative z-10 mx-auto mt-5 grid w-full max-w-6xl flex-1 grid-cols-3 gap-4" style={{ maxHeight: "60vh" }}>
+        {rooms.map((r, i) => (
+          <motion.article key={r.room}
+            className="flex min-h-0 flex-col overflow-hidden rounded-lg bg-white/[0.02]"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: E, delay: 0.22 + i * 0.1 }}>
+            <div className="relative min-h-0 flex-1 overflow-hidden bg-black/40">
+              <img src={r.src} alt={`${r.room} showroom visual`} className="h-full w-full object-cover object-top" loading="lazy" decoding="async" />
+            </div>
+            <div className={`shrink-0 border-t ${HAIR} px-4 py-4`}>
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[#FF6A00]">{r.room} Room</p>
+                <div className="flex items-center gap-1">
+                  {r.swatches.map((c) => (
+                    <span key={c} className="h-3 w-3 rounded-full border border-white/15" style={{ background: c }} />
+                  ))}
+                </div>
+              </div>
+              <p className="mt-2 font-sans text-[11px] font-medium text-white/[0.72]">{r.note}</p>
+              <p className="mt-2 font-sans text-[11.5px] leading-[1.7] text-white/[0.56]">{r.body}</p>
+            </div>
+          </motion.article>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function SlideProcess({ reduced }: { reduced: boolean | null }) {
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
@@ -1476,6 +1638,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "d1-showrooms":     return <SlideD1Showrooms reduced={reduced} />;
     case "d2-title":         return <SlideD2Title reduced={reduced} />;
     case "d2-map":           return <SlideD2Map reduced={reduced} />;
+    case "d2-choice":        return <SlideD2Choice reduced={reduced} />;
     case "heartbeat":        return <SlideHeartbeat reduced={reduced} />;
     case "heartbeat-logic":  return <SlideHeartbeatLogic reduced={reduced} />;
     case "story":            return <SlideStoryUnlock reduced={reduced} />;
@@ -1491,6 +1654,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "code-drawer":      return <SlideCodeDrawer reduced={reduced} />;
     case "exploration":      return <SlideExploration reduced={reduced} />;
     case "how-i-worked":     return <SlideHowIWorked reduced={reduced} />;
+    case "visual-language":  return <SlideVisualLanguage reduced={reduced} />;
     case "process":          return <SlideProcess reduced={reduced} />;
     case "showrooms":        return <SlideShowrooms reduced={reduced} />;
     case "showcase-live":    return <SlideShowcaseLive reduced={reduced} />;

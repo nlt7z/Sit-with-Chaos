@@ -1206,11 +1206,17 @@ const innovations: {
   prototypeSrc: string;
   videoCaption: string;
   notShipped?: true;
+  /** Per-item reason shown under a not-shipped feature; falls back to a generic line. */
+  notShippedNote?: string;
   /** Collapsed to a header by default; the visitor expands to reveal the prototype. */
   collapsible?: true;
 }[] = [
   {
     id: "heartbeat-power",
+    collapsible: true,
+    notShipped: true,
+    notShippedNote:
+      "Prototyped as an intimacy hook — Moments Feed shipped as the reusable core instead.",
     name: "Heartbeat Power",
     capability: "Real-time generation + character depth modeling",
     psychology: "Intimacy|Being let into the character's hidden thoughts.",
@@ -1227,6 +1233,9 @@ const innovations: {
   {
     id: "story-unlock",
     collapsible: true,
+    notShipped: true,
+    notShippedNote:
+      "Prototyped as a progression hook — Moments Feed shipped as the reusable core instead.",
     name: "Story Unlock",
     capability: "Progressive memory building",
     psychology: "Progression|An open loop pulls you forward.",
@@ -1265,6 +1274,8 @@ const innovations: {
     prototypeSrc: FEATURE_PROTOTYPES.altUniverse,
     videoCaption: "A scene only your history could trigger.",
     notShipped: true,
+    notShippedNote:
+      "Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.",
     detail: (
       <>
         Scenes triggered by <Em>personal history</Em> recontextualize the relationship — variable rewards from real shared context.
@@ -1407,7 +1418,7 @@ function InteractionInnovationList() {
                       )}
                       {item.notShipped && (
                         <p className="mt-3 font-sans text-[12px] leading-relaxed text-textSecondary/70">
-                          Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.
+                          {item.notShippedNote ?? "Designed and prototyped, not shipped."}
                         </p>
                       )}
                       <FeaturePrototypeEmbed
@@ -2039,7 +2050,20 @@ export default function CaseStudyContent() {
 
           <InteractionInnovationList />
 
+          <p>
+            I prototyped all four, but <Em>Moments Feed</Em> became the reusable core — not the flashiest, but the one direction that satisfied the most constraints at once. It proves two capabilities in a single surface (<Em>long-term memory</Em> and <Em>real-time reaction</Em>); it&apos;s the most cost-controllable for both model inference and engineering, unlike Alternate Universe&apos;s per-user live generation; it reuses the existing chat layout untouched; it lives in the same <Em>right-side drawer</Em> every showroom already shares; and &ldquo;a moments feed&rdquo; is the most immediate mental model for users. So it became the template the other rooms were built from.
+          </p>
+
           <AdditionalShowroomsGallery />
+
+          <div className="pt-2">
+            <h3 className="font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:text-[1.32rem]">
+              One room, one visual language
+            </h3>
+            <p className="mt-4 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
+              The showrooms don&apos;t share one skin — each room&apos;s palette, type, and icons follow its emotional theme. The <Em>romance</Em> room borrows from Chinese romance games (<Em>Love and Deepspace</Em>, <Em>Mr Love</Em>): warm dark tones and serif headlines that read as refined and intricate. The <Em>astrology</Em> room uses blue-violet and gold for tarot mystique, with a touch of pink for a girlish note. The <Em>therapy</Em> room — built with a university psychology professor — layers a calming blue over a warm base to stay healing yet rigorous, and pairs a visible analysis panel with a hug icon so that &ldquo;being understood&rdquo; is something you can see.
+            </p>
+          </div>
         </Section>
 
         {/* D3: GAMIFICATION + CODE TOOLS */}
@@ -2050,7 +2074,7 @@ export default function CaseStudyContent() {
         >
           {/* Pair 1 — both reply nudges in one line, then the prototype that demonstrates them. */}
           <div>
-            <p className="max-w-prose font-sans text-[15px] leading-relaxed text-textSecondary">
+            <p className="max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
               Two nudges guide users to the <Em>wow moment</Em> without breaking flow: <Em>Inspiration Response</Em> offers three reply options — action, emotion, expression — that feel like gameplay, not messaging; <Em>Continue Response</Em> extends the story from context in one tap, no effort required.
             </p>
             <FeaturePrototypeEmbed
@@ -2066,7 +2090,7 @@ export default function CaseStudyContent() {
             <h3 className="font-display text-[1.2rem] font-light tracking-tight text-textPrimary md:text-[1.32rem]">
               Code drawer, not console
             </h3>
-            <p className="mt-4 max-w-prose font-sans text-[15px] leading-relaxed text-textSecondary">
+            <p className="mt-4 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
               YAML specs, prompts, and constraints slide open beside the live demo — no context switch. Evaluators inspect the implementation in place, then clone the template as a <Em>reusable starting point</Em> for their own product.
             </p>
             <FeaturePrototypeEmbed
@@ -2100,7 +2124,7 @@ export default function CaseStudyContent() {
 
           <RevealLine className="mt-10" />
 
-          <p className="mt-10 font-sans text-[16px] leading-relaxed text-textSecondary">
+          <p className="mt-10 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
             Inspired by <Em>Love and Deepspace</Em>, I used Wan, Kling, Dreamnia, and SeeDance for visual identity. Interactions built with <Em>Cursor</Em> and <Em>Claude Code</Em> — all in four weeks.
           </p>
           <div className="grid gap-6 pt-4 md:grid-cols-2 md:gap-8">
@@ -2123,7 +2147,7 @@ export default function CaseStudyContent() {
           <h3 className="mt-16 font-display text-[1.25rem] font-light tracking-tight text-textPrimary md:text-[1.35rem]">
             Live interactive prototypes
           </h3>
-          <p className="mt-4 font-sans text-[16px] leading-relaxed text-textSecondary">
+          <p className="mt-4 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
             Open full page for best fidelity.
           </p>
           <VibeCodingPrototypeGallery />

@@ -46,6 +46,7 @@ const SLIDES = [
   { id: "d1-showrooms",     chapter: "决策 01"  },
   { id: "d2-title",         chapter: "决策 02"  },
   { id: "d2-map",           chapter: "决策 02"  },
+  { id: "d2-choice",        chapter: "决策 02"  },
   { id: "heartbeat",        chapter: "决策 02"  },
   { id: "heartbeat-logic",  chapter: "决策 02"  },
   { id: "story",            chapter: "决策 02"  },
@@ -62,6 +63,7 @@ const SLIDES = [
   { id: "exploration",      chapter: "方法"     },
   { id: "process",          chapter: "方法"     },
   { id: "how-i-worked",     chapter: "方法"     },
+  { id: "visual-language",  chapter: "方法"     },
   { id: "showrooms",        chapter: "产品展示" },
   { id: "showcase-live",    chapter: "产品展示" },
   { id: "backend-before",   chapter: "额外贡献" },
@@ -599,6 +601,75 @@ function SlideD2Map({ reduced }: { reduced: boolean | null }) {
   );
 }
 
+// §07.5 决策 02 — 方向取舍:四个功能里为什么选 moments 当核心样板
+function SlideD2Choice({ reduced }: { reduced: boolean | null }) {
+  const candidates = [
+    { name: "Heartbeat",    zh: "内心独白", chosen: false },
+    { name: "Story",        zh: "解锁故事", chosen: false },
+    { name: "Alt Universe", zh: "平行剧情", chosen: false },
+    { name: "Moments",      zh: "朋友圈",   chosen: true  },
+  ];
+  const reasons = [
+    { k: "能力密度最高", v: "一个功能,同时证明了长期记忆和实时 reaction 两种能力。" },
+    { k: "成本最可控",   v: "对模型推理、对开发都最轻——不像平行剧情要逐人实时生成剧情。" },
+    { k: "完全可复用",   v: "不动任何对话框设计,直接复用现成的聊天布局。" },
+    { k: "结构最统一",   v: "落在右侧拉栏里,和所有样板间「侧栏」的结构保持一致。" },
+    { k: "交互最易懂",   v: "没有额外的操作门槛,用户一眼就明白这是什么。" },
+    { k: "心智最直接",   v: "「朋友圈」这个隐喻,对用户来说最直接、最有代入感。" },
+  ];
+  return (
+    <section className={`relative flex h-full flex-col justify-center overflow-hidden px-10 md:px-16 ${CANVAS}`}>
+      <LivingAura reduced={reduced} />
+      <motion.div variants={STG} initial="hidden" animate="show" className="relative z-10 mx-auto w-full max-w-6xl">
+        <motion.div variants={FADE}><Eye>决策 02 · 方向取舍</Eye></motion.div>
+        <Mask delay={0.1}>
+          <h2 className={`text-balance mt-4 font-display font-light leading-[1.2] tracking-[-0.018em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.4rem, 2.9vw, 2.3rem)" }}>
+            恋爱房间,我做了四个功能方向——最后选 <em className="not-italic text-[#FF6A00]">moments</em> 当核心。
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-4 max-w-2xl ${BODY} text-[13.5px] text-white/[0.66]`}>
+          四个我都做了原型。选 moments 作为可复用的核心样板,不是因为它最惊艳,而是因为它一个功能同时满足了最多约束。
+        </motion.p>
+
+        {/* 四个候选 —— moments 高亮为「选用」 */}
+        <motion.div variants={UP} className="mt-6 flex flex-wrap gap-2.5">
+          {candidates.map((c) => (
+            <span key={c.name}
+              className={`inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 font-sans text-[12px] font-medium ${
+                c.chosen
+                  ? "bg-[#FF6A00] text-[#0A0A0A]"
+                  : "bg-white/[0.05] text-white/[0.6]"
+              }`}>
+              <span>{c.name}</span>
+              <span className={c.chosen ? "text-[#0A0A0A]/70" : "text-white/40"}>· {c.zh}</span>
+              {c.chosen && <span className="font-mono text-[10px] uppercase tracking-[0.12em]">✓ 选用</span>}
+            </span>
+          ))}
+        </motion.div>
+
+        {/* 为什么是 moments —— 六条约束 */}
+        <motion.div variants={UP} className={`mt-8 grid border-t ${HAIR} sm:grid-cols-2`}>
+          {reasons.map((r, i) => (
+            <motion.div key={r.k}
+              className={`flex gap-3.5 py-4 sm:px-6 ${
+                i > 0 ? `border-t ${HAIR}` : ""
+              } ${i === 1 ? "sm:border-t-0" : ""} ${i % 2 === 1 ? "sm:border-l" : "sm:pl-0"}`}
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, ease: E, delay: 0.3 + i * 0.07 }}>
+              <span className="shrink-0 font-mono text-[11px] text-[#FF6A00]">{String(i + 1).padStart(2, "0")}</span>
+              <div className="min-w-0">
+                <p className={`font-sans text-[13px] font-medium ${HEAD}`}>{r.k}</p>
+                <p className="mt-1 font-sans text-[12.5px] leading-[1.7] text-white/[0.58]">{r.v}</p>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
+  );
+}
+
 // ── 功能模板:左文案 + 右实时原型 ─────────────────────────────────────────────
 function ProtoFeatureSlide({
   reduced, eye, title, lead, src, caption, notShipped = false, note,
@@ -672,7 +743,9 @@ function SlideHeartbeat({ reduced }: { reduced: boolean | null }) {
       reduced={reduced}
       eye="恋爱 · 1/4 · Heartbeat Power"
       title="翻开角色的内心独白。"
+      notShipped
       lead="好奇缺口 + 情感特权——窥见角色的内心,像是『被允许靠近』。这正是把聊天变成依恋的亲密钩子。"
+      note="为什么没上线:作为「亲密感」钩子做了原型;最终上线的是可复用的核心样板 moments。"
       src={PROTO.heartbeat}
       caption="实时恋爱房间 · 点一下爱心,看见它的心里话"
     />
@@ -689,7 +762,9 @@ function SlideStoryUnlock({ reduced }: { reduced: boolean | null }) {
       reduced={reduced}
       eye="恋爱 · 2/4 · Story Unlock"
       title="聊得越深,背景故事越解锁。"
+      notShipped
       lead="未闭合的故事 + 进度感——没讲完的背景牵着你往前,于是『深度』本身成了奖励,把每次会话拉长。"
+      note="为什么没上线:作为「进度感」钩子做了原型;最终上线的是可复用的核心样板 moments。"
       src={PROTO.story}
       caption="实时恋爱房间 · 聊得越深,角色越敞开"
     />
@@ -847,35 +922,54 @@ function SlideCodeDrawer({ reduced }: { reduced: boolean | null }) {
   );
 }
 
-// §20.5 早期过程 — 早期探索素材的占位页(待补充)
+// §20.5 早期过程 — 我否决 / 迭代掉的方向(每个都配一句理由)
 function SlideExploration({ reduced }: { reduced: boolean | null }) {
-  const earlyWork = [
-    { src: "/assets/ai-character/previous/previous-version.jpg",    alt: "早期版本 — 调研与方向探索 01" },
-    { src: "/assets/ai-character/previous/previous--version-2.jpg", alt: "早期版本 — 调研与方向探索 02" },
-    { src: "/assets/ai-character/previous/previous-version-3.png",  alt: "早期版本 — 调研与方向探索 03" },
+  const tried = [
+    {
+      src: "/assets/ai-character/research-character-ai-screenshot.png",
+      tag: "否决 · 通用聊天框",
+      title: "又一个聊天框。",
+      reason: "模型的记忆和差异全埋在对话里——用户滑了半天,感受不到任何不同。证明不了能力,否决。",
+    },
+    {
+      src: "/assets/ai-character/previous/previous-version.jpg",
+      tag: "迭代 · 早期恋爱房间",
+      title: "能力藏在对话里。",
+      reason: "第一版把「认知」留在对话流里,还是看不见。→ 促使我把它搬到右侧栏,变成看得见的证明。",
+    },
   ];
   return (
     <section className={`relative flex h-full min-h-0 items-stretch overflow-hidden px-8 py-6 md:px-12 md:py-7 ${CANVAS}`}>
       <LivingAura reduced={reduced} />
       <motion.div className={SPLIT} variants={STG} initial="hidden" animate="show">
-        <div className="flex min-w-0 flex-col justify-center md:w-[34%] md:shrink-0">
-          <motion.div variants={FADE}><Eye>早期过程 · 探索</Eye></motion.div>
+        <div className="flex min-w-0 flex-col justify-center md:w-[32%] md:shrink-0">
+          <motion.div variants={FADE}><Eye>早期过程 · 否决的方向</Eye></motion.div>
           <Mask delay={0.1}>
             <h2 className={`text-balance mt-5 font-display font-light leading-[1.2] tracking-[-0.016em] ${HEAD}`}
               style={{ fontSize: "clamp(1.3rem, 2.6vw, 2rem)" }}>
-              四个房间之前——那些粗糙的早期工作。
+              四个房间之前——我否决和迭代掉的方向。
             </h2>
           </Mask>
           <motion.p variants={UP} className={`mt-4 ${BODY} text-[13.5px] text-white/[0.66]`}>
-            调研、草图,以及我在通往 showroom 路上否决掉的方向。
+            每一次否决,其实都在回答同一个问题:怎么让模型的能力「看得见」。
           </motion.p>
         </div>
-        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-3 content-center gap-3">
-          {earlyWork.map((img) => (
-            <div key={img.src} className="relative aspect-[16/9] min-h-0 overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]">
-              <img src={img.src} alt={img.alt}
-                className="absolute inset-0 h-full w-full object-contain object-center" loading="lazy" decoding="async" />
-            </div>
+        <motion.div variants={UP} className="grid min-h-0 flex-1 grid-cols-2 content-center gap-4">
+          {tried.map((t, i) => (
+            <motion.figure key={t.src}
+              className="flex min-h-0 flex-col overflow-hidden rounded-lg border border-white/[0.08] bg-white/[0.015]"
+              initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.65, ease: E, delay: 0.3 + i * 0.1 }}>
+              <div className="relative aspect-[16/10] min-h-0 overflow-hidden bg-black/40">
+                <img src={t.src} alt={t.title}
+                  className="absolute inset-0 h-full w-full object-cover object-top" loading="lazy" decoding="async" />
+              </div>
+              <figcaption className={`shrink-0 border-t ${HAIR} px-4 py-3.5`}>
+                <p className="font-mono text-[9.5px] uppercase tracking-[0.14em] text-[#FF6A00]/85">{t.tag}</p>
+                <p className={`mt-2 font-display text-[0.98rem] font-light ${HEAD}`}>{t.title}</p>
+                <p className="mt-1.5 font-sans text-[12px] leading-[1.7] text-white/[0.58]">{t.reason}</p>
+              </figcaption>
+            </motion.figure>
           ))}
         </motion.div>
       </motion.div>
@@ -924,6 +1018,74 @@ function SlideHowIWorked({ reduced }: { reduced: boolean | null }) {
           ))}
         </motion.div>
       </motion.div>
+    </section>
+  );
+}
+
+// §21.5 视觉语言 — 每个样板间的配色 / 字体 / 图标,都跟着房间的情绪走
+function SlideVisualLanguage({ reduced }: { reduced: boolean | null }) {
+  const rooms = [
+    {
+      room: "浪漫",
+      src: "/assets/ai-character/ux-strategy-romance-proof.png",
+      swatches: ["#2A1E17", "#C9A227", "#6E5A47"],
+      note: "暖调深色 · 衬线 Serif",
+      body: "参考国内恋爱手游(《恋与深空》《恋与制作人》)——暖调深色配 serif 衬线标题,把「精致、复杂」直接写进字形里。",
+    },
+    {
+      room: "星座",
+      src: "/assets/ai-character/interaction-astrology-room.png",
+      swatches: ["#4B3F7A", "#D4AF37", "#E4A6C4"],
+      note: "蓝紫 · 金 · 一点粉",
+      body: "蓝紫加金,是星座塔罗的神秘感;再点一笔粉色留住少女心——正好对上「向星座问情感」这个主题。",
+    },
+    {
+      room: "心理",
+      src: "/assets/ai-character/interaction-therapy-room.png",
+      swatches: ["#7FA8D6", "#EAF1FA", "#F0C7DA"],
+      note: "疗愈蓝 · 拥抱图标",
+      body: "和大学心理学教授合作:在温暖可爱的底色上压一层蓝,疗愈又不失严谨。可见的分析面板加一个拥抱图标,让「被理解」看得见。",
+    },
+  ];
+  return (
+    <section className={`relative flex h-full flex-col overflow-hidden px-8 pb-6 pt-8 md:px-12 ${CANVAS}`}>
+      <LivingAura reduced={reduced} />
+      <motion.div className="relative z-10 mx-auto w-full max-w-6xl" variants={STG} initial="hidden" animate="show">
+        <motion.div variants={FADE}><Eye>设计 · 视觉语言</Eye></motion.div>
+        <Mask delay={0.08}>
+          <h2 className={`text-balance mt-3 font-display font-light tracking-[-0.016em] ${HEAD}`}
+            style={{ fontSize: "clamp(1.3rem, 2.8vw, 2.1rem)" }}>
+            一个房间,一套视觉语言——颜色和字体都跟着房间的情绪走。
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className={`mt-3 max-w-2xl ${BODY} text-[13px] text-white/[0.62]`}>
+          样板间没有套同一个模板。每个房间的配色、字体、图标,都是为它的情绪主题单独定的。
+        </motion.p>
+      </motion.div>
+      <div className="relative z-10 mx-auto mt-5 grid w-full max-w-6xl flex-1 grid-cols-3 gap-4" style={{ maxHeight: "60vh" }}>
+        {rooms.map((r, i) => (
+          <motion.article key={r.room}
+            className="flex min-h-0 flex-col overflow-hidden rounded-lg bg-white/[0.02]"
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, ease: E, delay: 0.22 + i * 0.1 }}>
+            <div className="relative min-h-0 flex-1 overflow-hidden bg-black/40">
+              <img src={r.src} alt={`${r.room}样板间视觉`} className="h-full w-full object-cover object-top" loading="lazy" decoding="async" />
+            </div>
+            <div className={`shrink-0 border-t ${HAIR} px-4 py-4`}>
+              <div className="flex items-center justify-between gap-3">
+                <p className="font-mono text-[9.5px] uppercase tracking-[0.16em] text-[#FF6A00]">{r.room}样板间</p>
+                <div className="flex items-center gap-1">
+                  {r.swatches.map((c) => (
+                    <span key={c} className="h-3 w-3 rounded-full border border-white/15" style={{ background: c }} />
+                  ))}
+                </div>
+              </div>
+              <p className="mt-2 font-sans text-[11px] font-medium text-white/[0.72]">{r.note}</p>
+              <p className="mt-2 font-sans text-[11.5px] leading-[1.7] text-white/[0.56]">{r.body}</p>
+            </div>
+          </motion.article>
+        ))}
+      </div>
     </section>
   );
 }
@@ -1460,6 +1622,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "d1-showrooms":     return <SlideD1Showrooms reduced={reduced} />;
     case "d2-title":         return <SlideD2Title reduced={reduced} />;
     case "d2-map":           return <SlideD2Map reduced={reduced} />;
+    case "d2-choice":        return <SlideD2Choice reduced={reduced} />;
     case "heartbeat":        return <SlideHeartbeat reduced={reduced} />;
     case "heartbeat-logic":  return <SlideHeartbeatLogic reduced={reduced} />;
     case "story":            return <SlideStoryUnlock reduced={reduced} />;
@@ -1475,6 +1638,7 @@ function SlideRenderer({ id, reduced }: { id: SlideId; reduced: boolean | null }
     case "code-drawer":      return <SlideCodeDrawer reduced={reduced} />;
     case "exploration":      return <SlideExploration reduced={reduced} />;
     case "how-i-worked":     return <SlideHowIWorked reduced={reduced} />;
+    case "visual-language":  return <SlideVisualLanguage reduced={reduced} />;
     case "process":          return <SlideProcess reduced={reduced} />;
     case "showrooms":        return <SlideShowrooms reduced={reduced} />;
     case "showcase-live":    return <SlideShowcaseLive reduced={reduced} />;
