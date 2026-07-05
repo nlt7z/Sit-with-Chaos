@@ -432,6 +432,7 @@ export function BentoHome() {
   const inkDim = light ? "text-black/55" : "text-white/55";
   const inkFaint = light ? "text-black/40" : "text-white/40";
   const surface = light ? "light" : "dark";
+  const hero = light ? "light" : "glass";
   const canvas = light ? "#edece6" : "#0a0b0c";
 
   return (
@@ -474,19 +475,8 @@ export function BentoHome() {
           {/* ===== col 1 — identity(7) · clock(3) ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[0.9] md:flex-col md:gap-2.5">
             {/* identity — name + moodboard (hover) + CTA, merged into one tall card */}
-            <BentoCard label="Yuan Fang" surface="dark" light={light} drag={drag} index={0} className="order-1 col-span-2 h-[400px] min-h-0 flex-[7] md:order-none md:h-auto">
-              {/* product showcase — Liner product video fills the hero */}
-              <div className="pointer-events-none absolute inset-0 overflow-hidden">
-                <BentoVideo src="/assets/liner/liner-product-video.mp4" />
-                <div aria-hidden className="absolute inset-0 bg-gradient-to-b from-black/45 via-transparent to-black/85" />
-              </div>
-              {/* tagline + CTA */}
-              <div className="absolute inset-x-0 bottom-0 z-10 flex items-end justify-between gap-3 p-4">
-                <p className="max-w-[56%] font-display text-[13px] font-light italic leading-snug text-white/90">
-                  Love crafting, but crave creating even more.
-                </p>
-                <SplitBtn href={`mailto:${EMAIL}`} label="Say hello ↗" />
-              </div>
+            <BentoCard label="Yuan Fang" surface={hero} light={light} drag={drag} index={0} className="order-1 col-span-2 h-[400px] min-h-0 flex-[7] md:order-none md:h-auto">
+              <IdentityCard reduced={reduced} light={light} inkDim={inkDim} />
             </BentoCard>
 
             {/* clock — bigger */}
