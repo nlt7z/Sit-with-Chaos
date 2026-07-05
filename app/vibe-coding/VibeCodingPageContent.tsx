@@ -121,13 +121,6 @@ const entries: Entry[] = [
     },
   },
   {
-    date: "2026.06",
-    title: "lamdre restaurant homepage",
-    description: "Restaurant website homepage design — brand atmosphere, menu showcase, and reservation entry flow.",
-    tags: ["web"],
-    media: { kind: "video", src: "/assets/lab/lamdre.mp4" },
-  },
-  {
     date: "2026.05",
     title: "auction × gacha mobile game",
     description: "Mobile game prototype combining a real-time bidding mechanic with a blind-box reward system.",

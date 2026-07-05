@@ -23,7 +23,7 @@ const sans = Inter({
 export const metadata = {
   title: "让 AI 研究协作可被信任 — Liner 演示文稿",
   description:
-    "Liner AI Scholar 作品集演示:学术研究者没有协作问题,他们有的是上下文传递问题。从六场访谈的研究综合,到『连接组织』的产品方向与三种交互模式——一页一条线地讲清楚。",
+    "Liner AI Scholar 作品集演示:研究本是团队协作,工具却只为单人。从十一场访谈的研究综合,到『连接组织』的产品方向与三种交互模式——一页一条线地讲清楚。",
 };
 
 function Fallback() {

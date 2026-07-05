@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Liner Scholar</title>
+<template id="__bundler_thumbnail" data-bg-color="#0a0a0a">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#0a0a0a"/>
+    <rect x="80" y="120" width="220" height="600" rx="12" fill="#141414" stroke="#222" stroke-width="2"/>
+    <rect x="320" y="120" width="540" height="600" rx="12" fill="#141414" stroke="#222" stroke-width="2"/>
+    <rect x="880" y="120" width="240" height="600" rx="12" fill="#141414" stroke="#222" stroke-width="2"/>
+    <circle cx="1000" cy="220" r="36" fill="#3ddc84" opacity="0.18"/>
+    <circle cx="1000" cy="220" r="18" fill="#3ddc84"/>
+    <rect x="360" y="180" width="320" height="14" rx="4" fill="#3ddc84"/>
+    <rect x="360" y="220" width="440" height="10" rx="3" fill="#2a2a2a"/>
+    <rect x="360" y="246" width="380" height="10" rx="3" fill="#2a2a2a"/>
+    <rect x="360" y="320" width="460" height="60" rx="8" fill="#1a1a1a" stroke="#262626" stroke-width="1"/>
+    <rect x="360" y="400" width="460" height="60" rx="8" fill="#1a1a1a" stroke="#262626" stroke-width="1"/>
+    <rect x="360" y="480" width="460" height="60" rx="8" fill="#1a1a1a" stroke="#262626" stroke-width="1"/>
+  </svg>
+</template>
+<style>
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-Thin.otf') format('opentype'); font-weight: 100; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-ExtraLight.otf') format('opentype'); font-weight: 200; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-Light.otf') format('opentype'); font-weight: 300; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-Regular.otf') format('opentype'); font-weight: 400; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-Medium.otf') format('opentype'); font-weight: 500; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-SemiBold.otf') format('opentype'); font-weight: 600; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-Bold.otf') format('opentype'); font-weight: 700; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-ExtraBold.otf') format('opentype'); font-weight: 800; }
+  @font-face { font-family: 'Pretendard'; src: url('uploads/Pretendard-Black.otf') format('opentype'); font-weight: 900; }
+</style>
+<script src="https://unpkg.com/react@18.3.1/umd/react.development.js" integrity="sha384-hD6/rw4ppMLGNu3tX5cjIb+uRZ7UkRJ6BPkLpg4hAu/6onKUg4lLsHAs9EBPT82L" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js" integrity="sha384-u6aeetuaXnQ38mYT8rp6sbXaQe3NL9t+IBXmnYxwkUI2Hw4bsp2Wvmx4yRQF1uAm" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/@babel/standalone@7.29.0/babel.min.js" integrity="sha384-m08KidiNqLdpJqLq95G/LEi8Qvjl/xUYll3QILypMoQ65QorJ9Lvtp2RXYGBFj1y" crossorigin="anonymous"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg-base:      #141414;
+  --bg-surface:   #1a1a1a;
+  --bg-elevated:  #222222;
+  --bg-card:      #262626;
+  --bg-hover:     #2e2e2e;
+  --bg-active:    #333333;
+  --border-subtle: #1f1f1f;
+  --border-default: #2a2a2a;
+  --border-strong:  #383838;
+  --text-primary:   #ebebeb;
+  --text-secondary: #8c8c8c;
+  --text-muted:     #4a4a4a;
+  --accent-green:   #3ddc84;
+  --accent-green-dim: rgba(61,220,132,0.12);
+  --accent-yellow:  #e8b84b;
+  --accent-yellow-dim: rgba(232,184,75,0.15);
+  --accent-blue:    #5b8ef0;
+  --accent-red:     #e05c5c;
+  --font: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+html, body, #root { height: 100%; }
+body { font-family: var(--font); background: var(--bg-base); color: var(--text-primary); font-size: 13px; line-height: 1.5; overflow: hidden; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-strong); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── layout ── */
+.app { display: flex; flex-direction: column; height: 100vh; }
+.topbar { display: flex; align-items: center; height: 40px; min-height: 40px; background: var(--bg-base); border-bottom: 1px solid var(--border-subtle); padding: 0 14px; gap: 10px; flex-shrink: 0; position: sticky; top: 0; z-index: 30; }
+.body { display: flex; flex: 1; overflow: hidden; }
+
+/* ── topbar ── */
+.tb-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--text-secondary); }
+.tb-sep { color: var(--text-muted); }
+.tb-current { color: var(--text-primary); font-weight: 500; }
+.tb-center { margin: 0 auto; }
+.tb-right { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+
+.tabs { display: flex; gap: 1px; background: var(--bg-elevated); padding: 3px; border-radius: 10px; }
+.tab { padding: 5px 14px; font-size: 12.5px; font-weight: 500; color: var(--text-secondary); border-radius: 7px; cursor: pointer; transition: background .13s, color .13s; user-select: none; }
+.tab:hover { color: var(--text-primary); }
+.tab.active { background: var(--bg-card); color: var(--text-primary); box-shadow: 0 1px 3px rgba(0,0,0,.45); }
+
+.credits { display: flex; align-items: center; gap: 5px; font-size: 12.5px; font-weight: 500; padding: 4px 10px; background: var(--bg-elevated); border-radius: 99px; border: 1px solid var(--border-default); }
+.credits .zap { color: var(--accent-yellow); font-size: 11px; }
+
+.btn { display: inline-flex; align-items: center; gap: 5px; border: none; cursor: pointer; font-family: var(--font); font-size: 12px; font-weight: 500; border-radius: 7px; transition: background .13s, color .13s; white-space: nowrap; }
+.btn-sm { padding: 5px 10px; font-size: 11.5px; }
+.btn-xs { padding: 3px 8px; font-size: 11px; border-radius: 5px; }
+.btn-secondary { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-default); }
+.btn-secondary:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border-strong); }
+.btn-ghost { background: transparent; color: var(--text-secondary); border: 1px solid transparent; }
+.btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+.btn-upgrade { background: var(--bg-card); color: var(--text-secondary); border: 1px solid var(--border-default); padding: 5px 12px; }
+.btn-upgrade:hover { background: var(--bg-hover); color: var(--text-primary); }
+.btn-icon { padding: 5px; background: transparent; color: var(--text-muted); border-radius: 5px; border: none; }
+.btn-icon:hover { background: var(--bg-hover); color: var(--text-secondary); }
+.btn-action { background: var(--bg-surface); color: var(--text-secondary); border: 1px solid var(--border-default); padding: 8px 18px; border-radius: 99px; font-size: 13px; transition: background .13s, color .13s, border-color .13s; }
+.btn-action:hover { background: var(--bg-hover); color: var(--text-primary); border-color: var(--border-strong); }
+
+/* ── sidebar ── */
+.sidebar { width: 200px; min-width: 160px; max-width: 380px; background: var(--bg-base); border-right: 1px solid var(--border-subtle); display: flex; flex-direction: column; overflow: hidden; flex-shrink: 0; }
+.sidebar-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px 8px; flex-shrink: 0; }
+.sidebar-title { font-size: 12.5px; font-weight: 600; color: var(--text-primary); }
+.sidebar-search { padding: 0 10px 8px; flex-shrink: 0; }
+.search-wrap { position: relative; }
+.search-icon { position: absolute; left: 8px; top: 50%; transform: translateY(-50%); color: var(--text-muted); pointer-events: none; }
+.search-input { width: 100%; background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: 6px; color: var(--text-secondary); font-family: var(--font); font-size: 11.5px; padding: 5px 8px 5px 26px; outline: none; }
+.search-input::placeholder { color: var(--text-muted); }
+.filetree { flex: 1; overflow-y: auto; padding: 2px 6px 12px; }
+.ft-item { display: flex; align-items: center; gap: 6px; padding: 4px 6px; border-radius: 5px; cursor: pointer; font-size: 12px; color: var(--text-secondary); transition: background .12s, color .12s; }
+.ft-item:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.ft-item.active { background: var(--bg-elevated); color: var(--text-primary); }
+.ft-item-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ft-folder-icon { color: #5b8ef0; flex-shrink: 0; }
+.ft-file-icon { flex-shrink: 0; }
+.sidebar-bottom { padding: 10px 10px 10px; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+.user-dot { width: 22px; height: 22px; border-radius: 50%; background: linear-gradient(135deg,#5b8ef0,#3ddc84); flex-shrink: 0; }
+
+/* ── main content ── */
+.main { flex: 1; min-width: 360px; display: flex; flex-direction: column; overflow: hidden; }
+.doc-tabs { display: flex; align-items: center; padding: 0 12px; height: 38px; border-bottom: 1px solid var(--border-subtle); gap: 2px; flex-shrink: 0; overflow-x: auto; }
+.doc-tab { display: flex; align-items: center; gap: 7px; padding: 5px 10px; border-radius: 6px 6px 0 0; font-size: 12px; color: var(--text-secondary); cursor: pointer; white-space: nowrap; border-bottom: 2px solid transparent; transition: color .12s; }
+.doc-tab:hover { color: var(--text-primary); }
+.doc-tab.active { color: var(--text-primary); border-bottom-color: var(--accent-green); }
+.doc-tab-close { color: var(--text-muted); font-size: 11px; line-height: 1; padding: 1px 2px; border-radius: 3px; }
+.doc-tab-close:hover { background: var(--bg-hover); color: var(--text-secondary); }
+.doc-tab-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+.filter-bar { display: flex; align-items: center; gap: 6px; padding: 8px 12px; border-bottom: 1px solid var(--border-subtle); flex-shrink: 0; }
+.filter-right { margin-left: auto; display: flex; gap: 6px; }
+
+.select { appearance: none; background: var(--bg-card); border: 1px solid var(--border-default); border-radius: 6px; color: var(--text-secondary); font-family: var(--font); font-size: 11.5px; padding: 5px 22px 5px 9px; outline: none; cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5' fill='none'%3E%3Cpath d='M1 1l3.5 3.5L8 1' stroke='%23505050' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 7px center; }
+.select:hover { border-color: var(--border-strong); }
+
+/* ── table ── */
+.table-wrap { flex: 1; overflow-y: auto; }
+.table-head { display: grid; grid-template-columns: 36px 1fr 44%; background: var(--bg-base); border-bottom: 1px solid var(--border-default); position: sticky; top: 0; z-index: 2; }
+.th { padding: 8px 12px; font-size: 11.5px; font-weight: 600; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
+.th-check { justify-content: center; padding: 8px; }
+
+.paper-row { display: grid; grid-template-columns: 36px 1fr 44%; border-bottom: 1px solid var(--border-subtle); cursor: pointer; transition: background .1s; }
+.paper-row:hover { background: var(--bg-elevated); }
+.paper-row.selected { background: rgba(61,220,132,0.04); }
+.pc { padding: 14px 12px; }
+.pc-check { padding: 14px 8px; display: flex; justify-content: center; align-items: flex-start; }
+.checkbox { width: 14px; height: 14px; border: 1px solid var(--border-strong); border-radius: 3px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: transparent; transition: background .12s, border-color .12s; }
+.checkbox.checked { background: var(--accent-green); border-color: var(--accent-green); }
+.paper-title { font-size: 12.5px; font-weight: 600; color: var(--text-primary); line-height: 1.45; margin-bottom: 4px; }
+.paper-meta { font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; flex-wrap: wrap; margin-bottom: 5px; }
+.meta-sep { color: var(--border-strong); }
+.paper-badge { display: inline-flex; align-items: center; gap: 4px; font-size: 10.5px; font-weight: 500; color: var(--accent-green); margin-bottom: 6px; }
+.paper-badge::before { content:''; width:5px;height:5px;border-radius:50%;background:var(--accent-green);flex-shrink:0; }
+.paper-actions { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 8px; }
+
+.rationale { font-size: 12px; line-height: 1.6; color: var(--text-secondary); }
+.hl-yellow { color: var(--accent-yellow); }
+.hl-green  { color: var(--accent-green); }
+
+/* ── chat panel ── */
+.chat-panel { width: 308px; min-width: 240px; max-width: 600px; display: flex; flex-direction: column; background: var(--bg-base); overflow: hidden; flex-shrink: 0; }
+
+/* ── resize handles ── */
+.resize-handle { width: 4px; cursor: col-resize; background: transparent; flex-shrink: 0; position: relative; transition: background .15s; z-index: 5; margin: 0 -2px; }
+.resize-handle:hover, .resize-handle.dragging { background: var(--accent-green); opacity: 0.6; }
+.resize-handle::after { content: ''; position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 2px; height: 30px; border-radius: 1px; background: var(--border-default); opacity: 0; transition: opacity .15s; }
+.resize-handle:hover::after { opacity: 1; }
+.app.resizing { cursor: col-resize !important; user-select: none; }
+.app.resizing * { cursor: col-resize !important; user-select: none !important; }
+.chat-top { display: flex; align-items: center; padding: 10px 12px; border-bottom: 1px solid var(--border-subtle); gap: 8px; flex-shrink: 0; overflow: visible; z-index: 10; }
+.chat-top-right { margin-left: auto; }
+.chat-body { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+
+/* empty state */
+.chat-empty { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px; padding: 24px; }
+.chat-logo { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.chat-logo-icon { font-size: 18px; }
+.chat-logo-text { font-size: 20px; font-weight: 700; letter-spacing: -0.4px; }
+.chat-logo-text span { color: var(--text-secondary); font-weight: 400; }
+.chat-quick-btn { width: 100%; max-width: 220px; }
+.quick-new-badge { display: inline-flex; align-items: center; font-size: 9.5px; font-weight: 600; padding: 1px 6px; border-radius: 99px; background: var(--accent-green-dim); color: var(--accent-green); margin-left: 6px; }
+.chat-hint { font-size: 11.5px; color: var(--text-muted); margin-top: 4px; }
+
+/* chat messages */
+.chat-msgs { padding: 12px; display: flex; flex-direction: column; gap: 14px; }
+.msg-status { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-secondary); }
+.msg-status-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-green); flex-shrink: 0; }
+.msg-body { font-size: 12.5px; line-height: 1.65; color: var(--text-primary); }
+.msg-sources { padding: 4px 0 0; display: flex; flex-direction: column; gap: 3px; }
+.src-link { display: flex; align-items: center; gap: 7px; font-size: 11.5px; color: var(--text-secondary); padding: 3px 0; cursor: pointer; transition: color .12s; }
+.src-link:hover { color: var(--text-primary); }
+.src-fav { width: 14px; height: 14px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 8px; font-weight: 700; flex-shrink: 0; }
+.fav-green  { background: rgba(61,220,132,0.2); color: var(--accent-green); }
+.fav-yellow { background: rgba(232,184,75,0.2); color: var(--accent-yellow); }
+.fav-blue   { background: rgba(91,142,240,0.2); color: var(--accent-blue); }
+.fav-neutral{ background: var(--bg-hover); color: var(--text-secondary); }
+.thinking-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text-secondary); }
+.thinking-row .chevron { color: var(--text-muted); font-size: 10px; margin-left: 2px; }
+
+/* chat input */
+.chat-input-area { padding: 10px 12px; border-top: 1px solid var(--border-subtle); flex-shrink: 0; }
+.context-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: 5px; padding: 3px 8px; font-size: 11px; color: var(--text-secondary); cursor: pointer; }
+.context-chip:hover { background: var(--bg-hover); }
+.ctx-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 7px 10px 0; }
+.ctx-chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(61,220,132,0.10); border: 1px solid rgba(61,220,132,0.35); border-radius: 5px; padding: 3px 4px 3px 7px; font-size: 11px; color: var(--accent-green); max-width: 100%; }
+.ctx-chip-icon { display: inline-flex; flex-shrink: 0; }
+.ctx-chip-text { color: var(--text-secondary); font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1; min-width: 0; max-width: 240px; font-style: italic; }
+.ctx-chip-close { display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; border-radius: 3px; background: transparent; border: none; color: var(--accent-green); cursor: pointer; padding: 0; opacity: 0.7; }
+.ctx-chip-close:hover { background: rgba(61,220,132,0.2); opacity: 1; }
+.input-box { background: var(--bg-elevated); border: 1px solid var(--border-default); border-radius: 9px; overflow: hidden; }
+.input-field-wrap { display: flex; align-items: center; padding: 8px 10px; gap: 8px; }
+.chat-field { flex: 1; background: none; border: none; outline: none; font-family: var(--font); font-size: 12px; color: var(--text-primary); }
+.chat-field::placeholder { color: var(--text-muted); }
+.input-actions { display: flex; align-items: center; gap: 6px; padding: 6px 10px; border-top: 1px solid var(--border-subtle); }
+.input-btn { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--text-secondary); background: var(--bg-card); border: 1px solid var(--border-default); border-radius: 5px; padding: 3px 8px; cursor: pointer; font-family: var(--font); transition: background .12s, color .12s; }
+.input-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+.mic-btn { margin-left: auto; color: var(--text-muted); background: transparent; border: none; cursor: pointer; padding: 3px; border-radius: 4px; transition: color .12s; }
+.mic-btn:hover { color: var(--text-secondary); }
+
+/* ── new chat modal ── */
+.modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.55); z-index: 100; display: flex; align-items: center; justify-content: center; animation: fadeIn .15s ease; }
+.modal { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 14px; padding: 28px 28px 22px; width: 420px; box-shadow: 0 12px 40px rgba(0,0,0,0.6); animation: slideUp .18s ease; }
+.modal-title { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 6px; }
+.modal-sub { font-size: 12.5px; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5; }
+.modal-input { width: 100%; background: var(--bg-elevated); border: 1px solid var(--border-strong); border-radius: 8px; color: var(--text-primary); font-family: var(--font); font-size: 13px; padding: 10px 13px; outline: none; transition: border-color .15s; }
+.modal-input:focus { border-color: var(--accent-green); }
+.modal-input::placeholder { color: var(--text-muted); }
+.modal-footer { display: flex; justify-content: flex-end; gap: 8px; margin-top: 16px; }
+.modal-suggestions { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+.modal-chip { font-size: 11.5px; color: var(--text-secondary); background: var(--bg-hover); border: 1px solid var(--border-default); border-radius: 99px; padding: 4px 11px; cursor: pointer; transition: background .12s, color .12s, border-color .12s; }
+.modal-chip:hover { background: var(--bg-active); color: var(--text-primary); border-color: var(--border-strong); }
+.modal-divider { height: 1px; background: var(--border-subtle); margin: 20px 0; }
+.modal-label { font-size: 11.5px; font-weight: 600; color: var(--text-secondary); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+.visibility-options { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.vis-card { border: 1.5px solid var(--border-default); border-radius: 10px; padding: 14px 14px 12px; cursor: pointer; transition: border-color .15s, background .15s; background: var(--bg-elevated); display: flex; flex-direction: column; gap: 6px; }
+.vis-card:hover { border-color: var(--border-strong); background: var(--bg-hover); }
+.vis-card.selected { border-color: var(--accent-green); background: rgba(61,220,132,0.06); }
+.vis-card-header { display: flex; align-items: center; justify-content: space-between; }
+.vis-card-icon { width: 30px; height: 30px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+.vis-card-icon.personal { background: rgba(91,142,240,0.15); }
+.vis-card-icon.shared   { background: rgba(61,220,132,0.15); }
+.vis-radio { width: 14px; height: 14px; border-radius: 50%; border: 1.5px solid var(--border-strong); display: flex; align-items: center; justify-content: center; transition: border-color .15s; }
+.vis-radio.checked { border-color: var(--accent-green); }
+.vis-radio.checked::after { content:''; width:7px; height:7px; border-radius:50%; background:var(--accent-green); display:block; }
+.vis-card-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+.vis-card-desc { font-size: 11.5px; color: var(--text-secondary); line-height: 1.45; }
+@keyframes fadeIn { from{opacity:0} to{opacity:1} }
+@keyframes slideUp { from{transform:translateY(10px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+/* ── editor view ── */
+.editor-wrap { flex:1; overflow-y:auto; display:flex; flex-direction:column; background: var(--bg-surface); }
+.editor-toolbar { display:flex; align-items:center; gap:2px; padding:8px 16px; border-bottom:1px solid var(--border-subtle); flex-shrink:0; flex-wrap:wrap; }
+.tb-divider { width:1px; height:16px; background:var(--border-default); margin:0 4px; }
+.tb-btn { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:5px; cursor:pointer; color:var(--text-secondary); font-size:12px; font-weight:600; border:none; background:transparent; font-family:var(--font); transition:background .12s,color .12s; }
+.tb-btn:hover { background:var(--bg-hover); color:var(--text-primary); }
+.tb-btn.active { background:var(--bg-active); color:var(--text-primary); }
+.editor-body { flex:1; padding:48px 64px; max-width:780px; margin:0 auto; width:100%; }
+.editor-title { font-size:26px; font-weight:700; color:var(--text-primary); border:none; background:transparent; outline:none; width:100%; font-family:var(--font); letter-spacing:-0.4px; margin-bottom:6px; }
+.editor-title::placeholder { color:var(--text-muted); }
+.editor-meta { font-size:12px; color:var(--text-muted); margin-bottom:28px; display:flex; align-items:center; gap:8px; }
+.editor-content { font-size:14px; line-height:1.8; color:var(--text-secondary); border:none; background:transparent; outline:none; width:100%; font-family:var(--font); resize:none; min-height:400px; }
+.editor-content::placeholder { color:var(--text-muted); }
+
+/* ── group chat board ── */
+.group-chat { flex:1; overflow-y:auto; padding:16px 14px 8px; display:flex; flex-direction:column; gap:18px; }
+.gc-day-divider { display:flex; align-items:center; gap:8px; margin: 4px 0 -4px; }
+.gc-day-divider::before, .gc-day-divider::after { content:''; flex:1; height:1px; background:var(--border-subtle); }
+.gc-day-label { font-size:10.5px; color:var(--text-muted); font-weight:500; padding:0 4px; }
+.gc-msg { display:flex; gap:10px; }
+.gc-avatar { width:32px; height:32px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; }
+.gc-content { flex:1; min-width:0; }
+.gc-header { display:flex; align-items:baseline; gap:7px; margin-bottom:5px; flex-wrap:wrap; }
+.gc-name { font-size:12.5px; font-weight:700; color:var(--text-primary); }
+.gc-action { font-size:11.5px; color:var(--text-muted); }
+.gc-time { font-size:11px; color:var(--text-muted); margin-top:1px; display:block; }
+.gc-card { background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:10px; padding:13px 14px; }
+.gc-card-title { font-size:13px; font-weight:700; color:var(--text-primary); line-height:1.45; margin-bottom:8px; }
+.gc-card-meta { font-size:11px; color:var(--text-muted); margin-bottom:10px; line-height:1.55; }
+.gc-card-summary { font-size:12px; color:var(--text-secondary); line-height:1.55; margin-bottom:12px; }
+.gc-card-actions { display:flex; align-items:center; gap:14px; flex-wrap:wrap; }
+.gc-card-link { font-size:12px; font-weight:600; color:var(--accent-green); cursor:pointer; display:inline-flex; align-items:center; gap:3px; }
+.gc-card-link:hover { text-decoration:underline; }
+.gc-card-link.muted { color:var(--text-muted); font-weight:500; }
+.gc-card-link.muted:hover { color:var(--text-secondary); text-decoration:none; }
+.gc-text-msg { font-size:12.5px; color:var(--text-primary); line-height:1.6; background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:10px; padding:11px 14px; }
+.gc-reactions { display:flex; align-items:center; gap:6px; margin-top:8px; }
+.gc-reaction { display:inline-flex; align-items:center; gap:5px; padding:3px 8px; background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:99px; font-size:11.5px; color:var(--text-secondary); cursor:pointer; transition:background .12s; }
+.gc-reaction:hover { background:var(--bg-hover); }
+.gc-reaction-add { width:24px; height:22px; padding:0; display:inline-flex; align-items:center; justify-content:center; background:transparent; border:1px dashed var(--border-default); border-radius:6px; color:var(--text-muted); cursor:pointer; font-size:14px; line-height:1; }
+.gc-reaction-add:hover { color:var(--text-secondary); border-color:var(--border-strong); }
+.gc-footer-note { font-size:10.5px; color:var(--text-muted); text-align:center; padding:8px 14px 14px; }
+.sel-toolbar { position:fixed; z-index:250; background:#2a2a2a; border:1px solid #3a3a3a; border-radius:99px; padding:6px 4px; box-shadow:0 6px 20px rgba(0,0,0,0.6); display:flex; align-items:center; gap:0; animation:fadeIn .12s ease; pointer-events:auto; }
+.sel-tool-btn { display:inline-flex; align-items:center; gap:6px; padding:6px 12px; background:transparent; border:none; border-radius:99px; font-family:var(--font); font-size:12.5px; font-weight:500; color:#e8e8e8; cursor:pointer; transition:background .12s, color .12s; white-space:nowrap; }
+.sel-tool-btn:hover { background:rgba(255,255,255,0.08); }
+.sel-tool-btn.share { color:var(--accent-green); }
+.sel-tool-btn.share:hover { background:rgba(61,220,132,0.12); }
+.sel-tool-divider { width:1px; height:14px; background:#3a3a3a; margin:0 2px; }
+
+/* highlight class applied to active selection range */
+.msg-body ::selection, .msg-body::selection { background: rgba(61,220,132,0.28); }
+.msg-body.has-active-selection { background: linear-gradient(transparent, transparent); }
+
+.msg-toolbar { display:flex; align-items:center; gap:2px; margin-top:10px; padding-top:8px; border-top:1px solid var(--border-subtle); }
+.msg-tool-btn { display:inline-flex; align-items:center; justify-content:center; width:28px; height:28px; border-radius:6px; cursor:pointer; color:var(--text-muted); background:transparent; border:none; font-family:var(--font); transition:background .12s, color .12s; }
+.msg-tool-btn:hover { background:var(--bg-hover); color:var(--text-secondary); }
+.msg-tool-btn.active { color:var(--accent-green); }
+.msg-tool-btn.dislike.active { color:var(--accent-red); }
+.msg-tool-divider { width:1px; height:14px; background:var(--border-default); margin:0 4px; }
+.share-btn { display:inline-flex; align-items:center; gap:5px; padding:4px 10px; font-size:11px; font-weight:500; color:var(--accent-green); background:var(--accent-green-dim); border:1px solid rgba(61,220,132,0.25); border-radius:99px; cursor:pointer; transition:background .12s; font-family:var(--font); }
+.share-btn:hover { background:rgba(61,220,132,0.2); }
+
+/* ── share to shared chat modal ── */
+.share-modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:200; display:flex; align-items:center; justify-content:center; animation:fadeIn .15s ease; }
+.share-modal { background:var(--bg-card); border:1px solid var(--border-strong); border-radius:14px; padding:24px; width:400px; box-shadow:0 12px 40px rgba(0,0,0,0.6); animation:slideUp .18s ease; }
+.share-modal-title { font-size:14px; font-weight:700; color:var(--text-primary); margin-bottom:4px; }
+.share-modal-sub { font-size:12px; color:var(--text-secondary); margin-bottom:16px; line-height:1.5; }
+.share-preview { background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--text-secondary); line-height:1.55; margin-bottom:16px; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
+.share-modal-footer { display:flex; justify-content:flex-end; gap:8px; }
+
+/* ── share success toast ── */
+.toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:var(--bg-active); border:1px solid var(--border-strong); border-radius:8px; padding:10px 16px; font-size:12.5px; color:var(--text-primary); display:flex; align-items:center; gap:8px; box-shadow:0 4px 16px rgba(0,0,0,0.5); z-index:300; animation:slideUp .2s ease; white-space:nowrap; }
+.activity-cards { display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+.activity-card { background:var(--bg-elevated); border:1px solid var(--border-default); border-radius:9px; padding:10px 12px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; transition:background .12s, border-color .12s; }
+.activity-card:hover { background:var(--bg-hover); border-color:var(--border-strong); }
+.activity-avatar { width:26px; height:26px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:700; flex-shrink:0; margin-top:1px; }
+.activity-info { flex:1; min-width:0; }
+.activity-header { display:flex; align-items:center; justify-content:space-between; gap:8px; margin-bottom:2px; }
+.activity-name { font-size:12px; font-weight:600; color:var(--text-primary); }
+.activity-time { font-size:10.5px; color:var(--text-muted); flex-shrink:0; }
+.activity-desc { font-size:12px; color:var(--text-secondary); line-height:1.45; }
+.activity-tag { display:inline-flex; align-items:center; gap:4px; font-size:10.5px; color:var(--text-secondary); background:var(--bg-hover); border:1px solid var(--border-default); border-radius:4px; padding:1px 6px; margin-top:5px; }
+.file-tooltip { position: fixed; z-index: 200; pointer-events: none; animation: fadeIn .12s ease; }
+.file-tooltip-card { background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 10px; padding: 14px; width: 240px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); }
+.ft-tip-header { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.ft-tip-dot { width: 9px; height: 9px; border-radius: 2px; flex-shrink: 0; }
+.ft-tip-name { font-size: 12.5px; font-weight: 600; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ft-tip-meta { font-size: 11px; color: var(--text-muted); margin-bottom: 10px; display: flex; gap: 8px; }
+.ft-tip-preview { font-size: 11.5px; color: var(--text-secondary); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+.ft-tip-tags { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 10px; }
+.ft-tip-tag { font-size: 10.5px; color: var(--text-muted); background: var(--bg-hover); border: 1px solid var(--border-default); border-radius: 4px; padding: 1px 6px; }
+.history-dropdown { position: absolute; top: 44px; left: 0; right: 0; background: var(--bg-card); border: 1px solid var(--border-strong); border-radius: 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.6); z-index: 50; overflow: hidden; animation: slideUp .15s ease; }
+.history-header { padding: 10px 14px 8px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .08em; color: var(--text-muted); border-bottom: 1px solid var(--border-subtle); }
+.history-empty { padding: 24px 14px; text-align: center; font-size: 12px; color: var(--text-muted); }
+.history-item { display: flex; align-items: center; gap: 10px; padding: 9px 14px; cursor: pointer; transition: background .12s; border-bottom: 1px solid var(--border-subtle); }
+.history-item:last-child { border-bottom: none; }
+.history-item:hover { background: var(--bg-hover); }
+.history-item-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.history-item-icon.personal { background: rgba(91,142,240,0.15); }
+.history-item-icon.shared   { background: rgba(61,220,132,0.15); }
+.history-item-info { flex: 1; min-width: 0; }
+.history-item-title { font-size: 12.5px; font-weight: 500; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.history-item-meta { font-size: 11px; color: var(--text-muted); margin-top: 1px; display: flex; align-items: center; gap: 5px; }
+.history-vis-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
+@keyframes pulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+.thinking-anim { display: flex; gap: 3px; align-items: center; padding: 2px 0; }
+.thinking-anim span { width: 5px; height: 5px; border-radius: 50%; background: var(--text-muted); animation: pulse 1.2s infinite; }
+.thinking-anim span:nth-child(2) { animation-delay:.2s; }
+.thinking-anim span:nth-child(3) { animation-delay:.4s; }
+</style>
+<template id="__bundler_thumbnail" data-bg-color="#141414">
+  <svg viewBox="0 0 1200 800" xmlns="http://www.w3.org/2000/svg">
+    <rect width="1200" height="800" fill="#141414"/>
+    <rect x="0" y="0" width="200" height="800" fill="#111111"/>
+    <rect x="0" y="0" width="1200" height="40" fill="#141414"/>
+    <rect x="16" y="16" width="80" height="10" rx="3" fill="#3ddc84" opacity=".9"/>
+    <rect x="16" y="60" width="160" height="7" rx="3" fill="#2a2a2a"/>
+    <rect x="16" y="80" width="140" height="6" rx="3" fill="#2a2a2a"/>
+    <rect x="16" y="100" width="150" height="6" rx="3" fill="#2a2a2a"/>
+    <rect x="16" y="120" width="130" height="6" rx="3" fill="#3ddc84" opacity=".5"/>
+    <rect x="16" y="140" width="145" height="6" rx="3" fill="#2a2a2a"/>
+    <rect x="420" y="10" width="160" height="20" rx="8" fill="#222"/>
+    <rect x="430" y="13" width="40" height="14" rx="6" fill="#333"/>
+    <rect x="476" y="13" width="46" height="14" rx="6" fill="#222"/>
+    <rect x="528" y="13" width="40" height="14" rx="6" fill="#222"/>
+    <rect x="200" y="40" width="620" height="760" fill="#1a1a1a"/>
+    <rect x="216" y="56" width="580" height="28" rx="4" fill="#222"/>
+    <rect x="224" y="95" width="340" height="9" rx="3" fill="#ebebeb" opacity=".7"/>
+    <rect x="224" y="111" width="200" height="6" rx="3" fill="#444"/>
+    <rect x="574" y="95" width="200" height="6" rx="3" fill="#e8b84b" opacity=".7"/>
+    <rect x="574" y="108" width="180" height="6" rx="3" fill="#e8b84b" opacity=".4"/>
+    <rect x="224" y="210" width="340" height="8" rx="3" fill="#ebebeb" opacity=".6"/>
+    <rect x="224" y="225" width="200" height="6" rx="3" fill="#444"/>
+    <rect x="574" y="210" width="190" height="6" rx="3" fill="#3ddc84" opacity=".6"/>
+    <rect x="574" y="223" width="210" height="6" rx="3" fill="#3ddc84" opacity=".4"/>
+    <rect x="224" y="330" width="320" height="8" rx="3" fill="#ebebeb" opacity=".6"/>
+    <rect x="224" y="345" width="220" height="6" rx="3" fill="#444"/>
+    <rect x="574" y="330" width="200" height="6" rx="3" fill="#e8b84b" opacity=".5"/>
+    <rect x="224" y="450" width="300" height="8" rx="3" fill="#ebebeb" opacity=".6"/>
+    <rect x="574" y="450" width="180" height="6" rx="3" fill="#3ddc84" opacity=".5"/>
+    <rect x="820" y="40" width="380" height="760" fill="#141414"/>
+    <rect x="840" y="55" width="220" height="8" rx="3" fill="#2a2a2a"/>
+    <circle cx="895" cy="280" r="10" fill="#3ddc84" opacity=".8"/>
+    <rect x="912" y="273" width="90" height="13" rx="3" fill="#ebebeb" opacity=".8"/>
+    <rect x="848" y="320" width="320" height="32" rx="8" fill="#1e1e1e"/>
+    <rect x="848" y="362" width="320" height="32" rx="8" fill="#1e1e1e"/>
+    <rect x="848" y="404" width="320" height="32" rx="8" fill="#1e1e1e"/>
+    <rect x="848" y="446" width="320" height="32" rx="8" fill="#1e1e1e" stroke="#3ddc84" stroke-width="1.5" opacity=".6"/>
+  </svg>
+</template>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const PAPERS = [
+  {
+    id: 1,
+    title: 'Effects of assistive technology for students with reading and writing disabilities',
+    authors: 'Svensson et al.',
+    journal: 'Disability and Rehabilitation Assistive Technology',
+    date: '2019-08-16',
+    cited: 124,
+    access: 'open',
+    actions: ['pdf','cite','add'],
+    rationale: {
+      text: 'A highly cited (124 citations) longitudinal study showing that assistive technology (including TTS) has transfer effects on reading ability, especially for students with the most severe difficulties; and increases motivation for schoolwork. Directly extends the meta-analysis by examining real-world effectiveness across...',
+      hl: 'yellow',
+      hlEnd: 120,
+    },
+  },
+  {
+    id: 2,
+    title: "Assistive technology applications for students with reading difficulties: special education teachers' experiences and perceptions",
+    authors: 'Nordstrom et al.',
+    journal: null,
+    date: '2019',
+    cited: 159,
+    access: null,
+    actions: ['library','cite'],
+    rationale: {
+      text: 'A highly cited (159 citations) qualitative study exploring special education teachers\' experiences with reading/writing apps (including TTS and speech-to-text). Provides essential practitioner perspectives on remediation vs. compensation and real classroom implementation challenges absent from the...',
+      hl: 'yellow',
+      hlEnd: 130,
+    },
+  },
+  {
+    id: 3,
+    title: 'Text-to-speech applications to reduce mind wandering in students with dyslexia',
+    authors: 'Bonifacci et al.',
+    journal: 'Journal of Computer Assisted Learning',
+    date: '2021-11-10',
+    cited: 29,
+    access: 'open',
+    actions: ['pdf','cite','add'],
+    rationale: {
+      text: 'Investigates a previously unexplored mechanism — mind wandering — showing that TTS reduced mind wandering during reading for students with dyslexia, providing a new cognitive explanation for why TTS improves comprehension beyond just removing the decoding barrier.',
+      hl: 'green',
+      hlEnd: 999,
+    },
+  },
+  {
+    id: 4,
+    title: 'Impact of text-to-speech features on the reading comprehension of children with reading and language difficulties',
+    authors: 'Keeler et al.',
+    journal: 'Annals of dyslexia',
+    date: '2023',
+    cited: 25,
+    access: null,
+    actions: ['library','cite'],
+    rationale: {
+      text: 'Directly addresses a key gap in the original meta-analysis by systematically comparing TTS with and without text highlighting across multiple reading conditions. Found TTS significantly improved comprehension, with stronger benefits for dyslexia-only versus reading-language impairment subgroups.',
+      hl: 'green',
+      hlEnd: 999,
+    },
+  },
+  {
+    id: 5,
+    title: 'The Effects of Read-Aloud Accommodations for Students With and Without Disabilities: A Meta-Analysis',
+    authors: 'Buzick et al.',
+    journal: 'Remedial and Special Education',
+    date: '2018',
+    cited: 40,
+    access: null,
+    actions: ['library','cite'],
+    rationale: {
+      text: 'A highly relevant meta-analysis (40 citations) of read-aloud accommodations across 23 studies examining effects for both students with and without disabilities, providing critical context for interpreting TTS benefits as accommodation versus general learning tool.',
+      hl: 'yellow',
+      hlEnd: 80,
+    },
+  },
+  {
+    id: 6,
+    title: 'Text-to-speech technology and reading comprehension: A systematic review',
+    authors: 'Flanagan et al.',
+    journal: 'Journal of Learning Disabilities',
+    date: '2020',
+    cited: 56,
+    access: 'open',
+    actions: ['pdf','cite','add'],
+    rationale: {
+      text: 'Systematically reviews TTS technology outcomes across diverse reading disability populations. Complements the meta-analysis by focusing specifically on comprehension mechanisms and providing updated evidence from 2015–2020 studies not included in the original analysis.',
+      hl: 'green',
+      hlEnd: 999,
+    },
+  },
+];
+
+const FILES = [
+  { id:'resources', name:'resources', type:'folder', depth:0 },
+  { id:'f1', name:'Research Overview: TTS Eff...', type:'link', depth:0,
+    fullName:'Research Overview: TTS Effectiveness', pages:12, updated:'Apr 20, 2026',
+    preview:'A comprehensive overview of text-to-speech technology and its effectiveness for students with reading disabilities. Covers 28 peer-reviewed studies from 2002–2019.',
+    tags:['overview','TTS','meta-analysis'],
+    tldr:'TTS tools significantly improve reading comprehension for students with disabilities, especially when combined with text highlighting. Effect sizes are moderate-to-large across 28 studies. Most benefits appear for students with severe reading difficulties.' },
+  { id:'f2', name:'TTS and Reading Comprehe...', type:'doc', depth:0, color:'#e05c5c',
+    fullName:'TTS and Reading Comprehension', pages:8, updated:'Apr 18, 2026',
+    preview:'Examines the relationship between TTS tools and reading comprehension outcomes, with a focus on students with dyslexia and other reading impairments.',
+    tags:['reading','comprehension','dyslexia'],
+    tldr:'Students with dyslexia showed 34% better comprehension scores when using TTS compared to reading alone. Effect was strongest for longer, complex texts. No significant benefit found for students without reading disabilities.' },
+  { id:'f3', name:'Review', type:'doc', depth:0, color:'#8c8c8c',
+    fullName:'Literature Review Draft', pages:5, updated:'Apr 15, 2026',
+    preview:'Draft literature review synthesizing current evidence on assistive technology for reading disabilities. Includes methodology and findings sections.',
+    tags:['draft','literature review'],
+    tldr:'Current evidence strongly supports AT interventions for reading disabilities, though study quality varies widely. Key gaps remain around long-term outcomes and implementation fidelity. Teacher training is a critical moderating variable.' },
+  { id:'f4', name:'Assistive Technology and T...', type:'doc', depth:0, color:'#3ddc84', active:true,
+    fullName:'Assistive Technology and TTS', pages:14, updated:'Apr 14, 2026',
+    preview:'Explores assistive technology applications for students with reading and writing difficulties, including TTS software, speech-to-text tools, and text highlighting features.',
+    tags:['assistive tech','TTS','special education'],
+    tldr:'AT interventions — particularly TTS and speech-to-text — show consistent positive effects on both reading and writing outcomes. Teacher perceptions remain a major barrier to adoption. Cost-effectiveness appears favorable but is rarely studied.' },
+  { id:'f5', name:'Text-to-Speech and Readin...', type:'doc', depth:0, color:'#5b8ef0',
+    fullName:'Text-to-Speech and Reading Study', pages:21, updated:'Feb 22, 2026',
+    preview:'Primary research paper examining does use of text-to-speech and related read-aloud tools improve reading comprehension for students with reading disabilities.',
+    tags:['TTS','read-aloud','meta-analysis'],
+    tldr:'Meta-analysis of 45 studies confirms TTS read-aloud tools improve comprehension (mean d=0.35). Benefits are larger for younger students and those with severe disabilities. Synchronised text highlighting boosts outcomes by a further ~15%.' },
+];
+
+/* ── icons (inline SVG helpers) ── */
+const Icon = ({ name, size=13, color='currentColor' }) => {
+  const paths = {
+    folder: <><path d="M2 4.5C2 3.67 2.67 3 3.5 3H6l1.5 1.5H10.5C11.33 4.5 12 5.17 12 6v5c0 .83-.67 1.5-1.5 1.5h-7C2.67 12.5 2 11.83 2 11V4.5z" stroke={color} strokeWidth="1.2" fill="none"/></>,
+    link: <><path d="M5.5 8.5l3-3M4 9.5l-1 1a2.5 2.5 0 003.5 3.5l1-1M10 4.5l1-1a2.5 2.5 0 00-3.5-3.5l-1 1" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none"/></>,
+    doc: <><path d="M3 2h6l3 3v8a1 1 0 01-1 1H3a1 1 0 01-1-1V3a1 1 0 011-1z" stroke={color} strokeWidth="1.2" fill="none"/><path d="M9 2v3h3" stroke={color} strokeWidth="1.2" fill="none"/></>,
+    search: <><circle cx="5.5" cy="5.5" r="4" stroke={color} strokeWidth="1.3" fill="none"/><path d="M9 9l3.5 3.5" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></>,
+    plus: <><path d="M7 2v10M2 7h10" stroke={color} strokeWidth="1.7" strokeLinecap="round"/></>,
+    chevron: <><path d="M4 6l4 4 4-4" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/></>,
+    chevron_r: <><path d="M5 3l4 4-4 4" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/></>,
+    more: <><circle cx="7" cy="3" r="1" fill={color}/><circle cx="7" cy="7" r="1" fill={color}/><circle cx="7" cy="11" r="1" fill={color}/></>,
+    pin: <><path d="M9.5 1.5l3 3-1.5 1.5-1-1-3 3 1 1-1.5 1.5L5 8.5l-4 4.5-1-1 4.5-4L3 6.5 4.5 5l1 1 3-3-1-1z" stroke={color} strokeWidth="1.1" fill="none"/></>,
+    filter: <><path d="M1 3h12M3.5 7h7M6 11h2" stroke={color} strokeWidth="1.3" strokeLinecap="round"/></>,
+    export: <><path d="M7 1v9M4 7l3 3 3-3" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/><path d="M1 11v1a1 1 0 001 1h10a1 1 0 001-1v-1" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none"/></>,
+    share: <><circle cx="11" cy="3" r="1.8" stroke={color} strokeWidth="1.2" fill="none"/><circle cx="11" cy="11" r="1.8" stroke={color} strokeWidth="1.2" fill="none"/><circle cx="3" cy="7" r="1.8" stroke={color} strokeWidth="1.2" fill="none"/><path d="M9.3 4l-4.6 2.1M4.7 7.9l4.6 2.1" stroke={color} strokeWidth="1.2" strokeLinecap="round"/></>,
+    trash: <><path d="M2 4h10M5 4V2h4v2M3 4l1 8h6l1-8" stroke={color} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" fill="none"/></>,
+    external: <><path d="M8 2h4v4M6 8l5.5-5.5" stroke={color} strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/><path d="M10 8v4H2V4h4" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none"/></>,
+    history: <><circle cx="7" cy="7" r="5.5" stroke={color} strokeWidth="1.3" fill="none"/><path d="M7 4.5V7l2 2" stroke={color} strokeWidth="1.3" strokeLinecap="round"/></>,
+    mic: <><rect x="5" y="1" width="4" height="7" rx="2" stroke={color} strokeWidth="1.3" fill="none"/><path d="M3 7a4 4 0 008 0" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none"/><path d="M7 11v2" stroke={color} strokeWidth="1.3" strokeLinecap="round"/></>,
+    attach: <><path d="M11.5 6.5L6 12a3.5 3.5 0 01-4.95-4.95L7.55 1.5A2 2 0 0110.4 4.3L4.4 10.3A.5.5 0 013.7 9.6l5.3-5.3" stroke={color} strokeWidth="1.3" strokeLinecap="round" fill="none"/></>,
+    zap: <><path d="M8.5 1L2 8h5l-1.5 5L13 6H8L8.5 1z" stroke={color} strokeWidth="1.2" fill="none"/></>,
+    newchat: <><path d="M7 2v10M2 7h10" stroke={color} strokeWidth="1.5" strokeLinecap="round"/></>,
+    check: <><path d="M2.5 7l3.5 3.5 5.5-6" stroke={color} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></>,
+  };
+  return (
+    <svg width={size} height={size} viewBox="0 0 14 14" fill="none">{paths[name]}</svg>
+  );
+};
+
+/* ── Highlighted rationale ── */
+function Rationale({ text, hl, hlEnd }) {
+  if (hlEnd >= text.length) {
+    return <div className="rationale"><span className={`hl-${hl}`}>{text}</span></div>;
+  }
+  const highlighted = text.slice(0, hlEnd);
+  const normal = text.slice(hlEnd);
+  return (
+    <div className="rationale">
+      <span className={`hl-${hl}`}>{highlighted}</span>{normal}
+    </div>
+  );
+}
+
+/* ── Paper row ── */
+function PaperRow({ paper, selected, onToggle }) {
+  return (
+    <div className={`paper-row${selected ? ' selected' : ''}`} onClick={onToggle}>
+      <div className="pc-check" onClick={e => { e.stopPropagation(); onToggle(); }}>
+        <div className={`checkbox${selected ? ' checked' : ''}`}>
+          {selected && <Icon name="check" size={10} color="#111" />}
+        </div>
+      </div>
+
+      <div className="pc">
+        <div className="paper-title">{paper.title}</div>
+        <div className="paper-meta">
+          <span>{paper.authors}</span>
+          {paper.journal && <><span className="meta-sep">·</span><span>{paper.journal}</span></>}
+          <span className="meta-sep">·</span>
+          <span>{paper.date}</span>
+          <span className="meta-sep">·</span>
+          <span>Cited by {paper.cited}</span>
+        </div>
+        {paper.access === 'open' && (
+          <div className="paper-badge">Open access</div>
+        )}
+        <div className="paper-actions" onClick={e => e.stopPropagation()}>
+          {paper.actions.includes('pdf') && (
+            <button className="btn btn-secondary btn-xs">Open PDF <Icon name="external" size={10} /></button>
+          )}
+          {paper.actions.includes('library') && (
+            <button className="btn btn-secondary btn-xs">Open via library <Icon name="external" size={10} /></button>
+          )}
+          {paper.actions.includes('cite') && (
+            <button className="btn btn-secondary btn-xs">Cite</button>
+          )}
+          {paper.actions.includes('add') && (
+            <button className="btn btn-secondary btn-xs">Add to project</button>
+          )}
+          <button className="btn-icon" style={{marginLeft:2}}>
+            <Icon name="trash" size={12} color="var(--text-muted)" />
+          </button>
+        </div>
+      </div>
+
+      <div className="pc">
+        <Rationale text={paper.rationale.text} hl={paper.rationale.hl} hlEnd={paper.rationale.hlEnd} />
+      </div>
+    </div>
+  );
+}
+
+/* ── New Chat Modal ── */
+const SUGGESTIONS = [
+  'Summarize key findings',
+  'Find more papers',
+  'Compare methodologies',
+  'Write literature review',
+  'Identify research gaps',
+];
+
+function NewChatModal({ onConfirm, onClose }) {
+  const [question, setQuestion] = React.useState('');
+  const [visibility, setVisibility] = React.useState('personal');
+  const inputRef = React.useRef(null);
+  React.useEffect(() => { inputRef.current?.focus(); }, []);
+
+  const handleConfirm = () => {
+    if (!question.trim()) return;
+    onConfirm(question.trim(), visibility);
+  };
+
+  return (
+    <div className="modal-backdrop" onClick={onClose}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <div className="modal-title">Start a new chat</div>
+        <div className="modal-sub">Ask a question or pick a task to get started.</div>
+
+        <div className="modal-suggestions">
+          {SUGGESTIONS.map(s => (
+            <span key={s} className="modal-chip" onClick={() => setQuestion(s)}>{s}</span>
+          ))}
+        </div>
+
+        <input
+          ref={inputRef}
+          className="modal-input"
+          placeholder="e.g. What are the effects of TTS on reading comprehension?"
+          value={question}
+          onChange={e => setQuestion(e.target.value)}
+          onKeyDown={e => { if (e.key === 'Enter') handleConfirm(); if (e.key === 'Escape') onClose(); }}
+        />
+
+        <div className="modal-divider"></div>
+
+        <div className="modal-label">Chat visibility</div>
+        <div className="visibility-options">
+          {/* Personal */}
+          <div className={`vis-card${visibility==='personal'?' selected':''}`} onClick={() => setVisibility('personal')}>
+            <div className="vis-card-header">
+              <div className="vis-card-icon personal">
+                <svg width="16" height="16" viewBox="0 0 14 14" fill="none">
+                  <circle cx="7" cy="5" r="2.5" stroke="#5b8ef0" strokeWidth="1.3"/>
+                  <path d="M2.5 12c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4" stroke="#5b8ef0" strokeWidth="1.3" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div className={`vis-radio${visibility==='personal'?' checked':''}`}></div>
+            </div>
+            <div className="vis-card-name">Personal</div>
+            <div className="vis-card-desc">Only visible to you. Keep your research private.</div>
+          </div>
+
+          {/* Shared */}
+          <div className={`vis-card${visibility==='shared'?' selected':''}`} onClick={() => setVisibility('shared')}>
+            <div className="vis-card-header">
+              <div className="vis-card-icon shared">
+                <svg width="16" height="16" viewBox="0 0 14 14" fill="none">
+                  <circle cx="5" cy="5" r="2" stroke="#3ddc84" strokeWidth="1.3"/>
+                  <circle cx="10" cy="4" r="1.5" stroke="#3ddc84" strokeWidth="1.3"/>
+                  <path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/>
+                  <path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div className={`vis-radio${visibility==='shared'?' checked':''}`}></div>
+            </div>
+            <div className="vis-card-name">Shared</div>
+            <div className="vis-card-desc">Visible to all project team members.</div>
+          </div>
+        </div>
+
+        <div className="modal-footer">
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>Cancel</button>
+          <button
+            className="btn btn-secondary btn-sm"
+            style={question.trim() ? {background:'var(--accent-green)',color:'#111',borderColor:'var(--accent-green)'} : {opacity:0.4}}
+            onClick={handleConfirm}
+            disabled={!question.trim()}
+          >
+            Start {visibility === 'shared' ? 'shared' : 'personal'} chat
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function GroupChatBoard() {
+  const cards = [
+    { kind:'card', user:'Yuan Fang', initials:'YF', avatarBg:'#4a4a52', avatarColor:'#e8e8e8', action:'shared a research card', time:'09:52',
+      title:'AI-assisted search increases researcher anxiety when results are inconsistent across sessions',
+      meta:'Verified · Yuan · Synthesized from 4 sources · Liner search #12',
+      summary:'Confidence high · Four sources cited · AI draft reviewed by Yuan.',
+      reactions:[{emoji:'👍', count:4}, {emoji:'📎', count:2}] },
+    { kind:'text', user:'Liner Bot', initials:'AI', avatarBg:'#3a4a5a', avatarColor:'#9bb8db', time:'09:53',
+      body:'Consensus signal captured: team aligned on adding reproducibility metadata (run ID, rank snapshot, and DOI anchors) to shared research outputs. Wiki checklist has been updated and linked in the workspace header.',
+      reactions:[{emoji:'👍', count:2}] },
+    { kind:'card', user:'James Chen', initials:'JC', avatarBg:'#5a4a3a', avatarColor:'#f0c040', action:'shared from personal chat', time:'10:14',
+      title:'Methods comparison: TTS interventions show larger effect sizes in K–6 than secondary samples',
+      meta:'Personal chat · James · Drawn from 3 papers · Liner chat #07',
+      summary:'Effect size differential of d=0.41 between elementary and secondary cohorts. Worth flagging for our review section.',
+      reactions:[{emoji:'🔥', count:3}, {emoji:'👀', count:1}] },
+    { kind:'text', user:'Mia Park', initials:'MP', avatarBg:'#5a3a4a', avatarColor:'#e07cb0', time:'10:22',
+      body:'Adding the dyslexia subgroup analysis to the project tonight. Should we coordinate on a shared coding scheme before then?',
+      reactions:[] },
+    { kind:'card', user:'Sarah Levin', initials:'SL', avatarBg:'#3a5a4a', avatarColor:'#3ddc84', action:'shared a research card', time:'10:38',
+      title:'Synchronised text highlighting amplifies TTS comprehension gains by ~15% in dyslexic students',
+      meta:'Verified · Sarah · Synthesized from 6 sources · Liner search #18',
+      summary:'Confidence high · Six sources cited · Effect replicated across three independent samples (n=412 total).',
+      reactions:[{emoji:'👍', count:5}, {emoji:'📎', count:3}, {emoji:'💯', count:2}] },
+  ];
+
+  return (
+    <>
+      <div className="group-chat">
+        <div className="gc-day-divider"><span className="gc-day-label">Today · May 4</span></div>
+        {cards.map((c, i) => (
+          <div key={i} className="gc-msg">
+            <div className="gc-avatar" style={{background:c.avatarBg, color:c.avatarColor}}>{c.initials}</div>
+            <div className="gc-content">
+              <div className="gc-header">
+                <span className="gc-name">{c.user}</span>
+                {c.action && <span className="gc-action">{c.action}</span>}
+              </div>
+              <span className="gc-time" style={{marginBottom:6}}>{c.time}</span>
+              {c.kind === 'card' ? (
+                <div className="gc-card" style={{marginTop:4}}>
+                  <div className="gc-card-title">{c.title}</div>
+                  <div className="gc-card-meta">{c.meta}</div>
+                  <div className="gc-card-summary">{c.summary}</div>
+                  <div className="gc-card-actions">
+                    <span className="gc-card-link">View sources <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+                    <span className="gc-card-link">Add to project <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M4 10L10 4M10 4H5M10 4v5" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round"/></svg></span>
+                    <span className="gc-card-link muted">Leave note</span>
+                  </div>
+                </div>
+              ) : (
+                <div className="gc-text-msg" style={{marginTop:4}}>{c.body}</div>
+              )}
+              <div className="gc-reactions">
+                {c.reactions.map((r, j) => (
+                  <span key={j} className="gc-reaction"><span style={{fontSize:13}}>{r.emoji}</span> <span>{r.count}</span></span>
+                ))}
+                <button className="gc-reaction-add">+</button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <div className="gc-footer-note">All data is managed safely under Liner's Security &amp; Safety Policy.</div>
+    </>
+  );
+}
+
+function SelectionToolbar({ rect, onEdit, onRegenerate, onShare }) {
+  if (!rect) return null;
+  const top = Math.max(8, rect.top - 44);
+  const left = Math.max(8, Math.min(window.innerWidth - 320, rect.left + rect.width/2 - 160));
+  return (
+    <div className="sel-toolbar" style={{ top, left }}>
+      <button className="sel-tool-btn" onClick={onEdit}>
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9.5 2.5l2 2L4 12H2v-2l7.5-7.5z" stroke="currentColor" strokeWidth="1.3" strokeLinejoin="round"/></svg>
+        Edit
+      </button>
+      <div className="sel-tool-divider"></div>
+      <button className="sel-tool-btn" onClick={onRegenerate}>
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M11.5 7a4.5 4.5 0 11-1.3-3.2M11.5 1.5v3h-3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        Regenerate
+      </button>
+      <div className="sel-tool-divider"></div>
+      <button className="sel-tool-btn share" onClick={onShare}>
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+          <circle cx="5" cy="5" r="2" stroke="currentColor" strokeWidth="1.3"/>
+          <circle cx="10" cy="4" r="1.5" stroke="currentColor" strokeWidth="1.3"/>
+          <path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+          <path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+        </svg>
+        Share with group
+      </button>
+    </div>
+  );
+}
+
+/* ── Chat panel ── */
+function ShareToSharedChatModal({ message, onClose, onConfirm }) {
+  return (
+    <div className="share-modal-backdrop" onClick={onClose}>
+      <div className="share-modal" onClick={e => e.stopPropagation()}>
+        <div className="share-modal-title">Share to shared chat</div>
+        <div className="share-modal-sub">This answer will be visible to all project team members in a new shared chat thread.</div>
+        <div className="share-preview">{message}</div>
+        <div className="share-modal-footer">
+          <button className="btn btn-ghost btn-sm" onClick={onClose}>Cancel</button>
+          <button className="btn btn-sm" style={{background:'var(--accent-green)',color:'#111',border:'none',fontWeight:600}} onClick={onConfirm}>
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+              <circle cx="5" cy="5" r="2" stroke="currentColor" strokeWidth="1.3"/>
+              <circle cx="10" cy="4" r="1.5" stroke="currentColor" strokeWidth="1.3"/>
+              <path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+              <path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+            </svg>
+            Share now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function MsgToolbar({ message, chatVisibility }) {
+  const [liked, setLiked] = React.useState(null); // 'up' | 'down' | null
+  const [copied, setCopied] = React.useState(false);
+  const [showShare, setShowShare] = React.useState(false);
+  const [showToast, setShowToast] = React.useState(false);
+
+  const handleCopy = () => {
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1800);
+  };
+
+  const handleShareConfirm = () => {
+    setShowShare(false);
+    setShowToast(true);
+    setTimeout(() => setShowToast(false), 3000);
+  };
+
+  return (
+    <>
+      <div className="msg-toolbar">
+        {/* Share to shared chat — prominent only in personal chats */}
+        {chatVisibility === 'personal' && (
+          <button className="share-btn" onClick={() => setShowShare(true)}>
+            <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+              <circle cx="5" cy="5" r="2" stroke="currentColor" strokeWidth="1.3"/>
+              <circle cx="10" cy="4" r="1.5" stroke="currentColor" strokeWidth="1.3"/>
+              <path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+              <path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/>
+            </svg>
+            Share to team
+          </button>
+        )}
+        <div style={{marginLeft: chatVisibility === 'personal' ? 6 : 0, display:'flex', gap:2}}>
+          {/* Copy */}
+          <button className={`msg-tool-btn${copied ? ' active' : ''}`} title="Copy" onClick={handleCopy}>
+            {copied
+              ? <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2.5 7l3.5 3.5 5.5-6" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>
+              : <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="4" y="1" width="8" height="9" rx="1.5" stroke="currentColor" strokeWidth="1.2"/><path d="M2 4H1.5A1.5 1.5 0 000 5.5v7A1.5 1.5 0 001.5 14h7A1.5 1.5 0 0010 12.5V12" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
+            }
+          </button>
+          {/* Export/save */}
+          <button className="msg-tool-btn" title="Save to notes">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 2.5A1.5 1.5 0 013.5 1h5L11 4v8.5A1.5 1.5 0 019.5 14h-6A1.5 1.5 0 012 12.5V2.5z" stroke="currentColor" strokeWidth="1.2"/><path d="M8.5 1v3H11" stroke="currentColor" strokeWidth="1.2"/><path d="M5 8h4M5 10.5h2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
+          </button>
+          <div className="msg-tool-divider"></div>
+          {/* Thumbs up */}
+          <button className={`msg-tool-btn${liked==='up' ? ' active' : ''}`} title="Good response" onClick={() => setLiked(l => l==='up' ? null : 'up')}>
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M5 6V3a1 1 0 011-1h.5l2 3.5V12H3.5A1.5 1.5 0 012 10.5v-3A1.5 1.5 0 013.5 6H5zM10.5 12H9.5V6.5h1a1 1 0 011 1V11a1 1 0 01-1 1z" stroke="currentColor" strokeWidth="1.1" fill={liked==='up' ? 'currentColor' : 'none'} opacity={liked==='up'?.7:1}/></svg>
+          </button>
+          {/* Thumbs down */}
+          <button className={`msg-tool-btn dislike${liked==='down' ? ' active' : ''}`} title="Bad response" onClick={() => setLiked(l => l==='down' ? null : 'down')}>
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M9 8V11a1 1 0 01-1 1h-.5L5.5 8.5V2H10.5A1.5 1.5 0 0112 3.5v3A1.5 1.5 0 0110.5 8H9zM3.5 2H4.5v5.5h-1A1 1 0 012.5 6.5V3a1 1 0 011-1z" stroke="currentColor" strokeWidth="1.1" fill={liked==='down' ? 'currentColor' : 'none'} opacity={liked==='down'?.7:1}/></svg>
+          </button>
+        </div>
+      </div>
+
+      {showShare && (
+        <ShareToSharedChatModal
+          message={message}
+          onClose={() => setShowShare(false)}
+          onConfirm={handleShareConfirm}
+        />
+      )}
+
+      {showToast && (
+        <div className="toast">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5" cy="5" r="2" stroke="#3ddc84" strokeWidth="1.3"/><circle cx="10" cy="4" r="1.5" stroke="#3ddc84" strokeWidth="1.3"/><path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/><path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/></svg>
+          <span>Answer shared to team chat</span>
+          <span style={{color:'var(--text-muted)'}}>· Shared chat</span>
+        </div>
+      )}
+    </>
+  );
+}
+function ChatPanel({ width }) {
+  const [messages, setMessages] = React.useState([]);
+  const [inputVal, setInputVal] = React.useState('');
+  const [contextChips, setContextChips] = React.useState([]);
+  const [selRect, setSelRect] = React.useState(null);
+  const [selText, setSelText] = React.useState('');
+  const [showSelShare, setShowSelShare] = React.useState(false);
+  const [showSelToast, setShowSelToast] = React.useState(false);
+  const chatBodyRef = React.useRef(null);
+
+  // Track text selection inside AI message bodies
+  React.useEffect(() => {
+    const handler = () => {
+      const sel = window.getSelection();
+      if (!sel || sel.isCollapsed || sel.rangeCount === 0) {
+        setSelRect(null); setSelText('');
+        return;
+      }
+      const range = sel.getRangeAt(0);
+      // Only show toolbar if selection is inside an AI message body
+      let node = range.commonAncestorContainer;
+      if (node.nodeType === 3) node = node.parentElement;
+      const inAi = node && node.closest && node.closest('.msg-body');
+      if (!inAi) {
+        setSelRect(null); setSelText('');
+        return;
+      }
+      const rect = range.getBoundingClientRect();
+      if (rect.width < 2 && rect.height < 2) return;
+      setSelRect(rect);
+      setSelText(sel.toString());
+    };
+    document.addEventListener('selectionchange', handler);
+    return () => document.removeEventListener('selectionchange', handler);
+  }, []);
+
+  const handleSelEdit = () => {
+    setInputVal(`Edit this: "${selText.slice(0,80)}${selText.length>80?'…':''}" → `);
+    window.getSelection()?.removeAllRanges();
+    setSelRect(null);
+  };
+  const handleSelRegenerate = () => {
+    window.getSelection()?.removeAllRanges();
+    setSelRect(null);
+    setIsThinking(true);
+    setTimeout(() => setIsThinking(false), 1400);
+  };
+  const handleSelShare = () => {
+    setShowSelShare(true);
+  };
+  const confirmSelShare = () => {
+    setShowSelShare(false);
+    window.getSelection()?.removeAllRanges();
+    setSelRect(null);
+    setShowSelToast(true);
+    setTimeout(() => setShowSelToast(false), 3000);
+  };
+  const [isThinking, setIsThinking] = React.useState(false);
+  const [showNewChatModal, setShowNewChatModal] = React.useState(false);
+  const messagesEndRef = React.useRef(null);
+
+  const RESPONSES = {
+    'Find related papers': {
+      status: 'Finished thinking',
+      body: 'I found 8 highly relevant papers related to your current project. These cover assistive technology for reading disabilities, TTS comprehension studies, and recent meta-analyses from 2020–2024. Shall I add the most relevant ones to your project?',
+      sources: [
+        {label:'S', cls:'fav-green', url:'scholarworks.uni.edu'},
+        {label:'E', cls:'fav-yellow', url:'eric.ed.gov'},
+        {label:'A', cls:'fav-blue', url:'arxiv.org'},
+      ],
+    },
+    'Brainstorm ideas': {
+      status: 'Finished thinking',
+      body: "Here are 5 research directions based on your papers:\n\n1. Examine TTS + text highlighting synergy effects across disability subgroups\n2. Compare mobile vs. desktop TTS implementations\n3. Longitudinal study design for reading fluency outcomes\n4. Teacher perception vs. student outcome alignment\n5. Cost-effectiveness analysis of AT interventions",
+      sources: [],
+    },
+    'Write draft': {
+      status: 'Finished thinking',
+      body: 'I\'ve drafted an introduction section based on your 14 papers. The draft synthesizes the key findings on TTS effectiveness and frames the meta-analysis in the context of current assistive technology research. Would you like me to continue with the Methods section?',
+      sources: [],
+    },
+    'Add citations': {
+      status: 'Finished thinking',
+      body: 'I\'ve formatted all 14 papers in APA 7th edition. Citations have been added inline to your draft document. 3 papers were missing DOIs — I found them via CrossRef and added them automatically.',
+      sources: [
+        {label:'C', cls:'fav-neutral', url:'crossref.org'},
+        {label:'D', cls:'fav-blue', url:'doi.org'},
+      ],
+    },
+    'Summarize recent updates': {
+      status: 'Finished thinking',
+      body: "Here's what your teammates have been up to:",
+      sources: [],
+      activityCards: [
+        { name:'Sarah', color:'#5b8ef0', initials:'S', action:'Added 3 new papers on TTS and dyslexia interventions', time:'2 hours ago', tag:'3 papers added' },
+        { name:'James', color:'#f0c040', initials:'J', action:'Updated the Literature Review draft — added a Methods section', time:'5 hours ago', tag:'Review · edited' },
+        { name:'Mia', color:'#e05c5c', initials:'M', action:'Linked 2 external sources to Research Overview: TTS Eff...', time:'Yesterday', tag:'2 sources linked' },
+        { name:'James', color:'#f0c040', initials:'J', action:"Started a shared chat: 'Compare methodologies'", time:'Yesterday', tag:'Shared chat' },
+      ],
+      footer: 'The team is focusing on expanding the evidence base for TTS interventions in special education.',
+    },
+  };
+
+  const [chatVisibility, setChatVisibility] = React.useState(null);
+  const [chatHistory, setChatHistory] = React.useState([]);
+  const [showHistory, setShowHistory] = React.useState(false);
+  const [chatTitle, setChatTitle] = React.useState(null);
+  const historyRef = React.useRef(null);
+
+  // close history dropdown on outside click
+  React.useEffect(() => {
+    const handler = (e) => {
+      if (historyRef.current && !historyRef.current.contains(e.target)) setShowHistory(false);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const handleNewChat = (question, visibility) => {
+    // archive current chat if it has messages
+    if (messages.length > 0 && chatTitle) {
+      setChatHistory(prev => [{
+        id: Date.now(),
+        title: chatTitle,
+        visibility: chatVisibility || 'personal',
+        time: 'Just now',
+        messages: messages,
+      }, ...prev]);
+    }
+    setShowNewChatModal(false);
+    setChatVisibility(visibility);
+    setChatTitle(question);
+    setMessages([]);
+    setIsThinking(true);
+    setTimeout(() => {
+      setMessages([{ type: 'user', text: question }]);
+      setTimeout(() => {
+        setMessages(prev => [...prev, {
+          type: 'ai',
+          status: 'Finished thinking',
+          body: `Great question! Based on your project's 6 papers, I'll help you explore "${question}". I'm analyzing your existing sources and searching for additional relevant literature now.`,
+          sources: [
+            { label: 'S', cls: 'fav-green', url: 'scholarworks.uni.edu' },
+            { label: 'E', cls: 'fav-yellow', url: 'eric.ed.gov' },
+          ],
+        }]);
+        setIsThinking(false);
+      }, 1400);
+    }, 100);
+  };
+
+  const restoreChat = (item) => {
+    // archive current if needed
+    if (messages.length > 0 && chatTitle) {
+      setChatHistory(prev => [{
+        id: Date.now(), title: chatTitle,
+        visibility: chatVisibility || 'personal',
+        time: 'Just now', messages,
+      }, ...prev.filter(h => h.id !== item.id)]);
+    } else {
+      setChatHistory(prev => prev.filter(h => h.id !== item.id));
+    }
+    setMessages(item.messages);
+    setChatVisibility(item.visibility);
+    setChatTitle(item.title);
+    setShowHistory(false);
+  };
+
+  const handleAction = (action) => {
+    if (isThinking) return;
+    const resp = RESPONSES[action];
+    setIsThinking(true);
+    setMessages(prev => [...prev, { type:'user', text: action }]);
+    setTimeout(() => {
+      setMessages(prev => [...prev, { type:'ai', status: resp.status, body: resp.body, sources: resp.sources, activityCards: resp.activityCards, footer: resp.footer }]);
+      setIsThinking(false);
+    }, 1200);
+  };
+
+  const handleSend = () => {
+    if (!inputVal.trim() || isThinking) return;
+    const val = inputVal.trim();
+    setInputVal('');
+    setIsThinking(true);
+    setMessages(prev => [...prev, { type:'user', text: val }]);
+    setTimeout(() => {
+      setMessages(prev => [...prev, {
+        type:'ai', status:'Finished thinking',
+        body: `I've analyzed your question about "${val}" in the context of your research project. Based on the 14 papers in your project, here's what I found: The evidence suggests significant overlap with your existing research focus on TTS and reading comprehension. Would you like me to search for additional papers on this topic?`,
+        sources:[{label:'S', cls:'fav-green', url:'scholarworks.uni.edu'}],
+      }]);
+      setIsThinking(false);
+    }, 1500);
+  };
+
+  React.useEffect(() => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.parentElement.scrollTop = messagesEndRef.current.offsetTop;
+    }
+  }, [messages, isThinking]);
+
+  const hasMessages = messages.length > 0;
+
+  return (
+    <div className="chat-panel" style={{width}}>
+      {/* top */}
+      <div className="chat-top" style={{position:'relative'}} ref={historyRef}>
+        <button className="btn-icon" onClick={() => setShowHistory(v => !v)} style={{color: showHistory ? 'var(--text-secondary)' : 'var(--text-muted)'}}>
+          <Icon name="history" size={14} color="currentColor" />
+        </button>
+        <button className="btn btn-ghost btn-sm" style={{fontSize:12}} onClick={() => setShowNewChatModal(true)}>
+          <Icon name="newchat" size={12} />
+          New chat
+        </button>
+        {chatVisibility && (
+          <span style={{
+            display:'inline-flex', alignItems:'center', gap:4,
+            fontSize:11, fontWeight:500, padding:'2px 8px', borderRadius:99,
+            background: chatVisibility==='shared' ? 'var(--accent-green-dim)' : 'rgba(91,142,240,0.12)',
+            color: chatVisibility==='shared' ? 'var(--accent-green)' : 'var(--accent-blue)',
+            border: `1px solid ${chatVisibility==='shared' ? 'rgba(61,220,132,0.25)' : 'rgba(91,142,240,0.25)'}`,
+          }}>
+            {chatVisibility === 'shared'
+              ? <><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><circle cx="5" cy="5" r="2" stroke="currentColor" strokeWidth="1.3"/><circle cx="10" cy="4" r="1.5" stroke="currentColor" strokeWidth="1.3"/><path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/><path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg> Shared</>
+              : <><svg width="10" height="10" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" strokeWidth="1.3"/><path d="M2.5 12c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg> Personal</>
+            }
+          </span>
+        )}
+
+        {/* History dropdown */}
+        {showHistory && (
+          <div className="history-dropdown">
+            <div className="history-header">Chat history</div>
+            {chatHistory.length === 0 ? (
+              <div className="history-empty">
+                <svg width="24" height="24" viewBox="0 0 14 14" fill="none" style={{margin:'0 auto 8px',display:'block',opacity:.3}}><circle cx="7" cy="7" r="5.5" stroke="var(--text-muted)" strokeWidth="1.3"/><path d="M7 4.5V7l2 2" stroke="var(--text-muted)" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                All closed chats will be stored here
+              </div>
+            ) : (
+              chatHistory.map(item => (
+                <div key={item.id} className="history-item" onClick={() => restoreChat(item)}>
+                  <div className={`history-item-icon ${item.visibility}`}>
+                    {item.visibility === 'shared'
+                      ? <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="5" cy="5" r="2" stroke="#3ddc84" strokeWidth="1.3"/><circle cx="10" cy="4" r="1.5" stroke="#3ddc84" strokeWidth="1.3"/><path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/><path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                      : <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="#5b8ef0" strokeWidth="1.3"/><path d="M2.5 12c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4" stroke="#5b8ef0" strokeWidth="1.3" strokeLinecap="round"/></svg>
+                    }
+                  </div>
+                  <div className="history-item-info">
+                    <div className="history-item-title">{item.title}</div>
+                    <div className="history-item-meta">
+                      <span className="history-vis-dot" style={{background: item.visibility==='shared' ? 'var(--accent-green)' : 'var(--accent-blue)'}}></span>
+                      {item.visibility === 'shared' ? 'Shared' : 'Personal'}
+                      <span>·</span>
+                      <span>{item.time}</span>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+
+      {showNewChatModal && (
+        <NewChatModal
+          onConfirm={handleNewChat}
+          onClose={() => setShowNewChatModal(false)}
+        />
+      )}
+
+      {/* Selection toolbar */}
+      <SelectionToolbar
+        rect={selRect}
+        onEdit={handleSelEdit}
+        onRegenerate={handleSelRegenerate}
+        onShare={handleSelShare}
+      />
+
+      {/* Share selected text modal */}
+      {showSelShare && (
+        <ShareToSharedChatModal
+          message={selText}
+          onClose={() => setShowSelShare(false)}
+          onConfirm={confirmSelShare}
+        />
+      )}
+
+      {/* Selection share toast */}
+      {showSelToast && (
+        <div className="toast">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="5" cy="5" r="2" stroke="#3ddc84" strokeWidth="1.3"/><circle cx="10" cy="4" r="1.5" stroke="#3ddc84" strokeWidth="1.3"/><path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/><path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="#3ddc84" strokeWidth="1.3" strokeLinecap="round"/></svg>
+          <span>Shared with group</span>
+        </div>
+      )}
+
+      {/* body */}
+      <div className="chat-body">
+        {chatVisibility === 'shared' ? (
+          <GroupChatBoard />
+        ) : !hasMessages ? (
+          <div className="chat-empty">
+            <div className="chat-logo">
+              <span className="chat-logo-icon"><img src="data:image/png;base64,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" width={22} height={22} alt="Liner" style={{display:'block'}}/></span>
+              <span className="chat-logo-text">Liner <span>Scholar</span></span>
+            </div>
+            {['Find related papers','Brainstorm ideas','Write draft','Add citations','Summarize recent updates'].map(a => (
+              <button key={a} className="btn btn-action chat-quick-btn" onClick={() => handleAction(a)}
+                style={a === 'Summarize recent updates' ? {borderColor:'rgba(61,220,132,0.3)', color:'var(--text-primary)'} : {}}>
+                {a === 'Summarize recent updates' && (
+                  <svg width="13" height="13" viewBox="0 0 14 14" fill="none" style={{flexShrink:0}}>
+                    <circle cx="5" cy="5" r="2" stroke="var(--accent-green)" strokeWidth="1.3"/>
+                    <circle cx="10" cy="4" r="1.5" stroke="var(--accent-green)" strokeWidth="1.3"/>
+                    <path d="M1.5 11.5c0-1.8 1.5-3 3.5-3s3.5 1.2 3.5 3" stroke="var(--accent-green)" strokeWidth="1.3" strokeLinecap="round"/>
+                    <path d="M10 7.5c1.4.2 2.5 1.1 2.5 2.5" stroke="var(--accent-green)" strokeWidth="1.3" strokeLinecap="round"/>
+                  </svg>
+                )}
+                {a}
+                {a === 'Brainstorm ideas' && <span className="quick-new-badge">New</span>}
+              </button>
+            ))}
+            <div className="chat-hint">Type / to start quickly with shortcuts</div>
+          </div>
+        ) : (
+          <div className="chat-msgs">
+            {messages.map((m, i) => (
+              <div key={i}>
+                {m.type === 'user' ? (
+                  <div style={{display:'flex',justifyContent:'flex-end'}}>
+                    <div style={{background:'var(--bg-elevated)',border:'1px solid var(--border-default)',borderRadius:'10px 10px 3px 10px',padding:'8px 12px',fontSize:12.5,color:'var(--text-primary)',maxWidth:'85%'}}>
+                      {m.text}
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="thinking-row" style={{marginBottom:6}}>
+                      <span style={{color:'var(--accent-green)',fontSize:11}}>✓</span>
+                      <span>{m.status}</span>
+                      <span className="chevron">›</span>
+                    </div>
+                    <div className="msg-body" style={{whiteSpace:'pre-line'}}>{m.body}</div>
+                    {m.activityCards && (
+                      <div className="activity-cards">
+                        {m.activityCards.map((c,i) => (
+                          <div key={i} className="activity-card">
+                            <div className="activity-avatar" style={{background: c.color+'22', color: c.color}}>{c.initials}</div>
+                            <div className="activity-info">
+                              <div className="activity-header">
+                                <span className="activity-name">{c.name}</span>
+                                <span className="activity-time">{c.time}</span>
+                              </div>
+                              <div className="activity-desc">{c.action}</div>
+                              <span className="activity-tag">{c.tag}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {m.footer && <div style={{fontSize:12,color:'var(--text-muted)',marginTop:10,lineHeight:1.5}}>{m.footer}</div>}
+                    {m.sources && m.sources.length > 0 && (
+                      <div className="msg-sources">
+                        {m.sources.map((s,j) => (
+                          <div key={j} className="src-link">
+                            <div className={`src-fav ${s.cls}`}>{s.label}</div>
+                            <span>{s.url}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    <MsgToolbar message={m.body} chatVisibility={chatVisibility} />
+                  </div>
+                )}
+              </div>
+            ))}
+            {isThinking && (
+              <div>
+                <div className="thinking-row" style={{marginBottom:6}}>
+                  <div className="thinking-anim"><span/><span/><span/></div>
+                  <span style={{color:'var(--text-muted)'}}>Thinking…</span>
+                </div>
+              </div>
+            )}
+            <div ref={messagesEndRef}></div>
+          </div>
+        )}
+      </div>
+
+      {/* input */}
+      <div className="chat-input-area">
+        <div className="context-chip">
+          <Icon name="doc" size={11} color="var(--text-muted)" />
+          Assistive...
+        </div>
+        <div className="input-box">
+          {contextChips.length > 0 && (
+            <div className="ctx-chips">
+              {contextChips.map((c, i) => (
+                <span key={c.id} className="ctx-chip" title={c.text}>
+                  <span className="ctx-chip-icon">
+                    <svg width="11" height="11" viewBox="0 0 14 14" fill="none">
+                      <path d="M3 2h5l3 3v7H3V2z" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                      <path d="M8 2v3h3" stroke="currentColor" strokeWidth="1.2" strokeLinejoin="round"/>
+                    </svg>
+                  </span>
+                  <span className="ctx-chip-text">“{c.text}”</span>
+                  <button className="ctx-chip-close" onClick={() => setContextChips(chips => chips.filter(x => x.id !== c.id))} aria-label="Remove">
+                    <svg width="9" height="9" viewBox="0 0 10 10" fill="none"><path d="M2 2l6 6M8 2l-6 6" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round"/></svg>
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
+          <div className="input-field-wrap">
+            <input
+              className="chat-field"
+              placeholder={contextChips.length > 0 ? "Ask about the selected context…" : "Ask anything or type / to choose from task options"}
+              value={inputVal}
+              onChange={e => setInputVal(e.target.value)}
+              onKeyDown={e => {
+                if (e.key === 'Enter') handleSend();
+                if (e.key === 'Backspace' && inputVal === '' && contextChips.length > 0) {
+                  setContextChips(chips => chips.slice(0, -1));
+                }
+              }}
+              onPaste={e => {
+                const text = e.clipboardData.getData('text/plain');
+                if (text && text.length > 40) {
+                  e.preventDefault();
+                  setContextChips(chips => [...chips, {
+                    id: Date.now() + Math.random(),
+                    text: text.trim().replace(/\s+/g, ' ')
+                  }]);
+                }
+              }}
+            />
+            <button className="mic-btn">
+              <Icon name="mic" size={14} color="var(--text-muted)" />
+            </button>
+          </div>
+          <div className="input-actions">
+            <button className="input-btn"><Icon name="attach" size={11} /></button>
+            <button className="input-btn"><Icon name="filter" size={11} /> Shortcuts</button>
+            <button className="input-btn"><Icon name="plus" size={11} /> Add context</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── App ── */
+function EditorView() {
+  const [content, setContent] = React.useState(`The integration of text-to-speech (TTS) technology into educational settings has emerged as a critical accommodation strategy for students with reading disabilities. This literature review synthesizes evidence from 28 peer-reviewed studies conducted between 2002 and 2019, examining the effectiveness of TTS and related read-aloud tools on reading comprehension outcomes.\n\nFindings consistently demonstrate that TTS interventions produce moderate-to-large effect sizes (mean d = 0.35) for students with diagnosed reading disabilities, with particularly pronounced benefits for individuals with dyslexia and those presenting with the most severe reading impairments. The evidence further suggests that synchronised text highlighting amplifies these benefits by approximately 15%, underscoring the importance of multimodal presentation.\n\nDespite the robust evidence base, significant gaps remain in our understanding of long-term outcomes, implementation fidelity across diverse classroom settings, and the conditions under which TTS is most effective. Teacher training and attitudinal barriers emerge consistently as moderating variables warranting further investigation.`);
+
+  return (
+    <div className="editor-wrap">
+      {/* toolbar */}
+      <div className="editor-toolbar">
+        <select style={{appearance:'none',background:'var(--bg-card)',border:'1px solid var(--border-default)',borderRadius:5,color:'var(--text-secondary)',fontFamily:'var(--font)',fontSize:11,padding:'3px 8px',outline:'none',cursor:'pointer'}}>
+          <option>Paragraph</option><option>Heading 1</option><option>Heading 2</option><option>Heading 3</option>
+        </select>
+        <div className="tb-divider"></div>
+        {[['B','font-weight:700'],['I','font-style:italic'],['U','text-decoration:underline']].map(([l])=>(
+          <button key={l} className="tb-btn" style={{fontStyle:l==='I'?'italic':'',fontWeight:l==='B'?700:'',textDecoration:l==='U'?'underline':''}}>{l}</button>
+        ))}
+        <div className="tb-divider"></div>
+        <button className="tb-btn" title="Bullet list">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><circle cx="2" cy="4" r="1" fill="currentColor"/><circle cx="2" cy="7" r="1" fill="currentColor"/><circle cx="2" cy="10" r="1" fill="currentColor"/><path d="M5 4h7M5 7h7M5 10h7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
+        </button>
+        <button className="tb-btn" title="Numbered list">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M1.5 2.5h2M1.5 5.5h2M1.5 8.5h2" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/><path d="M5 3h7M5 7h7M5 11h7" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
+        </button>
+        <button className="tb-btn" title="Quote">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M2 5c0-1.1.9-2 2-2h1v3H3v1a2 2 0 002 2H4M8 5c0-1.1.9-2 2-2h1v3H9v1a2 2 0 002 2h-1" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round"/></svg>
+        </button>
+        <div className="tb-divider"></div>
+        <button className="tb-btn" title="Link">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><path d="M5.5 8.5l3-3M4 9.5l-1 1a2.5 2.5 0 003.5 3.5l1-1M10 4.5l1-1a2.5 2.5 0 00-3.5-3.5l-1 1" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round"/></svg>
+        </button>
+        <button className="tb-btn" title="Image">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="12" height="10" rx="1.5" stroke="currentColor" strokeWidth="1.2"/><circle cx="4.5" cy="5.5" r="1" stroke="currentColor" strokeWidth="1.1"/><path d="M1 9l3-3 3 3 2-2 4 4" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round"/></svg>
+        </button>
+        <div style={{marginLeft:'auto',display:'flex',gap:6}}>
+          <button className="btn btn-secondary btn-xs">Save draft</button>
+          <button className="btn btn-xs" style={{background:'var(--accent-green)',color:'#111',border:'none',fontWeight:600}}>Publish</button>
+        </div>
+      </div>
+
+      {/* document */}
+      <div className="editor-body">
+        <input className="editor-title" defaultValue="Literature Review: TTS and Reading Comprehension" />
+        <div className="editor-meta">
+          <span>Last edited by <strong style={{color:'var(--text-secondary)'}}>James</strong> · 5 hours ago</span>
+          <span>·</span>
+          <span style={{color:'var(--accent-green)'}}>● Auto-saved</span>
+        </div>
+        <textarea
+          className="editor-content"
+          value={content}
+          onChange={e => setContent(e.target.value)}
+        />
+      </div>
+    </div>
+  );
+}
+
+/* ── App ── */
+function FileTooltip({ file, anchorRect }) {
+  if (!file || !anchorRect || file.type === 'folder') return null;
+  const top = Math.min(anchorRect.top, window.innerHeight - 260);
+  return (
+    <div className="file-tooltip" style={{ left: anchorRect.right + 10, top }}>
+      <div className="file-tooltip-card">
+        {/* header */}
+        <div className="ft-tip-header">
+          {file.type === 'link'
+            ? <svg width="11" height="11" viewBox="0 0 14 14" fill="none"><path d="M5.5 8.5l3-3M4 9.5l-1 1a2.5 2.5 0 003.5 3.5l1-1M10 4.5l1-1a2.5 2.5 0 00-3.5-3.5l-1 1" stroke="var(--text-muted)" strokeWidth="1.3" strokeLinecap="round"/></svg>
+            : <div className="ft-tip-dot" style={{background: file.color || 'var(--text-muted)'}}></div>
+          }
+          <span className="ft-tip-name">{file.fullName}</span>
+        </div>
+        <div className="ft-tip-meta">
+          <span>{file.pages} pages</span>
+          <span>·</span>
+          <span>Updated {file.updated}</span>
+        </div>
+
+        {/* TL;DR */}
+        {file.tldr && (
+          <div style={{marginTop:10}}>
+            <div style={{display:'flex',alignItems:'center',gap:5,marginBottom:5}}>
+              <span style={{fontSize:9.5,fontWeight:700,textTransform:'uppercase',letterSpacing:'0.09em',color:'var(--accent-green)'}}>TL;DR</span>
+              <div style={{flex:1,height:'1px',background:'var(--border-subtle)'}}></div>
+            </div>
+            <div style={{fontSize:12,lineHeight:1.6,color:'var(--text-secondary)'}}>{file.tldr}</div>
+          </div>
+        )}
+
+        {/* tags */}
+        {file.tags && (
+          <div className="ft-tip-tags">
+            {file.tags.map(t => <span key={t} className="ft-tip-tag">{t}</span>)}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function App() {
+  const [sidebarW, setSidebarW] = React.useState(200);
+  const [chatW, setChatW] = React.useState(308);
+  const [resizing, setResizing] = React.useState(null);
+
+  React.useEffect(() => {
+    if (!resizing) return;
+    const onMove = (e) => {
+      if (resizing === 'sidebar') {
+        const w = Math.max(160, Math.min(380, e.clientX));
+        setSidebarW(w);
+      } else if (resizing === 'chat') {
+        const w = Math.max(240, Math.min(600, window.innerWidth - e.clientX));
+        setChatW(w);
+      }
+    };
+    const onUp = () => setResizing(null);
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('mouseup', onUp);
+    return () => {
+      document.removeEventListener('mousemove', onMove);
+      document.removeEventListener('mouseup', onUp);
+    };
+  }, [resizing]);
+
+  const [activeTab, setActiveTab] = React.useState('Files');
+  const [activeFile, setActiveFile] = React.useState('f4');
+  const [selected, setSelected] = React.useState(new Set());
+  const [allChecked, setAllChecked] = React.useState(false);
+  const [sortBy, setSortBy] = React.useState('Most relevant');
+  const [hoveredFile, setHoveredFile] = React.useState(null);
+  const [tooltipAnchor, setTooltipAnchor] = React.useState(null);
+  const hoverTimer = React.useRef(null);
+
+  const togglePaper = (id) => {
+    setSelected(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleAll = () => {
+    if (allChecked) {
+      setSelected(new Set());
+      setAllChecked(false);
+    } else {
+      setSelected(new Set(PAPERS.map(p => p.id)));
+      setAllChecked(true);
+    }
+  };
+
+  return (
+    <div className={`app${resizing ? ' resizing' : ''}`}>
+      {/* ── topbar ── */}
+      <div className="topbar">
+        <div className="tb-breadcrumb">
+          <span style={{color:'var(--accent-green)',fontSize:11}}>●</span>
+          <span>Projects</span>
+          <span className="tb-sep">/</span>
+          <span className="tb-current">Untitled</span>
+        </div>
+        <div className="tb-center">
+          <div className="tabs">
+            {['Files','Editor','Chat'].map(t => (
+              <div key={t} className={`tab${activeTab===t?' active':''}`} onClick={()=>setActiveTab(t)}
+                style={{position:'relative'}}>
+                {t}
+                {t === 'Chat' && activeTab !== 'Chat' && (
+                  <span style={{
+                    position:'absolute', top:3, right:3,
+                    width:5, height:5, borderRadius:'50%',
+                    background:'var(--accent-red)',
+                    boxShadow:'0 0 0 1.5px var(--bg-base)',
+                  }}></span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="tb-right">
+          <div className="credits">
+            <span className="zap">⚡</span>
+            <span>2,375</span>
+          </div>
+          <button className="btn btn-upgrade btn-sm">Upgrade</button>
+        </div>
+      </div>
+
+      <div className="body">
+        {/* ── sidebar ── */}
+        <div className="sidebar" style={{width: sidebarW}}>
+          <div className="sidebar-header">
+            <span className="sidebar-title">Files</span>
+            <button className="btn btn-secondary btn-xs" style={{gap:4}}>
+              <Icon name="plus" size={10} /> Add
+              <Icon name="chevron" size={10} />
+            </button>
+          </div>
+          <div className="sidebar-search">
+            <div className="search-wrap">
+              <span className="search-icon"><Icon name="search" size={11} color="var(--text-muted)" /></span>
+              <input className="search-input" placeholder="Search files" />
+            </div>
+          </div>
+          <div className="filetree">
+            {FILES.map(f => (
+              <div
+                key={f.id}
+                className={`ft-item${activeFile===f.id?' active':''}`}
+                onClick={()=>setActiveFile(f.id)}
+                onMouseEnter={e => {
+                  if (f.type === 'folder') return;
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  clearTimeout(hoverTimer.current);
+                  hoverTimer.current = setTimeout(() => {
+                    setHoveredFile(f);
+                    setTooltipAnchor(rect);
+                  }, 400);
+                }}
+                onMouseLeave={() => {
+                  clearTimeout(hoverTimer.current);
+                  setHoveredFile(null);
+                  setTooltipAnchor(null);
+                }}
+              >
+                {f.type === 'folder' && (
+                  <span className="ft-folder-icon"><Icon name="folder" size={13} color="#5b8ef0" /></span>
+                )}
+                {f.type === 'link' && (
+                  <span style={{color:'var(--text-muted)'}}><Icon name="link" size={12} color="var(--text-muted)" /></span>
+                )}
+                {f.type === 'doc' && (
+                  <span style={{width:8,height:8,borderRadius:2,background:f.color||'var(--text-muted)',flexShrink:0,display:'inline-block'}}></span>
+                )}
+                <span className="ft-item-name">{f.name}</span>
+              </div>
+            ))}
+          </div>
+          <div className="sidebar-bottom">
+            <div style={{display:'flex',alignItems:'center',gap:8}}>
+              <div className="user-dot"></div>
+            </div>
+            <button className="btn-icon">
+              <Icon name="more" size={13} color="var(--text-muted)" />
+            </button>
+          </div>
+        </div>
+
+        {/* resize handle: sidebar / main */}
+        <div className={`resize-handle${resizing==='sidebar'?' dragging':''}`} onMouseDown={() => setResizing('sidebar')}></div>
+
+        {/* ── main panel ── */}
+        <div className="main">
+          {/* doc tab */}
+          {activeTab === 'Files' && <>
+          <div className="doc-tabs">
+            <div className="doc-tab active">
+              <span className="doc-tab-dot" style={{background:'var(--accent-green)'}}></span>
+              Assistive Technolo...
+              <span className="doc-tab-close">✕</span>
+            </div>
+          </div>
+
+          {/* filter bar */}
+          <div className="filter-bar">
+            <button className="btn btn-secondary btn-xs">
+              <Icon name="filter" size={10} /> Filter
+            </button>
+            <select className="select" value={sortBy} onChange={e=>setSortBy(e.target.value)}>
+              <option>Most relevant</option>
+              <option>Most cited</option>
+              <option>Most recent</option>
+            </select>
+            <button className="btn btn-ghost btn-xs">
+              <Icon name="plus" size={10} /> Add column
+            </button>
+            <div className="filter-right">
+              <button className="btn btn-secondary btn-xs">
+                <Icon name="export" size={10} /> Export
+              </button>
+              <button className="btn btn-secondary btn-xs">
+                Share <Icon name="external" size={10} />
+              </button>
+            </div>
+          </div>
+
+          {/* table */}
+          <div className="table-wrap">
+            <div className="table-head">
+              <div className="th th-check" onClick={toggleAll}>
+                <div className={`checkbox${allChecked?' checked':''}`}>
+                  {allChecked && <Icon name="check" size={10} color="#111" />}
+                </div>
+              </div>
+              <div className="th">
+                Paper ({PAPERS.length})
+                <Icon name="pin" size={11} color="var(--text-muted)" />
+              </div>
+              <div className="th">Selection rationale</div>
+            </div>
+
+            {PAPERS.map(p => (
+              <PaperRow
+                key={p.id}
+                paper={p}
+                selected={selected.has(p.id)}
+                onToggle={() => togglePaper(p.id)}
+              />
+            ))}
+          </div>
+          </>}
+
+          {activeTab === 'Editor' && <EditorView />}
+
+        </div>
+
+        {/* resize handle: main / chat */}
+        <div className={`resize-handle${resizing==='chat'?' dragging':''}`} onMouseDown={() => setResizing('chat')}></div>
+
+        {/* ── chat panel ── */}
+        <ChatPanel width={chatW} />
+      </div>
+
+      {/* file hover tooltip */}
+      <FileTooltip file={hoveredFile} anchorRect={tooltipAnchor} />
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>

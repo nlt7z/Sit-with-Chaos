@@ -37,3 +37,7 @@ next-env.d.ts
 
 # Large media — exceeds GitHub 100MB limit; host via LFS/CDN instead
 public/assets/liner/Liner Product Video.mp4
+
+# large unreferenced case-study PDFs (keep local, host externally if needed)
+public/assets/liner/Processbook.pdf
+public/assets/liner/Liner-stakeholder-report_north4%20studio.pdf

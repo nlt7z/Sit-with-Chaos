@@ -1,11 +1,13 @@
+import { Footer } from "@/components/Footer";
+import { Nav } from "@/components/Nav";
 import type { Metadata } from "next";
-import LinerCaseStudy from "./LinerCaseStudy";
+import LinerScholarCaseStudy from "./LinerScholarCaseStudy";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
 const PATH = "/work/liner";
-const TITLE = "Liner — Research-driven AI collaboration workflow";
+const TITLE = "Liner AI Scholar — Collaborative Deep-Research Workflow";
 const DESCRIPTION =
-  "Led research and design for an AI-native collaborative research experience on Liner — used by 10M+ academic users and ranked a top-20 web AI by a16z. Three core interaction patterns reframe AI from a feature add into a collaborative-trust layer.";
+  "A collaborative deep-research workflow for Liner AI: research strategy, 11 researcher interviews, synthesis findings, and the product decisions that shaped a team-based scholarly research workflow.";
 const OG_IMAGE = "/assets/og/liner.jpg";
 
 export const metadata: Metadata = {
@@ -38,7 +40,9 @@ export default function LinerPage() {
         image={OG_IMAGE}
         datePublished="2026-05-01"
       />
-      <LinerCaseStudy />
+      <Nav variant="dark" />
+      <LinerScholarCaseStudy />
+      <Footer variant="dark" />
     </>
   );
 }
