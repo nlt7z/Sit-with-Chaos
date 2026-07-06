@@ -3477,6 +3477,12 @@
           }, 200); break;
         case 'focus':
           openEditorView(); setTimeout(function(){ setFocus(true); }, 180); break;
+        case 'group':
+          openEditorView(); setTimeout(function(){
+            filesPanel.classList.add('hidden'); chatPanel.classList.add('hidden'); editorPanel.classList.remove('hidden');
+            ensureGroupOpen(); renderGroup();
+            try{ var bu=document.querySelector('#groupPanel .gc-bot-update-row'); if(bu) bu.scrollIntoView({block:'center'}); }catch(_e){}
+          }, 200); break;
       }
     }catch(_e){}
   }

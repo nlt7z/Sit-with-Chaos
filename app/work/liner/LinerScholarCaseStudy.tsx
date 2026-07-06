@@ -116,7 +116,7 @@ function AutoVideo({ src, poster, className = "" }: { src: string; poster?: stri
     io.observe(v);
     return () => io.disconnect();
   }, [src]);
-  return <video ref={vref} muted loop playsInline preload="none" poster={poster} className={className} />;
+  return <video ref={vref} muted loop playsInline controls preload="none" poster={poster} className={className} />;
 }
 
 /* Scrollytelling: a sticky live prototype on the left that deep-links to the
@@ -204,15 +204,17 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
       if (w > 0) setScale(Math.min(1, w / NW));
     });
     ro.observe(el);
-    // lazy-mount this walkthrough's iframe only when it nears the viewport
+    // Mount this walkthrough's live iframe only while it's near the viewport, and
+    // unmount it once it's scrolled well away. The page carries five heavy prototype
+    // iframes; keeping every one alive at once is what would eventually exhaust
+    // memory and jank (or crash) low-end / Safari sessions. Capping to the one or two
+    // the reader is actually near keeps it stable no matter how far they scroll.
     const io = new IntersectionObserver(
       ([e]) => {
-        if (e.isIntersecting) {
-          setNear(true);
-          io.disconnect();
-        }
+        setNear(e.isIntersecting);
+        if (!e.isIntersecting) setReady(false); // force a fresh handshake on remount
       },
-      { rootMargin: "500px 0px" },
+      { rootMargin: "600px 0px" },
     );
     io.observe(el);
     return () => {
@@ -416,7 +418,7 @@ const ITERATIONS = [
     frame: "/assets/liner/prototypes/v1-dark.html",
     poster: "/assets/liner/ideation/v1-dark.png",
     manual: true,
-    title: "A personal reading room",
+    title: "A personal reading room vs. a team group chat",
     body: "v1 keeps Liner solo. The right rail is a tabbed AI chat. You spin up as many private chats as you want, with a single shared Group thread. Each source shows its TL;DR inline, so you triage papers without opening them, and you slide any private answer into Group. We didn’t focus on the editor, since we assumed it was no different from Google Docs. We turned out to be wrong.",
     show: "Watch the flow from a private AI chat into the shared Group thread.",
     call: "The call here: keep Liner personal and get the AI conversation right first, rather than bolting a team feed on top of it.",
@@ -428,7 +430,7 @@ const ITERATIONS = [
     poster: "/assets/liner/ideation/v2-group-topbar.png",
     manual: true,
     title: "Group gets its own panel",
-    body: "v2 brings the team in. The Group thread moves out to its own far-right panel, and it fills with structured knowledge cards, not chat. Each card carries its content, its citation, and a confidence signal, and teammates react and reply on it. Files, Editor, AI Chat, and Group open together.",
+    body: "User-testing v1 surfaced the problem that drove v2: a team doesn’t want another chat stream, it wants reviewed knowledge. So v2 brings the team in — the Group thread moves out to its own far-right panel, and it fills with structured knowledge cards, not chat. Each card carries its content, its citation, and a confidence signal, and teammates react and reply on it. Files, Editor, AI Chat, and Group open together.",
     show: "Open the Group panel to see the knowledge cards.",
     call: "The call here: make Group a space for reviewed knowledge. We took it too far — cards-only left no room to talk — and later brought a team conversation back alongside the cards.",
   },
@@ -438,7 +440,7 @@ const ITERATIONS = [
     frame: "/assets/liner/prototypes/v3-workspace.html",
     manual: false,
     title: "A workspace, and composable editor modes",
-    body: "v3 adds the workspace you land on before any doc, with milestones, tasks, teammates, and connected tools. In the editor, Citation ties each paragraph to its source, and Focus clears the panels for writing. That same select-to-reveal idea shaped the chat, which I explored as 3 layouts. On the technical side, I connected Figma MCP and generated this prototype straight from Liner’s design system, so it matches the real product.",
+    body: "v3 adds the workspace you land on before any doc, with milestones, tasks, teammates, and connected tools. In the editor, Citation ties each paragraph to its source, and Focus clears the panels for writing. That same select-to-reveal idea shaped the chat, which I explored as 3 layouts. Up to here, v1 and v2 were about direction, not craft — rough, vibe-coded prototypes to see whether an idea held. v3 is where I shifted to polish: I connected Figma MCP and generated this prototype straight from Liner’s design system, so it matches the real product instead of approximating it.",
     show: "Try switching editor modes, then the workspace and chat layouts.",
     call: "The call here: a workspace before the doc, and a hard split between private and shared, rather than one feed with a privacy toggle.",
   },
@@ -486,7 +488,7 @@ const WALK_V1: Scene[] = [
     scene: "files",
     label: "Files",
     title: "TL;DR on each source",
-    body: "Every saved source shows its TL;DR inline, so you triage papers without opening a thing.",
+    body: "Every saved source shows its TL;DR inline, so you triage papers without opening a thing — it’s for the reader on the team, the one deciding what deserves a full pass.",
   },
 ];
 const WALK_V2: Scene[] = [
@@ -517,18 +519,6 @@ const WALK_V3: Scene[] = [
     body: "Milestones, tasks, teammates, and connected tools, before you open any doc.",
   },
   {
-    scene: "citation",
-    label: "Citation mode",
-    title: "Citation mode",
-    body: "Turn citations on and hover a marker in the text to pop the source card it draws from.",
-  },
-  {
-    scene: "comments",
-    label: "Comment mode",
-    title: "Comments in the margin",
-    body: "Open a margin comment to leave feedback, question a claim, or track what has been reviewed.",
-  },
-  {
     scene: "authors",
     label: "Author mode",
     title: "See who wrote what",
@@ -539,6 +529,12 @@ const WALK_V3: Scene[] = [
     label: "Focus mode",
     title: "Focus mode",
     body: "Selected on its own, Focus clears the side panels for distraction-free writing.",
+  },
+  {
+    scene: "group",
+    label: "Group",
+    title: "The group’s AI: only the updates that touch you",
+    body: "The update cards above are every card and message in the group thread — the team view. The Liner AI bot, meanwhile, briefs you in the thread with just the updates relevant to you — the personalized view. Team and individual, layered in one Group line.",
   },
 ];
 const WALKS: Record<string, Scene[]> = { v1: WALK_V1, v2: WALK_V2, v3: WALK_V3 };
@@ -573,7 +569,7 @@ const WALKTHROUGH: Scene[] = [
     scene: "project",
     label: "Workspace",
     title: "The project workspace",
-    body: "Every project opens on a workspace: tasks, teammates, and connected resources like Google Drive and Zotero. The task cards are assigned across people — and to Liner AI, which quietly owns citation-checking and keeps the group digest current.",
+    body: "Every project opens on a workspace: tasks, teammates, and connected resources like Google Drive and Zotero. Liner AI assigns the task cards across the team — and takes some itself, quietly owning citation-checking and keeping the group digest current.",
     why: "Coordination used to fall on one person. Here AI carries it as a background, so nobody has to chase status.",
   },
   {
@@ -595,28 +591,21 @@ const WALKTHROUGH: Scene[] = [
     label: "Editor · citations",
     title: "Every claim traces to its source",
     body: "Turn citations on and each claim carries a marker. Hover to see the quote and source; click through to open the original and land on the exact passage — the claim in its full context, not a stripped snippet.",
-    why: "A shared result is only trusted if its source travels with it — and can be checked in place, not taken on faith.",
+    why: "A shared result is only trusted if its source travels with it — and can be checked in place, not taken on faith. It serves both sides of the desk: the writer citing a claim, and the teammate verifying it.",
   },
   {
     scene: "comments",
     label: "Editor · review",
     title: "Verify, question, or revise",
     body: "Verification stays human. Open a margin comment, read the claim against the passage it came from, and mark it Verified — a named, visible state that means “I checked this against its source and I stand behind sharing it.” The click-through makes that cheap to do.",
-    why: "Teams asked for a signal that a human reviewed the output — “I don’t trust it as a final output, but it helps me get the thinking going” (P5) — so a person, not the model, owns Verified.",
-  },
-  {
-    scene: "authors",
-    label: "Editor · presence",
-    title: "See who wrote what, live",
-    body: "Authorship colours show who added each line, and presence shows who is in the doc right now.",
-    why: "Teams want activity history transparent, even when the AI chat isn’t.",
+    why: "Teams asked for a signal that a human reviewed the output — “I don’t trust it as a final output, but it helps me get the thinking going” (P5) — so a person, not the model, owns Verified. In an academic team this is the advisor’s or senior reviewer’s tool, the one who signs off.",
   },
   {
     scene: "focus",
     label: "Editor · focus",
     title: "Focus mode for writing",
     body: "One click clears the panels for distraction-free drafting. The citation and comment layers stay composable.",
-    why: "Borrowed from the reading modes, so writing gets the same immersion.",
+    why: "Borrowed from the reading modes, so writing gets the same immersion — this one’s for the person drafting, not the reader triaging sources.",
   },
   {
     scene: "share",
@@ -629,17 +618,17 @@ const WALKTHROUGH: Scene[] = [
     scene: "group",
     label: "Right · the group",
     title: "Cards and conversation, together",
-    body: "The Group thread mixes reviewed knowledge cards with a real conversation, plus the AI’s background digest of what changed while you were away. Two input boxes, two intents: the AI box is for prompting the assistant; the group box is for talking to your teammates.",
+    body: "The Group thread mixes reviewed knowledge cards with a real conversation, plus the AI’s background digest that walks in to brief you on what changed while you were away — which sections were edited, where your review is needed, and what new sources have landed for you to read. Two input boxes, two intents: the AI box is for prompting the assistant; the group box is for talking to your teammates.",
     why: "v2’s cards-only was too rigid. Teams need to talk — so structure and conversation live side by side, and the two boxes keep “ask the AI” and “tell the team” from blurring.",
   },
 ];
 
 // How we'd know the collaboration bet paid off — the metrics I'd instrument.
 const METRICS = [
-  ["Team activation", "Projects created with more than one member. Does collaboration actually get switched on, or does Liner stay a solo tool?"],
-  ["Invite rate", "Share of projects where someone pulls a teammate in — the product’s own growth loop, and the path to the new audience."],
-  ["Share-to-group rate", "Share of private AI answers a person curates into the shared space. The single clearest signal that the private → shared handoff is working."],
-  ["Feature-led upgrades", "Subscriptions and upgrades attributable to the collaboration features. Whether the new pattern converts, not just engages."],
+  ["Share-to-group rate", "New interaction pattern", "Share of private AI answers a person curates into the shared space. The single clearest signal that the private → shared handoff is working."],
+  ["Invite rate", "New team audience", "Share of projects where someone pulls a teammate in — the product’s own growth loop, and the path to the new audience."],
+  ["Team activation", "New team audience", "Projects created with more than one member. Does collaboration actually get switched on, or does Liner stay a solo tool?"],
+  ["Feature-led upgrades", "A reason to stay", "Subscriptions and upgrades attributable to the collaboration features. Whether the new pattern converts, not just engages."],
 ] as const;
 
 const FUTURE = [
@@ -912,16 +901,23 @@ export default function LinerScholarCaseStudy() {
             <Title className="mt-5">Liner Collective Intelligence</Title>
             <Lead className="mt-6">
               <p>
+                Today, everything Liner’s AI generates already traces back to its cited sources — the AI is
+                accountable on its own. In a team, that isn’t enough.
+              </p>
+              <p>
                 Researchers don’t want to share their thinking. They want to share conclusions they can stand behind.
                 Today that handoff means leaving the tool: paste into Google Docs, drop a link in Slack, and the
                 citations break while no one can tell what was verified. So instead of a chat room, I designed the
                 boundary between a private workspace and a shared one: one journey, in four stages.
               </p>
               <p>
-                In the team context, AI shifts role. It’s no longer a chat partner or a teammate persona — it’s a{" "}
-                <span className="text-white">background</span>. It posts the group digest, keeps every citation
-                checked, and takes over the coordination that used to fall on one person. It never drafts or decides
-                in your place; it absorbs the busywork so the humans can do the judgment.
+                This reframe was mine to make, and it came straight from the research: the real friction in a team
+                isn’t the work itself — it’s that one person always ends up doing the glue work, the invisible
+                coordination labour that holds the group together. So in the team context, I recast AI’s role: it’s no
+                longer a chat partner or a teammate persona — it’s a <span className="text-white">background</span>. It
+                posts the group digest, keeps every citation checked, and takes over the coordination that used to fall
+                on one person. It never drafts or decides in your place; it absorbs the busywork so the humans can do
+                the judgment.
               </p>
             </Lead>
           </Reveal>
@@ -1017,12 +1013,13 @@ export default function LinerScholarCaseStudy() {
                     <div className="mt-8 max-w-2xl">
                       <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-nltLime">Final pick · Plan B + C</p>
                       <p className="mt-2 text-[15px] leading-[1.65] text-white/70">
-                        The interaction takes its cue from v3’s Focus and Citation modes: you select one panel or both.
-                        Testing settled it. People wanted both threads readable at once, since the content comes from the
-                        left and they wanted to see more of it. Selecting either panel on its own, or both side by side,
-                        kept the private-to-shared move continuous instead of a hard switch. Letting people choose the
-                        state also makes the process visible when sharing, which keeps it accurate and traceable back to
-                        the source.
+                        The AI-and-Group chat was mine to own, and I designed it by carrying the editor’s own gesture
+                        across: the same select-to-reveal from v3’s Focus and Citation modes now drives the chat — you
+                        select one panel or both. Testing settled it. People wanted both threads readable at once, since
+                        the content comes from the left and they wanted to see more of it. Selecting either panel on its
+                        own, or both side by side, kept the private-to-shared move continuous instead of a hard switch.
+                        Letting people choose the state also makes the process visible when sharing, which keeps it
+                        accurate and traceable back to the source.
                       </p>
                     </div>
 
@@ -1054,10 +1051,39 @@ export default function LinerScholarCaseStudy() {
                 <span className="text-white">Citation</span> for source traceability,{" "}
                 <span className="text-white">Comments</span> and <span className="text-white">Authors</span> for
                 accountability over who wrote and reviewed what, and <span className="text-white">Focus</span> for a
-                dense, shared surface that can still collapse into a quiet room to write in.
+                dense, shared surface that can still collapse into a quiet room to write in. The walkthrough below
+                demos the ones new to the final build; Author mode you already saw take shape in v3.
               </p>
             </Lead>
           </Reveal>
+
+          {/* the money shot — the whole system in one frame, before we walk it feature by feature */}
+          <Reveal delay={0.03}>
+            <figure className="mt-2">
+              <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-white/10 shadow-[0_40px_120px_-40px_rgba(210,255,0,0.18)]">
+                <Image
+                  src="/assets/liner/ideation/v4-final.png"
+                  alt="The final build in one screen: the editor with live citations and margin comments, an author tag on the text, and the private AI chat beside the Group thread of reviewed knowledge cards."
+                  width={1160}
+                  height={725}
+                  priority
+                  className="h-auto w-full"
+                />
+              </div>
+              <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">
+                <span className="text-white/55">Everything composed —</span>
+                {["Citation", "Comments", "Authors", "Focus", "Share-to-group"].map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full border border-nltLime/25 bg-nltLime/[0.06] px-2.5 py-1 tracking-[0.1em] text-nltLime"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </figcaption>
+            </figure>
+          </Reveal>
+
           <Reveal delay={0.04}>
             <PrototypeWalkthrough src={PROTO_SRC} scenes={WALKTHROUGH} />
           </Reveal>
@@ -1067,7 +1093,6 @@ export default function LinerScholarCaseStudy() {
             <div className={`pt-10 ${HAIR}`}>
               <Subhead>Validated, then refined</Subhead>
               <div className="mt-5 grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
-                {/* the award, left */}
                 <figure className="overflow-hidden rounded-xl ring-1 ring-white/10">
                   <Image
                     src="/assets/liner/Screenshot 2026-07-05 at 01.57.00.png"
@@ -1077,7 +1102,6 @@ export default function LinerScholarCaseStudy() {
                     className="h-auto w-full"
                   />
                 </figure>
-                {/* text, right */}
                 <div className="space-y-3 text-[16px] leading-[1.65] text-white/70">
                   <p>
                     We validated the flow through usability testing — and it also handed us the finding I didn’t want to
@@ -1121,14 +1145,27 @@ export default function LinerScholarCaseStudy() {
           <Reveal>
             <Kicker>Impact</Kicker>
             <Title className="mt-5">Where it landed</Title>
-            <Lead className="mt-6">
-              <p>
-                In the showcase and stakeholder reviews, the team singled out the features that made collaboration feel
-                native as the ones worth taking forward: <span className="text-white">focus mode</span>,{" "}
-                <span className="text-white">citations</span>, and <span className="text-white">share-to-group</span>.
-              </p>
-            </Lead>
           </Reveal>
+
+          {/* results first — the three signals stated big, before any caveat */}
+          <Reveal delay={0.02}>
+            <dl className="grid gap-8 border-t border-white/10 pt-8 sm:grid-cols-3 sm:gap-10">
+              {([
+                ["Jul 2026", "On the roadmap", "Liner is taking the collaborative workflow into the product — launch expected July 2026."],
+                ["3 features", "Chosen to carry forward", "Focus mode, citations, and share-to-group — the collaboration-native ones stakeholders kept."],
+                ["Capstone Award", "Section A", "Jury recognition for feature integration and platform evolution with AI."],
+              ] as const).map(([v, label, text]) => (
+                <div key={label}>
+                  <dt className="font-display text-[1.7rem] font-light leading-[1.05] tracking-[-0.01em] text-nltLime">{v}</dt>
+                  <dd className="mt-2.5">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">{label}</p>
+                    <p className="mt-1.5 text-[14px] leading-[1.5] text-white/60">{text}</p>
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </Reveal>
+
           <Reveal delay={0.04}>
             <figure className="overflow-hidden rounded-2xl bg-black ring-1 ring-white/10">
               <AutoVideo
@@ -1142,13 +1179,17 @@ export default function LinerScholarCaseStudy() {
             <div className={`pt-10 ${HAIR}`}>
               <Subhead>How we’d know it worked</Subhead>
               <p className="mt-3 max-w-2xl text-[15px] leading-[1.65] text-white/60">
-                It shipped as a prototype, so these are the metrics I’d instrument at launch rather than results — the
-                bet is only real if it moves activation, growth, and revenue, not just demos well.
+                It shipped as a prototype, so these are the metrics I’d instrument at launch rather than results. Each
+                maps back to a goal in the brief — a new interaction pattern, a new team audience, a broader reason to
+                stay — because the bet is only real if it moves them, not just demos well.
               </p>
               <dl className="mt-6 grid gap-x-8 gap-y-6 border-t border-white/10 pt-6 sm:grid-cols-2">
-                {METRICS.map(([label, text]) => (
+                {METRICS.map(([label, goal, text]) => (
                   <div key={label}>
-                    <dt className="font-mono text-[12px] uppercase tracking-[0.12em] text-nltLime">{label}</dt>
+                    <dt className="flex flex-wrap items-baseline gap-x-2.5">
+                      <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-nltLime">{label}</span>
+                      <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40">↳ {goal}</span>
+                    </dt>
                     <dd className="mt-2 text-[15px] leading-[1.55] text-white/70">{text}</dd>
                   </div>
                 ))}
@@ -1156,11 +1197,19 @@ export default function LinerScholarCaseStudy() {
             </div>
           </Reveal>
           <Reveal delay={0.05}>
-            <div className="rounded-xl border border-nltLime/30 bg-nltLime/[0.05] p-6">
-              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-nltLime">What’s next</p>
-              <p className="mt-2 text-[18px] leading-[1.5] text-white">
-                Liner is bringing this collaborative workflow into the product, with launch expected July 2026.
-              </p>
+            <div className={`pt-10 ${HAIR}`}>
+              <Link
+                href="/work/liner/deck-mono-zh"
+                className="group flex flex-wrap items-center justify-between gap-4 rounded-xl border border-nltLime/30 bg-nltLime/[0.05] px-6 py-5 transition-colors hover:border-nltLime/60"
+              >
+                <div>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-nltLime">中文演示文稿 · Presentation</p>
+                  <p className="mt-1.5 text-[16px] text-white">一页一页地讲这个案例 — 黑白极简版 Deck</p>
+                </div>
+                <span className="shrink-0 font-mono text-[13px] text-nltLime transition-transform group-hover:translate-x-0.5">
+                  打开 Deck ↗
+                </span>
+              </Link>
             </div>
           </Reveal>
           <Reveal delay={0.06}>
