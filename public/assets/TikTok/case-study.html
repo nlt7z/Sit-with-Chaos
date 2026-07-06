@@ -592,47 +592,31 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     <!-- Process & timeline -->
     <div class="qgroup" style="margin-top:6px">
       <div class="eyebrow"><span class="dot"></span>过程与时间线</div>
-      <h2 style="margin-top:14px;font-size:26px">一天理解问题,四小时把它做出来</h2>
-      <p class="para" style="margin-top:18px">这是一个高度压缩的自发项目。我用一整天时间纯粹地"住"在这个功能里 —— 一边分享、一边接收视频,亲身感受体验到底在哪里断掉,并确定真正的问题是什么、我想把它带向何方。然后我给自己大约 <b>四个小时</b>,把想法变成可点击的可交互原型。</p>
-      <p class="para">这个节奏是刻意的。理解是最贵的部分,也是只有我能做的部分;而搭建,是我让 AI 快速推进的地方。把一整天的真实使用前置,意味着等我开始设计时,我面对的是一个我真正感受过的问题 —— 而不是一个我假设出来的假说。</p>
-      <div class="field" style="margin-top:26px">
-        <div class="fl">Day 1</div>
-        <div class="ft"><b>沉浸与定义问题。</b>以真实的发送方和接收方身份使用产品,定位断点,并确定方向。</div>
-      </div>
-      <div class="field">
-        <div class="fl">~4 小时</div>
-        <div class="ft"><b>想法 &rarr; 落地。</b>把 6+ 个概念做成可点击的编码原型,再收敛到最终方案。</div>
-      </div>
+      <p class="para" style="margin-top:18px">虽然我本身就是 TikTok 的用户,但为了捕捉到更真实的用户心理和更广的使用场景,我先花了一天去体验分享和接收的功能,不断细化问题的方向,想清楚真正的问题到底是什么。这个阶段是<b>最痛苦的</b>,因为过程中会冒出非常多看起来正确的假设,需要把它们一个个 critique 掉;我当时的问题就在于一直停在表面想,没有深入到底层逻辑。但一旦想清楚,我就能顺着问题立刻发散 ideation —— 花了四个小时,把想法直接做成设计原型,再决策出最终方案,一步步做视觉细化。</p>
     </div>
 
     <!-- AI in the loop -->
     <div class="qgroup">
-      <div class="eyebrow"><span class="dot"></span>过程中的 AI</div>
-      <h2 style="margin-top:14px;font-size:26px">AI 把它做得很快 —— 但问题的定义还是我自己的</h2>
-      <p class="para" style="margin-top:18px">6+ 个概念能在一个下午就变成可点击的原型,靠的正是 AI。我描述每一个交互,它生成编码后的界面,于是我能<b>亲手体感</b>这些想法,而不只是把它们画出来 —— 你刚刚刷过的整个可交互原型,都是这样搭出来的。</p>
-      <p class="para">但当我把问题本身交给 AI —— 让它定义问题、发散 How-Might-We —— 它给出的东西始终不如我自己的,因为我是这个功能的真实用户,而它不是。它一直把问题理解成"A 分享了一条视频,B 没有回复"。但这并不是真正的症结。</p>
-      <div class="pull"><p>真正的问题不是"B 没回复",而是 <span class="cy">B 不想看</span> —— 或者 B <span class="pk">看了</span>,而 A 根本无从知道。</p></div>
-      <p class="para">这个区别是整个 case study 的核心,它来自真实的使用经验,而不是模型。所以我让分工落在各自最强的地方:<b>判断问题、定义方向,由我来做;把决定快速变成可点击的东西,交给 AI。</b></p>
+      <div class="eyebrow"><span class="dot"></span>Work with AI</div>
+      <p class="para" style="margin-top:18px">我先根据 TikTok 现在的界面,用 Claude Design 明确 TikTok 的 Design System;再通过 Claude 把我的 ideation、想好的功能写成更细致的 markdown,讲清楚 CTA 在哪里、整个 workflow 是什么;最后把 markdown 和 Design System 一起交给 Claude Code,生成最终的设计。</p>
+      <p class="para">前期我也用 Gemini、ChatGPT 来分析问题、给我不同的方向,但我发现 AI 总是把问题理解成"A 发了视频,B 没回"。可这根本不是真正的问题。真正的问题不是"B 没回",而是 <span class="cy">B 不想看</span> —— 或者 B <span class="pk">看了</span>,但 A 根本不知道。所以 AI 也通过这些反例,帮我更深入地理解了问题。</p>
+      <p class="para">有了初期的 ideation 之后,AI 还帮我做 pressure test,critique 每一个 ideation 到底能不能真的解决我提出的 HMW 问题。</p>
     </div>
 
     <!-- Reflection -->
     <div class="qgroup">
       <div class="eyebrow"><span class="dot"></span>反思</div>
-      <h2 style="margin-top:14px;font-size:26px">方案太多,以及一个关于"改动高度"的问题</h2>
-      <p class="para" style="margin-top:18px">难的从来不是想方案,而是在方案之间取舍。我最后有 6+ 个概念,从几乎零成本的小改动(Smart Reactions,直接塞进已经存在的回复栏),到结构性的大赌注(一个全新的 Shared Feed 容器)。收敛到 <b>Shared Feed + Smart Reactions</b>,意味着砍掉一些我很喜欢的想法。</p>
-      <p class="para">一个诚实的偏差:我大部分时候没有用工程可行性去卡我的想法。这让我能自由发散,但一个真正的提案必须权衡<b>成本与影响</b> —— 有些只是一行改动,有些则要重建一个核心界面 —— 而按这个维度去排序,是我没做完的功课。</p>
-      <p class="para">我反复打转的那个问题,是关于<b>改动的高度(altitude)</b>:我是留在 TikTok 现有的心智模型里、渐进地降低摩擦,还是勇于去做一个真正全新的交互范式?我倾向于保留熟悉的向下刷模型,因为正是它让"看分享"重新变得毫不费力 —— 但我并不认为这就自动是正确答案。这也是我最想继续深挖的那处张力。</p>
+      <p class="para" style="margin-top:18px">在我的方案里,有些是小成本的小改动(Smart Reactions 直接塞进现成的回复栏),有些则动到结构(一个全新的 Shared Feed)。我一直纠结的是"<b>改到多大</b>":是留在 TikTok 现在的习惯里,还是干脆做一个全新的交互。</p>
     </div>
 
     <!-- What's next -->
     <div class="qgroup">
-      <div class="eyebrow"><span class="dot"></span>如果还有时间</div>
-      <h2 style="margin-top:14px;font-size:26px">我接下来会做什么</h2>
-      <div class="hmw-list" style="margin-top:24px">
-        <div class="hmw-q"><span class="k"></span><p><b>用真实用户去验证。</b>这里的一切都是从真实经验和心智模型推演出来的,还没有经过测试。我会把原型放到真实的发送方和接收方面前,看"看"的成本 —— 以及"回"的成本 —— 是否真的降了下来。</p></div>
-        <div class="hmw-q"><span class="k"></span><p><b>把更大胆的范式做成原型。</b>一个我画了但没做出来的想法:像 Tinder / Hinge 那样,对好友分享的视频左右滑动,让"滑动"本身<i>就是</i>回应 —— 于是"看"和"回应"合并成同一个手势。我会让它和更稳妥的 Shared Feed 正面对比,看用户到底更偏好哪一个。</p></div>
-        <div class="hmw-q"><span class="k"></span><p><b>权衡可行性与影响。</b>按搭建成本与预期收益给这些概念排序,让整份工作读起来是一张路线图 —— 先上 Smart Reactions,再上 Feed —— 而不是一堆平铺的功能。</p></div>
-        <div class="hmw-q"><span class="k"></span><p><b>定义什么叫"成功"。</b>分享的反应/回复率、用户实际刷到一位好友那一叠的多深、以及发送方是否终于感到"被看见" —— 这些是我在把任何一项称为成功之前,会先埋点观测的信号。</p></div>
+      <div class="eyebrow"><span class="dot"></span>如果还有时间 · 我接下来想做的</div>
+      <div class="hmw-list" style="margin-top:20px">
+        <div class="hmw-q"><span class="k"></span><p><b>找真实用户再次调研和验证。</b>现在这些都是我根据自己的体验推理出来的。我想通过和真实用户对话,发掘可能被我遗漏的动机和想法,也想拿他们给我的 insight 再推出新的 ideation,让真实用户来验证:是不是真的更愿意看分享了。</p></div>
+        <div class="hmw-q"><span class="k"></span><p><b>试试更大胆的方向。</b>如果不是 TikTok 的语境,我会怎么做?如果不考虑技术的限制,我还能怎么做?</p></div>
+        <div class="hmw-q"><span class="k"></span><p><b>权衡好不好做、值不值得做。</b>按成本和收益给方案排个序,让它像一张路线图(先上 Smart Reactions,再上 Feed),而不是一堆平铺的功能。</p></div>
+        <div class="hmw-q"><span class="k"></span><p><b>想清楚什么算"成功"。</b>比如分享的回应率、大家能刷到一个好友那叠的多深、发送方是不是终于觉得"被看见"。</p></div>
       </div>
     </div>
   </section>
