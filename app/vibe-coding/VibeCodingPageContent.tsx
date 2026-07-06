@@ -522,11 +522,30 @@ function PrototypeCard({
   fluid?: boolean;
   onReady?: () => void;
 }) {
-  const media = (
+  const inner = (
     <MediaSlot media={entry.media} shouldLoad={shouldLoad} onReady={onReady} />
   );
-  // Live sites + embedded prototypes have a destination → show the hover arrow.
-  const hasLink = entry.media.kind === "live" || entry.media.kind === "iframe";
+  // iframe/live media carry their own destination; video/image/custom don't, so
+  // when such an entry has an href (e.g. the TikTok case study) we make the media
+  // itself the link so clicking the video opens the case study.
+  const selfLinked = entry.media.kind === "live" || entry.media.kind === "iframe";
+  const external = !!entry.href?.startsWith("http");
+  const media =
+    !selfLinked && entry.href ? (
+      <Link
+        href={entry.href}
+        target={external ? "_blank" : undefined}
+        rel={external ? "noopener noreferrer" : undefined}
+        aria-label={`Open ${entry.title}`}
+        className="group block transition-opacity hover:opacity-95"
+      >
+        {inner}
+      </Link>
+    ) : (
+      inner
+    );
+  // Live sites, embedded prototypes, and now media-linked entries show the hover arrow.
+  const hasLink = selfLinked || !!entry.href;
 
   return (
     <article
