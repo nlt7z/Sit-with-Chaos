@@ -121,7 +121,7 @@ function AutoVideo({ src, poster, className = "" }: { src: string; poster?: stri
 
 /* Scrollytelling: a sticky live prototype on the left that deep-links to the
  * scene the reader has scrolled to on the right (driven via postMessage). */
-type Scene = { scene: string; label: string; title: string; body: string; why?: string };
+type Scene = { scene: string; label: string; title: string; body: string; why?: string; stage?: string };
 
 function SceneBlock({
   s,
@@ -295,11 +295,26 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
         </div>
       </div>
 
-      {/* the narrative that drives it — right; each scene fills a screen so the pinned frame stays centered */}
+      {/* the narrative that drives it — right; each scene fills a screen so the pinned frame stays centered.
+       * When a scene opens a new journey stage, a stage marker precedes it so the walkthrough reads as
+       * four chapters (Set up · Explore · Curate · Align), not one flat list of features. */}
       <div className="space-y-16 lg:space-y-0">
-        {scenes.map((s, i) => (
-          <SceneBlock key={s.scene} s={s} index={i} isActive={active === i} onActivate={setActive} />
-        ))}
+        {scenes.map((s, i) => {
+          const opensStage = s.stage && s.stage !== scenes[i - 1]?.stage;
+          return (
+            // scene ids can repeat within a walkthrough (v2 pins three beats on the "group" scene),
+            // so the key must include the index to stay unique.
+            <div key={`${s.scene}-${i}`}>
+              {opensStage ? (
+                <div className="flex items-center gap-3 pt-10 lg:pt-24">
+                  <span className="font-mono text-[12px] uppercase tracking-[0.2em] text-nltLime">{s.stage}</span>
+                  <span className="h-px flex-1 bg-nltLime/25" />
+                </div>
+              ) : null}
+              <SceneBlock s={s} index={i} isActive={active === i} onActivate={setActive} />
+            </div>
+          );
+        })}
         {/* tail room so the last scene can reach center before the frame unpins */}
         <div aria-hidden className="hidden lg:block lg:h-[55vh]" />
       </div>
@@ -564,16 +579,22 @@ const CHAT_SWITCH: Scene[] = [
   },
 ];
 
+// The final build, walked along the four-stage journey rather than as a flat feature list —
+// Set up → Explore → Curate → Align. The prototype deep-links each scene and performs the action.
 const WALKTHROUGH: Scene[] = [
+  // ── 01 · Set up ──────────────────────────────────────────────
   {
     scene: "project",
+    stage: "01 · Set up",
     label: "Workspace",
     title: "The project workspace",
     body: "Every project opens on a workspace: tasks, teammates, and connected resources like Google Drive and Zotero. Liner AI assigns the task cards across the team — and takes some itself, quietly owning citation-checking and keeping the group digest current.",
-    why: "Coordination used to fall on one person. Here AI carries it as a background, so nobody has to chase status.",
+    why: "Coordination used to fall on one person. Here AI carries it in the background, so nobody has to chase status — and the workspace makes Liner the team’s shared home, not a tool off to the side.",
   },
+  // ── 02 · Explore (work alone) ────────────────────────────────
   {
     scene: "files",
+    stage: "02 · Explore",
     label: "Left · sources",
     title: "Every source in one panel",
     body: "The papers you’ve saved sit in the left panel. Open one and read it right beside your draft.",
@@ -587,41 +608,54 @@ const WALKTHROUGH: Scene[] = [
     why: "AI assists, and you decide. It never acts on its own.",
   },
   {
-    scene: "citation",
-    label: "Editor · citations",
-    title: "Every claim traces to its source",
-    body: "Turn citations on and each claim carries a marker. Hover to see the quote and source; click through to open the original and land on the exact passage — the claim in its full context, not a stripped snippet.",
-    why: "A shared result is only trusted if its source travels with it — and can be checked in place, not taken on faith. It serves both sides of the desk: the writer citing a claim, and the teammate verifying it.",
-  },
-  {
-    scene: "comments",
-    label: "Editor · review",
-    title: "Verify, question, or revise",
-    body: "Verification stays human. Open a margin comment, read the claim against the passage it came from, and mark it Verified — a named, visible state that means “I checked this against its source and I stand behind sharing it.” The click-through makes that cheap to do.",
-    why: "Teams asked for a signal that a human reviewed the output — “I don’t trust it as a final output, but it helps me get the thinking going” (P5) — so a person, not the model, owns Verified. In an academic team this is the advisor’s or senior reviewer’s tool, the one who signs off.",
-  },
-  {
     scene: "focus",
     label: "Editor · focus",
     title: "Focus mode for writing",
     body: "One click clears the panels for distraction-free drafting. The citation and comment layers stay composable.",
-    why: "Borrowed from the reading modes, so writing gets the same immersion — this one’s for the person drafting, not the reader triaging sources.",
+    why: "Exploration is solo work — so drafting gets its own quiet room, borrowed from the reading modes.",
+  },
+  // ── 03 · Curate (promote a conclusion you stand behind) ──────
+  {
+    scene: "citation",
+    stage: "03 · Curate",
+    label: "Editor · citations",
+    title: "Every claim traces to its source",
+    body: "Turn citations on and each claim carries a marker. Hover to see the quote and source; click through to open the original and land on the exact passage — the claim in its full context, not a stripped snippet.",
+    why: "Curation means promoting a conclusion you can stand behind — so its source travels with it, checkable in place, not taken on faith.",
   },
   {
     scene: "share",
     label: "Right · the chat",
     title: "Private AI, then share to Group",
     body: "Your private AI chat sits beside the Group thread. Share a curated answer across, and its source and citation travel with it. You choose whether to share your prompt, so your chat log stays yours by default.",
-    why: "Teams share outputs, not private AI logs. Liner becomes the shared space, not just a personal tool.",
+    why: "Teams share outputs, not private AI logs. The private → shared handoff is the whole move.",
+  },
+  // ── 04 · Align (verify, question, revise together) ───────────
+  {
+    scene: "comments",
+    stage: "04 · Align",
+    label: "Editor · review",
+    title: "Verify, question, or revise",
+    body: "Verification stays human. Open a margin comment, read the claim against the passage it came from, and mark it Verified — a named, visible state that means “I checked this against its source and I stand behind sharing it.” The click-through makes that cheap to do.",
+    why: "Teams asked for a signal that a human reviewed the output — “I don’t trust it as a final output, but it helps me get the thinking going” (P5) — so a person, not the model, owns Verified.",
   },
   {
     scene: "group",
     label: "Right · the group",
     title: "Cards and conversation, together",
     body: "The Group thread mixes reviewed knowledge cards with a real conversation, plus the AI’s background digest that walks in to brief you on what changed while you were away — which sections were edited, where your review is needed, and what new sources have landed for you to read. Two input boxes, two intents: the AI box is for prompting the assistant; the group box is for talking to your teammates.",
-    why: "v2’s cards-only was too rigid. Teams need to talk — so structure and conversation live side by side, and the two boxes keep “ask the AI” and “tell the team” from blurring.",
+    why: "v2’s cards-only was too rigid. Teams need to talk — so structure and conversation live side by side, aligning on what’s been reviewed.",
   },
 ];
+
+// The small map: every pain we found in research, and the move in the build that answers it.
+const FINDING_ANSWERS = [
+  ["Sharing has boundaries", "A private AI chat, then a deliberate Share-to-group — your prompt stays yours by default."],
+  ["The workflow is fragmented", "Sources, your draft, and the AI all live on one surface, so nothing has to move between tools."],
+  ["Revision state is invisible", "Margin Comments plus a human-owned Verified state, and author colours showing who wrote what."],
+  ["Coordination falls on one person", "AI runs in the background — it assigns tasks, checks every citation, and keeps the group digest current."],
+  ["Liner is a personal tool", "A project workspace makes Liner the team’s shared home, not a tool off to the side."],
+] as const;
 
 // How we'd know the collaboration bet paid off — the metrics I'd instrument.
 const METRICS = [
@@ -815,13 +849,6 @@ export default function LinerScholarCaseStudy() {
                   <span className="text-white">what still breaks once you’re fluent</span> and helped us rank what to
                   build next.
                 </p>
-                <p>
-                  From that, we defined 2 target users. <span className="text-white">Academic research teams</span> write
-                  papers with their professors; they need clear source attribution and a smooth path from collecting
-                  sources to writing. <span className="text-white">Research-based knowledge workers</span>, master’s and
-                  PhD students or lab members, want a shared space for scattered materials and AI outputs they can trust
-                  and share.
-                </p>
               </div>
             </div>
           </Reveal>
@@ -867,13 +894,17 @@ export default function LinerScholarCaseStudy() {
                     </div>
                     {f.img ? (
                       <figure className="mt-1 lg:mt-0">
-                        <Image
-                          src={f.img}
-                          alt={f.alt}
-                          width={1400}
-                          height={1300}
-                          className="mx-auto h-auto w-full max-w-[20rem] lg:max-w-[26rem]"
-                        />
+                        {/* Uniform plate for all five findings: same aspect box + faint surface + corners,
+                         * no ring and no shadow, so the mismatched transparent PNGs share one edge rhythm. */}
+                        <div className="mx-auto flex aspect-[4/3] w-full max-w-[20rem] items-center justify-center overflow-hidden rounded-2xl bg-white/[0.03] p-5 lg:max-w-[26rem]">
+                          <Image
+                            src={f.img}
+                            alt={f.alt}
+                            width={1400}
+                            height={1300}
+                            className="max-h-full w-auto max-w-full object-contain"
+                          />
+                        </div>
                       </figure>
                     ) : null}
                   </div>
@@ -1045,19 +1076,36 @@ export default function LinerScholarCaseStudy() {
             <Title className="mt-5">The decisions, made real</Title>
             <Lead className="mt-6">
               <p>
-                The editor is the part I owned, and where I pushed hardest. We refused to build “Google Docs with
-                comments” — that industry default solves none of the pains researchers actually named. Writing broke
-                down in four specific places, so the editor answers each one directly:{" "}
-                <span className="text-white">Citation</span> for source traceability,{" "}
-                <span className="text-white">Comments</span> and <span className="text-white">Authors</span> for
-                accountability over who wrote and reviewed what, and <span className="text-white">Focus</span> for a
-                dense, shared surface that can still collapse into a quiet room to write in. The walkthrough below
-                demos the ones new to the final build; Author mode you already saw take shape in v3.
+                The editor is the part I owned. We refused to build “Google Docs with comments” — the industry default
+                answers none of the pains researchers named. So every pain got a direct move, and the build runs them in
+                the order the journey does: <span className="text-white">set up, explore, curate, align</span>.
               </p>
             </Lead>
           </Reveal>
 
-          {/* the money shot — the whole system in one frame, before we walk it feature by feature */}
+          {/* ask #1 · the small map — every research pain, and the move that answers it */}
+          <Reveal delay={0.02}>
+            <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]">
+              <div className="hidden border-b border-white/10 px-5 py-3 sm:grid sm:grid-cols-[1fr_1.4fr] sm:gap-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">What broke (research)</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">How the build answers it</p>
+              </div>
+              {FINDING_ANSWERS.map(([pain, answer], i) => (
+                <div
+                  key={pain}
+                  className={`grid gap-1 px-5 py-4 sm:grid-cols-[1fr_1.4fr] sm:gap-8 ${i > 0 ? "border-t border-white/10" : ""}`}
+                >
+                  <p className="text-[14px] leading-[1.5] text-white/55">
+                    <span className="text-nltLime sm:hidden">Pain · </span>
+                    {pain}
+                  </p>
+                  <p className="text-[15px] leading-[1.55] text-white/85">{answer}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          {/* the money shot — the whole system in one frame, before we walk it stage by stage */}
           <Reveal delay={0.03}>
             <figure className="mt-2">
               <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-white/10 shadow-[0_40px_120px_-40px_rgba(210,255,0,0.18)]">
@@ -1085,6 +1133,12 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
 
           <Reveal delay={0.04}>
+            <p className="mt-10 max-w-2xl text-[13px] leading-relaxed text-white/50">
+              Walked along the four journey stages, not as a feature list. As you scroll each stage, the live window
+              jumps to the feature the text is describing.
+            </p>
+          </Reveal>
+          <Reveal delay={0.05}>
             <PrototypeWalkthrough src={PROTO_SRC} scenes={WALKTHROUGH} />
           </Reveal>
 
