@@ -55,7 +55,10 @@ const SLIDES = [
   { id: "chat-layouts",  chapter: "迭代" },
   { id: "usability",     chapter: "迭代" },
   { id: "final-pick",    chapter: "迭代" },
-  { id: "final-build",   chapter: "成品" },
+  { id: "final-setup",   chapter: "成品" },
+  { id: "final-explore", chapter: "成品" },
+  { id: "final-curate",  chapter: "成品" },
+  { id: "final-align",   chapter: "成品" },
   { id: "validated",     chapter: "成品" },
   { id: "future",        chapter: "成品" },
   { id: "impact",        chapter: "成效" },
@@ -203,9 +206,6 @@ function PrototypeWalk({ src, scenes }: { src: string; scenes: PScene[] }) {
             className="absolute left-0 top-0 block"
           />
         </div>
-        <a href={src} target="_blank" rel="noopener noreferrer" className="mt-2.5 inline-block text-[11px] font-semibold uppercase tracking-[0.12em] underline underline-offset-4" style={{ color: C.green }}>
-          打开全屏原型 ↗
-        </a>
       </div>
 
       {/* feature stepper — click to drive the prototype */}
@@ -240,37 +240,52 @@ const FINDING_IMG: Record<string, string> = {
 };
 
 const WALK_V1: PScene[] = [
-  { scene: "chat", label: "Chat", title: "AI 私聊与 Group 群聊,同屏", body: "私密的 AI 聊天(可开多个标签页)与唯一的一条 Group 群聊线并排出现,个人探索与团队共享同时在场。" },
-  { scene: "share", label: "Chat", title: "把一条消息分享到 Group", body: "在私密聊天里点『分享到团队』,选中共享聊天并确认,这个回答就成了团队能接力的共享工作。" },
-  { scene: "files", label: "Files", title: "每个来源的 TL;DR", body: "每个保存的来源内联显示它的 TL;DR,让你不打开论文就能筛选。" },
+  { scene: "chat", label: "Chat", title: "AI 私聊与 Group Chat,同屏", body: "私密的 AI 聊天(可开多个标签页)与唯一的一条 Group Chat 并排出现,个人探索与团队共享同时在场。" },
+  { scene: "share", label: "Chat", title: "把一条消息分享到 Group", body: "在私密聊天里点『分享到团队』,选中 Group Chat 并确认,这个回答就成了团队能接力的共享工作。" },
 ];
 
 const WALK_V2: PScene[] = [
-  { scene: "group", label: "Group", title: "Group 线有更新", body: "Group 线浮现更新:改了什么、什么需要回复,以及你离开时队友加了什么。" },
-  { scene: "group", label: "Group", title: "共享知识卡片", body: "你把一个发现作为卡片分享,结构固定:内容、它的引用,以及一个置信信号。队友在卡上回应与回复。" },
-  { scene: "group", label: "Group", title: "只有卡片,被我们修正的赌注", body: "v2 全押结构:没有自由文本框,团队只能发卡片、看不到原始 AI 输出。它让知识保持干净,却也切掉了团队赖以生存的日常来回。最终版把对话带了回来。" },
+  { scene: "group", label: "Group", title: "Group Chat 有更新", body: "Group Chat 浮现更新:改了什么、什么需要回复,以及你离开时队友加了什么。" },
+  { scene: "group", label: "Group", title: "共享知识卡片", body: "你把一个发现作为卡片分享,结构固定:内容、它的引用,以及它的置信度。队友在卡上回应与回复。" },
+  { scene: "group", label: "Group", title: "只有卡片:我们后来修正的一个判断", body: "v2 全押结构:没有自由文本框,团队只能发卡片、看不到原始 AI 输出。它让知识保持干净,却也切掉了团队赖以生存的日常来回。最终版把对话带了回来。" },
 ];
 
 const WALK_V3: PScene[] = [
   { scene: "workspace", label: "Workspace", title: "项目工作区", body: "里程碑、任务、队友与已连接工具,在你打开任何文档之前。" },
   { scene: "authors", label: "Author", title: "看谁写了什么", body: "作者模式按队友给文本上色,你能实时看到谁在编辑哪一部分。" },
   { scene: "focus", label: "Focus", title: "Focus 模式", body: "单独选中它,Focus 清空侧边面板,进入无干扰写作。" },
-  { scene: "group", label: "Group", title: "群聊里的 Liner AI:只挑跟你相关的更新", body: "上面的 update 卡片是群聊里所有人的卡片与消息(团队视角);而 Liner AI bot 会在群聊里单独帮你总结,只挑出与你相关的更新(个人化视角)。团队与个人,在同一条 Group 线里分层。" },
+  { scene: "group", label: "Group", title: "Group Chat 里的两层:私人更新 + 团队摘要", body: "上面的 update 卡片是私人的——Liner AI 只挑出与你相关的更新,只有你看得见(个人化视角);下面 Liner AI bot 发的是团队的——定时更新的群组摘要,所有人都看得见(团队视角)。个人与团队,在同一个 Group Chat 里分层。" },
 ];
 
-const WALK_FINAL: PScene[] = [
+// 成品按用户旅程分四段来讲;每段的功能可以跨阶段重复,同一个功能在不同阶段承担不同意义。
+const WALK_SETUP: PScene[] = [
+  { scene: "project", label: "工作区", title: "项目工作区", body: "每个项目都从一个工作区打开:任务、队友,以及 Google Drive、Zotero 等已连接资源。Liner AI 把任务卡分给团队,也自己领走一些——默默负责引用核查、让群组摘要保持最新。", why: "协调过去落在一个人身上;这里 AI 在幕后扛着,没人需要追状态。" },
+  { scene: "files", label: "左 · 来源", title: "接入来源与文献", body: "开项目时,就把已保存的论文、Google Drive 与 Zotero 里的资料接进左侧面板,材料一次就位。", why: "Set up 就是把人、文件、文献管理器都拉到同一处。" },
+];
+
+const WALK_EXPLORE: PScene[] = [
   { scene: "files", label: "左 · 来源", title: "所有来源在一个面板", body: "你保存的论文都待在左侧面板。打开一篇,就在你的草稿旁边读它。", why: "工作流曾是碎裂的,所以阅读与写作如今共用同一个界面。" },
-  { scene: "selection", label: "Editor · 内联 AI", title: "选中文本,就地行动", body: "高亮一行,弹出的浮层给出 Cite、Comment、Improve 或 Ask AI。助手在文本里与你相遇。", why: "AI 只做辅助,由你来决定;它从不擅自行动。" },
-  { scene: "citation", label: "Editor · 引用", title: "每个论断追溯到来源", body: "开启引用,每个论断都带上标记。悬停能看到引文与来源;点进去精确落到那一段,在完整语境里看它,而不是被剥离的片段。", why: "回应「来源可追溯」,只有当来源随结论一起旅行、且能就地核查,共享结果才被信任。" },
+  { scene: "tldr", label: "左 · 来源", title: "每个来源的 TLDR", body: "悬停任一来源,内联弹出它的 TLDR,让你不打开论文就能筛选该不该细读。", why: "探索要快速分流:先判断哪一篇值得花时间。" },
+  { scene: "selection", label: "Editor · 内联 AI", title: "选中文本,就地行动", body: "高亮一行,弹出的浮层给出 Cite、Comment、Improve 或 Ask AI。助手就在文本里响应你。", why: "AI 只做辅助,由你来决定;它从不擅自行动。" },
+  { scene: "aichat", label: "右 · AI 私聊", title: "私密 AI,独自探索", body: "只用你的私密 AI 私聊来阅读、追问与起草,此刻什么都还没共享——这就是向 Liner AI 提问的地方。", why: "探索是独自的:先在私密空间里把想法跑通。" },
+  { scene: "focus", label: "Editor · Focus", title: "Focus 专注写作", body: "一键清空侧边面板,进入无干扰起草;引用与评论图层保持可组合。", why: "探索是独自的工作,所以起草也有自己的一间安静房间。" },
+];
+
+const WALK_CURATE: PScene[] = [
+  { scene: "citation", label: "Editor · 引用", title: "每个论断追溯到来源", body: "开启引用,每个论断都带上标记。悬停能看到引文与来源;点进去精确落到那一段,在完整语境里看它,而不是被剥离的片段。", why: "提炼,是把一个你能站得住的结论提上去,所以来源要始终跟着结论、且能就地核查。" },
+  { scene: "share", label: "右 · Chat", title: "私密 AI,再分享到 Group", body: "你的私密 AI 聊天就在 Group Chat 旁边。把一个提炼过的回答分享过去,它的来源与引用会一并带过去。是否分享你的提示由你决定。", why: "团队分享的是产出,不是私密 AI 记录;Liner 因此成为共享的场所。" },
+  { scene: "both", label: "右 · 两栏", title: "两栏并排,把结论平移过去", body: "AI 私聊与 Group Chat 并排,选中两个,把一个提炼过的回答平移到共享一侧,而不丢失你的位置。", why: "提炼的关键动作,就是这一步『私密 → 共享』的平移。" },
+];
+
+const WALK_ALIGN: PScene[] = [
   { scene: "comments", label: "Editor · 审阅", title: "验证、质疑或修订", body: "验证仍由人来做。打开一条边注,把论断对着它出处的段落读,并标记为 Verified,一个具名、可见、由人负责的状态。", why: "回应「谁写了、谁审了」的问责,团队要一个『有人审阅过』的信号,所以由人、而非模型,拥有 Verified。" },
-  { scene: "focus", label: "Editor · Focus", title: "Focus 专注写作", body: "一键清空侧边面板,进入无干扰起草;引用与评论图层保持可组合。", why: "回应「专注」,把既密集又共享的界面,收拢成一间安静的写作室。" },
-  { scene: "share", label: "右 · Chat", title: "私密 AI,再分享至 Group", body: "你的私密 AI 聊天就在 Group 线旁边。把一个提炼过的回答分享过去,它的来源与引用一同旅行。是否分享你的提示由你决定。", why: "团队分享的是产出,不是私密 AI 记录;Liner 因此成为共享的场所。" },
-  { scene: "group", label: "右 · 群组", title: "卡片与对话并存", body: "Group 线把审阅过的知识卡片、一场真实的对话,以及 AI 关于「你离开时改了什么」的幕后摘要混在一起。两个输入框,两种意图。", why: "v2 的「只有卡片」太僵;团队需要交谈,所以结构与对话并肩而立。" },
+  { scene: "citation", label: "Editor · 核对引用", title: "点开引用,回到原文核对", body: "审阅者点任意标记,回到被引用的原文那一段核对;AI 也在后台核对每一条引用是否仍然成立。", why: "对齐要靠证据:结论对着来源被验证,而不是凭信任。" },
+  { scene: "group", label: "右 · 群组", title: "卡片与对话并存", body: "Group Chat 把审阅过的知识卡片、一场真实的对话,以及 AI 关于「你离开时改了什么」的幕后摘要混在一起。两个输入框,两种意图。", why: "v2 的「只有卡片」太僵;团队需要交谈,所以结构与对话并肩而立。" },
 ];
 
 const CHAT_SWITCH: PScene[] = [
   { scene: "aichat", label: "私密", title: "只选 AI 私聊", body: "单独选中你的私密 AI 聊天,用来探索与起草,此刻什么都还没共享。" },
-  { scene: "group", label: "共享", title: "只选 Group 群聊", body: "单独选中 Group 线,专注于团队已审阅、已共享的知识。" },
+  { scene: "group", label: "共享", title: "只选 Group Chat", body: "单独选中 Group Chat,专注于团队已审阅、已共享的知识。" },
   { scene: "both", label: "两者", title: "两个并排,同时看", body: "两个都选,把一个回答平移过去而不丢失位置,正是 Plan B + C 的行为。" },
 ];
 
@@ -285,7 +300,7 @@ const FINDINGS: { n: string; title: string; body: ReactNode; pain: string; quote
   {
     id: "f-factcheck", n: "01", first: true,
     title: "事实核查,始终由人来做",
-    body: <>AI 支持起草,但<G>解读与事实核查始终归人所有</G>,而这依旧很耗时。</>,
+    body: <>AI 支持起草,但<G>解读与事实核查始终归人所有</G>,但是反复核查很耗时。</>,
     pain: "AI 的结果不被当作『最终』,于是核查不断累积;有人在一次严重错误后就彻底弃用了 AI。",
     quote: "我不会把它当成最终产出,但它帮我把思路带起来。",
     cite: "P5",
@@ -355,12 +370,28 @@ const FUTURE: [string, string][] = [
   ["更深的集成", "今天已经连接了 Google Drive 与 Zotero。下一步是与文献管理器的双向同步,用户排名最高的一项。"],
 ];
 
-const METRICS: [string, string, string][] = [
-  ["分享至 Group 率", "新交互模式", "私密 AI 回答里,被人提炼进共享空间的比例。这是「私密 → 共享」交接是否奏效的、最清晰的单一信号。"],
-  ["邀请率", "新团队受众", "有人把队友拉进来的项目比例,产品自身的增长回路,也是通往新受众的路径。"],
-  ["团队激活", "新团队受众", "拥有超过一名成员的项目数。协作到底有没有被真正打开,还是 Liner 仍旧是个单人工具?"],
-  ["功能驱动的升级", "留下来的理由", "可归因于协作功能的订阅与升级。新模式是否在转化,而不只是被使用。"],
+const METRICS: { label: string; goal: string; text: string; group: "leading" | "lagging"; north?: boolean }[] = [
+  { label: "分享到 Group 率", goal: "新交互模式", group: "leading", north: true, text: "私密 AI 回答里,被人提炼进共享空间的比例。这是「私密 → 共享」交接是否奏效的、最清晰的单一信号。" },
+  { label: "邀请率", goal: "新团队受众", group: "leading", text: "有人把队友拉进来的项目比例,产品自身的增长回路,也是通往新受众的路径。" },
+  { label: "团队激活", goal: "新团队受众", group: "lagging", text: "拥有超过一名成员的项目数。协作到底有没有被真正打开,还是 Liner 仍旧是个单人工具?" },
+  { label: "功能驱动的升级", goal: "留下来的理由", group: "lagging", text: "可归因于协作功能的订阅与升级。新模式是否在转化,而不只是被使用。" },
 ];
+
+// 四阶段旅程指示条 — 让「成品」四页读成一张 user journey map
+function JourneyBar({ active }: { active: number }) {
+  return (
+    <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
+      {STAGES.map(([n, name], i) => (
+        <span key={n} className="flex items-center gap-2.5">
+          <span className="text-[11px] font-semibold tracking-[0.06em]" style={{ color: i === active ? C.green : C.faint }}>
+            {n} {name}
+          </span>
+          {i < STAGES.length - 1 ? <span aria-hidden style={{ color: C.faint }}>→</span> : null}
+        </span>
+      ))}
+    </div>
+  );
+}
 
 // ─── Slide renderer ────────────────────────────────────────────────────────────
 function SlideRenderer({ id }: { id: SlideId }) {
@@ -379,7 +410,7 @@ function SlideRenderer({ id }: { id: SlideId }) {
             </h1>
           </Rise>
           <Rise delay={0.22} className="mt-6">
-            <P className="max-w-2xl">Liner 的 AI 为单人而建,但深度研究是团队协作,论文、综述、整个研究,都由群体推进。难点在于:今天的 AI 大多是私密的,而团队需要一层<G>每条来源都可追溯的共享智能</G>。这个项目,设计的正是两者如何相遇。</P>
+            <P className="max-w-2xl">Liner 的 AI 为单人而建,但深度研究是团队协作,论文、综述、整个研究,都由群体推进。难点在于:今天的 AI 大多是私密的,而团队需要一层<G>每条来源都可追溯的共享智能</G>。这个项目,设计的正是如何让两者保持平衡。</P>
           </Rise>
           <Rise delay={0.3} className="mt-9">
             <dl className="grid max-w-2xl grid-cols-1 gap-x-8 gap-y-5 border-t pt-6 sm:grid-cols-3" style={{ borderColor: C.line }}>
@@ -440,14 +471,15 @@ function SlideRenderer({ id }: { id: SlideId }) {
       return (
         <Slide>
           <Rise><Eye>研究 · 专家与用户访谈</Eye></Rise>
-          <Rise delay={0.08} className="mt-5"><H className="max-w-3xl">两轮访谈,11 位研究者,两类目标用户</H></Rise>
-          <div className="mt-7 grid gap-8 md:grid-cols-2 md:gap-12">
+          <Rise delay={0.08} className="mt-5"><H className="max-w-3xl">两轮访谈,11 位研究者</H></Rise>
+          <div className="mt-7 max-w-3xl">
             <Rise delay={0.14}>
               <Label>访谈</Label>
               <Rule className="my-3" />
               <P>我们分两轮访谈了 11 位研究者。前 7 位通过自有人脉招募,让我们看见研究者<G>真实的工作方式,以及协作在哪里断裂</G>;后 4 位是 Liner 活跃用户,告诉我们上手之后仍会卡壳的地方,并帮我们排出接下来该做什么。</P>
             </Rise>
-            <Rise delay={0.2}>
+            {/* 两类目标用户 — 暂时隐藏,保留以便日后恢复
+            <Rise delay={0.2} className="mt-8">
               <Label>两类目标用户</Label>
               <Rule className="my-3" />
               <div className="space-y-4">
@@ -467,6 +499,7 @@ function SlideRenderer({ id }: { id: SlideId }) {
                 </div>
               </div>
             </Rise>
+            */}
           </div>
         </Slide>
       );
@@ -564,11 +597,11 @@ function SlideRenderer({ id }: { id: SlideId }) {
       return (
         <Slide>
           <Rise><Eye>旅程设计 · AI 的角色</Eye></Rise>
-          <Rise delay={0.08} className="mt-5"><H className="max-w-3xl">在团队里,AI 不再是队友,而是<G>幕后</G></H></Rise>
+          <Rise delay={0.08} className="mt-5"><H className="max-w-3xl">在团队里,AI 不再是队友,而是一个<G>幕后角色</G></H></Rise>
           <Rise delay={0.16} className="mt-6">
             <div className="max-w-3xl space-y-4">
               <P>这个重新定义由我提出,而且直接来自研究:团队真正的摩擦不在工作本身,而在于<G>总有一个人在做 glue work</G>,那份把群体黏合在一起、却又隐形的协调劳动。</P>
-              <P>所以在团队语境里,我把 AI 重塑成一个幕后:它整合资源、发布任务与团队摘要,并接管原本压在一个人身上的协调。它<G>从不替你起草或做决定</G>;它承担那些繁琐,好让人类专注去做判断。</P>
+              <P>所以在团队语境里,我把 AI 重塑成一个幕后角色:它整合资源、发布任务与团队摘要,并接管原本压在一个人身上的协调。它<G>从不替你起草或做决定</G>;它承担那些繁琐,好让人类专注去做判断。</P>
             </div>
           </Rise>
         </Slide>
@@ -625,9 +658,9 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "v1":
       return (
         <Slide>
-          <Rise><Label>v1 · 私人阅览室 vs 团队群聊</Label></Rise>
+          <Rise><Label>v1 · 私人阅览室 vs 团队 Group Chat</Label></Rise>
           <Rise delay={0.05} className="mt-2.5">
-            <P className="max-w-3xl !text-[14.5px]">v1 让 Liner 保持单人:带标签页的私密 AI 聊天 + 唯一的一条 Group 线。<G>取舍 · </G>先把 AI 对话本身做对,而不是硬贴一个团队信息流。</P>
+            <P className="max-w-3xl !text-[14.5px]">v1 让 Liner 保持单人:带标签页的私密 AI 聊天 + 唯一的一条 Group Chat。<G>取舍 · </G>先把 AI 对话本身做对,而不是硬贴一个团队信息流。</P>
           </Rise>
           <Rise delay={0.12} className="mt-5"><PrototypeWalk src="/assets/liner/prototypes/v1-dark.html" scenes={WALK_V1} /></Rise>
         </Slide>
@@ -636,9 +669,9 @@ function SlideRenderer({ id }: { id: SlideId }) {
     case "v2":
       return (
         <Slide>
-          <Rise><Label>v2 · Group 拥有了自己的面板</Label></Rise>
+          <Rise><Label>v2 · Group Chat 拥有了自己的面板</Label></Rise>
           <Rise delay={0.05} className="mt-2.5">
-            <P className="max-w-3xl !text-[14.5px]"><G>v1 的用户测试</G>暴露出问题:团队要的不是又一条聊天流,而是被审阅过的知识,于是 v2 把 Group 线移到最右侧独立面板,装成结构化的知识卡片。<G>取舍 · </G>把 Group 做成「被审阅过的知识」的空间;我们一度做过了头,只有卡片、没有对话,后来又把团队对话放了回来。</P>
+            <P className="max-w-3xl !text-[14.5px]"><G>v1 的用户测试</G>暴露出问题:团队要的不是又一条聊天流,而是被审阅过的知识,于是 v2 把 Group Chat 移到最右侧独立面板,装成结构化的知识卡片。<G>取舍 · </G>把 Group Chat 做成「被审阅过的知识」的空间;我们一度做过了头,只有卡片、没有对话,后来又把团队对话放了回来。</P>
           </Rise>
           <Rise delay={0.12} className="mt-5"><PrototypeWalk src="/assets/liner/prototypes/v2-group-topbar.html" scenes={WALK_V2} /></Rise>
         </Slide>
@@ -700,20 +733,64 @@ function SlideRenderer({ id }: { id: SlideId }) {
         <Slide>
           <Rise><Label>最终选择 · Plan B + C</Label></Rise>
           <Rise delay={0.05} className="mt-2.5">
-            <P className="max-w-3xl !text-[14.5px]">这个「AI 聊天与 Group 聊天」的交互由我负责,我把编辑器自身的手势迁移过来:与 v3 的 Focus、Citation 同样的「选中即展开」现在驱动着聊天,你选一个面板,或两个都选。测试给了定论:人们想同时读到两条线;单选或并排,都让私密到共享的移动保持连续,也让分享时的过程可见、可回溯到来源。</P>
+            <P className="max-w-3xl !text-[14.5px]">这个「AI Chat 与 Group Chat」的交互由我负责,我把编辑器自身的手势迁移过来:与 v3 的 Focus、Citation 同样的「选中即展开」现在驱动着聊天,你选一个面板,或两个都选。测试给了定论:人们想同时读到两条线;单选或并排,都让私密到共享的移动保持连续,也让分享时的过程可见、可回溯到来源。</P>
           </Rise>
           <Rise delay={0.12} className="mt-5"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={CHAT_SWITCH} /></Rise>
         </Slide>
       );
 
-    case "final-build":
+    case "final-setup":
       return (
         <Slide>
           <Rise><Label>成品 · 由我负责整合与最终设计(可交互)</Label></Rise>
           <Rise delay={0.05} className="mt-2.5">
-            <P className="max-w-3xl !text-[14.5px]">团队产出许多分散方案,由<G>我负责把它们 merge 成一个连贯系统、并完成最终设计</G>。我们拒绝做「带评论的 Google Docs」,写作在四个具体的地方崩坏,编辑器逐一回应(点右侧功能查看)。</P>
+            <P className="max-w-3xl !text-[14.5px]">团队产出许多分散方案,由<G>我负责把它们 merge 成一个连贯系统、并完成最终设计</G>。我们拒绝做「带 AI 的 Google Docs」,而是顺着<G>用户旅程</G>把功能分成四段来讲。</P>
           </Rise>
-          <Rise delay={0.12} className="mt-4"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={WALK_FINAL} /></Rise>
+          <Rise delay={0.12} className="mt-5"><JourneyBar active={0} /></Rise>
+          <Rise delay={0.16} className="mt-4">
+            <H className="max-w-3xl">01 建立 · Set up</H>
+            <P className="mt-2.5 max-w-3xl !text-[14.5px]">开一个项目,然后拉进队友、文件与文献管理器。</P>
+          </Rise>
+          <Rise delay={0.22} className="mt-5"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={WALK_SETUP} /></Rise>
+        </Slide>
+      );
+
+    case "final-explore":
+      return (
+        <Slide>
+          <Rise><Eye>成品 · 用户旅程</Eye></Rise>
+          <Rise delay={0.06} className="mt-4"><JourneyBar active={1} /></Rise>
+          <Rise delay={0.12} className="mt-4">
+            <H className="max-w-3xl">02 探索 · Explore</H>
+            <P className="mt-2.5 max-w-3xl !text-[14.5px]">独自工作:在一个私密工作区里阅读、高亮,并向 Liner AI 提问。</P>
+          </Rise>
+          <Rise delay={0.18} className="mt-5"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={WALK_EXPLORE} /></Rise>
+        </Slide>
+      );
+
+    case "final-curate":
+      return (
+        <Slide>
+          <Rise><Eye>成品 · 用户旅程</Eye></Rise>
+          <Rise delay={0.06} className="mt-4"><JourneyBar active={2} /></Rise>
+          <Rise delay={0.12} className="mt-4">
+            <H className="max-w-3xl">03 提炼 · Curate</H>
+            <P className="mt-2.5 max-w-3xl !text-[14.5px]">把一个你能站得住的结论,连同它的来源一起,提升到共享空间。</P>
+          </Rise>
+          <Rise delay={0.18} className="mt-5"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={WALK_CURATE} /></Rise>
+        </Slide>
+      );
+
+    case "final-align":
+      return (
+        <Slide>
+          <Rise><Eye>成品 · 用户旅程</Eye></Rise>
+          <Rise delay={0.06} className="mt-4"><JourneyBar active={3} /></Rise>
+          <Rise delay={0.12} className="mt-4">
+            <H className="max-w-3xl">04 对齐 · Align</H>
+            <P className="mt-2.5 max-w-3xl !text-[14.5px]">队友验证、质疑或修订这个论断,AI 则核对每一条引用是否成立。</P>
+          </Rise>
+          <Rise delay={0.18} className="mt-5"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={WALK_ALIGN} /></Rise>
         </Slide>
       );
 
@@ -760,7 +837,7 @@ function SlideRenderer({ id }: { id: SlideId }) {
           <Rise><Eye>成效 · 它落在了哪里</Eye></Rise>
           <Rise delay={0.08} className="mt-5"><H className="max-w-3xl">被挑出来继续推进,并进入产品路线图</H></Rise>
           <Rise delay={0.16} className="mt-6">
-            <P className="max-w-3xl">在展示与利益相关者评审里,团队把那些「让协作感觉是原生的」功能,挑成了值得继续推进的:<G>Focus 模式</G>、<G>引用</G>,以及<G>分享至 Group</G>。</P>
+            <P className="max-w-3xl">在展示与利益相关者评审里,团队把那些「让协作感觉是原生的」功能,挑成了值得继续推进的:<G>Focus 模式</G>、<G>引用</G>,以及<G>分享到 Group</G>。</P>
           </Rise>
           <Rise delay={0.24} className="mt-7">
             <div className="max-w-3xl border-l-2 pl-5" style={{ borderColor: C.green }}>
@@ -778,18 +855,35 @@ function SlideRenderer({ id }: { id: SlideId }) {
           <Rise delay={0.08} className="mt-5">
             <P className="max-w-3xl">它以原型交付,所以这些是我会在上线时埋点的指标,而非结果。<G>每一条都回连到 brief 里的一个目标</G>,因为这次押注只有真正推动它们,才算成立,而不只是演示得好看。</P>
           </Rise>
-          <Rise delay={0.16} className="mt-6">
-            <dl className="grid max-w-3xl grid-cols-1 gap-x-10 gap-y-5 border-t pt-6 sm:grid-cols-2" style={{ borderColor: C.line }}>
-              {METRICS.map(([label, goal, text]) => (
-                <div key={label}>
-                  <dt className="flex flex-wrap items-baseline gap-x-2">
-                    <span className="text-[14px] font-semibold" style={{ color: C.ink }}>{label}</span>
-                    <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: C.green }}>↳ {goal}</span>
-                  </dt>
-                  <dd className="mt-1.5 text-[13px] leading-[1.65]" style={{ color: C.muted }}>{text}</dd>
+          <Rise delay={0.16} className="mt-7">
+            <div className="grid max-w-3xl gap-x-10 gap-y-8 border-t pt-6 sm:grid-cols-2" style={{ borderColor: C.line }}>
+              {([
+                ["leading", "领先指标 · Leading", "早期信号,先动"],
+                ["lagging", "结果指标 · Lagging", "最终结果,后到"],
+              ] as const).map(([g, title, sub]) => (
+                <div key={g}>
+                  <div className="flex flex-wrap items-baseline gap-x-2">
+                    <Label>{title}</Label>
+                    <span className="text-[10px]" style={{ color: C.subtle }}>{sub}</span>
+                  </div>
+                  <Rule className="my-3" />
+                  <div className="space-y-5">
+                    {METRICS.filter((m) => m.group === g).map((m) => (
+                      <div key={m.label}>
+                        <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+                          <span className="text-[14px] font-semibold" style={{ color: C.ink }}>{m.label}</span>
+                          {m.north ? (
+                            <span className="rounded-full px-2 py-[2px] text-[10px] font-semibold tracking-[0.08em]" style={{ background: C.green, color: "#fff" }}>★ North Star</span>
+                          ) : null}
+                          <span className="text-[10px] font-semibold uppercase tracking-[0.12em]" style={{ color: C.green }}>↳ {m.goal}</span>
+                        </div>
+                        <p className="mt-1.5 text-[13px] leading-[1.65]" style={{ color: C.muted }}>{m.text}</p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
-            </dl>
+            </div>
           </Rise>
         </Slide>
       );

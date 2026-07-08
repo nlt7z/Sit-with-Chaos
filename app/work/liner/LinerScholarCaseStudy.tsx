@@ -362,7 +362,7 @@ const BRIEF = [
 const FINDINGS = [
   {
     title: "Fact-checking stays human",
-    body: "AI supports drafting, but interpretation and fact-checking stay human-owned, and that stays time-consuming.",
+    body: "AI supports drafting, but interpretation and fact-checking stay human-owned, and the repeated re-checking is time-consuming.",
     pain: "AI results aren’t trusted as “final,” so verification piles up. Some users drop AI entirely after one major error.",
     quote: "I don’t trust it as a final output, but it helps me get the thinking going.",
     cite: "P5",
@@ -434,8 +434,8 @@ const ITERATIONS = [
     poster: "/assets/liner/ideation/v1-dark.png",
     manual: true,
     title: "A personal reading room vs. a team group chat",
-    body: "v1 keeps Liner solo. The right rail is a tabbed AI chat. You spin up as many private chats as you want, with a single shared Group thread. Each source shows its TL;DR inline, so you triage papers without opening them, and you slide any private answer into Group. We didn’t focus on the editor, since we assumed it was no different from Google Docs. We turned out to be wrong.",
-    show: "Watch the flow from a private AI chat into the shared Group thread.",
+    body: "v1 keeps Liner solo. The right rail is a tabbed AI chat. You spin up as many private chats as you want, with a single shared Group Chat, and you slide any private answer into Group. We didn’t focus on the editor, since we assumed it was no different from Google Docs. We turned out to be wrong.",
+    show: "Watch the flow from a private AI chat into the shared Group Chat.",
     call: "The call here: keep Liner personal and get the AI conversation right first, rather than bolting a team feed on top of it.",
   },
   {
@@ -445,7 +445,7 @@ const ITERATIONS = [
     poster: "/assets/liner/ideation/v2-group-topbar.png",
     manual: true,
     title: "Group gets its own panel",
-    body: "User-testing v1 surfaced the problem that drove v2: a team doesn’t want another chat stream, it wants reviewed knowledge. So v2 brings the team in — the Group thread moves out to its own far-right panel, and it fills with structured knowledge cards, not chat. Each card carries its content, its citation, and a confidence signal, and teammates react and reply on it. Files, Editor, AI Chat, and Group open together.",
+    body: "User-testing v1 surfaced the problem that drove v2: a team doesn’t want another chat stream, it wants reviewed knowledge. So v2 brings the team in — the Group Chat moves out to its own far-right panel, and it fills with structured knowledge cards, not chat. Each card carries its content, its citation, and a confidence signal, and teammates react and reply on it. Files, Editor, AI Chat, and Group open together.",
     show: "Open the Group panel to see the knowledge cards.",
     call: "The call here: make Group a space for reviewed knowledge. We took it too far — cards-only left no room to talk — and later brought a team conversation back alongside the cards.",
   },
@@ -490,8 +490,8 @@ const WALK_V1: Scene[] = [
   {
     scene: "newchat",
     label: "Chat",
-    title: "AI chat and Group chat",
-    body: "Open as many private AI chats as you like, tabbed side by side, while the Group thread stays the single shared space. Here, starting a new chat.",
+    title: "AI Chat and Group Chat",
+    body: "Open as many private AI chats as you like, tabbed side by side, while the Group Chat stays the single shared space. Here, starting a new chat.",
   },
   {
     scene: "share",
@@ -499,19 +499,13 @@ const WALK_V1: Scene[] = [
     title: "Share a message to Group",
     body: "From a private chat, hit Share to team, pick the shared chat, and confirm. The answer becomes shared work the team can build on.",
   },
-  {
-    scene: "files",
-    label: "Files",
-    title: "TL;DR on each source",
-    body: "Every saved source shows its TL;DR inline, so you triage papers without opening a thing — it’s for the reader on the team, the one deciding what deserves a full pass.",
-  },
 ];
 const WALK_V2: Scene[] = [
   {
     scene: "group",
     label: "Group",
-    title: "The Group thread has updates",
-    body: "The Group thread surfaces updates: what changed, what needs a reply, and what teammates added while you were away.",
+    title: "The Group Chat has updates",
+    body: "The Group Chat surfaces updates: what changed, what needs a reply, and what teammates added while you were away.",
   },
   {
     scene: "group",
@@ -568,8 +562,8 @@ const CHAT_SWITCH: Scene[] = [
   {
     scene: "group",
     label: "Shared only",
-    title: "Group chat on its own",
-    body: "Select just the Group thread to focus on the team’s reviewed, shared knowledge.",
+    title: "Group Chat on its own",
+    body: "Select just the Group Chat to focus on the team’s reviewed, shared knowledge.",
   },
   {
     scene: "both",
@@ -601,6 +595,13 @@ const WALKTHROUGH: Scene[] = [
     why: "The workflow was fragmented, so reading and writing now share one surface.",
   },
   {
+    scene: "tldr",
+    label: "Left · sources",
+    title: "TLDR on each source",
+    body: "Hover any source and its TLDR pops inline, so you can triage what deserves a full read without opening a thing.",
+    why: "Explore means fast triage — decide which paper is worth the time first.",
+  },
+  {
     scene: "selection",
     label: "Editor · inline AI",
     title: "Select text, act on it",
@@ -627,7 +628,7 @@ const WALKTHROUGH: Scene[] = [
     scene: "share",
     label: "Right · the chat",
     title: "Private AI, then share to Group",
-    body: "Your private AI chat sits beside the Group thread. Share a curated answer across, and its source and citation travel with it. You choose whether to share your prompt, so your chat log stays yours by default.",
+    body: "Your private AI chat sits beside the Group Chat. Share a curated answer across, and its source and citation travel with it. You choose whether to share your prompt, so your chat log stays yours by default.",
     why: "Teams share outputs, not private AI logs. The private → shared handoff is the whole move.",
   },
   // ── 04 · Align (verify, question, revise together) ───────────
@@ -643,7 +644,7 @@ const WALKTHROUGH: Scene[] = [
     scene: "group",
     label: "Right · the group",
     title: "Cards and conversation, together",
-    body: "The Group thread mixes reviewed knowledge cards with a real conversation, plus the AI’s background digest that walks in to brief you on what changed while you were away — which sections were edited, where your review is needed, and what new sources have landed for you to read. Two input boxes, two intents: the AI box is for prompting the assistant; the group box is for talking to your teammates.",
+    body: "The Group Chat mixes reviewed knowledge cards with a real conversation, plus the AI’s background digest that walks in to brief you on what changed while you were away — which sections were edited, where your review is needed, and what new sources have landed for you to read. Two input boxes, two intents: the AI box is for prompting the assistant; the group box is for talking to your teammates.",
     why: "v2’s cards-only was too rigid. Teams need to talk — so structure and conversation live side by side, aligning on what’s been reviewed.",
   },
 ];
@@ -737,7 +738,7 @@ export default function LinerScholarCaseStudy() {
               <p>
                 The catch: AI today is mostly private, while a team needs a{" "}
                 <span className="text-white">shared intelligence</span> where every source stays traceable, a higher
-                bar than solo use. This project designs how the two meet.
+                bar than solo use. This project designs how to keep the two in balance.
               </p>
             </div>
 
@@ -1044,7 +1045,7 @@ export default function LinerScholarCaseStudy() {
                     <div className="mt-8 max-w-2xl">
                       <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-nltLime">Final pick · Plan B + C</p>
                       <p className="mt-2 text-[15px] leading-[1.65] text-white/70">
-                        The AI-and-Group chat was mine to own, and I designed it by carrying the editor’s own gesture
+                        The AI-and-Group Chat was mine to own, and I designed it by carrying the editor’s own gesture
                         across: the same select-to-reveal from v3’s Focus and Citation modes now drives the chat — you
                         select one panel or both. Testing settled it. People wanted both threads readable at once, since
                         the content comes from the left and they wanted to see more of it. Selecting either panel on its
@@ -1054,12 +1055,12 @@ export default function LinerScholarCaseStudy() {
                       </p>
                     </div>
 
-                    {/* live demo: AI chat / Group chat switching */}
+                    {/* live demo: AI Chat / Group Chat switching */}
                     <div className="mt-8">
                       <PrototypeWalkthrough
                         src={PROTO_SRC}
                         scenes={CHAT_SWITCH}
-                        title="Liner — AI chat and Group chat switching"
+                        title="Liner — AI Chat and Group Chat switching"
                       />
                     </div>
                   </div>
@@ -1111,7 +1112,7 @@ export default function LinerScholarCaseStudy() {
               <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-white/10 shadow-[0_40px_120px_-40px_rgba(210,255,0,0.18)]">
                 <Image
                   src="/assets/liner/ideation/v4-final.png"
-                  alt="The final build in one screen: the editor with live citations and margin comments, an author tag on the text, and the private AI chat beside the Group thread of reviewed knowledge cards."
+                  alt="The final build in one screen: the editor with live citations and margin comments, an author tag on the text, and the private AI chat beside the Group Chat of reviewed knowledge cards."
                   width={1160}
                   height={725}
                   priority

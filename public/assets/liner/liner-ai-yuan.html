@@ -3993,7 +3993,29 @@
             setSegState();
           }catch(_e){}
           break;
-        case 'selection': _editorBase(); setTimeout(_selectFirstPara, 220); break;
+        case 'tldr':
+          // Files + Editor, then pop the hover TL;DR preview on the first source.
+          _editorBase();
+          try{
+            chatPanel.classList.add('hidden');
+            groupPanel.classList.add('hidden');
+            filesPanel.classList.remove('hidden');
+            editorPanel.classList.remove('hidden');
+            setSegState();
+          }catch(_e){}
+          setTimeout(function(){
+            try{ var r=document.querySelector('.files-body .file-row[data-src]'); if(r) showFileTip(r.dataset.src, r); }catch(_e){}
+          }, 340);
+          break;
+        case 'selection':
+          _editorBase();
+          setTimeout(function(){
+            // Explore is solo work — Files + Editor + AI chat only, hide the Group chat panel.
+            _setBtn(_q('.chat-mode-btn[data-mode="ai"]'), true);
+            _setBtn(_q('.chat-mode-btn[data-mode="group"]'), false);
+            _selectFirstPara();
+          }, 220);
+          break;
         case 'share':
           _editorBase();
           setTimeout(function(){ openShare('How do teammates keep a source intact when I share it?',
@@ -4009,6 +4031,9 @@
         case 'comments':
           _editorBase();
           setTimeout(function(){
+            // Align is team review — Files + Editor + Group chat, hide the private AI chat.
+            _setBtn(_q('.chat-mode-btn[data-mode="group"]'), true);
+            _setBtn(_q('.chat-mode-btn[data-mode="ai"]'), false);
             _setBtn(_lb('commentsBtn'), true); _setBtn(_lb('citesBtn'), false);
             try{ var cm=doc.querySelector('.commented'); if(cm) openCommentPop(cm.id, false, cm); }catch(_e){}
           }, 200);
@@ -4021,6 +4046,10 @@
           _editorBase(); setTimeout(function(){
             _setBtn(_q('.chat-mode-btn[data-mode="ai"]'), true);
             _setBtn(_q('.chat-mode-btn[data-mode="group"]'), false);
+            // demonstrate the private AI chat once: run a starter query and stream a reply
+            if(!window.__aichatDemo){ window.__aichatDemo=true;
+              setTimeout(function(){ try{ runAI('ask','Find related papers for this project',null,null); }catch(_e){} }, 300);
+            }
           }, 160); break;
         case 'group':
           _editorBase(); setTimeout(function(){
