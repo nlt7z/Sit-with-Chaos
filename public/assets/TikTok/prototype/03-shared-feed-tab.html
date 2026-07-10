@@ -28,6 +28,12 @@
   @keyframes tkBubbleIn{0%{opacity:0;transform:translateY(8px) scale(.9)}62%{transform:translateY(0) scale(1.04)}100%{opacity:1;transform:scale(1)}}
   @keyframes tkSheetUp{0%{opacity:0;transform:translateY(28px)}100%{opacity:1;transform:translateY(0)}}
   @keyframes tkPlayPulse{0%,100%{opacity:.5}50%{opacity:1}}
+  @keyframes tkShimmer{0%{background-position:-260px 0}100%{background-position:260px 0}}
+  @keyframes tkPushDrop{0%{opacity:0;transform:translateY(-26px) scale(.96)}60%{transform:translateY(3px) scale(1)}100%{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes tkNewPill{0%{opacity:0;transform:translate(-50%,-10px)}100%{opacity:1;transform:translate(-50%,0)}}
+  @keyframes tkSpin{to{transform:rotate(360deg)}}
+  @keyframes tkStatusIn{0%{opacity:0;transform:translateY(6px) scale(.92)}100%{opacity:1;transform:translateY(0) scale(1)}}
+  .tk-sk{background:linear-gradient(100deg,rgba(255,255,255,.05) 30%,rgba(255,255,255,.13) 50%,rgba(255,255,255,.05) 70%);background-size:260px 100%;animation:tkShimmer 1.25s ease-in-out infinite;}
   [data-tap]{transition:transform .1s cubic-bezier(.16,1,.3,1);}
   [data-tap]:active{transform:scale(.92);}
   .tk-scroll::-webkit-scrollbar{display:none;}
@@ -62,6 +68,13 @@
       <sc-if value="{{ notPlaying }}" hint-placeholder-val="{{ true }}">
         <span style="display:flex;align-items:center;gap:7px;"><svg width="14" height="14" viewBox="0 0 24 24" fill="#ff5c7a"><path d="M8 5l11 7-11 7z"></path></svg>Replay</span>
       </sc-if>
+    </div>
+    <!-- in-tab state switcher: Empty → Notify → Loading → Feed -->
+    <div style="display:flex;align-items:center;gap:5px;height:36px;padding:0 5px;border-radius:11px;background:rgba(255,255,255,.05);box-shadow:inset 0 0 0 1px rgba(255,255,255,.1);">
+      <span style="font-size:10px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:#6b6c72;padding:0 4px;">State</span>
+      <sc-for list="{{ stateChips }}" as="s" hint-placeholder-count="4">
+        <div onclick="{{ s.onPick }}" data-tap="1" style="{{ s.style }}">{{ s.label }}</div>
+      </sc-for>
     </div>
   </div>
 
@@ -147,7 +160,10 @@
                    <div style="display:inline-flex;align-items:center;gap:9px;">
                      <div style="{{ v.commentAvStyle }}"></div>
                      <div style="display:flex;flex-direction:column;line-height:1.16;">
-                       <span style="font-size:15px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.55);">{{ v.sharerName }}</span>
+                       <div style="display:flex;align-items:center;gap:7px;">
+                         <span style="font-size:15px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.55);">{{ v.sharerName }}</span>
+                         <sc-if value="{{ v.isUnread }}" hint-placeholder-val="{{ false }}"><span style="font-size:9.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:#fe2c55;border-radius:5px;padding:2px 6px;box-shadow:0 2px 8px rgba(254,44,85,.5);">NEW</span></sc-if>
+                       </div>
                        <span style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.72);text-shadow:0 1px 2px rgba(0,0,0,.55);">shared with you · {{ v.sharerTime }}</span>
                      </div>
                    </div>
@@ -181,6 +197,22 @@
                        <div onclick="{{ t.onSend }}" data-tap="1" style="{{ v.tokenStyle }}"><sc-if value="{{ t.e }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;line-height:1;">{{ t.e }}</span></sc-if><span>{{ t.t }}</span></div>
                      </sc-for>
                    </div>
+                   </sc-if>
+
+                   <!-- Row 5: sender end-to-end status — your reply/react delivery lifecycle, inline -->
+                   <sc-if value="{{ v.hasStatus }}" hint-placeholder-val="{{ false }}">
+                     <div style="align-self:flex-start;display:inline-flex;align-items:center;gap:9px;background:rgba(0,0,0,.5);backdrop-filter:blur(14px);border-radius:16px;padding:7px 13px 7px 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);animation:tkStatusIn .3s cubic-bezier(.16,1,.3,1) both;">
+                       <div style="{{ v.statusAvStyle }}"></div>
+                       <div style="display:flex;flex-direction:column;line-height:1.18;">
+                         <span style="font-size:13px;font-weight:700;color:#fff;">{{ v.statusReply }}</span>
+                         <div style="display:flex;align-items:center;gap:5px;margin-top:1px;">
+                           <sc-if value="{{ v.statusSending }}" hint-placeholder-val="{{ false }}"><span style="width:11px;height:11px;border-radius:50%;border:1.6px solid rgba(255,255,255,.3);border-top-color:#fff;animation:tkSpin .7s linear infinite;flex:0 0 auto;"></span></sc-if>
+                           <sc-if value="{{ v.statusSent }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#25f4ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M4 12l5 5L20 6"></path></svg></sc-if>
+                           <sc-if value="{{ v.statusSeen }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25f4ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.4" fill="#25f4ee" stroke="none"></circle></svg></sc-if>
+                           <span style="font-size:11.5px;font-weight:600;color:{{ v.statusColor }};">{{ v.statusLabel }}</span>
+                         </div>
+                       </div>
+                     </div>
                    </sc-if>
                  </div>
 
@@ -219,6 +251,70 @@
              </div>
          </div>
 
+         <!-- ===== in-tab STATE overlays (empty · loading · notify) — cover the feed area, keep top bar + nav ===== -->
+
+         <!-- top "new shares" pill (feed state, unread > 0) -->
+         <sc-if value="{{ newPill }}" hint-placeholder-val="{{ false }}">
+           <div onclick="{{ onJumpUnread }}" data-tap="1" style="position:absolute;top:104px;left:50%;transform:translateX(-50%);z-index:7;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 7px 0 14px;border-radius:17px;background:#fe2c55;box-shadow:0 8px 22px rgba(254,44,85,.42);cursor:pointer;animation:tkNewPill .34s cubic-bezier(.16,1,.3,1) both;">
+             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
+             <span style="font-size:13px;font-weight:700;color:#fff;">{{ newPillText }}</span>
+             <div style="display:flex;align-items:center;margin-left:2px;"><sc-for list="{{ newPillAvatars }}" as="a" hint-placeholder-count="3"><div style="{{ a.style }}"></div></sc-for></div>
+           </div>
+         </sc-if>
+
+         <!-- LOADING skeleton -->
+         <sc-if value="{{ showLoading }}" hint-placeholder-val="{{ false }}">
+           <div style="position:absolute;top:96px;left:0;right:0;bottom:84px;z-index:5;background:#000;overflow:hidden;animation:tkFade .2s ease both;">
+             <div class="tk-sk" style="position:absolute;inset:0;opacity:.5;"></div>
+             <div style="position:absolute;right:14px;bottom:150px;display:flex;flex-direction:column;align-items:center;gap:20px;">
+               <div class="tk-sk" style="width:48px;height:48px;border-radius:50%;"></div>
+               <div class="tk-sk" style="width:34px;height:34px;border-radius:50%;"></div>
+               <div class="tk-sk" style="width:34px;height:34px;border-radius:50%;"></div>
+               <div class="tk-sk" style="width:34px;height:34px;border-radius:50%;"></div>
+             </div>
+             <div style="position:absolute;left:16px;right:80px;bottom:210px;display:flex;flex-direction:column;gap:10px;">
+               <div style="display:flex;align-items:center;gap:9px;"><div class="tk-sk" style="width:32px;height:32px;border-radius:50%;"></div><div class="tk-sk" style="width:120px;height:13px;border-radius:6px;"></div></div>
+               <div class="tk-sk" style="width:210px;height:38px;border-radius:12px;"></div>
+               <div style="display:flex;gap:7px;"><div class="tk-sk" style="width:78px;height:34px;border-radius:17px;"></div><div class="tk-sk" style="width:64px;height:34px;border-radius:17px;"></div><div class="tk-sk" style="width:88px;height:34px;border-radius:17px;"></div></div>
+             </div>
+             <div class="tk-sk" style="position:absolute;left:12px;right:12px;bottom:104px;height:46px;border-radius:23px;"></div>
+             <div style="position:absolute;top:0;left:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;"><div style="width:26px;height:26px;border-radius:50%;border:2.5px solid rgba(255,255,255,.2);border-top-color:rgba(255,255,255,.85);animation:tkSpin .8s linear infinite;"></div></div>
+           </div>
+         </sc-if>
+
+         <!-- EMPTY state -->
+         <sc-if value="{{ showEmpty }}" hint-placeholder-val="{{ false }}">
+           <div style="position:absolute;top:96px;left:0;right:0;bottom:84px;z-index:5;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 44px;animation:tkPageIn .42s cubic-bezier(.22,1,.36,1) both;">
+             <div style="position:relative;width:96px;height:96px;margin-bottom:24px;">
+               <div style="position:absolute;inset:0;border-radius:28px;background:linear-gradient(140deg,rgba(37,244,238,.18),rgba(254,44,85,.18));box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);"></div>
+               <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;"><svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.85)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2"></circle><path d="M3.4 19c0-3.2 2.5-5.4 5.6-5.4 1 0 2 .24 2.8.66"></path><circle cx="16.6" cy="8.6" r="2.5"></circle><path d="M15.3 13.7c2.3.2 4.1 2.2 4.1 5"></path><path d="M18 3.5l1 2.2 2.2 1-2.2 1-1 2.2-1-2.2-2.2-1 2.2-1z" fill="rgba(255,255,255,.85)" stroke="none"></path></svg></div>
+             </div>
+             <div style="font-size:21px;font-weight:800;letter-spacing:-.01em;color:#fff;">No shares yet</div>
+             <div style="margin-top:9px;font-size:14.5px;line-height:1.42;color:rgba(255,255,255,.6);max-width:250px;">When a friend sends you a video, it lands here — react and reply without leaving the tab.</div>
+             <div onclick="{{ onEmptyCta }}" data-tap="1" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;height:48px;padding:0 22px;border-radius:24px;background:#fe2c55;box-shadow:0 10px 26px rgba(254,44,85,.4);cursor:pointer;">
+               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"></circle><path d="M21 21l-4.5-4.5"></path></svg>
+               <span style="font-size:15px;font-weight:700;color:#fff;">Find videos to share</span>
+             </div>
+             <div onclick="{{ onEmptyInvite }}" data-tap="1" style="margin-top:14px;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.55);cursor:pointer;">Invite friends to TikTok</div>
+           </div>
+         </sc-if>
+
+         <!-- NOTIFY: incoming push banner over a dimmed tab -->
+         <sc-if value="{{ showNotify }}" hint-placeholder-val="{{ false }}">
+           <div onclick="{{ onNotifyOpen }}" style="position:absolute;top:96px;left:0;right:0;bottom:84px;z-index:5;background:rgba(0,0,0,.5);cursor:pointer;animation:tkFade .25s ease both;"></div>
+           <div onclick="{{ onNotifyOpen }}" data-tap="1" style="position:absolute;top:64px;left:10px;right:10px;z-index:9;display:flex;align-items:center;gap:12px;background:rgba(30,30,34,.72);backdrop-filter:blur(30px) saturate(1.5);border:1px solid rgba(255,255,255,.16);border-radius:20px;padding:12px 14px;box-shadow:0 16px 40px rgba(0,0,0,.5);cursor:pointer;animation:tkPushDrop .5s cubic-bezier(.16,1,.3,1) both;">
+             <div style="position:relative;width:42px;height:42px;flex:0 0 auto;">
+               <div style="{{ notifyAvStyle }}"></div>
+               <div style="position:absolute;right:-3px;bottom:-3px;width:20px;height:20px;border-radius:6px;background:#fe2c55;display:flex;align-items:center;justify-content:center;border:2px solid rgba(30,30,34,.9);"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M3 11l18-8-8 18-2-7-8-3z"></path></svg></div>
+             </div>
+             <div style="flex:1;min-width:0;">
+               <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:14.5px;font-weight:700;color:#fff;">TikTok</span><span style="font-size:11.5px;color:rgba(255,255,255,.5);">now</span></div>
+               <div style="font-size:13.5px;color:rgba(255,255,255,.86);line-height:1.3;margin-top:2px;">{{ notifyText }}</div>
+             </div>
+             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.55)" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M9 5l7 7-7 7"></path></svg>
+           </div>
+           <div style="position:absolute;top:132px;left:0;right:0;z-index:9;text-align:center;pointer-events:none;"><span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.5);">Tap to open in Shared with you</span></div>
+         </sc-if>
 
          <!-- status bar -->
          <div style="position:absolute;top:0;left:0;right:0;height:54px;display:flex;align-items:flex-end;justify-content:space-between;padding:0 32px 9px;z-index:6;pointer-events:none;">
@@ -812,6 +908,10 @@ class Component extends DCLogic {
     videoVariant: 'icecream',
     playing: false, flying: null,
     friendsDot: true,
+    // in-tab state machine for the "Shared with you" feed
+    sharedState: 'feed',   // 'feed' | 'loading' | 'empty' | 'notify'
+    readShared: {},        // videoId -> true once scrolled onto (clears the NEW badge)
+    sendStatus: {},        // videoId -> { phase:'sending'|'sent'|'seen', reply:'…' } — sender lifecycle
   };
 
   FRIENDS = {
@@ -897,6 +997,25 @@ class Component extends DCLogic {
   goTab(t){ this.setState({sharedTab:t}); }
   scrollFeed(i){ this.setState({feedIdx:i}); const el=this._feed; if(el) el.scrollTo({top:i*852,behavior:'smooth'}); }
   toggleCap(id){ this.setState(st=>({capExp:{...st.capExp,[id]:!st.capExp[id]}})); }
+
+  // ---- in-tab state machine: Empty → Notify → Loading → Feed ----
+  setSharedState(s){
+    this.clearTimers();
+    this.setState({ screen:'shared', sharedTab:'shared', sharedState:s, toast:null, replyInput:null });
+    if(s==='loading'){
+      // fresh fetch → every share comes back unread
+      this.setState({ readShared:{}, feedIdx:0, sendStatus:{}, sentTokens:{} });
+      if(this._feed) this._feed.scrollTop=0;
+      this._timers.push(setTimeout(()=>this.setState({sharedState:'feed'}), 1150));
+    }
+  }
+  markReadShared(id){ if(!id||this.state.readShared[id])return; this.setState(st=>({readShared:{...st.readShared,[id]:true}})); }
+  jumpUnread(){
+    const ordered=this.orderedShared();
+    const idx=ordered.findIndex(v=>!this.state.readShared[v.id]);
+    if(idx>=0) this.scrollFeed(idx);
+  }
+  openFromNotify(){ this.setSharedState('loading'); }
   doFollow(v){ const id=v.id; this.setState(st=>({followed:{...st.followed,[id]:true}})); this.showToast('Following '+(v.creator||v.name)); }
 
   openDm(mode){
@@ -915,7 +1034,17 @@ class Component extends DCLogic {
   sendReaction(v,tok){ const f=this.FRIENDS[v.sender]; const key=Date.now();
     this.setState(st=>({ sentTokens:{...st.sentTokens,[v.id]:[...(st.sentTokens[v.id]||[]),tok.t]}, flying:{key,emoji:tok.e||'\uD83D\uDCAC'} }));
     (this._timers||(this._timers=[])).push(setTimeout(()=>this.setState({flying:null}),440));
-    this.showToast('\u201C'+tok.t+'\u201D sent', {avatar:f.av, emoji:tok.e, sub:'Minion will see your reaction'.replace('Minion',f.name)}); }
+    this.driveSendStatus(v.id, (tok.e?tok.e+' ':'')+tok.t, f.id); }
+
+  // Sender end-to-end: your reply/react rides a delivery lifecycle inline on the card \u2014 no jump to DM.
+  driveSendStatus(vid, reply, friendId){
+    const f=this.FRIENDS[friendId]||this.FRIENDS.minion;
+    this.setState(st=>({ sendStatus:{...st.sendStatus,[vid]:{phase:'sending',reply,friend:friendId}} }));
+    const t=(this._timers||(this._timers=[]));
+    const set=(phase)=>this.setState(st=>{ const cur=st.sendStatus[vid]; if(!cur)return {}; return { sendStatus:{...st.sendStatus,[vid]:{...cur,phase}} }; });
+    t.push(setTimeout(()=>set('sent'), 850));
+    t.push(setTimeout(()=>set('seen'), 2100));
+  }
   doLike(v){ const on=!this.state.liked[v.id]; this.setState(st=>({liked:{...st.liked,[v.id]:on}})); }
   doBookmark(v){ const on=!this.state.bookmarked[v.id]; this.setState(st=>({bookmarked:{...st.bookmarked,[v.id]:on}})); if(on) this.addReceipt(v); }
   timeLabel(){ const d=new Date(); let h=d.getHours(); const m=String(d.getMinutes()).padStart(2,'0'); const ap=h>=12?'PM':'AM'; h=h%12||12; return h+':'+m+' '+ap; }
@@ -940,7 +1069,14 @@ class Component extends DCLogic {
   closeReply(){ this.setState({replyInput:null}); }
   togglePick(id){ this.setState(st=>({replyPick:{...st.replyPick,[id]:!st.replyPick[id]}})); }
   pickedNames(){ const ri=this.state.replyInput; if(!ri)return []; const p=this.state.replyPick||{}; return ri.senderIds.filter(id=>p[id]).map(id=>this.FRIENDS[id].name); }
-  sendReply(){ const ri=this.state.replyInput; if(!ri){return;} let names=this.pickedNames(); if(!names.length){ names=ri.sender; } const who= names.length>1? ('all '+names.length+' friends') : names[0]; this.setState({replyInput:null}); this.showToast('Replied to '+who); }
+  sendReply(){ const ri=this.state.replyInput; if(!ri){return;}
+    const p=this.state.replyPick||{}; let ids=ri.senderIds.filter(id=>p[id]); if(!ids.length) ids=ri.senderIds;
+    const names=ids.map(id=>this.FRIENDS[id].name);
+    const who= names.length>1? ('all '+names.length+' friends') : names[0];
+    this.setState({replyInput:null});
+    // sender end-to-end: land the reply's delivery status inline on the shared card
+    if(ri.vid){ this.driveSendStatus(ri.vid, (names.length>1? ('Replied · '+names.length) : ('Replied to '+names[0])), ids[0]); }
+    else { this.showToast('Replied to '+who); } }
 
   mergedSenders(v){ return (v.alsoSentBy&&v.alsoSentBy.length)? [v.sender,...v.alsoSentBy] : [v.sender]; }
 
@@ -959,7 +1095,8 @@ class Component extends DCLogic {
     const entry={1:'shared',2:'shared',3:'home',4:'shared',5:'shared',6:'inbox',7:'share',8:'inbox'}[n];
     this.setState({ idea:n, screen:entry, sharedTab:'shared', feedIdx:0,
       liked:{}, bookmarked:{}, followed:{}, capExp:{}, sentTokens:{}, seen:{}, skipped:{}, dmReceipts:[], replyInput:null,
-      shareIntentIdx:0, shareSent:false, sentIntent:null, roleBadge:null, toast:null, friendsDot:true });
+      shareIntentIdx:0, shareSent:false, sentIntent:null, roleBadge:null, toast:null, friendsDot:true,
+      sharedState:'feed', readShared:{}, sendStatus:{} });
     if(this._feed) this._feed.scrollTop=0;
     if(this.props.autoplayWalkthrough!==false) this._timers.push(setTimeout(()=>this.runWorkflow(n),650));
   }
@@ -1111,8 +1248,13 @@ class Component extends DCLogic {
     const sharedFeed=this.orderedShared().map((v)=>{
       const senders=this.mergedSenders(v);
       const sentList=st.sentTokens[v.id]||[];
-      const toks = sentList.length>0 ? [] : this.tokensFor(v).map(tk=>({ ...tk, onSend:()=>this.sendReaction(v,tk) }));
+      const stat=st.sendStatus[v.id]||null;
+      const toks = (sentList.length>0 || stat) ? [] : this.tokensFor(v).map(tk=>({ ...tk, onSend:()=>this.sendReaction(v,tk) }));
       const names=senders.map(id=>F[id].name);
+      // sender end-to-end delivery status (Sending → Sent → Seen)
+      const statF=F[(stat&&stat.friend)||v.sender]||F.minion;
+      const statLabel = stat ? ({sending:'Sending…', sent:'Sent', seen:'Seen by '+statF.name}[stat.phase]) : '';
+      const statColor = stat ? (stat.phase==='sending' ? 'rgba(255,255,255,.62)' : '#25f4ee') : '';
       let label;
       if(names.length===1) label=names[0]+' shared with you';
       else if(names.length===2) label=names[0]+' & '+names[1]+' shared';
@@ -1126,7 +1268,7 @@ class Component extends DCLogic {
         sharerComment: v.senderComment || null,
         hasComment: !!v.senderComment && !queueOn, noComment: !v.senderComment && !queueOn,
         sharerName: F[v.sender].name, commentAvStyle: this.circle(F[v.sender].av,32),
-        replyAvatars: senders.slice(0,3).map((id,si)=>({ style:this.circle(F[id].av,30,{ marginLeft: si>0?'-11px':'0' }) })),
+        replyAvatars: (()=>{ const clu=senders.slice(0,3); return clu.map((id,si)=>{ const extra={ marginLeft: si>0?'-11px':'0' }; if(si<clu.length-1){ const m='radial-gradient(circle at 34px 15px, transparent 17px, #000 17.5px)'; extra.WebkitMaskImage=m; extra.maskImage=m; } return { style:this.circle(F[id].av,30,extra) }; }); })(),
         replyHint: senders.length>1 ? ('Reply to all '+senders.length+'…') : ('Reply to '+names[0]+'…'),
         myAvStyle: this.circle(F[v.sender].av,34),
         sharerTime: ({sv1:'5h',sv2:'2h',sv3:'1d',sv4:'3h',sv5:'8h',sv6:'6h',sv7:'12h'})[v.id] || '5h',
@@ -1140,6 +1282,17 @@ class Component extends DCLogic {
         hasTokens: toks.length>0,
         tokenStyle: this.reactStyle(v.id),
         captionBottom: toks.length>0 ? '194px' : '150px',
+        // NEW / unread marker (feed state only)
+        isUnread: st.sharedState==='feed' && !st.readShared[v.id],
+        // sender delivery lifecycle
+        hasStatus: !!stat,
+        statusReply: stat ? stat.reply : '',
+        statusLabel: statLabel,
+        statusColor: statColor,
+        statusAvStyle: this.circle(statF.av,30),
+        statusSending: !!stat && stat.phase==='sending',
+        statusSent: !!stat && stat.phase==='sent',
+        statusSeen: !!stat && stat.phase==='seen',
       });
     });
 
@@ -1173,6 +1326,30 @@ class Component extends DCLogic {
       card.intentName=this.ME.name; card.intentAvStyle=this.circle(this.ME.av,32);
       card.captionBottom='150px';
     }
+
+    // ---- in-tab STATE overlays (状态 · 空态 · 通知) ----
+    const sState = st.sharedState || 'feed';
+    const inSharedTab = st.screen==='shared' && st.sharedTab==='shared';
+    const showLoading = inSharedTab && sState==='loading';
+    const showEmpty   = inSharedTab && sState==='empty';
+    const showNotify  = inSharedTab && sState==='notify';
+    // unread NEW pill: how many shares are still unwatched (feed state)
+    const unreadList = (sState==='feed') ? this.orderedShared().filter(v=>!st.readShared[v.id]) : [];
+    const unreadCount = unreadList.length;
+    const newPill = inSharedTab && sState==='feed' && unreadCount>0 && !endReached;
+    const newSenders = [];
+    unreadList.forEach(v=>{ const s=v.sender; if(newSenders.indexOf(s)<0 && newSenders.length<3) newSenders.push(s); });
+    const newPillAvatars = newSenders.map((id,i)=>({ style:this.circle(F[id].av,24,{ marginLeft:i>0?'-9px':'0', border:'1.5px solid #fe2c55' }) }));
+    const newPillText = unreadCount===1 ? '1 new share' : (unreadCount+' new shares');
+    // notify push banner content
+    const notifyFriend = F.minion;
+    const notifyText = notifyFriend.name + ' shared a video with you';
+    const notifyAvStyle = this.circle(notifyFriend.av,42);
+    // rail state switcher
+    const STATE_DEFS=[{k:'empty',label:'Empty'},{k:'notify',label:'Notify'},{k:'loading',label:'Loading'},{k:'feed',label:'Feed'}];
+    const stateChips = STATE_DEFS.map(d=>{ const on=inSharedTab && sState===d.k; return { label:d.label, onPick:()=>this.setSharedState(d.k),
+      style:{ fontSize:'11px', fontWeight:'700', padding:'6px 9px', borderRadius:'8px', cursor:'pointer', whiteSpace:'nowrap',
+        background: on?'rgba(254,44,85,.16)':'transparent', boxShadow: on?'inset 0 0 0 1px rgba(254,44,85,.5)':'none', color: on?'#ff5c7a':'#8a8b8f', transition:'all .15s ease' } }; });
 
     const tabFriends=st.sharedTab==='friends', tabShared=st.sharedTab==='shared';
     const tabStyle=on=>({ fontSize:'17px', fontWeight:'600', lineHeight:'1', whiteSpace:'nowrap', color: on?'#fff':'rgba(255,255,255,.55)', textShadow:'0 1px 4px rgba(0,0,0,.5)' });
@@ -1247,8 +1424,15 @@ class Component extends DCLogic {
       openCollections:()=>this.openDm('bottom'),
       replay: ()=>this.runWorkflow(st.idea),
       phoneRef:(el)=>{ this._phone=el; if(el) this.fit(); },
-      sharedScrollRef:(el)=>{ this._feed=el; if(el && !el._qbound){ el._qbound=1; el.addEventListener('scroll',()=>{ const i=Math.round(el.scrollTop/852); if(i!==this.state.feedIdx) this.setState({feedIdx:i}); }); } },
+      sharedScrollRef:(el)=>{ this._feed=el; if(el && !el._qbound){ el._qbound=1; el.addEventListener('scroll',()=>{ const i=Math.round(el.scrollTop/852); if(i!==this.state.feedIdx) this.setState({feedIdx:i}); const cur=this.orderedShared()[i]; if(cur) this.markReadShared(cur.id); }); } },
       priorityBubbles, showQueue,
+      // in-tab state overlays + switcher
+      stateChips, showLoading, showEmpty, showNotify,
+      newPill, newPillText, newPillAvatars, notifyText, notifyAvStyle,
+      onJumpUnread:()=>this.jumpUnread(),
+      onNotifyOpen:()=>this.openFromNotify(),
+      onEmptyCta:()=>this.setSharedState('notify'),
+      onEmptyInvite:()=>this.showToast('Invite link copied',{plainIcon:true}),
       goSharedTabFromFyp:()=>{ this.go('shared'); this.setState({sharedTab:'shared',friendsDot:false}); if(this._feed) this._feed.scrollTop=0; },
       stripRef:(el)=>{ this._strip=el; if(el && !el._end){ el._end=1; requestAnimationFrame(()=>{ try{ el.scrollLeft=el.scrollWidth; }catch(e){} }); } },
       dragStart:(e)=>this.dragStart(e), dragMove:(e)=>this.dragMove(e), dragEnd:()=>this.dragEnd(),

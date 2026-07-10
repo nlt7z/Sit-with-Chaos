@@ -166,6 +166,22 @@ section.block.hero{border-top:none;padding:70px 0 50px;}
 .rvl.in{opacity:1;transform:none;}
 @media (prefers-reduced-motion:reduce){.rvl{opacity:1!important;transform:none!important;transition:none;}}
 
+/* two-sided loop workflow */
+.loop{margin-top:22px;}
+.loop-steps{display:flex;flex-wrap:nowrap;align-items:stretch;gap:8px;}
+.loop-node{flex:1 1 0;min-width:0;border:1px solid var(--line-soft);border-radius:12px;background:rgba(255,255,255,0.014);padding:15px 14px 16px;display:flex;flex-direction:column;}
+.loop-role{font-family:var(--mono);font-size:10px;letter-spacing:0.07em;text-transform:uppercase;color:var(--t-4);margin-bottom:10px;}
+.loop-t{font-family:var(--display);font-size:16px;font-weight:600;color:var(--t-1);letter-spacing:-0.005em;margin-bottom:7px;line-height:1.2;}
+.loop-d{font-size:12.5px;line-height:1.55;color:var(--t-3);}
+.loop-conn{align-self:center;color:var(--t-4);font-size:15px;flex:none;}
+.loop-back{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:12px;padding:12px;border:1px dashed var(--line-soft);border-radius:12px;font-family:var(--mono);font-size:12px;letter-spacing:0.03em;color:var(--t-3);}
+.loop-back .lb-i{font-size:15px;color:var(--t-2);}
+@media (max-width:780px){
+  .loop-steps{flex-direction:column;}
+  .loop-conn{transform:rotate(90deg);align-self:flex-start;margin-left:22px;}
+  .loop-back{white-space:normal;text-align:center;}
+}
+
 /* idea + fields */
 .idea{padding:30px 0;border-top:1px solid var(--line-soft);}
 .idea:first-of-type{border-top:none;padding-top:6px;}
@@ -685,6 +701,45 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         </div>
       </div>
     </div>
+
+    <div class="loop-wrap" style="margin-top:44px">
+      <div class="final-label" style="margin-bottom:8px">双边循环 · 从 A 分享到 B 也分享</div>
+      <p class="para" style="max-width:820px">最终这套方案要转起来的,是这样一条闭环:发送方的分享被接收方低成本地看到、回应,接收方感到"在发现"、发送方感到"被看见",而接收方刷爽之后又回到 FYP 成为新的发送方。</p>
+      <div class="loop">
+        <div class="loop-steps">
+          <div class="loop-node">
+            <div class="loop-role">发送方 A</div>
+            <div class="loop-t">分享</div>
+            <p class="loop-d">带一点意图,把视频发给互关好友。</p>
+          </div>
+          <span class="loop-conn">→</span>
+          <div class="loop-node">
+            <div class="loop-role">接收方 B</div>
+            <div class="loop-t">发现</div>
+            <p class="loop-d">在 Shared Feed 里顺着往下刷,不再逆着回溯。</p>
+          </div>
+          <span class="loop-conn">→</span>
+          <div class="loop-node">
+            <div class="loop-role">接收方 B</div>
+            <div class="loop-t">回应</div>
+            <p class="loop-d">Smart Reactions 一点即发,不用打字。</p>
+          </div>
+          <span class="loop-conn">→</span>
+          <div class="loop-node">
+            <div class="loop-role">发送方 A</div>
+            <div class="loop-t">被看见</div>
+            <p class="loop-d">收到贴合语境的反馈,分享真正落地。</p>
+          </div>
+          <span class="loop-conn">→</span>
+          <div class="loop-node">
+            <div class="loop-role">B 成为发送方</div>
+            <div class="loop-t">再分享</div>
+            <p class="loop-d">刷爽之后回到 FYP,分享新的内容。</p>
+          </div>
+        </div>
+        <div class="loop-back"><span class="lb-i">↻</span>接收方成为发送方,循环重新开始</div>
+      </div>
+    </div>
   </section>
   </div>
 
@@ -810,7 +865,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
   if(!('IntersectionObserver' in window)) return;
   var mq=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)');
   if(mq&&mq.matches) return;
-  var sel='.region-head, #s1 .show, .bridge, .goal-card, .hmwq, .ib, .final-box, .ai-tools, #s8 .qgroup, .about-me';
+  var sel='.region-head, #s1 .show, .bridge, .goal-card, .hmwq, .ib, .final-box, .loop-wrap, .ai-tools, #s8 .qgroup, .about-me';
   var els=[].slice.call(document.querySelectorAll(sel)), vh=window.innerHeight;
   els.forEach(function(el){ if(el.getBoundingClientRect().top>vh*0.88){ el.classList.add('rvl'); } });
   var io=new IntersectionObserver(function(entries){
