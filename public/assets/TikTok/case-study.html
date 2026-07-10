@@ -304,6 +304,10 @@ section.block.hero{border-top:none;padding:70px 0 50px;}
 .final-ph{text-align:center;min-width:0;}
 .final-frame{display:block;width:100%;height:640px;border:0;background:transparent;}
 .final-ph .ib-replay{margin-top:14px;}
+.final-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:10px;margin-top:14px;}
+.final-actions .ib-replay{margin-top:0;}
+.ib-open{display:inline-flex;align-items:center;gap:8px;font-family:var(--font);font-size:13px;font-weight:600;color:#fff;background:var(--pink);border:1px solid var(--pink);border-radius:22px;padding:9px 16px;cursor:pointer;text-decoration:none;transition:filter .16s ease,transform .16s ease;}
+.ib-open:hover{filter:brightness(1.08);transform:translateY(-1px);}
 .final-txt{min-width:0;}
 .final-part + .final-part{margin-top:28px;padding-top:26px;border-top:1px solid var(--line-soft);}
 .final-label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--t-4);margin-bottom:12px;}
@@ -691,7 +695,10 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     <div class="final-box" style="margin-top:6px;">
       <div class="final-ph">
         <iframe class="final-frame" src="prototype/03-shared-feed-tab.html?bare=1" loading="lazy" title="Shared Feed Tab — final prototype"></iframe>
-                <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        <div class="final-actions">
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+          <a class="ib-open" href="prototype/03-shared-feed-tab.html" target="_blank" rel="noopener">↗ Open prototype</a>
+        </div>
       </div>
       <div class="final-txt">
         <div class="final-part">
