@@ -30,9 +30,7 @@
   @keyframes tkPlayPulse{0%,100%{opacity:.5}50%{opacity:1}}
   @keyframes tkShimmer{0%{background-position:-260px 0}100%{background-position:260px 0}}
   @keyframes tkPushDrop{0%{opacity:0;transform:translateY(-26px) scale(.96)}60%{transform:translateY(3px) scale(1)}100%{opacity:1;transform:translateY(0) scale(1)}}
-  @keyframes tkNewPill{0%{opacity:0;transform:translate(-50%,-10px)}100%{opacity:1;transform:translate(-50%,0)}}
   @keyframes tkSpin{to{transform:rotate(360deg)}}
-  @keyframes tkStatusIn{0%{opacity:0;transform:translateY(6px) scale(.92)}100%{opacity:1;transform:translateY(0) scale(1)}}
   .tk-sk{background:linear-gradient(100deg,rgba(255,255,255,.05) 30%,rgba(255,255,255,.13) 50%,rgba(255,255,255,.05) 70%);background-size:260px 100%;animation:tkShimmer 1.25s ease-in-out infinite;}
   [data-tap]{transition:transform .1s cubic-bezier(.16,1,.3,1);}
   [data-tap]:active{transform:scale(.92);}
@@ -198,22 +196,6 @@
                      </sc-for>
                    </div>
                    </sc-if>
-
-                   <!-- Row 5: sender end-to-end status — your reply/react delivery lifecycle, inline -->
-                   <sc-if value="{{ v.hasStatus }}" hint-placeholder-val="{{ false }}">
-                     <div style="align-self:flex-start;display:inline-flex;align-items:center;gap:9px;background:rgba(0,0,0,.5);backdrop-filter:blur(14px);border-radius:16px;padding:7px 13px 7px 8px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);animation:tkStatusIn .3s cubic-bezier(.16,1,.3,1) both;">
-                       <div style="{{ v.statusAvStyle }}"></div>
-                       <div style="display:flex;flex-direction:column;line-height:1.18;">
-                         <span style="font-size:13px;font-weight:700;color:#fff;">{{ v.statusReply }}</span>
-                         <div style="display:flex;align-items:center;gap:5px;margin-top:1px;">
-                           <sc-if value="{{ v.statusSending }}" hint-placeholder-val="{{ false }}"><span style="width:11px;height:11px;border-radius:50%;border:1.6px solid rgba(255,255,255,.3);border-top-color:#fff;animation:tkSpin .7s linear infinite;flex:0 0 auto;"></span></sc-if>
-                           <sc-if value="{{ v.statusSent }}" hint-placeholder-val="{{ false }}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#25f4ee" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M4 12l5 5L20 6"></path></svg></sc-if>
-                           <sc-if value="{{ v.statusSeen }}" hint-placeholder-val="{{ false }}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#25f4ee" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7z"></path><circle cx="12" cy="12" r="2.4" fill="#25f4ee" stroke="none"></circle></svg></sc-if>
-                           <span style="font-size:11.5px;font-weight:600;color:{{ v.statusColor }};">{{ v.statusLabel }}</span>
-                         </div>
-                       </div>
-                     </div>
-                   </sc-if>
                  </div>
 
                  <!-- Row 6: reply input — chat bubble with a little tail on the right -->
@@ -253,15 +235,6 @@
 
          <!-- ===== in-tab STATE overlays (empty · loading · notify) — cover the feed area, keep top bar + nav ===== -->
 
-         <!-- top "new shares" pill (feed state, unread > 0) -->
-         <sc-if value="{{ newPill }}" hint-placeholder-val="{{ false }}">
-           <div onclick="{{ onJumpUnread }}" data-tap="1" style="position:absolute;top:104px;left:50%;transform:translateX(-50%);z-index:7;display:inline-flex;align-items:center;gap:8px;height:34px;padding:0 7px 0 14px;border-radius:17px;background:#fe2c55;box-shadow:0 8px 22px rgba(254,44,85,.42);cursor:pointer;animation:tkNewPill .34s cubic-bezier(.16,1,.3,1) both;">
-             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M18 15l-6-6-6 6"></path></svg>
-             <span style="font-size:13px;font-weight:700;color:#fff;">{{ newPillText }}</span>
-             <div style="display:flex;align-items:center;margin-left:2px;"><sc-for list="{{ newPillAvatars }}" as="a" hint-placeholder-count="3"><div style="{{ a.style }}"></div></sc-for></div>
-           </div>
-         </sc-if>
-
          <!-- LOADING skeleton -->
          <sc-if value="{{ showLoading }}" hint-placeholder-val="{{ false }}">
            <div style="position:absolute;top:96px;left:0;right:0;bottom:84px;z-index:5;background:#000;overflow:hidden;animation:tkFade .2s ease both;">
@@ -292,8 +265,8 @@
              <div style="font-size:21px;font-weight:800;letter-spacing:-.01em;color:#fff;">No shares yet</div>
              <div style="margin-top:9px;font-size:14.5px;line-height:1.42;color:rgba(255,255,255,.6);max-width:250px;">When a friend sends you a video, it lands here — react and reply without leaving the tab.</div>
              <div onclick="{{ onEmptyCta }}" data-tap="1" style="display:inline-flex;align-items:center;justify-content:center;gap:8px;margin-top:24px;height:48px;padding:0 22px;border-radius:24px;background:#fe2c55;box-shadow:0 10px 26px rgba(254,44,85,.4);cursor:pointer;">
-               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7.5"></circle><path d="M21 21l-4.5-4.5"></path></svg>
-               <span style="font-size:15px;font-weight:700;color:#fff;">Find videos to share</span>
+               <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h7l-1 8 10-12h-7z"></path></svg>
+               <span style="font-size:15px;font-weight:700;color:#fff;">Nudge friends to share</span>
              </div>
              <div onclick="{{ onEmptyInvite }}" data-tap="1" style="margin-top:14px;font-size:13.5px;font-weight:600;color:rgba(255,255,255,.55);cursor:pointer;">Invite friends to TikTok</div>
            </div>
@@ -911,7 +884,6 @@ class Component extends DCLogic {
     // in-tab state machine for the "Shared with you" feed
     sharedState: 'feed',   // 'feed' | 'loading' | 'empty' | 'notify'
     readShared: {},        // videoId -> true once scrolled onto (clears the NEW badge)
-    sendStatus: {},        // videoId -> { phase:'sending'|'sent'|'seen', reply:'…' } — sender lifecycle
   };
 
   FRIENDS = {
@@ -970,9 +942,13 @@ class Component extends DCLogic {
     window.addEventListener('message',(ev)=>{ if(ev&&ev.data&&ev.data.type==='dc-replay') this.runWorkflow(this.state.idea); });
     var _switched=(_qi>=1&&_qi<=7&&_qi!==this.state.idea);
     if(_switched){ this.selectIdea(_qi); }
+    // deep-link an in-tab state (?state=empty|notify|loading|feed) — used by the case-study embeds
+    var _qs=_P?_P.get('state'):null;
+    var _stateDeep = ['empty','notify','loading','feed'].indexOf(_qs)>=0;
+    if(_stateDeep){ this.setSharedState(_qs); }
     try{ if(window.parent&&window.parent!==window) window.parent.postMessage({type:'dc-idea',n:this.state.idea},'*'); }catch(e){}
     this._fit=()=>this.fit(); window.addEventListener('resize',this._fit); this.fit();
-    if(!_switched && this.props.autoplayWalkthrough!==false) this._timers.push(setTimeout(()=>this.runWorkflow(this.state.idea),650));
+    if(!_switched && !_stateDeep && this.props.autoplayWalkthrough!==false) this._timers.push(setTimeout(()=>this.runWorkflow(this.state.idea),650));
     // Only the video actually on screen plays — everything else stays paused.
     // (A brute-force "play every <video> every 650ms" interval used to live here and
     //  pinned ~9 videos decoding at once, which is what made the page crawl.)
@@ -1004,17 +980,12 @@ class Component extends DCLogic {
     this.setState({ screen:'shared', sharedTab:'shared', sharedState:s, toast:null, replyInput:null });
     if(s==='loading'){
       // fresh fetch → every share comes back unread
-      this.setState({ readShared:{}, feedIdx:0, sendStatus:{}, sentTokens:{} });
+      this.setState({ readShared:{}, feedIdx:0, sentTokens:{} });
       if(this._feed) this._feed.scrollTop=0;
       this._timers.push(setTimeout(()=>this.setState({sharedState:'feed'}), 1150));
     }
   }
   markReadShared(id){ if(!id||this.state.readShared[id])return; this.setState(st=>({readShared:{...st.readShared,[id]:true}})); }
-  jumpUnread(){
-    const ordered=this.orderedShared();
-    const idx=ordered.findIndex(v=>!this.state.readShared[v.id]);
-    if(idx>=0) this.scrollFeed(idx);
-  }
   openFromNotify(){ this.setSharedState('loading'); }
   doFollow(v){ const id=v.id; this.setState(st=>({followed:{...st.followed,[id]:true}})); this.showToast('Following '+(v.creator||v.name)); }
 
@@ -1034,17 +1005,7 @@ class Component extends DCLogic {
   sendReaction(v,tok){ const f=this.FRIENDS[v.sender]; const key=Date.now();
     this.setState(st=>({ sentTokens:{...st.sentTokens,[v.id]:[...(st.sentTokens[v.id]||[]),tok.t]}, flying:{key,emoji:tok.e||'\uD83D\uDCAC'} }));
     (this._timers||(this._timers=[])).push(setTimeout(()=>this.setState({flying:null}),440));
-    this.driveSendStatus(v.id, (tok.e?tok.e+' ':'')+tok.t, f.id); }
-
-  // Sender end-to-end: your reply/react rides a delivery lifecycle inline on the card \u2014 no jump to DM.
-  driveSendStatus(vid, reply, friendId){
-    const f=this.FRIENDS[friendId]||this.FRIENDS.minion;
-    this.setState(st=>({ sendStatus:{...st.sendStatus,[vid]:{phase:'sending',reply,friend:friendId}} }));
-    const t=(this._timers||(this._timers=[]));
-    const set=(phase)=>this.setState(st=>{ const cur=st.sendStatus[vid]; if(!cur)return {}; return { sendStatus:{...st.sendStatus,[vid]:{...cur,phase}} }; });
-    t.push(setTimeout(()=>set('sent'), 850));
-    t.push(setTimeout(()=>set('seen'), 2100));
-  }
+    this.showToast('\u201C'+tok.t+'\u201D sent', {avatar:f.av, emoji:tok.e, sub:'Minion will see your reaction'.replace('Minion',f.name)}); }
   doLike(v){ const on=!this.state.liked[v.id]; this.setState(st=>({liked:{...st.liked,[v.id]:on}})); }
   doBookmark(v){ const on=!this.state.bookmarked[v.id]; this.setState(st=>({bookmarked:{...st.bookmarked,[v.id]:on}})); if(on) this.addReceipt(v); }
   timeLabel(){ const d=new Date(); let h=d.getHours(); const m=String(d.getMinutes()).padStart(2,'0'); const ap=h>=12?'PM':'AM'; h=h%12||12; return h+':'+m+' '+ap; }
@@ -1069,14 +1030,7 @@ class Component extends DCLogic {
   closeReply(){ this.setState({replyInput:null}); }
   togglePick(id){ this.setState(st=>({replyPick:{...st.replyPick,[id]:!st.replyPick[id]}})); }
   pickedNames(){ const ri=this.state.replyInput; if(!ri)return []; const p=this.state.replyPick||{}; return ri.senderIds.filter(id=>p[id]).map(id=>this.FRIENDS[id].name); }
-  sendReply(){ const ri=this.state.replyInput; if(!ri){return;}
-    const p=this.state.replyPick||{}; let ids=ri.senderIds.filter(id=>p[id]); if(!ids.length) ids=ri.senderIds;
-    const names=ids.map(id=>this.FRIENDS[id].name);
-    const who= names.length>1? ('all '+names.length+' friends') : names[0];
-    this.setState({replyInput:null});
-    // sender end-to-end: land the reply's delivery status inline on the shared card
-    if(ri.vid){ this.driveSendStatus(ri.vid, (names.length>1? ('Replied · '+names.length) : ('Replied to '+names[0])), ids[0]); }
-    else { this.showToast('Replied to '+who); } }
+  sendReply(){ const ri=this.state.replyInput; if(!ri){return;} let names=this.pickedNames(); if(!names.length){ names=ri.sender; } const who= names.length>1? ('all '+names.length+' friends') : names[0]; this.setState({replyInput:null}); this.showToast('Replied to '+who); }
 
   mergedSenders(v){ return (v.alsoSentBy&&v.alsoSentBy.length)? [v.sender,...v.alsoSentBy] : [v.sender]; }
 
@@ -1096,7 +1050,7 @@ class Component extends DCLogic {
     this.setState({ idea:n, screen:entry, sharedTab:'shared', feedIdx:0,
       liked:{}, bookmarked:{}, followed:{}, capExp:{}, sentTokens:{}, seen:{}, skipped:{}, dmReceipts:[], replyInput:null,
       shareIntentIdx:0, shareSent:false, sentIntent:null, roleBadge:null, toast:null, friendsDot:true,
-      sharedState:'feed', readShared:{}, sendStatus:{} });
+      sharedState:'feed', readShared:{} });
     if(this._feed) this._feed.scrollTop=0;
     if(this.props.autoplayWalkthrough!==false) this._timers.push(setTimeout(()=>this.runWorkflow(n),650));
   }
@@ -1245,16 +1199,19 @@ class Component extends DCLogic {
 
     const VID=this.VIDEOS;
     const queueOn= st.idea===4 && st.sharedTab==='shared' && st.screen==='shared';
-    const sharedFeed=this.orderedShared().map((v)=>{
+    // chronological order: oldest at top, newest appended at the bottom (scroll DOWN to reach fresh shares)
+    const orderedList=this.orderedShared();
+    const feedTotal=orderedList.length;
+    const FRESH_TIMES=['just now','2m','9m'];               // bottom-most = most recent
+    const OLD_TIMES=['1h','4h','8h','12h','1d','2d','3d'];
+    const sharedFeed=orderedList.map((v,idx)=>{
+      const fromBottom=(feedTotal-1)-idx;                   // 0 = last card
+      const isFresh=fromBottom<FRESH_TIMES.length;          // last few videos are the just-arrived ones
+      const cardTime=isFresh ? FRESH_TIMES[fromBottom] : (OLD_TIMES[fromBottom-FRESH_TIMES.length]||'3d');
       const senders=this.mergedSenders(v);
       const sentList=st.sentTokens[v.id]||[];
-      const stat=st.sendStatus[v.id]||null;
-      const toks = (sentList.length>0 || stat) ? [] : this.tokensFor(v).map(tk=>({ ...tk, onSend:()=>this.sendReaction(v,tk) }));
+      const toks = sentList.length>0 ? [] : this.tokensFor(v).map(tk=>({ ...tk, onSend:()=>this.sendReaction(v,tk) }));
       const names=senders.map(id=>F[id].name);
-      // sender end-to-end delivery status (Sending → Sent → Seen)
-      const statF=F[(stat&&stat.friend)||v.sender]||F.minion;
-      const statLabel = stat ? ({sending:'Sending…', sent:'Sent', seen:'Seen by '+statF.name}[stat.phase]) : '';
-      const statColor = stat ? (stat.phase==='sending' ? 'rgba(255,255,255,.62)' : '#25f4ee') : '';
       let label;
       if(names.length===1) label=names[0]+' shared with you';
       else if(names.length===2) label=names[0]+' & '+names[1]+' shared';
@@ -1271,7 +1228,7 @@ class Component extends DCLogic {
         replyAvatars: (()=>{ const clu=senders.slice(0,3); return clu.map((id,si)=>{ const extra={ marginLeft: si>0?'-11px':'0' }; if(si<clu.length-1){ const m='radial-gradient(circle at 34px 15px, transparent 17px, #000 17.5px)'; extra.WebkitMaskImage=m; extra.maskImage=m; } return { style:this.circle(F[id].av,30,extra) }; }); })(),
         replyHint: senders.length>1 ? ('Reply to all '+senders.length+'…') : ('Reply to '+names[0]+'…'),
         myAvStyle: this.circle(F[v.sender].av,34),
-        sharerTime: ({sv1:'5h',sv2:'2h',sv3:'1d',sv4:'3h',sv5:'8h',sv6:'6h',sv7:'12h'})[v.id] || '5h',
+        sharerTime: cardTime,
         creatorThumbStyle: { backgroundImage:'url("'+v.thumb+'")' },
         cardCapStyle: st.capExp[v.id]
           ? 'white-space:normal;overflow:hidden;max-height:8em;transition:max-height .36s cubic-bezier(.16,1,.3,1);'
@@ -1282,17 +1239,8 @@ class Component extends DCLogic {
         hasTokens: toks.length>0,
         tokenStyle: this.reactStyle(v.id),
         captionBottom: toks.length>0 ? '194px' : '150px',
-        // NEW / unread marker (feed state only)
-        isUnread: st.sharedState==='feed' && !st.readShared[v.id],
-        // sender delivery lifecycle
-        hasStatus: !!stat,
-        statusReply: stat ? stat.reply : '',
-        statusLabel: statLabel,
-        statusColor: statColor,
-        statusAvStyle: this.circle(statF.av,30),
-        statusSending: !!stat && stat.phase==='sending',
-        statusSent: !!stat && stat.phase==='sent',
-        statusSeen: !!stat && stat.phase==='seen',
+        // NEW marker: only the freshly-arrived bottom cards, until scrolled onto
+        isUnread: isFresh && st.sharedState==='feed' && !st.readShared[v.id],
       });
     });
 
@@ -1333,14 +1281,6 @@ class Component extends DCLogic {
     const showLoading = inSharedTab && sState==='loading';
     const showEmpty   = inSharedTab && sState==='empty';
     const showNotify  = inSharedTab && sState==='notify';
-    // unread NEW pill: how many shares are still unwatched (feed state)
-    const unreadList = (sState==='feed') ? this.orderedShared().filter(v=>!st.readShared[v.id]) : [];
-    const unreadCount = unreadList.length;
-    const newPill = inSharedTab && sState==='feed' && unreadCount>0 && !endReached;
-    const newSenders = [];
-    unreadList.forEach(v=>{ const s=v.sender; if(newSenders.indexOf(s)<0 && newSenders.length<3) newSenders.push(s); });
-    const newPillAvatars = newSenders.map((id,i)=>({ style:this.circle(F[id].av,24,{ marginLeft:i>0?'-9px':'0', border:'1.5px solid #fe2c55' }) }));
-    const newPillText = unreadCount===1 ? '1 new share' : (unreadCount+' new shares');
     // notify push banner content
     const notifyFriend = F.minion;
     const notifyText = notifyFriend.name + ' shared a video with you';
@@ -1428,8 +1368,7 @@ class Component extends DCLogic {
       priorityBubbles, showQueue,
       // in-tab state overlays + switcher
       stateChips, showLoading, showEmpty, showNotify,
-      newPill, newPillText, newPillAvatars, notifyText, notifyAvStyle,
-      onJumpUnread:()=>this.jumpUnread(),
+      notifyText, notifyAvStyle,
       onNotifyOpen:()=>this.openFromNotify(),
       onEmptyCta:()=>this.setSharedState('notify'),
       onEmptyInvite:()=>this.showToast('Invite link copied',{plainIcon:true}),
