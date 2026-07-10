@@ -186,8 +186,8 @@
 
                  <!-- Row 6: reply input — chat bubble with a little tail on the right -->
                  <div onclick="{{ v.onReplyBar }}" data-tap="1" style="position:absolute;left:10px;right:10px;bottom:92px;z-index:4;cursor:pointer;">
-                   <div style="position:relative;display:flex;align-items:center;gap:10px;height:46px;border-radius:23px 23px 8px 23px;padding:0 6px;background:rgba(255,255,255,.17);backdrop-filter:blur(18px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);">
-                     <div style="{{ v.myAvStyle }}"></div>
+                   <div style="position:relative;display:flex;align-items:center;gap:10px;height:46px;border-radius:23px 23px 8px 23px;padding:0 6px 0 8px;background:rgba(255,255,255,.17);backdrop-filter:blur(18px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);">
+                     <div style="display:flex;align-items:center;flex:0 0 auto;"><sc-for list="{{ v.replyAvatars }}" as="a" hint-placeholder-count="3"><div style="{{ a.style }}"></div></sc-for></div>
                      <span style="flex:1;color:rgba(255,255,255,.85);font-size:15px;">{{ v.replyHint }}</span>
                      <div style="width:36px;height:36px;border-radius:50%;background:#fe2c55;display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M3 11l18-8-8 18-2-7-8-3z"></path></svg></div>
                      <div style="position:absolute;right:26px;bottom:-6px;width:15px;height:15px;background:rgba(150,150,155,.5);transform:rotate(45deg);border-radius:0 0 4px 0;box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);"></div>
@@ -251,14 +251,61 @@
            <svg onclick="{{ onSearch }}" data-tap="1" width="23" height="23" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" style="cursor:pointer;flex:0 0 auto;"><circle cx="11" cy="11" r="7.5"></circle><path d="M21 21l-4.5-4.5"></path></svg>
          </div>
 
-         <!-- inline reply input (opens in-view, no DM nav) -->
+         <!-- reply: floating centered recipient picker + iOS field (avatar cluster) + system keyboard -->
          <sc-if value="{{ replyOpen }}" hint-placeholder-val="{{ false }}">
-           <div onclick="{{ closeReply }}" style="position:absolute;inset:0;background:rgba(0,0,0,.35);z-index:8;"></div>
-           <div style="position:absolute;left:0;right:0;bottom:0;z-index:9;background:#fff;padding:10px 12px 26px;border-radius:16px 16px 0 0;animation:tkSheetUp .26s cubic-bezier(.16,1,.3,1);">
-             <div style="display:flex;align-items:center;gap:10px;">
-               <div style="display:flex;flex:0 0 auto;"><sc-for list="{{ replySheetAvatars }}" as="a" hint-placeholder-count="1"><div style="{{ a.style }}"></div></sc-for></div>
-               <div style="flex:1;height:44px;background:#f1f1f2;border-radius:22px;display:flex;align-items:center;padding:0 16px;"><input ref="{{ replyInputRef }}" class="tk-reply-input" placeholder="{{ replyHintFull }}" /></div>
-               <div onclick="{{ sendReply }}" data-tap="1" style="width:44px;height:44px;border-radius:50%;background:#fe2c55;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M3 11l18-8-8 18-2-7-8-3z"></path></svg></div>
+           <div onclick="{{ closeReply }}" style="position:absolute;inset:0;background:rgba(0,0,0,.5);z-index:8;"></div>
+
+           <!-- picker floats in the middle of the screen — no card background -->
+           <div style="position:absolute;left:0;right:0;top:0;bottom:284px;z-index:9;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;">
+             <div style="font-size:14px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:.02em;margin-bottom:22px;text-shadow:0 1px 4px rgba(0,0,0,.5);">Reply to</div>
+             <div style="display:flex;gap:26px;pointer-events:auto;">
+               <sc-for list="{{ replyPickList }}" as="r" hint-placeholder-count="3">
+                 <div onclick="{{ r.onToggle }}" data-tap="1" style="display:flex;flex-direction:column;align-items:center;gap:10px;cursor:pointer;">
+                   <div style="position:relative;">
+                     <div style="{{ r.avStyle }}"></div>
+                     <sc-if value="{{ r.selected }}" hint-placeholder-val="{{ true }}">
+                       <div style="position:absolute;right:-3px;bottom:-3px;width:23px;height:23px;border-radius:50%;background:#0a84ff;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12l5 5L20 6"></path></svg></div>
+                     </sc-if>
+                   </div>
+                   <span style="font-size:13px;font-weight:600;color:#fff;text-shadow:0 1px 4px rgba(0,0,0,.55);">{{ r.name }}</span>
+                 </div>
+               </sc-for>
+             </div>
+           </div>
+
+           <!-- bottom: iOS field (grey bar, recipient avatar cluster on the left) + system keyboard -->
+           <div style="position:absolute;left:0;right:0;bottom:0;z-index:9;animation:tkSheetUp .26s cubic-bezier(.16,1,.3,1);">
+             <div style="background:#d1d4da;padding:8px 10px;display:flex;align-items:center;gap:10px;">
+               <div style="display:flex;align-items:center;flex:0 0 auto;">
+                 <sc-for list="{{ replyCluster }}" as="a" hint-placeholder-count="3"><div style="{{ a.style }}"></div></sc-for>
+               </div>
+               <div style="flex:1;min-height:36px;border-radius:18px;background:#fff;outline:1px solid #c3c3c8;display:flex;align-items:center;padding:0 5px 0 14px;">
+                 <div style="width:2px;height:20px;background:#0a84ff;margin-right:2px;"></div>
+                 <span style="flex:1;font-size:16px;color:#b1b1b6;">{{ replyPlaceholder }}</span>
+                 <div onclick="{{ sendReply }}" data-tap="1" style="width:29px;height:29px;border-radius:50%;background:#0a84ff;display:flex;align-items:center;justify-content:center;cursor:pointer;flex:0 0 auto;"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M6 11l6-6 6 6"></path></svg></div>
+               </div>
+             </div>
+
+             <!-- iOS light keyboard -->
+             <div style="background:#d1d4da;padding:2px 3px 5px;">
+               <div style="display:flex;gap:5px;padding:0 3px;margin-bottom:9px;">
+                 <sc-for list="{{ kbRow1 }}" as="k" hint-placeholder-count="10"><div style="flex:1;min-width:0;height:42px;background:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#000;">{{ k.k }}</div></sc-for>
+               </div>
+               <div style="display:flex;gap:5px;padding:0 20px;margin-bottom:9px;">
+                 <sc-for list="{{ kbRow2 }}" as="k" hint-placeholder-count="9"><div style="flex:1;min-width:0;height:42px;background:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#000;">{{ k.k }}</div></sc-for>
+               </div>
+               <div style="display:flex;gap:5px;padding:0 3px;margin-bottom:9px;">
+                 <div style="flex:1.35;height:42px;background:#adb3bd;border-radius:5px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="#000"><path d="M12 3l7 7h-4v6H9v-6H5z"></path></svg></div>
+                 <sc-for list="{{ kbRow3 }}" as="k" hint-placeholder-count="7"><div style="flex:1;min-width:0;height:42px;background:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:19px;color:#000;">{{ k.k }}</div></sc-for>
+                 <div style="flex:1.35;height:42px;background:#adb3bd;border-radius:5px;display:flex;align-items:center;justify-content:center;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 5H8.5a2 2 0 00-1.5.7L2.5 11a1.5 1.5 0 000 2l4.5 5.3a2 2 0 001.5.7H21a2 2 0 002-2V7a2 2 0 00-2-2z"></path><path d="M17 9l-5 6M12 9l5 6"></path></svg></div>
+               </div>
+               <div style="display:flex;gap:5px;padding:0 3px;">
+                 <div style="flex:0 0 auto;width:44px;height:42px;background:#adb3bd;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:#000;">123</div>
+                 <div style="flex:0 0 auto;width:38px;height:42px;background:#adb3bd;border-radius:5px;display:flex;align-items:center;justify-content:center;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.8"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 14.5a4 4 0 007 0M9 10h.01M15 10h.01" stroke-linecap="round"></path></svg></div>
+                 <div style="flex:1;height:42px;background:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#000;">space</div>
+                 <div onclick="{{ sendReply }}" data-tap="1" style="flex:0 0 auto;width:78px;height:42px;background:#adb3bd;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:#000;cursor:pointer;">return</div>
+               </div>
+               <div style="display:flex;justify-content:center;padding-top:7px;"><div style="width:130px;height:5px;border-radius:3px;background:rgba(0,0,0,.32);"></div></div>
              </div>
            </div>
          </sc-if>
@@ -758,6 +805,7 @@ class Component extends DCLogic {
     dmReceipts: [],
     toast: null,
     replyInput: null,
+    replyPick: {},
     sharedFromDm: false,
     shareIntentIdx: 0, shareSent: false, shareFriend: 0,
     sentIntent: null, roleBadge: null,
@@ -888,9 +936,11 @@ class Component extends DCLogic {
       thumbStyle:{ width:'22px', height:'28px', borderRadius:'5px', backgroundImage:'url("'+r.thumb+'")', backgroundSize:'cover', backgroundPosition:'center', flex:'0 0 auto' } };
   }
 
-  openReply(v){ this.setState({replyInput:{vid:v.id, senderIds:this.mergedSenders(v), sender:this.mergedSenders(v).map(id=>this.FRIENDS[id].name)}}); }
+  openReply(v){ const ids=this.mergedSenders(v); const pick={}; ids.forEach(id=>{ pick[id]=true; }); this.setState({replyInput:{vid:v.id, senderIds:ids, sender:ids.map(id=>this.FRIENDS[id].name)}, replyPick:pick}); }
   closeReply(){ this.setState({replyInput:null}); }
-  sendReply(){ const ri=this.state.replyInput; if(!ri){return;} const names=ri.sender; const who= names.length>1? ('all '+names.length+' friends') : names[0]; this.setState({replyInput:null}); this.showToast('Replied to '+who); }
+  togglePick(id){ this.setState(st=>({replyPick:{...st.replyPick,[id]:!st.replyPick[id]}})); }
+  pickedNames(){ const ri=this.state.replyInput; if(!ri)return []; const p=this.state.replyPick||{}; return ri.senderIds.filter(id=>p[id]).map(id=>this.FRIENDS[id].name); }
+  sendReply(){ const ri=this.state.replyInput; if(!ri){return;} let names=this.pickedNames(); if(!names.length){ names=ri.sender; } const who= names.length>1? ('all '+names.length+' friends') : names[0]; this.setState({replyInput:null}); this.showToast('Replied to '+who); }
 
   mergedSenders(v){ return (v.alsoSentBy&&v.alsoSentBy.length)? [v.sender,...v.alsoSentBy] : [v.sender]; }
 
@@ -1076,7 +1126,7 @@ class Component extends DCLogic {
         sharerComment: v.senderComment || null,
         hasComment: !!v.senderComment && !queueOn, noComment: !v.senderComment && !queueOn,
         sharerName: F[v.sender].name, commentAvStyle: this.circle(F[v.sender].av,32),
-        replyAvatars: senders.slice(0,3).map((id,si)=>({ style:this.circle(F[id].av,28,{ marginLeft: si>0?'-11px':'0' }) })),
+        replyAvatars: senders.slice(0,3).map((id,si)=>({ style:this.circle(F[id].av,30,{ marginLeft: si>0?'-11px':'0' }) })),
         replyHint: senders.length>1 ? ('Reply to all '+senders.length+'…') : ('Reply to '+names[0]+'…'),
         myAvStyle: this.circle(F[v.sender].av,34),
         sharerTime: ({sv1:'5h',sv2:'2h',sv3:'1d',sv4:'3h',sv5:'8h',sv6:'6h',sv7:'12h'})[v.id] || '5h',
@@ -1211,9 +1261,16 @@ class Component extends DCLogic {
       openDm:()=>this.openDm(), backToInbox:()=>this.go('inbox'),
       dmThread,
       replyOpen: !!ri,
-      replyHintFull: ri ? (ri.sender.length>1 ? ('Reply to all '+ri.sender.length+' friends…') : ('Reply to '+ri.sender[0]+'…')) : '',
-      replySheetAvatars: (ri && ri.senderIds ? ri.senderIds : []).slice(0,3).map((id,si)=>({ style:this.circle(F[id].av,40,{ marginLeft: si>0?'-15px':'0', boxShadow:'0 0 0 2px #fff' }) })),
-      replyInputRef:(el)=>{ if(el) setTimeout(()=>el.focus(),60); },
+      replyPickList: (ri && ri.senderIds ? ri.senderIds : []).map(id=>({
+        id, name:F[id].name, selected: !!(st.replyPick&&st.replyPick[id]),
+        avStyle: this.circle(F[id].av,54, (st.replyPick&&st.replyPick[id]) ? { outline:'2.5px solid #0a84ff', outlineOffset:'2px' } : { opacity:.62 }),
+        onToggle:()=>this.togglePick(id),
+      })),
+      replyCluster: (ri && ri.senderIds ? ri.senderIds : []).filter(id=>st.replyPick&&st.replyPick[id]).map((id,i)=>({ style:this.circle(F[id].av,30,{ marginLeft:i>0?'-11px':'0', border:'2px solid #d1d4da' }) })),
+      replyPlaceholder: (()=>{ const n=ri?ri.senderIds.filter(id=>st.replyPick&&st.replyPick[id]).map(id=>F[id].name):[]; return n.length===0?'Message…':(n.length===1?('Message '+n[0]):('Message '+n.length+' people')); })(),
+      kbRow1:'qwertyuiop'.split('').map(k=>({k})),
+      kbRow2:'asdfghjkl'.split('').map(k=>({k})),
+      kbRow3:'zxcvbnm'.split('').map(k=>({k})),
       closeReply:()=>this.closeReply(), sendReply:()=>this.sendReply(),
       vv, backToDm:()=>this.go('dm'), dmScrollRef:(el)=>{ this._dm=el; },
       shareFriendList, shareIntents, shareReactions, shareSent: st.shareSent, shareForm: !st.shareSent,

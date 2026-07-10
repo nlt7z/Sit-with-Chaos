@@ -1255,15 +1255,10 @@ export default function LinerScholarCaseStudy() {
             <div className={`pt-10 ${HAIR}`}>
               <Link
                 href="/work/liner/deck-mono-zh"
-                className="group flex flex-wrap items-center justify-between gap-4 rounded-xl border border-nltLime/30 bg-nltLime/[0.05] px-6 py-5 transition-colors hover:border-nltLime/60"
+                className="group inline-flex items-center gap-2 rounded-full border border-nltLime/40 bg-nltLime/[0.06] px-6 py-3 text-[14px] font-medium text-nltLime transition-colors hover:border-nltLime/70 hover:bg-nltLime/[0.12]"
               >
-                <div>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-nltLime">中文演示文稿 · Presentation</p>
-                  <p className="mt-1.5 text-[16px] text-white">一页一页地讲这个案例 — 黑白极简版 Deck</p>
-                </div>
-                <span className="shrink-0 font-mono text-[13px] text-nltLime transition-transform group-hover:translate-x-0.5">
-                  打开 Deck ↗
-                </span>
+                View the deck
+                <span className="transition-transform group-hover:translate-x-0.5">↗</span>
               </Link>
             </div>
           </Reveal>

@@ -126,6 +126,46 @@ section.block.hero{border-top:none;padding:70px 0 50px;}
   .metric-row{grid-template-columns:1fr;gap:16px;}
 }
 
+/* numbered root-cause heading in Scenario */
+.cause-h{display:flex;align-items:baseline;gap:11px;margin-bottom:11px;}
+.cause-h .cn{font-family:var(--display);font-size:26px;font-weight:600;line-height:1;background:linear-gradient(135deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;flex:none;}
+.cause-h .ct{font-family:var(--display);font-size:19px;font-weight:600;color:var(--t-1);letter-spacing:-0.005em;}
+
+/* chosen (shipped) idea — why-pick callout */
+.why-pick{margin-top:16px;background:rgba(254,44,85,0.06);border-radius:10px;padding:14px 18px;}
+.why-pick .wp-l{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--pink);margin-bottom:8px;}
+.why-pick p{font-size:14.5px;line-height:1.72;color:var(--t-2);}
+.why-pick p b{color:var(--t-1);}
+
+/* AI tool logos (Work with AI) */
+.ai-tools{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px;}
+.ai-tool{display:flex;align-items:center;gap:9px;padding:8px 15px 8px 10px;border:1px solid var(--line-soft);border-radius:12px;background:rgba(255,255,255,0.025);}
+.ai-tool img{width:24px;height:24px;object-fit:contain;border-radius:6px;display:block;background:#fff;}
+.ai-tool span{font-family:var(--font);font-size:13.5px;font-weight:600;color:var(--t-2);}
+
+/* Redesign Goals — 4 horizontal cards */
+.goal-row{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:26px;}
+.goal-card{border:1px solid var(--line-soft);border-radius:14px;background:rgba(255,255,255,0.014);padding:18px 16px;display:flex;flex-direction:column;}
+.goal-card .prio-tag{align-self:flex-start;margin:0 0 14px;}
+.goal-card .gc-t{font-family:var(--display);font-size:15.5px;font-weight:600;color:var(--t-1);letter-spacing:-0.005em;margin-bottom:9px;line-height:1.32;}
+.goal-card .gc-d{font-size:13px;line-height:1.62;color:var(--t-3);}
+@media (max-width:820px){.goal-row{grid-template-columns:1fr 1fr;}}
+@media (max-width:480px){.goal-row{grid-template-columns:1fr;}}
+
+/* HMW question list — two-tier hierarchy */
+.hmwq-list{display:flex;flex-direction:column;margin-top:26px;max-width:900px;}
+.hmwq{display:grid;grid-template-columns:34px 1fr;gap:20px;align-items:start;padding:20px 0;border-top:1px solid var(--line-soft);}
+.hmwq:first-child{border-top:none;padding-top:4px;}
+.hmwq-n{font-family:var(--display);font-size:22px;font-weight:600;line-height:1;background:linear-gradient(135deg,var(--cyan),var(--pink));-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent;padding-top:3px;}
+.hmwq-t{font-family:var(--display);font-size:19px;font-weight:600;color:var(--t-1);letter-spacing:-0.01em;margin-bottom:7px;line-height:1.25;}
+.hmwq-q{font-size:14.5px;line-height:1.6;color:var(--t-3);}
+@media (max-width:780px){.hmwq{grid-template-columns:1fr;gap:8px;}.hmwq-n{font-size:18px;}}
+
+/* scroll reveal */
+.rvl{opacity:0;transform:translateY(18px);transition:opacity .62s cubic-bezier(.16,1,.3,1),transform .62s cubic-bezier(.16,1,.3,1);}
+.rvl.in{opacity:1;transform:none;}
+@media (prefers-reduced-motion:reduce){.rvl{opacity:1!important;transform:none!important;transition:none;}}
+
 /* idea + fields */
 .idea{padding:30px 0;border-top:1px solid var(--line-soft);}
 .idea:first-of-type{border-top:none;padding-top:6px;}
@@ -375,7 +415,8 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="cap">想轻轻回应一下,可选的反应却很有限。</div>
       </div>
       <div class="body">
-        <p class="para">首先是<b>交互成本的不对等</b>。发送方可以在刷视频的间隙顺手完成分享,甚至一条视频一键群发给 9 个好友,整个过程不打断刷 FYP 的动作。而接收方的成本比发送方高很多。"我看过这个视频"意味着接收方 TA 得点开 DM,看视频,判断内容,判断发送方分享的意图,然后回复文字或者是 emoji,整个交互是一个<b>链条</b>而不是一个动作。</p>
+        <div class="cause-h"><span class="cn">①</span><span class="ct">交互成本不对等</span></div>
+        <p class="para">发送方可以在刷视频的间隙顺手完成分享,甚至一条视频一键群发给 9 个好友,整个过程不打断刷 FYP 的动作。而接收方的成本比发送方高很多。"我看过这个视频"意味着接收方 TA 得点开 DM,看视频,判断内容,判断发送方分享的意图,然后回复文字或者是 emoji,整个交互是一个<b>链条</b>而不是一个动作。</p>
         <p class="para">高成本让接收方会尽可能省略"打字回复"这个动作,只对极高优先级的视频回应,例如对方明确问了问题的那条。但这也意味着,即使接收方刷完了 20 条、回复了两条觉得有意思的,发送方也<b>看不到接收方现在在哪里</b>。20 条里看上去只有两条被"看",<b>心里会有落差</b>。</p>
       </div>
     </div>
@@ -388,7 +429,8 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="cap">分享的视频要往上滑去回溯之前的内容。</div>
       </div>
       <div class="body">
-        <p class="para">但更深的原因不在成本,而在<b>心智模型的错位</b>。TikTok 首页所有的内容都是无限的、算法投喂的、向后刷的视频流。可是分享一旦发生,这条视频就被从原生容器里抽出来,丢进了一个规则完全不同的容器。DM 的视频是有限的,接收方要逆着往前刷、回溯之前的内容,这完全违背了原本的习惯。<b>视频本身没有变,变的是它所处的容器。</b></p>
+        <div class="cause-h"><span class="cn">②</span><span class="ct">心智模型错位</span></div>
+        <p class="para">更深的原因不在成本。TikTok 首页所有的内容都是无限的、算法投喂的、向后刷的视频流。可是分享一旦发生,这条视频就被从原生容器里抽出来,丢进了一个规则完全不同的容器。DM 的视频是有限的,接收方要逆着往前刷、回溯之前的内容,这完全违背了原本的习惯。<b>视频本身没有变,变的是它所处的容器。</b></p>
       </div>
     </div>
 
@@ -400,7 +442,8 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="cap">首页 FYP 是更为精心组织的内容。</div>
       </div>
       <div class="body">
-        <p class="para">同时,更重要的是,在首页 FYP,你刷到的内容都是算法给你精心准备的,不管是内容、长度还是你关注的博主,你会对往下刷有期待。而朋友给你的内容,是基于朋友对你的了解和朋友的算法。不可否认,用户会在这个过程中找到共鸣,但也一样容易找到分歧。这些内容并不是算法给你组织好的,<b>没有任何优先级</b>,而是被一视同仁、按时间顺序排列,用户很容易看着看着就<b class="pk">失去了耐心</b>。</p>
+        <div class="cause-h"><span class="cn">③</span><span class="ct">没有优先级</span></div>
+        <p class="para">在首页 FYP,你刷到的内容都是算法给你精心准备的,不管是内容、长度还是你关注的博主,你会对往下刷有期待。而朋友给你的内容,是基于朋友对你的了解和朋友的算法。不可否认,用户会在这个过程中找到共鸣,但也一样容易找到分歧。这些内容并不是算法给你组织好的,<b>没有任何优先级</b>,而是被一视同仁、按时间顺序排列,用户很容易看着看着就<b class="pk">失去了耐心</b>。</p>
       </div>
     </div>
 
@@ -428,34 +471,26 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
 
     <p class="goal-lead">我想将分享从现在偏向单方面的行为,变为<b>双边循环互动</b>。所以基于之前的场景分析,我把这个目标分为四个可行的方向:</p>
 
-    <div class="prio-list" style="margin-top:26px">
-      <div class="prio">
+    <div class="goal-row">
+      <div class="goal-card">
         <span class="prio-tag p0">P0</span>
-        <div class="prio-b">
-          <div class="prio-t">01 · 降低"看"的成本</div>
-          <p class="prio-d">把分享从"逆着回溯的收件箱",变回"顺着往下刷的内容流"。</p>
-        </div>
+        <div class="gc-t">01 · 降低"看"的成本</div>
+        <p class="gc-d">把分享从"逆着回溯的收件箱",变回"顺着往下刷的内容流"。</p>
       </div>
-      <div class="prio">
+      <div class="goal-card">
         <span class="prio-tag p0">P0</span>
-        <div class="prio-b">
-          <div class="prio-t">02 · 降低"回"的成本</div>
-          <p class="prio-d">让"我收到了 / 你被看见了",不再唯一绑定在打字回复上。</p>
-        </div>
+        <div class="gc-t">02 · 降低"回"的成本</div>
+        <p class="gc-d">让"我收到了 / 你被看见了",不再唯一绑定在打字回复上。</p>
       </div>
-      <div class="prio">
+      <div class="goal-card">
         <span class="prio-tag p0">P0</span>
-        <div class="prio-b">
-          <div class="prio-t">03 · 统一双方心理定位</div>
-          <p class="prio-d">发送方知道分享被接收,接收方也不再有完成任务的感觉,让循环转起来。</p>
-        </div>
+        <div class="gc-t">03 · 统一双方心理定位</div>
+        <p class="gc-d">发送方知道分享被接收,接收方也不再有完成任务的感觉,让循环转起来。</p>
       </div>
-      <div class="prio">
+      <div class="goal-card">
         <span class="prio-tag p1">P1</span>
-        <div class="prio-b">
-          <div class="prio-t">04 · 让值得看的视频更早被看见</div>
-          <p class="prio-d">重塑视频优先级,注重目的性、互动性和时效性。</p>
-        </div>
+        <div class="gc-t">04 · 让值得看的视频更早被看见</div>
+        <p class="gc-d">重塑视频优先级,注重目的性、互动性和时效性。</p>
       </div>
     </div>
 
@@ -468,11 +503,11 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
 
   <section class="block" id="s6" data-nav="Ideation">
         <p class="hmw-lead">基于重塑的四个目标,我平衡用户体验和需求,提出了四个 HMW 问题:</p>
-        <div class="hmw-list" style="margin-top:24px">
-          <div class="hmw-q"><span class="k"></span><p><b>降低"看"的成本</b><br>我们如何将分享视频从"埋在聊天记录里的待办",变成一条可以顺畅刷下去的内容流?</p></div>
-          <div class="hmw-q"><span class="k"></span><p><b>降低"回"的成本</b><br>我们如何让"我看到了 / 我感受到了"这件事,不再依赖打字回复就能被传达?</p></div>
-          <div class="hmw-q"><span class="k"></span><p><b>统一双方心理定位</b><br>我们如何让发送方感到被接收、接收方感到在发现,使分享成为一个循环而非一项任务?</p></div>
-          <div class="hmw-q"><span class="k"></span><p><b>让值得看的视频更早被看见</b><br>我们如何根据目的性、互动性和时效性重新排列共享视频的优先级,让最值得看的内容最先出现?</p></div>
+        <div class="hmwq-list">
+          <div class="hmwq"><div class="hmwq-n">01</div><div><div class="hmwq-t">降低"看"的成本</div><p class="hmwq-q">我们如何将分享视频从"埋在聊天记录里的待办",变成一条可以顺畅刷下去的内容流?</p></div></div>
+          <div class="hmwq"><div class="hmwq-n">02</div><div><div class="hmwq-t">降低"回"的成本</div><p class="hmwq-q">我们如何让"我看到了 / 我感受到了"这件事,不再依赖打字回复就能被传达?</p></div></div>
+          <div class="hmwq"><div class="hmwq-n">03</div><div><div class="hmwq-t">统一双方心理定位</div><p class="hmwq-q">我们如何让发送方感到被接收、接收方感到在发现,使分享成为一个循环而非一项任务?</p></div></div>
+          <div class="hmwq"><div class="hmwq-n">04</div><div><div class="hmwq-t">让值得看的视频更早被看见</div><p class="hmwq-q">我们如何根据目的性、互动性和时效性重新排列共享视频的优先级,让最值得看的内容最先出现?</p></div></div>
         </div>
         <p class="hmw-lead" style="margin-top:28px">对于每个问题,我<b>深入研究了 TikTok 及同类产品</b>,例如小红书、抖音、Instagram、Snapchat 等,通过多维度对比,从 sender 和 receiver 两个角度去思考,构思可能的解法。以下是我对每个 HMW 问题的设计策略:</p>
 
@@ -483,14 +518,17 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案 01</span>
-        <h3 class="ib-name">"Shared with Me" Feed</h3>
-        <span class="ib-tag alt">Receiver</span>
+        <h3 class="ib-name">"Shared with Me" Feed</h3>        <span class="ib-final">✓ 最终采用</span>
       </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=3&amp;bare=1" loading="lazy" title="Shared with Me Feed"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
         <div class="body">
           <div class="ib-cn">朋友分享的内容流</div>
           <p class="para">分享的视频本质还是 TikTok,现在却被装进要往回溯的 DM。我想把它放回一个和刷 FYP 一致的容器,让"看"这个交互重新变得顺手。所以,我的想法是在 Friends 页面里新增一个 "Shared with You" tab,只展示朋友分享内容的竖向滚动播放器。在视频内容之外,展示分享朋友的标签,底部浮动快速回复按钮,支持边看边回。对接收方,沿用刷 FYP 的同一套交互来处理分享,无须逐个进入朋友的 DM;对发送方,接收方处理分享的门槛更低,回应更可能发生。</p>
+          <div class="why-pick">
+            <div class="wp-l">为什么选它</div>
+            <p>Shared Feed 解决了一个最致命的问题,就是 DM 里的消息是往上刷的,会刷到底、会刷到重复的和已经看过的。它通过整合好友分享的视频,shape 出一条以社交关系驱动的新视频流,提供的低成本交互最符合用户的心智和习惯。用户不再需要在 DM 里退出视频去看朋友的评论,在 Shared Feed 里能一边刷一边看朋友的评论,顺手点一个 reaction,<b>看分享视频的成本大大降低了</b>。而根据视频 tags 和发送方评论自动匹配的 Smart Reactions,正是这个容器里那个贴合内容语境、一点即发的回应动作,<b>让发送方能感受到被看见</b>。</p>
+          </div>
           <button type="button" class="ib-replay">↻ Replay walkthrough</button>
         </div>
       </div>
@@ -499,9 +537,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案 02</span>
-        <h3 class="ib-name">DM 内跳转顺序 + Thread Summary</h3>
-        <span class="ib-tag alt">Receiver</span>
-      </div>
+        <h3 class="ib-name">DM 内跳转顺序 + Thread Summary</h3>      </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=8&amp;bare=1" loading="lazy" title="DM 内跳转顺序 + Thread Summary"></iframe></div>
         <div class="body">
@@ -516,9 +552,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案 03</span>
-        <h3 class="ib-name">Inbox Value</h3>
-        <span class="ib-tag alt">Receiver</span>
-      </div>
+        <h3 class="ib-name">Inbox Value</h3>      </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=6&amp;bare=1" loading="lazy" title="Inbox Value"></iframe></div>
         <div class="body">
@@ -539,7 +573,6 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       <div class="ib-hd">
         <span class="ib-num">方案 01</span>
         <h3 class="ib-name">Smart Reactions</h3>
-        <span class="ib-tag alt">Receiver</span>
       </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=1&amp;bare=1" loading="lazy" title="Smart Reactions"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
@@ -554,9 +587,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案 02</span>
-        <h3 class="ib-name">Interaction Receipts</h3>
-        <span class="ib-tag alt">Sender</span>
-      </div>
+        <h3 class="ib-name">Interaction Receipts</h3>      </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=2&amp;bare=1" loading="lazy" title="Interaction Receipts"></iframe></div>
         <div class="body">
@@ -576,9 +607,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案 01</span>
-        <h3 class="ib-name">把 DM 重构成"共享空间"</h3>
-        <span class="ib-tag alt">Both</span>
-      </div>
+        <h3 class="ib-name">把 DM 重构成"共享空间"</h3>      </div>
       <div class="body" style="margin-top:16px">
         <p class="para">现在的 DM 里的视频卡片并没有传递出更深的社交意味。每个视频不再是卡片的设计,中间的播放 icon 可以重设计为开启,消息被包装成贴纸贴在视频卡片上,<b>视频不再是消息,而是等待你来开的礼物。</b></p>
       </div>
@@ -592,9 +621,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案 01</span>
-        <h3 class="ib-name">Priority Slot Queue</h3>
-        <span class="ib-tag alt">Receiver</span>
-      </div>
+        <h3 class="ib-name">Priority Slot Queue</h3>      </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=4&amp;bare=1" loading="lazy" title="Priority Slot Queue"></iframe></div>
         <div class="body">
@@ -609,9 +636,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案 02</span>
-        <h3 class="ib-name">Seen Sync</h3>
-        <span class="ib-tag alt">Both</span>
-      </div>
+        <h3 class="ib-name">Seen Sync</h3>      </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=5&amp;bare=1" loading="lazy" title="Seen Sync"></iframe></div>
         <div class="body">
@@ -628,9 +653,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       <div class="ib">
       <div class="ib-hd">
         <span class="ib-num">方案</span>
-        <h3 class="ib-name">Intent Shortcut</h3>
-        <span class="ib-tag alt">Sender</span>
-      </div>
+        <h3 class="ib-name">Intent Shortcut</h3>      </div>
       <div class="show">
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=7&amp;bare=1" loading="lazy" title="Intent Shortcut"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
         <div class="body">
@@ -656,10 +679,6 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       </div>
       <div class="final-txt">
         <div class="final-part">
-          <div class="final-label">为什么是它</div>
-          <p class="para">Shared Feed 解决了一个最致命的问题,就是 DM 里的消息是往上刷的,会刷到底、会刷到重复的和已经看过的。Shared Feed 通过整合好友分享的视频,shape 出一条以社交关系驱动的新视频流,这个页面所提供的低成本交互最符合用户的心智和习惯。用户不再需要在 DM 里退出视频去看朋友的评论,在 Shared Feed 里,他能一边刷一边看朋友的评论,顺手点一个 reaction,看分享视频的成本大大降低了。而根据视频 tags 和发送方评论自动匹配的 Smart Reactions,正是这个容器里那个贴合内容语境、一点即发的回应动作,<b>让发送方能感受到被看见</b>。</p>
-        </div>
-        <div class="final-part">
           <div class="final-label">我的设计思路</div>
           <p class="para">和普通视频的排版不同,Shared with You 页面的视频是以<b>朋友和分享这件事</b>为重心的。我刻意弱化了原视频的标题和文案,把它们压缩成一行,做成胶囊,转而强调分享给你的朋友、时间以及他留给你的评论。对发送方来说,分享的视频被观看和回复的概率会更高。</p>
           <p class="para">同时,多人分享的同一条视频不会重复出现,视频也不再作为 DM 消息存在,新的 inbox 只显示文字消息的数量。分流之后,用户能更享受这个好友共享的视频流,<b>反而开始希望好友分享的视频越多越好</b>。而在刷完之后,也会引导用户回到 FYP 去分享新的视频,让他们从接收方衔接成为发送方,促进双边的循环。</p>
@@ -674,8 +693,8 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
   <div class="region-head"><div><div class="ren">Reflection &amp; What&rsquo;s Next</div><div class="rt">反思与展望</div></div></div>
 
   <section class="block" id="s8">
-    <!-- Process & timeline -->
-    <div class="qgroup" style="margin-top:6px">
+    <!-- Process & timeline (hidden) -->
+    <div class="qgroup" style="display:none">
       <div class="eyebrow"><span class="dot"></span>过程与时间线</div>
       <p class="para" style="margin-top:18px">虽然我本身就是 TikTok 的用户,但为了捕捉到更真实的用户心理和更广的使用场景,我先花了一天去体验分享和接收的功能,不断细化问题的方向,想清楚真正的问题到底是什么。这个阶段是<b>最痛苦的</b>,因为过程中会冒出非常多看起来正确的假设,需要把它们一个个 critique 掉。但一旦想清楚,我就能顺着问题立刻发散 ideation,花了四个小时,把想法直接做成设计原型,再决策出最终方案,一步步做用户体验优化。</p>
     </div>
@@ -685,6 +704,11 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       <div class="eyebrow"><span class="dot"></span>Work with AI</div>
       <p class="para" style="margin-top:18px">我先根据 TikTok 现在的界面,用 Claude Design 明确 TikTok 的 Design System;再通过 Claude 把我的 ideation 写成更细致的 markdown,讲清楚整个 workflow 是什么;最后把 markdown 和 Design System 一起交给 Claude Code,不断迭代生成最终的设计。</p>
       <p class="para">前期 Ideation,我也用 Claude、Gemini、ChatGPT act as design lead 来帮我 critique 和 pressure test 我的想法,测试哪里有漏洞、哪里讲得不清楚。</p>
+      <div class="ai-tools">
+        <div class="ai-tool"><img src="logos/claude.svg" alt="Claude" onerror="this.style.display='none'"/><span>Claude</span></div>
+        <div class="ai-tool"><img src="logos/gemini.svg" alt="Gemini" onerror="this.style.display='none'"/><span>Gemini</span></div>
+        <div class="ai-tool"><img src="logos/chatgpt.svg" alt="ChatGPT" onerror="this.style.display='none'"/><span>ChatGPT</span></div>
+      </div>
     </div>
 
     <!-- Reflection -->
@@ -779,6 +803,20 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     var f=box.querySelector('iframe');
     if(f&&f.contentWindow){ f.contentWindow.postMessage({type:'dc-replay'},'*'); }
   });
+})();
+</script>
+<script>/*scroll-reveal*/
+(function(){
+  if(!('IntersectionObserver' in window)) return;
+  var mq=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)');
+  if(mq&&mq.matches) return;
+  var sel='.region-head, #s1 .show, .bridge, .goal-card, .hmwq, .ib, .final-box, .ai-tools, #s8 .qgroup, .about-me';
+  var els=[].slice.call(document.querySelectorAll(sel)), vh=window.innerHeight;
+  els.forEach(function(el){ if(el.getBoundingClientRect().top>vh*0.88){ el.classList.add('rvl'); } });
+  var io=new IntersectionObserver(function(entries){
+    entries.forEach(function(e){ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+  },{threshold:0.08,rootMargin:'0px 0px -8% 0px'});
+  document.querySelectorAll('.rvl').forEach(function(el){ io.observe(el); });
 })();
 </script>
 <script>/*vidctl*/
