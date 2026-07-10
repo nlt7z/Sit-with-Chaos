@@ -55,6 +55,7 @@ const SLIDES = [
   { id: "chat-layouts",  chapter: "迭代" },
   { id: "usability",     chapter: "迭代" },
   { id: "final-pick",    chapter: "迭代" },
+  { id: "final-intro",   chapter: "成品" },
   { id: "final-setup",   chapter: "成品" },
   { id: "final-explore", chapter: "成品" },
   { id: "final-curate",  chapter: "成品" },
@@ -221,7 +222,7 @@ function PrototypeWalk({ src, scenes }: { src: string; scenes: PScene[] }) {
             </button>
           ))}
         </div>
-        <div className="mt-3 border-l-2 pl-4" style={{ borderColor: C.green }}>
+        <div className="mt-3">
           <p className="text-[13.5px] leading-[1.7]" style={{ color: C.body }}>{s.body}</p>
           {s.why ? <p className="mt-2 text-[12.5px] leading-[1.6]" style={{ color: C.muted }}><span className="font-semibold" style={{ color: C.green }}>为什么 · </span>{s.why}</p> : null}
         </div>
@@ -571,7 +572,7 @@ function SlideRenderer({ id }: { id: SlideId }) {
         <Slide>
           <Rise><Eye>问题 · 重构</Eye></Rise>
           <Rise delay={0.1} className="mt-8">
-            <p className="max-w-4xl border-l-2 pl-6 font-medium leading-[1.32] tracking-[-0.01em]" style={{ borderColor: C.green, color: C.ink, fontSize: "clamp(1.5rem,3.4vw,2.3rem)" }}>
+            <p className="max-w-4xl font-medium leading-[1.32] tracking-[-0.01em]" style={{ color: C.ink, fontSize: "clamp(1.5rem,3.4vw,2.3rem)" }}>
               如何让 AI 研究工具既支持<G>私密、探索式</G>的思考,又能实现<G>透明、可问责</G>的团队协作?
             </p>
           </Rise>
@@ -739,19 +740,29 @@ function SlideRenderer({ id }: { id: SlideId }) {
         </Slide>
       );
 
-    case "final-setup":
+    case "final-intro":
       return (
         <Slide>
           <Rise><Label>成品 · 由我负责整合与最终设计(可交互)</Label></Rise>
-          <Rise delay={0.05} className="mt-2.5">
-            <P className="max-w-3xl !text-[14.5px]">团队产出许多分散方案,由<G>我负责把它们 merge 成一个连贯系统、并完成最终设计</G>。我们拒绝做「带 AI 的 Google Docs」,而是顺着<G>用户旅程</G>把功能分成四段来讲。</P>
+          <Rise delay={0.08} className="mt-6">
+            <p className="max-w-3xl font-medium leading-[1.32] tracking-[-0.01em]" style={{ color: C.ink, fontSize: "clamp(1.4rem,3vw,2.1rem)" }}>
+              团队产出许多分散方案,由<G>我负责把它们 merge 成一个连贯系统、并完成最终设计</G>。
+            </p>
           </Rise>
-          <Rise delay={0.12} className="mt-5"><JourneyBar active={0} /></Rise>
-          <Rise delay={0.16} className="mt-4">
+          <Rise delay={0.18} className="mt-8"><JourneyBar active={-1} /></Rise>
+        </Slide>
+      );
+
+    case "final-setup":
+      return (
+        <Slide>
+          <Rise><Eye>成品 · 用户旅程</Eye></Rise>
+          <Rise delay={0.06} className="mt-4"><JourneyBar active={0} /></Rise>
+          <Rise delay={0.12} className="mt-4">
             <H className="max-w-3xl">01 建立 · Set up</H>
             <P className="mt-2.5 max-w-3xl !text-[14.5px]">开一个项目,然后拉进队友、文件与文献管理器。</P>
           </Rise>
-          <Rise delay={0.22} className="mt-5"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={WALK_SETUP} /></Rise>
+          <Rise delay={0.18} className="mt-5"><PrototypeWalk src="/assets/liner/liner-ai-yuan.html" scenes={WALK_SETUP} /></Rise>
         </Slide>
       );
 
@@ -840,7 +851,7 @@ function SlideRenderer({ id }: { id: SlideId }) {
             <P className="max-w-3xl">在展示与利益相关者评审里,团队把那些「让协作感觉是原生的」功能,挑成了值得继续推进的:<G>Focus 模式</G>、<G>引用</G>,以及<G>分享到 Group</G>。</P>
           </Rise>
           <Rise delay={0.24} className="mt-7">
-            <div className="max-w-3xl border-l-2 pl-5" style={{ borderColor: C.green }}>
+            <div className="max-w-3xl">
               <Label>已进入路线图</Label>
               <p className="mt-2 text-[17px] leading-[1.55]" style={{ color: C.ink }}>Liner 正在把这套协作工作流并入产品,预计 <G>2026 年 7 月</G> 上线。</p>
             </div>
@@ -972,7 +983,7 @@ export default function DeckMonoClientZh() {
       </header>
 
       <main className="relative h-full min-h-0 overflow-hidden">
-        <AnimatePresence custom={dir} initial={false}>
+        <AnimatePresence custom={dir} initial={false} mode="wait">
           <motion.div
             key={slide.id}
             custom={dir}
@@ -980,7 +991,8 @@ export default function DeckMonoClientZh() {
             initial={reduced ? false : "enter"}
             animate={reduced ? undefined : "center"}
             exit={reduced ? undefined : "exit"}
-            transition={{ duration: 0.5, ease: E }}
+            transition={{ duration: 0.34, ease: E }}
+            style={{ willChange: "transform, opacity" }}
             className="absolute inset-x-0 bottom-16 top-14"
           >
             <SlideRenderer id={slide.id} />
