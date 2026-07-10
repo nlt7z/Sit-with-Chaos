@@ -102,6 +102,30 @@ section.block.hero{border-top:none;padding:70px 0 50px;}
 .hmw .hl{font-family:var(--mono);font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:var(--cyan);margin-bottom:9px;}
 .hmw p{font-family:var(--display);font-size:21px;line-height:1.5;font-weight:600;color:var(--t-1);letter-spacing:-0.005em;}
 
+/* GOALS & PRIORITIES */
+.goal-lead{font-size:16.5px;line-height:1.9;color:var(--t-2);max-width:840px;}
+.lever-row{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:26px;}
+.lever{border:1px solid var(--line-soft);border-radius:14px;padding:20px 18px;background:rgba(255,255,255,0.012);}
+.lever-k{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;color:var(--pink);margin-bottom:12px;}
+.lever-t{font-family:var(--display);font-size:17px;font-weight:600;color:var(--t-1);letter-spacing:-0.005em;margin-bottom:9px;}
+.lever-d{font-size:14px;line-height:1.65;color:var(--t-3);}
+.prio-list{display:flex;flex-direction:column;gap:12px;margin-top:22px;max-width:860px;}
+.prio{display:grid;grid-template-columns:auto 1fr;gap:16px;align-items:start;padding:16px 18px;border:1px solid var(--line-soft);border-radius:12px;background:rgba(255,255,255,0.012);}
+.prio-tag{font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:0.06em;padding:3px 9px;border-radius:5px;flex:none;margin-top:2px;}
+.prio-tag.p0{color:#08090b;background:var(--pink);box-shadow:0 3px 12px rgba(254,44,85,0.4);}
+.prio-tag.p1{color:var(--t-2);background:rgba(255,255,255,0.06);border:1px solid var(--line);}
+.prio-t{font-family:var(--display);font-size:16px;font-weight:500;color:var(--t-2);letter-spacing:-0.005em;margin-bottom:6px;}
+.prio-t b{color:var(--t-1);font-weight:600;}
+.prio-d{font-size:14px;line-height:1.65;color:var(--t-3);}
+.metric-row{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px;}
+.metric{border-left:2px solid var(--pink);padding:4px 0 4px 16px;}
+.metric-t{font-family:var(--display);font-size:16px;font-weight:600;color:var(--t-1);margin-bottom:7px;}
+.metric-d{font-size:13.5px;line-height:1.6;color:var(--t-3);}
+@media (max-width:780px){
+  .lever-row{grid-template-columns:1fr;gap:12px;}
+  .metric-row{grid-template-columns:1fr;gap:16px;}
+}
+
 /* idea + fields */
 .idea{padding:30px 0;border-top:1px solid var(--line-soft);}
 .idea:first-of-type{border-top:none;padding-top:6px;}
@@ -248,11 +272,11 @@ section.block.hero{border-top:none;padding:70px 0 50px;}
 .foot-link{font-family:var(--mono);font-size:12px;letter-spacing:0.02em;color:var(--t-3);text-decoration:none;transition:color .16s ease;}
 .foot-link:hover{color:var(--t-1);}
 
-.about-me{display:grid;grid-template-columns:220px 1fr;gap:44px;align-items:start;margin-top:22px;}
-.about-me .about-photo{margin:0;}
-.about-me .about-photo img{width:100%;border-radius:16px;display:block;background:#111;}
+.about-me{display:grid;grid-template-columns:220px 1fr;gap:44px;align-items:stretch;margin-top:22px;}
+.about-me .about-photo{margin:0;height:100%;}
+.about-me .about-photo img{width:100%;height:100%;object-fit:cover;object-position:center;border-radius:16px;display:block;background:#111;}
 .about-links{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px 22px;}
-@media(max-width:780px){.about-me{grid-template-columns:1fr;gap:24px;}.about-me .about-photo{max-width:240px;}}
+@media(max-width:780px){.about-me{grid-template-columns:1fr;gap:24px;}.about-me .about-photo{max-width:240px;height:auto;}.about-me .about-photo img{height:auto;object-fit:contain;}}
 
 footer{padding:56px 0 84px;border-top:1px solid var(--line-soft);margin-top:18px;}
 footer .f{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:18px;}
@@ -333,13 +357,15 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="cap">分享一条视频,一秒不到就能完成。</div>
       </div>
       <div class="body">
-        <p class="para">在 TikTok 上给朋友分享视频被默认是一种表达爱和在乎的方式,而分享一条视频几乎没有成本。但对接收方来说,打开收件箱看到 20 条新消息的小红点,心情往往是"被在乎"和"压力"交织的。看好友分享的视频不只是享受视频,还附带着一项回应的任务,我把这个过程形容成"<b class="cy">批奏折</b>"。</p>
+        <p class="para">在 TikTok 上给<b>互关好友</b>分享视频被默认是一种表达在乎的方式,而分享视频几乎零成本。但对接收方来说,打开 Inbox 看到 20 条新消息的小红点,心情往往是"被在乎"和"压力"交织的。看好友分享的视频不只是享受视频,还附带着一项回应的任务,我把这个过程形容成"<b class="cy">批奏折</b>"。</p>
       </div>
     </div>
 
     <div class="bridge">
-      <p>用户 A 分享了 20 条视频给用户 B,用户 B 却只看了 2 条。那这是为什么呢?</p>
+      <p><span class="cy">Design Challenge:</span> 用户 A 分享了 20 条视频给用户 B,用户 B 却只看了 2 条。怎么让用户 B "看" 得更多?</p>
     </div>
+
+    <p class="para" style="max-width:840px">我首先作为 TikTok 的用户,深入体验产品,思考分析这个场景发生的原因。</p>
 
     <div class="show vtop">
       <div class="ph">
@@ -349,7 +375,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="cap">想轻轻回应一下,可选的反应却很有限。</div>
       </div>
       <div class="body">
-        <p class="para">首先是<b>交互成本的不对等</b>。发送方几乎零成本,我可以在刷视频的间隙顺手完成分享,甚至一条视频一键群发给 9 个好友,整个过程不打断我继续刷 FYP。而接收方的成本甚至比发送方还要高。现在"我看过这个视频"等于接收方需要手动回复,意味着 TA 得看视频(有时候发送方自己都没看完),判断内容,判断发送方分享的意图,然后回复文字、emoji。</p>
+        <p class="para">首先是<b>交互成本的不对等</b>。发送方可以在刷视频的间隙顺手完成分享,甚至一条视频一键群发给 9 个好友,整个过程不打断刷 FYP 的动作。而接收方的成本比发送方高很多。"我看过这个视频"意味着接收方 TA 得点开 DM,看视频,判断内容,判断发送方分享的意图,然后回复文字或者是 emoji,整个交互是一个<b>链条</b>而不是一个动作。</p>
         <p class="para">高成本让接收方会尽可能省略"打字回复"这个动作,只对极高优先级的视频回应,例如对方明确问了问题的那条。但这也意味着,即使接收方刷完了 20 条、回复了两条觉得有意思的,发送方也<b>看不到接收方现在在哪里</b>。20 条里看上去只有两条被"看",<b>心里会有落差</b>。</p>
       </div>
     </div>
@@ -362,8 +388,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="cap">分享的视频要往上滑去回溯之前的内容。</div>
       </div>
       <div class="body">
-        <p class="para">但更深的原因不在成本,而在<b>心智模型的错位</b>。TikTok 首页所有的内容都是无限的、算法投喂的、向后刷的视频流,这个容器的动词是"看、赞、划走"。可是分享一旦发生,这条视频就被从原生容器里抽出来,丢进了一个规则完全不同的容器。DM 的视频是有限的,接收方要逆着往前刷、回溯之前的内容,这完全违背了原本的习惯,它的动词变成了"看、读信息、回复"。</p>
-        <p class="para">视频本身没有变,变的是它所处的容器。所以接收方面对的处境是:<b>一段为"划"而生的内容,被装进了一个要求"回"的容器里</b>。他用 FYP 的心智(笑一下划走)去处理一个 DM 的内容(它显示你欠一条回复),用户无法调和这种心智的变化。</p>
+        <p class="para">但更深的原因不在成本,而在<b>心智模型的错位</b>。TikTok 首页所有的内容都是无限的、算法投喂的、向后刷的视频流。可是分享一旦发生,这条视频就被从原生容器里抽出来,丢进了一个规则完全不同的容器。DM 的视频是有限的,接收方要逆着往前刷、回溯之前的内容,这完全违背了原本的习惯。<b>视频本身没有变,变的是它所处的容器。</b></p>
       </div>
     </div>
 
@@ -379,7 +404,9 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       </div>
     </div>
 
-    <div class="show vtop">
+    <p class="para" style="max-width:840px;margin-top:40px">这些原因回应了场景,但当我回顾问题,"让 B 看更多的视频",我并不认为这是<b>真正的目标</b>。分享是 TikTok 已被验证的留存驱动。会分享、会收到分享的人,留得更久。所以真目标是"<b>让社交关系图更强,从而留住用户</b>"。而用户 A 分享,是因为 A 想连接、想<b>被看见</b>。</p>
+
+    <div class="show vtop" style="margin-top:40px">
       <div class="ph">
         <div class="phone"><span class="island"></span><span class="bz l1"></span><span class="bz l2"></span><span class="bz l3"></span><span class="bz r1"></span>
           <div class="screen"><img src="previous/sharewithyou%20in%20normal%20feed.PNG" alt="朋友分享的视频出现在 normal feed 里,带分享标签" loading="lazy"/></div>
@@ -387,9 +414,51 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="cap">分享的视频已进入 normal feed。</div>
       </div>
       <div class="body">
-        <p class="para">现在用户能在 FYP 里刷到朋友分享的视频,但基于内容的分享不应该止于"看了",而是在这基础之上的社交连接。单纯看了这个视频,并不会解决 A、B 之间接收方和发送方的心理定位 —— 发送方不知道接收方看了,接收方的 DM 里还留着一条消息。我们要做的,是<b>对双方都成立的回应</b>。</p>
+        <p class="para">所以,虽然现在用户能在 FYP 里刷到朋友分享的视频,但基于内容的分享不应该止于"看了",而是在这基础之上的社交连接。单纯看了这个视频,并不会连接 A、B 之间接收方和发送方的心理定位,发送方不知道接收方看了,接收方的 DM 里还留着一条消息。我们要做的,是<b>对双方都成立的回应,让双方的分享形成一个双边循环</b>。</p>
       </div>
     </div>
+  </section>
+  </div>
+
+  <!-- ===== REDESIGN GOALS ===== -->
+  <div class="region" id="rg" data-nav="Goals">
+  <div class="region-head"><div><div class="ren">Redesign Goals</div><div class="rt">重塑目标</div></div></div>
+
+  <section class="block" id="s5" data-nav="Goals">
+
+    <p class="goal-lead">我想将分享从现在偏向单方面的行为,变为<b>双边循环互动</b>。所以基于之前的场景分析,我把这个目标分为四个可行的方向:</p>
+
+    <div class="prio-list" style="margin-top:26px">
+      <div class="prio">
+        <span class="prio-tag p0">P0</span>
+        <div class="prio-b">
+          <div class="prio-t">01 · 降低"看"的成本</div>
+          <p class="prio-d">把分享从"逆着回溯的收件箱",变回"顺着往下刷的内容流"。</p>
+        </div>
+      </div>
+      <div class="prio">
+        <span class="prio-tag p0">P0</span>
+        <div class="prio-b">
+          <div class="prio-t">02 · 降低"回"的成本</div>
+          <p class="prio-d">让"我收到了 / 你被看见了",不再唯一绑定在打字回复上。</p>
+        </div>
+      </div>
+      <div class="prio">
+        <span class="prio-tag p0">P0</span>
+        <div class="prio-b">
+          <div class="prio-t">03 · 统一双方心理定位</div>
+          <p class="prio-d">发送方知道分享被接收,接收方也不再有完成任务的感觉,让循环转起来。</p>
+        </div>
+      </div>
+      <div class="prio">
+        <span class="prio-tag p1">P1</span>
+        <div class="prio-b">
+          <div class="prio-t">04 · 让值得看的视频更早被看见</div>
+          <p class="prio-d">重塑视频优先级,注重目的性、互动性和时效性。</p>
+        </div>
+      </div>
+    </div>
+
   </section>
   </div>
 
@@ -398,22 +467,77 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
   <div class="region-head"><div><div class="ren">Ideation &amp; Why it works</div><div class="rt">构思与原理</div></div></div>
 
   <section class="block" id="s6" data-nav="Ideation">
-        <p class="hmw-lead">基于分析,我识别到分享视频的场景如今存在<b>接收方成本过高、心智错位、双方心理定位不统一</b>等问题,于是把它拆成三个 How-Might-We 问题:</p>
-        <div class="hmw-list">
-          <div class="hmw-q"><span class="k"></span><p>我们如何能让接收方表达"我收到了"、让发送方感知到"我的分享被看见",而不必把回应唯一绑定在"打字回复"上?</p></div>
-          <div class="hmw-q"><span class="k"></span><p>我们如何能把朋友分享的内容,从一个"要求逐条批奏折的收件箱",变回一个"可以顺着刷过去的内容流"?</p></div>
-          <div class="hmw-q"><span class="k"></span><p>我们如何能帮接收方在 20 条无差别堆叠的分享里,先看见"哪几条最值得现在看"?</p></div>
+        <p class="hmw-lead">基于重塑的四个目标,我平衡用户体验和需求,提出了四个 HMW 问题:</p>
+        <div class="hmw-list" style="margin-top:24px">
+          <div class="hmw-q"><span class="k"></span><p><b>降低"看"的成本</b><br>我们如何将分享视频从"埋在聊天记录里的待办",变成一条可以顺畅刷下去的内容流?</p></div>
+          <div class="hmw-q"><span class="k"></span><p><b>降低"回"的成本</b><br>我们如何让"我看到了 / 我感受到了"这件事,不再依赖打字回复就能被传达?</p></div>
+          <div class="hmw-q"><span class="k"></span><p><b>统一双方心理定位</b><br>我们如何让发送方感到被接收、接收方感到在发现,使分享成为一个循环而非一项任务?</p></div>
+          <div class="hmw-q"><span class="k"></span><p><b>让值得看的视频更早被看见</b><br>我们如何根据目的性、互动性和时效性重新排列共享视频的优先级,让最值得看的内容最先出现?</p></div>
         </div>
-        <p class="hmw-lead" style="margin-top:28px">对于每个问题,我<b>深入研究了 TikTok 及同类产品的心智模型</b>,例如小红书的快速反馈,并从 sender 和 receiver 两个角度去思考,构思可能的解法。以下是我对每个问题的候选方案:</p>
+        <p class="hmw-lead" style="margin-top:28px">对于每个问题,我<b>深入研究了 TikTok 及同类产品</b>,例如小红书、抖音、Instagram、Snapchat 等,通过多维度对比,从 sender 和 receiver 两个角度去思考,构思可能的解法。以下是我对每个 HMW 问题的设计策略:</p>
 
     <div class="qgroup">
-      <div class="q-label">01 HMW</div>
-      <p class="q-text">我们如何能让接收方表达"我收到了"、让发送方感知到"我的分享被看见",而不必把回应唯一绑定在"打字回复"上?</p>
-      <p class="q-thought"><b>"收到"不该只有打字一种表达。</b>我想让接收方能用符合内容语境的一键反应来回应,也让点赞、收藏这类自然行为自动变成回执 —— 发送方无需等一条文字,就能感知分享被看见。</p>
+      <div class="q-label">HMW 01 — 降低"看"的成本</div>
+      <p class="q-text">我们如何将分享视频从"埋在聊天记录里的待办",变成一条可以顺畅刷下去的内容流?</p>
 
       <div class="ib">
       <div class="ib-hd">
-        <span class="ib-num">01</span>
+        <span class="ib-num">方案 01</span>
+        <h3 class="ib-name">"Shared with Me" Feed</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=3&amp;bare=1" loading="lazy" title="Shared with Me Feed"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
+        <div class="body">
+          <div class="ib-cn">朋友分享的内容流</div>
+          <p class="para">分享的视频本质还是 TikTok,现在却被装进要往回溯的 DM。我想把它放回一个和刷 FYP 一致的容器,让"看"这个交互重新变得顺手。所以,我的想法是在 Friends 页面里新增一个 "Shared with You" tab,只展示朋友分享内容的竖向滚动播放器。在视频内容之外,展示分享朋友的标签,底部浮动快速回复按钮,支持边看边回。对接收方,沿用刷 FYP 的同一套交互来处理分享,无须逐个进入朋友的 DM;对发送方,接收方处理分享的门槛更低,回应更可能发生。</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">方案 02</span>
+        <h3 class="ib-name">DM 内跳转顺序 + Thread Summary</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=8&amp;bare=1" loading="lazy" title="DM 内跳转顺序 + Thread Summary"></iframe></div>
+        <div class="body">
+          <div class="ib-cn">调转顺序 + 分类摘要</div>
+          <p class="para">用户现在点进 DM 时,如果想看完所有视频,要一直往上滑到最早的视频,那为什么不把整个交互调转顺序呢。我的想法是用户点进消息页面时,直接跳转到未读的开始,同时,AI 把堆积的分享根据标签浓缩成分类的摘要。对接收方,有完整视野,可以从最开始的视频往下滑,维持 FYP 一致交互;对发送方,即使对方没全看,重点也能传达到。</p>
+          <p class="para" style="margin-top:12px;font-size:15px;color:var(--t-3);"><b style="color:var(--cyan);">为什么没选它 · </b>跳转视频治标不治本,依然是在 DM 容器里;同时,短视频重视频轻文字,内容难被"概括",一旦总结不准,反而会曲解朋友想分享的东西。</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">方案 03</span>
+        <h3 class="ib-name">Inbox Value</h3>
+        <span class="ib-tag alt">Receiver</span>
+      </div>
+      <div class="show">
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=6&amp;bare=1" loading="lazy" title="Inbox Value"></iframe></div>
+        <div class="body">
+          <div class="ib-cn">Inbox 内容价值前置</div>
+          <p class="para">把 Inbox 里的好友消息从"任务通知"变成"内容吸引"。DM 的消息红点只展示对方发送的文字消息数字,昵称下的 preview 直接展示文字消息,视频数量则作为另一个胶囊单独设计,用户能清晰看到文字与视频的数量。若没有文字消息,则由 AI 帮忙总结视频重点。对接收方,进入前即可判断这是不是值得现在看的内容,任务感转化为吸引力;对发送方,内容的价值被前置呈现,被点开的概率更高。</p>
+          <p class="para" style="margin-top:12px;font-size:15px;color:var(--t-3);"><b style="color:var(--cyan);">为什么没选它 · </b>Inbox 不止 DM,还有系统、内容等别的消息,重构信息架构设计改动成本和风险都大。</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+        </div>
+      </div>
+    </div>
+    </div>
+
+    <div class="qgroup">
+      <div class="q-label">HMW 02 — 降低"回"的成本</div>
+      <p class="q-text">我们如何让"我看到了 / 我感受到了"这件事,不再依赖打字回复就能被传达?</p>
+
+      <div class="ib">
+      <div class="ib-hd">
+        <span class="ib-num">方案 01</span>
         <h3 class="ib-name">Smart Reactions</h3>
         <span class="ib-tag alt">Receiver</span>
       </div>
@@ -421,136 +545,98 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=1&amp;bare=1" loading="lazy" title="Smart Reactions"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
         <div class="body">
           <div class="ib-cn">语境化快捷反应</div>
-          <p class="para">AI 识别视频的 tag(如美食)和发送方的评论,在现有底部回复栏展示 3 个动态的"emoji + 文字"反应,例如 想吃😋 / 冲😄 / 走起,替代固定 emoji。<b>点一下即发送,无需进入键盘。</b>对接收方,即使没看完整条视频,也能完成一次符合语境的轻量回应;对发送方,立刻收到更接近预期的反馈 —— meme 收到"笑死"、餐厅收到"走起"。</p>
+          <p class="para">"收到"不该只有打字一种表达,而现在快捷 emoji 回复只有固定的三个表情 😍😂😳,这对视频并不所有都适用。我参考小红书的快捷回复,每个分享的消息下方会根据笔记内容给出智能回复,设计针对 TikTok 视频的语境化快捷反应。AI 能识别视频的 tag 和发送方的评论,在现有底部回复栏展示 3 个动态的"emoji + 文字"反应,例如美食视频对应想吃😋 / 冲😄 / 走起,替代原有的固定 emoji。<b>点一下即发送,无需进入键盘。</b>对接收方,即使没看完整条视频,也能完成一次符合语境的轻量回应;对发送方,立刻收到更接近预期的反馈。</p>
           <button type="button" class="ib-replay">↻ Replay walkthrough</button>
         </div>
       </div>
     </div>
 
-<div class="ib">
+    <div class="ib">
       <div class="ib-hd">
-        <span class="ib-num">02</span>
+        <span class="ib-num">方案 02</span>
         <h3 class="ib-name">Interaction Receipts</h3>
         <span class="ib-tag alt">Sender</span>
       </div>
       <div class="show">
-        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=2&amp;bare=1" loading="lazy" title="Interaction Receipts"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=2&amp;bare=1" loading="lazy" title="Interaction Receipts"></iframe></div>
         <div class="body">
           <div class="ib-cn">行为同步回执</div>
-          <p class="para">让收藏这类强交互也成为一种回应。接收方收藏朋友分享的视频时,系统在 DM 中自动发送一条轻量回执气泡,例如 <code>[Name] bookmarked your video</code>。<b>只有收藏这类强交互才会展示,点赞不会</b> —— 因为收藏 = 我想和你一起去打卡。对发送方,不必等文字回复,就能看到对方确实在意这条内容;对接收方,无须刻意打字,自然的浏览行为本身即可传达兴趣。</p>
-<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+          <p class="para">让收藏这种强交互也成为一种回应,当接收方在看并且收藏朋友分享的视频时,系统在 DM 里自动发一条轻量回执,例如 <code>[Name] bookmarked your video</code>,让发送方不必等主动交互就知道对方在意。而点赞和评论更偏自然行为,涉及隐私问题,所以不会展示。</p>
+          <p class="para" style="margin-top:12px;font-size:15px;color:var(--t-3);"><b style="color:var(--cyan);">为什么没选它 · </b>收藏偏私人行为,虽然它可能意味着"我想和你去",但换个视角,它也可能变成一种<b style="color:var(--t-2);">被盯着的压力</b>,而接收方未必愿意被这样追踪。所以我认为发送方能看到的唯一信号,只能是接收方主动做出的动作。</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
         </div>
       </div>
     </div>
     </div>
 
     <div class="qgroup">
-      <div class="q-label">02 HMW</div>
-      <p class="q-text">我们如何能把朋友分享的内容,从一个"要求逐条批奏折的收件箱",变回一个"可以顺着刷过去的内容流"?</p>
-      <p class="q-thought">分享的视频本质还是 TikTok,却被装进要逆着回溯的 DM。我想把它放回一个和刷 FYP 一致的容器 —— <b>一个只看朋友分享、往下刷的 Shared Feed</b> —— 让"看"重新变得顺手。</p>
+      <div class="q-label">HMW 03 — 统一双方心理定位</div>
+      <p class="q-text">我们如何让发送方感到被接收、接收方感到在发现,使分享成为一个循环而非一项任务?</p>
 
       <div class="ib">
       <div class="ib-hd">
-        <span class="ib-num">01</span>
-        <h3 class="ib-name">Shared Feed Tab</h3>
-        <span class="ib-tag alt">Receiver</span>
+        <span class="ib-num">方案 01</span>
+        <h3 class="ib-name">把 DM 重构成"共享空间"</h3>
+        <span class="ib-tag alt">Both</span>
       </div>
-      <div class="show">
-        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=3&amp;bare=1" loading="lazy" title="Shared Feed Tab"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
-        <div class="body">
-          <div class="ib-cn">"Shared with Me" Feed(朋友 Tab)</div>
-          <p class="para">把分享内容放进一个与心智模型一致的容器。在 For You Page 旁新增一个 "Shared with You" tab,是一个只展示朋友分享内容的竖向滚动播放器。底部浮动快速回复按钮,支持边看边回。用户在 normal feed 里仍然能看到朋友分享的视频,但底部会有一个入口,可以跳转到 Friends 页面。对接收方,沿用刷 FYP 的同一套交互来处理分享 —— <b>把往上滑的"回溯"变成往下滑的"刷"</b> —— 无须逐个进入朋友的 DM;对发送方,接收方处理分享的门槛更低,回应更可能发生。</p>
-<button type="button" class="ib-replay">↻ Replay walkthrough</button>
-        </div>
+      <div class="body" style="margin-top:16px">
+        <p class="para">现在的 DM 里的视频卡片并没有传递出更深的社交意味。每个视频不再是卡片的设计,中间的播放 icon 可以重设计为开启,消息被包装成贴纸贴在视频卡片上,<b>视频不再是消息,而是等待你来开的礼物。</b></p>
       </div>
     </div>
     </div>
 
     <div class="qgroup">
-      <div class="q-label">03 HMW</div>
-      <p class="q-text">我们如何能帮接收方在 20 条无差别堆叠的分享里,先看见"哪几条最值得现在看"?</p>
-      <p class="q-thought">20 条无差别堆叠里,注意力是有限的。我想<b>让最值得现在看的先浮现</b>:按回复价值排序、去重与已看同步、把 Inbox 从任务通知变成内容吸引,并用摘要帮接收方一眼追上。</p>
+      <div class="q-label">HMW 04 — 让值得看的视频更早被看见</div>
+      <p class="q-text">我们如何根据目的性、互动性和时效性重新排列共享视频的优先级,让最值得看的内容最先出现?</p>
 
       <div class="ib">
       <div class="ib-hd">
-        <span class="ib-num">01</span>
+        <span class="ib-num">方案 01</span>
         <h3 class="ib-name">Priority Slot Queue</h3>
         <span class="ib-tag alt">Receiver</span>
       </div>
       <div class="show">
-        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=4&amp;bare=1" loading="lazy" title="Priority Slot Queue"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=4&amp;bare=1" loading="lazy" title="Priority Slot Queue"></iframe></div>
         <div class="body">
           <div class="ib-cn">回复价值排序</div>
-          <p class="para">让分享内容按"值得回应的程度"排序,而非时间顺序。打开朋友分享的视频时,播放器采用排序算法,<b>把队列编排成一条特定的心理流程</b>。最高优先级是行动/高意图内容(朋友评论过、带地点标签、活动邀请或购物链接);第二是快速多巴胺(一条短而有趣的 meme,用来转换情绪);第三是深度参与(更长、信息量更大的视频)。左边的 profile 能看到是哪位好友分享的,并会优先展示有评论的内容。对接收方,把有限精力先花在最重要、最值得回应的内容上,混合内容类型也避免了连刷同类导致的疲劳;对发送方,餐厅推荐、活动邀请等高意图内容被优先看到,更可能拿到"这周末一起去"这类真正期待的回应。</p>
-<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+          <p class="para">让分享内容按"值得回应的程度"排序,而非时间顺序。打开朋友分享的视频时,播放器采用排序算法,<b>把队列编排成一条特定的心理流程</b>。最高优先级是行动/高意图内容,朋友评论过、带地点标签、活动邀请或购物链接;第二是快速多巴胺,一条短而有趣的 meme,用来转换情绪;第三是深度参与,更长、信息量更大的视频。左边的 profile 能看到是哪位好友分享的,并会优先展示有评论的内容。对接收方,把有限精力先花在最重要、最值得回应的内容上,混合内容类型也避免了连刷同类导致的疲劳;对发送方,餐厅推荐、活动邀请等高意图内容被优先看到,更可能拿到"这周末一起去"这类真正期待的回应。</p>
+          <p class="para" style="margin-top:12px;font-size:15px;color:var(--t-3);"><b style="color:var(--cyan);">为什么没选它 · </b>朋友的分享很个人,让算法和 AI 判断"谁的更值得看"既难准、也可能让人不适,还把 FYP 那套排序又带回了一个本该以人为主的空间。</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
         </div>
       </div>
     </div>
 
-<div class="ib">
+    <div class="ib">
       <div class="ib-hd">
-        <span class="ib-num">02</span>
+        <span class="ib-num">方案 02</span>
         <h3 class="ib-name">Seen Sync</h3>
         <span class="ib-tag alt">Both</span>
       </div>
       <div class="show">
-        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=5&amp;bare=1" loading="lazy" title="Seen Sync"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=5&amp;bare=1" loading="lazy" title="Seen Sync"></iframe></div>
         <div class="body">
-          <div class="ib-cn">去重与已看同步</div>
-          <p class="para">让重复内容不再占用接收方的注意力。对发送方,接收方在 FYP 已经看过的内容,会在消息里标注为"看过";对接收方,若 FYP 推荐与朋友分享重合,视频上会显示分享标签,并提供一键回复入口。DM 里遇到重复的视频时,<b>系统会自动帮你跳过并标为已读</b>。对接收方,不必重复处理同一条内容;对发送方,能得知对方其实已经看过,避免误以为被忽略。</p>
-<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+          <div class="ib-cn">已看去重</div>
+          <p class="para">如果接收方在 FYP 里已经刷到过某条视频,系统会在 DM 里自动折叠这条视频、标为已读;如果用户在刷 FYP 时推荐和朋友分享重合,视频上会显示分享标签,并给一个一键回复入口。</p>
+          <p class="para" style="margin-top:12px;font-size:15px;color:var(--t-3);"><b style="color:var(--cyan);">为什么没选它 · </b>这个设计看似帮用户减负,但实则预设了"用户不想看重复视频"这个心理;实际上,如果用户想通过重看视频来感受他和朋友的默契、再笑一次,又是另一种解法。我本来还想把"我看过了"同步给发送方,让对方知道你看过,但<b style="color:var(--t-2);">"看过"是被动信号,不该外泄</b>;它容易变成一种被盯着的压力,而对方未必愿意让别人知道自己看过什么。所以"已看"只用来帮我自己去重,绝不对外暴露。</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
         </div>
       </div>
     </div>
 
-<div class="ib">
-      <div class="ib-hd">
-        <span class="ib-num">03</span>
-        <h3 class="ib-name">Inbox Value</h3>
-        <span class="ib-tag alt">Receiver</span>
-      </div>
-      <div class="show">
-        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=6&amp;bare=1" loading="lazy" title="Inbox Value"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
-        <div class="body">
-          <div class="ib-cn">Inbox 内容价值前置</div>
-          <p class="para">把 Inbox 从"任务通知"变成"内容吸引"。Inbox 直接展示内容本身,并用 summary 吸引点击,例如 <code>shared XXX doing XXX</code>。点进去后不从最早一条开始,而是<b>直接从最值得回应的视频开始播</b>。此外,视频不再作为消息展示,与文字信息分成两个渠道;视频侧会有一个小胶囊,用户能清晰看到文字与视频的数量。若没有文字消息,则由 AI 帮忙总结重点(summary)。对接收方,进入前即可判断这是不是值得现在看的内容,任务感转化为吸引力;对发送方,内容的价值被前置呈现,被点开的概率更高。</p>
-<button type="button" class="ib-replay">↻ Replay walkthrough</button>
-        </div>
-      </div>
-    </div>
+      <p class="q-thought" style="margin-top:36px">前面的问题都在<b>接收方</b>那一侧做文章。但如果发送方一次群发 20 条低意图视频,接收方端再怎么优化都是徒劳,所以有没有减少"<b>分享垃圾</b>"的做法,而不是增加"消费"?</p>
 
-<div class="ib">
+      <div class="ib">
       <div class="ib-hd">
-        <span class="ib-num">04</span>
-        <h3 class="ib-name">Thread Summary</h3>
-        <span class="ib-tag alt">Receiver</span>
-      </div>
-      <div class="show">
-        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=8&amp;bare=1" loading="lazy" title="Thread Summary"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
-        <div class="body">
-          <div class="ib-cn">对话总结</div>
-          <p class="para">用户点进消息页面时,<b>直接回到未读的开始</b>,AI 把堆积的分享浓缩成分类的摘要。进入 DM 时直接滚动到最上方,给出未读视频的 summary,可以分类浏览。对接收方,有完整视野,可以挑感兴趣的主题,不必逐条翻;对发送方,即使对方没全看,重点也能传达到。</p>
-<button type="button" class="ib-replay">↻ Replay walkthrough</button>
-        </div>
-      </div>
-    </div>
-    </div>
-
-    <div class="qgroup" style="display:none">
-      <p class="q-text">我们如何能在发送的那一刻引入一点意图或成本,让分享更精准、从源头减轻接收方的负担?</p>
-
-      <div class="ib" style="display:none">
-      <div class="ib-hd">
-        <span class="ib-num">01</span>
+        <span class="ib-num">方案</span>
         <h3 class="ib-name">Intent Shortcut</h3>
         <span class="ib-tag alt">Sender</span>
       </div>
       <div class="show">
-        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=7&amp;bare=1&amp;still=1" loading="lazy" title="Intent Shortcut"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
+        <div class="ph"><iframe class="ib-frame" src="prototype/index.html?idea=7&amp;bare=1" loading="lazy" title="Intent Shortcut"></iframe><div class="proto-live">可交互原型 · 点一下试试</div></div>
         <div class="body">
           <div class="ib-cn">发送意图快捷入口</div>
-          <p class="para">让发送方在分享的那一刻表达"我为什么发给你"。分享时,用户会看到与视频语境相关的快捷选项 —— 餐厅视频会显示"一起去?""去看看?""我加入"。发送方点一个之后,<b>接收方看到的不只是视频,还有这个意图标签</b>。对发送方,一种无须额外打字的轻量方式表达分享意图;对接收方,更快理解这条视频为什么发给自己,更容易做出合适的回应。</p>
-<button type="button" class="ib-replay">↻ Replay walkthrough</button>
+          <p class="para">让发送方在分享的那一刻表达"我为什么发给你"。分享时,用户会看到与视频语境相关的快捷选项,餐厅视频会显示"一起去?""啥时候有空?"。发送方点一个之后,<b>接收方看到的不只是视频,还有这个意图标签</b>。对发送方,一种无须额外打字的轻量方式表达分享意图;对接收方,更快理解这条视频为什么发给自己,更容易做出合适的回应。</p>
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
         </div>
       </div>
     </div>
@@ -563,21 +649,20 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
   <div class="region-head"><div><div class="ren">Final Decision</div><div class="rt">最终决策</div></div></div>
 
   <section class="block" id="s7" data-nav="Direction">
-    <div class="final-box">
+    <div class="final-box" style="margin-top:6px;">
       <div class="final-ph">
         <iframe class="final-frame" src="prototype/03-shared-feed-tab.html?bare=1" loading="lazy" title="Shared Feed Tab — final prototype"></iframe>
-        <div class="proto-live">可交互原型 · 点一下试试</div>
-        <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+                <button type="button" class="ib-replay">↻ Replay walkthrough</button>
       </div>
       <div class="final-txt">
         <div class="final-part">
           <div class="final-label">为什么是它</div>
-          <p class="para">Shared Feed 解决了一个最致命的问题,就是 DM 里的消息是往上刷的,会刷到底、会刷到重复的和已经看过的。Shared Feed 通过整合好友分享的视频,shape 出一条以社交关系驱动的新视频流,这个页面所提供的低成本交互最符合用户的心智和习惯。用户不再需要在 DM 里退出视频去看朋友的评论,在 Shared Feed 里,他能一边刷一边看朋友的评论,顺手点一个 reaction,看分享视频的成本大大降低了。而根据视频 tags 和发送方评论自动匹配的 Smart Reactions,正是这个容器里那个贴合内容语境、一点即发的回应动作。<b>视频流降低"看"的成本,符合语境的回复降低"回"的成本。</b>两个问题被同时解决。</p>
+          <p class="para">Shared Feed 解决了一个最致命的问题,就是 DM 里的消息是往上刷的,会刷到底、会刷到重复的和已经看过的。Shared Feed 通过整合好友分享的视频,shape 出一条以社交关系驱动的新视频流,这个页面所提供的低成本交互最符合用户的心智和习惯。用户不再需要在 DM 里退出视频去看朋友的评论,在 Shared Feed 里,他能一边刷一边看朋友的评论,顺手点一个 reaction,看分享视频的成本大大降低了。而根据视频 tags 和发送方评论自动匹配的 Smart Reactions,正是这个容器里那个贴合内容语境、一点即发的回应动作,<b>让发送方能感受到被看见</b>。</p>
         </div>
         <div class="final-part">
           <div class="final-label">我的设计思路</div>
-          <p class="para">和普通视频的排版不同,Shared with You 页面的视频是以<b>朋友和分享这件事</b>为重心的。我刻意弱化了原视频的标题和文案,把它们压缩成一行,转而强调分享给你的朋友、时间以及他留给你的评论。对发送方来说,分享的视频被观看和回复的概率会更高。</p>
-          <p class="para">同时,多人分享的同一条视频不会重复出现,视频也不再作为 DM 消息存在,新的 inbox 只显示文字消息的数量。分流之后,用户能更享受这个好友共享的视频流,<b>反而开始希望好友分享的视频越多越好</b>。而在刷完之后,也会引导用户回到 FYP 去分享新的视频,让他们从接收方衔接成为发送方。</p>
+          <p class="para">和普通视频的排版不同,Shared with You 页面的视频是以<b>朋友和分享这件事</b>为重心的。我刻意弱化了原视频的标题和文案,把它们压缩成一行,做成胶囊,转而强调分享给你的朋友、时间以及他留给你的评论。对发送方来说,分享的视频被观看和回复的概率会更高。</p>
+          <p class="para">同时,多人分享的同一条视频不会重复出现,视频也不再作为 DM 消息存在,新的 inbox 只显示文字消息的数量。分流之后,用户能更享受这个好友共享的视频流,<b>反而开始希望好友分享的视频越多越好</b>。而在刷完之后,也会引导用户回到 FYP 去分享新的视频,让他们从接收方衔接成为发送方,促进双边的循环。</p>
         </div>
       </div>
     </div>
@@ -592,15 +677,14 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
     <!-- Process & timeline -->
     <div class="qgroup" style="margin-top:6px">
       <div class="eyebrow"><span class="dot"></span>过程与时间线</div>
-      <p class="para" style="margin-top:18px">虽然我本身就是 TikTok 的用户,但为了捕捉到更真实的用户心理和更广的使用场景,我先花了一天去体验分享和接收的功能,不断细化问题的方向,想清楚真正的问题到底是什么。这个阶段是<b>最痛苦的</b>,因为过程中会冒出非常多看起来正确的假设,需要把它们一个个 critique 掉;我当时的问题就在于一直停在表面想,没有深入到底层逻辑。但一旦想清楚,我就能顺着问题立刻发散 ideation —— 花了四个小时,把想法直接做成设计原型,再决策出最终方案,一步步做视觉细化。</p>
+      <p class="para" style="margin-top:18px">虽然我本身就是 TikTok 的用户,但为了捕捉到更真实的用户心理和更广的使用场景,我先花了一天去体验分享和接收的功能,不断细化问题的方向,想清楚真正的问题到底是什么。这个阶段是<b>最痛苦的</b>,因为过程中会冒出非常多看起来正确的假设,需要把它们一个个 critique 掉。但一旦想清楚,我就能顺着问题立刻发散 ideation,花了四个小时,把想法直接做成设计原型,再决策出最终方案,一步步做用户体验优化。</p>
     </div>
 
     <!-- AI in the loop -->
     <div class="qgroup">
       <div class="eyebrow"><span class="dot"></span>Work with AI</div>
-      <p class="para" style="margin-top:18px">我先根据 TikTok 现在的界面,用 Claude Design 明确 TikTok 的 Design System;再通过 Claude 把我的 ideation、想好的功能写成更细致的 markdown,讲清楚 CTA 在哪里、整个 workflow 是什么;最后把 markdown 和 Design System 一起交给 Claude Code,生成最终的设计。</p>
-      <p class="para">前期我也用 Gemini、ChatGPT 来分析问题、给我不同的方向,但我发现 AI 总是把问题理解成"A 发了视频,B 没回"。可这根本不是真正的问题。真正的问题不是"B 没回",而是 <span class="cy">B 不想看</span> —— 或者 B <span class="pk">看了</span>,但 A 根本不知道。所以 AI 也通过这些反例,帮我更深入地理解了问题。</p>
-      <p class="para">有了初期的 ideation 之后,AI 还帮我做 pressure test,critique 每一个 ideation 到底能不能真的解决我提出的 HMW 问题。</p>
+      <p class="para" style="margin-top:18px">我先根据 TikTok 现在的界面,用 Claude Design 明确 TikTok 的 Design System;再通过 Claude 把我的 ideation 写成更细致的 markdown,讲清楚整个 workflow 是什么;最后把 markdown 和 Design System 一起交给 Claude Code,不断迭代生成最终的设计。</p>
+      <p class="para">前期 Ideation,我也用 Claude、Gemini、ChatGPT act as design lead 来帮我 critique 和 pressure test 我的想法,测试哪里有漏洞、哪里讲得不清楚。</p>
     </div>
 
     <!-- Reflection -->
@@ -616,7 +700,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
         <div class="hmw-q"><span class="k"></span><p><b>找真实用户再次调研和验证。</b>现在这些都是我根据自己的体验推理出来的。我想通过和真实用户对话,发掘可能被我遗漏的动机和想法,也想拿他们给我的 insight 再推出新的 ideation,让真实用户来验证:是不是真的更愿意看分享了。</p></div>
         <div class="hmw-q"><span class="k"></span><p><b>试试更大胆的方向。</b>如果不是 TikTok 的语境,我会怎么做?如果不考虑技术的限制,我还能怎么做?</p></div>
         <div class="hmw-q"><span class="k"></span><p><b>权衡好不好做、值不值得做。</b>按成本和收益给方案排个序,让它像一张路线图(先上 Smart Reactions,再上 Feed),而不是一堆平铺的功能。</p></div>
-        <div class="hmw-q"><span class="k"></span><p><b>想清楚什么算"成功"。</b>比如分享的回应率、大家能刷到一个好友那叠的多深、发送方是不是终于觉得"被看见"。</p></div>
+        <div class="hmw-q"><span class="k"></span><p><b>用真实数据验证"成功"。</b>前面我已经定义了三个信号:分享回应率、刷入深度、发送方的"被看见"感,但它们现在都还只是我的推理。下一步是把这几个信号放到真实用户身上跑一遍,让数据来告诉我方案是不是真的成立。</p></div>
       </div>
     </div>
   </section>
@@ -629,14 +713,9 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
       <figure class="about-photo"><img src="about-me.png" alt="方圆 Fang Yuan" loading="lazy"/></figure>
       <div>
         <h2 style="font-size:28px;">方圆 <span style="color:var(--t-3);font-weight:600;">Fang Yuan</span></h2>
-        <p class="para" style="margin-top:16px;">hii,我是方圆。我刚从华盛顿大学获得"以人为本的设计与工程"硕士学位,本科毕业于 Pratt Institute 交互艺术与室内设计专业。</p>
+        <p class="para" style="margin-top:16px;">hii 我是方圆,来自浙江杭州。我硕士毕业于华盛顿大学以人为本的设计与工程专业,本科毕业于 Pratt Institute 的交互艺术和室内设计专业。</p>
         <p class="para" style="margin-top:16px;">在生成式 AI 时代,生产成本无限降低、AI 几秒就能给出十种选择;而我的优势是 <b>visual craft</b>,对细节的执着与好奇。从高中起我坚持绘画已有十年,当 AI 给出多个选项,我能判断哪一种最合适并不断打磨,也能把一个想法从研究 shape 为可用的原型。一年前我还不会用 GitHub,如今已能独立做产品,和 Liner 合作时的交付完全由 AI 工具完成。</p>
         <p class="para" style="margin-top:16px;">我也热爱社交媒体,在 Instagram、小红书、bilibili 都有创作;作为 TikTok 用户,我最喜欢合拍特效游戏!</p>
-        <div class="about-links">
-          <a class="foot-link" href="https://nltstudio7.space" target="_blank" rel="noopener">Portfolio · nltstudio7.space ↗</a>
-          <a class="foot-link" href="https://www.tiktok.com" target="_blank" rel="noopener">TikTok ↗</a>
-          <a class="foot-link" href="https://github.com/nlt7z/Shared-with-You-Feed-Design" target="_blank" rel="noopener">GitHub · Prototype ↗</a>
-        </div>
       </div>
     </div>
   </section>
