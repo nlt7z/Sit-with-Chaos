@@ -164,11 +164,12 @@
                    </div>
                    </sc-if>
                    <sc-if value="{{ v.noComment }}" hint-placeholder-val="{{ false }}">
-                   <div style="align-self:flex-start;display:flex;align-items:center;gap:8px;max-width:272px;">
+                   <div style="align-self:flex-start;display:flex;align-items:center;gap:8px;max-width:300px;">
                      <div style="{{ v.quoteAvStyle }}"></div>
                      <sc-if value="{{ v.isUnread }}" hint-placeholder-val="{{ false }}"><span style="font-size:8.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:#fe2c55;border-radius:4px;padding:1.5px 4px;flex:0 0 auto;box-shadow:0 2px 8px rgba(254,44,85,.5);">NEW</span></sc-if>
                      <span style="flex:0 0 auto;font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerName }}</span>
                      <span style="flex:0 0 auto;font-size:14px;font-weight:500;color:rgba(255,255,255,.82);white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.6);">shared with you</span>
+                     <span style="flex:0 0 auto;margin-left:auto;font-size:11px;font-weight:500;color:rgba(255,255,255,.6);white-space:nowrap;padding-left:6px;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerTime }}</span>
                    </div>
                    </sc-if>
 
@@ -227,7 +228,8 @@
                      </sc-if>
                      <sc-if value="{{ v.noTokens }}" hint-placeholder-val="{{ false }}">
                      <div onclick="{{ v.onReplyBar }}" data-tap="1" style="{{ v.replyBoxStyle }}">
-                       <span style="flex:1;min-width:0;color:rgba(255,255,255,.85);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ v.replyHint }}</span>
+                       <svg width="17" height="17" viewBox="0 0 24 24" fill="#fe2c55" style="flex:0 0 auto;"><path d="M3 11l18-8-8 18-2-7-8-3z"></path></svg>
+                       <span style="flex:1;min-width:0;color:rgba(255,255,255,.9);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ v.replyHint }}</span>
                      </div>
                      </sc-if>
                    </div>
@@ -959,8 +961,8 @@ class Component extends DCLogic {
     return Object.assign({},base,bg); }
   replyBtnStyle(id){ const bg=this.reactBg(id);
     return Object.assign({ flex:'0 0 auto', width:'38px', height:'38px', borderRadius:'50%', backdropFilter:'blur(14px)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer' }, bg); }
-  replyBoxStyle(id){ const bg=this.reactBg(id);
-    return Object.assign({ display:'flex', alignItems:'center', gap:'10px', width:'100%', height:'44px', borderRadius:'22px', padding:'0 18px', backdropFilter:'blur(14px)', cursor:'pointer' }, bg); }
+  replyBoxStyle(){
+    return { display:'flex', alignItems:'center', gap:'9px', width:'100%', height:'44px', borderRadius:'22px', padding:'0 18px 0 14px', background:'rgba(255,255,255,.15)', backdropFilter:'blur(22px) saturate(1.5)', WebkitBackdropFilter:'blur(22px) saturate(1.5)', cursor:'pointer' }; }
 
   INTENTS = [{t:'Let\u2019s go?'},{t:'Wanna check this out?'},{t:'We should go'},{t:'For you \uD83D\uDC40'}];
   SHARE_EMOJI = ['\uD83E\uDD70','\uD83D\uDC4D','\uD83D\uDE02','\uD83D\uDE0E','\uD83E\uDD79','\uD83D\uDE4F'];
