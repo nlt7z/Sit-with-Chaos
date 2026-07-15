@@ -151,12 +151,16 @@
 
                    <!-- Row 1: has message → avatar + message (body size) + time; no message → avatar + name + "shared with you" -->
                    <sc-if value="{{ v.hasComment }}" hint-placeholder-val="{{ true }}">
-                   <div style="align-self:flex-start;display:flex;align-items:center;gap:7px;max-width:272px;">
-                     <div style="{{ v.quoteAvStyle }}"></div>
-                     <span style="flex:0 0 auto;font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerName }}</span>
-                     <sc-if value="{{ v.isUnread }}" hint-placeholder-val="{{ false }}"><span style="font-size:8.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:#fe2c55;border-radius:4px;padding:1.5px 4px;flex:0 0 auto;box-shadow:0 2px 8px rgba(254,44,85,.5);">NEW</span></sc-if>
-                     <span style="flex:1;min-width:0;font-size:15px;font-weight:400;color:rgba(255,255,255,.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerComment }}</span>
-                     <span style="flex:0 0 auto;font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerTime }}</span>
+                   <div style="align-self:flex-start;display:flex;align-items:flex-end;gap:9px;max-width:300px;">
+                     <div style="{{ v.quoteAvBig }}"></div>
+                     <div style="display:flex;flex-direction:column;gap:4px;min-width:0;flex:0 1 auto;">
+                       <div style="display:flex;align-items:center;gap:6px;padding-left:3px;">
+                         <span style="font-size:13px;font-weight:600;color:rgba(255,255,255,.9);text-shadow:0 1px 3px rgba(0,0,0,.55);">{{ v.sharerName }}</span>
+                         <sc-if value="{{ v.isUnread }}" hint-placeholder-val="{{ false }}"><span style="font-size:8px;font-weight:800;letter-spacing:.05em;color:#fff;background:#fe2c55;border-radius:4px;padding:1.5px 4px;flex:0 0 auto;box-shadow:0 2px 8px rgba(254,44,85,.5);">NEW</span></sc-if>
+                       </div>
+                       <span style="align-self:flex-start;max-width:214px;font-size:14.5px;font-weight:500;color:#fff;background:rgba(24,24,32,.62);backdrop-filter:blur(10px);border-radius:5px 15px 15px 15px;padding:6px 12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);">{{ v.sharerComment }}</span>
+                     </div>
+                     <span style="flex:0 0 auto;margin-left:auto;font-size:10.5px;font-weight:500;color:rgba(255,255,255,.6);white-space:nowrap;padding:0 0 6px 2px;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerTime }}</span>
                    </div>
                    </sc-if>
                    <sc-if value="{{ v.noComment }}" hint-placeholder-val="{{ false }}">
@@ -168,14 +172,28 @@
                    </div>
                    </sc-if>
 
-                   <!-- connector: a small quarter-circle from under the friend's avatar into the shared video -->
-                   <div style="margin:-3px 0 -5px 8px;line-height:0;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 1 Q2 12 13 12" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round"></path></svg></div>
-
-                   <!-- Row 2: the shared video — its own chip (left-aligned with rows 1 & 3) -->
-                   <div onclick="{{ v.onToggleCap }}" data-tap="1" style="align-self:flex-start;display:flex;align-items:center;gap:6px;max-width:262px;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);border-radius:11px;padding:7px 10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);cursor:pointer;">
-                     <span style="font-size:12.5px;font-weight:700;color:#fff;flex:0 0 auto;">{{ v.creator }}</span>
-                     <span style="font-size:12.5px;font-weight:400;color:rgba(255,255,255,.82);flex:1;min-width:0;{{ v.cardCapStyle }}">{{ v.caption }}</span>
-                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="{{ v.cardChevronStyle }}"><path d="M6 9l6 6 6-6"></path></svg>
+                   <!-- Row 2: the shared video chip — collapsed one-liner, expands into a full detail card -->
+                   <div onclick="{{ v.onToggleCap }}" data-tap="1" style="align-self:flex-start;max-width:270px;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);border-radius:12px;padding:8px 11px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);cursor:pointer;">
+                     <sc-if value="{{ v.capCollapsed }}" hint-placeholder-val="{{ true }}">
+                     <div style="display:flex;align-items:center;gap:6px;">
+                       <span style="font-size:12.5px;font-weight:700;color:#fff;flex:0 0 auto;">{{ v.creator }}</span>
+                       <span style="font-size:12.5px;font-weight:400;color:rgba(255,255,255,.8);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ v.caption }}</span>
+                       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M6 9l6 6 6-6"></path></svg>
+                     </div>
+                     </sc-if>
+                     <sc-if value="{{ v.capExpanded }}" hint-placeholder-val="{{ false }}">
+                     <div style="display:flex;flex-direction:column;gap:7px;animation:tkFade .28s ease both;">
+                       <div style="display:flex;align-items:center;gap:8px;">
+                         <span style="flex:1;min-width:0;font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ v.creator }}</span>
+                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.65)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="flex:0 0 auto;"><path d="M18 15l-6-6-6 6"></path></svg>
+                       </div>
+                       <span style="font-size:12.5px;font-weight:400;line-height:1.42;color:rgba(255,255,255,.9);">{{ v.caption }}</span>
+                       <div style="display:flex;flex-wrap:wrap;gap:6px;">
+                         <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:rgba(255,255,255,.82);background:rgba(255,255,255,.1);border-radius:8px;padding:3px 9px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M11 4.5 18 3v3.05L13 7.5v8.2A3.1 3.1 0 1 1 11 12.9V4.5z"></path></svg>{{ v.videoMusic }}</span>
+                         <sc-if value="{{ v.hasVideoLoc }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:rgba(255,255,255,.82);background:rgba(255,255,255,.1);border-radius:8px;padding:3px 9px;"><svg width="11" height="11" viewBox="0 0 24 24" fill="#fff"><path d="M12 2C8 2 5 5 5 9c0 5 7 13 7 13s7-8 7-13c0-4-3-7-7-7z"></path><circle cx="12" cy="9" r="2.3" fill="rgba(0,0,0,.55)"></circle></svg>{{ v.videoLoc }}</span></sc-if>
+                       </div>
+                     </div>
+                     </sc-if>
                    </div>
 
                    <!-- optional: priority queue avatars (idea 4) -->
@@ -198,9 +216,9 @@
                      <sc-if value="{{ v.hasTokens }}" hint-placeholder-val="{{ true }}">
                      <div style="display:flex;align-items:center;gap:8px;width:100%;">
                        <div onclick="{{ v.onReplyBar }}" data-tap="1" style="{{ v.replyBtnStyle }}">
-                         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+                         <svg width="18" height="18" viewBox="0 0 24 24" fill="#fe2c55"><path d="M3 11l18-8-8 18-2-7-8-3z"></path></svg>
                        </div>
-                       <div class="tk-scroll" style="display:flex;flex-wrap:nowrap;gap:6px;flex:1;min-width:0;overflow-x:auto;padding-right:8px;">
+                       <div class="tk-scroll" style="display:flex;flex-wrap:nowrap;gap:6px;flex:1;min-width:0;overflow-x:auto;padding-right:14px;-webkit-mask-image:linear-gradient(to right,#000 82%,transparent);mask-image:linear-gradient(to right,#000 82%,transparent);">
                          <sc-for list="{{ v.tokens }}" as="t" hint-placeholder-count="0">
                            <div onclick="{{ t.onSend }}" data-tap="1" style="{{ v.tokenStyle }}"><sc-if value="{{ t.e }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;line-height:1;">{{ t.e }}</span></sc-if><span>{{ t.t }}</span></div>
                          </sc-for>
@@ -210,7 +228,6 @@
                      <sc-if value="{{ v.noTokens }}" hint-placeholder-val="{{ false }}">
                      <div onclick="{{ v.onReplyBar }}" data-tap="1" style="{{ v.replyBoxStyle }}">
                        <span style="flex:1;min-width:0;color:rgba(255,255,255,.85);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ v.replyHint }}</span>
-                       <div style="width:34px;height:34px;border-radius:50%;background:#fe2c55;display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M3 11l18-8-8 18-2-7-8-3z"></path></svg></div>
                      </div>
                      </sc-if>
                    </div>
@@ -943,7 +960,7 @@ class Component extends DCLogic {
   replyBtnStyle(id){ const bg=this.reactBg(id);
     return Object.assign({ flex:'0 0 auto', width:'38px', height:'38px', borderRadius:'50%', backdropFilter:'blur(14px)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer' }, bg); }
   replyBoxStyle(id){ const bg=this.reactBg(id);
-    return Object.assign({ display:'flex', alignItems:'center', gap:'10px', width:'100%', height:'44px', borderRadius:'22px', padding:'0 6px 0 18px', backdropFilter:'blur(14px)', cursor:'pointer' }, bg); }
+    return Object.assign({ display:'flex', alignItems:'center', gap:'10px', width:'100%', height:'44px', borderRadius:'22px', padding:'0 18px', backdropFilter:'blur(14px)', cursor:'pointer' }, bg); }
 
   INTENTS = [{t:'Let\u2019s go?'},{t:'Wanna check this out?'},{t:'We should go'},{t:'For you \uD83D\uDC40'}];
   SHARE_EMOJI = ['\uD83E\uDD70','\uD83D\uDC4D','\uD83D\uDE02','\uD83D\uDE0E','\uD83E\uDD79','\uD83D\uDE4F'];
@@ -1239,7 +1256,7 @@ class Component extends DCLogic {
         hasMusic: false,
         sharerComment: v.senderComment || null,
         hasComment: !!v.senderComment && !queueOn, noComment: !v.senderComment && !queueOn,
-        sharerName: F[v.sender].name, commentAvStyle: this.circle(F[v.sender].av,32), quoteAvStyle: this.circle(F[v.sender].av,24),
+        sharerName: F[v.sender].name, commentAvStyle: this.circle(F[v.sender].av,32), quoteAvStyle: this.circle(F[v.sender].av,30), quoteAvBig: this.circle(F[v.sender].av,40),
         replyAvatars: (()=>{ const clu=senders.slice(0,3); return clu.map((id,si)=>{ const extra={ marginLeft: si>0?'-11px':'0' }; if(si<clu.length-1){ const m='radial-gradient(circle at 34px 15px, transparent 17px, #000 17.5px)'; extra.WebkitMaskImage=m; extra.maskImage=m; } return { style:this.circle(F[id].av,30,extra) }; }); })(),
         replyHint: senders.length>1 ? ('Reply to all '+senders.length+'…') : ('Reply to '+names[0]+'…'),
         myAvStyle: this.circle(F[v.sender].av,34),
@@ -1249,6 +1266,8 @@ class Component extends DCLogic {
           ? 'white-space:normal;overflow:hidden;max-height:8em;transition:max-height .36s cubic-bezier(.16,1,.3,1);'
           : 'white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-height:1.5em;transition:max-height .36s cubic-bezier(.16,1,.3,1);',
         cardChevronStyle: { flex:'0 0 auto', marginTop:'4px', transition:'transform .3s ease', transform: st.capExp[v.id]?'rotate(180deg)':'none' },
+        capExpanded: !!st.capExp[v.id], capCollapsed: !st.capExp[v.id],
+        videoMusic: v.music, videoLoc: v.loc, hasVideoLoc: !!v.loc,
         onReplyBar:()=>this.openReply(v),
         tokens:toks,
         hasTokens: toks.length>0,
