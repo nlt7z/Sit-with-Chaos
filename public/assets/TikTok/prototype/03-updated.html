@@ -134,7 +134,7 @@
                  <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.55) 0%,transparent 16%,transparent 40%,rgba(0,0,0,.82) 100%);pointer-events:none;"></div>
 
                  <!-- right rail -->
-                 <div style="position:absolute;right:9px;bottom:148px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:4;">
+                 <div style="position:absolute;right:9px;bottom:104px;display:flex;flex-direction:column;align-items:center;gap:18px;z-index:4;">
                    <div style="position:relative;margin-bottom:6px;">
                      <div style="{{ v.avStyle }}"></div>
                      <sc-if value="{{ v.showPlus }}" hint-placeholder-val="{{ true }}"><div onclick="{{ v.onFollow }}" data-tap="1" style="position:absolute;left:50%;bottom:-10px;transform:translateX(-50%);width:21px;height:21px;border-radius:50%;background:#fe2c55;display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.35);"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"></path></svg></div></sc-if>
@@ -147,23 +147,35 @@
                  </div>
 
                  <!-- ===== restructured shared card: stacked rows, anchored above the reply bar ===== -->
-                 <div style="position:absolute;left:14px;right:72px;bottom:150px;z-index:4;display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
+                 <div style="position:absolute;left:14px;right:72px;bottom:104px;z-index:4;display:flex;flex-direction:column;align-items:flex-start;gap:10px;">
 
-                   <!-- Row 1: sharer comment bubble (on top) -->
+                   <!-- Row 1: has message → avatar + message (body size) + time; no message → avatar + name + "shared with you" -->
                    <sc-if value="{{ v.hasComment }}" hint-placeholder-val="{{ true }}">
-                     <div style="align-self:flex-start;background:linear-gradient(135deg,rgba(124,92,252,.24),rgba(78,112,240,.18));backdrop-filter:blur(14px);border-radius:17px 17px 17px 5px;padding:9px 14px;font-size:15px;font-weight:500;line-height:1.28;color:#fff;max-width:252px;box-shadow:inset 0 0 0 1px rgba(160,150,255,.28);text-shadow:0 1px 2px rgba(0,0,0,.4);">{{ v.sharerComment }}</div>
+                   <div style="align-self:flex-start;display:flex;align-items:center;gap:7px;max-width:272px;">
+                     <div style="{{ v.quoteAvStyle }}"></div>
+                     <span style="flex:0 0 auto;font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerName }}</span>
+                     <sc-if value="{{ v.isUnread }}" hint-placeholder-val="{{ false }}"><span style="font-size:8.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:#fe2c55;border-radius:4px;padding:1.5px 4px;flex:0 0 auto;box-shadow:0 2px 8px rgba(254,44,85,.5);">NEW</span></sc-if>
+                     <span style="flex:1;min-width:0;font-size:15px;font-weight:400;color:rgba(255,255,255,.95);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerComment }}</span>
+                     <span style="flex:0 0 auto;font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerTime }}</span>
+                   </div>
+                   </sc-if>
+                   <sc-if value="{{ v.noComment }}" hint-placeholder-val="{{ false }}">
+                   <div style="align-self:flex-start;display:flex;align-items:center;gap:8px;max-width:272px;">
+                     <div style="{{ v.quoteAvStyle }}"></div>
+                     <sc-if value="{{ v.isUnread }}" hint-placeholder-val="{{ false }}"><span style="font-size:8.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:#fe2c55;border-radius:4px;padding:1.5px 4px;flex:0 0 auto;box-shadow:0 2px 8px rgba(254,44,85,.5);">NEW</span></sc-if>
+                     <span style="flex:0 0 auto;font-size:15px;font-weight:700;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,.6);">{{ v.sharerName }}</span>
+                     <span style="flex:0 0 auto;font-size:14px;font-weight:500;color:rgba(255,255,255,.82);white-space:nowrap;text-shadow:0 1px 3px rgba(0,0,0,.6);">shared with you</span>
+                   </div>
                    </sc-if>
 
-                   <!-- Row 2: sharer widget — avatar + name + shared time (no pill background) -->
-                   <div style="display:inline-flex;align-items:center;gap:9px;">
-                     <div style="{{ v.commentAvStyle }}"></div>
-                     <div style="display:flex;flex-direction:column;line-height:1.16;">
-                       <div style="display:flex;align-items:center;gap:7px;">
-                         <span style="font-size:15px;font-weight:700;text-shadow:0 1px 3px rgba(0,0,0,.55);">{{ v.sharerName }}</span>
-                         <sc-if value="{{ v.isUnread }}" hint-placeholder-val="{{ false }}"><span style="font-size:9.5px;font-weight:800;letter-spacing:.05em;color:#fff;background:#fe2c55;border-radius:5px;padding:2px 6px;box-shadow:0 2px 8px rgba(254,44,85,.5);">NEW</span></sc-if>
-                       </div>
-                       <span style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.72);text-shadow:0 1px 2px rgba(0,0,0,.55);">shared with you · {{ v.sharerTime }}</span>
-                     </div>
+                   <!-- connector: a small quarter-circle from under the friend's avatar into the shared video -->
+                   <div style="margin:-3px 0 -5px 8px;line-height:0;"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 1 Q2 12 13 12" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round"></path></svg></div>
+
+                   <!-- Row 2: the shared video — its own chip (left-aligned with rows 1 & 3) -->
+                   <div onclick="{{ v.onToggleCap }}" data-tap="1" style="align-self:flex-start;display:flex;align-items:center;gap:6px;max-width:262px;background:rgba(0,0,0,.5);backdrop-filter:blur(12px);border-radius:11px;padding:7px 10px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);cursor:pointer;">
+                     <span style="font-size:12.5px;font-weight:700;color:#fff;flex:0 0 auto;">{{ v.creator }}</span>
+                     <span style="font-size:12.5px;font-weight:400;color:rgba(255,255,255,.82);flex:1;min-width:0;{{ v.cardCapStyle }}">{{ v.caption }}</span>
+                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.6)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="{{ v.cardChevronStyle }}"><path d="M6 9l6 6 6-6"></path></svg>
                    </div>
 
                    <!-- optional: priority queue avatars (idea 4) -->
@@ -181,28 +193,26 @@
                      </div>
                    </sc-if>
 
-                   <!-- Row 3: the shared video — one line; tap to unfold the full caption -->
-                   <div onclick="{{ v.onToggleCap }}" data-tap="1" style="display:flex;align-items:flex-start;gap:6px;max-width:262px;background:rgba(0,0,0,.56);border-radius:13px;padding:9px 13px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.14);cursor:pointer;">
-                     <span style="font-size:13.5px;font-weight:700;color:#fff;flex:0 0 auto;line-height:1.42;">{{ v.creator }}</span>
-                     <span style="font-size:13.5px;font-weight:400;color:rgba(255,255,255,.85);flex:1;min-width:0;line-height:1.42;{{ v.cardCapStyle }}">{{ v.caption }}</span>
-                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.7)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" style="{{ v.cardChevronStyle }}"><path d="M6 9l6 6 6-6"></path></svg>
-                   </div>
-
-                   <!-- Row 4: smart reactions — single row, larger tap targets -->
-                   <sc-if value="{{ v.hasTokens }}" hint-placeholder-val="{{ true }}">
-                   <div class="tk-scroll" style="display:flex;flex-wrap:nowrap;gap:6px;width:100%;overflow-x:auto;padding-right:8px;">
-                     <sc-for list="{{ v.tokens }}" as="t" hint-placeholder-count="0">
-                       <div onclick="{{ t.onSend }}" data-tap="1" style="{{ v.tokenStyle }}"><sc-if value="{{ t.e }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;line-height:1;">{{ t.e }}</span></sc-if><span>{{ t.t }}</span></div>
-                     </sc-for>
-                   </div>
-                   </sc-if>
-                 </div>
-
-                 <!-- Row 6: reply input — chat bubble with a little tail on the right -->
-                 <div onclick="{{ v.onReplyBar }}" data-tap="1" style="position:absolute;left:10px;right:10px;bottom:92px;z-index:4;cursor:pointer;">
-                   <div style="position:relative;display:flex;align-items:center;gap:10px;height:46px;border-radius:23px 23px 8px 23px;padding:0 18px 0 8px;background:rgba(255,255,255,.17);backdrop-filter:blur(18px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.2);">
-                     <div style="display:flex;align-items:center;flex:0 0 auto;"><sc-for list="{{ v.replyAvatars }}" as="a" hint-placeholder-count="3"><div style="{{ a.style }}"></div></sc-for></div>
-                     <span style="flex:1;color:rgba(255,255,255,.85);font-size:15px;">{{ v.replyHint }}</span>
+                   <!-- Row 3: reactions available → reply icon + chips; none left → the reply input box -->
+                   <div style="width:100%;">
+                     <sc-if value="{{ v.hasTokens }}" hint-placeholder-val="{{ true }}">
+                     <div style="display:flex;align-items:center;gap:8px;width:100%;">
+                       <div onclick="{{ v.onReplyBar }}" data-tap="1" style="{{ v.replyBtnStyle }}">
+                         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.5 8.5 0 0 1-12.3 7.6L3 21l1.9-5.7A8.5 8.5 0 1 1 21 11.5z"></path></svg>
+                       </div>
+                       <div class="tk-scroll" style="display:flex;flex-wrap:nowrap;gap:6px;flex:1;min-width:0;overflow-x:auto;padding-right:8px;">
+                         <sc-for list="{{ v.tokens }}" as="t" hint-placeholder-count="0">
+                           <div onclick="{{ t.onSend }}" data-tap="1" style="{{ v.tokenStyle }}"><sc-if value="{{ t.e }}" hint-placeholder-val="{{ false }}"><span style="font-size:15px;line-height:1;">{{ t.e }}</span></sc-if><span>{{ t.t }}</span></div>
+                         </sc-for>
+                       </div>
+                     </div>
+                     </sc-if>
+                     <sc-if value="{{ v.noTokens }}" hint-placeholder-val="{{ false }}">
+                     <div onclick="{{ v.onReplyBar }}" data-tap="1" style="{{ v.replyBoxStyle }}">
+                       <span style="flex:1;min-width:0;color:rgba(255,255,255,.85);font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ v.replyHint }}</span>
+                       <div style="width:34px;height:34px;border-radius:50%;background:#fe2c55;display:flex;align-items:center;justify-content:center;flex:0 0 auto;"><svg width="17" height="17" viewBox="0 0 24 24" fill="#fff"><path d="M3 11l18-8-8 18-2-7-8-3z"></path></svg></div>
+                     </div>
+                     </sc-if>
                    </div>
                  </div>
                </div>
@@ -923,10 +933,17 @@ class Component extends DCLogic {
   orderedShared(){ const a=this.SHARED; const off=(this.IDEA_OPENER[this.state.idea]||0)%a.length; return a.map((_,i)=>a[(i+off)%a.length]); }
   tokensFor(v){ const tag=(v.tags&&v.tags[0]); return (tag && this.TOKENS[tag]) ? this.TOKENS[tag].slice(0,3) : []; }
   TONES = { sv1:['dark',57,46,32], sv2:['light',136,150,122], sv4:['light',172,175,191], sv3:['light',161,170,176], sv6:['dark',132,118,99], sv5:['light',174,175,171], sv7:['light',150,152,158] };
-  reactStyle(id){ const t=this.TONES[id]||['dark',30,30,34]; const dark=t[0]==='dark', r=t[1],g=t[2],b=t[3]; const mix=(c,t2,a)=>Math.round(c+(t2-c)*a);
-    const base={ display:'flex', alignItems:'center', gap:'5px', padding:'10px 13px', borderRadius:'18px', cursor:'pointer', flex:'0 0 auto', fontSize:'13.5px', fontWeight:'600', whiteSpace:'nowrap', transition:'all .18s ease' };
-    if(dark){ return Object.assign({},base,{ background:'rgba(255,255,255,.16)', color:'#fff', textShadow:'0 1px 3px rgba(0,0,0,.5)', boxShadow:'inset 0 0 0 1px rgba(255,255,255,.16)' }); }
-    return Object.assign({},base,{ background:'rgba('+mix(r,0,.62)+','+mix(g,0,.62)+','+mix(b,0,.62)+',.82)', color:'#fff', textShadow:'0 1px 2px rgba(0,0,0,.22)' }); }
+  // shared background for both the smart-reaction chips and the reply icon (tone-aware)
+  reactBg(id){ const t=this.TONES[id]||['dark',30,30,34]; const dark=t[0]==='dark', r=t[1],g=t[2],b=t[3]; const mix=(c,t2,a)=>Math.round(c+(t2-c)*a);
+    if(dark) return { background:'rgba(255,255,255,.16)', boxShadow:'inset 0 0 0 1px rgba(255,255,255,.16)' };
+    return { background:'rgba('+mix(r,0,.62)+','+mix(g,0,.62)+','+mix(b,0,.62)+',.82)', boxShadow:'none' }; }
+  reactStyle(id){ const bg=this.reactBg(id);
+    const base={ display:'flex', alignItems:'center', gap:'5px', padding:'10px 13px', borderRadius:'18px', cursor:'pointer', flex:'0 0 auto', fontSize:'13.5px', fontWeight:'600', whiteSpace:'nowrap', transition:'all .18s ease', color:'#fff', textShadow:'0 1px 2px rgba(0,0,0,.35)' };
+    return Object.assign({},base,bg); }
+  replyBtnStyle(id){ const bg=this.reactBg(id);
+    return Object.assign({ flex:'0 0 auto', width:'38px', height:'38px', borderRadius:'50%', backdropFilter:'blur(14px)', display:'flex', alignItems:'center', justifyContent:'center', cursor:'pointer' }, bg); }
+  replyBoxStyle(id){ const bg=this.reactBg(id);
+    return Object.assign({ display:'flex', alignItems:'center', gap:'10px', width:'100%', height:'44px', borderRadius:'22px', padding:'0 6px 0 18px', backdropFilter:'blur(14px)', cursor:'pointer' }, bg); }
 
   INTENTS = [{t:'Let\u2019s go?'},{t:'Wanna check this out?'},{t:'We should go'},{t:'For you \uD83D\uDC40'}];
   SHARE_EMOJI = ['\uD83E\uDD70','\uD83D\uDC4D','\uD83D\uDE02','\uD83D\uDE0E','\uD83E\uDD79','\uD83D\uDE4F'];
@@ -1222,7 +1239,7 @@ class Component extends DCLogic {
         hasMusic: false,
         sharerComment: v.senderComment || null,
         hasComment: !!v.senderComment && !queueOn, noComment: !v.senderComment && !queueOn,
-        sharerName: F[v.sender].name, commentAvStyle: this.circle(F[v.sender].av,32),
+        sharerName: F[v.sender].name, commentAvStyle: this.circle(F[v.sender].av,32), quoteAvStyle: this.circle(F[v.sender].av,24),
         replyAvatars: (()=>{ const clu=senders.slice(0,3); return clu.map((id,si)=>{ const extra={ marginLeft: si>0?'-11px':'0' }; if(si<clu.length-1){ const m='radial-gradient(circle at 34px 15px, transparent 17px, #000 17.5px)'; extra.WebkitMaskImage=m; extra.maskImage=m; } return { style:this.circle(F[id].av,30,extra) }; }); })(),
         replyHint: senders.length>1 ? ('Reply to all '+senders.length+'…') : ('Reply to '+names[0]+'…'),
         myAvStyle: this.circle(F[v.sender].av,34),
@@ -1235,7 +1252,10 @@ class Component extends DCLogic {
         onReplyBar:()=>this.openReply(v),
         tokens:toks,
         hasTokens: toks.length>0,
+        noTokens: toks.length===0,
         tokenStyle: this.reactStyle(v.id),
+        replyBtnStyle: this.replyBtnStyle(v.id),
+        replyBoxStyle: this.replyBoxStyle(v.id),
         captionBottom: toks.length>0 ? '194px' : '150px',
         // NEW marker: only the freshly-arrived bottom cards, until scrolled onto
         isUnread: isFresh && st.sharedState==='feed' && !st.readShared[v.id],

@@ -792,6 +792,35 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
   </section>
   </div>
 
+  <!-- ===== UPDATE / 后续迭代 ===== -->
+  <div class="region" id="ru" data-nav="Update">
+  <div class="region-head"><div><div class="ren">Update</div><div class="rt">后续迭代</div></div></div>
+
+  <section class="block" id="s9">
+    <div class="final-box" style="margin-top:6px;">
+      <div class="final-ph">
+        <iframe class="final-frame" src="prototype/03-updated.html?bare=1" loading="lazy" title="Shared Feed Tab — updated prototype"></iframe>
+        <div class="final-actions">
+          <button type="button" class="ib-replay">↻ Replay walkthrough</button>
+          <a class="ib-open" href="prototype/03-updated.html" target="_blank" rel="noopener">↗ Open prototype</a>
+        </div>
+      </div>
+      <div class="final-txt">
+        <div class="final-part">
+          <div class="final-label">把 Shared Feed 补成一个能自洽运转的 tab</div>
+          <p class="para">定稿之后,我又回到 Shared with You 这个页面做了一轮迭代。之前的原型主要是"有内容"这一种理想状态,这次把缺的状态和交互补齐,让它更像一个真的能上线、能自洽运转的 tab。</p>
+          <div class="hmw-list" style="margin-top:22px">
+            <div class="hmw-q"><span class="k"></span><p><b>补齐页面状态。</b>加了空态(还没有人分享)、加载骨架,以及朋友分享进来时的推送通知——让这个 tab 不再只有"满屏内容"一种样子。</p></div>
+            <div class="hmw-q"><span class="k"></span><p><b>新分享从底部追加,只往下发现。</b>最新的分享按时间顺序排在最下面,带"just now / 2m"这类刚送达的时间,顺着往下滑就能刷到;去掉了顶部"X 条新分享"的跳转气泡,保留"只向下、不回溯"的心智。刚到的分享带 NEW 标记,滑过即消。</p></div>
+            <div class="hmw-q"><span class="k"></span><p><b>回应保持一点即发。</b>Smart Reactions 仍然点一下就直接发出,不额外堆叠送达/已读状态,维持原本轻量的手感。</p></div>
+            <div class="hmw-q"><span class="k"></span><p><b>细节打磨。</b>底部回复输入框统一成干净的圆角 pill;原型左侧可以直接切换 Empty / Notify / Loading / Feed 四种状态查看。</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </div>
+
   <!-- ===== ABOUT ME ===== -->
   <section class="block" id="about" style="border-top:1px solid var(--line);">
     <div class="sec-head"><div class="eyebrow"><span class="dot"></span>About me</div></div>
@@ -861,7 +890,7 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
   // replay button (under each idea's text) → tell that block's prototype iframe to replay
   document.addEventListener('click',function(e){
     var btn=e.target.closest && e.target.closest('.ib-replay'); if(!btn) return;
-    var box=btn.closest('.ib')||btn.closest('.final-proto'); if(!box) return;
+    var box=btn.closest('.ib')||btn.closest('.final-box')||btn.closest('.final-proto'); if(!box) return;
     var f=box.querySelector('iframe');
     if(f&&f.contentWindow){ f.contentWindow.postMessage({type:'dc-replay'},'*'); }
   });
