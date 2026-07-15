@@ -16,11 +16,9 @@ const navItems = [
   { id: "overview", label: "Overview" },
   { id: "turning-point", label: "Context" },
   { id: "solution", label: "System" },
-  { id: "chat", label: "Chat" },
   { id: "quote", label: "Quote" },
   { id: "merchant", label: "Merchant" },
   { id: "prototype", label: "Prototype" },
-  { id: "scenarios", label: "Extensions" },
   { id: "impact", label: "Impact" },
   { id: "reflection", label: "Reflection" },
 ] as const;
@@ -127,7 +125,7 @@ function Section({
   id: string;
   eyebrow: string;
   title: string;
-  children: React.ReactNode;
+  children?: React.ReactNode;
 }) {
   return (
     <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-14 md:py-28 lg:py-36">
@@ -157,41 +155,55 @@ function ScaledPrototypeFrame({
   naturalWidth = 800,
   naturalHeight = 1180,
   displayMaxWidth,
+  fitViewport,
 }: {
   src: string;
   title: string;
   naturalWidth?: number;
   naturalHeight?: number;
   displayMaxWidth?: number;
+  // When set, cap the scale so the frame's height never exceeds this fraction
+  // of the viewport height — the whole prototype stays within one screen
+  // instead of overflowing and forcing a page scroll.
+  fitViewport?: number;
 }) {
-  const wrapperRef = useRef<HTMLDivElement>(null);
+  const measureRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(1);
   const effectiveMax = displayMaxWidth ?? naturalWidth;
 
   useIsomorphicLayoutEffect(() => {
-    const el = wrapperRef.current;
+    const el = measureRef.current;
     if (!el) return;
-    const apply = (w: number) => {
-      if (w > 0) setScale(Math.min(1, w / naturalWidth));
+    const apply = () => {
+      const w = el.clientWidth;
+      if (w <= 0) return;
+      let s = Math.min(1, w / naturalWidth);
+      if (fitViewport && typeof window !== "undefined") {
+        s = Math.min(s, (window.innerHeight * fitViewport) / naturalHeight);
+      }
+      setScale(s);
     };
-    apply(el.clientWidth);
-    if (typeof ResizeObserver === "undefined") return;
-    const ro = new ResizeObserver(([entry]) => apply(entry.contentRect.width));
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, [naturalWidth]);
+    apply();
+    let ro: ResizeObserver | undefined;
+    if (typeof ResizeObserver !== "undefined") {
+      ro = new ResizeObserver(apply);
+      ro.observe(el);
+    }
+    if (typeof window !== "undefined") window.addEventListener("resize", apply);
+    return () => {
+      ro?.disconnect();
+      if (typeof window !== "undefined") window.removeEventListener("resize", apply);
+    };
+  }, [naturalWidth, naturalHeight, fitViewport]);
 
   return (
-    <div className="mx-auto w-full" style={{ maxWidth: effectiveMax }}>
+    // measureRef reports the column width (bounded by effectiveMax); the inner
+    // box takes the scaled size and is centered — so when the scale is capped by
+    // viewport height, the narrower frame still sits centered in the column.
+    <div ref={measureRef} className="mx-auto w-full" style={{ maxWidth: effectiveMax }}>
       <div
-        ref={wrapperRef}
-        // overflow-hidden clips the scaled iframe AND keeps the wrapper's
-        // measured width bounded by its column — without it a not-yet-scaled
-        // 1200px iframe widens the whole document, which then feeds back into
-        // the width measurement and the scale never recovers (the page renders
-        // at desktop width on mobile). Mirrors the homepage ScaledPrototype.
-        className="relative w-full overflow-hidden"
-        style={{ height: naturalHeight * scale }}
+        className="relative mx-auto overflow-hidden"
+        style={{ width: naturalWidth * scale, height: naturalHeight * scale }}
       >
         <iframe
           src={src}
@@ -208,48 +220,6 @@ function ScaledPrototypeFrame({
         />
       </div>
     </div>
-  );
-}
-
-/**
- * Showcase video that lazy-loads and autoplays only once scrolled into view —
- * mirrors the homepage work-card video behavior so the heavy clip never loads
- * until it nears the viewport. Muted + looped, pauses when scrolled away.
- */
-function ShowcaseVideo({ src, title }: { src: string; title: string }) {
-  const vref = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const v = vref.current;
-    if (!v) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          if (!v.src) {
-            v.src = src;
-            v.load();
-          }
-          v.play().catch(() => {});
-        } else {
-          v.pause();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
-  }, [src]);
-
-  return (
-    <video
-      ref={vref}
-      title={title}
-      muted
-      loop
-      playsInline
-      preload="none"
-      className="block aspect-video w-full object-cover"
-    />
   );
 }
 
@@ -472,7 +442,14 @@ function CountUp({
   );
 }
 
-function SubsectionHeader({ label, hint }: { label: string; hint?: string }) {
+function SubsectionHeader({ label, hint }: { label?: string; hint?: string }) {
+  // Only the section eyebrow carries the mono-caps micro-label now; a hint on
+  // its own reads as a plain lead paragraph.
+  if (!label) {
+    return hint ? (
+      <p className="mb-8 max-w-lg text-[16px] leading-relaxed text-textSecondary sm:mb-10">{hint}</p>
+    ) : null;
+  }
   return (
     <div className="mb-8 flex flex-col gap-3 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
       <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/85">{label}</p>
@@ -528,14 +505,10 @@ export default function MeituanImCaseStudyPage() {
                   className="mt-6 max-w-xl text-[16px] leading-[1.6] text-textSecondary"
                 >
                   A 0-to-1 in-message quotation system across Meituan&apos;s 770M+ annual users and
-                  14.5M merchants — turning uncertain local-service pricing into a guided,
-                  comparable, bookable decision.
-                </motion.p>
-                <motion.p
-                  variants={heroItem}
-                  className="mt-5 max-w-xl text-[14px] leading-[1.7] text-textSecondary/80"
-                >
-                  <span className="text-textPrimary/80">For context:</span> it&apos;s a super-app marketplace — Uber, Yelp and TaskRabbit in one — where deals close inside in-app chat (<span className="text-textPrimary/80">IM</span>). This project ran the whole journey there: diagnose, compare, book, pay, review.
+                  14.5M merchants — turning uncertain local-service pricing into a guided, comparable,
+                  bookable decision. It&apos;s a super-app marketplace (Uber, Yelp and TaskRabbit in one)
+                  where deals close inside in-app chat, and I owned the whole journey: diagnose, compare,
+                  book, pay, review.
                 </motion.p>
 
                 <motion.div variants={heroItem} className="mt-8 flex flex-wrap items-center gap-3">
@@ -572,22 +545,6 @@ export default function MeituanImCaseStudyPage() {
                         Intent→order conversion on the diagnostic channel — ~1.3× the old path. Routing price-anxious users into it lifted overall search conversion <span className="text-textPrimary">+0.5pp</span>.
                       </p>
                     </div>
-
-                    {/* Project facts as a divider-grid — same pattern as the
-                        ai-character case study. Three columns: timeline, ownership,
-                        impact. Each cell has a hairline rule on the left. */}
-                    <dl className="grid grid-cols-1 gap-x-8 gap-y-6 border-t border-black/[0.08] pt-7 sm:grid-cols-3 sm:gap-y-0">
-                      {[
-                        { label: "Timeline", value: "4 weeks · 2025" },
-                        { label: "Team", value: "Sole designer · 2 PMs · 2 engineers" },
-                        { label: "Impact", value: "+30% channel conversion · +0.5pp overall (A/B with the team)" },
-                      ].map(({ label, value }) => (
-                        <div key={label} className="min-w-0">
-                          <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
-                          <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
-                        </div>
-                      ))}
-                    </dl>
                   </div>
 
                   {/* Right — product walkthrough video (shown on mobile too). */}
@@ -632,12 +589,8 @@ export default function MeituanImCaseStudyPage() {
           </FadeIn>
 
           <FadeIn className="mt-12">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">The first attempt</p>
-            <p className="mt-4 max-w-3xl text-[17px] leading-[1.6] tracking-tight text-textPrimary">
-              The obvious fix was to show price up front — so we shipped a standalone quote page first. Conversion didn&apos;t budge: the quote was rarely the final price, so users didn&apos;t believe it and merchants didn&apos;t maintain it.
-            </p>
-            <p className="mt-7 max-w-3xl text-[18px] leading-[1.55] tracking-tight text-textPrimary">
-              That failure was the insight. Price wasn&apos;t a <span className="text-textSecondary line-through decoration-textSecondary/40">number</span> problem — it was a <span className="text-nltLime-ink">process-trust</span> problem. Trust can&apos;t be declared on a page; it&apos;s built in the conversation.
+            <p className="max-w-3xl text-[18px] leading-[1.55] tracking-tight text-textPrimary">
+              We shipped a standalone quote page first. Conversion didn&apos;t budge — the quote was rarely the final price, so users didn&apos;t believe it and merchants didn&apos;t maintain it. That failure was the insight: price wasn&apos;t a <span className="text-textSecondary line-through decoration-textSecondary/40">number</span> problem, it was a <span className="text-nltLime-ink">process-trust</span> problem — built in the conversation, not declared on a page.
             </p>
           </FadeIn>
 
@@ -647,7 +600,6 @@ export default function MeituanImCaseStudyPage() {
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Before · 4-step linear journey</p>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">grayscale</p>
                 </div>
                 <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
@@ -664,19 +616,12 @@ export default function MeituanImCaseStudyPage() {
                     </li>
                   ))}
                 </ol>
-                <div className="mt-6 border-t border-black/[0.07] pt-5">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">→ Trust break</p>
-                  <p className="mt-1.5 text-[13.5px] leading-relaxed text-textSecondary">
-                    Quoted price ≠ actual bill.
-                  </p>
-                </div>
               </div>
 
               {/* AFTER — redesigned, warm accent */}
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">After · 3-step trust loop</p>
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">redesigned</p>
                 </div>
                 <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
@@ -692,9 +637,6 @@ export default function MeituanImCaseStudyPage() {
                     </li>
                   ))}
                 </ol>
-                <div className="mt-6 border-t border-black/[0.07] pt-5">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink/80">→ Trust restored</p>
-                </div>
               </div>
             </div>
           </FadeIn>
@@ -716,7 +658,6 @@ export default function MeituanImCaseStudyPage() {
 
           <div className="mt-16 md:mt-24">
             <SubsectionHeader
-              label="Transaction blueprint"
               hint="How a quote request becomes a booking, an on-site visit, and a settled order — across platform, user and merchant."
             />
             <FadeIn>
@@ -745,20 +686,8 @@ export default function MeituanImCaseStudyPage() {
 
         </Section>
 
-        <Section id="chat" eyebrow="IM Experience" title="Three entry states, one interaction model.">
-          <FadeIn className="mt-2">
-            <div className="mx-auto w-full max-w-[760px] overflow-hidden rounded-2xl border border-black/[0.08] bg-[#141416] shadow-[0_28px_60px_-26px_rgba(0,0,0,0.35)]">
-              <ShowcaseVideo
-                src="/assets/meituan-im/meituan-present/meituan-present-1.mp4"
-                title="IM experience — three entry states walkthrough"
-              />
-            </div>
-          </FadeIn>
-        </Section>
-
         <Section id="quote" eyebrow="Quoting Engine" title="Conversation becomes a contract. Merchants quote against it.">
           <div>
-            <SubsectionHeader label="Diagnosis in action" />
             <div className="grid gap-10 md:grid-cols-2 md:gap-8">
               <PhoneFrame
                 src="/assets/meituan-im/screen-07-diagnosis-start.jpg"
@@ -779,7 +708,6 @@ export default function MeituanImCaseStudyPage() {
 
           <div className="mt-20 md:mt-28">
             <SubsectionHeader
-              label="Competitive quoting"
               hint="Merchants quote the same diagnosis independently — so you compare guide prices against one order, never a platform-set final."
             />
             <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
@@ -822,7 +750,6 @@ export default function MeituanImCaseStudyPage() {
           </div>
 
           <div className="mt-20 md:mt-28">
-            <SubsectionHeader label="Closing the loop" />
             <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
               <PhoneFrame
                 src="/assets/meituan-im/screen-09-return-visit.jpg"
@@ -868,10 +795,7 @@ export default function MeituanImCaseStudyPage() {
             Switch scenarios from the rail, or tap the suggested replies to play a flow through.
             <span className="text-textSecondary/65"> Re-skinned in English with USD placeholders; shipped in Chinese with RMB.</span>
           </p>
-          <div className="mb-10 flex items-center justify-between gap-4">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
-              End-to-end build · interaction design, visual design & code
-            </p>
+          <div className="mb-10 flex items-center justify-end gap-4">
             <a
               href="/work/meituan-im/prototype"
               target="_blank"
@@ -891,6 +815,7 @@ export default function MeituanImCaseStudyPage() {
               naturalWidth={480}
               naturalHeight={1080}
               displayMaxWidth={480}
+              fitViewport={0.82}
             />
           </PrototypeReveal>
         </Section>
@@ -906,18 +831,11 @@ export default function MeituanImCaseStudyPage() {
               <span className="text-nltLime-ink">Diagnose → Structure → Commit</span> loop maps cleanly onto other
               high-stakes, non-standard services — the substrate changes, the trust mechanics don&apos;t.
             </p>
-            <dl className="mt-8 max-w-2xl divide-y divide-black/[0.07] border-t border-black/[0.07]">
-              {[
-                { d: "Education", t: "Goals & constraints → learning brief → compare plans." },
-                { d: "Banquet", t: "Size, date, must-haves → requirement card → venues quote on equal terms." },
-                { d: "Maternity care", t: "Need & credentials → care brief → package in trust context." },
-              ].map(({ d, t }) => (
-                <div key={d} className="flex flex-col gap-1 py-4 sm:flex-row sm:gap-8">
-                  <dt className="w-44 shrink-0 text-[15px] tracking-tight text-textPrimary">{d}</dt>
-                  <dd className="text-[14px] leading-relaxed text-textSecondary">{t}</dd>
-                </div>
+            <div className="mt-8 flex max-w-2xl flex-wrap gap-x-8 gap-y-3 border-t border-black/[0.07] pt-6">
+              {["Education", "Banquet", "Maternity care"].map((d) => (
+                <span key={d} className="text-[15px] tracking-tight text-textPrimary">{d}</span>
               ))}
-            </dl>
+            </div>
           </FadeIn>
         </Section>
 
@@ -936,7 +854,7 @@ export default function MeituanImCaseStudyPage() {
                   <span className="rounded-full border border-nltLime-ink/30 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-nltLime-ink/80">Measured</span>
                 </div>
                 <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
-                  ~60% of users ask about price before buying, so I routed them through a diagnose → quote → order flow. On it, intent→order converted ~1.3× the old path (9%→11.7% toilet repair, 17%→22% pipe clearing) — lifting the whole search entry +0.5pp.
+                  ~60% of users ask about price before buying. Routed through a diagnose → quote → order flow, intent→order converted ~1.3× the old path (9%→11.7% toilet repair, 17%→22% pipe clearing) — lifting overall search entry +0.5pp.
                 </p>
               </div>
             </div>
@@ -953,7 +871,6 @@ export default function MeituanImCaseStudyPage() {
                 <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
                 <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Projected</span>
               </div>
-              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Incremental volume modeled for wider rollout.</p>
             </div>
             <div>
               <p className="font-display text-[2rem] font-light leading-[0.95] tracking-[-0.01em] tabular-nums text-textPrimary md:text-[3.25rem]">
@@ -964,31 +881,21 @@ export default function MeituanImCaseStudyPage() {
                 <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
                 <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Projected</span>
               </div>
-              <p className="mt-1.5 text-[14px] leading-relaxed text-textSecondary">Modeled reduction in post-service complaints for this flow.</p>
             </div>
           </FadeIn>
           <FadeIn delay={0.15}>
             <p className="mt-10 max-w-2xl text-[13.5px] leading-relaxed text-textSecondary/80">
-              A floating window triggered on search, piloted on two categories — toilet repair and pipe clearing — in Hangzhou and select Zhejiang cities, bounded by certified-expert supply. Conversion is real June–August A/B data; the daily-orders and disputes figures are modeled forward from it for a wider rollout.
+              A search-triggered floating window, piloted on two repair categories in Hangzhou and select Zhejiang cities. Conversion is real June–August A/B data; daily-orders and disputes are modeled forward for wider rollout.
             </p>
           </FadeIn>
         </Section>
 
         <Section id="reflection" eyebrow="Reflection" title="Next time, I would push on four fronts.">
-          <div className="space-y-5 md:space-y-6">
-            <FadeIn>
-              <p className="text-[16px] tracking-tight text-textPrimary">Merchant experience deserves its own product pass.</p>
-            </FadeIn>
-            <FadeIn delay={0.06}>
-              <p className="text-[16px] tracking-tight text-textPrimary">Guide pricing should explain variability, not imply a promise.</p>
-            </FadeIn>
-            <FadeIn delay={0.12}>
-              <p className="text-[16px] tracking-tight text-textPrimary">Scale with AI triage, escalate to human experts.</p>
-            </FadeIn>
-            <FadeIn delay={0.18}>
-              <p className="text-[16px] tracking-tight text-textPrimary">When a diagnosis is wrong, make cost ownership explicit — who pays, who re-dispatches — so trust holds on the unhappy path, not just the happy one.</p>
-            </FadeIn>
-          </div>
+          <FadeIn>
+            <p className="max-w-3xl text-[16px] leading-[1.7] tracking-tight text-textPrimary">
+              Next time I&apos;d push on four fronts: give the merchant experience its own product pass; make guide pricing explain variability rather than imply a promise; scale with AI triage that escalates to human experts; and make cost ownership explicit when a diagnosis is wrong — who pays, who re-dispatches — so trust holds on the unhappy path, not just the happy one.
+            </p>
+          </FadeIn>
 
           <FadeIn className="mt-20 md:mt-28">
             <div className="relative">
