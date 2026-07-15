@@ -9,7 +9,7 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -589,13 +589,14 @@ function PrototypeCard({
 
 // ─── Editorial pieces (desktop) ────────────────────────────────────────────
 
-/** Giant ghost index numeral floating behind the active card. */
+/** Giant ghost index numeral floating behind the active card — cross-fades on
+ *  switch (slide + fade, no blur tween). */
 function GhostIndex({ index }: { index: number }) {
   const label = String(index + 1).padStart(2, "0");
   return (
     <div
       aria-hidden
-      className="pointer-events-none absolute inset-0 z-0 flex items-end justify-end overflow-hidden pb-[2vh] pr-[1vw]"
+      className="pointer-events-none absolute inset-0 z-0 flex items-center justify-end overflow-hidden pr-[2vw]"
     >
       <AnimatePresence mode="popLayout">
         <motion.span
@@ -607,11 +608,9 @@ function GhostIndex({ index }: { index: number }) {
             WebkitTextStroke: "1.6px rgba(210,255,0,0.22)",
             willChange: "transform, opacity",
           }}
-          // No blur tween — animating filter:blur on a min(74vh,40vw) text layer
-          // every frame was a major source of the switch jank. Slide + fade only.
-          initial={{ opacity: 0, x: 60 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -60 }}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           {label}
@@ -627,10 +626,12 @@ function EditorialCaption({
   entry,
   index,
   total,
+  side = false,
 }: {
   entry: Entry;
   index: number;
   total: number;
+  side?: boolean;
 }) {
   const words = entry.title.split(" ");
   const last = words.pop() ?? entry.title;
@@ -642,16 +643,25 @@ function EditorialCaption({
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className="mx-auto text-left"
-      style={{ width: "min(62vw, calc(48vh * 16 / 9))" }}
+      className={side ? "text-left" : "mx-auto text-left"}
+      style={side ? undefined : { width: "min(62vw, calc(48vh * 16 / 9))" }}
     >
-      <div className="flex items-baseline gap-3 font-mono text-[10px] uppercase tracking-[0.3em]">
-        <span className="tabular-nums text-nltLime">{String(index + 1).padStart(2, "0")}</span>
-        <span className="text-white/25">/</span>
-        <span className="tabular-nums text-white/35">{String(total).padStart(2, "0")}</span>
-      </div>
+      {/* The index counter lives on the right rail in side mode. */}
+      {!side && (
+        <div className="flex items-baseline gap-2.5 font-mono text-[10px] uppercase tracking-[0.3em]">
+          <span className="tabular-nums text-nltLime">{String(index + 1).padStart(2, "0")}</span>
+          <span className="text-white/25">/</span>
+          <span className="tabular-nums text-white/35">{String(total).padStart(2, "0")}</span>
+        </div>
+      )}
 
-      <h2 className="mt-3 font-display lowercase leading-[1.05] tracking-[-0.02em] text-white text-[clamp(20px,2.4vw,32px)]">
+      <h2
+        className={`font-display lowercase leading-[1.1] tracking-[-0.02em] text-white ${
+          side
+            ? "whitespace-nowrap text-[clamp(14px,1.3vw,19px)]"
+            : "mt-2 text-[clamp(20px,2.4vw,32px)]"
+        }`}
+      >
         {head ? `${head} ` : ""}
         <LimeMark>{last}</LimeMark>
       </h2>
@@ -659,10 +669,10 @@ function EditorialCaption({
   );
 }
 
-/** Game-style segmented loading bar — doubles as the carousel index.
- *  Segments fill up to the active item (lime), the current segment glows, and
- *  each segment is clickable to jump. */
-function LoadBar({
+/** Game-style segmented progress rail, pinned to the right edge — the vertical
+ *  index for the scroll gallery. Segments fill top→active (lime), the current
+ *  one glows, each is clickable to jump; up/down chevrons step through. */
+function VerticalRail({
   active,
   total,
   onPrev,
@@ -675,22 +685,18 @@ function LoadBar({
   onNext: () => void;
   onJump: (i: number) => void;
 }) {
-  const pct = Math.round(((active + 1) / total) * 100);
-
   return (
-    <div className="flex items-center gap-3 font-mono text-[11px] uppercase tracking-[0.2em] text-white/45 md:gap-4">
+    <div className="pointer-events-none fixed right-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 md:flex lg:right-7">
       <button
         onClick={onPrev}
-        className="px-1.5 py-2 text-white/45 transition-colors hover:text-nltLime"
+        className="pointer-events-auto flex h-6 w-6 items-center justify-center text-white/40 transition-colors hover:text-nltLime"
         aria-label="Previous"
       >
-        ‹
+        <ChevronUp className="h-4 w-4" strokeWidth={2} />
       </button>
 
-      <span className="text-white/25">[</span>
-
-      {/* segmented bar */}
-      <div className="relative flex items-center gap-[3px]">
+      {/* segmented column — fills top → active */}
+      <div className="flex flex-col items-center gap-[5px]">
         {Array.from({ length: total }).map((_, i) => {
           const filled = i <= active;
           const isActive = i === active;
@@ -698,7 +704,7 @@ function LoadBar({
             <button
               key={i}
               onClick={() => onJump(i)}
-              className="group relative py-2"
+              className="group pointer-events-auto px-2 py-[1px]"
               aria-label={`Go to item ${i + 1}`}
             >
               <span
@@ -715,17 +721,20 @@ function LoadBar({
         })}
       </div>
 
-      <span className="text-white/25">]</span>
-
-      <span className="tabular-nums text-nltLime">{String(pct).padStart(3, "0")}%</span>
-
       <button
         onClick={onNext}
-        className="px-1.5 py-2 text-white/45 transition-colors hover:text-nltLime"
+        className="pointer-events-auto flex h-6 w-6 items-center justify-center text-white/40 transition-colors hover:text-nltLime"
         aria-label="Next"
       >
-        ›
+        <ChevronDown className="h-4 w-4" strokeWidth={2} />
       </button>
+
+      {/* index counter — active / total, stacked to fit the vertical rail */}
+      <div className="flex flex-col items-center gap-0.5 tabular-nums leading-none">
+        <span className="text-nltLime">{String(active + 1).padStart(2, "0")}</span>
+        <span className="text-white/25">/</span>
+        <span className="text-white/35">{String(total).padStart(2, "0")}</span>
+      </div>
     </div>
   );
 }
@@ -782,6 +791,140 @@ function MobileFeed({ enabled }: { enabled: boolean }) {
         );
       })}
     </ul>
+  );
+}
+
+/** Desktop gallery — a vertical, infinitely-looping carousel. The active card
+ *  sits centred at full scale with the previous card peeking above and the next
+ *  peeking below (dimmed + scaled down); wrapping the offset makes it circular,
+ *  so the first item still shows the last above it and the second below. Scroll
+ *  wheel / arrows / rail advance one card at a time. Heavy embeds (full-app
+ *  iframes + live sites) mount ONLY while active; lightweight video/image
+ *  preload one card either side — same memory guard as the mobile feed. */
+function DesktopFeed({
+  enabled,
+  onReady,
+}: {
+  enabled: boolean;
+  onReady: (key: string) => void;
+}) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const wheelLock = useRef(false);
+  const wheelIdle = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const [active, setActive] = useState(0);
+  const n = entries.length;
+
+  const go = useCallback((dir: number) => setActive((i) => (i + dir + n) % n), [n]);
+  const prev = useCallback(() => go(-1), [go]);
+  const next = useCallback(() => go(1), [go]);
+
+  // Keyboard nav — arrows step one card (and preempt native page scroll).
+  useEffect(() => {
+    if (!enabled) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+        e.preventDefault();
+        next();
+      } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+        e.preventDefault();
+        prev();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [enabled, prev, next]);
+
+  // Scroll-to-advance — exactly one card per gesture. A trackpad flick emits a
+  // long burst of momentum events, so instead of a fixed cooldown we lock on the
+  // first event and only release once the wheel has been quiet for ~180ms (i.e.
+  // the whole gesture, momentum included, has ended). Down = next.
+  useEffect(() => {
+    if (!enabled) return;
+    const el = containerRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      // Reset the idle timer on every event so the lock only lifts after the
+      // burst stops — this is what prevents one flick from skipping a card.
+      if (wheelIdle.current) clearTimeout(wheelIdle.current);
+      wheelIdle.current = setTimeout(() => {
+        wheelLock.current = false;
+      }, 180);
+
+      if (wheelLock.current) return;
+      const dominant = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      if (Math.abs(dominant) < 2) return;
+      wheelLock.current = true;
+      if (dominant > 0) next();
+      else prev();
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      el.removeEventListener("wheel", onWheel);
+      if (wheelIdle.current) clearTimeout(wheelIdle.current);
+    };
+  }, [enabled, prev, next]);
+
+  return (
+    <div ref={containerRef} className="relative hidden h-full overflow-hidden md:block">
+      <GhostIndex index={active} />
+
+      {/* Editorial caption for the active card, pinned left (rail is right). */}
+      <div className="pointer-events-none absolute left-[5vw] top-1/2 z-20 hidden -translate-y-1/2 lg:block">
+        <div className="pointer-events-auto">
+          <EditorialCaption entry={entries[active]} index={active} total={n} side />
+        </div>
+      </div>
+
+      {/* Card stack — active centred, neighbours peek above / below. */}
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        {entries.map((entry, i) => {
+          const halfN = n / 2;
+          let offset = i - active;
+          if (offset > halfN) offset -= n;
+          if (offset < -halfN) offset += n;
+          const dist = Math.abs(offset);
+          const isActive = dist === 0;
+          const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
+          const shouldLoad = enabled && (heavy ? isActive : dist <= 1);
+          return (
+            <div
+              key={entryKey(entry)}
+              onClick={() => !isActive && setActive(i)}
+              className="absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
+              style={{
+                transformOrigin: "center center",
+                transform: `translateY(calc(${offset} * 46vh)) scale(${isActive ? 1 : 0.66})`,
+                opacity: isActive ? 1 : dist === 1 ? 0.4 : 0,
+                // grayscale only — animating blur on a card-sized layer was the
+                // main switch-jank cost; static desaturation is free.
+                filter: isActive ? "none" : "grayscale(1) brightness(0.7)",
+                cursor: isActive ? "default" : "pointer",
+                zIndex: isActive ? 10 : 5 - dist,
+                willChange: dist <= 1 ? "transform, opacity" : undefined,
+                visibility: dist > 1 ? "hidden" : "visible",
+                pointerEvents: dist > 1 ? "none" : undefined,
+              }}
+            >
+              <PrototypeCard
+                entry={entry}
+                shouldLoad={shouldLoad}
+                isActive={isActive}
+                onReady={() => onReady(entryKey(entry))}
+              />
+            </div>
+          );
+        })}
+      </div>
+
+      <VerticalRail
+        active={active}
+        total={n}
+        onPrev={prev}
+        onNext={next}
+        onJump={setActive}
+      />
+    </div>
   );
 }
 
@@ -939,11 +1082,7 @@ const FIRST_KEY = entryKey(entries[0]);
 // ─── Page content ───────────────────────────────────────────────────────────
 
 export function VibeCodingPageContent() {
-  const [active, setActive] = useState(0);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const wheelCooldown = useRef(false);
-
-  // Which layout is live. Both the carousel and the mobile list always render in
+  // Which layout is live. Both the desktop feed and the mobile list always render in
   // the React tree (only CSS hides one), so without this gate the hidden tree
   // still mounts its heavy prototype iframes — on a phone the invisible desktop
   // carousel was loading embeds on top of the mobile list and OOM-ing the tab.
@@ -982,47 +1121,8 @@ export function VibeCodingPageContent() {
     return () => clearTimeout(t);
   }, []);
 
-  // ── Navigation ─────────────────────────────────────────────────────────
-  const visible = entries;
-  const n = visible.length;
-
-  const prev = useCallback(() => {
-    setActive((i) => (i - 1 + n) % n);
-  }, [n]);
-
-  const next = useCallback(() => {
-    setActive((i) => (i + 1) % n);
-  }, [n]);
-
-  // Keyboard navigation
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") prev();
-      if (e.key === "ArrowRight") next();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [prev, next]);
-
-  // Scroll-to-navigate on the carousel area
-  useEffect(() => {
-    const el = carouselRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      if (wheelCooldown.current) return;
-      const dominant = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-      if (dominant > 0) next();
-      else if (dominant < 0) prev();
-      wheelCooldown.current = true;
-      setTimeout(() => { wheelCooldown.current = false; }, 550);
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => el.removeEventListener("wheel", onWheel);
-  }, [prev, next]);
-
   return (
-    <section className="relative flex flex-col md:h-full md:justify-center">
+    <section className="relative md:h-full">
       <EntryGate ready={entryReady} readyCount={readyCount} />
 
       {/* Mobile: stacked list */}
@@ -1030,78 +1130,8 @@ export function VibeCodingPageContent() {
         <MobileFeed enabled={view === "mobile"} />
       </div>
 
-      {/* Tablet / desktop: kinetic editorial carousel */}
-      <div ref={carouselRef} className="relative hidden min-h-0 overflow-hidden md:block md:h-[56vh]">
-        {/* giant ghost index numeral behind the deck */}
-        <GhostIndex index={active} />
-
-        <div className="absolute inset-0 z-10 flex items-end justify-center pb-[3vh]">
-          {visible.map((entry, i) => {
-            const raw = i - active;
-            const halfN = n / 2;
-            let offset = raw;
-            if (offset > halfN) offset -= n;
-            if (offset < -halfN) offset += n;
-            const dist = Math.abs(offset);
-            const isActive = dist === 0;
-            // Heavy embeds (full-app iframes + live external sites) mount ONLY
-            // while active. Three prototype cards sit adjacent in the deck, so
-            // the old dist<=2 window kept up to five live apps painting their
-            // canvas/video loops at once — which exhausted memory and crashed
-            // the tab. Lightweight video/image still preload 2-deep so carousel
-            // switches stay smooth; heavy cards boot on arrival (~1s).
-            const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
-            // view==="desktop" guard: this carousel is display:none on mobile but
-            // still mounted, so without it the iframes would load invisibly and
-            // stack onto the mobile list's memory.
-            const shouldLoad = view === "desktop" && (heavy ? isActive : dist <= 2);
-            return (
-              <div
-                key={entryKey(entry)}
-                onClick={() => !isActive && setActive(i)}
-                className="absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-                style={{
-                  transformOrigin: "bottom center",
-                  transform: `translateX(calc(${offset} * 44vw)) scale(${isActive ? 1 : 0.66})`,
-                  opacity: isActive ? 1 : dist === 1 ? 0.32 : 0,
-                  // grayscale only — animating blur on a card-sized layer was the
-                  // main switch-jank cost; the static desaturation is free.
-                  filter: isActive ? "none" : "grayscale(1) brightness(0.7)",
-                  cursor: isActive ? "default" : "pointer",
-                  zIndex: isActive ? 10 : 5 - dist,
-                  // Promote only the cards that actually move on a switch, and skip
-                  // painting/compositing the off-stage ones entirely.
-                  willChange: dist <= 1 ? "transform, opacity" : undefined,
-                  visibility: dist > 1 ? "hidden" : "visible",
-                  pointerEvents: dist > 1 ? "none" : undefined,
-                }}
-              >
-                <PrototypeCard
-                  entry={entry}
-                  shouldLoad={shouldLoad}
-                  isActive={isActive}
-                  onReady={() => onMediaReady(entryKey(entry))}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Editorial footer — caption + game-style load bar (desktop only). The
-          carousel is bottom-aligned so the caption sits right under the media. */}
-      <div className="hidden shrink-0 flex-col gap-5 pb-7 pt-4 md:flex">
-        <EditorialCaption entry={visible[active]} index={active} total={n} />
-        <div className="flex justify-center">
-          <LoadBar
-            active={active}
-            total={n}
-            onPrev={prev}
-            onNext={next}
-            onJump={setActive}
-          />
-        </div>
-      </div>
+      {/* Tablet / desktop: vertical scroll-snap gallery */}
+      <DesktopFeed enabled={view === "desktop"} onReady={onMediaReady} />
     </section>
   );
 }
