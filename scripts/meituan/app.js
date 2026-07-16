@@ -57,18 +57,18 @@ const __RM = typeof window !== 'undefined' && window.matchMedia ? window.matchMe
 const __R = (id, path) => (typeof window !== 'undefined' && window.__resources && window.__resources[id]) || path;
 
 // ─── Chrome ─────────────────────────────────────────────────────────
-function StatusBar() {
+function StatusBar({ tint = MT.ink } = {}) {
   return (
     <div style={{
       height: 54, padding: '16px 16px 0', flexShrink: 0,
       display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-      fontFamily: FF.num, fontWeight: 600, fontSize: 15, color: MT.ink, lineHeight: 1,
+      fontFamily: FF.num, fontWeight: 600, fontSize: 15, color: tint, lineHeight: 1,
     }}>
       <span className="tnum">9:41</span>
       <div style={{ display: 'flex', gap: 5, alignItems: 'center' }}>
-        <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="6.5" width="3" height="4.5" rx="0.7" fill={MT.ink}/><rect x="4.5" y="4.2" width="3" height="6.8" rx="0.7" fill={MT.ink}/><rect x="9" y="2" width="3" height="9" rx="0.7" fill={MT.ink}/><rect x="13.5" y="0" width="3" height="11" rx="0.7" fill={MT.ink}/></svg>
-        <svg width="16" height="11" viewBox="0 0 16 11"><path d="M8 3.4C10.1 3.4 12 4.2 13.4 5.6L14.4 4.6C12.7 2.9 10.4 1.9 8 1.9C5.6 1.9 3.3 2.9 1.6 4.6L2.6 5.6C4 4.2 5.9 3.4 8 3.4Z" fill={MT.ink}/><path d="M8 6.7C9.2 6.7 10.3 7.1 11.2 8L12.2 7C10.9 5.9 9.5 5.2 8 5.2C6.5 5.2 5.1 5.9 3.8 7L4.8 8C5.7 7.1 6.8 6.7 8 6.7Z" fill={MT.ink}/><circle cx="8" cy="9.6" r="1.4" fill={MT.ink}/></svg>
-        <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke={MT.ink} strokeOpacity="0.4" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill={MT.ink}/><rect x="22.5" y="4" width="1.5" height="4" rx="0.5" fill={MT.ink} fillOpacity="0.4"/></svg>
+        <svg width="17" height="11" viewBox="0 0 17 11"><rect x="0" y="6.5" width="3" height="4.5" rx="0.7" fill={tint}/><rect x="4.5" y="4.2" width="3" height="6.8" rx="0.7" fill={tint}/><rect x="9" y="2" width="3" height="9" rx="0.7" fill={tint}/><rect x="13.5" y="0" width="3" height="11" rx="0.7" fill={tint}/></svg>
+        <svg width="16" height="11" viewBox="0 0 16 11"><path d="M8 3.4C10.1 3.4 12 4.2 13.4 5.6L14.4 4.6C12.7 2.9 10.4 1.9 8 1.9C5.6 1.9 3.3 2.9 1.6 4.6L2.6 5.6C4 4.2 5.9 3.4 8 3.4Z" fill={tint}/><path d="M8 6.7C9.2 6.7 10.3 7.1 11.2 8L12.2 7C10.9 5.9 9.5 5.2 8 5.2C6.5 5.2 5.1 5.9 3.8 7L4.8 8C5.7 7.1 6.8 6.7 8 6.7Z" fill={tint}/><circle cx="8" cy="9.6" r="1.4" fill={tint}/></svg>
+        <svg width="25" height="12" viewBox="0 0 25 12"><rect x="0.5" y="0.5" width="21" height="11" rx="3" stroke={tint} strokeOpacity="0.4" fill="none"/><rect x="2" y="2" width="18" height="8" rx="1.5" fill={tint}/><rect x="22.5" y="4" width="1.5" height="4" rx="0.5" fill={tint} fillOpacity="0.4"/></svg>
       </div>
     </div>
   );
@@ -84,7 +84,7 @@ function HomeIndicator() {
 
 function Header({ active = 1, proJoined = false, onBack }) {
   const steps = ['Describe', 'Diagnose', 'Plan', 'Match'];
-  const progressPct = ((active - 1) / (steps.length - 1)) * 100;
+  const progressPct = Math.min(100, ((active - 1) / (steps.length - 1)) * 100);
   return (
     <div style={{ background: MT.surface, borderBottom: `1px solid ${MT.divider}`, flexShrink: 0 }}>
       <div style={{ height: 48, display: 'flex', alignItems: 'center', padding: '0 14px', justifyContent: 'space-between' }}>
@@ -796,7 +796,7 @@ function MerchantQuotesCard({ stale, onView }) {
     sort === 'price'   ? 'Lowest capped price first' :
     sort === 'rating'  ? 'Highest rated first' :
     sort === 'fastest' ? 'Soonest arrival first' :
-                         'Ranked by rating × distance × capped price';
+                         null;
   const topNoteFor = (i) => {
     if (i !== 0) return null;
     if (sort === 'price')   return { label: 'Lowest quote', tone: 'green' };
@@ -845,7 +845,7 @@ function MerchantQuotesCard({ stale, onView }) {
                 <div key={p.key} style={{ display: 'flex', alignItems: 'center', gap: 11, padding: '11px 0', borderBottom: `1px solid ${MT.divider}` }}>
                   <div style={{ width: 36, height: 36, borderRadius: 10, overflow: 'hidden', flexShrink: 0 }}><VendorImage kind={p.image}/></div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13.5, fontWeight: 700, color: MT.ink, fontFamily: FF.text, lineHeight: '17px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{p.name}</div>
+                    <div style={{ fontSize: 13.5, fontWeight: 700, color: MT.ink, fontFamily: FF.text, lineHeight: '17px', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{p.name}</div>
                     <div className="tnum" style={{ fontSize: 12, color: MT.muted, fontFamily: FF.text, marginTop: 1 }}>★ {p.rating} · {p.distance} mi · ~{p.eta} min</div>
                   </div>
                   <span style={{ display: 'inline-flex', alignItems: 'center', gap: 5, fontSize: 12, fontWeight: 700, fontFamily: FF.text, color: st.c, background: st.bg, border: `1px solid ${st.b}`, borderRadius: 100, padding: '4px 10px', flexShrink: 0, transition: 'all .25s' }}>
@@ -868,7 +868,7 @@ function MerchantQuotesCard({ stale, onView }) {
         {!collecting && (
           <>
             {!stale && (
-              <div style={{ margin: '0 -16px', padding: '12px 16px 2px', background: MT.surface, borderBottom: `1px solid ${MT.divider}` }}>
+              <div style={{ margin: '0 -16px', padding: explain ? '12px 16px 2px' : '12px 16px 11px', background: MT.surface, borderBottom: `1px solid ${MT.divider}` }}>
                 <div className="scroll" style={{ display: 'flex', gap: 6, overflowX: 'auto' }}>
                   {SORTS.map(s => {
                     const on = sort === s.key;
@@ -877,10 +877,12 @@ function MerchantQuotesCard({ stale, onView }) {
                     );
                   })}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '9px 1px 8px', fontSize: 12, color: MT.muted, fontFamily: FF.text }}>
-                  <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M4 7h6M6 10h2" stroke={MT.muted} strokeWidth="1.3" strokeLinecap="round"/></svg>
-                  <span>{explain}</span>
-                </div>
+                {explain && (
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5, padding: '9px 1px 8px', fontSize: 12, color: MT.muted, fontFamily: FF.text }}>
+                    <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M2 4h10M4 7h6M6 10h2" stroke={MT.muted} strokeWidth="1.3" strokeLinecap="round"/></svg>
+                    <span>{explain}</span>
+                  </div>
+                )}
               </div>
             )}
             {sorted.map((v, i) => (
@@ -966,13 +968,14 @@ function ProductCard({ onBuy }) {
         <div style={{ background: MT.surface, borderRadius: '4px 16px 16px 16px', flex: 1, border: `1px solid ${MT.divider}`, overflow: 'hidden', display: 'flex' }}>
           <div style={{ width: 100, position: 'relative', background: MT.surfaceAlt, overflow: 'hidden' }}>
             <img src={__R('toiletImg', 'assets/toilet.webp')} alt="" style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', objectFit: 'cover' }} />
-            <div style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 10, fontWeight: 800, color: '#fff', fontFamily: FF.text, background: MT.ink, padding: '2px 6px', borderRadius: 100, letterSpacing: '.4px', zIndex: 1 }}>
+            <div style={{ position: 'absolute', top: 8, left: 8, display: 'inline-flex', alignItems: 'center', gap: 3, fontSize: 10, fontWeight: 800, color: '#fff', fontFamily: FF.text, background: MT.ink, padding: '2px 7px', borderRadius: 100, letterSpacing: '.4px', whiteSpace: 'nowrap', zIndex: 1 }}>
               <span>★</span>
-              <span>FIRST-PARTY</span>
+              <span>Official</span>
             </div>
           </div>
           <div style={{ padding: '12px', flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <div style={{ fontSize: 15, fontWeight: 700, lineHeight: '19px', color: MT.ink, fontFamily: FF.display, letterSpacing: '-0.2px' }}>Worry-Free Toilet Unclog · Express on-site</div>
+            <div style={{ fontSize: 15, fontWeight: 700, lineHeight: '19px', color: MT.ink, fontFamily: FF.display, letterSpacing: '-0.2px' }}>Worry-Free Toilet Unclog</div>
+            <div style={{ fontSize: 12, color: MT.muted, fontFamily: FF.text, marginTop: 3 }}>Express on-site visit</div>
             <div style={{ display: 'flex', gap: 4, marginTop: 6, flexWrap: 'wrap' }}>
               <Tag tone="brand">Flat rate</Tag>
               <Tag tone="green">No fix, no charge</Tag>
@@ -986,6 +989,36 @@ function ProductCard({ onBuy }) {
               <button onClick={onBuy} className="btn-press" style={{ height: 36, padding: '0 16px', borderRadius: 100, border: 0, background: MT.brand, color: MT.brandInk, fontSize: 13, fontWeight: 700, fontFamily: FF.text, cursor: 'pointer' }}>Buy</button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ─── Completed-order recap (opens the post-service follow-up) ───────
+function OrderRecapCard() {
+  const row = (k, v) => (
+    <div style={{ display: 'flex', gap: 12, alignItems: 'baseline' }}>
+      <span style={{ width: 52, flexShrink: 0, color: MT.muted, fontFamily: FF.text, fontSize: 11, textTransform: 'uppercase', letterSpacing: '.6px', fontWeight: 700 }}>{k}</span>
+      <span style={{ flex: 1, fontSize: 13.5, fontFamily: FF.text, color: MT.ink, lineHeight: '19px' }}>{v}</span>
+    </div>
+  );
+  return (
+    <div style={{ padding: '6px 14px', ...ENTER }}>
+      <div style={{ background: MT.surface, border: `1px solid ${MT.divider}`, borderRadius: 16, overflow: 'hidden', boxShadow: MT.shadowSm }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 9, padding: '12px 14px', borderBottom: `1px solid ${MT.divider}` }}>
+          <span style={{ width: 20, height: 20, borderRadius: 10, background: MT.green, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+            <svg width="11" height="11" viewBox="0 0 12 12"><path d="M3 6.4l2 2 4.2-5" stroke="#fff" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round"/></svg>
+          </span>
+          <span style={{ fontSize: 14.5, fontWeight: 800, color: MT.ink, fontFamily: FF.display, letterSpacing: '-0.2px' }}>Order #4729</span>
+          <span style={{ fontSize: 12.5, color: MT.muted, fontFamily: FF.text }}>Completed</span>
+          <div style={{ flex: 1 }} />
+          <span style={{ fontSize: 12, fontWeight: 700, color: MT.greenDeep, background: MT.greenBg, border: '1px solid #C3E3D2', borderRadius: 100, padding: '2px 9px', fontFamily: FF.text, whiteSpace: 'nowrap' }}>Paid $52</span>
+        </div>
+        <div style={{ padding: '12px 14px', display: 'flex', flexDirection: 'column', gap: 9 }}>
+          {row('Issue', 'TOTO toilet · sewer odor')}
+          {row('Pro', 'Citrus Home Services · ★ 4.9')}
+          {row('Done', 'Yesterday, 6:40 PM · 45-day warranty')}
         </div>
       </div>
     </div>
@@ -1164,8 +1197,8 @@ function VendorDetailOverlay({ vendorKey, onClose, onBook }) {
       {/* Hero photo */}
       <div style={{ position: 'relative', height: 196, flexShrink: 0 }}>
         <VendorImage kind={v.image}/>
-        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,.3) 0%, rgba(0,0,0,0) 32%)' }}/>
-        <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}><StatusBar /></div>
+        <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to bottom, rgba(0,0,0,.58) 0%, rgba(0,0,0,.30) 12%, rgba(0,0,0,0) 36%)' }}/>
+        <div style={{ position: 'absolute', top: 0, left: 0, right: 0 }}><StatusBar tint="#fff" /></div>
         <button onClick={onClose} className="btn-press" style={{ position: 'absolute', top: 54, left: 16, width: 38, height: 38, borderRadius: 19, border: 0, background: MT.surface, boxShadow: MT.shadowMd, display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer' }}>
           <svg width="10" height="17" viewBox="0 0 11 20"><path d="M9 1L1 10l8 9" stroke={MT.ink} strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" fill="none"/></svg>
         </button>
@@ -1236,7 +1269,7 @@ function VendorDetailOverlay({ vendorKey, onClose, onBook }) {
 
 function BookingCard({ vendorKey, orderNum }) {
   const v = VENDORS[vendorKey] || VENDORS.citrus;
-  const [eta, setEta] = React.useState(14);
+  const [eta, setEta] = React.useState(v.eta || 14);
   React.useEffect(() => {
     const id = setInterval(() => setEta(e => (e > 11 ? e - 1 : e)), 18000);
     return () => clearInterval(id);
@@ -1296,7 +1329,7 @@ function BookingCard({ vendorKey, orderNum }) {
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ fontSize: 12, color: MT.muted, fontFamily: FF.text, textTransform: 'uppercase', letterSpacing: '.6px', fontWeight: 700 }}>Arriving in</div>
               <div style={{ marginTop: 2, fontSize: 15, fontWeight: 700, color: MT.ink, fontFamily: FF.display }}>
-                <span className="tnum" style={{ color: MT.ink }}>~{eta}</span> min · between <span className="tnum">4:15</span> — <span className="tnum">4:30 PM</span>
+                <span className="tnum" style={{ color: MT.ink }}>~{eta}</span> min · between <span className="tnum">6:00</span> — <span className="tnum">6:15 PM</span>
               </div>
             </div>
           </div>
@@ -1349,10 +1382,12 @@ function ServiceContextBar({ stage, scenario, vendor }) {
   let label, detail, dot, dotPulse = false;
   if (scenario === 'off-hours') {
     label = 'After hours'; detail = 'Replies pause until we reopen at 9 AM'; dot = MT.muted;
+  } else if (scenario === 'return-visit') {
+    label = 'Service complete'; detail = 'Order #4729 · closed out'; dot = MT.green;
   } else if (stage === 1) {
-    label = 'Smart assistant ready'; detail = 'Describe your issue to get a free diagnosis'; dot = MT.ink;
+    label = 'Smart assistant ready'; detail = 'Describe it for a free diagnosis'; dot = MT.ink;
   } else if (stage === 2) {
-    label = 'Specialist on the line'; detail = 'Mike Chen · Plumbing · 8 yrs · ★ 4.96'; dot = MT.green; dotPulse = true;
+    label = 'Specialist on the line'; detail = 'Mike Chen · Plumbing, 8 yrs · ★ 4.96'; dot = MT.green; dotPulse = true;
   } else if (stage === 3) {
     label = 'Repair order #4729'; detail = 'Drafting — confirm time and address'; dot = MT.ink; dotPulse = true;
   } else if (stage === 4) {
@@ -1404,6 +1439,8 @@ function QuickReplies({ stage, scenario }) {
       display: 'flex', gap: 6, padding: '10px 16px 8px',
       background: MT.surface, borderTop: `1px solid ${MT.divider}`,
       overflowX: 'auto', flexShrink: 0,
+      WebkitMaskImage: 'linear-gradient(to right, #000 calc(100% - 26px), transparent 100%)',
+      maskImage: 'linear-gradient(to right, #000 calc(100% - 26px), transparent 100%)',
     }}>
       {chips.map(c => (
         <button key={c} className="btn-press" style={{
@@ -1454,6 +1491,7 @@ function renderMessage(m, ctx, tight) {
     case 'product': return <ProductCard key={m.id} onBuy={() => ctx.onAction('buy-product')} />;
     case 'quick-rating': return <QuickRating key={m.id} onPick={(k) => ctx.onAction('rate:' + k)} />;
     case 'invite': return <InviteCard key={m.id} onAct={() => ctx.onAction('open-review')} />;
+    case 'order-recap': return <OrderRecapCard key={m.id} />;
     default: return null;
   }
 }
@@ -1537,7 +1575,8 @@ const SCRIPTS = {
   ],
 
   'return-visit': [
-    { delay: 0,    stage: 4, append: { type: 'divider', id: 'd1', label: 'Earlier conversation' } },
+    { delay: 0,    stage: 4, append: { type: 'order-recap', id: 'recap' } },
+    { delay: 120,  append: { type: 'divider', id: 'd1', label: 'Earlier conversation' } },
     { delay: 400,  append: { type: 'typing-pro', id: 't1' } },
     { delay: 900,  replace: 't1', append: { type: 'bot-q', id: 'q1', text: 'Did the previous tech sort it out for you? Anything else I can help with?', options: ['The diagnosis was off', "The repair plan didn't hold up", 'The vendor charged more than the quote'] } },
     { wait: 'q1' },
@@ -1565,7 +1604,7 @@ const SEEK = {
   'off-hours':      3, // the after-hours message
   'expired-modal':  3, // live quotes + the expired modal
   'expired-chat':   4, // stale quotes + the re-quote order
-  'return-visit':   2, // the return-visit question
+  'return-visit':   3, // the return-visit question (after the order-recap card)
 };
 
 // ─── Player ─────────────────────────────────────────────────────────
@@ -1738,7 +1777,7 @@ function Player({ scenario, onSceneEnd }) {
             width: 120, height: 36, borderRadius: 22, background: '#08080A', zIndex: 50,
           }} />
           <StatusBar />
-          <Header active={stage} proJoined={false} />
+          <Header active={scenario === 'return-visit' ? 5 : stage} proJoined={false} />
           <ServiceContextBar stage={stage} scenario={scenario} vendor={bookedVendor} />
           <div ref={scrollRef} className="scroll" style={{ flex: 1, overflow: 'auto', background: MT.bg, paddingBottom: 14, overscrollBehavior: 'contain' }}>
             {messages.map((m, __i) => {
