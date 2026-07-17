@@ -22,9 +22,11 @@ const resumeLink = {
 type NavProps = {
   /** Dark chrome for pages with a black / near-black background. */
   variant?: "light" | "dark";
+  /** Render as a floating, content-width capsule instead of a full-width bar. */
+  floating?: boolean;
 };
 
-export function Nav({ variant = "light" }: NavProps) {
+export function Nav({ variant = "light", floating = false }: NavProps) {
   const isDark = variant === "dark";
   const [scrolled, setScrolled] = useState(false);
   // `isScrolling` is true while the user is actively scrolling; resets ~220ms
@@ -60,6 +62,14 @@ export function Nav({ variant = "light" }: NavProps) {
     ? `rgba(6, 6, 8, ${bgAlpha})`
     : `rgba(255, 255, 255, ${bgAlpha})`;
 
+  // Floating capsule: unlike the full-width bar it needs a visible frost even at
+  // the very top of the page, so it always reads as a pill (never fully clear).
+  const floatBlur = isScrolling ? 8 : 16;
+  const floatAlpha = isScrolling ? 0.5 : isDark ? 0.72 : 0.78;
+  const floatBg = isDark
+    ? `rgba(6, 6, 8, ${floatAlpha})`
+    : `rgba(255, 255, 255, ${floatAlpha})`;
+
   useEffect(() => {
     if (open) document.body.style.overflow = "hidden";
     else document.body.style.overflow = "";
@@ -72,27 +82,8 @@ export function Nav({ variant = "light" }: NavProps) {
     ? { duration: 0 }
     : { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] as const };
 
-  return (
+  const barInner = (
     <>
-      <motion.header
-        initial={false}
-        animate={{
-          backgroundColor: bgColor,
-          backdropFilter: `blur(${blurPx}px)`,
-        }}
-        transition={barTransition}
-        className={`fixed inset-x-0 top-0 z-50 border-b ${
-          scrolled
-            ? isDark
-              ? "border-white/[0.1]"
-              : "border-[rgba(0,0,0,0.08)]"
-            : "border-transparent"
-        }`}
-      >
-        <nav
-          className="mx-auto flex max-w-content items-center justify-between px-6 py-4"
-          aria-label="Main"
-        >
           <Link
             href="/"
             aria-label="Yuan Fang — Home"
@@ -184,8 +175,54 @@ export function Nav({ variant = "light" }: NavProps) {
               />
             </div>
           </button>
-        </nav>
-      </motion.header>
+    </>
+  );
+
+  return (
+    <>
+      {floating ? (
+        <div className="fixed inset-x-0 top-3 z-50 px-4 md:top-4 md:px-6">
+          <motion.nav
+            initial={false}
+            animate={{
+              backgroundColor: floatBg,
+              backdropFilter: `blur(${floatBlur}px)`,
+            }}
+            transition={barTransition}
+            aria-label="Main"
+            className={`mx-auto flex max-w-content items-center justify-between rounded-full border px-5 py-2.5 md:px-6 ${
+              isDark
+                ? "border-white/[0.1] shadow-lg shadow-black/30"
+                : "border-[rgba(0,0,0,0.08)] shadow-lg shadow-black/[0.06]"
+            }`}
+          >
+            {barInner}
+          </motion.nav>
+        </div>
+      ) : (
+        <motion.header
+          initial={false}
+          animate={{
+            backgroundColor: bgColor,
+            backdropFilter: `blur(${blurPx}px)`,
+          }}
+          transition={barTransition}
+          className={`fixed inset-x-0 top-0 z-50 border-b ${
+            scrolled
+              ? isDark
+                ? "border-white/[0.1]"
+                : "border-[rgba(0,0,0,0.08)]"
+              : "border-transparent"
+          }`}
+        >
+          <nav
+            className="mx-auto flex max-w-content items-center justify-between px-6 py-4"
+            aria-label="Main"
+          >
+            {barInner}
+          </nav>
+        </motion.header>
+      )}
 
       <AnimatePresence>
         {open && (

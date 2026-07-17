@@ -147,21 +147,20 @@ type WorkRow =
   | { kind: "single"; project: Project }
   | { kind: "pair"; left: Project; right: Project };
 
-// NOTE: `tiktok` is intentionally hidden for now — the case study, its route
-// (/work/tiktok), and assets all still exist; add `tiktok` back into the two
-// arrays below to re-surface the card.
+// NOTE: `qbix` is intentionally hidden for now — its definition, route, and assets
+// all still exist; add `qbix` back into the two arrays below to re-surface the card.
 const workRows: WorkRow[] = [
   { kind: "single", project: liner },
+  { kind: "single", project: tiktok },
   { kind: "single", project: aiCharacter },
   { kind: "single", project: meituanIm },
   { kind: "single", project: studioEngine },
-  { kind: "single", project: qbix },
 ];
 
 // Flat order for the stacked /work view — each project becomes one sticky layer.
-const stackProjects: Project[] = [liner, aiCharacter, meituanIm, studioEngine, qbix];
+const stackProjects: Project[] = [liner, tiktok, aiCharacter, meituanIm, studioEngine];
 
-void tiktok; // referenced to keep the hidden project defined without an unused-var warning
+void qbix; // referenced to keep the hidden project defined without an unused-var warning
 
 const itemSpring = {
   hidden: { opacity: 0, y: 42 },
