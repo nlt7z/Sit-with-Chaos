@@ -51,7 +51,7 @@ const ARTWORK = [
 const JOURNEY = [
   { org: "Liner", note: "Product Designer · 2026", logo: "/assets/logos/liner.png", chip: "bg-white ring-black/[0.06]" },
   { org: "Alibaba Cloud", note: "Product Design Intern · 2025", logo: "/assets/logos/alibaba.svg", chip: "bg-white ring-black/[0.06]" },
-  { org: "Meituan", note: "Product Design Intern · 2025", logo: "/assets/logos/meituan-mark.svg", chip: "bg-[#FFD100] ring-black/10" },
+  { org: "Meituan", note: "Product Design Intern · 2025", logo: "/assets/logos/meituan.png", chip: "bg-white ring-black/[0.06]" },
   { org: "UW · HCDE", note: "MS · 2024–26", logo: "/assets/logos/uw.svg", chip: "bg-white ring-black/[0.06]" },
   { org: "Pratt Institute", note: "BFA", logo: "/assets/logos/pratt.svg", chip: "bg-[#1A1A1A] ring-white/10" },
 ];
