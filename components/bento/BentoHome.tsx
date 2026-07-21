@@ -46,12 +46,14 @@ const ARTWORK = [
   "/assets/about/gallery/read.jpg",
 ];
 
+// `chip` sets each logo's background so the mark reads in its own brand colour:
+// most sit on white; Meituan keeps its brand yellow, Pratt its gold-on-dark.
 const JOURNEY = [
-  { org: "Liner", note: "Product Designer · 2026" },
-  { org: "Alibaba Cloud", note: "Product Design Intern · 2025" },
-  { org: "Meituan", note: "Product Design Intern · 2025" },
-  { org: "UW · HCDE", note: "MS · 2024–26" },
-  { org: "Pratt Institute", note: "BFA" },
+  { org: "Liner", note: "Product Designer · 2026", logo: "/assets/logos/liner.png", chip: "bg-white ring-black/[0.06]" },
+  { org: "Alibaba Cloud", note: "Product Design Intern · 2025", logo: "/assets/logos/alibaba.svg", chip: "bg-white ring-black/[0.06]" },
+  { org: "Meituan", note: "Product Design Intern · 2025", logo: "/assets/logos/meituan-mark.svg", chip: "bg-[#FFD100] ring-black/10" },
+  { org: "UW · HCDE", note: "MS · 2024–26", logo: "/assets/logos/uw.svg", chip: "bg-white ring-black/[0.06]" },
+  { org: "Pratt Institute", note: "BFA", logo: "/assets/logos/pratt.svg", chip: "bg-[#1A1A1A] ring-white/10" },
 ];
 
 /* scaled iframe with a lime RoseLoader fallback */
@@ -574,9 +576,21 @@ export function BentoHome() {
                         />
                       ) : null}
                     </div>
-                    <div className="pb-7 transition-transform duration-300 group-hover/j:translate-x-1">
-                      <p className={`text-[12px] leading-tight transition-colors duration-300 group-hover/j:text-nltLime ${ink}`}>{j.org}</p>
-                      <p className={`font-mono text-[8px] uppercase tracking-wider ${inkFaint}`}>{j.note}</p>
+                    <div className="flex items-center gap-2.5 pb-7 transition-transform duration-300 group-hover/j:translate-x-1">
+                      {/* brand logo on a white chip so every mark reads on the dark
+                          card, regardless of its own colour (dark, orange, yellow…) */}
+                      <span className={`flex h-7 w-[58px] shrink-0 items-center justify-center rounded-[7px] px-1.5 shadow-sm ring-1 transition-shadow duration-300 group-hover/j:shadow-md ${j.chip}`}>
+                        <img
+                          src={j.logo}
+                          alt=""
+                          aria-hidden
+                          className="max-h-[18px] w-auto max-w-full object-contain"
+                        />
+                      </span>
+                      <div>
+                        <p className={`text-[12px] leading-tight transition-colors duration-300 group-hover/j:text-nltLime ${ink}`}>{j.org}</p>
+                        <p className={`font-mono text-[8px] uppercase tracking-wider ${inkFaint}`}>{j.note}</p>
+                      </div>
                     </div>
                   </motion.div>
                 ))}
