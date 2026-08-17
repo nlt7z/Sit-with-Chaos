@@ -1,0 +1,765 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>O2 Tech AI · HITL Redesign</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<style>
+/* ============ shell ============ */
+:root{
+  --bg:#0B0D0A;
+  --surface:#12150F;
+  --surface-2:#1A1E15;
+  --line:#272C20;
+  --text:#E9ECE3;
+  --dim:#8B9280;
+  --lime:#B8E532;
+  --lime-wash:rgba(184,229,50,.12);
+  --serif:"Playfair Display",Georgia,serif;
+  --sans:"DM Sans",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,monospace;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:var(--sans);font-size:16px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{background:var(--lime-wash);color:var(--text)}
+:focus-visible{outline:2px solid var(--text);outline-offset:2px;}
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{transition:none!important;animation:none!important}
+}
+
+/* ============ topbar / chapter indicator ============ */
+.topbar{
+  position:fixed;top:0;left:0;right:0;z-index:60;
+  display:flex;align-items:center;gap:4px;
+  padding:10px 20px;border-bottom:0;
+  background:rgba(11,13,10,.88);backdrop-filter:blur(10px);
+  overflow-x:auto;scrollbar-width:none;
+}
+.topbar::-webkit-scrollbar{display:none}
+.topbar .mark{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;
+  color:var(--text);white-space:nowrap;margin-right:16px;flex:none;
+}
+.topbar a{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--dim);text-decoration:none;padding:5px 7px;
+  border-bottom:2px solid transparent;flex:none;transition:color .2s;
+}
+.topbar a:hover{color:var(--text)}
+.topbar a.active{color:var(--lime);border-bottom-color:var(--lime)}
+.topbar a.active::after{content:" · " attr(data-title)}
+
+/* ============ layout ============ */
+.wrap{max-width:1520px;margin:0 auto}
+.cols{display:grid;grid-template-columns:55fr 45fr}
+.stage{min-width:0}
+.stage-sticky{
+  position:sticky;top:0;height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:56px 28px 20px 44px;max-width:760px;
+}
+.narrative{
+  min-width:0;max-width:620px;
+  padding:15vh 44px 24vh 10px;
+}
+.chapter{margin:0}
+.hr{border:0;margin:8rem 0}
+[data-sync]{scroll-margin-top:90px}
+[data-sync] + [data-sync]{margin-top:6rem}
+[data-sync] > .subhead:first-child{margin-top:0}
+
+/* narrative type */
+.kicker{
+  font-family:var(--mono);font-size:11px;letter-spacing:.22em;
+  color:var(--dim);margin:0 0 .6rem;
+}
+h1{
+  font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,2.2vw,1.9rem);
+  line-height:1.2;margin:0 0 1.6rem;letter-spacing:.005em;
+}
+h2{
+  font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,2.2vw,1.9rem);
+  line-height:1.2;letter-spacing:.005em;color:var(--text);margin:0 0 1.6rem;
+}
+h1 .no,h2 .no{
+  display:block;font-family:var(--mono);font-size:11px;letter-spacing:.26em;
+  color:var(--lime);margin:0 0 .9rem;
+}
+h3{
+  font-family:var(--serif);font-weight:500;font-size:1.25rem;
+  margin:2.2rem 0 .6rem;letter-spacing:.005em;
+}
+.narrative p{margin:0 0 1rem;color:var(--text)}
+.narrative ul,.narrative ol{margin:0 0 1.2rem;padding-left:1.35em}
+.narrative li{margin:0 0 .75rem}
+.narrative li::marker{color:var(--dim)}
+.flowline{font-family:var(--mono);font-size:12.5px;letter-spacing:.04em;color:var(--text);margin:0 0 1.3rem}
+.narrative .lead{font-family:var(--serif);font-size:1.3rem;line-height:1.45;margin:0 0 1.4rem}
+.narrative .quiet{color:var(--dim)}
+.subhead{
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;color:var(--dim);
+  margin:2.4rem 0 .8rem;
+}
+.srcfiles{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1.1rem}
+.srcfiles a{
+  font-family:var(--mono);font-size:11px;letter-spacing:.1em;
+  color:var(--dim);text-decoration:none;
+  border:1px solid var(--line);padding:6px 10px;
+  transition:color .2s,border-color .2s;
+}
+.srcfiles a:hover{color:var(--lime);border-color:var(--lime)}
+.srcfiles a .arr{color:var(--dim);margin-left:6px}
+.srcfiles a:hover .arr{color:var(--lime)}
+
+
+/* ============ final prototype ============ */
+.proto-section{max-width:1520px;margin:0 auto;padding:2rem 44px 110px}
+.proto-section .kicker{margin-bottom:.9rem}
+.proto-frame{border:1px solid var(--line);overflow:hidden;background:#fff}
+.proto-frame .bbar{display:flex;align-items:center;gap:6px;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--line)}
+.proto-frame .bbar i{width:8px;height:8px;background:var(--line);flex:none}
+.proto-frame .burl{
+  font-family:var(--mono);font-size:10px;letter-spacing:.04em;color:var(--dim);
+  background:var(--bg);border:1px solid var(--line);padding:2px 10px;margin-left:6px;
+  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.proto-frame .proto-embed{border:0;background:#fff}
+.topbar a.livelink{color:var(--lime)}
+@media (max-width:900px){
+  .proto-section{padding:1.5rem 20px 80px}
+}
+
+/* decision matrix (narrative side) */
+.matrix{width:100%;border-collapse:collapse;margin:1.4rem 0 1.6rem;font-size:12.5px}
+.matrix th,.matrix td{
+  font-family:var(--mono);font-weight:400;text-align:left;
+  padding:8px 10px;border-bottom:1px solid var(--line);
+  vertical-align:top;letter-spacing:.02em;
+}
+.matrix thead th{font-size:11px;letter-spacing:.16em;color:var(--dim)}
+.matrix td:first-child{color:var(--dim)}
+.matrix .selcol{background:var(--lime-wash)}
+.matrix thead .selcol{color:var(--lime);border-bottom-color:var(--lime)}
+.matrix-wrap{overflow-x:auto}
+
+/* mobile artifact slot */
+.artifact-slot{display:none}
+
+/* ============ artifact frames (shell side) ============ */
+.artifact-frame{display:none}
+.artifact-frame.is-active{display:block;animation:fadeIn .35s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.state-label{
+  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+  color:var(--dim);margin:12px 2px 0;
+}
+.state-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
+.state-tabs button{
+  font-family:var(--mono);font-size:10px;letter-spacing:.1em;
+  background:var(--surface);color:var(--dim);border:1px solid var(--line);
+  padding:5px 9px;cursor:pointer;transition:color .2s,border-color .2s;
+}
+.state-tabs button:hover{color:var(--text)}
+.state-tabs button[aria-pressed="true"]{color:var(--text);border-color:var(--dim)}
+
+/* 00 the two snapshots · browser-window cards */
+.snapgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.snap{margin:0}
+.artifact .bwin{border:1px solid var(--border);overflow:hidden;background:var(--card)}
+.artifact .bbar{display:flex;align-items:center;gap:4px;padding:5px 8px;border-bottom:1px solid var(--border);background:var(--card)}
+.artifact .bbar i{width:6px;height:6px;background:var(--border);flex:none}
+.artifact .burl{
+  font-family:var(--mono);font-size:7.5px;color:var(--muted-foreground);
+  background:var(--background);padding:1px 6px;margin-left:4px;
+  flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.snap img{width:100%;aspect-ratio:16/9;object-fit:cover;object-position:top;display:block}
+.snap figcaption{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--muted-foreground);margin-top:5px}
+
+
+
+/* ============ artifact canvas (O2 cream tokens, scoped) ============ */
+.artifact{
+  --background:#f5f2e9; --card:#fbfaf4; --foreground:#1f2420;
+  --primary:#2c3a2c;    --border:#dad4c4; --muted-foreground:#6b6f62;
+  --success:#6e7b5e;    --destructive:#9a3b2e;
+  --warning-strong:#bf6b2e; --warning-soft:#c9a34e;
+  --radius:.5rem;
+  background:var(--background);color:var(--foreground);
+  border:1px solid var(--line);
+  padding:18px;font-size:13px;line-height:1.5;
+}
+.artifact .a-title{
+  font-family:var(--mono);font-size:10px;letter-spacing:.18em;
+  color:var(--muted-foreground);margin:0 0 12px;
+}
+.artifact .card{
+  background:var(--card);border:1px solid var(--border);
+  padding:12px 14px;
+}
+.artifact .mono{font-family:var(--mono)}
+.artifact .dim{color:var(--muted-foreground)}
+.artifact .small{font-size:11px}
+.artifact .tiny{font-size:10px}
+
+
+
+
+/* 04 flow map */
+.pipe{display:flex;align-items:center;gap:4px;flex-wrap:wrap;margin-bottom:14px}
+.pipe .st{font-family:var(--mono);font-size:9px;letter-spacing:.04em;color:var(--muted-foreground);
+  border:1px solid var(--border);padding:3px 6px;background:var(--card)}
+.pipe .st.here{color:var(--foreground);border-color:var(--primary)}
+.pipe .st.fail{color:var(--destructive);border-color:var(--destructive);background:transparent}
+.pipe .sep{color:var(--muted-foreground);font-size:9px;font-family:var(--mono)}
+.fq{display:flex;align-items:center;gap:10px;padding:9px 2px;border-bottom:1px solid var(--border)}
+.fq:last-child{border-bottom:0}
+.fq .dno{font-family:var(--mono);font-size:11px;color:var(--muted-foreground);flex:none}
+.fq .q{font-size:12.5px;font-weight:600;flex:1}
+.fq .ans{font-family:var(--mono);font-size:9px;letter-spacing:.08em;padding:2px 6px;border:1px solid var(--border);color:var(--muted-foreground);flex:none}
+.fq .ans.full{color:var(--success);border-color:var(--success)}
+.fq .ans.none{color:var(--destructive);border-color:var(--destructive)}
+
+/* 05 evidence */
+.ev-panel{display:none}
+#af-evidence[data-state="d1"] .ev-panel[data-panel="d1"],
+#af-evidence[data-state="d2"] .ev-panel[data-panel="d2"],
+#af-evidence[data-state="d3"] .ev-panel[data-panel="d3"],
+#af-evidence[data-state="d4"] .ev-panel[data-panel="d4"]{display:block}
+.evcap{font-family:var(--mono);font-size:9.5px;color:var(--muted-foreground);letter-spacing:.05em;margin:2px 0 12px}
+.btnmock{display:inline-block;font-family:var(--mono);font-size:10px;border:1px solid var(--border);
+  background:var(--card);padding:5px 9px;color:var(--foreground);margin:6px 6px 0 0}
+
+/* 06 options */
+.opt-panel{display:none}
+#af-options[data-state="a"] .opt-panel[data-panel="a"],
+#af-options[data-state="b"] .opt-panel[data-panel="b"],
+#af-options[data-state="c"] .opt-panel[data-panel="c"]{display:block}
+.scopebar{margin-top:12px}
+.scopebar .cap{font-family:var(--mono);font-size:9.5px;color:var(--muted-foreground);letter-spacing:.1em;margin-bottom:4px;display:flex;justify-content:space-between}
+.scopebar .track{background:var(--card);border:1px solid var(--border);height:10px}
+.scopebar .fill{height:100%;background:var(--lime);}
+
+
+/* 08 measure */
+.metrics{display:grid;grid-template-columns:1fr;gap:8px}
+.metrics .card{padding:10px 12px}
+.metrics .card.first{border-color:var(--primary)}
+.metrics .t{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--foreground)}
+.metrics p{margin:4px 0 0;font-size:10.5px;color:var(--muted-foreground);line-height:1.45}
+.metrics .star{font-family:var(--mono);font-size:9px;color:var(--primary);letter-spacing:.08em;margin-top:6px}
+
+.colsplit{display:flex;gap:2px;margin-top:6px}
+.colsplit i{flex:1;height:12px;background:var(--border)}
+.colsplit i.on{background:var(--primary)}
+
+/* 03 zoomed screenshots */
+.zoomshot{margin:12px 0 6px}
+.zoomshot:first-child{margin-top:0}
+.zoomshot img{width:100%;display:block;border:1px solid var(--border)}
+
+/* 04 live option prototypes */
+.proto-embed{position:relative;width:100%;overflow:hidden;border:1px solid var(--border);background:#F5F3EA}
+.proto-embed iframe{width:1280px;height:720px;border:0;display:block;transform-origin:0 0}
+.optfoot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px}
+.optfoot a{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--muted-foreground);
+  text-decoration:none;border:1px solid var(--border);padding:4px 9px;white-space:nowrap;
+  transition:color .2s,border-color .2s}
+.optfoot a:hover{color:var(--foreground);border-color:var(--foreground)}
+.lineage{border-left:2px solid var(--primary);padding-left:8px;margin:6px 0;font-family:var(--mono);font-size:9.5px;color:var(--muted-foreground)}
+
+/* ============ flat pass · one surface, no nested cards ============ */
+.artifact .card{background:transparent;border:0;padding:10px 0}
+.metrics .card{border-left:2px solid var(--border);padding:2px 0 2px 10px}
+.metrics .card.first{border-left-color:var(--primary)}
+.snap .bwin,.artifact .bwin{background:transparent}
+.artifact .bbar{background:transparent}
+
+/* ============ responsive ============ */
+@media (max-width: 900px){
+  .cols{display:block}
+  .stage{display:none}
+  .narrative{max-width:640px;margin:0 auto;padding:96px 20px 18vh}
+  .artifact-slot{display:block;margin:0 0 2rem}
+  .artifact-frame{display:block}
+  .hr{margin:4.5rem 0}
+  [data-sync] + [data-sync]{margin-top:3rem}
+  h2{font-size:1.45rem}
+  .narrative .lead{font-size:1.15rem}
+}
+@media (max-width: 480px){
+  .artifact{padding:12px}
+}
+</style>
+</head>
+<body>
+
+<nav class="topbar" aria-label="Chapters">
+  <span class="mark">O2 TECH AI · HITL</span>
+  <a href="#ch01" data-title="BRIEF">01</a><a href="#ch02" data-title="WORKFLOW">02</a><a href="#ch03" data-title="DIAGNOSIS">03</a><a href="#ch04" data-title="IDEATION">04</a>
+  <a href="#ch05" data-title="METRICS">05</a><a href="#ch06" data-title="SELECTION">06</a><a href="#live" class="livelink" data-title="PROTOTYPE">LIVE</a>
+</nav>
+
+<div class="wrap">
+<div class="cols">
+
+<!-- ================= LEFT · STAGE ================= -->
+<div class="stage">
+<div class="stage-sticky" id="stageInner">
+
+  <!-- 01 the two snapshots -->
+  <figure class="artifact-frame is-active" id="af-frame" data-home="ch01">
+    <div class="artifact">
+      <p class="a-title">THE MATERIAL · TWO FROZEN SNAPSHOTS</p>
+      <div class="snapgrid">
+        <figure class="snap">
+          <div class="bwin">
+            <div class="bbar"><i></i><i></i><i></i><span class="burl">bom-setup-current-frozen.html</span></div>
+            <img src="assets/o2%20design/shots/setup.png" alt="Setup snapshot" loading="lazy">
+          </div>
+          <figcaption>SETUP · VERSION 2</figcaption>
+        </figure>
+        <figure class="snap">
+          <div class="bwin">
+            <div class="bbar"><i></i><i></i><i></i><span class="burl">bom-ebom-current-frozen.html</span></div>
+            <img src="assets/o2%20design/shots/confirm.png" alt="Confirm Parts snapshot" loading="lazy">
+          </div>
+          <figcaption>CONFIRM PARTS · VERSION 1</figcaption>
+        </figure>
+      </div>
+      <div class="fq" style="margin-top:12px"><span class="q">Method</span><span class="ans">THICK THINKING</span></div>
+      <div class="fq"><span class="q">Comparators</span><span class="ans">PALANTIR · FLEXPORT · RAMP</span></div>
+      <div class="fq"><span class="q">Lenses</span><span class="ans">PRODUCT · PSYCHOLOGY · VISUAL</span></div>
+      <p class="tiny mono dim" style="margin:10px 0 0">EVERY NUMBER COUNTED FROM THESE TWO FILES</p>
+    </div>
+    <figcaption class="state-label" data-label>01 · THE TWO SNAPSHOTS</figcaption>
+  </figure>
+
+  <!-- 02 pipeline -->
+  <figure class="artifact-frame" id="af-workflow" data-home="ch02">
+    <div class="artifact">
+      <p class="a-title">FOUR STAGES · THE AGENT PAUSES AT 02</p>
+      <div class="pipe">
+        <span class="st">BOM ARRIVES</span><span class="sep">›</span>
+        <span class="st">SETUP</span><span class="sep">›</span>
+        <span class="st here">CONFIRM PARTS</span><span class="sep">›</span>
+        <span class="st">SOURCE + PRICE</span><span class="sep">›</span>
+        <span class="st">BUILD QUOTES</span>
+      </div>
+      <div class="fq"><span class="dno">01</span><span class="q">Setup</span><span class="ans">HUMAN SETS RULES</span></div>
+      <div class="fq"><span class="dno">02</span><span class="q">Confirm Parts</span><span class="ans none">AGENT PAUSES · HITL GATE</span></div>
+      <div class="fq"><span class="dno">03</span><span class="q">Source and Price</span><span class="ans">AGENT</span></div>
+      <div class="fq"><span class="dno">04</span><span class="q">Build Quotes</span><span class="ans">AGENT</span></div>
+      <p class="tiny mono dim" style="margin:10px 0 0">RULES IN AT 01 · AVL · PRICE · PACKAGING · ALLOWLIST</p>
+    </div>
+    <figcaption class="state-label" data-label>02 · FOUR STAGES · THE HITL GATE</figcaption>
+  </figure>
+
+  <figure class="artifact-frame" id="af-thesis" data-home="ch03">
+    <div class="artifact">
+      <p class="a-title">FROM THE SHIPPED SCREEN · THE STATUS HEADER</p>
+      <div class="zoomshot"><img src="assets/o2%20design/shots/z-header.png" alt="Header reports counts and buckets with no reasoning" loading="lazy"></div>
+      <div class="evcap">RESULTS AND COUNTS · NO REASONING · NO LINEAGE · NO UNDO</div>
+    </div>
+    <figcaption class="state-label" data-label>03 · RESULTS WITHOUT REASONING</figcaption>
+  </figure>
+
+  <figure class="artifact-frame" id="af-evidence" data-home="ch03" data-state="d2">
+    <div class="artifact">
+      <p class="a-title">FROM THE SHIPPED SCREEN · ZOOMED</p>
+
+      <div class="ev-panel" data-panel="d2">
+        <div class="zoomshot"><img src="assets/o2%20design/shots/z-cause.png" alt="A matched row next to a review row that gives no cause" loading="lazy"></div>
+        <div class="evcap">THE REVIEW ROW · 0 VALID · NO CAUSE</div>
+        <div class="zoomshot" style="max-width:340px"><img src="assets/o2%20design/shots/z-refresh.png" alt="Two refresh buttons side by side" loading="lazy"></div>
+        <div class="evcap">TWO REFRESH BUTTONS · EQUAL WEIGHT</div>
+      </div>
+
+      <div class="ev-panel" data-panel="d3">
+        <div class="zoomshot"><img src="assets/o2%20design/shots/z-cols.png" alt="Empty columns and one repeated value" loading="lazy"></div>
+        <div class="evcap">EMPTY COLUMNS AND ONE REPEATED VALUE</div>
+        <div class="zoomshot" style="max-width:420px"><img src="assets/o2%20design/shots/z-type.png" alt="Three facts stacked in ten pixel type" loading="lazy"></div>
+        <div class="evcap">HIERARCHY BY SHRINKING TYPE</div>
+      </div>
+
+      <div class="state-tabs" data-tabs="af-evidence">
+        <button type="button" data-set="d2" aria-pressed="true">ATTRIBUTION</button>
+        <button type="button" data-set="d3" aria-pressed="false">TABLE LOAD</button>
+      </div>
+    </div>
+    <figcaption class="state-label" data-label>03 · EVIDENCE · ATTRIBUTION GAP</figcaption>
+  </figure>
+
+  <!-- 04 three options -->
+  <figure class="artifact-frame" id="af-options" data-home="ch04" data-state="a">
+    <div class="artifact">
+      <p class="a-title">THREE WORKING PROTOTYPES</p>
+
+      <div class="opt-panel" data-panel="a">
+        <div class="proto-embed"><iframe src="assets/o2%20design/option-a-lineage.html" title="Option A prototype" loading="lazy"></iframe></div>
+        <div class="optfoot"><span class="evcap">CLICK A PRICE · LINEAGE OPENS</span><a href="assets/o2%20design/option-a-lineage.html" target="_blank" rel="noopener">FULL SIZE ↗</a></div>
+        <div class="scopebar"><div class="cap"><span>BUILD + OPS COST</span><span>LOW</span></div>
+          <div class="track"><div class="fill" style="width:15%"></div></div></div>
+      </div>
+
+      <div class="opt-panel" data-panel="b">
+        <div class="proto-embed"><iframe src="assets/o2%20design/option-b-queue.html" title="Option B prototype" loading="lazy"></iframe></div>
+        <div class="optfoot"><span class="evcap">APPROVE EACH CARD · QUEUE ADVANCES</span><a href="assets/o2%20design/option-b-queue.html" target="_blank" rel="noopener">FULL SIZE ↗</a></div>
+        <div class="scopebar"><div class="cap"><span>BUILD + OPS COST</span><span>MEDIUM</span></div>
+          <div class="track"><div class="fill" style="width:45%"></div></div></div>
+      </div>
+
+      <div class="opt-panel" data-panel="c">
+        <div class="proto-embed"><iframe src="assets/o2%20design/option-c-copilot.html" title="Option C prototype" loading="lazy"></iframe></div>
+        <div class="optfoot"><span class="evcap">SEND A SUGGESTION · WHAT-IF RUNS</span><a href="assets/o2%20design/option-c-copilot.html" target="_blank" rel="noopener">FULL SIZE ↗</a></div>
+        <div class="scopebar"><div class="cap"><span>BUILD + OPS COST</span><span>HIGH</span></div>
+          <div class="track"><div class="fill" style="width:100%"></div></div></div>
+      </div>
+
+      <div class="state-tabs" data-tabs="af-options">
+        <button type="button" data-set="a" aria-pressed="true">A · LINEAGE</button>
+        <button type="button" data-set="b" aria-pressed="false">B · QUEUE</button>
+        <button type="button" data-set="c" aria-pressed="false">C · COPILOT</button>
+      </div>
+    </div>
+    <figcaption class="state-label" data-label>04 · OPTION A · ATTRIBUTION AND LINEAGE</figcaption>
+  </figure>
+
+  <!-- 06 the final setup -->
+  <figure class="artifact-frame" id="af-selection" data-home="ch06">
+    <div class="artifact">
+      <p class="a-title">FINAL PROTOTYPE · THE SETUP PAGE</p>
+      <div class="snap">
+        <div class="bwin">
+          <div class="bbar"><i></i><i></i><i></i><span class="burl">O2 Confirm Parts.html</span></div>
+          <img src="assets/o2%20design/shots/final-setup.png" alt="Final prototype Setup page, sourcing rules with consequences" loading="lazy" style="aspect-ratio:16/10">
+        </div>
+      </div>
+      <p class="tiny mono dim" style="margin:10px 0 0">EVERY RULE SHOWS WHAT IT DID TODAY</p>
+    </div>
+    <figcaption class="state-label" data-label>06 · THE FINAL SETUP</figcaption>
+  </figure>
+
+  <!-- 05 metrics -->
+  <figure class="artifact-frame" id="af-measure" data-home="ch05">
+    <div class="artifact">
+      <p class="a-title">FIVE METRICS · WITH TARGETS</p>
+      <div class="metrics">
+        <div class="card"><div class="t">CYCLE TIME PER BOM</div><p>Upload to exported quote.</p><div class="star">TARGET · DOWN 40%</div></div>
+        <div class="card"><div class="t">SPOT-CHECK RATIO</div><p>Re-checking auto-resolved lines.</p><div class="star">TARGET · 100% TO UNDER 15%</div></div>
+        <div class="card"><div class="t">UNPRICED LEAKAGE</div><p>Defective quotes that reach a customer.</p><div class="star">TARGET · ZERO</div></div>
+        <div class="card"><div class="t">MANUAL OVERRIDE RATE</div><p>Reads the agent's accuracy and how fast it learns.</p></div>
+        <div class="card"><div class="t">FIRST-PASS ACCEPTANCE</div><p>BOMs that go straight through to Source and Price.</p></div>
+      </div>
+    </div>
+    <figcaption class="state-label" data-label>05 · FIVE METRICS</figcaption>
+  </figure>
+
+</div>
+</div>
+
+<!-- ================= RIGHT · NARRATIVE ================= -->
+<main class="narrative">
+
+<!-- 01 -->
+<section class="chapter" id="ch01">
+  <div class="artifact-slot" id="slot-ch01"></div>
+  <div data-sync data-frame="af-frame" data-label="01 · THE TWO SNAPSHOTS">
+    <p class="kicker">CASE STUDY · O2 TECH AI · HUMAN-IN-THE-LOOP WORKFLOW REDESIGN</p>
+    <h1><span class="no">01</span>Brief | Core Idea and Method</h1>
+    <p class="lead">In hardware supply chain data, mistakes are expensive and full automation is unrealistic. The real work is the balance between the AI agent and the human expert: a human-in-the-loop flow that makes heavy data visible, trusted and usable.</p>
+    <div class="srcfiles" aria-label="Original frozen snapshots">
+      <a href="assets/o2%20design/bom-setup-current-frozen.html" target="_blank" rel="noopener">SNAPSHOT · SETUP<span class="arr">↗</span></a>
+      <a href="assets/o2%20design/bom-ebom-current-frozen.html" target="_blank" rel="noopener">SNAPSHOT · CONFIRM PARTS<span class="arr">↗</span></a>
+    </div>
+    <p>The study reads the real system: production source code and the live interface. The method is thick thinking. Walk the buyer's real scenarios, then hold the screens against dense B2B products like Palantir, Flexport and Ramp.</p>
+    <p>Three lenses: product mindset, user psychology, visual hierarchy. The goal is a rebuild with low cost and high return.</p>
+  </div>
+</section>
+<hr class="hr">
+
+<!-- 02 -->
+<section class="chapter" id="ch02">
+  <div class="artifact-slot" id="slot-ch02"></div>
+  <div data-sync data-frame="af-workflow" data-label="02 · FOUR STAGES · THE HITL GATE">
+    <h2><span class="no">02</span>Workflow | The Flow and the HITL Gate</h2>
+    <p class="lead">O2 Tech AI processes a BOM in four stages:</p>
+    <p class="flowline">01 Setup → 02 Confirm Parts → 03 Source &amp; Price → 04 Build Quotes</p>
+    <ul>
+      <li>Step 01 Setup: the buyer or engineer enters the hard rules. AVL policy, hard or soft. A target price ceiling. Packaging and a distributor allowlist.</li>
+      <li>Step 02 Confirm Parts: the core HITL gate. The agent parses the BOM, extracts standard parts, then pauses itself and asks a human to review and correct.</li>
+    </ul>
+  </div>
+</section>
+<hr class="hr">
+
+<!-- 03 -->
+<section class="chapter" id="ch03">
+  <div class="artifact-slot" id="slot-ch03"></div>
+  <div data-sync data-frame="af-evidence" data-state="d2">
+    <h2><span class="no">03</span>Diagnosis | What Is Broken and Why</h2>
+    <h3>1. Product mindset: rules without attribution</h3>
+    <ul>
+      <li>Rules and results are disconnected. The user sets hard AVL, a price target and packaging rules in Setup. Then 6 lines arrive unpriced and the system never says why. Out of stock? Blocked by hard AVL? A wrong MPN? The user cannot tell.</li>
+      <li>Time and state conflict. 18 of 30 prices are over 21 hours old. Two refresh buttons sit side by side with equal weight, with no risk levels and no explanation. That invites wrong clicks and burns API cost.</li>
+    </ul>
+  </div>
+  <div data-sync data-frame="af-thesis">
+    <h3>2. User psychology: the trust gap</h3>
+    <ul>
+      <li>The re-check trap. The header shows results and task status but gives no reasoning. Users respond by re-checking every line, and the automation loses the savings it was hired for.</li>
+      <li>No lineage. Decisions show only results. There is no one-click view of the original part data next to the AI normalized data.</li>
+      <li>No undo, no feedback loop. Users cannot tell whether the system remembers a fix, whether one click can revert it, or whether an audit log exists. The interface answers none of this.</li>
+    </ul>
+  </div>
+  <div data-sync data-frame="af-evidence" data-state="d3">
+    <h3>3. Visual hierarchy: data overload</h3>
+    <ul>
+      <li>A debug state in production. 28 columns open by default, no sticky columns. Nearly 40% of the width holds blanks or repeated constants. Part status hides behind horizontal scroll.</li>
+      <li>Hierarchy by shrinking type. Secondary information only gets smaller, so it gets hard to read. Colour, weight and grouping go unused.</li>
+      <li>No visualisation. A pure table, with no risk distribution and no breakdown of unpriced causes. The user gets no sense of global control.</li>
+    </ul>
+  </div>
+</section>
+<hr class="hr">
+
+<!-- 04 -->
+<section class="chapter" id="ch04">
+  <div class="artifact-slot" id="slot-ch04"></div>
+  <div data-sync data-frame="af-options" data-state="a">
+    <h2><span class="no">04</span>Ideation | Three Directions</h2>
+    <p class="lead">The breakthrough is a trust ladder: expose the right information at the right depth, and balance cognitive load against confidence. I drew three directions:</p>
+    <h3>Option A · Progressive attribution and lineage</h3>
+    <ul>
+      <li>Strategy: keep the table. Add micro attribution. A price opens its lineage one level deep, which supplier and which day. Edits keep the original text as a diff. One-click undo, and corrections flow back to the matcher.</li>
+      <li>Character: low build cost, small change for current users, aimed straight at the fear of trusting.</li>
+    </ul>
+  </div>
+  <div data-sync data-frame="af-options" data-state="b">
+    <h3>Option B · Exception-driven action queue</h3>
+    <ul>
+      <li>Strategy: hide the 80% of lines matched with high confidence. The screen becomes a queue of decision cards. Attention lands on the 6 nodes that need a human, one approval each, then the flow moves on.</li>
+      <li>Character: fastest handling and zero noise, and it demands high initial trust in the agent.</li>
+    </ul>
+  </div>
+  <div data-sync data-frame="af-options" data-state="c">
+    <h3>Option C · Co-pilot workspace</h3>
+    <ul>
+      <li>Strategy: a lean table on the left, an AI panel with a what-if simulator on the right. The user speaks plainly: refresh every stale Murata capacitor.</li>
+      <li>Character: the most flexible version and the most expensive. Heavy build, and heavy inference cost on every session.</li>
+    </ul>
+  </div>
+  <div data-sync data-frame="af-options" data-state="a">
+    <p class="subhead">TRADE-OFF MATRIX</p>
+    <div class="matrix-wrap">
+    <table class="matrix">
+      <thead><tr><th></th><th class="selcol">A · Lineage</th><th>B · Queue</th><th>C · Co-pilot</th></tr></thead>
+      <tbody>
+        <tr><td>First use</td><td class="selcol">easy, familiar</td><td>medium, new pattern</td><td>easiest, plain language</td></tr>
+        <tr><td>Fluency</td><td class="selcol">medium high</td><td>highest, exceptions only</td><td>medium, relies on chat</td></tr>
+        <tr><td>Build cost</td><td class="selcol">low, small changes</td><td>medium</td><td>high, new LLM layer</td></tr>
+        <tr><td>Ops cost</td><td class="selcol">low</td><td>low</td><td>high, frequent agent calls</td></tr>
+        <tr><td>Reversibility</td><td class="selcol">highest</td><td>high</td><td>medium</td></tr>
+        <tr><td>Business impact</td><td class="selcol">steady ROI</td><td>high, mature users</td><td>strong story, heavy landing</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
+<hr class="hr">
+
+<!-- 05 -->
+<section class="chapter" id="ch05">
+  <div class="artifact-slot" id="slot-ch05"></div>
+  <div data-sync data-frame="af-measure">
+    <h2><span class="no">05</span>Success Metrics | What I Would Measure</h2>
+    <p class="lead">Five numbers that measure the business value of the rebuild:</p>
+    <ol>
+      <li>Cycle time per BOM: average time from upload to exported quote. Target: down 40%.</li>
+      <li>Spot-check ratio: how often users re-check lines the agent already resolved. Target: from 100% to under 15%.</li>
+      <li>Unpriced quote leakage: defective quotes that slip out because a blocked rule went unseen. Target: zero.</li>
+      <li>Manual override rate: how often users correct the agent. It reads accuracy and learning.</li>
+      <li>First-pass acceptance: BOMs that go straight through to Source and Price with no edits.</li>
+    </ol>
+  </div>
+</section>
+<hr class="hr">
+
+<!-- 06 -->
+<section class="chapter" id="ch06">
+  <div class="artifact-slot" id="slot-ch06"></div>
+  <div data-sync data-frame="af-selection">
+    <h2><span class="no">06</span>Redesign Selection | The Choice and the Polish</h2>
+    <p class="lead">The choice: option A, with option B's exception-first triage folded in. Hybrid, light.</p>
+    <ul>
+      <li>The logic: an early stage B2B AI product should trade the lowest build cost and the lowest API cost for the highest customer trust and the fastest landing. A plus B changes no backend data structure and clears the trust and efficiency problems at the highest ROI.</li>
+    </ul>
+  </div>
+  <div data-sync data-frame="af-selection">
+    <p class="subhead">WHERE THE POLISH GOES</p>
+    <ol>
+      <li>Build the trust ladder: every exception states its cause. The row says hard AVL blocked, or out of stock.</li>
+      <li>Converge the table: lock 8 core columns, fold debug and rare columns into a drawer, and use semantic colour in place of broad highlight.</li>
+      <li>Make change visible and reversible: hover shows the original text against the standard MPN, with row-level undo. Safety builds trust.</li>
+    </ol>
+  </div>
+</section>
+</main>
+</div>
+</div>
+
+<!-- ================= FINAL PROTOTYPE ================= -->
+<section class="proto-section" id="live">
+  <p class="kicker">FINAL PROTOTYPE · A + B HYBRID · LIVE</p>
+  <div class="proto-frame">
+    <div class="bbar"><i></i><i></i><i></i><span class="burl">O2 Confirm Parts.html</span></div>
+    <div class="proto-embed" data-w="1440" data-h="900"><iframe src="assets/o2%20design/O2%20Confirm%20Parts.html" title="O2 Confirm Parts, final prototype" loading="lazy"></iframe></div>
+  </div>
+  <div class="srcfiles" style="margin-top:12px">
+    <a href="assets/o2%20design/O2%20Confirm%20Parts.html" target="_blank" rel="noopener">OPEN FULL SIZE<span class="arr">↗</span></a>
+  </div>
+</section>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- labels per frame / state ---------- */
+  var LABELS = {
+    "af-frame":    { def:"01 · THE TWO SNAPSHOTS" },
+    "af-workflow": { def:"02 · FOUR STAGES · THE HITL GATE" },
+    "af-thesis":   { def:"03 · RESULTS WITHOUT REASONING" },
+    "af-evidence": { d2:"03 · EVIDENCE · ATTRIBUTION GAP",
+                     d3:"03 · EVIDENCE · TABLE LOAD",
+                     def:"03 · EVIDENCE" },
+    "af-options":  { a:"04 · OPTION A · ATTRIBUTION AND LINEAGE",
+                     b:"04 · OPTION B · ACTION QUEUE",
+                     c:"04 · OPTION C · CO-PILOT WORKSPACE",
+                     def:"04 · THREE OPTIONS" },
+    "af-selection":{ def:"06 · THE FINAL SETUP" },
+    "af-measure":  { def:"05 · FIVE METRICS" }
+  };
+
+  var stage = document.getElementById("stageInner");
+  var frames = Array.prototype.slice.call(document.querySelectorAll(".artifact-frame"));
+  var mql = window.matchMedia("(max-width: 900px)");
+
+
+
+  /* ---------- state application ---------- */
+  function scaleEmbeds(){
+    Array.prototype.forEach.call(document.querySelectorAll(".proto-embed"), function(w){
+      var f = w.querySelector("iframe");
+      if (!f) return;
+      var cw = w.clientWidth;
+      if (!cw) return;
+      var dw = +w.dataset.w || 1280, dh = +w.dataset.h || 720;
+      var sc = cw / dw;
+      f.style.width = dw + "px";
+      f.style.height = dh + "px";
+      f.style.transform = "scale(" + sc + ")";
+      w.style.height = Math.round(dh * sc) + "px";
+    });
+  }
+  window.addEventListener("resize", scaleEmbeds);
+  if ("ResizeObserver" in window){
+    var embedRO = new ResizeObserver(scaleEmbeds);
+    Array.prototype.forEach.call(document.querySelectorAll(".proto-embed"), function(w){ embedRO.observe(w); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll(".proto-embed iframe"), function(f){
+    f.addEventListener("load", scaleEmbeds);
+  });
+
+  function setState(frame, state){
+    if (!state) return;
+    frame.dataset.state = state;
+    if (frame.id === "af-options") requestAnimationFrame(scaleEmbeds);
+    var tabs = frame.querySelector("[data-tabs]");
+    if (tabs){
+      tabs.querySelectorAll("button").forEach(function(b){
+        b.setAttribute("aria-pressed", b.dataset.set === state ? "true" : "false");
+      });
+    }
+    setLabel(frame, state);
+  }
+
+  function setLabel(frame, state, override){
+    var cap = frame.querySelector("[data-label]");
+    if (!cap) return;
+    if (override){ cap.textContent = override; return; }
+    var m = LABELS[frame.id] || {};
+    cap.textContent = m[state] || m.def || cap.textContent;
+  }
+
+  function showFrame(id, state, label){
+    frames.forEach(function(f){ f.classList.toggle("is-active", f.id === id); });
+    var f = document.getElementById(id);
+    if (!f) return;
+    if (state) setState(f, state);
+    if (label) setLabel(f, state, label);
+  }
+
+  /* ---------- interactions ---------- */
+  document.querySelectorAll("[data-tabs]").forEach(function(tabs){
+    var frame = document.getElementById(tabs.dataset.tabs);
+    tabs.querySelectorAll("button").forEach(function(b){
+      b.addEventListener("click", function(){ setState(frame, b.dataset.set); });
+    });
+  });
+
+  /* ---------- scroll sync ---------- */
+  var railLinks = Array.prototype.slice.call(document.querySelectorAll(".topbar a"));
+  function setRail(chId){
+    railLinks.forEach(function(a){
+      a.classList.toggle("active", a.getAttribute("href") === "#" + chId);
+    });
+  }
+  var syncEls = Array.prototype.slice.call(document.querySelectorAll("[data-sync]"));
+  if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        if (!e.isIntersecting) return;
+        var el = e.target;
+        var ch = el.closest(".chapter");
+        if (ch) setRail(ch.id);
+        if (!mql.matches){
+          showFrame(el.dataset.frame, el.dataset.state, el.dataset.label);
+        }
+      });
+    }, { rootMargin: "-50% 0% -50% 0%", threshold: 0 });
+    syncEls.forEach(function(el){ io.observe(el); });
+  }
+
+  /* ---------- mobile placement ---------- */
+  function place(){
+    var mobile = mql.matches;
+    frames.forEach(function(f){
+      var home = f.dataset.home;
+      if (!home) return;
+      var slot = document.getElementById("slot-" + home);
+      if (mobile && slot) slot.appendChild(f);
+      else stage.appendChild(f);
+    });
+  }
+  place();
+  requestAnimationFrame(scaleEmbeds);
+  if (mql.addEventListener) mql.addEventListener("change", function(){ place(); requestAnimationFrame(scaleEmbeds); });
+  else mql.addListener(place);
+
+  /* ---------- init ---------- */
+  showFrame("af-frame", null, "01 · THE TWO SNAPSHOTS");
+  setRail("ch01");
+})();
+</script>
+</body>
+</html>

@@ -8,6 +8,14 @@ export const metadata = {
 
 const EXPERIMENTS = [
   {
+    id: "⑩",
+    href: "/o2-case-study.html",
+    title: "O2 Tech AI · HITL redesign",
+    blurb:
+      "A scroll-driven dark case study of O2 Tech AI's human-in-the-loop sourcing product. Six chapters share one sticky artifact stage: screens, workflow maps and evidence swap in as the argument advances. Playfair headlines on near-black, signature lime accents.",
+    proves: "a case study as one continuous scene",
+  },
+  {
     id: "⑨",
     href: "/lab/bento",
     title: "Bento desktop homepage",

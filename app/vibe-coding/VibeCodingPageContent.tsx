@@ -39,6 +39,22 @@ type Entry = {
 
 const entries: Entry[] = [
   {
+    date: "2026.08",
+    title: "o2 tech ai case study",
+    description:
+      "Scroll-driven dark case study for O2 Tech AI's human-in-the-loop sourcing product. Six chapters share one sticky artifact stage where screens, workflow maps and evidence swap in as the argument advances.",
+    tags: ["web", "ai"],
+    href: "/o2-case-study.html",
+    hrefLabel: "case study →",
+    media: {
+      kind: "iframe",
+      src: "/o2-case-study.html",
+      href: "/o2-case-study.html",
+      bg: "bg-[#0B0D0A]",
+      title: "O2 Tech AI HITL case study",
+    },
+  },
+  {
     date: "2026.05",
     title: "design agency website",
     description: "Studio website for a creative agency — brand expression, work showcase, and inquiry flow.",

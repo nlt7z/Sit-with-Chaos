@@ -1,0 +1,681 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>O2 · Option A — Readiness contract</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   O2 · Option A — readiness contract header; everything below unchanged
+   Implements: Option A (readiness contract header) + Option B
+   (confidence-banded triage), D1–D4 fixes, Setup consequence
+   preview, one primary CTA per screen, state-named taxonomy.
+   Token discipline: 2 radii, 3 body type sizes, selected ≠ primary.
+   ============================================================ */
+:root{
+  --paper:#F5F3EA;
+  --card:#FCFBF6;
+  --card-2:#F0EEE1;
+  --ink:#232919;
+  --muted:#6E7361;
+  --faint:#9AA08D;
+  --line:#E4E1D1;
+  --line-2:#D2CFBC;
+
+  --pine:#2E4326;          /* primary action — never used for "selected" */
+  --pine-ink:#F2F5EA;
+  --sel:#232919;           /* selected control state */
+
+  --ok:#3F7A3F;   --ok-wash:#E9F1E1;   --ok-tick:#82A972;
+  --warn:#A26D14; --warn-wash:#F6EDD6; --warn-tick:#CD9F45;
+  --bad:#AE3A28;  --bad-wash:#F7E6E1;  --bad-tick:#C55B44;
+  --stale-tick:#CFC8A4;
+  --hollow:#E9E6D6;
+
+  --anno:#B8E532; --anno-ink:#2A3A06;
+
+  --r-s:6px; --r-m:10px;
+  --sans:"Inter",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --disp:"Fraunces",Georgia,serif;
+
+  --fs-1:12px;   /* meta, mono captions */
+  --fs-2:13.5px; /* table, controls    */
+  --fs-3:15px;   /* body, labels      */
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:var(--fs-3);line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:96px;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+input{font:inherit;color:inherit}
+.mono{font-family:var(--mono)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ============ top bar — jobs, not the org chart ============ */
+.topbar{
+  display:flex;align-items:center;gap:4px;
+  padding:10px 28px;border-bottom:1px solid var(--line);
+  background:var(--card);position:relative;
+}
+.brand{display:flex;align-items:center;gap:8px;margin-right:20px}
+.brand .dot{width:22px;height:22px;background:var(--pine);color:var(--pine-ink);
+  display:grid;place-items:center;font-family:var(--mono);font-size:10px;font-weight:500}
+.brand b{font-weight:600;font-size:var(--fs-3);letter-spacing:-.01em}
+.topnav{display:flex;gap:2px}
+.topnav a{
+  font-size:var(--fs-2);font-weight:500;color:var(--muted);text-decoration:none;
+  padding:6px 12px;
+}
+.topnav a:hover{color:var(--ink);background:var(--card-2)}
+.topnav a.active{color:var(--ink);background:var(--card-2)}
+.topbar .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.searchchip{
+  display:flex;align-items:center;gap:8px;font-size:var(--fs-1);color:var(--faint);
+  border:1px solid var(--line);padding:5px 10px;background:var(--paper);
+}
+.searchchip kbd{font-family:var(--mono);font-size:10px;border:1px solid var(--line);padding:0 4px;background:var(--card)}
+.avatar{width:26px;height:26px;background:var(--card-2);border:1px solid var(--line-2);
+  display:grid;place-items:center;font-size:10px;font-weight:600;color:var(--muted)}
+
+/* ============ context header — a title, not a filename ============ */
+.ctx{padding:20px 28px 0;max-width:1280px;margin:0 auto}
+.crumb{font-size:var(--fs-1);color:var(--faint);margin:0 0 6px}
+.crumb a{color:var(--muted);text-decoration:none}
+.ctx h1{
+  font-family:var(--disp);font-weight:500;font-size:24px;letter-spacing:.005em;
+  margin:0 0 6px;
+}
+.ctx .meta{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:var(--fs-1);color:var(--muted)}
+.filechip{
+  font-family:var(--mono);font-size:11px;color:var(--muted);
+  border:1px solid var(--line);padding:2px 8px;background:var(--card);
+  max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.meta .sep{color:var(--line-2)}
+
+/* ============ stepper — quiet, numbered, gated ============ */
+.stepper{
+  display:flex;align-items:center;gap:4px;
+  padding:16px 28px 0;max-width:1280px;margin:0 auto;
+}
+.step{
+  display:flex;align-items:center;gap:8px;
+  font-size:var(--fs-2);font-weight:500;color:var(--muted);
+  padding:7px 12px;border:1px solid transparent;
+}
+.step .n{
+  width:18px;height:18px;display:grid;place-items:center;
+  font-family:var(--mono);font-size:10px;border:1px solid var(--line-2);color:var(--faint);background:var(--card);
+}
+.step.done .n{background:var(--ok-wash);border-color:var(--ok-tick);color:var(--ok)}
+.step.current{color:var(--ink);background:var(--card);border-color:var(--line)}
+.step.current .n{background:var(--sel);border-color:var(--sel);color:var(--card)}
+.step[disabled]{opacity:.55;cursor:not-allowed}
+.step:not([disabled]):hover{color:var(--ink)}
+.step-sep{color:var(--line-2);font-size:var(--fs-1)}
+.step .lock{font-size:10px;color:var(--faint)}
+
+/* ============ screens ============ */
+.screen{max-width:1280px;margin:0 auto;padding:16px 28px 40px}
+.screen[hidden]{display:none}
+
+/* ============ readiness header — the contract (Option A) ============ */
+.ready{
+  background:var(--card);border:1px solid var(--line);
+  padding:20px 22px 18px;position:relative;
+}
+.ready .top{display:flex;align-items:flex-start;gap:28px;flex-wrap:wrap}
+.verdict-wrap{min-width:230px}
+.verdict{
+  font-family:var(--disp);font-weight:600;font-size:34px;line-height:1.05;
+  letter-spacing:.003em;margin:0 0 4px;
+}
+.verdict.bad{color:var(--bad)} .verdict.warn{color:var(--warn)}
+.verdict.stale{color:var(--muted)} .verdict.ok{color:var(--ok)}
+.vline{font-size:var(--fs-2);color:var(--muted);max-width:300px}
+
+/* price never renders without its coverage — one inseparable element */
+.pricecell{
+  border-left:1px solid var(--line);padding-left:28px;min-width:250px;
+}
+.pricecell .cap{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);margin:2px 0 6px}
+.pricecell .fig{font-family:var(--mono);font-variant-numeric:tabular-nums;font-size:22px;font-weight:500;line-height:1.2}
+.pricecell .fig.withheld{color:var(--muted)}
+.pricecell .cov{display:block;font-size:var(--fs-1);color:var(--muted);margin-top:4px}
+.pricecell .cov b{color:var(--ink);font-weight:600}
+
+.ready .actions{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+.btn-primary{
+  background:var(--pine);color:var(--pine-ink);
+  font-weight:600;font-size:var(--fs-2);
+  padding:10px 18px;
+  transition:filter .15s;
+}
+.btn-primary:hover{filter:brightness(1.12)}
+.btn-ghost{font-size:var(--fs-1);color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.btn-ghost:hover{color:var(--ink)}
+.btn-line{
+  font-size:var(--fs-1);font-weight:500;color:var(--muted);
+  border:1px solid var(--line-2);padding:5px 10px;background:var(--card);
+}
+.btn-line:hover{color:var(--ink);border-color:var(--faint)}
+
+/* state chips = filters, named by state, one taxonomy */
+.ready .strip-row{margin-top:16px;border-top:1px solid var(--line);padding-top:14px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.chip{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:var(--fs-1);font-weight:500;color:var(--muted);
+  border:1px solid var(--line);padding:4px 11px;background:var(--card);
+}
+.chip i{width:7px;height:7px;flex:none}
+.chip .num{font-weight:500}
+.chip:hover{border-color:var(--faint);color:var(--ink)}
+.chip.c-bad i{background:var(--bad-tick)} .chip.c-warn i{background:var(--warn-tick)}
+.chip.c-ok i{background:var(--ok-tick)} .chip.c-stale i{background:var(--stale-tick)}
+.chip.off{opacity:.5}
+
+/* the thirty-tick strip — the path from the header back to the rows */
+.ticks{display:flex;gap:3px;height:12px;margin:0 0 6px}
+.ticks i{flex:1;background:var(--hollow);cursor:pointer;transition:transform .1s}
+.ticks i:hover{transform:scaleY(1.45)}
+.ticks i.ok{background:var(--ok-tick)} .ticks i.warn{background:var(--warn-tick)}
+.ticks i.bad{background:var(--bad-tick)} .ticks i.stale{background:var(--stale-tick)}
+.ticks-cap{font-family:var(--mono);font-size:10px;letter-spacing:.12em;color:var(--faint)}
+
+/* freshness — one control, age stated (D4) */
+.fresh{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:var(--fs-1);color:var(--muted)}
+.fresh .age-dot{width:7px;height:7px;background:var(--ok-tick);flex:none}
+.fresh.stale .age-dot{background:var(--warn-tick)}
+
+/* ============ triage bands (Option B) ============ */
+.bands{margin-top:16px;display:flex;flex-direction:column;gap:12px}
+.band{background:var(--card);border:1px solid var(--line);overflow:hidden}
+.band-h{
+  width:100%;display:flex;align-items:center;gap:10px;text-align:left;
+  padding:13px 18px;font-size:var(--fs-2);font-weight:600;
+}
+.band-h i{width:8px;height:8px;flex:none}
+.band-h .bl{white-space:nowrap}
+.band-h .sumline{
+  flex:1;min-width:0;margin-left:6px;
+  font-weight:400;font-size:var(--fs-2);color:var(--muted);
+}
+.band-h .sumline b{color:var(--ink);font-weight:600}
+.band-h .count{font-family:var(--mono);font-variant-numeric:tabular-nums;font-weight:500;color:var(--muted)}
+.band-h .hint{font-weight:400;color:var(--muted)}
+.band-h .tw{margin-left:auto;color:var(--faint);font-size:var(--fs-1);transition:transform .2s}
+.band.open .band-h .tw{transform:rotate(180deg)}
+.band-b{display:none;border-top:1px solid var(--line)}
+.band.open .band-b{display:block}
+.band.b-bad{border-color:#E5C3B8}.band.b-bad .band-h i{background:var(--bad-tick)}
+.band.b-warn{border-color:#E4D2A8}.band.b-warn .band-h i{background:var(--warn-tick)}
+.band.b-ok .band-h i{background:var(--ok-tick)}
+
+/* exception rows — evidence and the required action, in the row */
+.xrow{display:flex;gap:16px;align-items:flex-start;padding:14px 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.xrow:last-child{border-bottom:0}
+.xrow .id{min-width:230px}
+.xrow .mpn{font-family:var(--mono);font-size:var(--fs-2);font-weight:500}
+.xrow .desc{font-size:var(--fs-1);color:var(--muted);margin-top:2px}
+.xrow .why{flex:1;min-width:240px}
+.xrow .why .lab{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);margin-bottom:3px}
+.xrow .why p{margin:0;font-size:var(--fs-2)}
+.xrow .why p .num{font-size:var(--fs-1)}
+.xrow .do{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.xrow.blocked .why p{color:var(--bad)}
+.btn-act{
+  font-size:var(--fs-1);font-weight:600;color:var(--ink);
+  border:1px solid var(--line-2);padding:6px 11px;background:var(--card);
+}
+.btn-act:hover{border-color:var(--ink)}
+.btn-act.main{background:var(--sel);border-color:var(--sel);color:var(--card)}
+.btn-act.main:hover{filter:brightness(1.25)}
+
+/* ============ table — hygiene (D3) ============ */
+.tablewrap{overflow-x:auto}
+table.parts{border-collapse:separate;border-spacing:0;width:100%;min-width:880px;font-size:var(--fs-2)}
+.parts th{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.13em;color:var(--faint);
+  text-align:left;padding:9px 14px;border-bottom:1px solid var(--line);white-space:nowrap;
+  background:var(--card);
+}
+.parts td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top;background:var(--card)}
+.parts tr:last-child td{border-bottom:0}
+.parts .c-id{position:sticky;left:0;z-index:2;box-shadow:inset -1px 0 0 var(--line)}
+.parts th.c-id{z-index:3}
+.parts .mpn{font-family:var(--mono);font-weight:500;white-space:nowrap}
+.parts .desc{font-size:var(--fs-1);color:var(--muted);margin-top:1px;max-width:250px}
+.parts .src{white-space:nowrap}
+.parts .src .via{font-size:var(--fs-1);color:var(--muted)}
+.parts td.r,.parts th.r{text-align:right}
+.parts td.r{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.parts .age{font-family:var(--mono);font-size:var(--fs-1);color:var(--faint);white-space:nowrap}
+.parts .age.old{color:var(--warn)}
+.rowact{visibility:hidden;display:flex;gap:4px;white-space:nowrap}
+.parts tr:hover .rowact{visibility:visible}
+.rowact button{font-size:11px;color:var(--muted);text-decoration:underline;text-underline-offset:3px;padding:2px 4px}
+.rowact button:hover{color:var(--ink)}
+
+/* ============ unchanged zone (Option A scope) ============ */
+.unchg{margin-top:18px}
+.unchg-cap{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--faint);margin:0 0 8px}
+.card-table{background:var(--card);border:1px solid var(--line);overflow:hidden}
+
+/* ============ setup screen ============ */
+.setup-grid{display:flex;flex-direction:column;gap:12px;margin-top:0}
+.panel{background:var(--card);border:1px solid var(--line);padding:20px 22px}
+.panel h2{font-size:var(--fs-3);font-weight:600;margin:0 0 2px}
+.panel .sub{font-size:var(--fs-1);color:var(--muted);margin:0 0 16px}
+.frow{display:grid;grid-template-columns:200px 1fr;gap:10px 24px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.frow:first-of-type{border-top:0}
+.frow>label{font-size:var(--fs-2);font-weight:500;padding-top:6px}
+.frow .hint{grid-column:2;font-size:var(--fs-1);color:var(--faint);margin-top:-2px}
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+
+/* single-select: joined segmented control (pick one) */
+.seg{display:inline-flex;border:1px solid var(--line-2);overflow:hidden;background:var(--card)}
+.seg button{font-size:var(--fs-2);font-weight:500;color:var(--muted);padding:6px 14px;border-right:1px solid var(--line)}
+.seg button:last-child{border-right:0}
+.seg button[aria-pressed="true"]{background:var(--sel);color:var(--card)}
+.seg button:not([aria-pressed="true"]):hover{color:var(--ink);background:var(--card-2)}
+
+/* multi-select: separate check chips (pick any) */
+.chk{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:var(--fs-2);font-weight:500;color:var(--muted);
+  border:1px solid var(--line-2);padding:6px 12px;background:var(--card);
+}
+.chk .box{width:13px;height:13px;border:1.5px solid var(--line-2);display:grid;place-items:center;font-size:9px;color:transparent}
+.chk[aria-pressed="true"]{color:var(--ink);border-color:var(--faint)}
+.chk[aria-pressed="true"] .box{background:var(--sel);border-color:var(--sel);color:var(--card)}
+.chk:hover{color:var(--ink)}
+
+.txt{
+  border:1px solid var(--line-2);background:var(--card);
+  padding:6px 10px;font-size:var(--fs-2);width:110px;
+}
+.txt:focus{outline:2px solid var(--sel);outline-offset:1px}
+.unit{font-size:var(--fs-1);color:var(--muted)}
+.slider-row{display:flex;align-items:center;gap:12px;max-width:420px;flex:1}
+.slider-row input[type=range]{flex:1;accent-color:var(--pine)}
+.slider-row .end{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--faint)}
+.slider-out{font-size:var(--fs-1);color:var(--muted)}
+
+/* the consequence footer — policy shows its cost before Continue */
+.consequence{
+  background:var(--card);border:1px solid var(--line-2);
+  padding:16px 22px;display:flex;align-items:center;gap:22px;flex-wrap:wrap;
+  position:sticky;bottom:76px;box-shadow:0 6px 24px rgba(35,41,25,.08);
+}
+.consequence .mini{flex:1;min-width:280px}
+.consequence .line{font-size:var(--fs-2);margin:0 0 8px}
+.consequence .line b{font-weight:600}
+.consequence .line .no{color:var(--bad);font-weight:600}
+.consequence .ticks{height:9px;margin-bottom:0}
+
+/* ============ annotation layer (portfolio markup, lime = my layer) ============ */
+.anno{
+  display:none;position:absolute;z-index:30;
+  font-family:var(--mono);font-size:10px;line-height:1.45;letter-spacing:.02em;
+  background:var(--anno);color:var(--anno-ink);
+  padding:4px 8px;max-width:250px;
+  box-shadow:0 2px 10px rgba(35,41,25,.18);
+}
+body.show-anno .anno{display:block}
+.anno b{font-weight:600;display:block;letter-spacing:.08em}
+.rel{position:relative}
+
+/* ============ prototype bar ============ */
+.protobar{
+  position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:50;
+  display:flex;align-items:center;gap:4px;
+  background:#1E2417;color:#D9DECB;
+  padding:7px 8px 7px 16px;box-shadow:0 8px 30px rgba(20,25,12,.35);
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;white-space:nowrap;
+}
+.protobar .lab{color:#8B927B;margin-right:6px}
+.protobar button{color:#B9C1A6;padding:5px 10px;font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+.protobar button:hover{color:#F0F3E4}
+.protobar button[aria-pressed="true"]{background:#B8E532;color:#1E2417}
+.protobar .div{width:1px;height:16px;background:#3A4230;margin:0 6px}
+
+@media (max-width:900px){
+  .ready .top{gap:16px}
+  .pricecell{border-left:0;padding-left:0}
+  .frow{grid-template-columns:1fr}
+  .frow .hint{grid-column:1}
+  .protobar{max-width:94vw;overflow-x:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ============ nav: four jobs, internal controls removed ============ -->
+<header class="topbar rel">
+  <div class="brand"><span class="dot">O2</span><b>parts</b></div>
+  <nav class="topnav">
+    <a href="#" class="active">Quotes</a>
+    <a href="#">Suppliers</a>
+    <a href="#">Inventory</a>
+    <a href="#">Knowledge</a>
+  </nav>
+  <div class="right">
+    <span class="searchchip">Search <kbd>⌘K</kbd></span>
+    <span class="avatar">AL</span>
+  </div>
+  <span class="anno" style="top:44px;left:640px"><b>NAV</b>16 flat entries → 4 jobs. Stop&nbsp;all, O2&nbsp;Internal, Design&nbsp;mode: gone from production chrome.</span>
+</header>
+
+<!-- ============ context: a title, not a filename ============ -->
+<div class="ctx rel">
+  <p class="crumb"><a href="#">Quotes</a> / Acme Robotics</p>
+  <h1>Acme Robotics · Rev B controller board</h1>
+  <div class="meta">
+    <span class="num">30 lines</span><span class="sep">·</span>
+    <span>Version 2</span><span class="sep">·</span>
+    <span>Uploaded 21 h ago by o2-admin</span><span class="sep">·</span>
+    <span class="filechip" title="code-repo-30-line-test-bom_customer_cbom_customer_cbom (1).xlsx">code-repo-30-line-test-bom_customer_cbom… (1).xlsx</span>
+    <button class="btn-ghost">Activity</button>
+  </div>
+  <span class="anno" style="top:-6px;right:0"><b>TITLE</b>Who + what + state. The raw filename demoted to a metadata chip.</span>
+</div>
+
+<!-- ============ stepper: linear, gated by the verdict ============ -->
+<nav class="stepper rel" aria-label="Quote pipeline">
+  <button class="step done" id="step-setup"><span class="n">✓</span>Setup</button>
+  <span class="step-sep">›</span>
+  <button class="step current" id="step-confirm"><span class="n">2</span>Confirm parts</button>
+  <span class="step-sep">›</span>
+  <button class="step" id="step-source" disabled><span class="n">3</span>Source &amp; price <span class="lock" id="stepLock">· blocked</span></button>
+  <span class="step-sep">›</span>
+  <button class="step" disabled><span class="n">4</span>Build quote</button>
+  <span class="anno" style="top:44px;left:340px"><b>GATE</b>Later steps lock until the verdict clears — the pipeline tells the truth about itself.</span>
+</nav>
+
+<!-- ================================================================
+     SCREEN · CONFIRM PARTS
+     ================================================================ -->
+<main class="screen" id="screen-confirm">
+
+  <!-- Option A · readiness contract -->
+  <section class="ready rel" aria-label="Readiness">
+    <div class="top">
+      <div class="verdict-wrap">
+        <h2 class="verdict bad" id="verdict">Blocked</h2>
+        <p class="vline" id="vline">2 lines cannot be bought from any allowed source.</p>
+      </div>
+      <div class="pricecell rel">
+        <div class="cap">DRAFT QUOTE</div>
+        <div class="fig withheld" id="fig">Price withheld</div>
+        <span class="cov" id="cov">would cover <b>22 of 30</b> lines · not quotable yet</span>
+        <span class="anno" style="bottom:-30px;left:28px"><b>D1</b>The price and its coverage are one element. Screenshot one, you screenshot both.</span>
+      </div>
+      <div class="actions">
+        <button class="btn-primary" id="cta">Resolve 2 blocked lines</button>
+        <button class="btn-ghost">Run what-if</button>
+      </div>
+    </div>
+
+    <div class="strip-row rel">
+      <div class="chips" id="chips"></div>
+      <div class="ticks" id="ticks" aria-label="30 lines in file order, coloured by state"></div>
+      <div class="ticks-cap">30 LINES · FILE ORDER · CLICK A TICK TO JUMP TO ITS LINE</div>
+      <div class="fresh" id="fresh"><span class="age-dot"></span><span id="freshText">Prices current · refreshed 2 h ago</span><button class="btn-line" id="freshBtn" hidden>Refresh 18 prices</button></div>
+      <span class="anno" style="top:-8px;right:0"><b>D2</b>One taxonomy, named by state — not by who resolved it. Chips are filters.</span>
+      <span class="anno" style="bottom:34px;left:34%"><b>D1→D3</b>The tick strip is the path from the header back to the rows. Four-second read; bins at 500 lines.</span>
+      <span class="anno" style="bottom:-10px;left:0"><b>D4</b>One freshness control, age stated. Two rival refresh buttons merged.</span>
+    </div>
+  </section>
+
+  <!-- Option A stops here: the shipped table, untouched -->
+  <div class="unchg rel">
+    <div class="unchg-cap">BELOW THIS LINE · UNCHANGED — THE SHIPPED TABLE, SIMPLIFIED FOR THIS MOCKUP</div>
+    <div class="card-table" id="flatTable"></div>
+    <span class="anno" style="top:20px;right:0"><b>SCOPE</b>Option A touches nothing below the header. One component, no new data, fully reversible.</span>
+  </div>
+
+</main>
+
+<!-- ============ prototype bar ============ -->
+<div class="protobar" role="toolbar" aria-label="Prototype controls">
+  <span class="lab">PROTOTYPE</span>
+  <button data-scn="blocked" aria-pressed="true">BLOCKED</button>
+  <button data-scn="incomplete" aria-pressed="false">INCOMPLETE</button>
+  <button data-scn="stale" aria-pressed="false">STALE</button>
+  <button data-scn="ready" aria-pressed="false">READY</button>
+  <span class="div"></span>
+  <button id="annoBtn" aria-pressed="false">NOTES</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* ================= data · 30 lines ================= */
+var LINES = [
+  {mpn:"GRM1555C1H180JA01D", mfr:"Murata",   desc:"CAP CER 18 pF 50 V C0G/NP0 0402",  qty:30,  unit:0.0143, via:"DigiKey · @≥100"},
+  {mpn:"GRM155R71C104KA88D", mfr:"Murata",   desc:"CAP CER 0.1 µF 16 V X7R 0402",     qty:60,  unit:0.0160, via:"Mouser · @≥100"},
+  {mpn:"GRM185R61E105KA12D", mfr:"Murata",   desc:"CAP CER 1 µF 25 V X5R 0603",       qty:90,  unit:0.0768, via:"DigiKey · @≥100"},
+  {mpn:"CL10B104KB8NNNC",    mfr:"Samsung",  desc:"CAP CER 0.1 µF 50 V X7R 0603",     qty:120, unit:0.0121, via:"Arrow · @≥220"},
+  {mpn:"CC0402KRX7R9BB471",  mfr:"YAGEO",    desc:"CAP CER 470 pF 50 V X7R 0402",     qty:150, unit:0.0150, via:"DigiKey · @≥500"},
+  {mpn:"C0402C101J5GAC7867", mfr:"KEMET",    desc:"CAP CER 100 pF 50 V C0G 0402",     qty:180, unit:0.0170, via:"Mouser · @≥500"},
+  {mpn:"CC0805KKX7R7BB105",  mfr:"YAGEO",    desc:"CAP CER 1 µF 16 V X7R 0805",       qty:210, unit:0.0442, via:"Arrow · @≥220"},
+  {mpn:"RC0402FR-0710KL",    mfr:"YAGEO",    desc:"RES 10 kΩ 1% 1/16 W 0402",         qty:240, unit:0.0084, via:"DigiKey · @≥1000"},
+  {mpn:"RC0402FR-071KL",     mfr:"YAGEO",    desc:"RES 1 kΩ 1% 1/16 W 0402",          qty:120, unit:0.0084, via:"DigiKey · @≥1000"},
+  {mpn:"ERJ-2RKF4700X",      mfr:"Panasonic",desc:"RES 470 Ω 1% 1/10 W 0402",         qty:60,  unit:0.0091, via:"Mouser · @≥1000"},
+  {mpn:"CRCW040233K0FKED",   mfr:"Vishay",   desc:"RES 33 kΩ 1% 1/16 W 0402",         qty:90,  unit:0.0102, via:"DigiKey · @≥500"},
+  {mpn:"LQG15HS10NJ02D",     mfr:"Murata",   desc:"IND 10 nH ±5% 0402",               qty:60,  unit:0.0198, via:"Mouser · @≥100"},
+  {mpn:"SKY13351-378LF",     mfr:"Skyworks", desc:"RF SWITCH SPDT 0.1–6.0 GHz",       qty:30,  unit:1.9200, via:"Arrow · @≥25"},
+  {mpn:"BLM15AG601SN1D",     mfr:"Murata",   desc:"FERRITE BEAD 600 Ω 0402",          qty:120, unit:0.0177, via:"DigiKey · @≥100"},
+  {mpn:"TPS62841DLCR",       mfr:"TI",       desc:"BUCK CONV 750 mA VSON-6",          qty:30,  unit:0.6120, via:"TI Direct · @≥25"},
+  {mpn:"STM32L432KCU6",      mfr:"ST",       desc:"MCU ARM M4 256 KB UFQFPN-32",      qty:30,  unit:4.8800, via:"DigiKey · @≥25"},
+  {mpn:"W25Q64JVSSIQ",       mfr:"Winbond",  desc:"FLASH 64 Mb QSPI SOIC-8",          qty:30,  unit:0.8140, via:"Mouser · @≥25"},
+  {mpn:"NCP2020FCT1G",       mfr:"onsemi",   desc:"AUDIO AMP CLASS-D WLCSP-9",        qty:30,  unit:0.6400, via:"Mouser · @≥25"},
+  {mpn:"ABM8-24.000MHZ-B2-T",mfr:"Abracon",  desc:"XTAL 24 MHz ±20 ppm 3225",         qty:30,  unit:0.2960, via:"DigiKey · @≥100"},
+  {mpn:"SP0503BAHTG",        mfr:"Littelfuse",desc:"TVS ARRAY 3-CH SOT-23",           qty:30,  unit:0.1730, via:"Arrow · @≥100"},
+  {mpn:"PESD5V0S1BA",        mfr:"Nexperia", desc:"ESD DIODE 5 V SOD-323",            qty:60,  unit:0.0490, via:"Mouser · @≥250"},
+  {mpn:"DMG2305UX-7",        mfr:"Diodes",   desc:"MOSFET P-CH 20 V SOT-23",          qty:30,  unit:0.1210, via:"DigiKey · @≥100"},
+  {mpn:"LTST-C190KRKT",      mfr:"Lite-On",  desc:"LED RED 0603 REV-MOUNT",           qty:60,  unit:0.0980, via:"Mouser · @≥100"},
+  {mpn:"10118194-0001LF",    mfr:"Amphenol", desc:"CONN MICRO-USB B SMT",             qty:30,  unit:0.4620, via:"DigiKey · @≥50"},
+  {mpn:"20021121-00010C4LF", mfr:"Amphenol", desc:"HEADER 10-POS 1.27 mm SMT",        qty:30,  unit:0.6240, via:"Mouser · @≥50"},
+  {mpn:"MF-MSMF050-2",       mfr:"Bourns",   desc:"PTC FUSE 500 mA 1812",             qty:30,  unit:0.1480, via:"DigiKey · @≥100"},
+  {mpn:"NRVTS245ESFT1G",     mfr:"onsemi",   desc:"SCHOTTKY 45 V 2 A SOD-123",        qty:30,  unit:0.2110, via:"Arrow · @≥100"},
+  {mpn:"74LVC1G17GW",        mfr:"Nexperia", desc:"SCHMITT BUFFER TSSOP-5",           qty:30,  unit:0.0870, via:"Mouser · @≥250"},
+  {mpn:"SN74AVC2T245RSWR",   mfr:"TI",       desc:"XCVR 2-BIT UQFN-10",               qty:30,  unit:0.3240, via:"TI Direct · @≥25"},
+  {mpn:"B72520T0350K062",    mfr:"TDK",      desc:"VARISTOR 35 V 0805",               qty:30,  unit:0.1090, via:"DigiKey · @≥100"}
+];
+
+/* exception detail per scenario (indexes into LINES).
+   Every blocked line carries its cause: a fact about the world needs the
+   customer; a consequence of the user's own policy carries the control
+   that would release it. */
+var BLOCKED_INFO = {
+  12:{cause:"YOUR AVL POLICY",
+      why:"In stock at Arrow — outside your AVL. Not a market problem; a settings one.",
+      acts:[["Allow Arrow for this line",1],["Choose substitute",0],["Keep blocked",0]]},
+  17:{cause:"END OF LIFE",
+      why:"Manufacturer EOL. No stock at any distributor, at any price.",
+      acts:[["Ask customer: approve substitute",1],["Remove from quote",0]]}
+};
+var REVIEW_INFO = {
+  3:{why:"Two sources disagree on MOQ — 500 vs 1,000. Pick affects unit price by 12%.", acts:[["Approve pick",1],["Open both sources",0]]},
+  8:{why:"Substitute pick. One datasheet delta: tolerance ±10% → ±20%.", acts:[["Approve substitute",1],["See original",0]]},
+  15:{why:"Price basis below need — quoted @≥25, build needs 30. Next break at 100 changes total.", acts:[["Approve at 100-break",1],["Keep @25 basis",0]]},
+  23:{why:"Connector matched by description only — manufacturer PDF unreadable.", acts:[["Confirm match",1],["Open datasheet",0]]}
+};
+var UNPRICED = [12,17,3,8,15,23];   /* used by the incomplete scenario */
+var STALE_IDX = [0,1,2,4,5,6,7,9,10,11,13,14,16,18,19,20,21,24];
+
+/* figures are computed from the lines, so the header can never
+   contradict the rows — the D1 failure this redesign exists to fix */
+var TOTAL_ALL = LINES.reduce(function(a,l){ return a + l.unit*l.qty; }, 0);
+var TOTAL_PARTIAL = LINES.reduce(function(a,l,i){
+  return UNPRICED.indexOf(i)>=0 ? a : a + l.unit*l.qty;
+}, 0);
+
+/* ================= scenarios ================= */
+var SCN = {
+  blocked:{
+    verdict:"Blocked", vclass:"bad",
+    vline:"2 lines cannot be bought: one is end of life, one sits outside your AVL policy.",
+    fig:"Price withheld", withheld:true,
+    cov:'would cover <b>28 of 30</b> lines · not quotable while 2 are blocked',
+    cta:"Resolve 2 blocked lines", lock:"· blocked",
+    fresh:{stale:false, text:"Prices current · refreshed 2 h ago", btn:null},
+    state:function(i){ if(BLOCKED_INFO[i])return"bad"; if(REVIEW_INFO[i])return"warn"; return"ok"; }
+  },
+  incomplete:{
+    verdict:"Incomplete", vclass:"warn",
+    vline:"6 lines have no price yet. The agent is not confident enough to fill them.",
+    fig:"USD "+TOTAL_PARTIAL.toFixed(2), withheld:false,
+    cov:'covers <b>24 of 30</b> lines · 6 unpriced, listed below',
+    cta:"Price 6 remaining lines", lock:"· incomplete",
+    fresh:{stale:false, text:"Prices current · refreshed 2 h ago", btn:null},
+    state:function(i){ return UNPRICED.indexOf(i)>=0?"warn":"ok"; }
+  },
+  stale:{
+    verdict:"Stale", vclass:"stale",
+    vline:"Every line is priced, but the market may have moved under 18 of them.",
+    fig:"USD "+TOTAL_ALL.toFixed(2)+" – "+(TOTAL_ALL*1.028).toFixed(2), withheld:false,
+    cov:'covers <b>30 of 30</b> lines · as of yesterday 14:02',
+    cta:"Refresh 18 prices", lock:"· stale",
+    fresh:{stale:true, text:"18 prices older than 21 h · last full refresh yesterday 14:02", btn:"Refresh 18 prices"},
+    state:function(i){ return STALE_IDX.indexOf(i)>=0?"stale":"ok"; }
+  },
+  ready:{
+    verdict:"Ready", vclass:"ok",
+    vline:"Every line priced from an allowed source. Nothing is waiting on you.",
+    fig:"USD "+TOTAL_ALL.toFixed(2), withheld:false,
+    cov:'covers <b>30 of 30</b> lines · USD '+(TOTAL_ALL/30).toFixed(2)+' per unit',
+    cta:"Continue to Source & price", lock:"",
+    fresh:{stale:false, text:"Prices current · refreshed 4 min ago", btn:null},
+    state:function(){ return "ok"; }
+  }
+};
+
+var $=function(id){return document.getElementById(id)};
+var current="blocked";
+
+/* ================= renderers ================= */
+function money(n){return "USD "+n.toFixed(2)}
+function lineTotal(l){return l.unit==null?null:l.unit*l.qty}
+
+function renderHeader(s){
+  var v=$("verdict"); v.textContent=s.verdict; v.className="verdict "+s.vclass;
+  $("vline").textContent=s.vline;
+  var f=$("fig"); f.textContent=s.fig; f.className="fig num"+(s.withheld?" withheld":"");
+  $("cov").innerHTML=s.cov;
+  $("cta").textContent=s.cta;
+  var lockEl=$("stepLock"), step=$("step-source");
+  if(s.lock){ lockEl.textContent=s.lock; step.setAttribute("disabled",""); }
+  else { lockEl.textContent=""; step.removeAttribute("disabled"); }
+  var fr=$("fresh"); fr.className="fresh"+(s.fresh.stale?" stale":"");
+  $("freshText").textContent=s.fresh.text;
+  var fb=$("freshBtn");
+  if(s.fresh.btn){ fb.hidden=false; fb.textContent=s.fresh.btn; } else fb.hidden=true;
+}
+
+function renderChips(s){
+  var counts={bad:0,warn:0,stale:0,ok:0};
+  LINES.forEach(function(_,i){counts[s.state(i)]++});
+  var defs=[
+    ["bad","Blocked",counts.bad],
+    ["warn", current==="incomplete"?"Unpriced":"Needs review", counts.warn],
+    ["stale","Stale price",counts.stale],
+    ["ok","Verified by O2",counts.ok]
+  ];
+  var host=$("chips"); host.innerHTML="";
+  defs.forEach(function(d){
+    if(!d[2])return;
+    var b=document.createElement("button");
+    b.className="chip c-"+d[0];
+    b.innerHTML="<i></i>"+d[1]+' <span class="num">'+d[2]+"</span>";
+    b.addEventListener("click",function(){jumpTo(d[0])});
+    host.appendChild(b);
+  });
+}
+
+function renderTicks(s,host){
+  host.innerHTML="";
+  LINES.forEach(function(l,i){
+    var t=document.createElement("i");
+    t.className=s.state(i);
+    t.title="Line "+String(i+1).padStart(2,"0")+" · "+l.mpn;
+    t.addEventListener("click",function(){jumpTo(s.state(i))});
+    host.appendChild(t);
+  });
+}
+
+function verifiedTable(idx,s){
+  var rows=idx.map(function(i){
+    var l=LINES[i], tot=lineTotal(l);
+    var old = s.state(i)==="stale";
+    return "<tr>"
+      +'<td class="c-id"><div class="mpn">'+l.mpn+'</div><div class="desc">'+l.desc+"</div></td>"
+      +"<td>"+l.mfr+"</td>"
+      +'<td class="src">'+(l.via?l.via:"—")+'<div class="via">total-cost pick · '+(l.via?l.via.split(" ·")[0]:"—")+"</div></td>"
+      +'<td class="r">'+l.qty+"</td>"
+      +'<td class="r">'+(l.unit==null?"—":l.unit.toFixed(4))+"</td>"
+      +'<td class="r">'+(tot==null?"—":tot.toFixed(2))+"</td>"
+      +'<td><span class="age'+(old?" old":"")+'">'+(old?"26 h":"2 h")+"</span></td>"
+      +'<td><div class="rowact"><button>Sources</button><button>Alternates</button></div></td>'
+      +"</tr>";
+  }).join("");
+  return '<div class="tablewrap"><table class="parts">'
+    +"<thead><tr>"
+    +'<th class="c-id">MPN / DESCRIPTION</th><th>MFR</th><th>SOURCE · BASIS</th>'
+    +'<th class="r">QTY</th><th class="r">UNIT USD</th><th class="r">TOTAL USD</th><th>AGE</th><th></th>'
+    +"</tr></thead><tbody>"+rows+"</tbody></table></div>";
+}
+
+function renderFlat(s){
+  var all=LINES.map(function(_,i){return i});
+  $("flatTable").innerHTML=verifiedTable(all,s);
+}
+function jumpTo(){
+  var t=$("flatTable"); if(t)t.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* ================= scenario switch ================= */
+function apply(name){
+  current=name;
+  var s=SCN[name];
+  renderHeader(s); renderChips(s); renderTicks(s,$("ticks")); renderFlat(s);
+  Array.prototype.forEach.call(document.querySelectorAll(".protobar [data-scn]"),function(b){
+    b.setAttribute("aria-pressed", b.getAttribute("data-scn")===name ? "true":"false");
+  });
+}
+Array.prototype.forEach.call(document.querySelectorAll(".protobar [data-scn]"),function(b){
+  b.addEventListener("click",function(){
+    apply(b.getAttribute("data-scn"));
+  });
+});
+
+/* ================= cta walks the happy path ================= */
+$("cta").addEventListener("click",function(){
+  if(current==="ready")return;
+  var next={blocked:"incomplete",incomplete:"stale",stale:"ready"};
+  apply(next[current]);
+});
+
+/* ================= annotations ================= */
+$("annoBtn").addEventListener("click",function(){
+  var on=document.body.classList.toggle("show-anno");
+  this.setAttribute("aria-pressed",on?"true":"false");
+});
+
+apply("blocked");
+})();
+</script>
+</body>
+</html>

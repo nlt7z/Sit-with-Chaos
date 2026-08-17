@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<meta name="color-scheme" content="light">
+<title>Option C · Copilot</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F3EA; --card:#FCFBF6; --ink:#232919; --muted:#6E7361; --faint:#9AA08D;
+  --line:#E4E1D1; --line2:#D2CFBC; --pine:#2E4326; --pine-ink:#F2F5EA;
+  --ok:#3F7A3F; --warn:#A26D14; --bad:#AE3A28;
+  --sans:"Inter",system-ui,sans-serif; --mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;width:1280px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.wrap{display:grid;grid-template-columns:1fr 420px;gap:0;min-height:720px}
+.left{padding:18px 24px 24px;border-right:1px solid var(--line)}
+.left h1{font-size:18px;font-weight:600;margin:0 0 2px}
+.left .meta{font-family:var(--mono);font-size:11px;color:var(--muted);margin-bottom:14px}
+.tablewrap{background:var(--card);border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;color:var(--faint);text-align:left;padding:8px 12px;border-bottom:1px solid var(--line)}
+td{padding:8px 12px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.mpn{font-family:var(--mono);font-weight:500;white-space:nowrap}
+td.r,th.r{text-align:right}
+td.r{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.age{font-family:var(--mono);font-size:11px;color:var(--faint)}
+tr.stale .age{color:var(--warn);font-weight:500}
+tr.flash td{background:#EDF3E2;transition:background .4s}
+.right{display:flex;flex-direction:column;background:var(--card)}
+.right .head{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--muted);padding:16px 18px;border-bottom:1px solid var(--line)}
+.thread{flex:1;padding:16px 18px;display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+.msg{max-width:92%;font-size:13px;line-height:1.5}
+.msg.user{align-self:flex-end;background:var(--ink);color:var(--card);padding:8px 12px}
+.msg.agent{align-self:flex-start;background:var(--paper);border:1px solid var(--line);padding:8px 12px}
+.msg .est{display:block;font-family:var(--mono);font-size:10px;color:var(--muted);margin-top:6px}
+.msg .act{display:flex;gap:6px;margin-top:8px}
+.btn{font-family:var(--mono);font-size:10px;letter-spacing:.06em;border:1px solid var(--line2);padding:5px 10px}
+.btn:hover{border-color:var(--ink)}
+.btn.main{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.suggest{padding:0 18px 10px;display:flex;flex-direction:column;gap:6px}
+.suggest button{font-size:12px;text-align:left;border:1px dashed var(--line2);color:var(--muted);padding:7px 10px}
+.suggest button:hover{color:var(--ink);border-color:var(--ink)}
+.inputbar{display:flex;gap:8px;padding:0 18px 16px}
+.inputbar input{flex:1;font:inherit;font-size:13px;border:1px solid var(--line2);background:var(--paper);padding:9px 12px;color:var(--ink)}
+.inputbar .send{background:var(--pine);color:var(--pine-ink);font-weight:600;font-size:13px;padding:9px 16px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="left">
+    <h1>Confirm Parts</h1>
+    <div class="meta">30 LINES · 8 CORE COLUMNS · 3 STALE</div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>MPN</th><th>MFR</th><th class="r">UNIT USD</th><th class="r">QTY</th><th>AGE</th></tr></thead>
+        <tbody>
+          <tr><td class="mpn">GRM1555C1H180JA01D</td><td>Murata</td><td class="r" data-p>0.0143</td><td class="r">30</td><td><span class="age">2 h</span></td></tr>
+          <tr class="stale" data-murata><td class="mpn">GRM155R71C104KA88D</td><td>Murata</td><td class="r" data-p>0.0160</td><td class="r">60</td><td><span class="age">26 h</span></td></tr>
+          <tr><td class="mpn">CL10B104KB8NNNC</td><td>Samsung</td><td class="r" data-p>0.0121</td><td class="r">120</td><td><span class="age">2 h</span></td></tr>
+          <tr class="stale" data-murata><td class="mpn">GRM185R61E105KA12D</td><td>Murata</td><td class="r" data-p>0.0768</td><td class="r">90</td><td><span class="age">26 h</span></td></tr>
+          <tr><td class="mpn">RC0402FR-0710KL</td><td>YAGEO</td><td class="r" data-p>0.0084</td><td class="r">240</td><td><span class="age">2 h</span></td></tr>
+          <tr class="stale" data-murata><td class="mpn">LQG15HS10NJ02D</td><td>Murata</td><td class="r" data-p>0.0198</td><td class="r">60</td><td><span class="age">27 h</span></td></tr>
+          <tr><td class="mpn">STM32L432KCU6</td><td>ST</td><td class="r" data-p>4.8800</td><td class="r">30</td><td><span class="age">2 h</span></td></tr>
+          <tr><td class="mpn">W25Q64JVSSIQ</td><td>Winbond</td><td class="r" data-p>0.8140</td><td class="r">30</td><td><span class="age">3 h</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="right">
+    <div class="head">COPILOT · WHAT-IF</div>
+    <div class="thread" id="thread">
+      <div class="msg agent">Ask about this BOM, or try a what-if. I will estimate the cost before anything runs.</div>
+    </div>
+    <div class="suggest" id="suggest">
+      <button data-flow="murata">refresh every stale Murata capacitor</button>
+      <button data-flow="avl">what changes if hard AVL becomes soft</button>
+    </div>
+    <div class="inputbar">
+      <input placeholder="Ask the agent" aria-label="Ask the agent">
+      <button class="send">Send</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var thread = document.getElementById("thread");
+function add(cls, html){
+  var d = document.createElement("div");
+  d.className = "msg " + cls;
+  d.innerHTML = html;
+  thread.appendChild(d);
+  thread.scrollTop = thread.scrollHeight;
+  return d;
+}
+function runMurata(){
+  Array.prototype.forEach.call(document.querySelectorAll("[data-murata]"), function(tr){
+    tr.classList.remove("stale");
+    tr.classList.add("flash");
+    tr.querySelector(".age").textContent = "1 m";
+  });
+  add("agent", "3 prices refreshed. Total moved USD 0.42. <span class='est'>1,380 TOKENS USED</span>");
+}
+var FLOWS = {
+  murata: {
+    user: "refresh every stale Murata capacitor",
+    agent: function(){
+      var m = add("agent", "3 lines match. Estimated 1,400 tokens. <span class='act'><button class='btn main' id='runM'>RUN</button><button class='btn'>CANCEL</button></span>");
+      m.querySelector("#runM").addEventListener("click", runMurata);
+    }
+  },
+  avl: {
+    user: "what changes if hard AVL becomes soft",
+    agent: function(){
+      add("agent", "2 blocked lines gain a source. Total rises USD 84.10. Nothing applied yet. <span class='est'>SIMULATION · 2,900 TOKENS</span>");
+    }
+  }
+};
+Array.prototype.forEach.call(document.querySelectorAll("[data-flow]"), function(b){
+  b.addEventListener("click", function(){
+    var f = FLOWS[b.dataset.flow];
+    add("user", f.user);
+    setTimeout(f.agent, 350);
+  });
+});
+})();
+</script>
+</body>
+</html>

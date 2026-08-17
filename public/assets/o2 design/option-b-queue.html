@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<meta name="color-scheme" content="light">
+<title>Option B · Action Queue</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&family=Fraunces:opsz,wght@9..144,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F3EA; --card:#FCFBF6; --ink:#232919; --muted:#6E7361; --faint:#9AA08D;
+  --line:#E4E1D1; --line2:#D2CFBC; --pine:#2E4326; --pine-ink:#F2F5EA;
+  --ok:#3F7A3F; --warn:#A26D14; --bad:#AE3A28;
+  --sans:"Inter",system-ui,sans-serif; --mono:"IBM Plex Mono",monospace; --disp:"Fraunces",serif;
+}
+*{box-sizing:border-box}
+body{margin:0;width:1280px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.top{display:flex;align-items:baseline;gap:14px;padding:18px 28px 6px}
+.top h1{font-size:18px;font-weight:600;margin:0}
+.top .meta{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.top .prog{margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.bar{height:3px;background:var(--line);margin:0 28px}
+.bar i{display:block;height:100%;background:var(--pine);width:0;transition:width .3s}
+.hidden-note{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--muted);padding:10px 28px}
+.stage{padding:6px 28px 24px;max-width:760px}
+.qcard{background:var(--card);border:1px solid var(--line);padding:22px 24px}
+.cause{font-family:var(--mono);font-size:10px;letter-spacing:.1em;padding:3px 8px;border:1px solid}
+.cause.bad{color:var(--bad);border-color:var(--bad)}
+.cause.warn{color:var(--warn);border-color:var(--warn)}
+.qcard .mpn{font-family:var(--mono);font-size:16px;font-weight:500;margin:12px 0 2px}
+.qcard .desc{font-size:12.5px;color:var(--muted)}
+.qcard .ev{margin:14px 0 18px;font-size:14px;border-left:2px solid var(--line2);padding-left:12px}
+.acts{display:flex;gap:8px}
+.btn{font-size:13px;font-weight:600;border:1px solid var(--line2);padding:9px 16px}
+.btn:hover{border-color:var(--ink)}
+.btn.main{background:var(--pine);color:var(--pine-ink);border-color:var(--pine)}
+.btn.main:hover{filter:brightness(1.12)}
+.done{display:none;background:var(--card);border:1px solid var(--line);padding:34px 28px;text-align:center}
+.done h2{font-family:var(--disp);font-weight:600;font-size:30px;color:var(--ok);margin:0 0 6px}
+.done p{color:var(--muted);margin:0 0 18px}
+</style>
+</head>
+<body>
+<div class="top"><h1>Decisions</h1><span class="meta">6 NEED YOU</span><span class="prog" id="prog">1 OF 6</span></div>
+<div class="bar"><i id="fill"></i></div>
+<p class="hidden-note">24 HIGH CONFIDENCE LINES HIDDEN · <u style="cursor:pointer">SHOW ALL</u></p>
+
+<div class="stage">
+  <div class="qcard" id="card">
+    <span class="cause" id="cause"></span>
+    <div class="mpn" id="mpn"></div>
+    <div class="desc" id="desc"></div>
+    <div class="ev" id="ev"></div>
+    <div class="acts">
+      <button class="btn main" id="approve"></button>
+      <button class="btn" id="edit">Edit</button>
+      <button class="btn" id="skip">Skip</button>
+    </div>
+  </div>
+  <div class="done" id="done">
+    <h2>Queue clear</h2>
+    <p>30 of 30 lines resolved. Nothing hidden went unchecked.</p>
+    <button class="btn main">Continue to Source and Price</button>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+var Q = [
+  {cause:"NO SOURCE UNDER HARD AVL", cls:"bad", mpn:"SKY13351-378LF", desc:"Skyworks · RF switch SPDT",
+   ev:"In stock at Arrow. Arrow sits outside your AVL.", act:"Allow Arrow for this line"},
+  {cause:"MANUFACTURER EOL", cls:"bad", mpn:"NCP2020FCT1G", desc:"onsemi · audio amp class D",
+   ev:"No stock at any distributor, at any price.", act:"Approve substitute"},
+  {cause:"SOURCES DISAGREE ON MOQ", cls:"warn", mpn:"CL10B104KB8NNNC", desc:"Samsung · 0.1 uF 50 V",
+   ev:"500 vs 1,000. The pick moves unit price 12%.", act:"Approve pick"},
+  {cause:"SUBSTITUTE PICK", cls:"warn", mpn:"RC0402FR-071KL", desc:"YAGEO · 1 kOhm 0402",
+   ev:"One datasheet delta: tolerance 10% to 20%.", act:"Approve substitute"},
+  {cause:"PRICE BASIS BELOW NEED", cls:"warn", mpn:"STM32L432KCU6", desc:"ST · MCU ARM M4",
+   ev:"Quoted at 25 and up. The build needs 30.", act:"Approve at 100 break"},
+  {cause:"MATCHED BY DESCRIPTION ONLY", cls:"warn", mpn:"10118194-0001LF", desc:"Amphenol · micro USB",
+   ev:"Manufacturer PDF unreadable. Match unverified.", act:"Confirm match"}
+];
+var i = 0;
+var el = function(id){ return document.getElementById(id); };
+function render(){
+  if (i >= Q.length){
+    el("card").style.display = "none";
+    el("done").style.display = "block";
+    el("prog").textContent = "6 OF 6";
+    el("fill").style.width = "100%";
+    return;
+  }
+  var q = Q[i];
+  el("cause").textContent = q.cause;
+  el("cause").className = "cause " + q.cls;
+  el("mpn").textContent = q.mpn;
+  el("desc").textContent = q.desc;
+  el("ev").textContent = q.ev;
+  el("approve").textContent = q.act;
+  el("prog").textContent = (i + 1) + " OF 6";
+  el("fill").style.width = (i / Q.length * 100) + "%";
+}
+["approve","skip"].forEach(function(id){
+  el(id).addEventListener("click", function(){ i++; render(); });
+});
+el("edit").addEventListener("click", function(){ i++; render(); });
+render();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,451 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>O2 · Option C — Quote-first</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   O2 · Option C — quote-first, exceptions interrupt.
+   The draft quote document IS the surface. The audit table is
+   demoted to a link. Only lines that threaten the document
+   surface, as blocking interrupts carrying the required action.
+   ============================================================ */
+:root{
+  --paper:#F5F3EA;
+  --card:#FCFBF6;
+  --card-2:#F0EEE1;
+  --ink:#232919;
+  --muted:#6E7361;
+  --faint:#9AA08D;
+  --line:#E4E1D1;
+  --line-2:#D2CFBC;
+
+  --pine:#2E4326; --pine-ink:#F2F5EA;
+  --ok:#3F7A3F;   --ok-wash:#E9F1E1;
+  --warn:#A26D14; --warn-wash:#F6EDD6;
+  --bad:#AE3A28;  --bad-wash:#F7E6E1;
+
+  --anno:#B8E532; --anno-ink:#2A3A06;
+
+  --r-s:6px; --r-m:10px;
+  --sans:"Inter",system-ui,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --disp:"Fraunces",Georgia,serif;
+  --fs-1:12px; --fs-2:13.5px; --fs-3:15px;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:var(--sans);font-size:var(--fs-3);line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  padding-bottom:96px;
+}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.mono{font-family:var(--mono)}
+.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* ============ top bar ============ */
+.topbar{
+  display:flex;align-items:center;gap:4px;
+  padding:10px 28px;border-bottom:1px solid var(--line);
+  background:var(--card);position:relative;
+}
+.brand{display:flex;align-items:center;gap:8px;margin-right:20px}
+.brand .dot{width:22px;height:22px;background:var(--pine);color:var(--pine-ink);
+  display:grid;place-items:center;font-family:var(--mono);font-size:10px;font-weight:500}
+.brand b{font-weight:600;font-size:var(--fs-3);letter-spacing:-.01em}
+.topnav{display:flex;gap:2px}
+.topnav a{font-size:var(--fs-2);font-weight:500;color:var(--muted);text-decoration:none;padding:6px 12px;}
+.topnav a.active,.topnav a:hover{color:var(--ink);background:var(--card-2)}
+.topbar .right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.avatar{width:26px;height:26px;background:var(--card-2);border:1px solid var(--line-2);
+  display:grid;place-items:center;font-size:10px;font-weight:600;color:var(--muted)}
+
+/* ============ document stage ============ */
+.stage{max-width:820px;margin:0 auto;padding:26px 28px 40px}
+.stagehead{display:flex;align-items:flex-end;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.stagehead h1{font-family:var(--disp);font-weight:500;font-size:22px;margin:0}
+.stagehead .status{font-size:var(--fs-1);color:var(--muted)}
+.stagehead .status b{color:var(--bad);font-weight:600}
+body.resolved .stagehead .status b{color:var(--ok)}
+.stagehead .aux{margin-left:auto;display:flex;align-items:center;gap:12px}
+.btn-ghost{font-size:var(--fs-1);color:var(--muted);text-decoration:underline;text-underline-offset:3px}
+.btn-ghost:hover{color:var(--ink)}
+.btn-primary{
+  background:var(--pine);color:var(--pine-ink);font-weight:600;font-size:var(--fs-2);
+  padding:10px 18px;transition:filter .15s;
+}
+.btn-primary:hover{filter:brightness(1.12)}
+.btn-primary[disabled]{opacity:.45;cursor:not-allowed;filter:none}
+
+/* the document — a page, not a screen */
+.doc{
+  background:var(--card);border:1px solid var(--line);
+  padding:40px 48px 36px;position:relative;
+  box-shadow:0 10px 34px rgba(35,41,25,.07);
+}
+.doc .dochead{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;
+  border-bottom:1px solid var(--line);padding-bottom:18px;margin-bottom:18px}
+.doc .from .co{font-family:var(--disp);font-weight:600;font-size:19px}
+.doc .from .sub{font-size:var(--fs-1);color:var(--muted);margin-top:2px}
+.doc .qmeta{text-align:right;font-size:var(--fs-1);color:var(--muted)}
+.doc .qmeta .kind{font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--faint)}
+.doc .qmeta .ref{font-family:var(--mono);color:var(--ink)}
+.doc .toblock{display:flex;gap:40px;margin-bottom:20px;flex-wrap:wrap}
+.doc .toblock .lab{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--faint);margin-bottom:3px}
+.doc .toblock .v{font-size:var(--fs-2)}
+.doc .toblock .v b{font-weight:600}
+
+/* quote lines */
+table.q{border-collapse:collapse;width:100%;font-size:var(--fs-2)}
+.q th{
+  font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.13em;color:var(--faint);
+  text-align:left;padding:8px 10px;border-bottom:1px solid var(--line-2);white-space:nowrap;
+}
+.q th.r,.q td.r{text-align:right}
+.q td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.q td.r{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.q .mpn{font-family:var(--mono);font-weight:500;white-space:nowrap}
+.q .d{font-size:var(--fs-1);color:var(--muted)}
+.q tr.threat td{background:var(--bad-wash)}
+.q tr.threat .mark{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--bad);font-weight:500}
+body.resolved .q tr.threat td{background:var(--ok-wash)}
+body.resolved .q tr.threat .mark{color:var(--ok)}
+
+/* totals */
+.totals{display:flex;justify-content:flex-end;margin-top:14px}
+.totals .box{min-width:290px}
+.totals .row{display:flex;justify-content:space-between;gap:30px;font-size:var(--fs-2);padding:5px 10px}
+.totals .row .num{font-weight:500}
+.totals .row.grand{border-top:1px solid var(--line-2);margin-top:4px;padding-top:10px;font-weight:600;font-size:var(--fs-3)}
+.totals .withheld{color:var(--bad);font-weight:600}
+.terms{margin-top:22px;border-top:1px solid var(--line);padding-top:14px;
+  font-size:var(--fs-1);color:var(--muted);display:flex;gap:26px;flex-wrap:wrap}
+.terms b{color:var(--ink);font-weight:600}
+
+/* ============ the blocking interrupt ============ */
+.interrupt{
+  position:fixed;right:26px;bottom:82px;width:400px;max-width:calc(100vw - 40px);z-index:40;
+  background:var(--card);border:1px solid var(--bad);
+  box-shadow:0 16px 48px rgba(35,41,25,.22);overflow:hidden;
+}
+.interrupt .ih{
+  display:flex;align-items:center;gap:9px;padding:12px 16px;
+  background:var(--bad-wash);border-bottom:1px solid var(--bad);
+  font-size:var(--fs-2);font-weight:600;color:var(--bad);
+}
+.interrupt .ih .n{font-family:var(--mono)}
+.irow{padding:13px 16px;border-bottom:1px solid var(--line)}
+.irow:last-child{border-bottom:0}
+.irow .mpn{font-family:var(--mono);font-size:var(--fs-2);font-weight:500}
+.irow .cause{font-family:var(--mono);font-size:10px;letter-spacing:.14em;color:var(--bad);margin:1px 0 4px}
+.irow p{margin:0 0 9px;font-size:var(--fs-1);color:var(--muted)}
+.irow .acts{display:flex;gap:6px;flex-wrap:wrap}
+.btn-act{
+  font-size:var(--fs-1);font-weight:600;color:var(--ink);
+  border:1px solid var(--line-2);padding:6px 11px;background:var(--card);
+}
+.btn-act:hover{border-color:var(--ink)}
+.btn-act.main{background:#232919;border-color:#232919;color:var(--card)}
+.btn-act.main:hover{filter:brightness(1.25)}
+.irow.done .acts,.irow.done p{display:none}
+.irow.done .cause{color:var(--ok)}
+.irow .doneline{display:none;font-size:var(--fs-1);color:var(--ok);font-weight:500}
+.irow.done .doneline{display:block}
+body.resolved .interrupt{display:none}
+
+/* resolved toast */
+.toast{
+  display:none;position:fixed;right:26px;bottom:82px;z-index:40;
+  background:var(--ok-wash);border:1px solid var(--ok);color:var(--ok);
+  padding:11px 16px;font-size:var(--fs-2);font-weight:600;
+  box-shadow:0 10px 30px rgba(35,41,25,.15);
+}
+body.resolved .toast{display:block}
+
+/* ============ annotation layer ============ */
+.anno{
+  display:none;position:absolute;z-index:30;
+  font-family:var(--mono);font-size:10px;line-height:1.45;letter-spacing:.02em;
+  background:var(--anno);color:var(--anno-ink);
+  padding:4px 8px;max-width:250px;
+  box-shadow:0 2px 10px rgba(35,41,25,.18);
+}
+body.show-anno .anno{display:block}
+.anno b{font-weight:600;display:block;letter-spacing:.08em}
+.anno.fixed{position:fixed}
+.rel{position:relative}
+
+/* ============ prototype bar ============ */
+.protobar{
+  position:fixed;left:50%;bottom:16px;transform:translateX(-50%);z-index:50;
+  display:flex;align-items:center;gap:4px;
+  background:#1E2417;color:#D9DECB;
+  padding:7px 8px 7px 16px;box-shadow:0 8px 30px rgba(20,25,12,.35);
+  font-family:var(--mono);font-size:11px;letter-spacing:.06em;white-space:nowrap;
+}
+.protobar .lab{color:#8B927B;margin-right:6px}
+.protobar button{color:#B9C1A6;padding:5px 10px;font-family:var(--mono);font-size:11px;letter-spacing:.06em}
+.protobar button:hover{color:#F0F3E4}
+.protobar button[aria-pressed="true"]{background:#B8E532;color:#1E2417}
+.protobar .div{width:1px;height:16px;background:#3A4230;margin:0 6px}
+
+@media (max-width:760px){
+  .doc{padding:24px 20px}
+  .interrupt{right:12px;left:12px;width:auto}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand"><span class="dot">O2</span><b>parts</b></div>
+  <nav class="topnav">
+    <a href="#" class="active">Quotes</a>
+    <a href="#">Suppliers</a>
+    <a href="#">Inventory</a>
+    <a href="#">Knowledge</a>
+  </nav>
+  <div class="right"><span class="avatar">AL</span></div>
+</header>
+
+<main class="stage rel">
+
+  <div class="stagehead rel">
+    <h1>Draft quote</h1>
+    <span class="status" id="statusLine">Not sendable · <b>2 lines threaten this quote</b></span>
+    <div class="aux">
+      <button class="btn-ghost">Line audit ↗</button>
+      <button class="btn-primary" id="sendBtn" disabled>Send to customer</button>
+    </div>
+    <span class="anno" style="top:40px;left:0"><b>C · THE SURFACE</b>The agent drafts the quote immediately. The user reviews the document a customer will hold them to — not a 28-column audit table.</span>
+    <span class="anno" style="top:40px;right:150px"><b>DEMOTED</b>The audit surface still exists — as a link. Users who do not yet trust the agent will experience this as being locked out.</span>
+  </div>
+
+  <article class="doc" aria-label="Draft quotation">
+    <div class="dochead">
+      <div class="from">
+        <div class="co">Acme Electronics</div>
+        <div class="sub">via O2 parts · automated sourcing</div>
+      </div>
+      <div class="qmeta">
+        <div class="kind">QUOTATION · DRAFT</div>
+        <div class="ref">Q-2418 · Rev B controller board</div>
+        <div>Prepared 16 Aug · <span id="validLine">validity pending</span></div>
+      </div>
+    </div>
+
+    <div class="toblock">
+      <div><div class="lab">FOR</div><div class="v"><b>Acme Robotics</b> · hardware procurement</div></div>
+      <div><div class="lab">BUILD</div><div class="v">30 boards · 30 line items</div></div>
+      <div><div class="lab">SOURCING POLICY</div><div class="v">AVL preferred + approved · brokers excluded</div></div>
+    </div>
+
+    <table class="q">
+      <thead><tr>
+        <th>#</th><th>ITEM</th><th class="r">QTY</th><th class="r">UNIT USD</th><th class="r">EXT USD</th>
+      </tr></thead>
+      <tbody id="qbody"></tbody>
+    </table>
+
+    <div class="totals rel">
+      <div class="box">
+        <div class="row"><span>Lines quoted</span><span class="num" id="tLines">28 of 30</span></div>
+        <div class="row"><span>Longest lead time</span><span class="num">12 days</span></div>
+        <div class="row grand"><span>Total</span><span class="num withheld" id="tGrand">Withheld · 2 unresolved</span></div>
+      </div>
+      <span class="anno" style="top:-6px;left:-260px"><b>D1 HOLDS HERE TOO</b>The total never renders while a line still threatens it. No cent-precision fiction over unpriced rows.</span>
+    </div>
+
+    <div class="terms">
+      <span>Validity <b id="termValid">—</b></span>
+      <span>Packaging <b>reel / cut tape / tray</b></span>
+      <span>Prices refreshed <b>2 h ago</b></span>
+    </div>
+  </article>
+
+</main>
+
+<!-- ============ the blocking interrupt ============ -->
+<aside class="interrupt rel" id="interrupt" aria-label="Blocking exceptions">
+  <div class="ih"><span class="n" id="iCount">2</span> lines threaten this quote</div>
+
+  <div class="irow" data-line="13">
+    <div class="mpn">SKY13351-378LF <span class="d">· line 13 · RF switch</span></div>
+    <div class="cause" data-cause>CAUSE · YOUR AVL POLICY</div>
+    <p>In stock at Arrow — outside your AVL. Not a market problem; a settings one.</p>
+    <div class="acts">
+      <button class="btn-act main" data-resolve="Allowed Arrow for this line">Allow Arrow for this line</button>
+      <button class="btn-act" data-resolve="Substitute approved">Choose substitute</button>
+    </div>
+    <div class="doneline" data-done></div>
+  </div>
+
+  <div class="irow" data-line="18">
+    <div class="mpn">NCP2020FCT1G <span class="d">· line 18 · audio amp</span></div>
+    <div class="cause" data-cause>CAUSE · END OF LIFE</div>
+    <p>Manufacturer EOL. No stock at any distributor, at any price.</p>
+    <div class="acts">
+      <button class="btn-act main" data-resolve="Substitute sent to customer for approval">Ask customer: approve substitute</button>
+      <button class="btn-act" data-resolve="Removed from quote">Remove from quote</button>
+    </div>
+    <div class="doneline" data-done></div>
+  </div>
+
+  <span class="anno" style="top:-64px;right:0"><b>INTERRUPT</b>Only lines that threaten the document surface — and each carries its cause and the action that releases it. Everything else stays quiet.</span>
+</aside>
+
+<div class="toast">Quote complete · every line priced from an allowed source</div>
+
+<!-- ============ prototype bar ============ -->
+<div class="protobar" role="toolbar" aria-label="Prototype controls">
+  <span class="lab">PROTOTYPE · OPTION C</span>
+  <button id="stInterrupt" aria-pressed="true">2 THREATS</button>
+  <button id="stResolved" aria-pressed="false">RESOLVED</button>
+  <span class="div"></span>
+  <button id="annoBtn" aria-pressed="false">NOTES</button>
+</div>
+
+<script>
+(function(){
+"use strict";
+
+/* quote lines — same 30-line test BOM as A and B */
+var LINES = [
+  ["GRM1555C1H180JA01D","CAP CER 18 pF 50 V C0G/NP0 0402",30,0.0143],
+  ["GRM155R71C104KA88D","CAP CER 0.1 µF 16 V X7R 0402",60,0.0160],
+  ["GRM185R61E105KA12D","CAP CER 1 µF 25 V X5R 0603",90,0.0768],
+  ["CL10B104KB8NNNC","CAP CER 0.1 µF 50 V X7R 0603",120,0.0121],
+  ["CC0402KRX7R9BB471","CAP CER 470 pF 50 V X7R 0402",150,0.0150],
+  ["C0402C101J5GAC7867","CAP CER 100 pF 50 V C0G 0402",180,0.0170],
+  ["CC0805KKX7R7BB105","CAP CER 1 µF 16 V X7R 0805",210,0.0442],
+  ["RC0402FR-0710KL","RES 10 kΩ 1% 1/16 W 0402",240,0.0084],
+  ["RC0402FR-071KL","RES 1 kΩ 1% 1/16 W 0402",120,0.0084],
+  ["ERJ-2RKF4700X","RES 470 Ω 1% 1/10 W 0402",60,0.0091],
+  ["CRCW040233K0FKED","RES 33 kΩ 1% 1/16 W 0402",90,0.0102],
+  ["LQG15HS10NJ02D","IND 10 nH ±5% 0402",60,0.0198],
+  ["SKY13351-378LF","RF SWITCH SPDT 0.1–6.0 GHz",30,1.9200],
+  ["BLM15AG601SN1D","FERRITE BEAD 600 Ω 0402",120,0.0177],
+  ["TPS62841DLCR","BUCK CONV 750 mA VSON-6",30,0.6120],
+  ["STM32L432KCU6","MCU ARM M4 256 KB UFQFPN-32",30,4.8800],
+  ["W25Q64JVSSIQ","FLASH 64 Mb QSPI SOIC-8",30,0.8140],
+  ["NCP2020FCT1G","AUDIO AMP CLASS-D WLCSP-9",30,0.6400],
+  ["ABM8-24.000MHZ-B2-T","XTAL 24 MHz ±20 ppm 3225",30,0.2960],
+  ["SP0503BAHTG","TVS ARRAY 3-CH SOT-23",30,0.1730],
+  ["PESD5V0S1BA","ESD DIODE 5 V SOD-323",60,0.0490],
+  ["DMG2305UX-7","MOSFET P-CH 20 V SOT-23",30,0.1210],
+  ["LTST-C190KRKT","LED RED 0603 REV-MOUNT",60,0.0980],
+  ["10118194-0001LF","CONN MICRO-USB B SMT",30,0.4620],
+  ["20021121-00010C4LF","HEADER 10-POS 1.27 mm SMT",30,0.6240],
+  ["MF-MSMF050-2","PTC FUSE 500 mA 1812",30,0.1480],
+  ["NRVTS245ESFT1G","SCHOTTKY 45 V 2 A SOD-123",30,0.2110],
+  ["74LVC1G17GW","SCHMITT BUFFER TSSOP-5",30,0.0870],
+  ["SN74AVC2T245RSWR","XCVR 2-BIT UQFN-10",30,0.3240],
+  ["B72520T0350K062","VARISTOR 35 V 0805",30,0.1090]
+];
+var THREATS = [12,17];   /* 0-based: lines 13 and 18 */
+
+var tbody = document.getElementById("qbody");
+var html = "";
+LINES.forEach(function(l,i){
+  var threat = THREATS.indexOf(i)>=0;
+  var ext = l[2]*l[3];
+  html += '<tr'+(threat?' class="threat" data-trow="'+(i+1)+'"':'')+'>'
+    +'<td class="num">'+String(i+1).padStart(2,"0")+'</td>'
+    +'<td><span class="mpn">'+l[0]+'</span> <span class="d">'+l[1]+'</span>'
+    +(threat?' <span class="mark" data-tmark>· UNRESOLVED</span>':'')+'</td>'
+    +'<td class="r">'+l[2]+'</td>'
+    +'<td class="r" data-unit>'+(threat?"—":l[3].toFixed(4))+'</td>'
+    +'<td class="r" data-ext>'+(threat?"—":ext.toFixed(2))+'</td></tr>';
+});
+tbody.innerHTML = html;
+
+var TOTAL = LINES.reduce(function(a,l){return a+l[2]*l[3]},0);
+var resolvedCount = 0;
+
+function updateInterruptCount(){
+  document.getElementById("iCount").textContent = 2 - resolvedCount;
+}
+
+function settle(){
+  document.body.classList.add("resolved");
+  document.getElementById("statusLine").innerHTML = 'Sendable · <b>every line priced from an allowed source</b>';
+  document.getElementById("tGrand").textContent = "USD "+TOTAL.toFixed(2);
+  document.getElementById("tGrand").classList.remove("withheld");
+  document.getElementById("tLines").textContent = "30 of 30";
+  document.getElementById("validLine").textContent = "valid 72 h";
+  document.getElementById("termValid").textContent = "72 h from send";
+  document.getElementById("sendBtn").removeAttribute("disabled");
+  Array.prototype.forEach.call(document.querySelectorAll("tr.threat"),function(tr){
+    var i = +tr.getAttribute("data-trow")-1, l = LINES[i];
+    tr.querySelector("[data-unit]").textContent = l[3].toFixed(4);
+    tr.querySelector("[data-ext]").textContent = (l[2]*l[3]).toFixed(2);
+    tr.querySelector("[data-tmark]").textContent = "· RESOLVED";
+  });
+  setPressed("stResolved");
+}
+
+function reset(){
+  document.body.classList.remove("resolved");
+  resolvedCount = 0;
+  updateInterruptCount();
+  document.getElementById("statusLine").innerHTML = 'Not sendable · <b>2 lines threaten this quote</b>';
+  var g = document.getElementById("tGrand");
+  g.textContent = "Withheld · 2 unresolved"; g.classList.add("withheld");
+  document.getElementById("tLines").textContent = "28 of 30";
+  document.getElementById("validLine").textContent = "validity pending";
+  document.getElementById("termValid").textContent = "—";
+  document.getElementById("sendBtn").setAttribute("disabled","");
+  Array.prototype.forEach.call(document.querySelectorAll(".irow"),function(r){
+    r.classList.remove("done");
+    r.querySelector("[data-cause]").textContent = r.querySelector("[data-cause]").getAttribute("data-orig");
+  });
+  Array.prototype.forEach.call(document.querySelectorAll("tr.threat"),function(tr){
+    tr.querySelector("[data-unit]").textContent = "—";
+    tr.querySelector("[data-ext]").textContent = "—";
+    tr.querySelector("[data-tmark]").textContent = "· UNRESOLVED";
+  });
+  setPressed("stInterrupt");
+}
+
+Array.prototype.forEach.call(document.querySelectorAll("[data-cause]"),function(c){
+  c.setAttribute("data-orig", c.textContent);
+});
+
+Array.prototype.forEach.call(document.querySelectorAll("[data-resolve]"),function(b){
+  b.addEventListener("click",function(){
+    var row = b.closest(".irow");
+    if (row.classList.contains("done")) return;
+    row.classList.add("done");
+    row.querySelector("[data-cause]").textContent = "RESOLVED";
+    row.querySelector("[data-done]").textContent = b.getAttribute("data-resolve");
+    resolvedCount++;
+    updateInterruptCount();
+    if (resolvedCount >= 2) settle();
+  });
+});
+
+function setPressed(id){
+  ["stInterrupt","stResolved"].forEach(function(x){
+    document.getElementById(x).setAttribute("aria-pressed", x===id ? "true":"false");
+  });
+}
+document.getElementById("stInterrupt").addEventListener("click",reset);
+document.getElementById("stResolved").addEventListener("click",function(){
+  Array.prototype.forEach.call(document.querySelectorAll(".irow:not(.done) [data-resolve].main"),function(b){ b.click(); });
+});
+
+document.getElementById("annoBtn").addEventListener("click",function(){
+  var on = document.body.classList.toggle("show-anno");
+  this.setAttribute("aria-pressed", on ? "true":"false");
+});
+})();
+</script>
+</body>
+</html>

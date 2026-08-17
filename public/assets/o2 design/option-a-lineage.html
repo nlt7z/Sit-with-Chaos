@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280">
+<meta name="color-scheme" content="light">
+<title>Option A · Lineage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#F5F3EA; --card:#FCFBF6; --ink:#232919; --muted:#6E7361; --faint:#9AA08D;
+  --line:#E4E1D1; --line2:#D2CFBC; --pine:#2E4326; --pine-ink:#F2F5EA;
+  --ok:#3F7A3F; --warn:#A26D14; --bad:#AE3A28;
+  --sans:"Inter",system-ui,sans-serif; --mono:"IBM Plex Mono",monospace;
+}
+*{box-sizing:border-box}
+body{margin:0;width:1280px;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
+.top{display:flex;align-items:baseline;gap:14px;padding:18px 28px 0}
+.top h1{font-size:18px;font-weight:600;margin:0}
+.top .meta{font-family:var(--mono);font-size:11px;color:var(--muted)}
+.hint{font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--muted);padding:6px 28px 12px}
+.tablewrap{margin:0 28px 24px;background:var(--card);border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}
+th{font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.12em;color:var(--faint);text-align:left;padding:9px 14px;border-bottom:1px solid var(--line)}
+td{padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+.mpn{font-family:var(--mono);font-weight:500;white-space:nowrap}
+td.r,th.r{text-align:right}
+td.r{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.age{font-family:var(--mono);font-size:11px;color:var(--faint)}
+.age.old{color:var(--warn)}
+.chip{font-family:var(--mono);font-size:9px;letter-spacing:.08em;border:1px solid var(--line2);color:var(--muted);padding:2px 6px;margin-left:8px;white-space:nowrap}
+.chip.edited{color:var(--warn);border-color:var(--warn)}
+.chip.original{color:var(--muted)}
+.price{font-family:var(--mono);font-variant-numeric:tabular-nums;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.price:hover{color:var(--pine)}
+tr.lin td{background:var(--paper);border-top:0;padding:10px 14px 12px}
+tr.lin[hidden]{display:none}
+.linrow{display:flex;align-items:center;gap:16px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.linrow b{color:var(--ink);font-weight:500}
+.linrow .act{margin-left:auto;display:flex;gap:8px}
+.btn{font-family:var(--mono);font-size:10px;letter-spacing:.06em;border:1px solid var(--line2);padding:5px 10px;color:var(--ink)}
+.btn:hover{border-color:var(--ink)}
+.btn.main{background:var(--ink);color:var(--card);border-color:var(--ink)}
+.diff{display:flex;flex-direction:column;gap:4px;font-family:var(--mono);font-size:11px}
+.diff .was{color:var(--bad);text-decoration:line-through}
+.diff .now{color:var(--ok)}
+.toast{position:fixed;left:28px;bottom:18px;background:var(--ink);color:var(--card);font-family:var(--mono);font-size:11px;padding:8px 14px;opacity:0;transition:opacity .25s}
+.toast.on{opacity:1}
+</style>
+</head>
+<body>
+<div class="top"><h1>Confirm Parts</h1><span class="meta">30 LINES · VERSION 2</span></div>
+<p class="hint">CLICK A PRICE FOR ITS LINEAGE · CLICK EDITED FOR THE DIFF</p>
+
+<div class="tablewrap">
+<table>
+<thead><tr>
+  <th>MPN</th><th>MFR</th><th class="r">UNIT USD</th><th class="r">QTY</th><th class="r">TOTAL USD</th><th>AGE</th>
+</tr></thead>
+<tbody>
+  <tr>
+    <td class="mpn">GRM1555C1H180JA01D</td><td>Murata</td>
+    <td class="r"><span class="price" data-lin="l1">0.0143</span></td>
+    <td class="r">30</td><td class="r">0.43</td><td><span class="age">2 h</span></td>
+  </tr>
+  <tr class="lin" id="l1" hidden><td colspan="6">
+    <div class="linrow"><span>SOURCE <b>DIGIKEY</b></span><span>QUOTED <b>AUG 14 · 09:12</b></span><span>BASIS <b>100 AND UP</b></span>
+      <span class="act"><button class="btn">OPEN QUOTE</button><button class="btn" data-toast="Price restored to the previous quote">UNDO PRICE</button></span></div>
+  </td></tr>
+
+  <tr>
+    <td class="mpn"><span id="mpn2">CL10B104KB8NNNC</span><button class="chip edited" id="chip2" data-lin="l2">EDITED</button></td><td>Samsung</td>
+    <td class="r"><span class="price" data-lin="l2">0.0121</span></td>
+    <td class="r">120</td><td class="r">1.45</td><td><span class="age">2 h</span></td>
+  </tr>
+  <tr class="lin" id="l2" hidden><td colspan="6">
+    <div class="linrow">
+      <div class="diff"><span class="was">customer wrote cl10b104</span><span class="now">agent wrote CL10B104KB8NNNC</span></div>
+      <span>SOURCE <b>ARROW</b></span><span>QUOTED <b>AUG 15 · 16:40</b></span>
+      <span class="act"><button class="btn main" id="undo2">UNDO EDIT</button><button class="btn" data-toast="Kept. The matcher records your approval">KEEP</button></span>
+    </div>
+  </td></tr>
+
+  <tr>
+    <td class="mpn">RC0402FR-0710KL</td><td>YAGEO</td>
+    <td class="r"><span class="price" data-lin="l3">0.0084</span></td>
+    <td class="r">240</td><td class="r">2.02</td><td><span class="age">2 h</span></td>
+  </tr>
+  <tr class="lin" id="l3" hidden><td colspan="6">
+    <div class="linrow"><span>SOURCE <b>DIGIKEY</b></span><span>QUOTED <b>AUG 14 · 09:12</b></span><span>BASIS <b>1000 AND UP</b></span>
+      <span class="act"><button class="btn">OPEN QUOTE</button><button class="btn" data-toast="Price restored to the previous quote">UNDO PRICE</button></span></div>
+  </td></tr>
+
+  <tr>
+    <td class="mpn">TPS62841DLCR</td><td>TI</td>
+    <td class="r"><span class="price" data-lin="l4">0.6120</span></td>
+    <td class="r">30</td><td class="r">18.36</td><td><span class="age old">26 h</span></td>
+  </tr>
+  <tr class="lin" id="l4" hidden><td colspan="6">
+    <div class="linrow"><span>SOURCE <b>TI DIRECT</b></span><span>QUOTED <b>AUG 12 · 21:03</b></span><span>BASIS <b>25 AND UP</b></span>
+      <span class="act"><button class="btn" data-toast="One line queued for refresh">REFRESH THIS LINE</button></span></div>
+  </td></tr>
+
+  <tr>
+    <td class="mpn">STM32L432KCU6</td><td>ST</td>
+    <td class="r"><span class="price" data-lin="l5">4.8800</span></td>
+    <td class="r">30</td><td class="r">146.40</td><td><span class="age">2 h</span></td>
+  </tr>
+  <tr class="lin" id="l5" hidden><td colspan="6">
+    <div class="linrow"><span>SOURCE <b>DIGIKEY</b></span><span>QUOTED <b>AUG 14 · 09:12</b></span><span>BASIS <b>25 AND UP</b></span>
+      <span class="act"><button class="btn">OPEN QUOTE</button><button class="btn" data-toast="Price restored to the previous quote">UNDO PRICE</button></span></div>
+  </td></tr>
+
+  <tr>
+    <td class="mpn">W25Q64JVSSIQ</td><td>Winbond</td>
+    <td class="r"><span class="price" data-lin="l6">0.8140</span></td>
+    <td class="r">30</td><td class="r">24.42</td><td><span class="age">3 h</span></td>
+  </tr>
+  <tr class="lin" id="l6" hidden><td colspan="6">
+    <div class="linrow"><span>SOURCE <b>MOUSER</b></span><span>QUOTED <b>AUG 13 · 11:27</b></span><span>BASIS <b>25 AND UP</b></span>
+      <span class="act"><button class="btn">OPEN QUOTE</button><button class="btn" data-toast="Price restored to the previous quote">UNDO PRICE</button></span></div>
+  </td></tr>
+</tbody>
+</table>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+"use strict";
+var toastEl = document.getElementById("toast"), timer;
+function toast(msg){
+  toastEl.textContent = msg; toastEl.classList.add("on");
+  clearTimeout(timer); timer = setTimeout(function(){ toastEl.classList.remove("on"); }, 1800);
+}
+Array.prototype.forEach.call(document.querySelectorAll("[data-lin]"), function(t){
+  t.addEventListener("click", function(){
+    var row = document.getElementById(t.dataset.lin);
+    row.hidden = !row.hidden;
+  });
+});
+Array.prototype.forEach.call(document.querySelectorAll("[data-toast]"), function(b){
+  b.addEventListener("click", function(e){
+    e.stopPropagation(); toast(b.dataset.toast);
+  });
+});
+var undone = false;
+document.getElementById("undo2").addEventListener("click", function(){
+  undone = !undone;
+  var mpn = document.getElementById("mpn2"), chip = document.getElementById("chip2");
+  if (undone){
+    mpn.textContent = "cl10b104";
+    chip.textContent = "ORIGINAL"; chip.classList.remove("edited"); chip.classList.add("original");
+    this.textContent = "REDO EDIT";
+    toast("Reverted to the customer text");
+  } else {
+    mpn.textContent = "CL10B104KB8NNNC";
+    chip.textContent = "EDITED"; chip.classList.add("edited"); chip.classList.remove("original");
+    this.textContent = "UNDO EDIT";
+    toast("Standard MPN applied again");
+  }
+});
+})();
+</script>
+</body>
+</html>
