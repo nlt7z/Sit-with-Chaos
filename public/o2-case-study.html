@@ -58,6 +58,27 @@ body{
 .topbar a:hover{color:var(--text)}
 .topbar a.active{color:var(--lime);border-bottom-color:var(--lime)}
 .topbar a.active::after{content:" · " attr(data-title)}
+@media (min-width:901px){
+  body{padding-left:11rem}
+  .topbar{
+    top:0;left:0;bottom:0;right:auto;width:11rem;
+    flex-direction:column;justify-content:center;align-items:stretch;gap:0;
+    padding:0 0 0 24px;background:none;backdrop-filter:none;border:0;
+    overflow:visible;
+  }
+  .topbar .mark{
+    font-size:10px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--lime);margin:0 0 20px;
+  }
+  .topbar a{
+    font-family:var(--sans);font-size:13px;letter-spacing:0;line-height:1.4;
+    padding:8px 0 8px 16px;border-bottom:0;border-left:1px solid transparent;
+    color:rgba(233,236,227,.65);
+    transition:color .5s ease-out,border-color .5s ease-out;
+  }
+  .topbar a:hover{color:var(--text);border-left-color:rgba(184,229,50,.4)}
+  .topbar a.active{color:var(--lime);border-left-color:var(--lime);font-weight:500;border-bottom:0}
+}
 
 /* ============ layout ============ */
 .wrap{max-width:1520px;margin:0 auto}
@@ -300,7 +321,7 @@ h3{
 <body>
 
 <nav class="topbar" aria-label="Chapters">
-  <span class="mark">O2 TECH AI · HITL</span>
+  <span class="mark">O2 TECH AI</span>
   <a href="#ch01" data-title="BRIEF">01</a><a href="#ch02" data-title="WORKFLOW">02</a><a href="#ch03" data-title="DIAGNOSIS">03</a><a href="#ch04" data-title="IDEATION">04</a>
   <a href="#ch05" data-title="METRICS">05</a><a href="#ch06" data-title="SELECTION">06</a><a href="#live" class="livelink" data-title="PROTOTYPE">LIVE</a>
 </nav>
