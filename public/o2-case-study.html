@@ -83,18 +83,11 @@ body{
   font-family:var(--mono);font-size:11px;letter-spacing:.22em;
   color:var(--dim);margin:0 0 .6rem;
 }
-h1{
-  font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,2.2vw,1.9rem);
-  line-height:1.2;margin:0 0 1.6rem;letter-spacing:.005em;
+h1,h2{
+  font-family:var(--mono);font-weight:500;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;line-height:1.6;color:var(--text);margin:0 0 1.2rem;
 }
-h2{
-  font-family:var(--serif);font-weight:500;font-size:clamp(1.5rem,2.2vw,1.9rem);
-  line-height:1.2;letter-spacing:.005em;color:var(--text);margin:0 0 1.6rem;
-}
-h1 .no,h2 .no{
-  display:block;font-family:var(--mono);font-size:11px;letter-spacing:.26em;
-  color:var(--lime);margin:0 0 .9rem;
-}
+h1 .no,h2 .no{color:var(--lime);margin-right:10px}
 h3{
   font-family:var(--serif);font-weight:500;font-size:1.25rem;
   margin:2.2rem 0 .6rem;letter-spacing:.005em;
@@ -297,7 +290,6 @@ h3{
   .artifact-frame{display:block}
   .hr{margin:4.5rem 0}
   [data-sync] + [data-sync]{margin-top:3rem}
-  h2{font-size:1.45rem}
   .narrative .lead{font-size:1.15rem}
 }
 @media (max-width: 480px){
