@@ -263,6 +263,9 @@ h3{
 .colsplit i{flex:1;height:12px;background:var(--border)}
 .colsplit i.on{background:var(--primary)}
 
+/* film */
+.film video{width:100%;display:block}
+
 /* 03 zoomed screenshots */
 .zoomshot{margin:12px 0 6px}
 .zoomshot:first-child{margin-top:0}
@@ -317,8 +320,14 @@ h3{
 <div class="stage">
 <div class="stage-sticky" id="stageInner">
 
+  <!-- 01 the film -->
+  <figure class="artifact-frame is-active" id="af-film" data-home="ch01">
+    <div class="film"><video src="assets/o2%20design/o2.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Final design walkthrough"></video></div>
+    <figcaption class="state-label" data-label>01 · THE FINAL DESIGN</figcaption>
+  </figure>
+
   <!-- 01 the two snapshots -->
-  <figure class="artifact-frame is-active" id="af-frame" data-home="ch01">
+  <figure class="artifact-frame" id="af-frame" data-home="ch01">
     <div class="artifact">
       <p class="a-title">THE MATERIAL · TWO FROZEN SNAPSHOTS</p>
       <div class="snapgrid">
@@ -435,6 +444,12 @@ h3{
     <figcaption class="state-label" data-label>04 · OPTION A · ATTRIBUTION AND LINEAGE</figcaption>
   </figure>
 
+  <!-- 06 the film -->
+  <figure class="artifact-frame" id="af-film2" data-home="ch06">
+    <div class="film"><video src="assets/o2%20design/o2.mp4" autoplay muted loop playsinline preload="metadata" aria-label="Final design walkthrough"></video></div>
+    <figcaption class="state-label" data-label>06 · THE FINAL DESIGN</figcaption>
+  </figure>
+
   <!-- 06 the final setup -->
   <figure class="artifact-frame" id="af-selection" data-home="ch06">
     <div class="artifact">
@@ -453,11 +468,11 @@ h3{
   <!-- 05 metrics -->
   <figure class="artifact-frame" id="af-measure" data-home="ch05">
     <div class="artifact">
-      <p class="a-title">FIVE METRICS · WITH TARGETS</p>
+      <p class="a-title">FIVE METRICS</p>
       <div class="metrics">
-        <div class="card"><div class="t">CYCLE TIME PER BOM</div><p>Upload to exported quote.</p><div class="star">TARGET · DOWN 40%</div></div>
-        <div class="card"><div class="t">SPOT-CHECK RATIO</div><p>Re-checking auto-resolved lines.</p><div class="star">TARGET · 100% TO UNDER 15%</div></div>
-        <div class="card"><div class="t">UNPRICED LEAKAGE</div><p>Defective quotes that reach a customer.</p><div class="star">TARGET · ZERO</div></div>
+        <div class="card"><div class="t">CYCLE TIME PER BOM</div><p>Upload to exported quote.</p></div>
+        <div class="card"><div class="t">SPOT-CHECK RATIO</div><p>Re-checking auto-resolved lines.</p></div>
+        <div class="card"><div class="t">UNPRICED LEAKAGE</div><p>Defective quotes that reach a customer.</p></div>
         <div class="card"><div class="t">MANUAL OVERRIDE RATE</div><p>Reads the agent's accuracy and how fast it learns.</p></div>
         <div class="card"><div class="t">FIRST-PASS ACCEPTANCE</div><p>BOMs that go straight through to Source and Price.</p></div>
       </div>
@@ -474,10 +489,12 @@ h3{
 <!-- 01 -->
 <section class="chapter" id="ch01">
   <div class="artifact-slot" id="slot-ch01"></div>
-  <div data-sync data-frame="af-frame" data-label="01 · THE TWO SNAPSHOTS">
+  <div data-sync data-frame="af-film" data-label="01 · THE FINAL DESIGN">
     <p class="kicker">CASE STUDY · O2 TECH AI · HUMAN-IN-THE-LOOP WORKFLOW REDESIGN</p>
     <h1><span class="no">01</span>Brief | Core Idea and Method</h1>
     <p class="lead">In hardware supply chain data, mistakes are expensive and full automation is unrealistic. The real work is the balance between the AI agent and the human expert: a human-in-the-loop flow that makes heavy data visible, trusted and usable.</p>
+  </div>
+  <div data-sync data-frame="af-frame" data-label="01 · THE TWO SNAPSHOTS">
     <div class="srcfiles" aria-label="Original frozen snapshots">
       <a href="assets/o2%20design/bom-setup-current-frozen.html" target="_blank" rel="noopener">SNAPSHOT · SETUP<span class="arr">↗</span></a>
       <a href="assets/o2%20design/bom-ebom-current-frozen.html" target="_blank" rel="noopener">SNAPSHOT · CONFIRM PARTS<span class="arr">↗</span></a>
@@ -585,9 +602,9 @@ h3{
     <h2><span class="no">05</span>Success Metrics | What I Would Measure</h2>
     <p class="lead">Five numbers that measure the business value of the rebuild:</p>
     <ol>
-      <li>Cycle time per BOM: average time from upload to exported quote. Target: down 40%.</li>
-      <li>Spot-check ratio: how often users re-check lines the agent already resolved. Target: from 100% to under 15%.</li>
-      <li>Unpriced quote leakage: defective quotes that slip out because a blocked rule went unseen. Target: zero.</li>
+      <li>Cycle time per BOM: average time from upload to exported quote.</li>
+      <li>Spot-check ratio: how often users re-check lines the agent already resolved.</li>
+      <li>Unpriced quote leakage: defective quotes that slip out because a blocked rule went unseen.</li>
       <li>Manual override rate: how often users correct the agent. It reads accuracy and learning.</li>
       <li>First-pass acceptance: BOMs that go straight through to Source and Price with no edits.</li>
     </ol>
@@ -598,7 +615,7 @@ h3{
 <!-- 06 -->
 <section class="chapter" id="ch06">
   <div class="artifact-slot" id="slot-ch06"></div>
-  <div data-sync data-frame="af-selection">
+  <div data-sync data-frame="af-film2">
     <h2><span class="no">06</span>Redesign Selection | The Choice and the Polish</h2>
     <p class="lead">The choice: option A, with option B's exception-first triage folded in. Hybrid, light.</p>
     <ul>
@@ -636,6 +653,8 @@ h3{
 
   /* ---------- labels per frame / state ---------- */
   var LABELS = {
+    "af-film":     { def:"01 · THE FINAL DESIGN" },
+    "af-film2":    { def:"06 · THE FINAL DESIGN" },
     "af-frame":    { def:"01 · THE TWO SNAPSHOTS" },
     "af-workflow": { def:"02 · FOUR STAGES · THE HITL GATE" },
     "af-thesis":   { def:"03 · RESULTS WITHOUT REASONING" },
@@ -736,8 +755,14 @@ h3{
           showFrame(el.dataset.frame, el.dataset.state, el.dataset.label);
         }
       });
-    }, { rootMargin: "-50% 0% -50% 0%", threshold: 0 });
+    }, { rootMargin: "-20% 0% -50% 0%", threshold: 0 });
     syncEls.forEach(function(el){ io.observe(el); });
+    window.addEventListener("scroll", function(){
+      if (window.scrollY < 150 && !mql.matches){
+        showFrame("af-film", null, "01 · THE FINAL DESIGN");
+        setRail("ch01");
+      }
+    }, { passive: true });
   }
 
   /* ---------- mobile placement ---------- */
@@ -757,7 +782,7 @@ h3{
   else mql.addListener(place);
 
   /* ---------- init ---------- */
-  showFrame("af-frame", null, "01 · THE TWO SNAPSHOTS");
+  showFrame("af-film", null, "01 · THE FINAL DESIGN");
   setRail("ch01");
 })();
 </script>
