@@ -171,12 +171,15 @@ h3{
 
 /* ============ artifact frames (shell side) ============ */
 .artifact-frame{display:none}
-.artifact-frame.is-active{display:block;animation:fadeIn .35s ease}
+.artifact-frame.is-active{display:flex;flex-direction:column;animation:fadeIn .35s ease}
 @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 .state-label{
-  font-family:var(--mono);font-size:11px;letter-spacing:.16em;
-  color:var(--dim);margin:12px 2px 0;
+  order:-1;
+  display:flex;align-items:center;gap:10px;
+  font-family:var(--mono);font-size:11px;letter-spacing:.18em;
+  color:var(--text);margin:0 0 12px;
 }
+.state-label::before{content:"";width:8px;height:8px;background:var(--lime);flex:none}
 .state-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 0}
 .state-tabs button{
   font-family:var(--mono);font-size:10px;letter-spacing:.1em;
@@ -308,7 +311,7 @@ h3{
   .stage{display:none}
   .narrative{max-width:640px;margin:0 auto;padding:96px 20px 18vh}
   .artifact-slot{display:block;margin:0 0 2rem}
-  .artifact-frame{display:block}
+  .artifact-frame{display:flex;flex-direction:column}
   .hr{margin:4.5rem 0}
   [data-sync] + [data-sync]{margin-top:3rem}
   .narrative .lead{font-size:1.15rem}
@@ -449,12 +452,12 @@ h3{
       </div>
 
       <div class="state-tabs" data-tabs="af-options">
-        <button type="button" data-set="a" aria-pressed="true">A · LINEAGE</button>
-        <button type="button" data-set="b" aria-pressed="false">B · QUEUE</button>
-        <button type="button" data-set="c" aria-pressed="false">C · COPILOT</button>
+        <button type="button" data-set="a" aria-pressed="true">A</button>
+        <button type="button" data-set="b" aria-pressed="false">B</button>
+        <button type="button" data-set="c" aria-pressed="false">C</button>
       </div>
     </div>
-    <figcaption class="state-label" data-label>04 · OPTION A · ATTRIBUTION AND LINEAGE</figcaption>
+    <figcaption class="state-label" data-label>04 · OPTION A PROTOTYPE · LINEAGE</figcaption>
   </figure>
 
   <!-- 06 the film -->
@@ -512,7 +515,7 @@ h3{
       <a href="assets/o2%20design/bom-setup-current-frozen.html" target="_blank" rel="noopener">SNAPSHOT · SETUP<span class="arr">↗</span></a>
       <a href="assets/o2%20design/bom-ebom-current-frozen.html" target="_blank" rel="noopener">SNAPSHOT · CONFIRM PARTS<span class="arr">↗</span></a>
     </div>
-    <p>The study reads the real system: production source code and the live interface. The method is thick thinking. Walk the buyer's real scenarios, then hold the screens against dense B2B products like Palantir, Flexport and Ramp.</p>
+    <p>The study reads the real system: production source code and the live interface. Walk the buyer's real scenarios, then hold the screens against dense B2B products like Palantir, Flexport and Ramp.</p>
     <p>Three lenses: product mindset, user psychology, visual hierarchy. The goal is a rebuild with low cost and high return.</p>
   </div>
 </section>
@@ -674,10 +677,10 @@ h3{
     "af-evidence": { d2:"03 · EVIDENCE · ATTRIBUTION GAP",
                      d3:"03 · EVIDENCE · TABLE LOAD",
                      def:"03 · EVIDENCE" },
-    "af-options":  { a:"04 · OPTION A · ATTRIBUTION AND LINEAGE",
-                     b:"04 · OPTION B · ACTION QUEUE",
-                     c:"04 · OPTION C · CO-PILOT WORKSPACE",
-                     def:"04 · THREE OPTIONS" },
+    "af-options":  { a:"04 · OPTION A PROTOTYPE · LINEAGE",
+                     b:"04 · OPTION B PROTOTYPE · ACTION QUEUE",
+                     c:"04 · OPTION C PROTOTYPE · CO-PILOT",
+                     def:"04 · THREE PROTOTYPES" },
     "af-selection":{ def:"06 · THE FINAL SETUP" },
     "af-measure":  { def:"05 · FIVE METRICS" }
   };
