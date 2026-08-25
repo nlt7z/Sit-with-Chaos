@@ -1,0 +1,1746 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="903a1698-91e6-413f-8b9c-374ac554118f"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<style>/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("66f38c8b-7fdc-405a-ac11-51f385d48571") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("51b54668-ce90-461d-bd72-76d5e4b14d7e") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("6348ddef-dd95-4073-8850-f98ceb1dd00d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("f88bd3e9-1e9f-4f9e-b290-415ec6a77b32") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("62290359-6e45-406d-8897-eb63e6330562") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("66f38c8b-7fdc-405a-ac11-51f385d48571") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("51b54668-ce90-461d-bd72-76d5e4b14d7e") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("6348ddef-dd95-4073-8850-f98ceb1dd00d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("f88bd3e9-1e9f-4f9e-b290-415ec6a77b32") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("62290359-6e45-406d-8897-eb63e6330562") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("66f38c8b-7fdc-405a-ac11-51f385d48571") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("51b54668-ce90-461d-bd72-76d5e4b14d7e") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("6348ddef-dd95-4073-8850-f98ceb1dd00d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("f88bd3e9-1e9f-4f9e-b290-415ec6a77b32") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("62290359-6e45-406d-8897-eb63e6330562") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("66f38c8b-7fdc-405a-ac11-51f385d48571") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("51b54668-ce90-461d-bd72-76d5e4b14d7e") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("6348ddef-dd95-4073-8850-f98ceb1dd00d") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("f88bd3e9-1e9f-4f9e-b290-415ec6a77b32") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'Geist';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("62290359-6e45-406d-8897-eb63e6330562") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("8824f292-a27b-4664-bdaa-c434e8f2c8a7") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("782efe5f-0dbc-4965-b0d5-9c8e6d24f9cd") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("09c1c24f-6c2c-4e43-8156-b2aca1c9b7a2") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("380f0062-8ee5-41f4-b6f3-278e86340714") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("79063036-a6d3-4afd-835f-4573bc519807") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("1717593a-392f-4d41-95ff-c7e62bd96606") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("7f215b1d-9613-4b84-8b28-5b1ffd6d856a") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("bd911bc3-e274-4d26-b2bf-e6970e3cb475") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("9869cd7d-c2a1-4c0c-a82b-da9bffa5ba1d") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("2d878e90-8d66-4d2c-8b4f-34f76d64a9fa") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+/* cyrillic-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("e2f28bba-6944-43da-a1a9-c286c4fb4d76") format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+/* cyrillic */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("d24e71cf-f5c9-4805-8b55-be7388221672") format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+/* vietnamese */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("94d8e4d7-6f86-4466-9873-214d26893de7") format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+0128-0129, U+0168-0169, U+01A0-01A1, U+01AF-01B0, U+0300-0301, U+0303-0304, U+0308-0309, U+0323, U+0329, U+1EA0-1EF9, U+20AB;
+}
+/* latin-ext */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("1a5ed6d0-584d-47bf-9c1b-38063cdef504") format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+/* latin */
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("183c8c3d-a021-4fe1-84e1-276057b47941") format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+</style>
+<style>
+  html, body { margin:0; padding:0; background:#F6F6F7; }
+  body { font-family:'Geist', -apple-system, BlinkMacSystemFont, sans-serif; -webkit-font-smoothing:antialiased; color:#111827; }
+  * { box-sizing:border-box; }
+  a { color:#1D4ED8; text-decoration:none; }
+  a:hover { color:#1E3A8A; text-decoration:underline; }
+  button { font:inherit; color:inherit; }
+  ::-webkit-scrollbar { width:10px; height:10px; }
+  ::-webkit-scrollbar-thumb { background:#D6D6DA; border-radius:6px; border:3px solid #F6F6F7; }
+  @keyframes o2-in { from { opacity:0; transform:translateY(6px) } to { opacity:1; transform:none } }
+  @keyframes o2-scrim { from { opacity:0 } to { opacity:1 } }
+  @keyframes o2-focus { from { opacity:0; transform:scale(.985) translateY(8px) } to { opacity:1; transform:none } }
+  @keyframes o2-toast { from { opacity:0; transform:translate(-50%, 12px) } to { opacity:1; transform:translate(-50%, 0) } }
+  @keyframes o2-pulse { 0%,100% { opacity:1 } 50% { opacity:.35 } }
+  @keyframes o2-sweep { from { transform:translateX(-100%) } to { transform:translateX(300%) } }
+  @keyframes o2-sheet { from { opacity:0; transform:translateX(14px) } to { opacity:1; transform:none } }
+</style>
+</helmet>
+
+<div style="height:100vh; display:flex; flex-direction:column; overflow:hidden; background:#F6F6F7; font-size:14px;">
+
+  <div style="height:44px; flex:none; display:flex; align-items:center; gap:20px; padding:0 16px; background:#FFFFFF; border-bottom:1px solid #EBEBEF;">
+    <div style="display:flex; align-items:center; gap:8px;">
+      <div style="width:20px; height:20px; border-radius:6px; background:#111827; color:#fff; font-size:11px; font-weight:600; display:flex; align-items:center; justify-content:center;">O</div>
+      <span style="font-size:13px; font-weight:600; letter-spacing:-.01em;">O2 Tech</span>
+    </div>
+    <div style="display:flex; align-items:center; gap:2px; font-size:13px; color:#6B7280;">
+      <span style="padding:5px 9px; border-radius:6px; background:#F3F4F6; color:#111827; font-weight:500;">BOMs</span>
+      <span style="padding:5px 9px;">Catalog</span>
+      <span style="padding:5px 9px;">Clients</span>
+      <span style="padding:5px 9px;">Suppliers</span>
+      <span style="padding:5px 9px;">AVL</span>
+    </div>
+    <div style="flex:1;"></div>
+    <div style="display:flex; align-items:center; gap:8px; font-size:12px; color:#6B7280;">
+      <span style="width:6px; height:6px; border-radius:50%; background:#22C55E;"></span>
+      <span>agent idle · last run 21h ago</span>
+      <span style="width:1px; height:16px; background:#EBEBEF; margin:0 4px;"></span>
+      <span style="width:22px; height:22px; border-radius:50%; background:#E5E7EB; display:flex; align-items:center; justify-content:center; font-size:10px; color:#374151; font-weight:600;">YL</span>
+    </div>
+  </div>
+
+  <div style="flex:none; background:#FFFFFF; border-bottom:1px solid #EBEBEF; padding:14px 24px 0;">
+    <div style="display:flex; align-items:flex-start; gap:14px;">
+      <div style="flex:1; min-width:0;">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <h1 style="margin:0; font-size:17px; font-weight:600; letter-spacing:-.02em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">customer_cbom_rev3.xlsx</h1>
+          <span style="flex:none; font-size:11px; font-family:'IBM Plex Mono',monospace; color:#6B7280; border:1px solid #E5E7EB; border-radius:5px; padding:1px 6px;">v2</span>
+          <sc-if value="{{ hasRuleOverride }}" hint-placeholder-val="{{ false }}">
+            <span style="flex:none; font-size:11px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #FDE68A; border-radius:5px; padding:1px 6px;">{{ ruleOverrideLabel }}</span>
+          </sc-if>
+        </div>
+        <div style="margin-top:3px; font-size:12px; color:#9CA3AF;">30 lines · uploaded 21h ago · owner o2-admin</div>
+      </div>
+      <div style="display:flex; align-items:center; gap:8px;">
+        <button style="height:30px; padding:0 11px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; font-size:13px; color:#374151; cursor:pointer;" style-hover="border-color:#D1D5DB; background:#FAFAFA;">View original</button>
+        <button style="height:30px; padding:0 11px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; font-size:13px; color:#374151; cursor:pointer;" style-hover="border-color:#D1D5DB; background:#FAFAFA;">Run what-if</button>
+      </div>
+    </div>
+    <div style="display:flex; gap:2px; margin-top:14px;">
+      <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+        <button sc-camel-on-click="{{ s.go }}" style="position:relative; padding:9px 14px 11px; border:0; background:transparent; font-size:13px; cursor:pointer; display:flex; align-items:center; gap:7px;">
+          <sc-if value="{{ s.on }}" hint-placeholder-val="{{ true }}">
+            <span style="position:absolute; left:0; right:0; bottom:0; height:2px; background:#111827; border-radius:2px 2px 0 0;"></span>
+          </sc-if>
+          <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px; height:15px; border-radius:50%; background:#111827; color:#fff; font-size:9px; display:flex; align-items:center; justify-content:center;">✓</span>
+          </sc-if>
+          <sc-if value="{{ s.todo }}" hint-placeholder-val="{{ false }}">
+            <span style="width:15px; height:15px; border-radius:50%; border:1px solid #D1D5DB; color:#9CA3AF; font-size:9px; display:flex; align-items:center; justify-content:center;">{{ s.n }}</span>
+          </sc-if>
+          <span style="font-weight:{{ s.weight }}; color:{{ s.color }};">{{ s.label }}</span>
+          <sc-if value="{{ s.badge }}" hint-placeholder-val="{{ false }}">
+            <span style="font-size:11px; font-weight:600; color:#B91C1C; background:#FEF2F2; border-radius:999px; padding:1px 6px;">{{ s.badgeText }}</span>
+          </sc-if>
+        </button>
+      </sc-for>
+    </div>
+  </div>
+
+  <sc-if value="{{ onSetup }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1; overflow:auto; padding:24px 24px 64px;">
+      <div style="max-width:980px; margin:0 auto;">
+        <div style="display:flex; align-items:baseline; gap:12px;">
+          <h2 style="margin:0; font-size:20px; font-weight:600; letter-spacing:-.02em;">Sourcing rules</h2>
+          <span style="font-size:13px; color:#6B7280;">Every decision on the next step cites one of these by name.</span>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:14px; margin-top:18px;">
+          <sc-for list="{{ rules }}" as="rl" hint-placeholder-count="6">
+            <div style="background:#fff; border:1px solid #EBEBEF; border-radius:11px; padding:15px 16px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500; color:#6B7280; background:#F3F4F6; border-radius:4px; padding:2px 6px; letter-spacing:.02em;">{{ rl.id }}</span>
+                <span style="font-size:13px; font-weight:600;">{{ rl.name }}</span>
+              </div>
+              <div style="margin-top:11px; font-size:15px; font-weight:500; letter-spacing:-.01em;">{{ rl.value }}</div>
+              <sc-if value="{{ rl.overridden }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:6px; display:inline-flex; align-items:center; font-size:11.5px; font-weight:600; color:#92400E; background:#FFFBEB; border:1px solid #FDE68A; border-radius:5px; padding:2px 7px;">{{ rl.overrideLabel }}</div>
+              </sc-if>
+              <sc-if value="{{ rl.requested }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:6px; display:inline-flex; align-items:center; font-size:11.5px; color:#6B7280; background:#F3F4F6; border-radius:5px; padding:2px 7px;">{{ rl.requestedLabel }}</div>
+              </sc-if>
+              <div style="margin-top:5px; font-size:12.5px; color:#6B7280; line-height:1.5;">{{ rl.note }}</div>
+              <div style="margin-top:12px; padding-top:11px; border-top:1px solid #F3F4F6; display:flex; align-items:center; gap:6px; font-size:11.5px; color:#9CA3AF;">
+                <span style="width:5px; height:5px; border-radius:50%; background:{{ rl.dot }};"></span>
+                <span>{{ rl.impact }}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top:20px; display:flex; justify-content:flex-end;">
+          <button sc-camel-on-click="{{ goConfirm }}" style="height:36px; padding:0 16px; border:0; border-radius:8px; background:#111827; color:#fff; font-size:13.5px; font-weight:500; cursor:pointer;" style-hover="background:#1F2937;">Continue to Confirm Parts</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ onPrice }}" hint-placeholder-val="{{ false }}">
+    <div style="flex:1; overflow:auto; padding:24px 24px 64px;">
+      <div style="max-width:980px; margin:0 auto;">
+        <sc-if value="{{ blocked }}" hint-placeholder-val="{{ true }}">
+          <div style="background:#fff; border:1px solid #FCA5A5; border-radius:12px; padding:22px 24px; display:flex; gap:16px; align-items:flex-start;">
+            <span style="flex:none; width:26px; height:26px; border-radius:50%; background:#FEF2F2; color:#B91C1C; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:600;">!</span>
+            <div style="flex:1;">
+              <div style="font-size:15px; font-weight:600;">{{ openCount }} lines still need a decision</div>
+              <div style="margin-top:4px; font-size:13px; color:#6B7280; line-height:1.55;">Pricing runs on confirmed parts only. Unresolved lines would silently drop out of the quote, so this step stays closed until you clear them.</div>
+              <button sc-camel-on-click="{{ goConfirm }}" style="margin-top:14px; height:32px; padding:0 13px; border:0; border-radius:7px; background:#111827; color:#fff; font-size:13px; font-weight:500; cursor:pointer;">Back to the {{ openCount }} decisions</button>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{ unblocked }}" hint-placeholder-val="{{ false }}">
+          <div style="background:#fff; border:1px solid #EBEBEF; border-radius:12px; padding:24px;">
+            <div style="font-size:12px; color:#6B7280; text-transform:uppercase; letter-spacing:.06em; font-weight:600;">Quoted build cost</div>
+            <div style="margin-top:8px; font-size:34px; font-weight:600; letter-spacing:-.03em; font-variant-numeric:tabular-nums;">{{ totalCost }}</div>
+            <div style="margin-top:4px; font-size:13px; color:#6B7280;">{{ perUnit }} per board · 30 boards · all 30 lines confirmed</div>
+            <div style="margin-top:20px; display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:#EBEBEF; border:1px solid #EBEBEF; border-radius:10px; overflow:hidden;">
+              <sc-for list="{{ priceStats }}" as="st" hint-placeholder-count="3">
+                <div style="background:#fff; padding:14px 16px;">
+                  <div style="font-size:12px; color:#6B7280;">{{ st.label }}</div>
+                  <div style="margin-top:5px; font-size:18px; font-weight:600; letter-spacing:-.02em; font-variant-numeric:tabular-nums;">{{ st.value }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ onConfirm }}" hint-placeholder-val="{{ true }}">
+  <div style="flex:1; min-height:0; display:flex; flex-direction:column;">
+
+    <div style="flex:none; padding:14px 24px; background:#FFFFFF; border-bottom:1px solid #EBEBEF;">
+      <div style="display:flex; align-items:center; gap:20px;">
+        <div style="flex:none; width:184px;">
+          <div style="display:flex; align-items:baseline; gap:6px;">
+            <span style="font-size:26px; font-weight:600; letter-spacing:-.03em; font-variant-numeric:tabular-nums;">{{ openCount }}</span>
+            <span style="font-size:13px; color:#6B7280;">of 30 need you</span>
+          </div>
+          <div style="margin-top:8px; height:5px; border-radius:3px; background:#F3F4F6; overflow:hidden; display:flex;">
+            <div style="width:{{ pctResolved }}; background:#111827; transition:width .5s cubic-bezier(.2,.8,.2,1);"></div>
+            <div style="width:{{ pctReview }}; background:#FCD34D; transition:width .5s cubic-bezier(.2,.8,.2,1);"></div>
+            <div style="width:{{ pctBlocked }}; background:#EF4444; transition:width .5s cubic-bezier(.2,.8,.2,1);"></div>
+          </div>
+        </div>
+        <div style="width:1px; height:34px; background:#EBEBEF;"></div>
+        <div style="flex:1; display:flex; gap:22px;">
+          <sc-for list="{{ legend }}" as="lg" hint-placeholder-count="4">
+            <div>
+              <div style="display:flex; align-items:center; gap:6px;">
+                <span style="width:6px; height:6px; border-radius:2px; background:{{ lg.dot }};"></span>
+                <span style="font-size:12px; color:#6B7280;">{{ lg.label }}</span>
+              </div>
+              <div style="margin-top:2px; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:-.01em;">{{ lg.n }}</div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex:none; text-align:right;">
+          <div style="font-size:12px; color:#9CA3AF;">Estimate so far</div>
+          <div style="margin-top:2px; font-size:15px; font-weight:600; font-variant-numeric:tabular-nums; letter-spacing:-.01em;">{{ runningCost }}</div>
+        </div>
+        <button sc-camel-on-click="{{ startReview }}" style="flex:none; height:36px; padding:0 16px; border:0; border-radius:8px; background:#111827; color:#fff; font-size:13.5px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:9px; box-shadow:0 1px 2px rgba(17,24,39,.2);" style-hover="background:#1F2937;">
+          <span>{{ reviewCta }}</span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; opacity:.55; border:1px solid rgba(255,255,255,.3); border-radius:4px; padding:1px 4px;">R</span>
+        </button>
+      </div>
+    </div>
+
+    <div style="flex:none; display:flex; align-items:center; gap:10px; padding:9px 24px; background:#FFFFFF; border-bottom:1px solid #EBEBEF;">
+      <div style="display:flex; padding:2px; background:#F3F4F6; border-radius:8px; gap:2px;">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="2">
+          <button sc-camel-on-click="{{ f.pick }}" style="height:26px; padding:0 11px; border:0; border-radius:6px; background:{{ f.bg }}; color:{{ f.fg }}; font-size:12.5px; font-weight:{{ f.weight }}; cursor:pointer; box-shadow:{{ f.shadow }}; transition:background .15s;">{{ f.label }}</button>
+        </sc-for>
+      </div>
+      <div style="position:relative; width:230px;">
+        <input value="{{ query }}" sc-camel-on-change="{{ setQuery }}" placeholder="MPN, designator, manufacturer" style="width:100%; height:30px; padding:0 10px 0 28px; border:1px solid #E5E7EB; border-radius:7px; background:#fff; font-size:12.5px; outline:none;" style-focus="border-color:#111827;">
+        <span style="position:absolute; left:9px; top:7px; font-size:13px; color:#9CA3AF;">⌕</span>
+      </div>
+      <div style="flex:1;"></div>
+      <sc-if value="{{ hasStale }}" hint-placeholder-val="{{ true }}">
+        <button sc-camel-on-click="{{ refreshAll }}" style="height:30px; padding:0 11px; border:1px solid #D9DEE6; background:#F4F6F9; border-radius:7px; font-size:12.5px; color:#475569; cursor:pointer; display:flex; align-items:center; gap:7px;" style-hover="background:#EAEEF4; border-color:#C3CBD6;">
+          <span style="width:6px; height:6px; border-radius:50%; background:#94A3B8; animation:o2-pulse 2s ease-in-out infinite;"></span>
+          <span>{{ staleLabel }}</span>
+        </button>
+      </sc-if>
+      <sc-if value="{{ refreshing }}" hint-placeholder-val="{{ false }}">
+        <div style="height:30px; padding:0 11px; border:1px solid #E5E7EB; border-radius:7px; font-size:12.5px; color:#6B7280; display:flex; align-items:center; gap:8px; overflow:hidden; position:relative;">
+          <span>Refreshing supplier APIs…</span>
+          <span style="position:absolute; inset:0; background:linear-gradient(90deg,transparent,rgba(17,24,39,.06),transparent); width:40%; animation:o2-sweep 1.1s linear infinite;"></span>
+        </div>
+      </sc-if>
+      <button sc-camel-on-click="{{ toggleCols }}" style="height:30px; padding:0 11px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; font-size:12.5px; color:#374151; cursor:pointer;" style-hover="background:#FAFAFA;">{{ colsLabel }}</button>
+    </div>
+
+    <div style="flex:1; min-height:0; overflow:auto; padding:0 0 80px;">
+      <div style="min-width:1060px;">
+        <div style="position:sticky; top:0; z-index:5; display:grid; grid-template-columns:{{ gridCols }}; background:#FBFBFC; border-bottom:1px solid #E5E7EB; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.055em; color:#9CA3AF;">
+          <sc-for list="{{ cols }}" as="c" hint-placeholder-count="8">
+            <div style="padding:9px 12px; text-align:{{ c.align }}; white-space:nowrap; overflow:hidden;">{{ c.label }}</div>
+          </sc-for>
+        </div>
+
+        <sc-for list="{{ visibleRows }}" as="r" hint-placeholder-count="10">
+          <div sc-camel-on-click="{{ r.open }}" style="position:relative; display:grid; grid-template-columns:{{ gridCols }}; align-items:center; min-height:{{ rowH }}; background:#fff; border-bottom:1px solid #F1F1F4; cursor:pointer; transition:background .12s;" style-hover="background:#FAFAFB;">
+            <sc-if value="{{ r.isBlocked }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute; left:0; top:0; bottom:0; width:2px; background:#DC2626;"></span>
+            </sc-if>
+            <sc-if value="{{ r.isReview }}" hint-placeholder-val="{{ false }}">
+              <span style="position:absolute; left:0; top:0; bottom:0; width:2px; background:#D97706;"></span>
+            </sc-if>
+
+            <div style="padding:0 12px; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#B0B4BC; font-variant-numeric:tabular-nums;">{{ r.line }}</div>
+
+            <div style="padding:0 12px; min-width:0;">
+              <sc-if value="{{ r.isBlocked }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <div style="display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600; color:#991B1B; background:#FEF2F2; border-radius:5px; padding:2px 7px;">
+                    <span style="width:5px; height:5px; border-radius:50%; background:#DC2626;"></span>
+                    <span>Needs decision</span>
+                  </div>
+                  <div style="margin-top:3px; font-size:11.5px; color:#9CA3AF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.reason }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ r.isReview }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <div style="display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:600; color:#92400E; background:#FFFBEB; border-radius:5px; padding:2px 7px;">
+                    <span style="width:5px; height:5px; border-radius:50%; background:#D97706;"></span>
+                    <span>Confirm match</span>
+                  </div>
+                  <div style="margin-top:3px; font-size:11.5px; color:#9CA3AF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.reason }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ r.isResolved }}" hint-placeholder-val="{{ true }}">
+                <div style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#6B7280;">
+                  <span style="color:#16A34A; font-size:11px;">✓</span>
+                  <span>O2 resolved</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ r.isUser }}" hint-placeholder-val="{{ false }}">
+                <div style="display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:#166534; font-weight:500;">
+                  <span style="width:15px; height:15px; border-radius:50%; background:#F0FDF4; color:#166534; font-size:9px; display:inline-flex; align-items:center; justify-content:center;">✓</span>
+                  <span>You confirmed</span>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="padding:0 12px; min-width:0;">
+              <div style="display:flex; align-items:center; gap:7px;">
+                <span style="font-family:'IBM Plex Mono',monospace; font-size:12.5px; font-weight:500; letter-spacing:-.01em; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.mpn }}</span>
+                <sc-if value="{{ r.hasDiff }}" hint-placeholder-val="{{ false }}">
+                  <button sc-camel-on-click="{{ r.toggleDiff }}" title="AI normalized this MPN — click to compare" style="flex:none; height:16px; padding:0 5px; border:1px solid #DDD6FE; background:#F5F3FF; color:#6D28D9; border-radius:4px; font-size:9.5px; font-weight:600; letter-spacing:.03em; cursor:pointer;" style-hover="background:#EDE9FE;">DIFF</button>
+                </sc-if>
+              </div>
+              <div style="margin-top:2px; font-size:11.5px; color:#9CA3AF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.desc }}</div>
+              <sc-if value="{{ r.diffOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="margin:6px 0 8px; padding:9px 11px; background:#FBFAFF; border:1px solid #E9E5FB; border-radius:8px; animation:o2-in .16s ease-out;">
+                  <div style="display:flex; gap:8px; align-items:baseline;">
+                    <span style="flex:none; width:74px; font-size:10.5px; color:#9CA3AF; text-transform:uppercase; letter-spacing:.05em;">Customer</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B7280; text-decoration:line-through; text-decoration-color:#D8B4FE;">{{ r.rawMpn }}</span>
+                  </div>
+                  <div style="display:flex; gap:8px; align-items:baseline; margin-top:4px;">
+                    <span style="flex:none; width:74px; font-size:10.5px; color:#9CA3AF; text-transform:uppercase; letter-spacing:.05em;">Matched</span>
+                    <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#111827; font-weight:500;">{{ r.mpn }}</span>
+                  </div>
+                  <div style="margin-top:7px; font-size:11.5px; color:#6B7280;">{{ r.diffNote }}</div>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="padding:0 12px; font-size:12.5px; color:#6B7280; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.mfr }}</div>
+
+            <div style="padding:0 12px; min-width:0; text-align:right;">
+              <sc-if value="{{ r.hasPrice }}" hint-placeholder-val="{{ true }}">
+                <div>
+                  <div style="font-size:13px; font-weight:500; font-variant-numeric:tabular-nums; letter-spacing:-.01em;">{{ r.unitPrice }}</div>
+                  <div style="margin-top:2px; font-size:11.5px; color:{{ r.subColor }}; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">{{ r.priceSub }}</div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ r.noPrice }}" hint-placeholder-val="{{ false }}">
+                <div style="display:inline-flex; align-items:center; gap:6px; font-size:12px; color:#B91C1C; background:#FEF2F2; border:1px solid #FEE2E2; border-radius:6px; padding:3px 8px;">
+                  <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.02em;">{{ r.blockCode }}</span>
+                </div>
+              </sc-if>
+            </div>
+
+            <div style="padding:0 12px;">
+              <sc-if value="{{ r.isStale }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex; align-items:center; gap:6px; font-size:12px; color:#92400E;">
+                  <span style="width:6px; height:6px; border-radius:50%; background:#F59E0B;"></span>
+                  <span style="font-variant-numeric:tabular-nums;">{{ r.age }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ r.isFresh }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:12px; color:#B0B4BC; font-variant-numeric:tabular-nums;">{{ r.age }}</span>
+              </sc-if>
+            </div>
+
+            <div style="padding:0 12px;">
+              <sc-if value="{{ r.hasAlts }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:11.5px; color:#6B7280; border:1px solid #EBEBEF; border-radius:5px; padding:2px 7px; font-variant-numeric:tabular-nums;">{{ r.altLabel }}</span>
+              </sc-if>
+            </div>
+
+            <div style="padding:0 12px; display:flex; justify-content:flex-end; gap:6px;">
+              <sc-if value="{{ r.needsAction }}" hint-placeholder-val="{{ false }}">
+                <button sc-camel-on-click="{{ r.open }}" style="height:26px; padding:0 11px; border:0; border-radius:6px; background:#111827; color:#fff; font-size:12px; font-weight:500; cursor:pointer;" style-hover="background:#1F2937;">Resolve</button>
+              </sc-if>
+              <sc-if value="{{ r.isUser }}" hint-placeholder-val="{{ false }}">
+                <button sc-camel-on-click="{{ r.undo }}" style="height:26px; padding:0 10px; border:1px solid #E5E7EB; border-radius:6px; background:#fff; font-size:12px; color:#6B7280; cursor:pointer;" style-hover="border-color:#D1D5DB;">Undo</button>
+              </sc-if>
+              <sc-if value="{{ r.isResolved }}" hint-placeholder-val="{{ true }}">
+                <span style="font-size:16px; color:#D1D5DB; line-height:1;">›</span>
+              </sc-if>
+            </div>
+          </div>
+        </sc-for>
+
+        <sc-if value="{{ filteredEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:56px 24px; text-align:center; background:#fff;">
+            <div style="font-size:15px; font-weight:600;">Nothing left in this view</div>
+            <div style="margin-top:5px; font-size:13px; color:#6B7280;">All exceptions are cleared. O2 handled the other 24 lines.</div>
+            <button sc-camel-on-click="{{ showAll }}" style="margin-top:14px; height:32px; padding:0 13px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; font-size:13px; cursor:pointer;">Show all 30 lines</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <div style="flex:none; height:52px; display:flex; align-items:center; gap:14px; padding:0 24px; background:#fff; border-top:1px solid #EBEBEF;">
+      <span style="font-size:12.5px; color:#6B7280;">{{ footerNote }}</span>
+      <div style="flex:1;"></div>
+      <span style="font-size:12px; color:#9CA3AF; font-family:'IBM Plex Mono',monospace;">R review · J K move · ↵ accept · Esc close</span>
+      <button sc-camel-on-click="{{ goPrice }}" style="height:34px; padding:0 15px; border:0; border-radius:8px; background:{{ continueBg }}; color:{{ continueFg }}; font-size:13.5px; font-weight:500; cursor:pointer;">Continue to Source &amp; Price</button>
+    </div>
+  </div>
+  </sc-if>
+
+  <sc-if value="{{ focusOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; inset:0; z-index:60; background:rgba(17,24,39,.42); backdrop-filter:blur(3px); animation:o2-scrim .18s ease-out; display:flex; align-items:center; justify-content:center; padding:24px;">
+      <div style="position:relative; width:100%; max-width:1240px; height:100%; max-height:820px; background:#fff; border-radius:14px; box-shadow:0 24px 60px rgba(17,24,39,.28); display:flex; flex-direction:column; overflow:hidden; animation:o2-focus .2s cubic-bezier(.2,.8,.2,1);">
+
+        <div style="flex:none; height:56px; display:flex; align-items:center; gap:14px; padding:0 18px; border-bottom:1px solid #EBEBEF;">
+          <div style="display:flex; align-items:center; gap:9px;">
+            <span style="font-size:13px; font-weight:600;">{{ focusCounter }}</span>
+            <span style="font-size:11px; color:#B0B4BC;">{{ focusOrderNote }}</span>
+            <div style="display:flex; gap:3px;">
+              <sc-for list="{{ focusPips }}" as="p" hint-placeholder-count="6">
+                <span style="width:16px; height:3px; border-radius:2px; background:{{ p.bg }}; transition:background .25s;"></span>
+              </sc-for>
+            </div>
+          </div>
+          <span style="width:1px; height:20px; background:#EBEBEF;"></span>
+          <span style="font-family:'IBM Plex Mono',monospace; font-size:12px; color:#6B7280;">line {{ f.line }} · {{ f.ref }} · {{ f.spendAtStake }} at stake</span>
+          <div style="flex:1;"></div>
+          <button sc-camel-on-click="{{ prevFocus }}" style="width:30px; height:30px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; cursor:pointer; color:#6B7280;" style-hover="background:#FAFAFA;">↑</button>
+          <button sc-camel-on-click="{{ nextFocus }}" style="width:30px; height:30px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; cursor:pointer; color:#6B7280;" style-hover="background:#FAFAFA;">↓</button>
+          <button sc-camel-on-click="{{ closeFocus }}" style="height:30px; padding:0 11px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; cursor:pointer; font-size:12.5px; color:#6B7280;" style-hover="background:#FAFAFA;">Close</button>
+        </div>
+
+        <div style="flex:1; min-height:0; display:grid; grid-template-columns:300px minmax(0,1fr) 330px;">
+
+          <div style="border-right:1px solid #EBEBEF; padding:20px 18px; overflow:auto; background:#FCFCFD;">
+            <div style="font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#9CA3AF;">What the customer sent</div>
+            <div style="margin-top:9px; font-family:'IBM Plex Mono',monospace; font-size:14px; font-weight:500; letter-spacing:-.01em; word-break:break-all;">{{ f.rawMpn }}</div>
+            <div style="margin-top:6px; font-size:12.5px; color:#6B7280; line-height:1.5;">{{ f.desc }}</div>
+
+            <sc-if value="{{ f.hasDiff }}" hint-placeholder-val="{{ true }}">
+              <div style="margin-top:14px; padding:11px 12px; background:#F8F6FF; border:1px solid #E9E5FB; border-radius:9px;">
+                <div style="font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#7C3AED;">O2 normalized it</div>
+                <div style="margin-top:7px; font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500;">{{ f.mpn }}</div>
+                <div style="margin-top:6px; font-size:12px; color:#6B7280; line-height:1.5;">{{ f.diffNote }}</div>
+              </div>
+            </sc-if>
+
+            <div style="margin-top:18px; padding-top:16px; border-top:1px solid #EFEFF2; display:grid; gap:11px;">
+              <sc-for list="{{ f.facts }}" as="ft" hint-placeholder-count="5">
+                <div style="display:flex; justify-content:space-between; gap:10px;">
+                  <span style="font-size:12.5px; color:#9CA3AF;">{{ ft.k }}</span>
+                  <span style="font-size:12.5px; font-weight:500; text-align:right; font-variant-numeric:tabular-nums;">{{ ft.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="overflow:auto; padding:20px 22px;">
+            <div style="display:flex; align-items:baseline; gap:10px;">
+              <h3 style="margin:0; font-size:16px; font-weight:600; letter-spacing:-.02em;">{{ f.question }}</h3>
+            </div>
+            <p style="margin:6px 0 0; font-size:13px; color:#6B7280; line-height:1.55; max-width:62ch;">{{ f.explain }}</p>
+
+            <sc-if value="{{ f.isSettled }}" hint-placeholder-val="{{ false }}">
+              <div style="margin-top:12px; display:flex; align-items:center; gap:10px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:9px; padding:9px 12px;">
+                <span style="flex:none; width:16px; height:16px; border-radius:50%; background:#16A34A; color:#fff; font-size:10px; display:flex; align-items:center; justify-content:center;">✓</span>
+                <span style="flex:1; font-size:12.5px; color:#166534;">{{ f.settledText }}</span>
+                <button sc-camel-on-click="{{ f.settledUndo }}" style="height:26px; padding:0 10px; border:1px solid #BBF7D0; background:#fff; border-radius:6px; font-size:12px; color:#166534; cursor:pointer;">Undo</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{ f.hasSameCause }}" hint-placeholder-val="{{ false }}">
+              <button sc-camel-on-click="{{ f.sameCauseOpen }}" style="margin-top:12px; width:100%; text-align:left; display:flex; align-items:center; gap:10px; background:#FFFBEB; border:1px solid #FDE68A; border-radius:9px; padding:9px 12px; cursor:pointer;" style-hover="border-color:#F59E0B;">
+                <span style="flex:none; font-family:'IBM Plex Mono',monospace; font-size:10.5px; font-weight:600; color:#92400E; background:#FEF3C7; border-radius:4px; padding:2px 6px;">{{ f.sameCauseId }}</span>
+                <span style="flex:1; font-size:12.5px; color:#92400E;">{{ f.sameCauseText }}</span>
+                <span style="flex:none; font-size:12px; color:#B45309;">View rule ›</span>
+              </button>
+            </sc-if>
+
+            <div style="margin-top:16px; display:grid; gap:9px;">
+              <sc-for list="{{ f.candidates }}" as="cd" hint-placeholder-count="3">
+                <div sc-camel-on-click="{{ cd.pick }}" style="border:1.5px solid {{ cd.border }}; background:{{ cd.bg }}; border-radius:11px; padding:13px 15px; cursor:pointer; transition:border-color .15s, background .15s;" style-hover="border-color:#C7CBD3;">
+                  <div style="display:flex; align-items:flex-start; gap:11px;">
+                    <span style="flex:none; margin-top:2px; width:15px; height:15px; border-radius:50%; border:1.5px solid {{ cd.radioBorder }}; background:{{ cd.radioBg }}; display:flex; align-items:center; justify-content:center;">
+                      <sc-if value="{{ cd.selected }}" hint-placeholder-val="{{ false }}">
+                        <span style="width:5px; height:5px; border-radius:50%; background:#fff;"></span>
+                      </sc-if>
+                    </span>
+                    <div style="flex:1; min-width:0;">
+                      <div style="display:flex; align-items:center; gap:9px; flex-wrap:wrap;">
+                        <span style="font-family:'IBM Plex Mono',monospace; font-size:13px; font-weight:500;">{{ cd.mpn }}</span>
+                        <sc-if value="{{ cd.isExact }}" hint-placeholder-val="{{ true }}">
+                          <span style="font-size:10.5px; font-weight:600; color:#166534; background:#F0FDF4; border-radius:4px; padding:1px 6px;">EXACT</span>
+                        </sc-if>
+                        <sc-if value="{{ cd.isAlt }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size:10.5px; font-weight:600; color:#6D28D9; background:#F5F3FF; border-radius:4px; padding:1px 6px;">ALTERNATE</span>
+                        </sc-if>
+                        <sc-if value="{{ cd.isBlockedCand }}" hint-placeholder-val="{{ false }}">
+                          <span style="font-size:10.5px; font-weight:600; color:#991B1B; background:#FEF2F2; border-radius:4px; padding:1px 6px;">{{ cd.blockCode }}</span>
+                        </sc-if>
+                      </div>
+                      <div style="margin-top:3px; font-size:12.5px; color:#6B7280;">{{ cd.sub }}</div>
+                      <div style="margin-top:10px; display:flex; gap:18px; flex-wrap:wrap;">
+                        <sc-for list="{{ cd.metrics }}" as="m" hint-placeholder-count="4">
+                          <div>
+                            <div style="font-size:10.5px; color:#9CA3AF; text-transform:uppercase; letter-spacing:.05em;">{{ m.k }}</div>
+                            <div style="margin-top:2px; font-size:13px; font-weight:500; font-variant-numeric:tabular-nums; color:{{ m.color }};">{{ m.v }}</div>
+                          </div>
+                        </sc-for>
+                      </div>
+                      <sc-if value="{{ cd.hasMath }}" hint-placeholder-val="{{ true }}">
+                        <div style="margin-top:11px; padding:8px 10px; background:#F8F8FA; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:11.5px; color:#4B5563; line-height:1.6;">{{ cd.math }}</div>
+                      </sc-if>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <div style="margin-top:14px; display:flex; align-items:center; gap:10px;">
+              <button sc-camel-on-click="{{ manualOverride }}" style="height:30px; padding:0 12px; border:1px dashed #D1D5DB; background:#fff; border-radius:7px; font-size:12.5px; color:#6B7280; cursor:pointer;" style-hover="border-color:#9CA3AF; color:#374151;">Enter a different MPN manually</button>
+              <sc-if value="{{ overrideOpen }}" hint-placeholder-val="{{ false }}">
+                <div style="flex:1; display:flex; align-items:center; gap:10px;">
+                  <input value="{{ overrideText }}" sc-camel-on-change="{{ setOverride }}" placeholder="e.g. CL10B104KB8NNNC" style="height:30px; flex:1; padding:0 10px; border:1px solid #111827; border-radius:7px; font-family:'IBM Plex Mono',monospace; font-size:12.5px; outline:none;">
+                  <sc-if value="{{ hasOvHint }}" hint-placeholder-val="{{ false }}">
+                    <span style="flex:none; font-size:11.5px; color:{{ ovHintColor }}; white-space:nowrap;">{{ ovHintText }}</span>
+                  </sc-if>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="border-left:1px solid #EBEBEF; background:#FCFCFD; overflow:auto; padding:20px 18px;">
+            <div style="font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#9CA3AF;">Why O2 says this</div>
+
+            <div style="margin-top:12px; display:grid; gap:2px;">
+              <sc-for list="{{ f.trace }}" as="t" hint-placeholder-count="4">
+                <div style="display:flex; gap:9px; padding:8px 0; border-bottom:1px solid #F1F1F4;">
+                  <span style="flex:none; margin-top:1px; width:15px; height:15px; border-radius:50%; background:{{ t.bg }}; color:{{ t.fg }}; font-size:9px; display:flex; align-items:center; justify-content:center; font-weight:700;">{{ t.glyph }}</span>
+                  <div style="flex:1; min-width:0;">
+                    <div style="font-size:12.5px; font-weight:500;">{{ t.label }}</div>
+                    <div style="margin-top:2px; font-size:12px; color:#6B7280; line-height:1.5;">{{ t.detail }}</div>
+                    <sc-if value="{{ t.overridden }}" hint-placeholder-val="{{ false }}">
+                      <div style="margin-top:3px; font-size:11.5px; color:#16A34A;">{{ t.overriddenNote }}</div>
+                    </sc-if>
+                    <sc-if value="{{ t.canOpen }}" hint-placeholder-val="{{ false }}">
+                      <button sc-camel-on-click="{{ t.openRule }}" style="display:inline-block; margin-top:4px; padding:0 0 1px; border:0; border-bottom:1px dotted #9CA3AF; background:transparent; font-size:11px; font-family:'IBM Plex Mono',monospace; color:#4B5563; cursor:pointer;" style-hover="color:#111827; border-bottom-color:#111827;">{{ t.ruleId }} · view rule</button>
+                    </sc-if>
+                    <sc-if value="{{ t.isPlain }}" hint-placeholder-val="{{ false }}">
+                      <span style="display:inline-block; margin-top:4px; font-size:11px; font-family:'IBM Plex Mono',monospace; color:#B0B4BC;">{{ t.ruleId }}</span>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+
+            <button sc-camel-on-click="{{ toggleLineage }}" style="margin-top:18px; padding:0; border:0; background:transparent; display:flex; align-items:center; gap:6px; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#9CA3AF; cursor:pointer;" style-hover="color:#6B7280;"><span>{{ lineageGlyph }}</span><span>Price lineage</span></button>
+            <sc-if value="{{ lineageOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:10px; background:#fff; border:1px solid #EBEBEF; border-radius:9px; padding:11px 12px;">
+              <sc-for list="{{ f.lineage }}" as="ln" hint-placeholder-count="4">
+                <div style="display:flex; justify-content:space-between; gap:10px; padding:3px 0;">
+                  <span style="font-size:11.5px; color:#9CA3AF; font-family:'IBM Plex Mono',monospace;">{{ ln.k }}</span>
+                  <span style="font-size:11.5px; text-align:right; font-family:'IBM Plex Mono',monospace; color:#374151;">{{ ln.v }}</span>
+                </div>
+              </sc-for>
+            </div>
+            </sc-if>
+
+            <button sc-camel-on-click="{{ toggleAudit }}" style="margin-top:18px; padding:0; border:0; background:transparent; display:flex; align-items:center; gap:6px; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#9CA3AF; cursor:pointer;" style-hover="color:#6B7280;"><span>{{ auditGlyph }}</span><span>Audit trail</span></button>
+            <sc-if value="{{ auditOpen }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:10px; display:grid; gap:10px;">
+              <sc-for list="{{ f.audit }}" as="a" hint-placeholder-count="2">
+                <div style="display:flex; gap:9px;">
+                  <span style="flex:none; margin-top:5px; width:5px; height:5px; border-radius:50%; background:{{ a.dot }};"></span>
+                  <div>
+                    <div style="font-size:12px; color:#374151;">{{ a.text }}</div>
+                    <div style="margin-top:1px; font-size:11px; color:#B0B4BC;">{{ a.when }}</div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            </sc-if>
+            <sc-if value="{{ f.canRestore }}" hint-placeholder-val="{{ false }}">
+              <button sc-camel-on-click="{{ restoreOriginal }}" style="margin-top:12px; height:28px; padding:0 10px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; font-size:12px; color:#6B7280; cursor:pointer;" style-hover="border-color:#D1D5DB;">Restore to AI original</button>
+            </sc-if>
+          </div>
+        </div>
+
+        <div style="flex:none; min-height:60px; display:flex; align-items:center; gap:14px; padding:0 18px; border-top:1px solid #EBEBEF; background:#FCFCFD;">
+          <label sc-camel-on-click="{{ toggleTeamRule }}" style="display:flex; align-items:center; gap:9px; cursor:pointer; user-select:none;">
+            <span style="width:16px; height:16px; border-radius:5px; border:1.5px solid {{ teamRuleBorder }}; background:{{ teamRuleBg }}; display:flex; align-items:center; justify-content:center; color:#fff; font-size:10px; transition:background .15s;">{{ teamRuleGlyph }}</span>
+            <span style="font-size:12.5px; color:#374151;">Save this correction as a team rule for future BOMs</span>
+          </label>
+          <div style="flex:1;"></div>
+          <button sc-camel-on-click="{{ skipFocus }}" style="height:34px; padding:0 13px; border:1px solid #E5E7EB; background:#fff; border-radius:8px; font-size:13px; color:#6B7280; cursor:pointer;" style-hover="background:#F6F6F7;">Skip for now</button>
+          <button sc-camel-on-click="{{ acceptFocus }}" style="height:34px; padding:0 16px; border:0; border-radius:8px; background:#111827; color:#fff; font-size:13.5px; font-weight:500; cursor:pointer; display:flex; align-items:center; gap:9px;" style-hover="background:#1F2937;">
+            <span>{{ acceptLabel }}</span>
+            <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; opacity:.55; border:1px solid rgba(255,255,255,.3); border-radius:4px; padding:1px 4px;">↵</span>
+          </button>
+        </div>
+
+        <sc-if value="{{ rpOpen }}" hint-placeholder-val="{{ false }}">
+          <div style="position:absolute; top:56px; right:0; bottom:0; width:430px; z-index:20; background:#fff; border-left:1px solid #EBEBEF; box-shadow:-18px 0 44px rgba(17,24,39,.10); display:flex; flex-direction:column; animation:o2-sheet .18s cubic-bezier(.2,.8,.2,1);">
+            <div style="flex:none; height:50px; display:flex; align-items:center; gap:9px; padding:0 16px; border-bottom:1px solid #EBEBEF;">
+              <span style="font-family:'IBM Plex Mono',monospace; font-size:10px; font-weight:500; color:#6B7280; background:#F3F4F6; border-radius:4px; padding:2px 6px; letter-spacing:.02em;">{{ rp.id }}</span>
+              <span style="font-size:13px; font-weight:600;">{{ rp.name }}</span>
+              <div style="flex:1;"></div>
+              <button sc-camel-on-click="{{ rp.close }}" style="width:28px; height:28px; border:1px solid #E5E7EB; background:#fff; border-radius:7px; cursor:pointer; color:#6B7280;" style-hover="background:#FAFAFA;">×</button>
+            </div>
+            <div style="flex:1; overflow:auto; padding:16px;">
+              <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
+                <span style="font-size:12px; color:#9CA3AF;">Current value</span>
+                <span style="font-size:14px; font-weight:600;">{{ rp.valueNow }}</span>
+              </div>
+              <div style="margin-top:3px; text-align:right; font-size:11px; color:#B0B4BC;">{{ rp.origin }}</div>
+              <p style="margin:10px 0 0; font-size:12.5px; color:#6B7280; line-height:1.55;">{{ rp.note }}</p>
+
+              <sc-if value="{{ rp.isApplied }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:14px; display:flex; align-items:center; gap:9px; background:#F0FDF4; border:1px solid #BBF7D0; border-radius:9px; padding:9px 11px;">
+                  <span style="flex:none; width:15px; height:15px; border-radius:50%; background:#16A34A; color:#fff; font-size:9px; display:flex; align-items:center; justify-content:center;">✓</span>
+                  <span style="flex:1; font-size:12px; color:#166534;">{{ rp.appliedText }}</span>
+                  <button sc-camel-on-click="{{ rp.undoApplied }}" style="height:24px; padding:0 9px; border:1px solid #BBF7D0; background:#fff; border-radius:6px; font-size:11.5px; color:#166534; cursor:pointer;">Undo</button>
+                </div>
+              </sc-if>
+
+              <div style="margin-top:16px; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#9CA3AF;">Cited on this BOM</div>
+              <div style="margin-top:8px; display:grid; gap:2px;">
+                <sc-for list="{{ rp.cited }}" as="ct" hint-placeholder-count="2">
+                  <div style="display:flex; align-items:center; gap:8px; padding:6px 0; border-bottom:1px solid #F1F1F4;">
+                    <span style="flex:none; font-weight:700; font-size:10px; color:{{ ct.fg }};">{{ ct.glyph }}</span>
+                    <span style="flex:none; font-family:'IBM Plex Mono',monospace; font-size:11px; color:#6B7280;">{{ ct.line }} · {{ ct.ref }}</span>
+                    <span style="flex:1; font-size:11.5px; color:#9CA3AF; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; text-align:right;">{{ ct.label }}</span>
+                  </div>
+                </sc-for>
+              </div>
+
+              <sc-if value="{{ rp.showScopes }}" hint-placeholder-val="{{ false }}">
+                <div>
+                  <div style="margin-top:16px; font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#9CA3AF;">Change it</div>
+                  <div style="margin-top:8px; display:grid; gap:8px;">
+                    <sc-for list="{{ rp.scopes }}" as="sp" hint-placeholder-count="3">
+                      <div sc-camel-on-click="{{ sp.pick }}" style="border:1.5px solid {{ sp.border }}; background:{{ sp.bg }}; border-radius:10px; padding:10px 12px; cursor:pointer; transition:border-color .15s, background .15s;" style-hover="border-color:#C7CBD3;">
+                        <div style="display:flex; align-items:flex-start; gap:9px;">
+                          <span style="flex:none; margin-top:2px; width:14px; height:14px; border-radius:50%; border:1.5px solid {{ sp.radioBorder }}; background:{{ sp.radioBg }}; display:flex; align-items:center; justify-content:center;">
+                            <sc-if value="{{ sp.selected }}" hint-placeholder-val="{{ false }}">
+                              <span style="width:4px; height:4px; border-radius:50%; background:#fff;"></span>
+                            </sc-if>
+                          </span>
+                          <div style="flex:1; min-width:0;">
+                            <div style="font-size:12.5px; font-weight:600;">{{ sp.title }}</div>
+                            <div style="margin-top:2px; font-size:11.5px; color:#6B7280; line-height:1.5;">{{ sp.sub }}</div>
+                          </div>
+                        </div>
+                      </div>
+                    </sc-for>
+                  </div>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ rp.showPreview }}" hint-placeholder-val="{{ false }}">
+                <div style="margin-top:12px; border-left:2px solid #F59E0B; background:#FFFBEB; border-radius:0 9px 9px 0; padding:10px 12px;">
+                  <div style="font-size:10.5px; font-weight:600; text-transform:uppercase; letter-spacing:.06em; color:#92400E;">If you apply</div>
+                  <div style="margin-top:7px; display:grid; gap:7px;">
+                    <sc-for list="{{ rp.preview }}" as="pv" hint-placeholder-count="2">
+                      <div>
+                        <div style="display:flex; gap:7px; align-items:baseline;">
+                          <span style="flex:none; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:#92400E;">{{ pv.line }}</span>
+                          <span style="font-size:12px; color:#78350F;">{{ pv.what }}</span>
+                        </div>
+                        <div style="margin-top:1px; font-size:11px; color:#B45309;">{{ pv.delta }}</div>
+                      </div>
+                    </sc-for>
+                  </div>
+                  <div style="margin-top:9px; padding-top:8px; border-top:1px solid #FDE68A; font-size:11.5px; font-weight:600; color:#92400E; font-variant-numeric:tabular-nums;">{{ rp.previewTotal }}</div>
+                </div>
+              </sc-if>
+            </div>
+            <div style="flex:none; display:flex; align-items:center; gap:10px; padding:12px 16px; border-top:1px solid #EBEBEF; background:#FCFCFD;">
+              <button sc-camel-on-click="{{ rp.close }}" style="height:32px; padding:0 12px; border:1px solid #E5E7EB; background:#fff; border-radius:8px; font-size:12.5px; color:#6B7280; cursor:pointer;" style-hover="background:#F6F6F7;">Close</button>
+              <div style="flex:1;"></div>
+              <button sc-camel-on-click="{{ rp.primaryAction }}" style="height:32px; padding:0 14px; border:0; border-radius:8px; background:{{ rp.primaryBg }}; color:{{ rp.primaryFg }}; font-size:12.5px; font-weight:500; cursor:pointer;">{{ rp.primaryLabel }}</button>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ toastOpen }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed; left:50%; bottom:26px; z-index:80; animation:o2-toast .2s cubic-bezier(.2,.8,.2,1); display:flex; align-items:center; gap:14px; background:#111827; color:#fff; border-radius:10px; padding:11px 13px 11px 15px; box-shadow:0 12px 30px rgba(17,24,39,.3);">
+      <span style="font-size:13px;">{{ toastText }}</span>
+      <sc-if value="{{ canUndoToast }}" hint-placeholder-val="{{ false }}">
+        <button sc-camel-on-click="{{ undoToast }}" style="height:26px; padding:0 10px; border:1px solid rgba(255,255,255,.22); background:transparent; color:#fff; border-radius:6px; font-size:12px; cursor:pointer;" style-hover="background:rgba(255,255,255,.1);">Undo</button>
+      </sc-if>
+    </div>
+  </sc-if>
+</div>
+
+
+
+</x-dc>
+<script type="text/x-dc" data-dc-script="" data-props="{&quot;$preview&quot;:{&quot;width&quot;:1440,&quot;height&quot;:900}}">
+
+const money = n => '$' + n.toFixed(n < 1 ? 4 : 2);
+
+const BASE = [
+  ['GRM1555C1H180JA01D','Murata Electronics','CAP CER 18PF 50V C0G/NP0 0402','DigiKey',0.0143,130,'C1',2],
+  ['GRM155R71C104KA88D','MURATA','CAP CER 0.1UF 16V X7R 0402','Mouser',0.0160,160,'C2',2],
+  ['GRM185R61E105KA12D','Murata Electronics','CAP CER 1UF 25V X5R 0603','DigiKey',0.0768,190,'C3',5],
+  null,
+  ['CC0402KRX7R9BB471','YAGEO','CAP CER 470PF 50V X7R 0402','DigiKey',0.0150,500,'C5',2],
+  ['C0402C101J5GAC7867','KEMET','CAP CER 100pF 50V C0G/NP0 0402','Mouser',0.0170,500,'C6',3],
+  ['CC0805KKX7R7BB105','YAGEO','CAP CER 1UF 16V X7R 0805','Arrow',0.0442,310,'C7',3],
+  ['C0805C226M9PACTU','KEMET','CAP CER 22UF 6.3V X5R 0805','Mouser',0.0840,340,'C8',5],
+  null,
+  ['CC0402KRX7R8BB103','YAGEO','CAP CER 10000PF 25V X7R 0402','DigiKey',0.0095,550,'C10',3],
+  ['CC0402KRX7R9BB221','YAGEO','CAP CER 220PF 50V X7R 0402','DigiKey',0.0120,580,'C11',3],
+  ['TMK316BJ106KL-T','Taiyo Yuden','CAP CER 10UF 25V X5R 1206','DigiKey',0.0977,500,'C12',2],
+  null, null, null, null,
+  ['C1005X7R1H472K050BA','TDK','CAP CER 4700PF 50V X7R 0402','DigiKey',0.0163,760,'C17',2],
+  ['GMK107BJ105KA-T','Taiyo Yuden','CAP CER 1UF 35V X5R 0603','DigiKey',0.0493,790,'C18',4],
+  ['GMK325BJ475MN-T','Taiyo Yuden','CAP CER 4.7UF 35V X5R 1210','DigiKey',0.1854,575,'C19',3],
+  ['GRM31MR72A473KA01L','Murata Electronics','CAP CER 47000PF 100V X7R 1206','DigiKey',0.0801,700,'C20',2],
+  ['RC0402FR-0710KL','YAGEO','RES SMD 10K OHM 1% 1/16W 0402','DigiKey',0.0021,1000,'R1',6],
+  ['RC0402FR-07100RL','YAGEO','RES SMD 100 OHM 1% 1/16W 0402','Mouser',0.0021,1000,'R2',6],
+  ['CRCW04024K70FKED','Vishay Dale','RES SMD 4.7K OHM 1% 1/16W 0402','DigiKey',0.0031,900,'R3',4],
+  ['ERJ-2RKF1002X','Panasonic','RES SMD 10K OHM 1% 1/16W 0402','Arrow',0.0028,900,'R4',4],
+  ['LQM18PN4R7MFH','Murata Electronics','FIXED IND 4.7UH 400MA 0603','DigiKey',0.0940,320,'L1',3],
+  ['744314650','Wurth Elektronik','FIXED IND 6.5UH 6A SMD','Mouser',0.6420,120,'L2',2],
+  ['STM32G071CBT6','STMicroelectronics','MCU 32BIT ARM CORTEX-M0+ LQFP48','DigiKey',3.4100,60,'U1',2],
+  ['TPS62840DLCR','Texas Instruments','IC REG BUCK ADJ 750MA SOT563','Mouser',0.9800,60,'U2',3],
+  ['SN74LVC1G08DBVR','Texas Instruments','IC GATE AND 1CH 2-INP SOT23-5','DigiKey',0.0640,90,'U3',4],
+  ['B340A-13-F','Diodes Inc','DIODE SCHOTTKY 40V 3A SMA','DigiKey',0.2860,90,'D1',3],
+  ['CSTNE16M0V530000R0','Murata Electronics','CERALOCK 16MHZ RESONATOR','Mouser',0.3320,60,'Y1',2]
+];
+
+const EXC = {
+  4: {
+    line: 4, ref: 'C4', mpn: 'CL10B104KB8NNNC_REEL', rawMpn: 'CL10B104KB8NNNC',
+    mfr: 'Samsung Electro-Mechanics', desc: 'CAP CER 0.1UF 50V X7R 0603',
+    kind: 'REVIEW_REQUIRED', reason: 'Packaging suffix inferred · confidence 0.71',
+    hasDiff: true, diffNote: 'Added the _REEL suffix. Setup accepts reel and cut tape for SMT, and only the reel variant is stocked at this quantity.',
+    question: 'Is the reeled variant the part they meant?',
+    explain: 'The customer MPN has no packaging suffix. Two orderable variants exist under that base number; O2 picked the reel because Setup accepts reel for SMT parts, but the confidence is below the 0.85 auto-accept threshold.',
+    canRestore: false,
+    facts: [['Reference','C4'],['Qty / board','4'],['Total qty','120'],['Attrition','+0'],['Confidence','0.71']],
+    candidates: [
+      { mpn:'CL10B104KB8NNNC_REEL', sub:'Samsung · DigiKey · reel of 4,000', isExact:false, isAlt:false, exactLabel:true,
+        metrics:[['Unit','$0.0089'],['MOQ','4,000'],['Stock','48,200'],['Lead','2 d']],
+        math:'0.0089 × 120 used, 4000 min buy\n= $35.60 spend, $1.07 consumed\nExcess 3,880 to inventory' },
+      { mpn:'CL10B104KB8NNNC (cut tape)', sub:'Samsung · Mouser · cut tape', isAlt:false,
+        metrics:[['Unit','$0.0240'],['MOQ','100'],['Stock','6,400'],['Lead','2 d']],
+        math:'0.0240 × 120 used, 200 min buy\n= $4.80 spend, $2.88 consumed\nCheaper total cost at this volume' }
+    ],
+    trace: [
+      ['pass','AVL rule','DigiKey and Mouser are both Approved distributors.','AVL-01'],
+      ['pass','Packaging constraint','Reel and cut tape both accepted for SMT.','PKG-02'],
+      ['warn','Confidence threshold','0.71 is under the 0.85 auto-accept bar, so O2 stopped.','CONF-01'],
+      ['pass','Target price','$0.0089 and $0.0240 are both under the $0.05 target.','PRICE-01']
+    ],
+    lineage: [['source','DigiKey API v4'],['fetched','2026-08-16 09:12 UTC'],['price_break','4000 @ 0.00890'],['stock_qty','48200'],['packaging','TAPE & REEL']],
+    audit: [['O2 normalized MPN and proposed reel variant','21h ago','#7C3AED'],['BOM v2 imported from customer_cbom_rev3.xlsx','21h ago','#D1D5DB']]
+  },
+  9: {
+    line: 9, ref: 'C9', mpn: 'CC0402JRNP09BN470', rawMpn: 'CC0402JRNP09BN470',
+    mfr: 'YAGEO', desc: 'CAP CER 47PF 50V NP0 0402',
+    kind: 'NEEDS_DECISION', reason: 'No distributor stock in the approved list', blockCode: 'NO_STOCK',
+    hasDiff: false,
+    question: 'Nobody on the AVL has this part in stock.',
+    explain: 'The MPN is valid and active. Every approved distributor shows zero available. Two form-fit-function alternates pass the electrical spec, and one broker has stock but Setup excludes brokers.',
+    canRestore: false,
+    facts: [['Reference','C9'],['Qty / board','9'],['Total qty','270'],['Attrition','+0'],['Confidence','1.00']],
+    candidates: [
+      { mpn:'CC0402JRNP09BN470', sub:'YAGEO · original part · no approved stock', blocked:'NO_STOCK',
+        metrics:[['Unit','—'],['MOQ','—'],['Stock','0'],['Lead','16 wk']],
+        math:null },
+      { mpn:'GRM1555C1H470JA01D', sub:'Murata · DigiKey · alternate, same 47pF C0G 0402', isAlt:true,
+        metrics:[['Unit','$0.0110'],['MOQ','500'],['Stock','122,000'],['Lead','2 d']],
+        math:'0.0110 × 270 used, 500 min buy\n= $5.50 spend, $2.97 consumed\nSpec match: 47pF ±5% C0G 50V 0402' },
+      { mpn:'C0402C470J5GACTU', sub:'KEMET · Mouser · alternate, same 47pF C0G 0402', isAlt:true,
+        metrics:[['Unit','$0.0138'],['MOQ','500'],['Stock','61,500'],['Lead','3 d']],
+        math:'0.0138 × 270 used, 500 min buy\n= $6.90 spend, $3.73 consumed\nSpec match: 47pF ±5% C0G 50V 0402' }
+    ],
+    trace: [
+      ['fail','Stock availability','0 available across DigiKey, Mouser, Arrow.','AVL-01'],
+      ['fail','Broker exclusion','One broker holds 8,000 pcs; Setup excludes brokers.','VEN-03'],
+      ['pass','Alternate search','2 alternates pass the electrical spec filter.','ALT-01'],
+      ['pass','Target price','Both alternates land under the $0.05 target.','PRICE-01']
+    ],
+    lineage: [['source','DigiKey API v4'],['fetched','2026-08-16 09:12 UTC'],['stock_qty','0'],['lifecycle','ACTIVE'],['factory_lead','16 weeks']],
+    audit: [['O2 searched 4 distributors, found no approved stock','21h ago','#7C3AED'],['BOM v2 imported from customer_cbom_rev3.xlsx','21h ago','#D1D5DB']]
+  },
+  13: {
+    line: 13, ref: 'C13', mpn: 'EEU-FR1E471L', rawMpn: 'EKZN250ELL471MH15D',
+    mfr: 'Chemi-Con → Panasonic', desc: 'CAP ALUM 470UF 20% 25V RADIAL',
+    kind: 'REVIEW_REQUIRED', reason: 'Original is obsolete · O2 swapped to an alternate',
+    hasDiff: true, diffNote: 'The original Chemi-Con part is marked obsolete by DigiKey. O2 substituted the Panasonic FR-series equivalent.',
+    question: 'Confirm the substitution for an obsolete part.',
+    explain: 'The customer part is end-of-life. There is last-time-buy stock, but not enough for the build. O2 proposed the Panasonic equivalent, which matches capacitance, voltage, ripple and can size.',
+    canRestore: true,
+    facts: [['Reference','C13'],['Qty / board','13'],['Total qty','390'],['Attrition','+0'],['Confidence','0.82']],
+    candidates: [
+      { mpn:'EEU-FR1E471L', sub:'Panasonic · DigiKey · proposed substitution', isAlt:true,
+        metrics:[['Unit','$0.3862'],['MOQ','200'],['Stock','14,300'],['Lead','2 d']],
+        math:'0.3862 × 390 used, 400 min buy\n= $154.48 spend, $150.62 consumed\nESR 0.10Ω vs 0.11Ω original' },
+      { mpn:'EKZN250ELL471MH15D', sub:'Chemi-Con · DigiKey · obsolete, last-time-buy', blocked:'OBSOLETE',
+        metrics:[['Unit','$0.4120'],['MOQ','1'],['Stock','180'],['Lead','—']],
+        math:'Only 180 pcs remain against 390 needed.\nCannot cover the build.' }
+    ],
+    trace: [
+      ['fail','Lifecycle check','Original marked OBSOLETE by DigiKey.','LIFE-01'],
+      ['warn','Last-time-buy stock','180 pcs available, 390 required.','LIFE-02'],
+      ['pass','Alternate spec match','470µF 25V radial, ESR within tolerance.','ALT-01'],
+      ['pass','AVL rule','Panasonic is an Approved manufacturer.','AVL-01']
+    ],
+    lineage: [['source','DigiKey API v4'],['fetched','2026-08-16 09:12 UTC'],['price_break','200 @ 0.38620'],['lifecycle','OBSOLETE'],['sub_source','DigiKey substitution feed']],
+    audit: [['O2 substituted EEU-FR1E471L for the obsolete original','21h ago','#7C3AED'],['BOM v2 imported from customer_cbom_rev3.xlsx','21h ago','#D1D5DB']]
+  },
+  14: {
+    line: 14, ref: 'C14', mpn: 'CL21A475KAQNNNE', rawMpn: 'CL21A475KAQNNNE',
+    mfr: 'Samsung Electro-Mechanics', desc: 'CAP CER 4.7UF 25V X5R 0805',
+    kind: 'REVIEW_REQUIRED', reason: 'Best price exceeds the $0.05 target', blockCode: 'PRICE_TARGET_EXCEEDED',
+    hasDiff: false,
+    question: 'The only approved source is over your price target.',
+    explain: 'Setup caps unit price at $0.05. The cheapest approved offer is $0.0730. A cheaper Yageo alternate exists at $0.0410 but its manufacturer is not on the AVL, and the AVL preference is set to Hard.',
+    canRestore: false,
+    facts: [['Reference','C14'],['Qty / board','14'],['Total qty','420'],['Attrition','+0'],['Confidence','0.94']],
+    candidates: [
+      { mpn:'CL21A475KAQNNNE', sub:'Samsung · Mouser · over target', isExact:true,
+        metrics:[['Unit','$0.0730'],['MOQ','500'],['Stock','32,000'],['Lead','2 d']],
+        math:'0.0730 × 420 used, 500 min buy\n= $36.50 spend, $30.66 consumed\n$0.0230 over the $0.05 target' },
+      { mpn:'CC0805KKX5R8BB475', sub:'YAGEO · DigiKey · not on AVL', isAlt:true, blocked:'HARD_AVL_BLOCKED',
+        metrics:[['Unit','$0.0410'],['MOQ','500'],['Stock','88,000'],['Lead','2 d']],
+        math:'Would save $12.18 on this line.\nRequires relaxing the Hard AVL rule.' }
+    ],
+    trace: [
+      ['fail','Target price','$0.0730 exceeds the $0.05 target by $0.0230.','PRICE-01'],
+      ['fail','Hard AVL block','Cheaper Yageo option is not on the AVL; preference is Hard.','AVL-02'],
+      ['pass','Packaging constraint','Reel accepted for SMT.','PKG-02'],
+      ['pass','Lead time','2 days, under the 28-day cap.','LEAD-01']
+    ],
+    lineage: [['source','Mouser API v2'],['fetched','2026-08-15 14:40 UTC'],['price_break','500 @ 0.07300'],['stock_qty','32000'],['age','21h — stale']],
+    audit: [['O2 flagged the line against the Setup price target','21h ago','#7C3AED'],['BOM v2 imported from customer_cbom_rev3.xlsx','21h ago','#D1D5DB']]
+  },
+  15: {
+    line: 15, ref: 'C15', mpn: 'EKY-350ELL331MJ16S', rawMpn: 'EKY-350ELL331MJ16S',
+    mfr: 'Chemi-Con', desc: 'CAP 330UF 35V ELECT KY RAD',
+    kind: 'REVIEW_REQUIRED', reason: 'Only stock sits outside the AVL', blockCode: 'HARD_AVL_BLOCKED',
+    hasDiff: false,
+    question: 'Stock exists, but only at a distributor you excluded.',
+    explain: 'Verical holds 6,200 pcs at a good price. Setup restricts buying to the Approved AVL with a Hard preference, so O2 will not select it on its own.',
+    canRestore: false,
+    facts: [['Reference','C15'],['Qty / board','15'],['Total qty','450'],['Attrition','+0'],['Confidence','0.97']],
+    candidates: [
+      { mpn:'EKY-350ELL331MJ16S', sub:'Chemi-Con · Verical · not in AVL', blocked:'HARD_AVL_BLOCKED',
+        metrics:[['Unit','$0.2140'],['MOQ','500'],['Stock','6,200'],['Lead','4 d']],
+        math:'0.2140 × 450 used, 500 min buy\n= $107.00 spend, $96.30 consumed\nBlocked by AVL-02, one click to allow' },
+      { mpn:'UPW1V331MHD6', sub:'Nichicon · DigiKey · alternate, on AVL', isAlt:true,
+        metrics:[['Unit','$0.2980'],['MOQ','500'],['Stock','9,800'],['Lead','2 d']],
+        math:'0.2980 × 450 used, 500 min buy\n= $149.00 spend, $134.10 consumed\n$37.80 more than the blocked option' }
+    ],
+    trace: [
+      ['fail','Hard AVL block','Verical is not an Approved distributor.','AVL-02'],
+      ['pass','Alternate on AVL','Nichicon equivalent found at an approved source.','ALT-01'],
+      ['pass','Lead time','Both under the 28-day cap.','LEAD-01'],
+      ['warn','Target price','Both exceed the $0.05 target; electrolytics are exempt.','PRICE-02']
+    ],
+    lineage: [['source','Verical API'],['fetched','2026-08-15 14:40 UTC'],['price_break','500 @ 0.21400'],['stock_qty','6200'],['age','21h — stale']],
+    audit: [['O2 held the line on the Hard AVL rule','21h ago','#7C3AED'],['BOM v2 imported from customer_cbom_rev3.xlsx','21h ago','#D1D5DB']]
+  },
+  16: {
+    line: 16, ref: 'C16', mpn: 'CC0402JRNP09BN101', rawMpn: 'CC0402JRNP09BN1O1',
+    mfr: 'YAGEO', desc: 'CAP CER 100PF 50V NP0 0402',
+    kind: 'NEEDS_DECISION', reason: 'MPN does not resolve to any known part', blockCode: 'INVALID_MPN',
+    hasDiff: true, diffNote: 'The customer string contains the letter O where a zero is expected. O2 will not silently rewrite a character it is not sure about.',
+    question: 'This MPN does not exist as written.',
+    explain: 'No catalog match across four distributors. A single-character correction produces a valid, stocked Yageo part with the same description the customer wrote. O2 flags it rather than assuming the typo.',
+    canRestore: false,
+    facts: [['Reference','C16'],['Qty / board','16'],['Total qty','480'],['Attrition','+0'],['Confidence','0.00']],
+    candidates: [
+      { mpn:'CC0402JRNP09BN101', sub:'YAGEO · DigiKey · one character corrected (O → 0)', isAlt:true,
+        metrics:[['Unit','$0.0104'],['MOQ','500'],['Stock','204,000'],['Lead','2 d']],
+        math:'0.0104 × 480 used, 500 min buy\n= $5.20 spend, $4.99 consumed\nDescription matches the customer line exactly' },
+      { mpn:'GRM1555C1H101JA01D', sub:'Murata · DigiKey · alternate, same 100pF C0G 0402', isAlt:true,
+        metrics:[['Unit','$0.0121'],['MOQ','500'],['Stock','150,000'],['Lead','2 d']],
+        math:'0.0121 × 480 used, 500 min buy\n= $6.05 spend, $5.81 consumed\nSpec match: 100pF ±5% C0G 50V 0402' }
+    ],
+    trace: [
+      ['fail','Catalog resolution','No match for the string as written.','MPN-01'],
+      ['warn','Fuzzy candidate','One-character edit distance to a valid, stocked part.','MPN-02'],
+      ['pass','Description cross-check','Customer description matches the corrected part.','MPN-03'],
+      ['pass','Target price','$0.0104 is under the $0.05 target.','PRICE-01']
+    ],
+    lineage: [['source','O2 catalog resolver'],['fetched','2026-08-16 09:12 UTC'],['match_count','0'],['fuzzy_distance','1'],['fuzzy_conf','0.93']],
+    audit: [['O2 could not resolve the MPN and stopped','21h ago','#7C3AED'],['BOM v2 imported from customer_cbom_rev3.xlsx','21h ago','#D1D5DB']]
+  }
+};
+
+const STALE = new Set([2,5,6,7,8,10,11,12,18,20,21,23,25,26,27,28,29,30]);
+
+// consumed cost per candidate, in candidate order — matches the math shown on each card
+const CONSUMED = { 4:[1.07,2.88], 9:[0,2.97,3.73], 13:[150.62,0], 14:[30.66,17.22], 15:[96.30,134.10], 16:[4.99,5.81] };
+const unitOf = c => { const m = /\$([\d.]+)/.exec(c.metrics[0][1]); return m ? parseFloat(m[1]) : null; };
+const BASE_COST = 3707.31;
+
+// review queue runs largest spend first, so the expensive calls get fresh attention
+const ORDER = [13, 15, 14, 4, 9, 16];
+const SPEND = { 13:'$154.48', 15:'$107.00', 14:'$36.50', 4:'$35.60', 9:'$5.50', 16:'$5.20' };
+
+const RULES = [
+  { id: 'AVL-01', name: 'Approved vendors', value: 'DigiKey · Mouser · Arrow', note: 'Brokers and unlisted distributors are excluded from every match.', dot: '#16A34A', impact: 'Cited on 3 of today’s 6 decisions' },
+  { id: 'AVL-02', name: 'AVL preference', value: 'Hard', note: 'Off-AVL parts are never auto-selected, even when they are cheaper or the only stock.', dot: '#DC2626', impact: 'Blocked 2 lines outright' },
+  { id: 'PRICE-01', name: 'Unit price target', value: '$0.05', note: 'Anything above the target is surfaced for a human rather than silently bought.', dot: '#F59E0B', impact: 'Flagged 1 line' },
+  { id: 'PKG-02', name: 'SMT packaging', value: 'Reel · Cut tape', note: 'Tray and bulk are rejected for SMT lines. Reel is preferred when both are stocked.', dot: '#16A34A', impact: 'Drove 1 normalization' },
+  { id: 'CONF-01', name: 'Auto-accept threshold', value: '0.85 confidence', note: 'Below this, O2 proposes but never commits. This is the line between automation and review.', dot: '#D97706', impact: 'Held 1 line for review' },
+  { id: 'LEAD-01', name: 'Max lead time', value: '28 days', note: 'Longer lead offers are kept as fallbacks but never selected as the best match.', dot: '#16A34A', impact: 'No conflicts today' }
+];
+
+// rules a reviewer can act on from inside a decision. pick = candidate index that
+// becomes the resolution when the rule stops holding it back.
+const RULE_ACTIONS = {
+  'AVL-02': {
+    bomValue: 'Soft',
+    changeLabel: 'Hard → Soft',
+    bomNote: 'Off-AVL sources become eligible for this quote only. The Setup default stays Hard.',
+    effects: [
+      { line: 15, pick: 0, what: 'Verical stock becomes eligible', delta: 'saves $37.80 against the on-AVL alternate' },
+      { line: 14, pick: 1, what: 'CC0805KKX5R8BB475 becomes eligible', delta: 'saves $12.18 on this line' }
+    ]
+  },
+  'PRICE-01': {
+    bomValue: '$0.08',
+    changeLabel: '$0.05 → $0.08',
+    bomNote: 'Lines up to $0.08 clear without review on this quote. The Setup default stays $0.05.',
+    effects: [
+      { line: 14, pick: 0, what: 'CL21A475KAQNNNE passes at $0.0730', delta: '$0.0230 over the old target' }
+    ]
+  },
+  'CONF-01': {
+    bomValue: '0.70',
+    changeLabel: '0.85 → 0.70',
+    bomNote: 'Proposals at 0.70 and above confirm without review on this quote. The Setup default stays 0.85.',
+    effects: [
+      { line: 4, pick: 0, what: 'The reel variant confirms at 0.71', delta: '$1.07 consumed, excess 3,880 to inventory' }
+    ]
+  }
+};
+
+const RULE_BY_ID = {}; RULES.forEach(r => RULE_BY_ID[r.id] = r);
+
+class Component extends DCLogic {
+  state = {
+    step: 'confirm', filter: 'exceptions', query: '', cols: 'roomy',
+    diffId: null, focusId: null, choice: {}, resolved: {}, teamRule: false,
+    overrideOpen: false, overrideText: '', toast: null, refreshing: false, staleCleared: false,
+    rulePanel: null, ruleScope: 'bom', rulePreview: false,
+    ruleApplied: {}, ruleRequested: {},
+    lineageOpen: false, auditOpen: false,
+    lastAction: null,
+  };
+
+  componentDidMount() {
+    this._key = e => {
+      const t = e.target.tagName;
+      if (t === 'INPUT' || t === 'TEXTAREA') return;
+      const open = this.state.focusId;
+      if (e.key === 'Escape' && this.state.rulePanel) { e.preventDefault(); this.closeRule(); }
+      else if (e.key === 'Escape' && open) { e.preventDefault(); this.setState({ focusId: null }); }
+      else if ((e.key === 'r' || e.key === 'R') && !open && this.state.step === 'confirm') { e.preventDefault(); this.startReview(); }
+      else if (open && (e.key === 'j' || e.key === 'ArrowDown')) { e.preventDefault(); this.move(1); }
+      else if (open && (e.key === 'k' || e.key === 'ArrowUp')) { e.preventDefault(); this.move(-1); }
+      else if (open && e.key === 'Enter') { e.preventDefault(); this.accept(); }
+    };
+    window.addEventListener('keydown', this._key);
+  }
+  componentWillUnmount() { window.removeEventListener('keydown', this._key); }
+
+  openLines() { return ORDER.filter(n => !this.state.resolved[n]); }
+
+  startReview() {
+    const o = this.openLines();
+    this.setState({ focusId: o.length ? o[0] : ORDER[0], teamRule: false, overrideOpen: false, rulePanel: null, rulePreview: false });
+  }
+  move(d) {
+    const i = ORDER.indexOf(this.state.focusId);
+    const n = ORDER[(i + d + ORDER.length) % ORDER.length];
+    this.setState({ focusId: n, teamRule: false, overrideOpen: false, rulePanel: null, rulePreview: false });
+  }
+
+  toastFor(ms, msg, action) {
+    this.setState({ toast: msg, lastAction: action || null });
+    clearTimeout(this._tt);
+    this._tt = setTimeout(() => this.setState({ toast: null }), ms);
+  }
+
+  resolveLine(id, pick, via, viaScope) {
+    const ex = EXC[id];
+    const cand = ex.candidates[pick];
+    return { mpn: cand.mpn, teamRule: via ? false : this.state.teamRule,
+      unit: unitOf(cand), consumed: (CONSUMED[id] || [])[pick] || 0,
+      supplier: (cand.sub.split(' · ')[1] || '').trim(),
+      via: via || null, viaScope: viaScope || null };
+  }
+
+  accept() {
+    const id = this.state.focusId; if (!id) return;
+    if (this.state.resolved[id]) { // already settled, move on
+      const rest = this.openLines();
+      if (rest.length) this.setState({ focusId: rest[0], teamRule: false, overrideOpen: false, rulePanel: null, rulePreview: false });
+      else this.setState({ focusId: null, rulePanel: null });
+      return;
+    }
+    const pick = this.state.choice[id] ?? 0;
+    const resolved = { ...this.state.resolved, [id]: this.resolveLine(id, pick) };
+    const rest = ORDER.filter(n => !resolved[n]);
+    this.setState({
+      resolved,
+      focusId: rest.length ? rest[0] : null, teamRule: false, overrideOpen: false, rulePanel: null, rulePreview: false
+    });
+    this.toastFor(5000,
+      this.state.teamRule ? 'Line ' + id + ' confirmed · saved as a team rule' : 'Line ' + id + ' confirmed',
+      { kind: 'line', line: id });
+  }
+  undoLine(id) {
+    const resolved = { ...this.state.resolved }; delete resolved[id];
+    this.setState({ resolved, toast: null, lastAction: null });
+  }
+
+  // ---- rule panel ----
+  openRule(id) {
+    if (!RULE_BY_ID[id]) return;
+    const canWaive = this.ruleEffectFor(id, this.state.focusId);
+    this.setState({ rulePanel: id, ruleScope: RULE_ACTIONS[id] ? 'bom' : (canWaive ? 'line' : 'default'), rulePreview: false });
+  }
+  closeRule() { this.setState({ rulePanel: null, rulePreview: false }); }
+  ruleEffectFor(id, line) {
+    const act = RULE_ACTIONS[id]; if (!act || !line) return null;
+    return act.effects.find(e => e.line === line && !this.state.resolved[e.line]) || null;
+  }
+  openEffects(id) {
+    const act = RULE_ACTIONS[id]; if (!act) return [];
+    return act.effects.filter(e => !this.state.resolved[e.line]);
+  }
+
+  applyRuleBom(id) {
+    const act = RULE_ACTIONS[id]; if (!act) return;
+    const eff = this.openEffects(id); if (!eff.length) return;
+    const resolved = { ...this.state.resolved };
+    eff.forEach(e => { resolved[e.line] = this.resolveLine(e.line, e.pick, id, 'bom'); });
+    this.setState({
+      resolved,
+      ruleApplied: { ...this.state.ruleApplied, [id]: { value: act.bomValue, lines: eff.map(e => e.line) } },
+      rulePreview: false
+    });
+    this.toastFor(6500,
+      id + ' is ' + act.bomValue + ' on this BOM · ' + eff.length + (eff.length > 1 ? ' lines re-resolved' : ' line re-resolved'),
+      { kind: 'rule', id: id, lines: eff.map(e => e.line) });
+  }
+  undoRule(id) {
+    const app = this.state.ruleApplied[id]; if (!app) return;
+    const resolved = { ...this.state.resolved };
+    app.lines.forEach(n => delete resolved[n]);
+    const ruleApplied = { ...this.state.ruleApplied }; delete ruleApplied[id];
+    this.setState({ resolved, ruleApplied, toast: null, lastAction: null, rulePreview: false });
+  }
+  waiveLine(id) {
+    const line = this.state.focusId;
+    const e = this.ruleEffectFor(id, line); if (!e) return;
+    const resolved = { ...this.state.resolved, [line]: this.resolveLine(line, e.pick, id, 'line') };
+    this.setState({ resolved, rulePanel: null, rulePreview: false });
+    this.toastFor(5000, id + ' waived on line ' + line + ' · rule unchanged', { kind: 'line', line: line });
+  }
+  requestDefault(id) {
+    this.setState({ ruleRequested: { ...this.state.ruleRequested, [id]: true } });
+    this.toastFor(5000, id + ' default change sent to o2-admin', null);
+  }
+
+  buildRows() {
+    const out = [];
+    for (let i = 1; i <= 30; i++) {
+      const ex = EXC[i];
+      const done = this.state.resolved[i];
+      if (ex) {
+        const cand = done ? null : ex.candidates[this.state.choice[i] ?? 0];
+        // a line only shows a red attribution code when a rule actually withheld the price;
+        // lines held on confidence still carry O2's proposed price, shown as a proposal
+        const proposed = !done && !ex.blockCode ? unitOf(cand) : null;
+        out.push({
+          line: i, mpn: done ? done.mpn : ex.mpn, rawMpn: ex.rawMpn, mfr: ex.mfr, desc: ex.desc,
+          hasDiff: ex.hasDiff, diffNote: ex.diffNote,
+          kind: done ? 'USER_RESOLVED' : ex.kind, reason: ex.reason, blockCode: ex.blockCode,
+          unit: done ? done.unit : proposed,
+          supplier: done ? done.supplier : (cand ? (cand.sub.split(' · ')[1] || '').trim() : ''),
+          isProposal: !done && proposed != null,
+          via: done ? done.via : null, viaScope: done ? done.viaScope : null,
+          alts: ex.candidates.length - 1,
+          stale: false, age: done ? 'just now' : '—'
+        });
+      } else {
+        const b = BASE[i - 1];
+        const stale = STALE.has(i) && !this.state.staleCleared;
+        out.push({
+          line: i, mpn: b[0], rawMpn: b[0], mfr: b[1], desc: b[2], hasDiff: false,
+          kind: 'O2_RESOLVED', supplier: b[3], unit: b[4], buy: b[5], alts: b[7] - 1,
+          stale, age: stale ? '21h ago' : '2h ago'
+        });
+      }
+    }
+    return out;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const rows = this.buildRows();
+    const open = this.openLines();
+    const openCount = open.length;
+    const nBlocked = open.filter(n => EXC[n].kind === 'NEEDS_DECISION').length;
+    const nReview = open.filter(n => EXC[n].kind === 'REVIEW_REQUIRED').length;
+    const nUser = Object.keys(st.resolved).length;
+    const nResolved = 30 - 6;
+    const staleN = rows.filter(r => r.stale).length;
+    const confirmedCost = Object.values(st.resolved).reduce((s, r) => s + (r.consumed || 0), BASE_COST);
+
+    const q = st.query.trim().toLowerCase();
+    let visible = rows;
+    if (st.filter === 'exceptions') visible = visible.filter(r => r.kind !== 'O2_RESOLVED');
+    if (q) visible = visible.filter(r => (r.mpn + ' ' + r.mfr + ' ' + r.desc).toLowerCase().includes(q));
+
+    const vis = visible.map(r => ({
+      ...r,
+      isBlocked: r.kind === 'NEEDS_DECISION', isReview: r.kind === 'REVIEW_REQUIRED',
+      isResolved: r.kind === 'O2_RESOLVED', isUser: r.kind === 'USER_RESOLVED',
+      needsAction: r.kind === 'NEEDS_DECISION' || r.kind === 'REVIEW_REQUIRED',
+      hasPrice: r.unit != null, noPrice: r.unit == null,
+      unitPrice: r.unit != null ? money(r.unit) : '',
+      priceSub: r.kind === 'USER_RESOLVED'
+        ? (r.via
+          ? (r.supplier ? r.supplier + ' · ' : '') + r.via + (r.viaScope === 'line' ? ' waiver' : ' · this BOM')
+          : (r.supplier ? r.supplier + ' · confirmed by you' : 'confirmed by you'))
+        : r.isProposal ? (r.supplier ? r.supplier + ' · O2 proposal' : 'O2 proposal')
+        : (r.supplier ? r.supplier + ' · buy ' + r.buy : ''),
+      subIsProposal: r.isProposal === true,
+      subColor: r.isProposal ? '#6D28D9' : '#9CA3AF',
+      isStale: !!r.stale, isFresh: !r.stale,
+      hasAlts: r.alts > 0, altLabel: r.alts + ' alt',
+      diffOpen: st.diffId === r.line,
+      toggleDiff: e => { e.stopPropagation(); this.setState({ diffId: st.diffId === r.line ? null : r.line }); },
+      open: () => { if (EXC[r.line]) this.setState({ focusId: r.line, teamRule: false, overrideOpen: false, rulePanel: null, rulePreview: false }); },
+      undo: e => { e.stopPropagation(); this.undoLine(r.line); }
+    }));
+
+    const ex = st.focusId ? EXC[st.focusId] : null;
+    let f = null, pips = [];
+    if (ex) {
+      const pick = st.choice[st.focusId] ?? 0;
+      const done = st.resolved[st.focusId];
+
+      // rules that hold more than one open line: worth one shared fix
+      let sameCause = null;
+      if (!done) {
+        for (const t of ex.trace) {
+          if (t[0] !== 'fail') continue;
+          const rid = t[3];
+          if (!RULE_ACTIONS[rid]) continue;
+          const others = this.openEffects(rid).map(e => e.line).filter(n => n !== st.focusId);
+          if (others.length && this.ruleEffectFor(rid, st.focusId)) {
+            sameCause = { id: rid, others: others };
+            break;
+          }
+        }
+      }
+
+      const dynamicAudit = done
+        ? [[done.via
+            ? (done.viaScope === 'line'
+              ? done.via + ' waived on this line · resolved with ' + done.mpn
+              : 'Rule change ' + done.via + ' re-resolved this line with ' + done.mpn)
+            : 'You confirmed ' + done.mpn, 'just now', '#16A34A']]
+        : [];
+
+      f = {
+        ...ex,
+        spendAtStake: SPEND[st.focusId] || '',
+        facts: ex.facts.map(([k, v]) => ({ k, v })),
+        candidates: ex.candidates.map((c, i) => ({
+          mpn: c.mpn, sub: c.sub,
+          isExact: !c.isAlt && !c.blocked, isAlt: !!c.isAlt, isBlockedCand: !!c.blocked, blockCode: c.blocked || '',
+          selected: done ? done.mpn === c.mpn : i === pick,
+          border: (done ? done.mpn === c.mpn : i === pick) ? '#111827' : '#EBEBEF',
+          bg: (done ? done.mpn === c.mpn : i === pick) ? '#FAFAFB' : '#fff',
+          radioBorder: (done ? done.mpn === c.mpn : i === pick) ? '#111827' : '#D1D5DB',
+          radioBg: (done ? done.mpn === c.mpn : i === pick) ? '#111827' : '#fff',
+          metrics: c.metrics.map(([k, v]) => ({ k, v, color: v === '—' || v === '0' ? '#B91C1C' : '#111827' })),
+          hasMath: !!c.math, math: c.math || '',
+          pick: () => { if (!st.resolved[st.focusId]) this.setState({ choice: { ...st.choice, [st.focusId]: i } }); }
+        })),
+        trace: ex.trace.map(([s, label, detail, ruleId]) => {
+          const overridden = (s === 'fail' || s === 'warn') && !!st.ruleApplied[ruleId];
+          const shown = overridden ? 'pass' : s;
+          return {
+            label, detail, ruleId,
+            glyph: shown === 'pass' ? '✓' : shown === 'fail' ? '✕' : '!',
+            bg: shown === 'pass' ? '#F0FDF4' : shown === 'fail' ? '#FEF2F2' : '#FFFBEB',
+            fg: shown === 'pass' ? '#16A34A' : shown === 'fail' ? '#DC2626' : '#B45309',
+            overridden,
+            overriddenNote: overridden ? 'Now passes · ' + ruleId + ' is ' + st.ruleApplied[ruleId].value + ' on this BOM' : '',
+            canOpen: !!RULE_BY_ID[ruleId],
+            isPlain: !RULE_BY_ID[ruleId],
+            openRule: e => { e.preventDefault(); this.openRule(ruleId); }
+          };
+        }),
+        hasSameCause: !!sameCause,
+        sameCauseId: sameCause ? sameCause.id : '',
+        sameCauseText: sameCause
+          ? 'also holds line ' + sameCause.others.join(' and line ') + '. One rule change clears ' + (sameCause.others.length + 1) + ' lines.'
+          : '',
+        sameCauseOpen: () => { if (sameCause) this.openRule(sameCause.id); },
+        isSettled: !!done,
+        settledText: done
+          ? (done.via
+            ? 'Resolved with ' + done.mpn + ' · ' + done.via + (done.viaScope === 'line' ? ' waiver' : ' change')
+            : 'Resolved with ' + done.mpn + ' · confirmed by you')
+          : '',
+        settledUndo: () => this.undoLine(st.focusId),
+        lineage: ex.lineage.map(([k, v]) => ({ k, v })),
+        audit: dynamicAudit.concat(ex.audit).map(([text, when, dot]) => ({ text, when, dot }))
+      };
+      pips = ORDER.map(n => ({ bg: st.resolved[n] ? '#16A34A' : n === st.focusId ? '#111827' : '#E5E7EB' }));
+    }
+
+    // ---- rule panel view ----
+    let rp = null;
+    if (st.rulePanel && RULE_BY_ID[st.rulePanel]) {
+      const rule = RULE_BY_ID[st.rulePanel];
+      const act = RULE_ACTIONS[rule.id] || null;
+      const applied = st.ruleApplied[rule.id] || null;
+      const requested = !!st.ruleRequested[rule.id];
+      const waivable = this.ruleEffectFor(rule.id, st.focusId);
+      const eff = act ? this.openEffects(rule.id) : [];
+      const projected = confirmedCost + eff.reduce((s, e) => s + ((CONSUMED[e.line] || [])[e.pick] || 0), 0);
+
+      // cited-today list across all six decisions
+      const cited = ORDER.filter(n => EXC[n].trace.some(t => t[3] === rule.id)).map(n => {
+        const t = EXC[n].trace.find(t => t[3] === rule.id);
+        const res = !!st.resolved[n];
+        const overridden = (t[0] === 'fail' || t[0] === 'warn') && !!applied;
+        const s = res || overridden ? 'pass' : t[0];
+        return {
+          line: 'line ' + n, ref: EXC[n].ref, label: t[1],
+          glyph: s === 'pass' ? '✓' : s === 'fail' ? '✕' : '!',
+          fg: s === 'pass' ? '#16A34A' : s === 'fail' ? '#DC2626' : '#B45309'
+        };
+      });
+
+      const scopes = [];
+      if (act && waivable) scopes.push({
+        key: 'line',
+        title: 'Only line ' + st.focusId,
+        sub: 'One-time waiver. The rule stays as it is.'
+      });
+      if (act) scopes.push({
+        key: 'bom',
+        title: rule.id + ' ' + act.changeLabel + ' · this BOM only',
+        sub: act.bomNote
+      });
+      scopes.push({
+        key: 'default',
+        title: 'Change the team default',
+        sub: 'Rewrites Setup for every future BOM. Needs sign-off from o2-admin.'
+      });
+      const scopeViews = scopes.map(s => ({
+        ...s,
+        selected: st.ruleScope === s.key,
+        border: st.ruleScope === s.key ? '#111827' : '#EBEBEF',
+        bg: st.ruleScope === s.key ? '#FAFAFB' : '#fff',
+        radioBorder: st.ruleScope === s.key ? '#111827' : '#D1D5DB',
+        radioBg: st.ruleScope === s.key ? '#111827' : '#fff',
+        pick: () => this.setState({ ruleScope: s.key, rulePreview: false })
+      }));
+
+      let primaryLabel = '', primaryDisabled = false, primaryAction = () => {};
+      if (applied) {
+        primaryLabel = 'Done'; primaryAction = () => this.closeRule();
+      } else if (st.ruleScope === 'line') {
+        primaryLabel = 'Waive line ' + st.focusId; primaryAction = () => this.waiveLine(rule.id);
+      } else if (st.ruleScope === 'bom') {
+        if (!eff.length) { primaryLabel = 'No open lines under this rule'; primaryDisabled = true; }
+        else if (!st.rulePreview) { primaryLabel = 'Preview the change'; primaryAction = () => this.setState({ rulePreview: true }); }
+        else { primaryLabel = 'Apply to this BOM'; primaryAction = () => this.applyRuleBom(rule.id); }
+      } else {
+        if (requested) { primaryLabel = 'Requested · waiting on o2-admin'; primaryDisabled = true; }
+        else { primaryLabel = 'Send to o2-admin'; primaryAction = () => this.requestDefault(rule.id); }
+      }
+
+      rp = {
+        id: rule.id, name: rule.name, note: rule.note,
+        value: rule.value,
+        valueNow: applied ? applied.value + ' · this BOM' : rule.value,
+        origin: 'Setup v2 · set by o2-admin',
+        isApplied: !!applied,
+        appliedText: applied ? rule.id + ' is ' + applied.value + ' on this BOM · ' + applied.lines.length + (applied.lines.length > 1 ? ' lines re-resolved' : ' line re-resolved') : '',
+        undoApplied: () => this.undoRule(rule.id),
+        isRequested: requested,
+        cited,
+        hasAction: !!act,
+        showScopes: !applied,
+        scopes: scopeViews,
+        showPreview: st.rulePreview && st.ruleScope === 'bom' && !applied && eff.length > 0,
+        preview: eff.map(e => ({
+          line: 'line ' + e.line, what: e.what, delta: e.delta
+        })),
+        previewTotal: 'Estimate moves to $' + projected.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' · no new exceptions',
+        primaryLabel, primaryDisabled,
+        primaryBg: primaryDisabled ? '#F3F4F6' : '#111827',
+        primaryFg: primaryDisabled ? '#9CA3AF' : '#fff',
+        primaryAction,
+        close: () => this.closeRule()
+      };
+    }
+
+    const filters = [
+      { key: 'exceptions', label: 'Needs you · ' + openCount },
+      { key: 'all', label: 'All 30 lines' }
+    ].map(x => ({
+      label: x.label,
+      bg: st.filter === x.key ? '#fff' : 'transparent',
+      fg: st.filter === x.key ? '#111827' : '#6B7280',
+      weight: st.filter === x.key ? '600' : '500',
+      shadow: st.filter === x.key ? '0 1px 2px rgba(17,24,39,.08)' : 'none',
+      pick: () => this.setState({ filter: x.key })
+    }));
+
+    const stepDefs = [
+      { key: 'setup', label: 'Setup' },
+      { key: 'confirm', label: 'Confirm Parts' },
+      { key: 'price', label: 'Source & Price' },
+      { key: 'quote', label: 'Build Quote' }
+    ];
+    const order = ['setup', 'confirm', 'price', 'quote'];
+    const cur = order.indexOf(st.step);
+    const overrideCount = Object.keys(st.ruleApplied).length;
+
+    // manual override: run the text against what the catalog already knows
+    const ovText = st.overrideText.trim().toUpperCase();
+    let ovHint = null;
+    if (st.overrideOpen && ovText.length > 3 && ex) {
+      const inCand = ex.candidates.find(c => c.mpn.toUpperCase().startsWith(ovText));
+      const inBase = BASE.find(b => b && b[0].toUpperCase().startsWith(ovText));
+      if (inCand) ovHint = { ok: true, text: 'Resolves · ' + inCand.sub };
+      else if (inBase) ovHint = { ok: true, text: 'Resolves · ' + inBase[1] + ' · stocked at ' + inBase[3] };
+      else ovHint = { ok: false, text: 'No catalog match yet' };
+    }
+
+    return {
+      steps: stepDefs.map((s, i) => ({
+        label: s.label, n: i + 1, on: st.step === s.key,
+        done: i < cur, todo: i >= cur,
+        weight: st.step === s.key ? '600' : '500',
+        color: st.step === s.key ? '#111827' : '#6B7280',
+        badge: s.key === 'confirm' && openCount > 0, badgeText: String(openCount),
+        go: () => this.setState({ step: s.key })
+      })),
+      onSetup: st.step === 'setup', onConfirm: st.step === 'confirm', onPrice: st.step === 'price' || st.step === 'quote',
+      goConfirm: () => this.setState({ step: 'confirm' }),
+      goPrice: () => this.setState({ step: 'price' }),
+
+      hasRuleOverride: overrideCount > 0,
+      ruleOverrideLabel: overrideCount + (overrideCount > 1 ? ' rules overridden on this BOM' : ' rule overridden on this BOM'),
+
+      rules: RULES.map(rl => {
+        const applied = st.ruleApplied[rl.id];
+        return {
+          ...rl,
+          overridden: !!applied,
+          overrideLabel: applied ? applied.value + ' on customer_cbom_rev3 · Setup default unchanged' : '',
+          requested: !!st.ruleRequested[rl.id],
+          requestedLabel: 'Default change requested · waiting on o2-admin'
+        };
+      }),
+
+      startReview: () => this.startReview(),
+      openCount, blocked: openCount > 0, unblocked: openCount === 0,
+      reviewCta: openCount > 0 ? 'Review ' + openCount + ' decisions' : 'All clear',
+      legend: [
+        { label: 'Needs decision', n: nBlocked, dot: '#DC2626' },
+        { label: 'Confirm match', n: nReview, dot: '#D97706' },
+        { label: 'O2 resolved', n: nResolved, dot: '#D1D5DB' },
+        { label: 'You confirmed', n: nUser, dot: '#16A34A' }
+      ],
+      pctResolved: (nResolved / 30 * 100) + '%',
+      pctReview: (nReview / 30 * 100) + '%',
+      pctBlocked: (nBlocked / 30 * 100) + '%',
+      runningCost: '$' + confirmedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      totalCost: '$' + confirmedCost.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }),
+      perUnit: '$' + (confirmedCost / 30).toFixed(2),
+      priceStats: [
+        { label: 'Lines from DigiKey', value: '19' },
+        { label: 'Excess inventory', value: '$104.03' },
+        { label: 'Longest lead', value: '4 days' }
+      ],
+
+      filters, query: st.query, setQuery: e => this.setState({ query: e.target.value }),
+      hasStale: staleN > 0 && !st.refreshing, refreshing: st.refreshing,
+      staleLabel: 'Refresh ' + staleN + ' stale prices',
+      refreshAll: () => {
+        this.setState({ refreshing: true });
+        setTimeout(() => this.setState({ refreshing: false, staleCleared: true, toast: 'Refreshed ' + staleN + ' prices · ' + staleN + ' API calls used' }), 1500);
+        clearTimeout(this._tt);
+        this._tt = setTimeout(() => this.setState({ toast: null }), 6500);
+      },
+      colsLabel: st.cols === 'compact' ? 'Compact' : 'Comfortable',
+      toggleCols: () => this.setState({ cols: st.cols === 'compact' ? 'roomy' : 'compact' }),
+      rowH: st.cols === 'compact' ? '46px' : '60px',
+      gridCols: '48px 176px minmax(220px,1fr) 150px 180px 116px 84px 132px',
+      cols: [
+        { label: '#', align: 'left' }, { label: 'Status', align: 'left' }, { label: 'MPN', align: 'left' },
+        { label: 'Manufacturer', align: 'left' }, { label: 'Best price', align: 'right' },
+        { label: 'Freshness', align: 'left' }, { label: 'Alts', align: 'left' }, { label: '', align: 'right' }
+      ],
+      visibleRows: vis, filteredEmpty: vis.length === 0,
+      showAll: () => this.setState({ filter: 'all', query: '' }),
+      footerNote: openCount > 0
+        ? openCount + ' unresolved lines are excluded from the estimate'
+        : (staleN > 0
+          ? 'All 30 lines confirmed · ' + staleN + ' prices are 21h old, refresh before pricing'
+          : 'All 30 lines confirmed · ready to price'),
+      continueBg: openCount > 0 ? '#F3F4F6' : '#111827',
+      continueFg: openCount > 0 ? '#9CA3AF' : '#fff',
+
+      focusOpen: !!ex, f: f || {},
+      focusCounter: ex ? 'Decision ' + (ORDER.indexOf(st.focusId) + 1) + ' of 6' : '',
+      focusOrderNote: 'largest spend first',
+      focusPips: pips,
+      prevFocus: () => this.move(-1), nextFocus: () => this.move(1),
+      closeFocus: () => this.setState({ focusId: null, rulePanel: null, rulePreview: false }),
+      skipFocus: () => this.move(1),
+      acceptFocus: () => this.accept(),
+      acceptLabel: ex && st.resolved[st.focusId]
+        ? (openCount > 0 ? 'Next decision' : 'Close')
+        : (openCount > 1 ? 'Confirm & next' : 'Confirm'),
+      teamRule: st.teamRule,
+      teamRuleBg: st.teamRule ? '#111827' : '#fff',
+      teamRuleBorder: st.teamRule ? '#111827' : '#D1D5DB',
+      teamRuleGlyph: st.teamRule ? '✓' : '',
+      toggleTeamRule: () => this.setState({ teamRule: !st.teamRule }),
+      overrideOpen: st.overrideOpen, overrideText: st.overrideText,
+      manualOverride: () => this.setState({ overrideOpen: !st.overrideOpen }),
+      setOverride: e => this.setState({ overrideText: e.target.value }),
+      hasOvHint: !!ovHint,
+      ovHintText: ovHint ? ovHint.text : '',
+      ovHintColor: ovHint && ovHint.ok ? '#16A34A' : '#9CA3AF',
+      restoreOriginal: () => this.setState({ choice: { ...st.choice, [st.focusId]: 0 }, toast: 'Restored to O2’s original match' }),
+
+      lineageOpen: st.lineageOpen, toggleLineage: () => this.setState({ lineageOpen: !st.lineageOpen }),
+      lineageGlyph: st.lineageOpen ? '▾' : '▸',
+      auditOpen: st.auditOpen, toggleAudit: () => this.setState({ auditOpen: !st.auditOpen }),
+      auditGlyph: st.auditOpen ? '▾' : '▸',
+
+      rpOpen: !!rp, rp: rp || {},
+
+      toastOpen: !!st.toast, toastText: st.toast || '',
+      canUndoToast: !!st.lastAction,
+      undoToast: () => {
+        const a = st.lastAction;
+        if (!a) { this.setState({ toast: null }); return; }
+        if (a.kind === 'rule') this.undoRule(a.id);
+        else this.undoLine(a.line);
+      }
+    };
+  }
+}
+</script>
+
+
+</body></html>
