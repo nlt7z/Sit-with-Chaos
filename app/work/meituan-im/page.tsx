@@ -102,8 +102,8 @@ function CaseNav() {
                 }}
                 className={`block border-l-[1.5px] border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
                   active === id
-                    ? "border-nltLime font-medium text-textPrimary"
-                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-nltLime/40 hover:text-textPrimary"
+                    ? "border-[#FFD100] font-medium text-textPrimary"
+                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-[#FFD100]/60 hover:text-textPrimary"
                 }`}
               >
                 {label}
@@ -256,7 +256,7 @@ function PhoneFrame({
             href={src}
             target="_blank"
             rel="noreferrer"
-            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-nltLime-ink"
+            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-[#8A6A00]"
           >
             View full →
           </a>
@@ -381,7 +381,7 @@ function Callout({
 }) {
   return (
     <div className="flex gap-4">
-      <span className="mt-[2px] inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-nltLime-ink/30 bg-nltLime-soft font-mono text-[11px] tabular-nums text-nltLime-ink">
+      <span className="mt-[2px] inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-[#FFD100] bg-[#FFF7CC] font-mono text-[11px] tabular-nums text-[#8A6A00]">
         {index.toString().padStart(2, "0")}
       </span>
       <div className="min-w-0">
@@ -504,16 +504,15 @@ export default function MeituanImCaseStudyPage() {
                   variants={heroItem}
                   className="mt-6 max-w-xl text-[16px] leading-[1.6] text-textSecondary"
                 >
-                  A 0-to-1 in-message quotation system across Meituan&apos;s 770M+ annual users and
-                  14.5M merchants — turning uncertain local-service pricing into a guided, comparable,
-                  bookable decision. It&apos;s a super-app marketplace (Uber, Yelp and TaskRabbit in one)
-                  where deals close inside in-app chat, and I owned the whole journey: diagnose, compare,
-                  book, pay, review.
+                  A 0-to-1 in-chat quotation system for Meituan, a super-app (Uber, Yelp and
+                  TaskRabbit in one) with 770M+ users and 14.5M merchants. It turns unclear
+                  service pricing into a clear, comparable, bookable decision. I owned the whole
+                  journey: diagnose, compare, book, pay, review.
                 </motion.p>
 
                 <motion.div variants={heroItem} className="mt-8 flex flex-wrap items-center gap-3">
                   <a
-                    href="/work/meituan-im/deck-present"
+                    href="/work/meituan-im/deck-story-en"
                     className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                   >
                     View Presentation Deck
@@ -542,7 +541,7 @@ export default function MeituanImCaseStudyPage() {
                         +30<span className="text-[0.5em] text-textPrimary/70">%</span>
                       </p>
                       <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-textSecondary">
-                        Intent→order conversion on the diagnostic channel — ~1.3× the old path. Routing price-anxious users into it lifted overall search conversion <span className="text-textPrimary">+0.5pp</span>.
+                        Intent→order conversion in the new channel, about 1.3× the old path. It also lifted overall search conversion <span className="text-textPrimary">+0.5pp</span>.
                       </p>
                     </div>
                   </div>
@@ -574,23 +573,22 @@ export default function MeituanImCaseStudyPage() {
         <Section id="turning-point" eyebrow="Context · Signal" title="The brief asked for price visibility. The evidence pointed deeper.">
           <FadeIn>
             <figure className="relative max-w-3xl">
-              <span aria-hidden className="absolute -left-2 -top-7 font-display text-[6rem] font-light leading-none text-nltLime-ink/15 md:text-[8rem]">
+              <span aria-hidden className="absolute -left-2 -top-7 font-display text-[6rem] font-light leading-none text-[#FFD100]/30 md:text-[8rem]">
                 &ldquo;
               </span>
               <blockquote className="relative font-display text-[1.5rem] font-light leading-[1.3] tracking-tight text-textPrimary md:text-[1.9rem] md:leading-[1.28]">
-                I needed a plumber. I messaged ten shops, actually talked to six, and spent half an hour
-                comparing — and I still had no idea what it would cost. Every number felt like something
-                they&apos;d change once they showed up.
+                I needed a plumber. I messaged ten shops, talked to six, and still had no idea
+                what it would cost. Every number felt like it would change once they showed up.
               </blockquote>
               <figcaption className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
-                A pattern from user research — and my own experience
+                From user research, and my own experience
               </figcaption>
             </figure>
           </FadeIn>
 
           <FadeIn className="mt-12">
             <p className="max-w-3xl text-[18px] leading-[1.55] tracking-tight text-textPrimary">
-              We shipped a standalone quote page first. Conversion didn&apos;t budge — the quote was rarely the final price, so users didn&apos;t believe it and merchants didn&apos;t maintain it. That failure was the insight: price wasn&apos;t a <span className="text-textSecondary line-through decoration-textSecondary/40">number</span> problem, it was a <span className="text-nltLime-ink">process-trust</span> problem — built in the conversation, not declared on a page.
+              We shipped a standalone quote page first. Conversion did not move. The quote was rarely the final price, so users did not believe it. That failure was the insight: price was not a <span className="text-textSecondary line-through decoration-textSecondary/40">number</span> problem. It was a <span className="rounded-[3px] bg-[#FFD100] px-1 text-[#3D2E00]">process-trust</span> problem, built in the conversation.
             </p>
           </FadeIn>
 
@@ -621,7 +619,7 @@ export default function MeituanImCaseStudyPage() {
               {/* AFTER — redesigned, warm accent */}
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">After · 3-step trust loop</p>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8A6A00]">After · 3-step trust loop</p>
                 </div>
                 <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
@@ -631,7 +629,7 @@ export default function MeituanImCaseStudyPage() {
                   ].map((t, i) => (
                     <li key={i} className="py-4">
                       <div className="flex items-baseline gap-3">
-                        <span className="font-mono text-[10px] tabular-nums text-nltLime-ink">0{i + 1}</span>
+                        <span className="font-mono text-[10px] tabular-nums text-[#8A6A00]">0{i + 1}</span>
                         <p className="text-[15px] tracking-tight text-textPrimary">{t}</p>
                       </div>
                     </li>
@@ -658,7 +656,7 @@ export default function MeituanImCaseStudyPage() {
 
           <div className="mt-16 md:mt-24">
             <SubsectionHeader
-              hint="How a quote request becomes a booking, an on-site visit, and a settled order — across platform, user and merchant."
+              hint="How a quote request becomes a booking, a visit, and a paid order, across platform, user and merchant."
             />
             <FadeIn>
               <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
@@ -708,7 +706,7 @@ export default function MeituanImCaseStudyPage() {
 
           <div className="mt-20 md:mt-28">
             <SubsectionHeader
-              hint="Merchants quote the same diagnosis independently — so you compare guide prices against one order, never a platform-set final."
+              hint="Merchants quote the same diagnosis on their own. You compare guide prices against one order."
             />
             <div className="grid gap-12 lg:grid-cols-[320px_minmax(0,1fr)] lg:gap-16">
               <PhoneFrame
@@ -770,18 +768,18 @@ export default function MeituanImCaseStudyPage() {
           </div>
         </Section>
 
-        <Section id="merchant" eyebrow="The Other Side" title="Merchants quote against the same order — on equal footing.">
+        <Section id="merchant" eyebrow="The Other Side" title="Merchants quote against the same order, on equal footing.">
           <FadeIn>
             <p className="max-w-[42rem] text-[16px] leading-[1.7] text-textSecondary">
-              Every merchant gets the same structured order and submits one quote — a fixed price or a tightly-bounded
-              range, never open-ended. Since they can&apos;t see each other&apos;s numbers, they compete on the brief
-              instead of undercutting — and for local repair, where the exact price isn&apos;t knowable until the visit,
-              a bounded range is the honest unit.
+              Every merchant gets the same order and submits one quote: a fixed price or a bounded
+              range. They can&apos;t see each other&apos;s numbers, so they compete on the brief, not on
+              undercutting. For repair, the real price is unknown until the visit, so a range is
+              the honest unit.
             </p>
           </FadeIn>
           <FadeIn className="mt-10">
             <ScaledPrototypeFrame
-              src="/assets/meituan-im/Repair%20Flow.html#flow=merchant&rail=0"
+              src="/assets/meituan-im/Revised%20Repair%20Flow.html#flow=merchant&rail=0"
               title="Merchant quote desk — interactive prototype"
               naturalWidth={1110}
               naturalHeight={820}
@@ -800,7 +798,7 @@ export default function MeituanImCaseStudyPage() {
               href="/work/meituan-im/prototype"
               target="_blank"
               rel="noreferrer"
-              className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/60 transition-colors hover:text-nltLime-ink"
+              className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/60 transition-colors hover:text-[#8A6A00]"
             >
               Open in new window ↗
             </a>
@@ -810,7 +808,7 @@ export default function MeituanImCaseStudyPage() {
               settles down ~1deg, and a soft amber wash brushes through. */}
           <PrototypeReveal>
             <ScaledPrototypeFrame
-              src="/assets/meituan-im/Repair%20Flow.html"
+              src="/assets/meituan-im/Revised%20Repair%20Flow.html"
               title="Repair flow — interactive prototype"
               naturalWidth={480}
               naturalHeight={1080}
@@ -827,9 +825,9 @@ export default function MeituanImCaseStudyPage() {
         >
           <FadeIn className="mt-2">
             <p className="max-w-2xl text-[17px] leading-[1.6] tracking-tight text-textPrimary">
-              Home repair was the reference build. The same{" "}
-              <span className="text-nltLime-ink">Diagnose → Structure → Commit</span> loop maps cleanly onto other
-              high-stakes, non-standard services — the substrate changes, the trust mechanics don&apos;t.
+              Home repair was the first build. The same{" "}
+              <span className="rounded-[3px] bg-[#FFD100] px-1 text-[#3D2E00]">Diagnose → Structure → Commit</span> loop fits other
+              high-stakes, non-standard services. The service changes; the trust mechanics don&apos;t.
             </p>
             <div className="mt-8 flex max-w-2xl flex-wrap gap-x-8 gap-y-3 border-t border-black/[0.07] pt-6">
               {["Education", "Banquet", "Maternity care"].map((d) => (
@@ -844,17 +842,19 @@ export default function MeituanImCaseStudyPage() {
               so the primary result reads first; the projected outcomes step down below. */}
           <FadeIn className="border-t border-black/[0.06] pt-12 md:pt-16">
             <div className="flex flex-wrap items-baseline gap-x-10 gap-y-4">
-              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-nltLime-ink md:text-[5.5rem] lg:text-[8rem]">
-                +<CountUp to={30} />
-                <span className="text-[0.5em] text-nltLime-ink/70">%</span>
+              <p className="font-display text-[3.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[5.5rem] lg:text-[8rem]">
+                <span className="rounded-xl bg-[#FFD100] px-3 pb-1 text-[#1A1400]">
+                  +<CountUp to={30} />
+                  <span className="text-[0.5em] text-[#1A1400]/70">%</span>
+                </span>
               </p>
               <div className="max-w-md">
                 <div className="flex items-center gap-2">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Conversion lift · diagnostic channel</p>
-                  <span className="rounded-full border border-nltLime-ink/30 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-nltLime-ink/80">Measured</span>
+                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8A6A00]">Conversion lift · diagnostic channel</p>
+                  <span className="rounded-full border border-[#8A6A00]/40 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-[#8A6A00]">Measured</span>
                 </div>
                 <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
-                  ~60% of users ask about price before buying. Routed through a diagnose → quote → order flow, intent→order converted ~1.3× the old path (9%→11.7% toilet repair, 17%→22% pipe clearing) — lifting overall search entry +0.5pp.
+                  ~60% of users ask about price before buying. In the new flow, intent→order converted about 1.3× the old path (9%→11.7% toilet repair, 17%→22% pipe clearing).
                 </p>
               </div>
             </div>
@@ -885,7 +885,7 @@ export default function MeituanImCaseStudyPage() {
           </FadeIn>
           <FadeIn delay={0.15}>
             <p className="mt-10 max-w-2xl text-[13.5px] leading-relaxed text-textSecondary/80">
-              A search-triggered floating window, piloted on two repair categories in Hangzhou and select Zhejiang cities. Conversion is real June–August A/B data; daily-orders and disputes are modeled forward for wider rollout.
+              Piloted on two repair categories in Hangzhou and nearby cities. The conversion lift is real A/B data from June to August. Daily orders and disputes are modeled for wider rollout.
             </p>
           </FadeIn>
         </Section>
@@ -893,17 +893,17 @@ export default function MeituanImCaseStudyPage() {
         <Section id="reflection" eyebrow="Reflection" title="Next time, I would push on four fronts.">
           <FadeIn>
             <p className="max-w-3xl text-[16px] leading-[1.7] tracking-tight text-textPrimary">
-              Next time I&apos;d push on four fronts: give the merchant experience its own product pass; make guide pricing explain variability rather than imply a promise; scale with AI triage that escalates to human experts; and make cost ownership explicit when a diagnosis is wrong — who pays, who re-dispatches — so trust holds on the unhappy path, not just the happy one.
+              Next time I&apos;d push on four fronts: give the merchant side its own design pass; make guide pricing explain why prices vary; scale with AI triage that hands off to human experts; and decide who pays when a diagnosis is wrong, so trust holds on the unhappy path too.
             </p>
           </FadeIn>
 
           <FadeIn className="mt-20 md:mt-28">
             <div className="relative">
-              <span aria-hidden className="absolute -left-2 -top-6 font-display text-[7rem] font-light leading-none text-nltLime-ink/15 md:text-[9rem]">
+              <span aria-hidden className="absolute -left-2 -top-6 font-display text-[7rem] font-light leading-none text-[#FFD100]/30 md:text-[9rem]">
                 &ldquo;
               </span>
               <p className="relative max-w-4xl font-display text-[1.75rem] font-light leading-[1.25] tracking-tight text-textPrimary md:text-[2.5rem] md:leading-[1.18]">
-                Transparent <span className="text-nltLime-ink">process</span> is often a stronger trust advantage than transparent <span className="line-through decoration-textSecondary/40">pricing</span> alone.
+                Transparent <span className="rounded-[3px] bg-[#FFD100] px-1.5 text-[#3D2E00]">process</span> is often a stronger trust advantage than transparent <span className="line-through decoration-textSecondary/40">pricing</span> alone.
               </p>
               <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
                 Designing trust before the bill · 2025
