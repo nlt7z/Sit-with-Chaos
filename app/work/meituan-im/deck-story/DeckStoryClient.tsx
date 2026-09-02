@@ -284,7 +284,7 @@ const COPY_EN: Record<string, Record<string, string>> = {
   voice: {
     eye: "Broken Trust · A User's Words",
     l1: "“My drain was clogged. I spent **30 minutes** and asked **10 shops**.",
-    l2: "None would give a price. They all said **‘we have to see it first’**.",
+    l2: "None would give a certain price. They all said **‘we have to see it first’**.",
     l3: "And once the guy shows up, ==the price only goes up==.”",
     src: "A pattern we heard again and again in user research",
   },
@@ -1005,6 +1005,8 @@ function SlideCover() {
 // §00b 背景:超级应用类比(Uber + Yelp + TaskRabbit)
 function SlideContext() {
   const c = useC("context");
+  const t = useT();
+  const lang = useLang();
   const analogy = [
     { icon: "/assets/meituan-im/logos/uber-icon.png",       name: "Uber",       key: "u" },
     { icon: "/assets/meituan-im/logos/yelp-icon.png",       name: "Yelp",       key: "y" },
@@ -1033,46 +1035,51 @@ function SlideContext() {
             </motion.div>
           ))}
         </div>
+        {/* 规模数字:从 Role 页移来,与类比卡同宽的横向条 */}
+        <motion.div className="mt-4 flex max-w-[880px] items-center gap-14 rounded-2xl px-7 py-6" style={{ background: U.bg }}
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, ease: E, delay: 0.95 }}>
+          <img src="/assets/meituan-im/meituan-logo.png" alt="Meituan"
+            className="h-6 w-auto shrink-0 object-contain" decoding="async" />
+          <div>
+            <p className="font-light leading-none tracking-[-0.02em]" style={{ fontSize: 34, color: U.ink }}>
+              {lang === "en"
+                ? <CountUp to={770} suffix="M+" format={(n) => String(Math.round(n))} startDelay={1100} />
+                : <CountUp to={7.7} suffix=" 亿+" format={(n) => n.toFixed(1)} startDelay={1100} />}
+            </p>
+            <p className="mt-1.5 text-[10px] tracking-[0.14em]" style={{ color: U.muted }}>{t("users")}</p>
+          </div>
+          <div>
+            <p className="font-light leading-none tracking-[-0.02em]" style={{ fontSize: 34, color: U.ink }}>
+              {lang === "en"
+                ? <CountUp to={14.5} suffix="M" format={(n) => n.toFixed(1)} startDelay={1250} />
+                : <CountUp to={1450} suffix=" 万" startDelay={1250} />}
+            </p>
+            <p className="mt-1.5 text-[10px] tracking-[0.14em]" style={{ color: U.muted }}>{t("merchants")}</p>
+          </div>
+        </motion.div>
       </motion.div>
     </section>
   );
 }
 
-// §01 我的职责与角色
+// §01 我的职责与角色 — 规模数字已移到 Context 页,这里是纯文字陈述页
 function SlideRole() {
   const c = useC("role");
-  const t = useT();
-  const lang = useLang();
   return (
-    <Split
-      eye={plain(c("eye"))}
-      title={c("title")}
-      body={c("body")}
-      media={
-        <div className="flex h-full flex-col justify-center">
-          <div className="flex flex-col rounded-2xl px-10 py-12" style={{ background: U.bg }}>
-            <img src="/assets/meituan-im/meituan-logo.png" alt="Meituan"
-              className="h-7 w-auto self-start object-contain object-left" decoding="async" />
-            <div className="mt-10">
-              <p className="font-light leading-none tracking-[-0.02em]" style={{ fontSize: 52, color: U.ink }}>
-                {lang === "en"
-                  ? <CountUp to={770} suffix="M+" format={(n) => String(Math.round(n))} startDelay={600} />
-                  : <CountUp to={7.7} suffix=" 亿+" format={(n) => n.toFixed(1)} startDelay={600} />}
-              </p>
-              <p className="mt-2 text-[11px] tracking-[0.14em]" style={{ color: U.muted }}>{t("users")}</p>
-            </div>
-            <div className="mt-9">
-              <p className="font-light leading-none tracking-[-0.02em]" style={{ fontSize: 52, color: U.ink }}>
-                {lang === "en"
-                  ? <CountUp to={14.5} suffix="M" format={(n) => n.toFixed(1)} startDelay={800} />
-                  : <CountUp to={1450} suffix=" 万" startDelay={800} />}
-              </p>
-              <p className="mt-2 text-[11px] tracking-[0.14em]" style={{ color: U.muted }}>{t("merchants")}</p>
-            </div>
-          </div>
-        </div>
-      }
-    />
+    <section className="flex h-full flex-col justify-center" style={{ padding: "0 88px" }}>
+      <motion.div variants={STG} initial="hidden" animate="show" className="w-full max-w-[1000px]">
+        <motion.div variants={FADE}><Eye>{plain(c("eye"))}</Eye></motion.div>
+        <Mask delay={0.12}>
+          <h2 className="mt-6 font-light leading-[1.4] tracking-[-0.015em]" style={{ fontSize: 34, color: U.ink }}>
+            <Rich text={c("title")} wipe />
+          </h2>
+        </Mask>
+        <motion.p variants={UP} className="mt-7 max-w-[720px] text-[15.5px] font-light leading-[2]" style={{ color: U.inkLight }}>
+          <Rich text={c("body")} />
+        </motion.p>
+      </motion.div>
+    </section>
   );
 }
 
