@@ -13,7 +13,7 @@ import { SplitTextChars } from "@/components/SplitBtn";
  * Desktop: a Linear-style nav panel pinned to the far-left edge. One graphite
  * surface with a hairline border and a glassy top edge; one text label per
  * row. Corners match the bento cards (22px panel, 6px padding, 16px rows).
- * The current section sits on a lifted row in lime; a quiet
+ * The current section is a lime row with dark text; a quiet
  * highlight slides after the pointer between rows (the Vercel nav hover), and
  * labels roll on hover like the "Say hello" button.
  * Mobile: a floating pill nav along the bottom edge.
@@ -48,15 +48,15 @@ export function SideRail({ active }: { active: "home" | "work" | "lab" }) {
                 onFocus={() => setHovered(key)}
                 onBlur={() => setHovered(null)}
                 className={`group relative flex h-10 items-center justify-center whitespace-nowrap rounded-2xl px-3 text-[13px] font-medium tracking-[-0.01em] transition-[color,transform] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline-none active:scale-[0.97] ${
-                  on ? "text-nltLime" : "text-[#8a8f98] hover:text-[#f7f8f8] focus-visible:text-[#f7f8f8]"
+                  on ? "text-[#0a0b0c]" : "text-[#8a8f98] hover:text-[#f7f8f8] focus-visible:text-[#f7f8f8]"
                 }`}
               >
                 {/* current section — a lifted row */}
                 {on ? (
                   <span
                     aria-hidden
-                    className="absolute inset-0 rounded-2xl bg-white/[0.07]"
-                    style={{ boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.07), inset 0 0 0 1px rgba(255,255,255,0.05)" }}
+                    className="absolute inset-0 rounded-2xl bg-nltLime"
+                    style={{ boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.35)" }}
                   />
                 ) : null}
                 {/* hover — one highlight that glides between rows */}
@@ -102,9 +102,9 @@ export function SideRail({ active }: { active: "home" | "work" | "lab" }) {
                 href={href}
                 aria-current={on ? "page" : undefined}
                 className={`relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${
-                  on ? "bg-white/[0.07] text-nltLime" : "text-[#8a8f98] active:text-[#f7f8f8]"
+                  on ? "bg-nltLime text-[#0a0b0c]" : "text-[#8a8f98] active:text-[#f7f8f8]"
                 }`}
-                style={on ? { boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.07), inset 0 0 0 1px rgba(255,255,255,0.05)" } : undefined}
+                
               >
                 {label}
               </Link>

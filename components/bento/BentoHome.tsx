@@ -520,14 +520,20 @@ export function BentoHome() {
             </BentoCard>
           </div>
 
-          {/* ===== col 2 — the two films, each at its own 16:9, then the
-              moodboard strip in whatever height is left ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[1.72] md:flex-col md:gap-2.5">
+          {/* ===== col 2 — the two films at their own 16:9, with the
+              moodboard strip between them taking the height that's left ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[1.95] md:flex-col md:gap-2.5">
             {/* qbix — the live site, recorded; the block opens it */}
             <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} accent="#c8e06c" index={3} className="order-4 col-span-2 min-h-0 shrink-0 md:order-none">
               <a href="https://qbix.space" target="_blank" rel="noopener noreferrer" aria-label="Open qbix.space in a new tab" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#0b0b0b]">
                 <InViewVideo src={QBIX_FILM.src} poster={QBIX_FILM.poster} />
+              </div>
+            </BentoCard>
+
+            <BentoCard label="Moodboard" surface="dark" drag={drag} index={5} className="order-9 col-span-1 h-[200px] min-h-0 flex-1 md:order-none md:h-auto">
+              <div className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px] bg-[#0f1011]">
+                <Moodboard reduced={reduced} />
               </div>
             </BentoCard>
 
@@ -547,16 +553,10 @@ export function BentoHome() {
                 <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} />
               </div>
             </BentoCard>
-
-            <BentoCard label="Moodboard" surface="dark" drag={drag} index={5} className="order-9 col-span-1 h-[200px] min-h-0 flex-1 md:order-none md:h-auto">
-              <div className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px] bg-[#0f1011]">
-                <Moodboard reduced={reduced} />
-              </div>
-            </BentoCard>
           </div>
 
-          {/* ===== col 3 — meituan, full height so the phone reads large ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[1.36] md:flex-col md:gap-2.5">
+          {/* ===== col 3 — meituan, the live prototype ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[1.13] md:flex-col md:gap-2.5">
             <BentoCard label="Meituan" headerRight={<CornerArrow href="/work/meituan-im" label="Meituan case study" />} surface="dark" drag={drag} accent="#FFC300" index={6} className="order-2 col-span-2 h-[600px] min-h-0 flex-1 md:order-none md:h-auto">
               <Link
                 href="/work/meituan-im"
