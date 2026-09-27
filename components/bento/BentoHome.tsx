@@ -141,7 +141,7 @@ function LiveSite({ src, poster, title, width = 1440 }: { src: string; poster: s
    homepage paints first. */
 const PHONE = { canvasW: 480, canvasH: 1000, x: 24, y: 70, w: 432, h: 924, r: 56 };
 
-function PhonePrototype({ src, title, reduced, interactive }: { src: string; title: string; reduced: boolean; interactive: boolean }) {
+function PhonePrototype({ src, title, reduced, interactive, align = "center" }: { src: string; title: string; reduced: boolean; interactive: boolean; align?: "center" | "bottom" }) {
   const { ref: boxRef, mount } = useDeferredMount<HTMLDivElement>(900);
   const [box, setBox] = useState({ w: 0, h: 0 });
   const [loaded, setLoaded] = useState(false);
@@ -161,8 +161,8 @@ function PhonePrototype({ src, title, reduced, interactive }: { src: string; tit
     <div ref={boxRef} className="absolute inset-0">
       {s > 0 ? (
         <div
-          className="absolute left-1/2 top-1/2"
-          style={{ width: PHONE.w * s, height: PHONE.h * s, transform: "translate(-50%, -50%)" }}
+          className={`absolute left-1/2 ${align === "bottom" ? "bottom-0" : "top-1/2"}`}
+          style={{ width: PHONE.w * s, height: PHONE.h * s, transform: align === "bottom" ? "translateX(-50%)" : "translate(-50%, -50%)" }}
         >
           {!loaded ? (
             <div
@@ -562,14 +562,26 @@ export function BentoHome() {
                   +0.5pp overall
                 </span>
               </Link>
+              <div className="relative z-20 shrink-0 px-4 pt-3">
+                <p className="text-[13.5px] leading-[1.5] text-[#d0d6e0]">0→1 in-message quotation system on a 770M-user platform</p>
+                <div aria-hidden className="mt-2 h-[16.5px]" />
+                <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Flow">
+                  {["diagnose", "quote compare", "confirm"].map((step) => (
+                    <li key={step} className="rounded-full bg-white/[0.06] px-2.5 py-[5px] text-[12px] font-medium leading-none text-[#d0d6e0]">
+                      {step}
+                    </li>
+                  ))}
+                </ul>
+              </div>
               <div className="relative min-h-0 flex-1">
                 <div
                   aria-hidden
                   className="pointer-events-none absolute inset-0"
-                  style={{ background: "radial-gradient(55% 50% at 50% 55%, rgba(210,255,0,0.14), transparent 72%)" }}
+                  style={{ background: "radial-gradient(60% 45% at 50% 70%, rgba(210,255,0,0.14), transparent 72%)" }}
                 />
-                <div className="absolute inset-x-3 bottom-3 top-3">
-                  <PhonePrototype src={MEITUAN_PROTOTYPE} title="Meituan repair flow, live prototype" reduced={reduced} interactive={!isMobile} />
+                {/* phone sits on the block's bottom inset, like the media in every other block */}
+                <div className="absolute inset-x-2 bottom-2 top-4">
+                  <PhonePrototype src={MEITUAN_PROTOTYPE} title="Meituan repair flow, live prototype" reduced={reduced} interactive={!isMobile} align="bottom" />
                 </div>
                 {isMobile ? (
                   <Link href="/work/meituan-im" aria-label="Meituan case study" className="absolute inset-0 z-30" />
