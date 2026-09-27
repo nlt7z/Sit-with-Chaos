@@ -34,11 +34,11 @@ const jetbrainsMono = JetBrains_Mono({
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.nltstudio7.space"),
-  title: "Yuan Fang — Product Design Builder",
+  title: "Yuan Fang Creative Builder",
   description:
     "A UX designer pairing AI-native speed with a fine-art command of craft and a relentless drive to build — turning ambiguity into clear product direction and working prototypes.",
   openGraph: {
-    title: "Yuan Fang — Product Design Builder",
+    title: "Yuan Fang Creative Builder",
     description: "Portfolio of Yuan Fang, MS HCDE @ UW",
     url: "https://www.nltstudio7.space",
     images: [
@@ -46,13 +46,13 @@ export const metadata: Metadata = {
         url: "/assets/og-card.png",
         width: 1200,
         height: 630,
-        alt: "Yuan Fang — Product Design Builder",
+        alt: "Yuan Fang Creative Builder",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Yuan Fang — Product Design Builder",
+    title: "Yuan Fang Creative Builder",
     description: "Portfolio of Yuan Fang, MS HCDE @ UW",
     images: ["/assets/og-card.png"],
   },
