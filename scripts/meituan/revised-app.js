@@ -2173,6 +2173,29 @@ function Player({ scenario, onSceneEnd }) {
     next();
   }
 
+  // Autoplay: whenever the script stops on a wait, resolve it the way a
+  // visitor would, after a readable beat. Cleared if a real tap resolves it.
+  const autoRef = React.useRef(null);
+  React.useEffect(() => {
+    if (!__autoplay() || !waiting) return;
+    const timers = [];
+    const later = (ms, fn) => timers.push(setTimeout(() => { if (!cancelled.current) fn(); }, ms));
+    if (!waiting.startsWith('action:')) {
+      later(1700, () => {
+        const q = messages.find(m => m.id === waiting);
+        const pick = q && q.options && q.options[0];
+        if (pick) autoRef.current.onPick(waiting, pick);
+      });
+    } else if (waiting === 'action:get-quotes') {
+      later(2200, () => autoRef.current.onAction('get-quotes'));
+    } else if (waiting === 'action:book-vendor') {
+      later(2600, () => autoRef.current.onAction('view-vendor:citrus'));
+      later(4600, () => autoRef.current.onAction('book-vendor:citrus'));
+    }
+    return () => timers.forEach(clearTimeout);
+    // eslint-disable-next-line
+  }, [waiting]);
+
   const ctx = {
     // Quick-reply chips: send the tap as a user message, then answer it with a
     // canned reply — out-of-band, without touching the scripted flow.
@@ -2247,6 +2270,7 @@ function Player({ scenario, onSceneEnd }) {
     },
     bookedVendor,
   };
+  autoRef.current = ctx;
 
   return (
     <div style={{ position: 'relative' }}>
@@ -2549,6 +2573,11 @@ function __railHidden() {
   var p = __flowParams();
   return p.get('rail') === '0' || p.has('solo');
 }
+// autoplay=1 → the flow plays itself: picks the first suggested reply, asks
+// for quotes, opens and books the top pro, then replays. A real tap still wins.
+function __autoplay() {
+  return __flowParams().get('autoplay') === '1';
+}
 function __seekRequested() {
   var p = __flowParams();
   return p.has('seek') && p.get('seek') !== '0';
@@ -2583,7 +2612,10 @@ function App() {
   const hideRail = __railHidden();
   const [nonce, setNonce] = React.useState(0);
   const replay = () => setNonce(n => n + 1);
-  const onSceneEnd = (next) => { if (next) setScenario(next); };
+  const onSceneEnd = (next) => {
+    if (next) { setScenario(next); return; }
+    if (__autoplay()) setTimeout(replay, 5200);
+  };
 
   const isMerchant = scenario === 'merchant';
   // Width includes room for the scenario rail (wraps to ~2 rows at 760);

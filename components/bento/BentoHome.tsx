@@ -21,15 +21,13 @@ import { RoseLoader } from "@/components/RoseLoader";
 import { SplitTextChars } from "@/components/SplitBtn";
 
 const EMAIL = "fangyuanzero7@gmail.com";
-// the role reads brighter than the rest of the line
 const POSITIONING = { role: "Product Designer", rest: " who makes AI work people can see, check, and steer" };
 const BRAND_TAGS = ["Product Thinking", "Visual Craft", "Curiosity"];
 
 // the "now" block: O2 Tech AI's BOM feature film (muted, loops while on screen)
 const NOW_FILM = { src: "/assets/o2/o2-bom-film.mp4", poster: "/assets/o2/o2-bom-film-poster.webp" };
-const O2_CASE_STUDY = "/o2-case-study.html";
 
-const MEITUAN_PROTOTYPE = "/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0";
+const MEITUAN_PROTOTYPE = "/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0&autoplay=1";
 
 // qbix.space's homepage, live; the hero still covers the block until it paints
 const QBIX = { href: "https://qbix.space", poster: "/assets/work/qbix-scroll-poster.webp" };
@@ -275,13 +273,20 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
         <p className="mb-2 font-mono text-[12px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
         <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
         <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
-        <p className="mt-4 font-display text-[15px] font-light leading-[1.45] text-[#d0d6e0]">
-          Love crafting, but crave creating even more.
+        {/* the slogan, shown as if selected: the site's ::selection lime behind
+            each wrapped line, dark text */}
+        <p className="mt-4 text-[15px] leading-[1.45]">
+          <span className="box-decoration-clone bg-nltLime py-[0.12em] text-[#1d1d1f] [-webkit-box-decoration-break:clone]">
+            {POSITIONING.role}
+            {POSITIONING.rest}
+          </span>
         </p>
       </div>
 
-      {/* middle — the photo; the quote is a sticker pressed onto its corner */}
-      <div className="relative min-h-0 flex-1">
+      {/* middle — the photo at a fixed 6:5, centred in the free height; the
+          quote is a sticker pressed onto its corner */}
+      <div className="relative flex min-h-0 flex-1 items-center">
+        <div className="relative aspect-[6/5] max-h-full w-full">
         <div className="absolute inset-0 overflow-hidden rounded-[14px] bg-[#1a1c17]">
           <Image
             src="/assets/about/yuan-portrait.jpg"
@@ -302,14 +307,11 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
           ))}
         </div>
         <QuoteStamp reduced={reduced} className="absolute -left-2.5 -top-4 z-10 w-[58px]" />
+        </div>
       </div>
 
-      {/* bottom — positioning + focus tags + CTA */}
+      {/* bottom — focus tags + CTA */}
       <div className="relative flex shrink-0 flex-col gap-3">
-        <p className="text-[13.5px] leading-[1.5] text-white/75">
-          <span className="text-white">{POSITIONING.role}</span>
-          {POSITIONING.rest}
-        </p>
         <ul className="-mt-0.5 flex flex-wrap gap-1.5" aria-label="Focus">
           {BRAND_TAGS.map((r) => (
             <li key={r} className="rounded-full bg-white/[0.06] px-2.5 py-[5px] text-[12px] font-medium leading-none tracking-[-0.005em] text-[#d0d6e0]">
@@ -528,9 +530,8 @@ export function BentoHome() {
             </BentoCard>
 
 
-            {/* O2 Tech AI — "right now"; the whole block opens the case study */}
-            <BentoCard label="O2 Tech AI" headerRight={<CornerArrow href={O2_CASE_STUDY} label="O2 Tech AI case study" />} surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-1">
-              <a href={O2_CASE_STUDY} target="_blank" rel="noopener noreferrer" aria-label="O2 Tech AI case study (opens in a new tab)" className="absolute inset-0 z-30" />
+            {/* O2 Tech AI — "right now"; the film only (its case study is offline for now) */}
+            <BentoCard label="O2 Tech AI" surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-1">
               <div className="pointer-events-none relative z-20 flex shrink-0 items-baseline gap-2 px-4 pb-2">
                 <span className="relative flex h-1.5 w-1.5 shrink-0 -translate-y-px">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nltLime opacity-80" />
@@ -563,7 +564,7 @@ export function BentoHome() {
                 </span>
               </Link>
               <div className="relative z-20 shrink-0 px-4 pt-3">
-                <p className="text-[13.5px] leading-[1.5] text-[#d0d6e0]">0→1 in-message quotation system on a 770M-user platform</p>
+                <p className="text-[13.5px] leading-[1.45]"><span className="box-decoration-clone bg-nltLime py-[0.12em] text-[#1d1d1f] [-webkit-box-decoration-break:clone]">0→1 in-message quotation system on a 770M-user platform</span></p>
                 <div aria-hidden className="mt-2 h-[16.5px]" />
                 <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Flow">
                   {["diagnose", "quote compare", "confirm"].map((step) => (
