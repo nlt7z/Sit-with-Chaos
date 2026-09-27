@@ -31,14 +31,9 @@ const O2_CASE_STUDY = "/o2-case-study.html";
 
 const MEITUAN_PROTOTYPE = "/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0";
 
-// qbix.space recorded live (intro, the hero cube, a slow scroll to the footer):
-// the site is cross-origin, so a recording is the only way to show it moving
-const QBIX_FILM = { src: "/assets/work/qbix-scroll.mp4", poster: "/assets/work/qbix-scroll-poster.webp" };
+// qbix.space's homepage, live; the hero still covers the block until it paints
+const QBIX = { href: "https://qbix.space", poster: "/assets/work/qbix-scroll-poster.webp" };
 
-// dark + lime stills for the moodboard block (Unsplash License, free use):
-// lvevMv6RaME, CYmXROu9dRg, SIX1o2wMmVI, gi4qYMtbthU, ELaFzBeZ6i0, bAyu1Pp74b4
-const MOODBOARD = [1, 2, 3, 4, 5, 6].map((n) => `/assets/moodboard/lime-0${n}.webp`);
-const MOODBOARD_DWELL = 4200; // ms per image
 
 /* True below the `md` breakpoint. Layout is handled in CSS; this only gates
  * runtime behaviour (drag, embed interactivity) that CSS can't express. Starts
@@ -100,6 +95,44 @@ function useDeferredMount<T extends HTMLElement>(delay = 700) {
     };
   }, [delay]);
   return { ref, mount };
+}
+
+/* A live website rendered at a desktop width and scaled into the block; its
+   viewport height follows the block's aspect, so the page fills edge to edge.
+   Presentational (no pointer events); a poster covers it until it loads. */
+function LiveSite({ src, poster, title, width = 1440 }: { src: string; poster: string; title: string; width?: number }) {
+  const { ref, mount } = useDeferredMount<HTMLDivElement>(600);
+  const [box, setBox] = useState({ w: 0, h: 0 });
+  const [loaded, setLoaded] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(([e]) => setBox({ w: e.contentRect.width, h: e.contentRect.height }));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, [ref]);
+  const scale = box.w ? box.w / width : 0;
+  return (
+    <div ref={ref} className="absolute inset-0 overflow-hidden">
+      {mount && scale ? (
+        <iframe
+          src={src}
+          title={title}
+          tabIndex={-1}
+          onLoad={() => window.setTimeout(() => setLoaded(true), 1200)}
+          className="pointer-events-none absolute left-0 top-0 border-0"
+          style={{ width, height: Math.round(box.h / scale), transform: `scale(${scale})`, transformOrigin: "top left" }}
+        />
+      ) : null}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={poster}
+        alt=""
+        aria-hidden
+        className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-700 ${loaded ? "opacity-0" : "opacity-100"}`}
+      />
+    </div>
+  );
 }
 
 /* The Meituan prototype, live. Its 480×1000 canvas is white around the phone,
@@ -362,38 +395,6 @@ function JourneyCarousel({ reduced }: { reduced: boolean }) {
   );
 }
 
-/* moodboard — dark + lime stills cross-fading with a slow push-in; hover holds
-   the current one. Reduced motion: the first still, no push. */
-function Moodboard({ reduced }: { reduced: boolean }) {
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-  useEffect(() => {
-    if (reduced || paused) return;
-    const id = setTimeout(() => setI((v) => (v + 1) % MOODBOARD.length), MOODBOARD_DWELL);
-    return () => clearTimeout(id);
-  }, [reduced, paused, i]);
-
-  return (
-    <div className="absolute inset-0" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      {MOODBOARD.map((src, k) => (
-        <Image
-          key={src}
-          src={src}
-          alt=""
-          fill
-          sizes="(max-width: 767px) 50vw, 320px"
-          className="object-cover"
-          style={{
-            opacity: k === i ? 1 : 0,
-            transform: !reduced && k === i ? "scale(1.07)" : "scale(1)",
-            transition: `opacity 1.4s cubic-bezier(0.25,0.1,0.25,1), transform ${MOODBOARD_DWELL + 1400}ms linear`,
-          }}
-        />
-      ))}
-    </div>
-  );
-}
-
 /* vinyl player — click to play / pause (no autoplay). The playing state is
    loud on purpose: a pulsing ring, a lime sheen, a tall equalizer. */
 function VinylAudio() {
@@ -507,38 +508,28 @@ export function BentoHome() {
             into a single intentional feed. On md+ the wrappers reassert as the
             four flex columns of the no-scroll desktop puzzle. */}
         <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:gap-2.5 md:overflow-hidden">
-          {/* ===== col 1 — identity(7) · location globe(3) ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[1.1] md:flex-col md:gap-2.5">
-            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 h-[560px] min-h-0 flex-[7] md:order-none md:h-auto">
+          {/* ===== col 1 — identity, full height ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[1.03] md:flex-col md:gap-2.5">
+            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 h-[560px] min-h-0 flex-1 md:order-none md:h-auto">
               <IdentityCard reduced={reduced} />
-            </BentoCard>
-
-            <BentoCard label="Location" surface="dark" drag={drag} index={2} className="order-7 col-span-2 h-[280px] min-h-0 flex-[3] md:order-none md:h-auto">
-              <div className="relative min-h-0 flex-1">
-                <HalftoneGlobe reduced={reduced} />
-              </div>
             </BentoCard>
           </div>
 
-          {/* ===== col 2 — the two films at their own 16:9, with the
-              moodboard strip between them taking the height that's left ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[1.95] md:flex-col md:gap-2.5">
-            {/* qbix — the live site, recorded; the block opens it */}
-            <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} accent="#c8e06c" index={3} className="order-4 col-span-2 min-h-0 shrink-0 md:order-none">
+          {/* ===== col 2 — the two films share the column height (a light
+              side crop on desktop keeps every column's bottom edge aligned;
+              mobile shows them at their own 16:9) ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[2.05] md:flex-col md:gap-2.5">
+            {/* qbix — the live homepage; the block opens the site */}
+            <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} accent="#c8e06c" index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
               <a href="https://qbix.space" target="_blank" rel="noopener noreferrer" aria-label="Open qbix.space in a new tab" className="absolute inset-0 z-30 block" />
-              <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#0b0b0b]">
-                <InViewVideo src={QBIX_FILM.src} poster={QBIX_FILM.poster} />
+              <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#0b0b0b] md:aspect-auto md:min-h-0 md:flex-1">
+                <LiveSite src={QBIX.href} poster={QBIX.poster} title="qbix.space homepage" />
               </div>
             </BentoCard>
 
-            <BentoCard label="Moodboard" surface="dark" drag={drag} index={5} className="order-9 col-span-1 h-[200px] min-h-0 flex-1 md:order-none md:h-auto">
-              <div className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px] bg-[#0f1011]">
-                <Moodboard reduced={reduced} />
-              </div>
-            </BentoCard>
 
             {/* O2 Tech AI — "right now"; the whole block opens the case study */}
-            <BentoCard label="O2 Tech AI" headerRight={<CornerArrow href={O2_CASE_STUDY} label="O2 Tech AI case study" />} surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 shrink-0 md:order-none">
+            <BentoCard label="O2 Tech AI" headerRight={<CornerArrow href={O2_CASE_STUDY} label="O2 Tech AI case study" />} surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-1">
               <a href={O2_CASE_STUDY} target="_blank" rel="noopener noreferrer" aria-label="O2 Tech AI case study (opens in a new tab)" className="absolute inset-0 z-30" />
               <div className="pointer-events-none relative z-20 flex shrink-0 items-baseline gap-2 px-4 pb-2">
                 <span className="relative flex h-1.5 w-1.5 shrink-0 -translate-y-px">
@@ -549,14 +540,14 @@ export function BentoHome() {
                   <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-nltLime">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
                 </span>
               </div>
-              <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#141416]">
+              <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#141416] md:aspect-auto md:min-h-0 md:flex-1">
                 <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} />
               </div>
             </BentoCard>
           </div>
 
           {/* ===== col 3 — meituan, the live prototype ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[1.13] md:flex-col md:gap-2.5">
+          <div className="contents md:flex md:min-h-0 md:flex-[1.02] md:flex-col md:gap-2.5">
             <BentoCard label="Meituan" headerRight={<CornerArrow href="/work/meituan-im" label="Meituan case study" />} surface="dark" drag={drag} accent="#FFC300" index={6} className="order-2 col-span-2 h-[600px] min-h-0 flex-1 md:order-none md:h-auto">
               <Link
                 href="/work/meituan-im"
@@ -587,13 +578,19 @@ export function BentoHome() {
             </BentoCard>
           </div>
 
-          {/* ===== col 4 — journey(5) · audio(5) ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[0.88] md:flex-col md:gap-2.5">
-            <BentoCard label="Journey" surface="dark" drag={drag} index={9} className="order-8 col-span-2 h-[260px] min-h-0 flex-[5] md:order-none md:h-auto">
+          {/* ===== col 4 — location globe(4) · journey(3) · audio(3) ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[0.9] md:flex-col md:gap-2.5">
+            <BentoCard label="Location" surface="dark" drag={drag} index={2} className="order-7 col-span-2 h-[280px] min-h-0 flex-[4] md:order-none md:h-auto">
+              <div className="relative min-h-0 flex-1">
+                <HalftoneGlobe reduced={reduced} />
+              </div>
+            </BentoCard>
+
+            <BentoCard label="Journey" surface="dark" drag={drag} index={9} className="order-8 col-span-2 h-[260px] min-h-0 flex-[3] md:order-none md:h-auto">
               <JourneyCarousel reduced={reduced} />
             </BentoCard>
 
-            <BentoCard label="Audio" surface="dark" drag={drag} index={11} className="order-10 col-span-1 h-[200px] min-h-0 flex-[5] md:order-none md:h-auto">
+            <BentoCard label="Audio" surface="dark" drag={drag} index={11} className="order-10 col-span-1 h-[200px] min-h-0 flex-[3] md:order-none md:h-auto">
               <div className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px]">
                 <VinylAudio />
               </div>

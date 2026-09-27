@@ -74,7 +74,9 @@ export function SideRail({ active }: { active: "home" | "work" | "lab" }) {
                   ) : null}
                 </AnimatePresence>
                 <span className="sr-only">{label}</span>
-                <span aria-hidden className="relative">
+                {/* line box sized to the glyph boxes so the rolling letters sit
+                    on the row's true centre */}
+                <span aria-hidden className="relative flex items-center leading-[1.1]">
                   <SplitTextChars text={label} stagger={14} />
                 </span>
                 {/* focus ring drawn inside the row */}
