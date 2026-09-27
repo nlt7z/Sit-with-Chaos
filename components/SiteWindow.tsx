@@ -33,6 +33,9 @@ type SiteWindowProps = {
   /** Fired once when the embedded iframe finishes loading — lets a parent
    *  loading gate wait on this preview before revealing. */
   onReady?: () => void;
+  /** Still shown until the live iframe paints (and whenever it isn't mounted),
+   *  so an inactive preview reads as the site instead of a blank panel. */
+  poster?: string;
 };
 
 export function SiteWindow({
@@ -45,6 +48,7 @@ export function SiteWindow({
   chrome = true,
   bare = false,
   onReady,
+  poster,
 }: SiteWindowProps) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.4);
@@ -137,9 +141,21 @@ export function SiteWindow({
       {/* Iframe area */}
       <div
         ref={frameRef}
-        className="relative w-full overflow-hidden bg-neutral-50"
+        className={`relative w-full overflow-hidden ${bare ? "bg-transparent" : "bg-neutral-50"}`}
         style={{ aspectRatio: `${IFRAME_WIDTH} / ${IFRAME_HEIGHT}` }}
       >
+        {poster ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={poster}
+            alt=""
+            aria-hidden
+            draggable={false}
+            className={`absolute inset-0 h-full w-full object-cover object-top transition-opacity duration-500 ${
+              active && loaded ? "opacity-0" : "opacity-100"
+            }`}
+          />
+        ) : null}
         {active ? (
           <iframe
             src={href}
@@ -170,7 +186,7 @@ export function SiteWindow({
         <div
           aria-hidden
           className={`absolute inset-0 z-[1] flex flex-col items-center justify-center gap-2.5 overflow-hidden bg-neutral-50 transition-opacity duration-500 ease-portfolio ${
-            showSkeleton && !loaded ? "opacity-100" : "pointer-events-none opacity-0"
+            showSkeleton && !loaded && !poster ? "opacity-100" : "pointer-events-none opacity-0"
           }`}
         >
           {!reduced ? (

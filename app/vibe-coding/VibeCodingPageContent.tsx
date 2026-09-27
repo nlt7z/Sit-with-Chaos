@@ -13,7 +13,6 @@ import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { LimeMark } from "@/components/LimeMark";
 import { RoseLoader } from "@/components/RoseLoader";
 import { SiteWindow } from "@/components/SiteWindow";
 import { TurntableWidget } from "@/components/TurntableWidget";
@@ -23,7 +22,7 @@ type Tag = "app" | "web" | "interaction" | "ai";
 type Media =
   | { kind: "video"; src: string }
   | { kind: "image"; src: string; alt: string }
-  | { kind: "live"; href: string; url: string; label: string }
+  | { kind: "live"; href: string; url: string; label: string; poster?: string }
   | { kind: "iframe"; src: string; href: string; bg: string; title: string }
   | { kind: "custom"; node: "turntable" };
 
@@ -39,22 +38,6 @@ type Entry = {
 
 const entries: Entry[] = [
   {
-    date: "2026.08",
-    title: "o2 tech ai case study",
-    description:
-      "Scroll-driven dark case study for O2 Tech AI's human-in-the-loop sourcing product. Six chapters share one sticky artifact stage where screens, workflow maps and evidence swap in as the argument advances.",
-    tags: ["web", "ai"],
-    href: "/o2-case-study.html",
-    hrefLabel: "case study →",
-    media: {
-      kind: "iframe",
-      src: "/o2-case-study.html",
-      href: "/o2-case-study.html",
-      bg: "bg-[#0B0D0A]",
-      title: "O2 Tech AI HITL case study",
-    },
-  },
-  {
     date: "2026.05",
     title: "design agency website",
     description: "Studio website for a creative agency — brand expression, work showcase, and inquiry flow.",
@@ -66,6 +49,7 @@ const entries: Entry[] = [
       href: "https://qbix.space",
       url: "qbix.space",
       label: "Design agency — live site preview",
+      poster: "/assets/work/qbix-fullpage.webp",
     },
   },
   {
@@ -219,10 +203,10 @@ function LazyVideo({
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-md bg-white/[0.03]">
+    <div className="relative aspect-video overflow-hidden rounded-md">
       {/* shimmer — fades out once video can play */}
       <div
-        className={`absolute inset-0 animate-pulse bg-white/[0.05] transition-opacity duration-500 ${
+        className={`absolute inset-0 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
           loaded ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       />
@@ -266,9 +250,9 @@ function LazyImage({
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-md bg-white/[0.03]">
+    <div className="relative aspect-video overflow-hidden rounded-md">
       <div
-        className={`absolute inset-0 animate-pulse bg-white/[0.05] transition-opacity duration-500 ${
+        className={`absolute inset-0 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
           loaded ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       />
@@ -333,7 +317,7 @@ function ScaledIframe({
     >
       {/* shimmer overlay */}
       <div
-        className={`absolute inset-0 z-10 animate-pulse bg-white/[0.05] transition-opacity duration-500 ${
+        className={`absolute inset-0 z-10 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
           loaded ? "pointer-events-none opacity-0" : "opacity-100"
         }`}
       />
@@ -386,6 +370,7 @@ function MediaSlot({
         active={shouldLoad}
         chrome={false}
         bare
+        poster={media.poster}
         onReady={onReady}
       />
     );
@@ -411,7 +396,7 @@ function MediaSlot({
     return shouldLoad ? (
       <TurntableWidget />
     ) : (
-      <div className="aspect-square w-full rounded-md bg-white/[0.05]" />
+      <div className="aspect-square w-full rounded-md bg-white/[0.035]" />
     );
   }
   return null;
@@ -530,12 +515,14 @@ function PrototypeCard({
   shouldLoad,
   isActive,
   fluid = false,
+  caption,
   onReady,
 }: {
   entry: Entry;
   shouldLoad: boolean;
   isActive: boolean;
   fluid?: boolean;
+  caption?: { index: number; total: number };
   onReady?: () => void;
 }) {
   const inner = (
@@ -574,12 +561,13 @@ function PrototypeCard({
       }}
     >
       {/* Desktop active card gets the tilt + cursor arrow; neighbours + mobile
-          render flat. The editorial caption below carries the title on desktop. */}
+          render flat. The caption block under it carries the title. */}
       {!fluid && isActive ? (
         <ActiveCardFX hasLink={hasLink}>{media}</ActiveCardFX>
       ) : (
         <div>{media}</div>
       )}
+      {!fluid && caption ? <CardCaption {...caption} active={isActive} entry={entry} /> : null}
 
       {/* In-card header — mobile list only. */}
       {fluid && (
@@ -636,51 +624,54 @@ function GhostIndex({ index }: { index: number }) {
   );
 }
 
-/** Bold editorial caption for the active entry — re-mounts on navigation so the
- *  LimeMark highlighter re-swipes and the block slides in each time. */
-function EditorialCaption({
+/** Caption centred under the active card: a lime block carrying the index and title,
+ *  wiped in left → right (the LimeMark gesture) each time the card becomes
+ *  active, plus the entry's link on the right. It rides inside the card's
+ *  transformed wrapper, so it switches with the card. */
+function CardCaption({
   entry,
   index,
   total,
-  side = false,
+  active,
 }: {
   entry: Entry;
   index: number;
   total: number;
-  side?: boolean;
+  active: boolean;
 }) {
-  const words = entry.title.split(" ");
-  const last = words.pop() ?? entry.title;
-  const head = words.join(" ");
-
+  const reduced = useReducedMotion();
+  const external = !!entry.href?.startsWith("http");
   return (
     <motion.div
-      key={`${index}-${entry.title}`}
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-      className={side ? "text-left" : "mx-auto text-left"}
-      style={side ? undefined : { width: "min(62vw, calc(48vh * 16 / 9))" }}
+      className="mt-3 flex items-center justify-center gap-4"
+      initial={false}
+      animate={{ opacity: active ? 1 : 0 }}
+      transition={{ duration: 0.3 }}
     >
-      {/* The index counter lives on the right rail in side mode. */}
-      {!side && (
-        <div className="flex items-baseline gap-2.5 font-mono text-[10px] uppercase tracking-[0.3em]">
-          <span className="tabular-nums text-nltLime">{String(index + 1).padStart(2, "0")}</span>
-          <span className="text-white/25">/</span>
-          <span className="tabular-nums text-white/35">{String(total).padStart(2, "0")}</span>
-        </div>
-      )}
-
-      <h2
-        className={`font-display lowercase leading-[1.1] tracking-[-0.02em] text-white ${
-          side
-            ? "whitespace-nowrap text-[clamp(14px,1.3vw,19px)]"
-            : "mt-2 text-[clamp(20px,2.4vw,32px)]"
-        }`}
+      <motion.div
+        className="inline-flex min-w-0 items-baseline gap-3 bg-nltLime px-3 py-1.5 text-[#0a0b0c]"
+        initial={false}
+        animate={{ clipPath: active || reduced ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}
+        transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1], delay: active ? 0.15 : 0 }}
       >
-        {head ? `${head} ` : ""}
-        <LimeMark>{last}</LimeMark>
-      </h2>
+        <span className="shrink-0 font-mono text-[11px] tabular-nums tracking-[0.12em]">
+          {String(index + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
+        </span>
+        <h2 className="truncate font-display text-[clamp(16px,1.35vw,20px)] lowercase leading-[1.2] tracking-[-0.01em]">
+          {entry.title}
+        </h2>
+      </motion.div>
+      {entry.href && entry.hrefLabel ? (
+        <Link
+          href={entry.href}
+          target={external ? "_blank" : undefined}
+          rel={external ? "noopener noreferrer" : undefined}
+          tabIndex={active ? 0 : -1}
+          className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-white/60 transition-colors hover:text-nltLime"
+        >
+          {entry.hrefLabel}
+        </Link>
+      ) : null}
     </motion.div>
   );
 }
@@ -885,13 +876,6 @@ function DesktopFeed({
     <div ref={containerRef} className="relative hidden h-full overflow-hidden md:block">
       <GhostIndex index={active} />
 
-      {/* Editorial caption for the active card, pinned left (rail is right). */}
-      <div className="pointer-events-none absolute left-[5vw] top-1/2 z-20 hidden -translate-y-1/2 lg:block">
-        <div className="pointer-events-auto">
-          <EditorialCaption entry={entries[active]} index={active} total={n} side />
-        </div>
-      </div>
-
       {/* Card stack — active centred, neighbours peek above / below. */}
       <div className="absolute inset-0 z-10 flex items-center justify-center">
         {entries.map((entry, i) => {
@@ -910,7 +894,9 @@ function DesktopFeed({
               className="absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
               style={{
                 transformOrigin: "center center",
-                transform: `translateY(calc(${offset} * 46vh)) scale(${isActive ? 1 : 0.66})`,
+                // neighbours sit far enough out that the caption under the
+                // active card clears them; the -2vh keeps card + caption centred
+                transform: `translateY(calc(${offset} * 58vh - 2vh)) scale(${isActive ? 1 : 0.66})`,
                 opacity: isActive ? 1 : dist === 1 ? 0.4 : 0,
                 // grayscale only — animating blur on a card-sized layer was the
                 // main switch-jank cost; static desaturation is free.
@@ -926,6 +912,7 @@ function DesktopFeed({
                 entry={entry}
                 shouldLoad={shouldLoad}
                 isActive={isActive}
+                caption={{ index: i, total: n }}
                 onReady={() => onReady(entryKey(entry))}
               />
             </div>
@@ -1072,16 +1059,6 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
             </span>
           </div>
         </motion.div>
-
-        {/* Brand mark */}
-        <motion.p
-          className="absolute -bottom-24 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.36em] text-white/25 md:-bottom-28"
-          initial={{ opacity: 0 }}
-          animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
-          transition={{ duration: 0.45, delay: 0.5, ease: "linear" }}
-        >
-          Yuan Fang &nbsp;·&nbsp; Portfolio &nbsp;·&nbsp; 2026
-        </motion.p>
       </div>
     </motion.div>
   );

@@ -38,6 +38,7 @@ export function BentoCard({
   drag = true,
   accent = "#d2ff00",
   light = false,
+  headerRight,
   style,
 }: {
   children: ReactNode;
@@ -50,6 +51,8 @@ export function BentoCard({
   accent?: string;
   /** Light theme — drops the heavy drop shadow. */
   light?: boolean;
+  /** Right side of the header row (e.g. the ↗ affordance). */
+  headerRight?: ReactNode;
   style?: CSSProperties;
 }) {
   const reduced = useReducedMotion();
@@ -89,18 +92,21 @@ export function BentoCard({
       >
         <div
           onPointerDown={startDrag}
-          className={`flex shrink-0 select-none items-center justify-between px-3.5 pb-1 pt-2.5 ${
+          className={`flex shrink-0 select-none items-center justify-between min-h-[34px] px-4 pb-1 pt-2.5 ${
             drag ? "cursor-grab active:cursor-grabbing" : ""
           }`}
           // Only claim the touch gesture when the card is actually draggable;
           // otherwise the header would swallow vertical scroll on mobile.
           style={{ touchAction: drag ? "none" : "pan-y" }}
         >
+          {/* every block names itself top-left (company, project, or widget);
+              an unlabeled card keeps an empty strip as its drag handle */}
           {label ? (
-            <span className="font-mono text-[9px] uppercase tracking-[0.16em] opacity-45">{label}</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#8a8f98]">{label}</span>
           ) : (
-            <span aria-hidden className="h-2 w-8 rounded-full bg-current opacity-[0.12]" />
+            <span aria-hidden className="h-3" />
           )}
+          {headerRight}
         </div>
 
         <div className={`relative flex min-h-0 flex-1 flex-col ${bodyClassName}`}>{children}</div>

@@ -21,14 +21,14 @@ export function SplitTextChars({
             className="block translate-y-0 transition-transform duration-300 ease-portfolio group-hover:-translate-y-full"
             style={{ transitionDelay: `${i * stagger}ms` }}
           >
-            {ch === " " ? " " : ch}
+            {ch === " " ? "\u00a0" : ch}
           </span>
           <span
             aria-hidden
             className="absolute inset-0 translate-y-full transition-transform duration-300 ease-portfolio group-hover:translate-y-0"
             style={{ transitionDelay: `${i * stagger}ms` }}
           >
-            {ch === " " ? " " : ch}
+            {ch === " " ? "\u00a0" : ch}
           </span>
         </span>
       ))}

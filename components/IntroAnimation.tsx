@@ -330,16 +330,6 @@ export function IntroAnimation() {
             </span>
           </div>
         </motion.div>
-
-        {/* Brand mark */}
-        <motion.p
-          className="absolute -bottom-24 left-1/2 -translate-x-1/2 whitespace-nowrap font-mono text-[10px] uppercase tracking-[0.36em] text-white/25 md:-bottom-28"
-          initial={{ opacity: 0 }}
-          animate={phase === "exit" ? { opacity: 0 } : { opacity: 1 }}
-          transition={{ duration: 0.45, delay: 0.5, ease: "linear" }}
-        >
-          Yuan Fang &nbsp;·&nbsp; Portfolio &nbsp;·&nbsp; 2026
-        </motion.p>
       </div>
     </motion.div>
   );

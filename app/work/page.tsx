@@ -1,5 +1,6 @@
+import { RAIL_CLEARANCE } from "@/components/bento/railClearance";
 import { SideRail } from "@/components/bento/SideRail";
-import { Work } from "@/components/Work";
+import { WorkShowcase } from "@/components/WorkShowcase";
 
 export const metadata = {
   title: "Work — Yuan Fang",
@@ -7,15 +8,15 @@ export const metadata = {
 };
 
 /**
- * /work — a dark gallery of the five featured case studies (the same project
- * cards the previous homepage used), with the section rail on the left.
+ * /work — every project on one page (WorkShowcase): three full-width features,
+ * then two smaller ones side by side, with the section rail on the left.
  */
 export default function WorkPage() {
   return (
     <div className="relative min-h-screen bg-[#0a0b0c] text-white">
       {/* ambient lime glow + halftone dot corners, matching the home bento.
-          Fixed so the corner decoration stays pinned to the viewport as the
-          deck scrolls beneath it (top-right + bottom-left, like the homepage). */}
+          Fixed so the corner decoration stays pinned to the viewport while the
+          page scrolls beneath it (top-right + bottom-left, like the homepage). */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
@@ -24,7 +25,6 @@ export default function WorkPage() {
             "radial-gradient(50% 35% at 80% 0%, rgba(210,255,0,0.08), rgba(10,11,12,0) 60%)",
         }}
       />
-      {/* top-right halftone dot-matrix */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
@@ -35,7 +35,6 @@ export default function WorkPage() {
           maskImage: "radial-gradient(120% 90% at 85% 4%, black 0%, transparent 62%)",
         }}
       />
-      {/* mirrored corner — faint lime wash + dot-matrix anchored bottom-left */}
       <div
         aria-hidden
         className="pointer-events-none fixed inset-0 z-0"
@@ -56,16 +55,9 @@ export default function WorkPage() {
       />
       <SideRail active="work" />
 
-      {/* Eyebrow stays fixed at the top while the deck scrolls beneath it. */}
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-30 pt-16 md:pt-20">
-        <div className="mx-auto max-w-content px-6">
-          <p className="font-mono text-xs uppercase tracking-[0.18em] text-nltLime">Selected work</p>
-        </div>
-      </div>
-
-      <div className="relative z-10">
-        <Work stack />
-      </div>
+      <main className={`relative z-10 overflow-x-clip ${RAIL_CLEARANCE}`}>
+        <WorkShowcase />
+      </main>
     </div>
   );
 }
