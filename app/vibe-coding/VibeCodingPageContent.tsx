@@ -3,7 +3,6 @@
 import {
   AnimatePresence,
   motion,
-  useMotionTemplate,
   useMotionValue,
   useReducedMotion,
   useSpring,
@@ -428,14 +427,11 @@ function ActiveCardFX({
   const reduced = useReducedMotion();
   const [hovered, setHovered] = useState(false);
 
-  // 0..1 pointer position within the card → tilt + glare.
+  // 0..1 pointer position within the card → tilt.
   const mx = useMotionValue(0.5);
   const my = useMotionValue(0.5);
   const rotX = useSpring(useTransform(my, [0, 1], [6.5, -6.5]), TILT_SPRING);
   const rotY = useSpring(useTransform(mx, [0, 1], [-8.5, 8.5]), TILT_SPRING);
-  const gx = useTransform(mx, (v) => v * 100);
-  const gy = useTransform(my, (v) => v * 100);
-  const glare = useMotionTemplate`radial-gradient(380px circle at ${gx}% ${gy}%, rgba(210,255,0,0.22), transparent 60%)`;
 
   // Pixel pointer position → cursor-following arrow (offset to centre the 56px button).
   const ax = useMotionValue(0);
@@ -476,25 +472,6 @@ function ActiveCardFX({
         className="relative will-change-transform"
       >
         {children}
-        {!reduced && (
-          <>
-            {/* cursor-tracked lime glare */}
-            <motion.div
-              aria-hidden
-              style={{ background: glare }}
-              animate={{ opacity: hovered ? 1 : 0 }}
-              transition={{ duration: 0.35, ease: [0.25, 0.1, 0.25, 1] }}
-              className="pointer-events-none absolute inset-0 z-[3] rounded-md mix-blend-screen"
-            />
-            {/* lime hairline edge on hover */}
-            <motion.div
-              aria-hidden
-              animate={{ opacity: hovered ? 1 : 0 }}
-              transition={{ duration: 0.35 }}
-              className="pointer-events-none absolute inset-0 z-[2] rounded-md ring-1 ring-inset ring-nltLime/40"
-            />
-          </>
-        )}
       </motion.div>
 
       {/* Cursor-following lime arrow — visual affordance only (the media itself

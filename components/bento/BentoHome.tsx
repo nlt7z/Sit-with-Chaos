@@ -14,7 +14,6 @@ import { useEffect, useRef, useState } from "react";
 
 import { BentoCard } from "@/components/bento/BentoCard";
 import { HalftoneGlobe } from "@/components/bento/HalftoneGlobe";
-import { QuoteStamp } from "@/components/bento/QuoteStamp";
 import { RAIL_CLEARANCE } from "@/components/bento/railClearance";
 import { SideRail } from "@/components/bento/SideRail";
 import { RoseLoader } from "@/components/RoseLoader";
@@ -22,7 +21,9 @@ import { SplitTextChars } from "@/components/SplitBtn";
 
 const EMAIL = "fangyuanzero7@gmail.com";
 const POSITIONING = { role: "Product Designer", rest: " who makes AI work people can see, check, and steer" };
-const BRAND_TAGS = ["Product Thinking", "Visual Craft", "Curiosity"];
+const INTRO =
+  "Painting taught me to see what a system wants to become before it knows itself. Ten years across canvas, spatial design, and digital products turned that instinct into a method.";
+const SKILL_TAGS = ["Product Design", "Interaction Design", "Visual Design", "Vibe Coding"];
 
 // the "now" block: O2 Tech AI's BOM feature film (muted, loops while on screen)
 const NOW_FILM = { src: "/assets/o2/o2-bom-film.mp4", poster: "/assets/o2/o2-bom-film-poster.webp" };
@@ -48,13 +49,15 @@ function useIsMobile() {
   return mobile;
 }
 
-// square crops of the artwork; the photo cross-fades through them on hover
-const ARTWORK = [
-  "/assets/about/gallery/thumbs/echo.webp",
-  "/assets/about/gallery/thumbs/hang.webp",
-  "/assets/about/gallery/thumbs/ice.webp",
-  "/assets/about/gallery/thumbs/read.webp",
+// the mood board: the portrait, then square crops of the artwork
+const MOOD = [
+  { src: "/assets/about/yuan-portrait.jpg", alt: "Yuan Fang" },
+  { src: "/assets/about/gallery/thumbs/echo.webp", alt: "" },
+  { src: "/assets/about/gallery/thumbs/hang.webp", alt: "" },
+  { src: "/assets/about/gallery/thumbs/ice.webp", alt: "" },
+  { src: "/assets/about/gallery/thumbs/read.webp", alt: "" },
 ];
+const MOOD_DWELL = 3200; // ms per image
 
 // One stop per slide: logo, name, role. Logos render as quiet white marks (a
 // logo bar, Vercel / Linear style) via a CSS filter; Meituan ships a
@@ -243,24 +246,11 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
   );
 }
 
-/* identity — name, slogan, the photo (hover: artwork), the positioning line +
-   focus tags and the CTA, on frosted glass. */
-function IdentityCard({ reduced }: { reduced: boolean }) {
-  const [hover, setHover] = useState(false);
-  const [i, setI] = useState(0);
-
-  useEffect(() => {
-    if (reduced || !hover) return;
-    const id = setInterval(() => setI((v) => (v + 1) % ARTWORK.length), 2600);
-    return () => clearInterval(id);
-  }, [reduced, hover]);
-
+/* identity — name, slogan, a short intro, what I do and the CTA, on frosted
+   glass. */
+function IdentityCard() {
   return (
-    <div
-      className="relative flex h-full flex-col gap-4 px-4 pb-4"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
+    <div className="relative flex h-full flex-col gap-4 px-4 pb-4">
       {/* the glass: a cool sheen from the top-left */}
       <div
         aria-hidden
@@ -268,7 +258,7 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
         style={{ background: "linear-gradient(158deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.015) 36%, rgba(255,255,255,0) 60%)" }}
       />
 
-      {/* top — name + slogan */}
+      {/* top — name + slogan + intro */}
       <div className="relative shrink-0 leading-none">
         <p className="mb-2 font-mono text-[12px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
         <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
@@ -281,39 +271,13 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
             {POSITIONING.rest}
           </span>
         </p>
+        <p className="mt-3 text-[13.5px] leading-[1.5] text-white/65">{INTRO}</p>
       </div>
 
-      {/* middle — the photo at a fixed 6:5, centred in the free height; the
-          quote is a sticker pressed onto its corner */}
-      <div className="relative flex min-h-0 flex-1 items-center">
-        <div className="relative aspect-[6/5] max-h-full w-full">
-        <div className="absolute inset-0 overflow-hidden rounded-[14px] bg-[#1a1c17]">
-          <Image
-            src="/assets/about/yuan-portrait.jpg"
-            alt="Yuan Fang"
-            fill
-            sizes="300px"
-            className={`object-cover transition-opacity duration-700 ${hover ? "opacity-0" : "opacity-100"}`}
-          />
-          {ARTWORK.map((src, idx) => (
-            <Image
-              key={src}
-              src={src}
-              alt=""
-              fill
-              sizes="300px"
-              className={`object-cover transition-opacity duration-700 ${hover && idx === i ? "opacity-100" : "opacity-0"}`}
-            />
-          ))}
-        </div>
-        <QuoteStamp reduced={reduced} className="absolute -left-2.5 -top-4 z-10 w-[58px]" />
-        </div>
-      </div>
-
-      {/* bottom — focus tags + CTA */}
-      <div className="relative flex shrink-0 flex-col gap-3">
-        <ul className="-mt-0.5 flex flex-wrap gap-1.5" aria-label="Focus">
-          {BRAND_TAGS.map((r) => (
+      {/* bottom — what I do + CTA */}
+      <div className="relative mt-auto flex shrink-0 flex-col gap-3">
+        <ul className="flex flex-wrap gap-1.5" aria-label="What I do">
+          {SKILL_TAGS.map((r) => (
             <li key={r} className="rounded-full bg-white/[0.06] px-2.5 py-[5px] text-[12px] font-medium leading-none tracking-[-0.005em] text-[#d0d6e0]">
               {r}
             </li>
@@ -324,11 +288,11 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
             href={`mailto:${EMAIL}`}
             className="group inline-flex h-11 items-center gap-2 rounded-full bg-nltLime px-5 text-[14px] font-medium text-[#0a0b0c] shadow-[0_0_0_rgba(210,255,0,0)] transition-[box-shadow,transform] duration-300 ease-portfolio hover:shadow-[0_8px_28px_-6px_rgba(210,255,0,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1b1d] active:scale-[0.98]"
           >
-            <span className="sr-only">Say hello</span>
+            <span className="sr-only">Say Hello</span>
             {/* flex + a line box the size of the glyph boxes, so the rolling
                 letters centre on the arrow instead of riding 3px high */}
             <span aria-hidden className="flex items-center leading-[1.1]">
-              <SplitTextChars text="Say hello" />
+              <SplitTextChars text="Say Hello" />
             </span>
             <span aria-hidden className="leading-none transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
               ↗
@@ -336,6 +300,38 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
           </a>
         </div>
       </div>
+    </div>
+  );
+}
+
+/* mood board — the portrait and the artwork cross-fade on a timer; hover holds
+   the current one. Reduced motion: stays on the portrait. */
+function MoodBoard({ reduced }: { reduced: boolean }) {
+  const [i, setI] = useState(0);
+  const [paused, setPaused] = useState(false);
+
+  useEffect(() => {
+    if (reduced || paused) return;
+    const id = setInterval(() => setI((v) => (v + 1) % MOOD.length), MOOD_DWELL);
+    return () => clearInterval(id);
+  }, [reduced, paused]);
+
+  return (
+    <div
+      className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px] bg-[#1a1c17]"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {MOOD.map((m, idx) => (
+        <Image
+          key={m.src}
+          src={m.src}
+          alt={m.alt}
+          fill
+          sizes="(max-width: 767px) 50vw, 300px"
+          className={`object-cover transition-opacity duration-700 ${idx === i ? "opacity-100" : "opacity-0"}`}
+        />
+      ))}
     </div>
   );
 }
@@ -510,10 +506,14 @@ export function BentoHome() {
             into a single intentional feed. On md+ the wrappers reassert as the
             four flex columns of the no-scroll desktop puzzle. */}
         <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:gap-2.5 md:overflow-hidden">
-          {/* ===== col 1 — identity, full height ===== */}
+          {/* ===== col 1 — identity (its own height) · mood board (the rest) ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[1.03] md:flex-col md:gap-2.5">
-            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 h-[560px] min-h-0 flex-1 md:order-none md:h-auto">
-              <IdentityCard reduced={reduced} />
+            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 md:order-none md:flex-none">
+              <IdentityCard />
+            </BentoCard>
+
+            <BentoCard label="Mood Board" surface="dark" drag={drag} index={1} className="order-11 col-span-1 h-[200px] min-h-0 md:order-none md:h-auto md:flex-1">
+              <MoodBoard reduced={reduced} />
             </BentoCard>
           </div>
 

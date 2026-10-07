@@ -22,6 +22,8 @@ type Media = { kind: "video"; src: string; poster: string } | { kind: "image"; s
 type Project = {
   slug: string;
   company: string;
+  /** square brand mark shown before the company name (rendered white) */
+  logo: string;
   name: string;
   intro: string;
   media: Media;
@@ -33,6 +35,7 @@ const FEATURES: Project[] = [
   {
     slug: "liner",
     company: "Liner",
+    logo: "/assets/logos/liner.png",
     name: "Research + designed AI-native co-research for 10M+ academic users",
     intro: "Led end-to-end research and design for an AI-native collaborative research experience where people collect sources, discuss, and co-write together.",
     media: { kind: "video", src: "/assets/liner/liner-cover.mp4", poster: "/assets/work/posters/liner.webp" },
@@ -41,6 +44,7 @@ const FEATURES: Project[] = [
   {
     slug: "meituan-im",
     company: "Meituan",
+    logo: "/assets/work/logos/meituan.png",
     name: "0→1 in-message quotation system on a 770M-user platform",
     intro: "Led the 0-to-1 design of an in-message quotation system on a platform with 770M+ annual transacting users and 14.5M active merchants.",
     media: { kind: "video", src: "/assets/meituan-im/meituan-present/meituan-present-1.mp4", poster: "/assets/work/posters/meituan.webp" },
@@ -49,6 +53,7 @@ const FEATURES: Project[] = [
   {
     slug: "ai-character",
     company: "Alibaba Cloud",
+    logo: "/assets/logos/alibaba.svg",
     name: "Shipped Qwen Character's Interactive Showrooms MVP",
     intro: "0→1 MVP feature for Qwen Character LLM, serving millions of enterprise customers.",
     media: { kind: "video", src: "/assets/ai-character/figma-h264.mp4", poster: "/assets/work/posters/alibaba.webp" },
@@ -60,6 +65,7 @@ const PAIR: Project[] = [
   {
     slug: "tiktok",
     company: "TikTok",
+    logo: "/assets/work/logos/tiktok.svg",
     name: "Redesigned how friends' shared videos surface in a Shared with You feed",
     intro: "Self-initiated product case study: turning the DM inbox of friend-shared videos into a scrollable Shared Feed with one-tap Smart Reactions and reply-value ranking.",
     media: { kind: "video", src: "/assets/TikTok/showcase.mp4", poster: "/assets/work/posters/tiktok.webp" },
@@ -68,6 +74,7 @@ const PAIR: Project[] = [
   {
     slug: "studio-engine",
     company: "StudioEngine",
+    logo: "/assets/work/logos/studioengine.png",
     name: "Rebuilt a GenAI video app into a 4-stage creative workspace",
     intro: "Restructured a Gen-2 web app from a single-step generator into a four-stage creative workspace creators actually iterate in.",
     media: { kind: "image", src: "/assets/work/vp-genie.jpg" },
@@ -162,6 +169,12 @@ function useCursorArrow() {
   };
 }
 
+/* the company's mark, knocked to white so every logo reads as one quiet set */
+function BrandMark({ src }: { src: string }) {
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={src} alt="" aria-hidden className="h-4 w-4 object-contain brightness-0 invert" />;
+}
+
 const reveal = (reduced: boolean, delay = 0) =>
   reduced
     ? {}
@@ -196,10 +209,10 @@ function Feature({ project, reduced }: { project: Project; reduced: boolean }) {
             style={{ background: "radial-gradient(55% 75% at 20% 70%, rgba(10,11,12,0.6), transparent 75%)" }}
           />
           <p className="flex items-center gap-2.5 font-mono text-[12px] uppercase tracking-[0.18em] text-white/70">
-            <span aria-hidden className="h-2 w-2 bg-nltLime" />
+            <BrandMark src={project.logo} />
             {project.company}
           </p>
-          <h2 className="mt-3 max-w-[36ch] text-balance font-display text-[clamp(1.45rem,2.1vw,2rem)] font-light leading-[1.15] tracking-[-0.015em] text-white">
+          <h2 className="mt-3 font-display text-[clamp(1.35rem,1.85vw,1.8rem)] font-light leading-[1.15] tracking-[-0.015em] text-white">
             {project.name}
           </h2>
           <p className="mt-3 max-w-[62ch] text-[14.5px] leading-[1.6] text-white/70">{project.intro}</p>
@@ -232,10 +245,10 @@ function Tile({ project, reduced, delay }: { project: Project; reduced: boolean;
             style={{ background: "radial-gradient(70% 70% at 25% 70%, rgba(10,11,12,0.75), transparent 72%)" }}
           />
           <p className="flex items-center gap-2.5 font-mono text-[12px] uppercase tracking-[0.18em] text-white/70">
-            <span aria-hidden className="h-2 w-2 bg-nltLime" />
+            <BrandMark src={project.logo} />
             {project.company}
           </p>
-          <h3 className="mt-2.5 max-w-[34ch] text-balance font-display text-[clamp(1.15rem,1.45vw,1.4rem)] font-light leading-[1.2] tracking-[-0.01em] text-white">
+          <h3 className="mt-2.5 font-display text-[clamp(1.15rem,1.45vw,1.4rem)] font-light leading-[1.2] tracking-[-0.01em] text-white">
             {project.name}
           </h3>
           <p className="mt-2.5 max-w-[54ch] text-[14px] leading-[1.6] text-white/70">{project.intro}</p>

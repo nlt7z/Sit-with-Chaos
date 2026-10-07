@@ -33,7 +33,7 @@ export function SideRail({ active }: { active: "home" | "work" | "lab" }) {
     <>
       <nav aria-label="Sections" className="fixed left-4 top-1/2 z-50 hidden -translate-y-1/2 md:block">
         <div
-          className="flex w-[80px] flex-col gap-2 rounded-[22px] border border-white/[0.08] bg-[#0f1011]/85 px-1 py-1.5 backdrop-blur-md"
+          className="flex w-[62px] flex-col gap-2 rounded-[22px] border border-white/[0.08] bg-[#0f1011]/85 px-1 py-1.5 backdrop-blur-md"
           style={{ boxShadow: "inset 0 1px 0 0 rgba(255,255,255,0.06), 0 8px 24px rgba(0,0,0,0.5), 0 2px 6px rgba(0,0,0,0.3)" }}
           onMouseLeave={() => setHovered(null)}
         >
@@ -47,7 +47,7 @@ export function SideRail({ active }: { active: "home" | "work" | "lab" }) {
                 onMouseEnter={() => setHovered(key)}
                 onFocus={() => setHovered(key)}
                 onBlur={() => setHovered(null)}
-                className={`group relative flex h-10 items-center justify-center whitespace-nowrap rounded-[18px] px-3 text-[13px] font-medium tracking-[-0.01em] transition-[color,transform] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline-none active:scale-[0.97] ${
+                className={`group relative flex h-10 items-center justify-center whitespace-nowrap rounded-[18px] px-2 text-[13px] font-medium tracking-[-0.01em] transition-[color,transform] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline-none active:scale-[0.97] ${
                   on ? "text-[#0a0b0c]" : "text-[#8a8f98] hover:text-[#f7f8f8] focus-visible:text-[#f7f8f8]"
                 }`}
               >
