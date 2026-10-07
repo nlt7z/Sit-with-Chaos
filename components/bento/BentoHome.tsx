@@ -245,11 +245,65 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
   );
 }
 
-/* identity — name, the slogan running into a short intro, and the CTA, on
-   frosted glass. */
-function IdentityCard() {
+/* identity — name, the slogan and the CTA, on frosted glass. The intro that
+   runs on from the slogan stays folded away until the block is hovered (or
+   focused); the block then grows to show it. Touch screens can't hover, so
+   they always show it. */
+const SLOGAN_P = "text-[15px] leading-[1.45] text-white/70";
+
+function Slogan() {
+  // shown as if selected: the site's ::selection lime behind each wrapped line, dark text
   return (
-    <div className="relative flex h-full flex-col gap-5 px-4 pb-4">
+    <span className="box-decoration-clone bg-nltLime py-[0.12em] text-[#1d1d1f] [-webkit-box-decoration-break:clone]">
+      {POSITIONING.role}
+      {POSITIONING.rest}
+    </span>
+  );
+}
+
+function IdentityCard({ reduced }: { reduced: boolean }) {
+  const [hover, setHover] = useState(false);
+  const [canHover, setCanHover] = useState(true);
+  const [h, setH] = useState<{ short: number; full: number } | null>(null);
+  const [animate, setAnimate] = useState(false);
+  const shortRef = useRef<HTMLParagraphElement>(null);
+  const fullRef = useRef<HTMLParagraphElement>(null);
+  const open = hover || !canHover;
+
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const apply = () => setCanHover(mq.matches);
+    apply();
+    mq.addEventListener("change", apply);
+    return () => mq.removeEventListener("change", apply);
+  }, []);
+
+  // the two heights the paragraph moves between, measured off hidden copies
+  useEffect(() => {
+    const s = shortRef.current;
+    const f = fullRef.current;
+    if (!s || !f) return;
+    const ro = new ResizeObserver(() => setH({ short: s.offsetHeight, full: f.offsetHeight }));
+    ro.observe(s);
+    ro.observe(f);
+    // the first measurement lands without a transition
+    const t = window.setTimeout(() => setAnimate(true), 300);
+    return () => {
+      ro.disconnect();
+      clearTimeout(t);
+    };
+  }, []);
+
+  const transition = reduced || !animate ? { duration: 0 } : { duration: 0.45, ease: [0.25, 0.1, 0.25, 1] as const };
+
+  return (
+    <div
+      className="relative flex h-full flex-col gap-5 px-4 pb-4"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onFocus={() => setHover(true)}
+      onBlur={() => setHover(false)}
+    >
       {/* the glass: a cool sheen from the top-left */}
       <div
         aria-hidden
@@ -257,20 +311,32 @@ function IdentityCard() {
         style={{ background: "linear-gradient(158deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.015) 36%, rgba(255,255,255,0) 60%)" }}
       />
 
-      {/* name + slogan + intro */}
+      {/* name + slogan (+ intro on hover) */}
       <div className="relative shrink-0 leading-none">
         <p className="mb-2 font-mono text-[12px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
         <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
         <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
-        {/* the slogan, shown as if selected: the site's ::selection lime behind
-            each wrapped line, dark text */}
-        <p className="mt-4 text-[15px] leading-[1.45] text-white/70">
-          <span className="box-decoration-clone bg-nltLime py-[0.12em] text-[#1d1d1f] [-webkit-box-decoration-break:clone]">
-            {POSITIONING.role}
-            {POSITIONING.rest}
-          </span>
-          . {INTRO}
-        </p>
+        <div className="relative mt-4">
+          <p ref={shortRef} aria-hidden className={`${SLOGAN_P} pointer-events-none invisible absolute inset-x-0 top-0`}>
+            <Slogan />
+          </p>
+          <p ref={fullRef} aria-hidden className={`${SLOGAN_P} pointer-events-none invisible absolute inset-x-0 top-0`}>
+            <Slogan />. {INTRO}
+          </p>
+          <motion.div
+            className="overflow-hidden"
+            initial={false}
+            animate={{ height: h ? (open ? h.full : h.short) : "auto" }}
+            transition={transition}
+          >
+            <p className={SLOGAN_P}>
+              <Slogan />
+              <motion.span initial={false} animate={{ opacity: open ? 1 : 0 }} transition={transition}>
+                . {INTRO}
+              </motion.span>
+            </p>
+          </motion.div>
+        </div>
       </div>
 
       {/* CTA */}
@@ -447,7 +513,7 @@ export function BentoHome() {
           {/* ===== col 1 — identity (its own height) · photo (the rest) ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[1.03] md:flex-col md:gap-2.5">
             <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 md:order-none md:flex-none">
-              <IdentityCard />
+              <IdentityCard reduced={reduced} />
             </BentoCard>
 
             <BentoCard surface="dark" drag={drag} index={1} className="order-1 col-span-2 h-[420px] min-h-0 md:order-none md:h-auto md:flex-1">
