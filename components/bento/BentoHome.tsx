@@ -22,6 +22,7 @@ import { SplitTextChars } from "@/components/SplitBtn";
 
 const EMAIL = "fangyuanzero7@gmail.com";
 const POSITIONING = { role: "Product Designer", rest: " who makes AI work people can see, check, and steer" };
+const BRAND_TAGS = ["Product Thinking", "Visual Craft", "Curiosity"];
 const INTRO =
   "Painting taught me to see what a system wants to become before it knows itself. Ten years across canvas, spatial design, and digital products turned that instinct into a method.";
 
@@ -244,24 +245,11 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
   );
 }
 
-/* identity — name, the slogan running into a short intro, the photo (hover:
-   artwork) and the CTA, on frosted glass. */
-function IdentityCard({ reduced }: { reduced: boolean }) {
-  const [hover, setHover] = useState(false);
-  const [i, setI] = useState(0);
-
-  useEffect(() => {
-    if (reduced || !hover) return;
-    const id = setInterval(() => setI((v) => (v + 1) % ARTWORK.length), 2600);
-    return () => clearInterval(id);
-  }, [reduced, hover]);
-
+/* identity — name, the slogan running into a short intro, and the CTA, on
+   frosted glass. */
+function IdentityCard() {
   return (
-    <div
-      className="relative flex h-full flex-col gap-4 px-4 pb-4"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
+    <div className="relative flex h-full flex-col gap-5 px-4 pb-4">
       {/* the glass: a cool sheen from the top-left */}
       <div
         aria-hidden
@@ -269,7 +257,7 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
         style={{ background: "linear-gradient(158deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.015) 36%, rgba(255,255,255,0) 60%)" }}
       />
 
-      {/* top — name + slogan */}
+      {/* name + slogan + intro */}
       <div className="relative shrink-0 leading-none">
         <p className="mb-2 font-mono text-[12px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
         <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
@@ -285,16 +273,48 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
         </p>
       </div>
 
-      {/* middle — the photo at a fixed 6:5, centred in the free height; the
-          quote is a sticker pressed onto its corner */}
-      <div className="relative flex min-h-0 flex-1 items-center">
-        <div className="relative aspect-[6/5] max-h-full w-full">
+      {/* CTA */}
+      <div className="relative mt-auto shrink-0">
+        <a
+          href={`mailto:${EMAIL}`}
+          className="group inline-flex h-11 items-center gap-2 rounded-full bg-nltLime px-5 text-[14px] font-medium text-[#0a0b0c] shadow-[0_0_0_rgba(210,255,0,0)] transition-[box-shadow,transform] duration-300 ease-portfolio hover:shadow-[0_8px_28px_-6px_rgba(210,255,0,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1b1d] active:scale-[0.98]"
+        >
+          <span className="sr-only">Say Hello</span>
+          {/* flex + a line box the size of the glyph boxes, so the rolling
+              letters centre on the arrow instead of riding 3px high */}
+          <span aria-hidden className="flex items-center leading-[1.1]">
+            <SplitTextChars text="Say Hello" />
+          </span>
+          <span aria-hidden className="leading-none transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
+            ↗
+          </span>
+        </a>
+      </div>
+    </div>
+  );
+}
+
+/* photo — the portrait fills the block (hover: cross-fades through the
+   artwork), the quote pressed onto its corner, focus tags along the bottom. */
+function PhotoCard({ reduced }: { reduced: boolean }) {
+  const [hover, setHover] = useState(false);
+  const [i, setI] = useState(0);
+
+  useEffect(() => {
+    if (reduced || !hover) return;
+    const id = setInterval(() => setI((v) => (v + 1) % ARTWORK.length), 2600);
+    return () => clearInterval(id);
+  }, [reduced, hover]);
+
+  return (
+    <div className="relative flex min-h-0 flex-1 flex-col gap-3 px-2 pb-3" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
+      <div className="relative min-h-0 flex-1">
         <div className="absolute inset-0 overflow-hidden rounded-[14px] bg-[#1a1c17]">
           <Image
             src="/assets/about/yuan-portrait.jpg"
             alt="Yuan Fang"
             fill
-            sizes="300px"
+            sizes="(max-width: 767px) 100vw, 320px"
             className={`object-cover transition-opacity duration-700 ${hover ? "opacity-0" : "opacity-100"}`}
           />
           {ARTWORK.map((src, idx) => (
@@ -303,34 +323,20 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
               src={src}
               alt=""
               fill
-              sizes="300px"
+              sizes="(max-width: 767px) 100vw, 320px"
               className={`object-cover transition-opacity duration-700 ${hover && idx === i ? "opacity-100" : "opacity-0"}`}
             />
           ))}
         </div>
-        <QuoteStamp reduced={reduced} className="absolute -left-2.5 -top-4 z-10 w-[58px]" />
-        </div>
+        <QuoteStamp reduced={reduced} className="absolute -left-1 -top-4 z-10 w-[52px]" />
       </div>
-
-      {/* bottom — CTA */}
-      <div className="relative flex shrink-0 flex-col gap-3">
-        <div className="pt-1">
-          <a
-            href={`mailto:${EMAIL}`}
-            className="group inline-flex h-11 items-center gap-2 rounded-full bg-nltLime px-5 text-[14px] font-medium text-[#0a0b0c] shadow-[0_0_0_rgba(210,255,0,0)] transition-[box-shadow,transform] duration-300 ease-portfolio hover:shadow-[0_8px_28px_-6px_rgba(210,255,0,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1b1d] active:scale-[0.98]"
-          >
-            <span className="sr-only">Say Hello</span>
-            {/* flex + a line box the size of the glyph boxes, so the rolling
-                letters centre on the arrow instead of riding 3px high */}
-            <span aria-hidden className="flex items-center leading-[1.1]">
-              <SplitTextChars text="Say Hello" />
-            </span>
-            <span aria-hidden className="leading-none transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-              ↗
-            </span>
-          </a>
-        </div>
-      </div>
+      <ul className="flex shrink-0 flex-wrap gap-1.5 px-2" aria-label="Focus">
+        {BRAND_TAGS.map((r) => (
+          <li key={r} className="rounded-full bg-white/[0.06] px-2.5 py-[5px] text-[12px] font-medium leading-none tracking-[-0.005em] text-[#d0d6e0]">
+            {r}
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
@@ -438,10 +444,14 @@ export function BentoHome() {
             into a single intentional feed. On md+ the wrappers reassert as the
             four flex columns of the no-scroll desktop puzzle. */}
         <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:gap-2.5 md:overflow-hidden">
-          {/* ===== col 1 — identity, full height ===== */}
+          {/* ===== col 1 — identity (its own height) · photo (the rest) ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[1.03] md:flex-col md:gap-2.5">
-            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 h-[640px] min-h-0 flex-1 md:order-none md:h-auto">
-              <IdentityCard reduced={reduced} />
+            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 md:order-none md:flex-none">
+              <IdentityCard />
+            </BentoCard>
+
+            <BentoCard surface="dark" drag={drag} index={1} className="order-1 col-span-2 h-[420px] min-h-0 md:order-none md:h-auto md:flex-1">
+              <PhotoCard reduced={reduced} />
             </BentoCard>
           </div>
 
