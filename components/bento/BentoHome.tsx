@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { BentoCard } from "@/components/bento/BentoCard";
 import { HalftoneGlobe } from "@/components/bento/HalftoneGlobe";
+import { QuoteStamp } from "@/components/bento/QuoteStamp";
 import { RAIL_CLEARANCE } from "@/components/bento/railClearance";
 import { SideRail } from "@/components/bento/SideRail";
 import { RoseLoader } from "@/components/RoseLoader";
@@ -23,7 +24,6 @@ const EMAIL = "fangyuanzero7@gmail.com";
 const POSITIONING = { role: "Product Designer", rest: " who makes AI work people can see, check, and steer" };
 const INTRO =
   "Painting taught me to see what a system wants to become before it knows itself. Ten years across canvas, spatial design, and digital products turned that instinct into a method.";
-const SKILL_TAGS = ["Product Design", "Interaction Design", "Visual Design", "Vibe Coding"];
 
 // the "now" block: O2 Tech AI's BOM feature film (muted, loops while on screen)
 const NOW_FILM = { src: "/assets/o2/o2-bom-film.mp4", poster: "/assets/o2/o2-bom-film-poster.webp" };
@@ -49,15 +49,13 @@ function useIsMobile() {
   return mobile;
 }
 
-// the mood board: the portrait, then square crops of the artwork
-const MOOD = [
-  { src: "/assets/about/yuan-portrait.jpg", alt: "Yuan Fang" },
-  { src: "/assets/about/gallery/thumbs/echo.webp", alt: "" },
-  { src: "/assets/about/gallery/thumbs/hang.webp", alt: "" },
-  { src: "/assets/about/gallery/thumbs/ice.webp", alt: "" },
-  { src: "/assets/about/gallery/thumbs/read.webp", alt: "" },
+// square crops of the artwork; the photo cross-fades through them on hover
+const ARTWORK = [
+  "/assets/about/gallery/thumbs/echo.webp",
+  "/assets/about/gallery/thumbs/hang.webp",
+  "/assets/about/gallery/thumbs/ice.webp",
+  "/assets/about/gallery/thumbs/read.webp",
 ];
-const MOOD_DWELL = 3200; // ms per image
 
 // One stop per slide: logo, name, role. Logos render as quiet white marks (a
 // logo bar, Vercel / Linear style) via a CSS filter; Meituan ships a
@@ -246,11 +244,24 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
   );
 }
 
-/* identity — name, slogan, a short intro, what I do and the CTA, on frosted
-   glass. */
-function IdentityCard() {
+/* identity — name, the slogan running into a short intro, the photo (hover:
+   artwork) and the CTA, on frosted glass. */
+function IdentityCard({ reduced }: { reduced: boolean }) {
+  const [hover, setHover] = useState(false);
+  const [i, setI] = useState(0);
+
+  useEffect(() => {
+    if (reduced || !hover) return;
+    const id = setInterval(() => setI((v) => (v + 1) % ARTWORK.length), 2600);
+    return () => clearInterval(id);
+  }, [reduced, hover]);
+
   return (
-    <div className="relative flex h-full flex-col gap-4 px-4 pb-4">
+    <div
+      className="relative flex h-full flex-col gap-4 px-4 pb-4"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
       {/* the glass: a cool sheen from the top-left */}
       <div
         aria-hidden
@@ -258,31 +269,51 @@ function IdentityCard() {
         style={{ background: "linear-gradient(158deg, rgba(255,255,255,0.09) 0%, rgba(255,255,255,0.015) 36%, rgba(255,255,255,0) 60%)" }}
       />
 
-      {/* top — name + slogan + intro */}
+      {/* top — name + slogan */}
       <div className="relative shrink-0 leading-none">
         <p className="mb-2 font-mono text-[12px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
         <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
         <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
         {/* the slogan, shown as if selected: the site's ::selection lime behind
             each wrapped line, dark text */}
-        <p className="mt-4 text-[15px] leading-[1.45]">
+        <p className="mt-4 text-[15px] leading-[1.45] text-white/70">
           <span className="box-decoration-clone bg-nltLime py-[0.12em] text-[#1d1d1f] [-webkit-box-decoration-break:clone]">
             {POSITIONING.role}
             {POSITIONING.rest}
           </span>
+          . {INTRO}
         </p>
-        <p className="mt-3 text-[13.5px] leading-[1.5] text-white/65">{INTRO}</p>
       </div>
 
-      {/* bottom — what I do + CTA */}
-      <div className="relative mt-auto flex shrink-0 flex-col gap-3">
-        <ul className="flex flex-wrap gap-1.5" aria-label="What I do">
-          {SKILL_TAGS.map((r) => (
-            <li key={r} className="rounded-full bg-white/[0.06] px-2.5 py-[5px] text-[12px] font-medium leading-none tracking-[-0.005em] text-[#d0d6e0]">
-              {r}
-            </li>
+      {/* middle — the photo at a fixed 6:5, centred in the free height; the
+          quote is a sticker pressed onto its corner */}
+      <div className="relative flex min-h-0 flex-1 items-center">
+        <div className="relative aspect-[6/5] max-h-full w-full">
+        <div className="absolute inset-0 overflow-hidden rounded-[14px] bg-[#1a1c17]">
+          <Image
+            src="/assets/about/yuan-portrait.jpg"
+            alt="Yuan Fang"
+            fill
+            sizes="300px"
+            className={`object-cover transition-opacity duration-700 ${hover ? "opacity-0" : "opacity-100"}`}
+          />
+          {ARTWORK.map((src, idx) => (
+            <Image
+              key={src}
+              src={src}
+              alt=""
+              fill
+              sizes="300px"
+              className={`object-cover transition-opacity duration-700 ${hover && idx === i ? "opacity-100" : "opacity-0"}`}
+            />
           ))}
-        </ul>
+        </div>
+        <QuoteStamp reduced={reduced} className="absolute -left-2.5 -top-4 z-10 w-[58px]" />
+        </div>
+      </div>
+
+      {/* bottom — CTA */}
+      <div className="relative flex shrink-0 flex-col gap-3">
         <div className="pt-1">
           <a
             href={`mailto:${EMAIL}`}
@@ -300,38 +331,6 @@ function IdentityCard() {
           </a>
         </div>
       </div>
-    </div>
-  );
-}
-
-/* mood board — the portrait and the artwork cross-fade on a timer; hover holds
-   the current one. Reduced motion: stays on the portrait. */
-function MoodBoard({ reduced }: { reduced: boolean }) {
-  const [i, setI] = useState(0);
-  const [paused, setPaused] = useState(false);
-
-  useEffect(() => {
-    if (reduced || paused) return;
-    const id = setInterval(() => setI((v) => (v + 1) % MOOD.length), MOOD_DWELL);
-    return () => clearInterval(id);
-  }, [reduced, paused]);
-
-  return (
-    <div
-      className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px] bg-[#1a1c17]"
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      {MOOD.map((m, idx) => (
-        <Image
-          key={m.src}
-          src={m.src}
-          alt={m.alt}
-          fill
-          sizes="(max-width: 767px) 50vw, 300px"
-          className={`object-cover transition-opacity duration-700 ${idx === i ? "opacity-100" : "opacity-0"}`}
-        />
-      ))}
     </div>
   );
 }
@@ -393,73 +392,6 @@ function JourneyCarousel({ reduced }: { reduced: boolean }) {
   );
 }
 
-/* vinyl player — click to play / pause (no autoplay). The playing state is
-   loud on purpose: a pulsing ring, a lime sheen, a tall equalizer. */
-function VinylAudio() {
-  const ref = useRef<HTMLAudioElement>(null);
-  const [playing, setPlaying] = useState(false);
-
-  const toggle = () => {
-    const a = ref.current;
-    if (!a) return;
-    a.volume = 0.55;
-    if (a.paused) a.play().then(() => setPlaying(true)).catch(() => {});
-    else {
-      a.pause();
-      setPlaying(false);
-    }
-  };
-
-  return (
-    <button type="button" onClick={toggle} aria-label={playing ? "Pause audio" : "Play audio"} aria-pressed={playing} className="relative block h-full w-full overflow-hidden text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-nltLime/60">
-      <audio ref={ref} src="/assets/vinyl.mp3" loop preload="none" />
-      <Image
-        src="/assets/record.png"
-        alt=""
-        fill
-        sizes="280px"
-        className={`object-cover object-center transition-transform duration-700 ${playing ? "scale-105" : "scale-100"}`}
-      />
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/10 to-transparent" />
-      <div
-        className="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 transition-opacity duration-500"
-        style={{ opacity: playing ? 1 : 0, background: "radial-gradient(120% 80% at 50% 120%, rgba(210,255,0,0.30), transparent 70%)" }}
-      />
-      <span className="absolute right-2.5 top-2.5 grid h-9 w-9 place-items-center rounded-full bg-black/55 text-[12px] text-white backdrop-blur-sm">
-        {playing ? <span className="absolute inset-0 animate-ping rounded-full border border-nltLime/70" /> : null}
-        <span className="relative">{playing ? "❚❚" : "▶"}</span>
-      </span>
-      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between px-3 pb-3">
-        <div className="min-w-0">
-          <p className="flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.14em] text-nltLime">
-            {playing ? <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-nltLime" /> : null}
-            {playing ? "Now playing" : "Tap to play"}
-          </p>
-          <p className="truncate text-[13px] text-white">On the turntable</p>
-        </div>
-        <div className="flex h-7 items-end gap-[3px]">
-          {[0, 1, 2, 3, 4].map((k) => (
-            <span
-              key={k}
-              className="w-[4px] rounded-full bg-nltLime"
-              style={{
-                height: 5,
-                opacity: playing ? 1 : 0.35,
-                animationName: playing ? "soundbar" : "none",
-                animationDuration: `${0.5 + k * 0.12}s`,
-                animationTimingFunction: "ease-in-out",
-                animationIterationCount: "infinite",
-                animationDirection: "alternate",
-                animationDelay: `${k * 0.09}s`,
-              }}
-            />
-          ))}
-        </div>
-      </div>
-    </button>
-  );
-}
-
 /* ------------------------------------------------------------------ */
 /* page                                                                 */
 /* ------------------------------------------------------------------ */
@@ -506,14 +438,10 @@ export function BentoHome() {
             into a single intentional feed. On md+ the wrappers reassert as the
             four flex columns of the no-scroll desktop puzzle. */}
         <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:gap-2.5 md:overflow-hidden">
-          {/* ===== col 1 — identity (its own height) · mood board (the rest) ===== */}
+          {/* ===== col 1 — identity, full height ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[1.03] md:flex-col md:gap-2.5">
-            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 md:order-none md:flex-none">
-              <IdentityCard />
-            </BentoCard>
-
-            <BentoCard label="Mood Board" surface="dark" drag={drag} index={1} className="order-11 col-span-1 h-[200px] min-h-0 md:order-none md:h-auto md:flex-1">
-              <MoodBoard reduced={reduced} />
+            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 h-[640px] min-h-0 flex-1 md:order-none md:h-auto">
+              <IdentityCard reduced={reduced} />
             </BentoCard>
           </div>
 
@@ -591,7 +519,7 @@ export function BentoHome() {
             </BentoCard>
           </div>
 
-          {/* ===== col 4 — location globe(4) · journey(3) · audio(3) ===== */}
+          {/* ===== col 4 — location globe(4) · journey(3) ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[0.9] md:flex-col md:gap-2.5">
             <BentoCard label="Location" surface="dark" drag={drag} index={2} className="order-7 col-span-2 h-[280px] min-h-0 flex-[4] md:order-none md:h-auto">
               <div className="relative min-h-0 flex-1">
@@ -601,12 +529,6 @@ export function BentoHome() {
 
             <BentoCard label="Journey" surface="dark" drag={drag} index={9} className="order-8 col-span-2 h-[260px] min-h-0 flex-[3] md:order-none md:h-auto">
               <JourneyCarousel reduced={reduced} />
-            </BentoCard>
-
-            <BentoCard label="Audio" surface="dark" drag={drag} index={11} className="order-10 col-span-1 h-[200px] min-h-0 flex-[3] md:order-none md:h-auto">
-              <div className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px]">
-                <VinylAudio />
-              </div>
             </BentoCard>
           </div>
         </div>
