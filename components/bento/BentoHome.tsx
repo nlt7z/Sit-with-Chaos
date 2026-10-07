@@ -360,8 +360,9 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
   );
 }
 
-/* photo — the portrait fills the block (hover: cross-fades through the
-   artwork), the quote pressed onto its corner, focus tags along the bottom. */
+/* photo — the portrait at 1:1, centred in the block (hover: cross-fades
+   through the artwork), the quote pressed onto its corner, focus tags along
+   the bottom. */
 function PhotoCard({ reduced }: { reduced: boolean }) {
   const [hover, setHover] = useState(false);
   const [i, setI] = useState(0);
@@ -374,7 +375,9 @@ function PhotoCard({ reduced }: { reduced: boolean }) {
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col gap-3 px-2 pb-3" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      <div className="relative min-h-0 flex-1">
+      {/* the photo stays 1:1, as large as the free space allows, centred */}
+      <div className="relative flex min-h-0 flex-1 items-center justify-center [container-type:size]">
+        <div className="relative aspect-square w-[min(100cqw,100cqh)]">
         <div className="absolute inset-0 overflow-hidden rounded-[14px] bg-[#1a1c17]">
           <Image
             src="/assets/about/yuan-portrait.jpg"
@@ -395,6 +398,7 @@ function PhotoCard({ reduced }: { reduced: boolean }) {
           ))}
         </div>
         <QuoteStamp reduced={reduced} className="absolute -left-1 -top-4 z-10 w-[52px]" />
+        </div>
       </div>
       <ul className="flex shrink-0 flex-wrap gap-1.5 px-2" aria-label="Focus">
         {BRAND_TAGS.map((r) => (
