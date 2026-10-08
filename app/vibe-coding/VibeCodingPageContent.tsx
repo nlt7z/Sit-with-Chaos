@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import { Action } from "@/components/Action";
 import { RoseLoader } from "@/components/RoseLoader";
@@ -675,15 +675,19 @@ function MobileFeed({ enabled }: { enabled: boolean }) {
   );
 }
 
-/** Desktop gallery — native vertical scroll with CSS scroll-snap: one card per
- *  snap stop (scroll-snap-stop: always, so a flick still lands one card on),
- *  the active card centred at full scale, its neighbours peeking above and
- *  below, dimmed and scaled down. Wheel, trackpad and the scrollbar-less
- *  gesture are the browser's own; arrows, the right rail and clicking a
- *  neighbour scroll a card to centre. Heavy embeds (full-app iframes + live
- *  sites) mount ONLY while active; lightweight video/image preload one card
- *  either side, the same memory guard as the mobile feed. */
+/** Desktop gallery — a looping vertical gallery on native scroll + CSS
+ *  scroll-snap. One card per snap stop (scroll-snap-stop: always, so a flick
+ *  lands one card on), the active card centred at full scale, its neighbours
+ *  peeking above and below, dimmed and scaled down.
+ *
+ *  Looping: the list is rendered three times. Scrolling starts in the middle
+ *  copy; whenever the scroll settles in the first or last copy it jumps,
+ *  without animation, to the same card in the middle copy, so there is always
+ *  a card above and below. Heavy embeds (full-app iframes + live sites) mount
+ *  ONLY on the active slide; lightweight video/image preload one slide either
+ *  side, the same memory guard as the mobile feed. */
 const SLIDE_VH = 58;
+const COPIES = 3;
 
 function DesktopFeed({
   enabled,
@@ -693,67 +697,92 @@ function DesktopFeed({
   onReady: (key: string) => void;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  // mirrors `active` for the wheel listener; written where it is measured
-  const activeRef = useRef(0);
   const n = entries.length;
+  // `slot` indexes the rendered slides (0 … 3n-1); the entry is slot % n
+  const [slot, setSlot] = useState(n);
+  // mirrors `slot` for the listeners; written where it is measured
+  const slotRef = useRef(n);
+  // where a programmatic scroll is heading; steps chain from it, so a second
+  // press during a slow animation still moves one more card
+  const targetRef = useRef<number | null>(null);
+  const active = slot % n;
 
-  const scrollTo = useCallback((i: number) => {
-    const el = scrollerRef.current?.querySelector<HTMLElement>(`[data-slide="${i}"]`);
-    el?.scrollIntoView({ behavior: "smooth", block: "center" });
-  }, []);
+  const slideH = () => (window.innerHeight * SLIDE_VH) / 100;
 
-  // The active card is the slide nearest the scroller's centre.
+  const scrollToSlot = useCallback((target: number, smooth = true) => {
+    const sc = scrollerRef.current;
+    if (!sc) return;
+    target = Math.max(0, Math.min(COPIES * n - 1, target));
+    targetRef.current = target;
+    sc.scrollTo({ top: target * ((window.innerHeight * SLIDE_VH) / 100), behavior: smooth ? "smooth" : "auto" });
+  }, [n]);
+
+  // Step from the pending target if one is in flight, else from the centre.
+  const step = useCallback((dir: number) => scrollToSlot((targetRef.current ?? slotRef.current) + dir), [scrollToSlot]);
+
+  // Start on the first card of the middle copy, before the first paint.
+  useLayoutEffect(() => {
+    const sc = scrollerRef.current;
+    if (sc) sc.scrollTop = n * slideH();
+  }, [n]);
+
+  // Track the centred slide. When scrolling settles:
+  //  • a mouse-wheel notch (~100px) is less than half a card, so mandatory
+  //    snapping pulls it straight back; if a wheel gesture with clear intent
+  //    settled on the card it started from, finish the step (trackpad flicks
+  //    already land one card on and pass through);
+  //  • in an outer copy, hop to the same card in the middle copy (same pixels,
+  //    nothing visibly moves).
   useEffect(() => {
     const sc = scrollerRef.current;
     if (!sc) return;
     let raf = 0;
+    let settle: ReturnType<typeof setTimeout> | undefined;
+    let wheelFrom = -1;
+    let wheelSum = 0;
     const measure = () => {
       raf = 0;
-      const slide = (window.innerHeight * SLIDE_VH) / 100;
-      const idx = Math.max(0, Math.min(n - 1, Math.round(sc.scrollTop / slide)));
-      activeRef.current = idx;
-      setActive(idx);
+      const s = Math.max(0, Math.min(COPIES * n - 1, Math.round(sc.scrollTop / slideH())));
+      slotRef.current = s;
+      setSlot(s);
+    };
+    const settled = () => {
+      measure();
+      targetRef.current = null;
+      const back = wheelFrom >= 0 && slotRef.current === wheelFrom && Math.abs(wheelSum) >= 60;
+      const dir = Math.sign(wheelSum);
+      wheelFrom = -1;
+      wheelSum = 0;
+      if (back && enabled) {
+        step(dir);
+        return;
+      }
+      const s = slotRef.current;
+      if (s < n || s >= 2 * n) {
+        const mid = n + (s % n);
+        sc.scrollTop += (mid - s) * slideH();
+        slotRef.current = mid;
+        setSlot(mid);
+      }
     };
     const onScroll = () => {
       if (!raf) raf = requestAnimationFrame(measure);
+      if (settle) clearTimeout(settle);
+      settle = setTimeout(settled, 160);
     };
-    measure();
-    sc.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      sc.removeEventListener("scroll", onScroll);
-    };
-  }, [n]);
-
-  // A single mouse-wheel notch (~100px) is less than half a card, so mandatory
-  // snapping would pull it straight back. When a wheel gesture with clear
-  // intent settles on the card it started from, finish the step. Trackpad
-  // flicks already land on the next card and pass through untouched.
-  useEffect(() => {
-    const sc = scrollerRef.current;
-    if (!sc || !enabled) return;
-    let accum = 0;
-    let from = -1;
-    let idle: ReturnType<typeof setTimeout> | undefined;
     const onWheel = (e: WheelEvent) => {
-      if (from < 0) from = activeRef.current;
-      accum += Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      if (idle) clearTimeout(idle);
-      idle = setTimeout(() => {
-        if (activeRef.current === from && Math.abs(accum) >= 60) {
-          scrollTo(Math.max(0, Math.min(n - 1, from + Math.sign(accum))));
-        }
-        accum = 0;
-        from = -1;
-      }, 220);
+      if (wheelFrom < 0) wheelFrom = slotRef.current;
+      wheelSum += Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
     };
+    sc.addEventListener("scroll", onScroll, { passive: true });
     sc.addEventListener("wheel", onWheel, { passive: true });
     return () => {
+      cancelAnimationFrame(raf);
+      if (settle) clearTimeout(settle);
+      sc.removeEventListener("scroll", onScroll);
       sc.removeEventListener("wheel", onWheel);
-      if (idle) clearTimeout(idle);
     };
-  }, [enabled, n, scrollTo]);
+  }, [n, enabled, step]);
 
   // Arrow keys step one card (the scroller isn't focused by default).
   useEffect(() => {
@@ -761,15 +790,23 @@ function DesktopFeed({
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         e.preventDefault();
-        scrollTo(Math.min(n - 1, active + 1));
+        step(1);
       } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
         e.preventDefault();
-        scrollTo(Math.max(0, active - 1));
+        step(-1);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [enabled, active, n, scrollTo]);
+  }, [enabled, step]);
+
+  // The rail jumps to the nearest copy of the chosen card.
+  const jumpToEntry = (i: number) => {
+    const cur = slotRef.current;
+    const base = cur - (cur % n);
+    const options = [base - n + i, base + i, base + n + i].filter((t) => t >= 0 && t < COPIES * n);
+    scrollToSlot(options.reduce((a, b) => (Math.abs(b - cur) < Math.abs(a - cur) ? b : a)));
+  };
 
   return (
     <div className="relative hidden h-full md:block">
@@ -779,23 +816,24 @@ function DesktopFeed({
         ref={scrollerRef}
         className="absolute inset-0 z-10 snap-y snap-mandatory overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
-        {/* half a screen of runway above and below, so the first and last
-            cards can snap to centre too */}
+        {/* half a screen of runway above and below, so every slide can
+            snap to centre */}
         <div aria-hidden style={{ height: `calc(50% - ${SLIDE_VH / 2}vh)` }} />
-        {entries.map((entry, i) => {
-          const dist = Math.abs(i - active);
+        {Array.from({ length: COPIES * n }, (_, s) => {
+          const entry = entries[s % n];
+          const dist = Math.abs(s - slot);
           const isActive = dist === 0;
           const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
           const shouldLoad = enabled && (heavy ? isActive : dist <= 1);
           return (
             <div
-              key={entryKey(entry)}
-              data-slide={i}
+              key={`${Math.floor(s / n)}:${entryKey(entry)}`}
               className="flex snap-center snap-always items-center justify-center"
               style={{ height: `${SLIDE_VH}vh` }}
+              aria-hidden={isActive ? undefined : true}
             >
               <div
-                onClick={() => !isActive && scrollTo(i)}
+                onClick={() => !isActive && scrollToSlot(s)}
                 className="transition-[transform,opacity,filter] duration-500 ease-portfolio"
                 style={{
                   transform: `scale(${isActive ? 1 : 0.66})`,
@@ -809,7 +847,7 @@ function DesktopFeed({
                   entry={entry}
                   shouldLoad={shouldLoad}
                   isActive={isActive}
-                  caption={{ index: i, total: n }}
+                  caption={{ index: s % n, total: n }}
                   onReady={() => onReady(entryKey(entry))}
                 />
               </div>
@@ -822,7 +860,7 @@ function DesktopFeed({
       <SectionRail
         items={entries.map((e) => ({ id: entryKey(e), label: e.title }))}
         active={entryKey(entries[active])}
-        onJump={(id) => scrollTo(entries.findIndex((e) => entryKey(e) === id))}
+        onJump={(id) => jumpToEntry(entries.findIndex((e) => entryKey(e) === id))}
         counter
         labels="hover"
         ariaLabel="Prototypes"

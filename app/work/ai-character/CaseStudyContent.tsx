@@ -243,7 +243,7 @@ function SitePreviewFrame({
         className="h-[min(72vh,780px)] min-h-[420px] w-full border-0 bg-white md:h-[min(68vh,860px)] md:min-h-[560px]"
       />
       <p className="border-t border-black/[0.05] bg-surfaceAlt/30 px-4 py-2.5 font-sans text-[11px] leading-relaxed text-textSecondary md:px-5">
-        If the frame is empty, the host blocks embedding — use Open in browser.
+        If the frame is empty, the host blocks embedding. Use Open in browser.
       </p>
     </div>
   );
@@ -287,7 +287,7 @@ function ImagePlaceholder({ label, src, className = "" }: PlaceholderProps) {
     <button
       type="button"
       onClick={() => open({ src, alt: label })}
-      aria-label={`${label} — view larger`}
+      aria-label={`${label}, view larger`}
       className={`group relative block w-full cursor-zoom-in overflow-hidden ${mediaRound} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2`}
     >
       <img src={src} alt={label} className={`h-auto w-full object-contain transition-transform duration-700 ease-portfolio group-hover:scale-[1.02] ${mediaRound}`} loading="lazy" />
@@ -649,7 +649,7 @@ const additionalShowroomGalleryItems: {
     id: "astrology",
     room: "Astrology Room",
     capability: "Real-time memory updates",
-    body: "A personal constellation file updates during conversation — memory becomes transparent and inspectable. Watching the model assemble you is intrinsically compelling, and visible memory quietly converts into trust.",
+    body: "A personal constellation file updates during conversation: memory becomes transparent and inspectable. Watching the model assemble you is intrinsically compelling, and visible memory quietly converts into trust.",
     prototypeSrc: FEATURE_PROTOTYPES.astroProfile,
     videoCaption: "Your profile rewrites in real time.",
   },
@@ -657,7 +657,7 @@ const additionalShowroomGalleryItems: {
     id: "therapy",
     room: "Therapy Room",
     capability: "Real-time analysis",
-    body: "A live panel surfaces conversation themes — users see what the system understood, not just what it said. Feeling understood is exactly what builds trust and brings people back.",
+    body: "A live panel surfaces conversation themes: users see what the system understood, not just what it said. Feeling understood is exactly what builds trust and brings people back.",
     prototypeSrc: FEATURE_PROTOTYPES.therapyAnalysis,
     videoCaption: "The model's read, visible beside your words.",
   },
@@ -678,7 +678,7 @@ function AdditionalShowroomsGallery() {
           <p className="mt-3 font-sans text-[13px] font-medium leading-snug tracking-wide text-textSecondary/95">{item.capability}</p>
           <p className="mt-3 max-w-prose font-sans text-[16px] leading-[1.65] text-textSecondary">{item.body}</p>
           <FeaturePrototypeEmbed
-            label={`${item.room} — live prototype`}
+            label={`${item.room}: live prototype`}
             src={item.prototypeSrc}
             caption={item.videoCaption}
             className="mt-6"
@@ -746,7 +746,7 @@ function D1BeforeAfter() {
       {/* Before */}
       <div>
         <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
-          Before — Generic chat
+          Before: Generic chat
         </p>
         <div className="overflow-hidden rounded-xl bg-black">
           <video
@@ -756,7 +756,7 @@ function D1BeforeAfter() {
             loop
             playsInline
             preload="metadata"
-            aria-label="Before — static documentation and generic chat"
+            aria-label="Before: static documentation and generic chat"
           >
             <source src="/assets/ai-character/before.mp4" type="video/mp4" />
           </video>
@@ -767,7 +767,7 @@ function D1BeforeAfter() {
       <div>
         <div className="mb-3 flex items-center justify-between">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
-            After —{" "}
+            After:{" "}
             <span className="text-textSecondary/70">{activeRoom.tab} room</span>
           </p>
           <div className="flex items-center gap-1.5">
@@ -829,7 +829,7 @@ const sectionRoot = {
 const sectionPiece = heroItem;
 
 const metaFields = [
-  { label: "Role", value: "Sole UX designer — research to production code" },
+  { label: "Role", value: "Sole UX designer, research to production code" },
   { label: "Timeline", value: "4 weeks · July–August 2025" },
   { label: "Team", value: "Me · 2 supervisors · 2 PM · 1 engineer" },
   {
@@ -1090,7 +1090,7 @@ const innovations: {
     collapsible: true,
     notShipped: true,
     notShippedNote:
-      "Prototyped as an intimacy hook — Moments Feed shipped as the reusable core instead.",
+      "Prototyped as an intimacy hook. Moments Feed shipped as the reusable core instead.",
     name: "Heartbeat Power",
     capability: "Real-time generation + character depth modeling",
     psychology: "Intimacy|Being let into the character's hidden thoughts.",
@@ -1099,7 +1099,7 @@ const innovations: {
     videoCaption: "One tap. What it was actually thinking.",
     detail: (
       <>
-        A tap-to-reveal <Em>inner-monologue card</Em> creates <Em>emotional privilege</Em> — users glimpse the
+        A tap-to-reveal <Em>inner-monologue card</Em> creates <Em>emotional privilege</Em>: users glimpse the
         character&apos;s subtext without breaking the surface illusion.
       </>
     ),
@@ -1109,7 +1109,7 @@ const innovations: {
     collapsible: true,
     notShipped: true,
     notShippedNote:
-      "Prototyped as a progression hook — Moments Feed shipped as the reusable core instead.",
+      "Prototyped as a progression hook. Moments Feed shipped as the reusable core instead.",
     name: "Story Unlock",
     capability: "Progressive memory building",
     psychology: "Progression|An open loop pulls you forward.",
@@ -1118,7 +1118,7 @@ const innovations: {
     videoCaption: "Go deeper. The character opens up.",
     detail: (
       <>
-        <Em>Backstory milestones</Em> unlock through conversation depth — one knowledge base revealing progressively
+        <Em>Backstory milestones</Em> unlock through conversation depth: one knowledge base revealing progressively
         across two interaction layers.
       </>
     ),
@@ -1133,7 +1133,7 @@ const innovations: {
     videoCaption: "It keeps living between sessions.",
     detail: (
       <>
-        <Em>Instagram-style posts</Em> generated from interaction history sustain <Em>off-session presence</Em> — the
+        <Em>Instagram-style posts</Em> generated from interaction history sustain <Em>off-session presence</Em>: the
         character keeps existing between conversations.
       </>
     ),
@@ -1149,10 +1149,10 @@ const innovations: {
     videoCaption: "A scene only your history could trigger.",
     notShipped: true,
     notShippedNote:
-      "Real-time generation requirements were too high for the timeline — designed and prototyped, not shipped.",
+      "Real-time generation requirements were too high for the timeline. Designed and prototyped, not shipped.",
     detail: (
       <>
-        Scenes triggered by <Em>personal history</Em> recontextualize the relationship — variable rewards from real shared context.
+        Scenes triggered by <Em>personal history</Em> recontextualize the relationship: variable rewards from real shared context.
       </>
     ),
   },
@@ -1205,13 +1205,13 @@ function InteractionInnovationList() {
               <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary md:px-6">LLM workflow</p>
               <button
                 type="button"
-                onClick={() => openLightbox({ src: item.workflowSrc, alt: `${item.name} — LLM workflow` })}
-                aria-label={`${item.name} — LLM workflow — view larger`}
+                onClick={() => openLightbox({ src: item.workflowSrc, alt: `${item.name}: LLM workflow` })}
+                aria-label={`${item.name}: LLM workflow, view larger`}
                 className="group relative block w-full cursor-zoom-in overflow-hidden bg-black/[0.02] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-inset"
               >
                 <img
                   src={item.workflowSrc}
-                  alt={`${item.name} — LLM workflow`}
+                  alt={`${item.name}: LLM workflow`}
                   className="h-auto w-full transition-transform duration-700 ease-portfolio group-hover:scale-[1.02]"
                   loading="lazy"
                   decoding="async"
@@ -1284,7 +1284,7 @@ function InteractionInnovationList() {
                       <p className="mt-3 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
                       {item.psychology && (
                         <p className="mt-3 max-w-prose font-sans text-[15px] leading-[1.6] text-textSecondary">
-                          <span className="font-medium text-textPrimary">{item.psychology.split("|")[0]} — </span>{item.psychology.split("|")[1]}
+                          <span className="font-medium text-textPrimary">{item.psychology.split("|")[0]}: </span>{item.psychology.split("|")[1]}
                         </p>
                       )}
                       {item.notShipped && (
@@ -1293,7 +1293,7 @@ function InteractionInnovationList() {
                         </p>
                       )}
                       <FeaturePrototypeEmbed
-                        label={`${item.name} — live prototype`}
+                        label={`${item.name}: live prototype`}
                         src={item.prototypeSrc}
                         caption={item.videoCaption}
                         className="mt-6"
@@ -1321,12 +1321,12 @@ function InteractionInnovationList() {
             <p className="mt-3 max-w-prose text-[16px] leading-[1.65] text-textSecondary">{item.detail}</p>
             {item.psychology && (
               <p className="mt-3 max-w-prose font-sans text-[15px] leading-[1.6] text-textSecondary">
-                <span className="font-medium text-textPrimary">{item.psychology.split("|")[0]} — </span>{item.psychology.split("|")[1]}
+                <span className="font-medium text-textPrimary">{item.psychology.split("|")[0]}: </span>{item.psychology.split("|")[1]}
               </p>
             )}
 
             <FeaturePrototypeEmbed
-              label={`${item.name} — live prototype`}
+              label={`${item.name}: live prototype`}
               src={item.prototypeSrc}
               caption={item.videoCaption}
               className="mt-6"
@@ -1347,7 +1347,7 @@ const uxStrategyShowrooms = [
     capability: "Long-term memory",
     feel: "Character recalls conversation specifics across sessions",
     proofSrc: "/assets/ai-character/ux-strategy-romance-proof.png",
-    proofAlt: "Romance showroom — character moment feed referencing shared history",
+    proofAlt: "Romance showroom: character moment feed referencing shared history",
   },
   {
     id: "astrology",
@@ -1355,7 +1355,7 @@ const uxStrategyShowrooms = [
     capability: "Real-time memory updates",
     feel: "Live constellation profile updates mid-conversation",
     proofSrc: "/assets/ai-character/ux-strategy-astrology-proof.png",
-    proofAlt: "Astrology showroom — zodiac profile field updating as memory writes in chat",
+    proofAlt: "Astrology showroom: zodiac profile field updating as memory writes in chat",
   },
   {
     id: "therapy",
@@ -1363,7 +1363,7 @@ const uxStrategyShowrooms = [
     capability: "Real-time analysis",
     feel: "Expert panel surfaces conversation themes as you chat",
     proofSrc: "/assets/ai-character/ux-strategy-therapy-proof.png",
-    proofAlt: "Therapy showroom — expert analysis panel beside the conversation",
+    proofAlt: "Therapy showroom: expert analysis panel beside the conversation",
   },
 ] as const;
 
@@ -1386,7 +1386,7 @@ function ShowroomStrategyCard({
       <button
         type="button"
         onClick={() => open({ src: proofSrc, alt: proofAlt })}
-        aria-label={`${proofAlt} — view larger`}
+        aria-label={`${proofAlt}, view larger`}
         className="group relative aspect-[10/13] w-full shrink-0 cursor-zoom-in overflow-hidden rounded-2xl bg-black/[0.04] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
       >
         <img
@@ -1441,7 +1441,7 @@ const aiWorkflowStages = [
     accentNum: "#534AB7",
     accentName: "#3C3489",
     toolLines: ["Notion", "Memo", "ChatGPT, Claude"],
-    body: "Synthesized scattered research findings — 6 apps, 40+ user comments — into strategy patterns in one session.",
+    body: "Synthesized scattered research findings (6 apps, 40+ user comments) into strategy patterns in one session.",
   },
   {
     n: "02",
@@ -1719,15 +1719,15 @@ const metricRows = [
   {
     stat: "~2×",
     label: "Model tokens & calls",
-    before: "Generic chat and docs-led trials — 4-week average before launch.",
-    after: "Showroom-led sessions — 4-week average after go-live, same dashboard scope.",
+    before: "Generic chat and docs-led trials: 4-week average before launch.",
+    after: "Showroom-led sessions: 4-week average after go-live, same dashboard scope.",
     note: "Same internal pipeline, pre vs post launch.",
   },
   {
     stat: "87%",
     label: "Clone-to-try setup",
-    before: "~7 steps for B2B evaluators — repo/spec, install, keys, model endpoint, prompt wiring, first run.",
-    after: "Template entry with pre-seeded context and copy-ready YAML/prompt — setup becomes a short checklist.",
+    before: "~7 steps for B2B evaluators: repo/spec, install, keys, model endpoint, prompt wiring, first run.",
+    after: "Template entry with pre-seeded context and copy-ready YAML/prompt. Setup becomes a short checklist.",
     note: "Internal clone-to-try checklist, setup actions only.",
   },
   {
@@ -1822,13 +1822,13 @@ export default function CaseStudyContent() {
         >
           
           <p>
-            <Em>Qwen Character is an LLM API</Em> — teams build their own character products on it, the way they build on Claude. But feeling the model meant configuring, running samples, and reading output alone — a loop that <Em>routinely stretched into hours</Em>, and most trial users left before the moment of value. So I redesigned its site into a <Em>storefront</Em>: a shift from documentation to <Em>proof</Em>.
+            <Em>Qwen Character is an LLM API</Em>: teams build their own character products on it, the way they build on Claude. But feeling the model meant configuring, running samples, and reading output alone, a loop that <Em>routinely stretched into hours</Em>, and most trial users left before the moment of value. So I redesigned its site into a <Em>storefront</Em>: a shift from documentation to <Em>proof</Em>.
           </p>
 
           <blockquote className="my-16 w-full !max-w-none border-l-2 border-nltLime pl-7 not-italic md:my-20 md:pl-8">
             <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">How might we</p>
             <p className="mt-4 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
-              Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em> — within minutes?
+              Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em>, within minutes?
             </p>
           </blockquote>
         </Section>
@@ -1840,7 +1840,7 @@ export default function CaseStudyContent() {
           title="I replaced documentation with market-specific showrooms."
         >
           <p>
-            The showroom strategy came from our PM — a familiar consumer-product play. My leverage was pushing it to its limit and owning the build: rather than improving the documentation, I designed 4 market-specific showrooms — companionship, psychotherapy, character cloning, IP licensing — that let users experience a working version of their own future product. On a 10-person team, <Em>every feature decision across all 4 rooms was mine</Em>, and all of it shipped on the live site. Users don&apos;t believe descriptions, so the first message had to <Em>prove the capability</Em>.
+            The showroom strategy came from our PM, a familiar consumer-product play. My leverage was pushing it to its limit and owning the build: rather than improving the documentation, I designed 4 market-specific showrooms (companionship, psychotherapy, character cloning, IP licensing) that let users experience a working version of their own future product. On a 10-person team, <Em>every feature decision across all 4 rooms was mine</Em>, and all of it shipped on the live site. Users don&apos;t believe descriptions, so the first message had to <Em>prove the capability</Em>.
           </p>
 
           <D1BeforeAfter />
@@ -1853,19 +1853,19 @@ export default function CaseStudyContent() {
           title="I designed each room to prove one capability in 60 seconds."
         >
           <p>
-            Three model strengths crammed into one chat window — none landed. So I split them across rooms: each makes one form of cognition <Em>visible</Em> — <Em>memory</Em>, <Em>analysis</Em>, or <Em>implementation</Em> — with one proof moment legible in 60 seconds, no explainer text.
+            Three model strengths crammed into one chat window: none landed. So I split them across rooms: each makes one form of cognition <Em>visible</Em> (<Em>memory</Em>, <Em>analysis</Em>, or <Em>implementation</Em>) with one proof moment legible in 60 seconds, no explainer text.
           </p>
 
           <UxStrategyShowroomTable />
 
           <p className="pt-2">
-            From here, each feature up close — the <Em>user psychology</Em> it&apos;s built on, and the <Em>model capability</Em> it makes visible.
+            From here, each feature up close: the <Em>user psychology</Em> it&apos;s built on, and the <Em>model capability</Em> it makes visible.
           </p>
 
           <InteractionInnovationList />
 
           <p>
-            I prototyped all four, but <Em>Moments Feed</Em> became the reusable core — not the flashiest, but the one direction that satisfied the most constraints at once. It proves two capabilities in a single surface (<Em>long-term memory</Em> and <Em>real-time reaction</Em>); it&apos;s the most cost-controllable for both model inference and engineering, unlike Alternate Universe&apos;s per-user live generation; it reuses the existing chat layout untouched; it lives in the same <Em>right-side drawer</Em> every showroom already shares; and &ldquo;a moments feed&rdquo; is the most immediate mental model for users. So it became the template the other rooms were built from.
+            I prototyped all four, but <Em>Moments Feed</Em> became the reusable core: not the flashiest, but the one direction that satisfied the most constraints at once. It proves two capabilities in a single surface (<Em>long-term memory</Em> and <Em>real-time reaction</Em>); it&apos;s the most cost-controllable for both model inference and engineering, unlike Alternate Universe&apos;s per-user live generation; it reuses the existing chat layout untouched; it lives in the same <Em>right-side drawer</Em> every showroom already shares; and &ldquo;a moments feed&rdquo; is the most immediate mental model for users. So it became the template the other rooms were built from.
           </p>
 
           <AdditionalShowroomsGallery />
@@ -1875,7 +1875,7 @@ export default function CaseStudyContent() {
               One room, one visual language
             </h3>
             <p className="mt-4 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
-              The showrooms don&apos;t share one skin — each room&apos;s palette, type, and icons follow its emotional theme. The <Em>romance</Em> room borrows from Chinese romance games (<Em>Love and Deepspace</Em>, <Em>Mr Love</Em>): warm dark tones and serif headlines that read as refined and intricate. The <Em>astrology</Em> room uses blue-violet and gold for tarot mystique, with a touch of pink for a girlish note. The <Em>therapy</Em> room — built with a university psychology professor — layers a calming blue over a warm base to stay healing yet rigorous, and pairs a visible analysis panel with a hug icon so that &ldquo;being understood&rdquo; is something you can see.
+              The showrooms don&apos;t share one skin: each room&apos;s palette, type, and icons follow its emotional theme. The <Em>romance</Em> room borrows from Chinese romance games (<Em>Love and Deepspace</Em>, <Em>Mr Love</Em>): warm dark tones and serif headlines that read as refined and intricate. The <Em>astrology</Em> room uses blue-violet and gold for tarot mystique, with a touch of pink for a girlish note. The <Em>therapy</Em> room (built with a university psychology professor) layers a calming blue over a warm base to stay healing yet rigorous, and pairs a visible analysis panel with a hug icon so that &ldquo;being understood&rdquo; is something you can see.
             </p>
           </div>
         </Section>
@@ -1889,12 +1889,12 @@ export default function CaseStudyContent() {
           {/* Pair 1 — both reply nudges in one line, then the prototype that demonstrates them. */}
           <div>
             <p className="max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
-              Two nudges guide users to the <Em>wow moment</Em> without breaking flow: <Em>Inspiration Response</Em> offers three reply options — action, emotion, expression — that feel like gameplay, not messaging; <Em>Continue Response</Em> extends the story from context in one tap, no effort required.
+              Two nudges guide users to the <Em>wow moment</Em> without breaking flow: <Em>Inspiration Response</Em> offers three reply options (action, emotion, expression) that feel like gameplay, not messaging; <Em>Continue Response</Em> extends the story from context in one tap, no effort required.
             </p>
             <FeaturePrototypeEmbed
-              label="Experience loop — inspiration and continue response in flow"
+              label="Experience loop: inspiration and continue response in flow"
               src={FEATURE_PROTOTYPES.inspire}
-              caption="↑ Both live in the romance room — tap a reply option, or continue the story."
+              caption="↑ Both live in the romance room: tap a reply option, or continue the story."
               className="mt-6"
             />
           </div>
@@ -1905,18 +1905,18 @@ export default function CaseStudyContent() {
               Code drawer, not console
             </h3>
             <p className="mt-4 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
-              YAML specs, prompts, and constraints slide open beside the live demo — no context switch. Evaluators inspect the implementation in place, then clone the template as a <Em>reusable starting point</Em> for their own product.
+              YAML specs, prompts, and constraints slide open beside the live demo, no context switch. Evaluators inspect the implementation in place, then clone the template as a <Em>reusable starting point</Em> for their own product.
             </p>
             <FeaturePrototypeEmbed
-              label="Developer tools — romance room code side panel"
+              label="Developer tools: romance room code side panel"
               src={FEATURE_PROTOTYPES.code}
-              caption="↑ Romance room — the YAML and prompt behind the demo, open right there."
+              caption="↑ Romance room: the YAML and prompt behind the demo, open right there."
               className="mt-6"
             />
             <FeaturePrototypeEmbed
-              label="Developer tools — therapy room code side panel"
+              label="Developer tools: therapy room code side panel"
               src={FEATURE_PROTOTYPES.therapyCode}
-              caption="↑ Therapy room — the same code drawer: pipeline spec, prompt, and model config."
+              caption="↑ Therapy room, the same code drawer: pipeline spec, prompt, and model config."
               className="mt-6"
             />
           </div>
@@ -1939,7 +1939,7 @@ export default function CaseStudyContent() {
           <RevealLine className="mt-10" />
 
           <p className="mt-10 max-w-reading font-sans text-[17px] leading-[1.72] tracking-[-0.011em] text-textSecondary/95 md:text-[1.0625rem] md:leading-[1.76]">
-            Inspired by <Em>Love and Deepspace</Em>, I used Wan, Kling, Dreamnia, and SeeDance for visual identity. Interactions built with <Em>Cursor</Em> and <Em>Claude Code</Em> — all in four weeks.
+            Inspired by <Em>Love and Deepspace</Em>, I used Wan, Kling, Dreamnia, and SeeDance for visual identity. Interactions built with <Em>Cursor</Em> and <Em>Claude Code</Em>, all in four weeks.
           </p>
           <div className="grid gap-6 pt-4 md:grid-cols-2 md:gap-8">
             <ImagePlaceholder label="Character design exploration" src="/assets/ai-character/design.jpg" />
@@ -1974,19 +1974,19 @@ export default function CaseStudyContent() {
           title="Full refresh of the Qwen Character SaaS console."
         >
           <p>
-            I delivered an end-to-end update to the Qwen Character admin — spanning <Em>API</Em> surfaces,{" "}
+            I delivered an end-to-end update to the Qwen Character admin, spanning <Em>API</Em> surfaces,{" "}
             <Em>Studio</Em> (Applications, Workflows, Knowledge Base, Characters), and the nested flows underneath.
             That included secondary screens teams rely on in production: empty and error states, and{" "}
             <Em>analytics</Em> views for operational data such as invocation metrics and call volume.
           </p>
           <div className="grid grid-cols-1 gap-8 pt-4 md:grid-cols-2 md:gap-10">
             <ShowcaseVideo
-              label="SaaS console — overview screen recording"
+              label="SaaS console: overview screen recording"
               src="/assets/ai-character/homepage.mov"
-              caption="Updated console overview — API entry and Studio navigation"
+              caption="Updated console overview: API entry and Studio navigation"
             />
-            <ImagePlaceholder label="Studio surfaces — capability and workflow modules" src="/assets/ai-character/updateddesign1.jpg" />
-            <ImagePlaceholder label="Nested flows — detail views and extended configuration" src="/assets/ai-character/updateddesign2.jpg" />
+            <ImagePlaceholder label="Studio surfaces: capability and workflow modules" src="/assets/ai-character/updateddesign1.jpg" />
+            <ImagePlaceholder label="Nested flows: detail views and extended configuration" src="/assets/ai-character/updateddesign2.jpg" />
             <ImagePlaceholder label="Knowledge Base and downstream screens" src="/assets/ai-character/updatedesign3.jpg" />
           </div>
 
@@ -1995,7 +1995,7 @@ export default function CaseStudyContent() {
           </h3>
           <SitePreviewFrame
             eyebrow="Adoption"
-            title="Spark Design templates — adopted B2B design system page"
+            title="Spark Design templates: adopted B2B design system page"
             src="https://sparkdesign.agentscope.io/#/templates"
             href="https://sparkdesign.agentscope.io/#/templates"
           />

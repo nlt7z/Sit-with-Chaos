@@ -783,13 +783,13 @@ export default function StudioEngineCaseStudy() {
             <SectionTitle>&ldquo;I don&apos;t think I&apos;m smart enough for this tool.&rdquo;</SectionTitle>
             <Prose className="mt-14">
               <p>
-                P3 clicked 12 times. Each time the AI returned something different — never closer.
+                P3 clicked 12 times. Each time the AI returned something different, never closer.
                 After the twelfth attempt, she stopped.
               </p>
           
               <p>
-                She is. Studio Engine.ai collapses professional pre-production — script, characters, props,
-                storyboard — into one prompt. The power was real. The mental model assumed expertise most
+                She is. Studio Engine.ai collapses professional pre-production (script, characters, props,
+                storyboard) into one prompt. The power was real. The mental model assumed expertise most
                 users didn&apos;t have.
               </p>
             </Prose>
@@ -797,7 +797,7 @@ export default function StudioEngineCaseStudy() {
               <div className="max-w-[42rem]">
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/65">HMW</p>
                 <p className="mt-4 font-display text-[clamp(1.5rem,3.6vw,2.125rem)] font-light leading-[1.1] tracking-[-0.03em] text-textPrimary">
-                  How might Studio Engine.ai Gen-2 serve both professionals and emerging creators — and
+                  How might Studio Engine.ai Gen-2 serve both professionals and emerging creators, and
                   convert free users to paid?
                 </p>
               </div>
@@ -823,7 +823,7 @@ export default function StudioEngineCaseStudy() {
                 <div className="aspect-[4/3] overflow-hidden bg-white">
                   <Image
                     src="/assets/studio-engine/task-1-2.jpg"
-                    alt="Task 01 — script generation from prompt"
+                    alt="Task 01: script generation from prompt"
                     width={600}
                     height={450}
                     sizes="(max-width: 768px) 100vw, 22vw"
@@ -835,7 +835,7 @@ export default function StudioEngineCaseStudy() {
                     Task 01 · Script
                   </p>
                   <p className="mt-2 text-[13px] leading-snug text-textSecondary">
-                    Script generation — manageable
+                    Script generation: manageable
                   </p>
                   <p className="mt-3 font-mono text-[11px] text-textSecondary/70">5 / 6 completed</p>
                 </div>
@@ -850,7 +850,7 @@ export default function StudioEngineCaseStudy() {
                   <div className="aspect-video overflow-hidden bg-white">
                     <Image
                       src="/assets/studio-engine/task-2-4.jpg"
-                      alt="Task 02 — visual editing, where every session broke down"
+                      alt="Task 02: visual editing, where every session broke down"
                       width={900}
                       height={506}
                       sizes="(max-width: 768px) 100vw, 40vw"
@@ -878,19 +878,19 @@ export default function StudioEngineCaseStudy() {
                   <ul className="mt-4 space-y-2 border-t border-black/[0.05] pt-4">
                     <li className="text-[12px] leading-snug text-textSecondary">
                       <span className="text-textPrimary">AI output unpredictable</span>
-                      {" "}— 6/6 clicked regenerate repeatedly with no convergence; had no way to communicate what was wrong
+                      : 6/6 clicked regenerate repeatedly with no convergence; had no way to communicate what was wrong
                     </li>
                     <li className="text-[12px] leading-snug text-textSecondary">
                       <span className="text-textPrimary">No recovery path</span>
-                      {" "}— 3/6 lost work permanently when regenerating; there was no undo
+                      : 3/6 lost work permanently when regenerating; there was no undo
                     </li>
                     <li className="text-[12px] leading-snug text-textSecondary">
                       <span className="text-textPrimary">Inpainting invisible</span>
-                      {" "}— users found the button but had no mental model for what it would affect or how to use it
+                      : users found the button but had no mental model for what it would affect or how to use it
                     </li>
                     <li className="text-[12px] leading-snug text-textSecondary">
                       <span className="text-textPrimary">4-screen editing path</span>
-                      {" "}— changing a character&apos;s hair required: project overview → character list → character editor → inpainting tool. 6/6 lost context mid-flow
+                      : changing a character&apos;s hair required: project overview → character list → character editor → inpainting tool. 6/6 lost context mid-flow
                     </li>
                   </ul>
                 </div>
@@ -901,7 +901,7 @@ export default function StudioEngineCaseStudy() {
                 <div className="aspect-[4/3] overflow-hidden bg-white">
                   <Image
                     src="/assets/studio-engine/task-3-1.jpg"
-                    alt="Task 03 — storyboard overview and scene refinement"
+                    alt="Task 03: storyboard overview and scene refinement"
                     width={600}
                     height={450}
                     sizes="(max-width: 768px) 100vw, 22vw"
@@ -913,7 +913,7 @@ export default function StudioEngineCaseStudy() {
                     Task 03 · Storyboard
                   </p>
                   <p className="mt-2 text-[13px] leading-snug text-textSecondary">
-                    Storyboard — friction but functional
+                    Storyboard: friction but functional
                   </p>
                   <p className="mt-3 font-mono text-[11px] text-textSecondary/70">4 – 5 / 6 completed</p>
                 </div>
@@ -989,8 +989,8 @@ export default function StudioEngineCaseStudy() {
                 creative workflow so each pattern has a home in the product, not just in the model.
               </p>
               <p>
-                Two layers, one system. The 4-stage pipeline shown at the top — Basics → Outline →
-                Script → Visuals — is the AI generation flow. The 5-area IA below wraps around it: an
+                Two layers, one system. The 4-stage pipeline shown at the top (Basics → Outline →
+                Script → Visuals) is the AI generation flow. The 5-area IA below wraps around it: an
                 entry point (Input), the pipeline itself (Basics, Visuals), and post-generation work
                 (Edit, Manage).
               </p>
@@ -1000,7 +1000,7 @@ export default function StudioEngineCaseStudy() {
           <Reveal className="mt-16 md:mt-20" delay={0.08}>
             <div className="overflow-hidden">
               <iframe
-                title="Workflow comparison — before vs after"
+                title="Workflow comparison: before vs after"
                 src="/assets/studio-engine/before_after_horizontal_workflow_v2.html"
                 className="block w-full border-0"
                 style={{ height: "min(72vh, 820px)", minHeight: "clamp(360px, 50vh, 560px)" }}
@@ -1044,13 +1044,13 @@ export default function StudioEngineCaseStudy() {
             <SectionTitle>Reframe AI: from oracle to collaborator</SectionTitle>
             <Prose className="mt-14">
               <p>
-                6/6 participants encountered AI outputs they couldn&apos;t steer — the study&apos;s
+                6/6 participants encountered AI outputs they couldn&apos;t steer, the study&apos;s
                 highest-severity finding. The product gave one output and waited for acceptance. If
                 it was wrong, the only option was to regenerate and hope.
               </p>
               <p>
                 Gen-2 makes two structural changes. Visual generation is gated behind a{" "}
-                <span className="text-textPrimary">script checkpoint</span> — users
+                <span className="text-textPrimary">script checkpoint</span>: users
                 review and commit the script before any images run, so a bad prompt doesn&apos;t
                 cascade into dozens of wrong assets. When visuals do generate, the interface returns{" "}
                 <span className="text-textPrimary">three variations at once</span>:
@@ -1064,11 +1064,11 @@ export default function StudioEngineCaseStudy() {
             <div className="mt-14">
               <FlowMacBookPair
                 leftSrc="/assets/studio-engine/problem1.jpg"
-                leftAlt="Before state — one output per generation"
+                leftAlt="Before state: one output per generation"
                 rightSrc="/assets/studio-engine/solution-1-1.jpg"
-                rightAlt="After state — multi-option visual selection"
-                leftCaption="Before: one output per generation — accept or restart."
-                rightCaption="After: 3 variations at once — pick, iterate, or save to history."
+                rightAlt="After state: multi-option visual selection"
+                leftCaption="Before: one output per generation. Accept or restart."
+                rightCaption="After: 3 variations at once. Pick, iterate, or save to history."
                 imageWidth={1000}
                 imageHeight={720}
               />
@@ -1083,21 +1083,21 @@ export default function StudioEngineCaseStudy() {
             <SectionTitle>Make generation reversible</SectionTitle>
             <Prose className="mt-14">
               <p>
-                3/6 participants lost work to regeneration with no undo. A <span className="text-textPrimary">generation history panel</span> saves every output — return, compare, or recover at any point.
+                3/6 participants lost work to regeneration with no undo. A <span className="text-textPrimary">generation history panel</span> saves every output: return, compare, or recover at any point.
               </p>
             </Prose>
             <ParticipantQuote
               quote="How can you return to an old version of an image?"
-              attr="P4 — after losing a preferred generation"
+              attr="P4, after losing a preferred generation"
             />
             <div className="mt-14">
               <FlowMacBookPair
                 leftSrc="/assets/studio-engine/problem-2-1.png"
-                leftAlt="Problem — lost previous version after regenerate"
+                leftAlt="Problem: lost previous version after regenerate"
                 rightSrc="/assets/studio-engine/solution-2.jpg"
-                rightAlt="Solution — revision trail and recovery"
+                rightAlt="Solution: revision trail and recovery"
                 leftCaption="Before: regeneration overwrote previous work with no way back."
-                rightCaption="After: every generation is saved — return, compare, or recover at any point."
+                rightCaption="After: every generation is saved. Return, compare, or recover at any point."
                 imageWidth={1000}
                 imageHeight={700}
                 deviceFrame={false}
@@ -1113,15 +1113,15 @@ export default function StudioEngineCaseStudy() {
             <SectionTitle>Bring editing onto one surface</SectionTitle>
             <Prose className="mt-14">
               <p>
-                Character editing required 4+ screen transitions. Only <span className="text-textPrimary">2/6 completed it</span> — the study&apos;s lowest success rate. A consolidated panel puts generation, inpainting, and history on one surface.
+                Character editing required 4+ screen transitions. Only <span className="text-textPrimary">2/6 completed it</span>, the study&apos;s lowest success rate. A consolidated panel puts generation, inpainting, and history on one surface.
               </p>
             </Prose>
             <div className="mt-14">
               <FlowMacBookPair
                 leftSrc="/assets/studio-engine/problem-3.png"
-                leftAlt="Problem — fragmented editing across pages"
+                leftAlt="Problem: fragmented editing across pages"
                 rightSrc="/assets/studio-engine/edit-after.jpg"
-                rightAlt="Solution — consolidated editing panel"
+                rightAlt="Solution: consolidated editing panel"
                 leftCaption="Before: visual editing was split across multiple pages."
                 rightCaption="After: generation, inpainting, references, and history live in one workspace."
                 imageWidth={1000}
@@ -1164,7 +1164,7 @@ export default function StudioEngineCaseStudy() {
               <p>
                 We did not get to A/B the redesign in production before I left the engagement, so I
                 can&apos;t claim a conversion or retention number. What I would track in the next
-                round — and what success would look like — is below.
+                round, and what success would look like, is below.
               </p>
             </Prose>
           </Reveal>
@@ -1177,13 +1177,13 @@ export default function StudioEngineCaseStudy() {
                     metric: "Visual editing completion",
                     baseline: "33–50% (study)",
                     target: "≥ 80%",
-                    note: "T3 / T4 in the usability study — the lowest-success tasks.",
+                    note: "T3 / T4 in the usability study, the lowest-success tasks.",
                   },
                   {
                     metric: "Regenerations per asset",
                     baseline: "Not tracked",
                     target: "Trending down over a session",
-                    note: "A proxy for convergence — users getting closer, not just trying again.",
+                    note: "A proxy for convergence: users getting closer, not just trying again.",
                   },
                   {
                     metric: "History panel adoption",
@@ -1245,7 +1245,7 @@ export default function StudioEngineCaseStudy() {
         <section id="reflection" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal className="mt-24 md:mt-32" delay={0.04}>
             <Eyebrow>Reflection</Eyebrow>
-            <SectionTitle>What I would do differently — and push next</SectionTitle>
+            <SectionTitle>What I would do differently, and push next</SectionTitle>
             <Prose className="mt-10">
               <p>
                 The framework holds, but three things stand out when I look back at the study and
@@ -1260,11 +1260,11 @@ export default function StudioEngineCaseStudy() {
                 },
                 {
                   t: "What I’d test first",
-                  d: "Gen-2 prototypes with 6–8 new participants, focused on the visual-editing flow (the 33% completion drop). Then a 4–6 week longitudinal study — moving from “can I complete this?” to “does this tool grow with me?”",
+                  d: "Gen-2 prototypes with 6–8 new participants, focused on the visual-editing flow (the 33% completion drop). Then a 4–6 week longitudinal study, moving from “can I complete this?” to “does this tool grow with me?”",
                 },
                 {
                   t: "What I’d push next: Ask Genie",
-                  d: "Hover tooltips were a temporary scaffold, not a teaching system. The next step is an agent layer that watches user actions, explains tools like Inpainting in the moment, and proactively suggests the right control pattern — embedded in the editor, not a chat box beside it.",
+                  d: "Hover tooltips were a temporary scaffold, not a teaching system. The next step is an agent layer that watches user actions, explains tools like Inpainting in the moment, and proactively suggests the right control pattern, embedded in the editor, not a chat box beside it.",
                 },
               ].map((x) => (
                 <HoverPanel

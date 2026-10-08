@@ -277,7 +277,7 @@ const FACTS = [
 ] as const;
 
 const BRIEF = [
-  "Liner is an AI-powered research tool that supports deep research. It helps you discover, analyze, and organize scholarly content through AI-assisted search, citation, and synthesis. It has 12M+ users and ranks in the top 20 web AIs (a16z), but it’s built for one person. Research rarely happens alone, so Liner briefed us to design that collaborative layer — a business bet with three goals: introduce a new interaction pattern, open a new team audience, and give existing users a broader reason to stay — all without diluting the fast, private AI experience people already rely on.",
+  "Liner is an AI-powered research tool that supports deep research. It helps you discover, analyze, and organize scholarly content through AI-assisted search, citation, and synthesis. It has 12M+ users and ranks in the top 20 web AIs (a16z), but it’s built for one person. Research rarely happens alone, so Liner briefed us to design that collaborative layer, a business bet with three goals: introduce a new interaction pattern, open a new team audience, and give existing users a broader reason to stay, all without diluting the fast, private AI experience people already rely on.",
   "In the early phase, the questions we most wanted to answer were: how are researchers actually using AI today? Where does collaboration break down? And how do people want to work together? To answer them, I ran an expert interview, a competitive analysis, and 2 rounds of user interviews.",
 ] as const;
 
@@ -322,7 +322,7 @@ const FINDINGS = [
   },
   {
     title: "Coordination falls on one person",
-    body: "Nudging, follow-ups, and accountability are where team collaboration actually stalls — and it all lands on whoever volunteers to coordinate.",
+    body: "Nudging, follow-ups, and accountability are where team collaboration actually stalls, and it all lands on whoever volunteers to coordinate.",
     pain: "Chasing people, tracking who owes what, and keeping status current happens off-platform, so one person carries it and momentum stalls between meetings. This is the load we later hand to AI.",
     quote: "",
     cite: "",
@@ -367,9 +367,9 @@ const ITERATIONS = [
     poster: "/assets/liner/ideation/v2-group-topbar.png",
     manual: true,
     title: "Group gets its own panel",
-    body: "User-testing v1 surfaced the problem that drove v2: a team doesn’t want another chat stream, it wants reviewed knowledge. So v2 brings the team in — the Group Chat moves out to its own far-right panel, and it fills with structured knowledge cards, not chat. Each card carries its content, its citation, and a confidence signal, and teammates react and reply on it. Files, Editor, AI Chat, and Group open together.",
+    body: "User-testing v1 surfaced the problem that drove v2: a team doesn’t want another chat stream, it wants reviewed knowledge. So v2 brings the team in: the Group Chat moves out to its own far-right panel, and it fills with structured knowledge cards, not chat. Each card carries its content, its citation, and a confidence signal, and teammates react and reply on it. Files, Editor, AI Chat, and Group open together.",
     show: "Open the Group panel to see the knowledge cards.",
-    call: "The call here: make Group a space for reviewed knowledge. We took it too far — cards-only left no room to talk — and later brought a team conversation back alongside the cards.",
+    call: "The call here: make Group a space for reviewed knowledge. We took it too far (cards-only left no room to talk) and later brought a team conversation back alongside the cards.",
   },
   {
     id: "v3",
@@ -377,7 +377,7 @@ const ITERATIONS = [
     frame: "/assets/liner/prototypes/v3-workspace.html",
     manual: false,
     title: "A workspace, and composable editor modes",
-    body: "v3 adds the workspace you land on before any doc, with milestones, tasks, teammates, and connected tools. In the editor, Citation ties each paragraph to its source, and Focus clears the panels for writing. That same select-to-reveal idea shaped the chat, which I explored as 3 layouts. Up to here, v1 and v2 were about direction, not craft — rough, vibe-coded prototypes to see whether an idea held. v3 is where I shifted to polish: I connected Figma MCP and generated this prototype straight from Liner’s design system, so it matches the real product instead of approximating it.",
+    body: "v3 adds the workspace you land on before any doc, with milestones, tasks, teammates, and connected tools. In the editor, Citation ties each paragraph to its source, and Focus clears the panels for writing. That same select-to-reveal idea shaped the chat, which I explored as 3 layouts. Up to here, v1 and v2 were about direction, not craft: rough, vibe-coded prototypes to see whether an idea held. v3 is where I shifted to polish: I connected Figma MCP and generated this prototype straight from Liner’s design system, so it matches the real product instead of approximating it.",
     show: "Try switching editor modes, then the workspace and chat layouts.",
     call: "The call here: a workspace before the doc, and a hard split between private and shared, rather than one feed with a privacy toggle.",
   },
@@ -438,7 +438,7 @@ const WALK_V2: Scene[] = [
   {
     scene: "group",
     label: "Group",
-    title: "Cards only — the bet we revised",
+    title: "Cards only: the bet we revised",
     body: "v2 went all-in on structure: no free-text box, so the team could only post cards and never see raw AI output. It kept knowledge clean, but it also cut the ordinary back-and-forth teams live on. We brought the conversation back in the final build.",
   },
 ];
@@ -465,7 +465,7 @@ const WALK_V3: Scene[] = [
     scene: "group",
     label: "Group",
     title: "The group’s AI: only the updates that touch you",
-    body: "The update cards above are every card and message in the group thread — the team view. The Liner AI bot, meanwhile, briefs you in the thread with just the updates relevant to you — the personalized view. Team and individual, layered in one Group line.",
+    body: "The update cards above are every card and message in the group thread: the team view. The Liner AI bot, meanwhile, briefs you in the thread with just the updates relevant to you: the personalized view. Team and individual, layered in one Group line.",
   },
 ];
 const WALKS: Record<string, Scene[]> = { v1: WALK_V1, v2: WALK_V2, v3: WALK_V3 };
@@ -504,8 +504,8 @@ const WALKTHROUGH: Scene[] = [
     stage: "01 · Set up",
     label: "Workspace",
     title: "The project workspace",
-    body: "Every project opens on a workspace: tasks, teammates, and connected resources like Google Drive and Zotero. Liner AI assigns the task cards across the team — and takes some itself, quietly owning citation-checking and keeping the group digest current.",
-    why: "Coordination used to fall on one person. Here AI carries it in the background, so nobody has to chase status — and the workspace makes Liner the team’s shared home, not a tool off to the side.",
+    body: "Every project opens on a workspace: tasks, teammates, and connected resources like Google Drive and Zotero. Liner AI assigns the task cards across the team, and takes some itself, quietly owning citation-checking and keeping the group digest current.",
+    why: "Coordination used to fall on one person. Here AI carries it in the background, so nobody has to chase status, and the workspace makes Liner the team’s shared home, not a tool off to the side.",
   },
   // ── 02 · Explore (work alone) ────────────────────────────────
   {
@@ -521,7 +521,7 @@ const WALKTHROUGH: Scene[] = [
     label: "Left · sources",
     title: "TLDR on each source",
     body: "Hover any source and its TLDR pops inline, so you can triage what deserves a full read without opening a thing.",
-    why: "Explore means fast triage — decide which paper is worth the time first.",
+    why: "Explore means fast triage: decide which paper is worth the time first.",
   },
   {
     scene: "selection",
@@ -535,7 +535,7 @@ const WALKTHROUGH: Scene[] = [
     label: "Editor · focus",
     title: "Focus mode for writing",
     body: "One click clears the panels for distraction-free drafting. The citation and comment layers stay composable.",
-    why: "Exploration is solo work — so drafting gets its own quiet room, borrowed from the reading modes.",
+    why: "Exploration is solo work, so drafting gets its own quiet room, borrowed from the reading modes.",
   },
   // ── 03 · Curate (promote a conclusion you stand behind) ──────
   {
@@ -543,8 +543,8 @@ const WALKTHROUGH: Scene[] = [
     stage: "03 · Curate",
     label: "Editor · citations",
     title: "Every claim traces to its source",
-    body: "Turn citations on and each claim carries a marker. Hover to see the quote and source; click through to open the original and land on the exact passage — the claim in its full context, not a stripped snippet.",
-    why: "Curation means promoting a conclusion you can stand behind — so its source travels with it, checkable in place, not taken on faith.",
+    body: "Turn citations on and each claim carries a marker. Hover to see the quote and source; click through to open the original and land on the exact passage: the claim in its full context, not a stripped snippet.",
+    why: "Curation means promoting a conclusion you can stand behind, so its source travels with it, checkable in place, not taken on faith.",
   },
   {
     scene: "share",
@@ -559,31 +559,31 @@ const WALKTHROUGH: Scene[] = [
     stage: "04 · Align",
     label: "Editor · review",
     title: "Verify, question, or revise",
-    body: "Verification stays human. Open a margin comment, read the claim against the passage it came from, and mark it Verified — a named, visible state that means “I checked this against its source and I stand behind sharing it.” The click-through makes that cheap to do.",
-    why: "Teams asked for a signal that a human reviewed the output — “I don’t trust it as a final output, but it helps me get the thinking going” (P5) — so a person, not the model, owns Verified.",
+    body: "Verification stays human. Open a margin comment, read the claim against the passage it came from, and mark it Verified: a named, visible state that means “I checked this against its source and I stand behind sharing it.” The click-through makes that cheap to do.",
+    why: "Teams asked for a signal that a human reviewed the output: “I don’t trust it as a final output, but it helps me get the thinking going” (P5), so a person, not the model, owns Verified.",
   },
   {
     scene: "group",
     label: "Right · the group",
     title: "Cards and conversation, together",
-    body: "The Group Chat mixes reviewed knowledge cards with a real conversation, plus the AI’s background digest that walks in to brief you on what changed while you were away — which sections were edited, where your review is needed, and what new sources have landed for you to read. Two input boxes, two intents: the AI box is for prompting the assistant; the group box is for talking to your teammates.",
-    why: "v2’s cards-only was too rigid. Teams need to talk — so structure and conversation live side by side, aligning on what’s been reviewed.",
+    body: "The Group Chat mixes reviewed knowledge cards with a real conversation, plus the AI’s background digest that walks in to brief you on what changed while you were away: which sections were edited, where your review is needed, and what new sources have landed for you to read. Two input boxes, two intents: the AI box is for prompting the assistant; the group box is for talking to your teammates.",
+    why: "v2’s cards-only was too rigid. Teams need to talk, so structure and conversation live side by side, aligning on what’s been reviewed.",
   },
 ];
 
 // The small map: every pain we found in research, and the move in the build that answers it.
 const FINDING_ANSWERS = [
-  ["Sharing has boundaries", "A private AI chat, then a deliberate Share-to-group — your prompt stays yours by default."],
+  ["Sharing has boundaries", "A private AI chat, then a deliberate Share-to-group: your prompt stays yours by default."],
   ["The workflow is fragmented", "Sources, your draft, and the AI all live on one surface, so nothing has to move between tools."],
   ["Revision state is invisible", "Margin Comments plus a human-owned Verified state, and author colours showing who wrote what."],
-  ["Coordination falls on one person", "AI runs in the background — it assigns tasks, checks every citation, and keeps the group digest current."],
+  ["Coordination falls on one person", "AI runs in the background: it assigns tasks, checks every citation, and keeps the group digest current."],
   ["Liner is a personal tool", "A project workspace makes Liner the team’s shared home, not a tool off to the side."],
 ] as const;
 
 // How we'd know the collaboration bet paid off — the metrics I'd instrument.
 const METRICS = [
   ["Share-to-group rate", "New interaction pattern", "Share of private AI answers a person curates into the shared space. The single clearest signal that the private → shared handoff is working."],
-  ["Invite rate", "New team audience", "Share of projects where someone pulls a teammate in — the product’s own growth loop, and the path to the new audience."],
+  ["Invite rate", "New team audience", "Share of projects where someone pulls a teammate in, the product’s own growth loop, and the path to the new audience."],
   ["Team activation", "New team audience", "Projects created with more than one member. Does collaboration actually get switched on, or does Liner stay a solo tool?"],
   ["Feature-led upgrades", "A reason to stay", "Subscriptions and upgrades attributable to the collaboration features. Whether the new pattern converts, not just engages."],
 ] as const;
@@ -591,7 +591,7 @@ const METRICS = [
 const FUTURE = [
   [
     "Close the loop back to the doc",
-    "Testing surfaced the question I keep returning to: if I share a new idea into the group thread, how does it get back into the paper — and who does it? Sharing to Group can’t be the endpoint. The real goal is the shared insight acting back on the original text, and that flow is the next thing to design.",
+    "Testing surfaced the question I keep returning to: if I share a new idea into the group thread, how does it get back into the paper, and who does it? Sharing to Group can’t be the endpoint. The real goal is the shared insight acting back on the original text, and that flow is the next thing to design.",
   ],
   [
     "Onboard the split",
@@ -819,7 +819,7 @@ export default function LinerScholarCaseStudy() {
             <Title className="mt-5">Liner Collective Intelligence</Title>
             <Lead className="mt-6">
               <p>
-                Today, everything Liner’s AI generates already traces back to its cited sources — the AI is
+                Today, everything Liner’s AI generates already traces back to its cited sources: the AI is
                 accountable on its own. In a team, that isn’t enough.
               </p>
               <p>
@@ -830,9 +830,9 @@ export default function LinerScholarCaseStudy() {
               </p>
               <p>
                 This reframe was mine to make, and it came straight from the research: the real friction in a team
-                isn’t the work itself — it’s that one person always ends up doing the glue work, the invisible
+                isn’t the work itself: it’s that one person always ends up doing the glue work, the invisible
                 coordination labour that holds the group together. So in the team context, I recast AI’s role: it’s no
-                longer a chat partner or a teammate persona — it’s a <span className="text-textPrimary">background</span>. It
+                longer a chat partner or a teammate persona: it’s a <span className="text-textPrimary">background</span>. It
                 posts the group digest, keeps every citation checked, and takes over the coordination that used to fall
                 on one person. It never drafts or decides in your place; it absorbs the busywork so the humans can do
                 the judgment.
@@ -927,7 +927,7 @@ export default function LinerScholarCaseStudy() {
                       <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">Final pick · Plan B + C</p>
                       <p className="mt-2 text-[15px] leading-[1.65] text-textSecondary">
                         The AI-and-Group Chat was mine to own, and I designed it by carrying the editor’s own gesture
-                        across: the same select-to-reveal from v3’s Focus and Citation modes now drives the chat — you
+                        across: the same select-to-reveal from v3’s Focus and Citation modes now drives the chat: you
                         select one panel or both. Testing settled it. People wanted both threads readable at once, since
                         the content comes from the left and they wanted to see more of it. Selecting either panel on its
                         own, or both side by side, kept the private-to-shared move continuous instead of a hard switch.
@@ -941,7 +941,7 @@ export default function LinerScholarCaseStudy() {
                       <PrototypeWalkthrough
                         src={PROTO_SRC}
                         scenes={CHAT_SWITCH}
-                        title="Liner — AI Chat and Group Chat switching"
+                        title="Liner: AI Chat and Group Chat switching"
                       />
                     </div>
                   </div>
@@ -958,7 +958,7 @@ export default function LinerScholarCaseStudy() {
             <Title className="mt-5">The decisions, made real</Title>
             <Lead className="mt-6">
               <p>
-                The editor is the part I owned. We refused to build “Google Docs with comments” — the industry default
+                The editor is the part I owned. We refused to build “Google Docs with comments”: the industry default
                 answers none of the pains researchers named. So every pain got a direct move, and the build runs them in
                 the order the journey does: <span className="text-textPrimary">set up, explore, curate, align</span>.
               </p>
@@ -1001,7 +1001,7 @@ export default function LinerScholarCaseStudy() {
                 />
               </div>
               <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
-                <span className="text-textSecondary/80">Everything composed —</span>
+                <span className="text-textSecondary/80">Everything composed:</span>
                 {["Citation", "Comments", "Authors", "Focus", "Share-to-group"].map((t) => (
                   <span
                     key={t}
@@ -1032,7 +1032,7 @@ export default function LinerScholarCaseStudy() {
                 <figure className="overflow-hidden rounded-[14px] ring-1 ring-black/[0.08]">
                   <Image
                     src="/assets/liner/Screenshot 2026-07-05 at 01.57.00.png"
-                    alt="Section A Capstone Award — Feature integration and platform evolution with AI, Team North4Studio."
+                    alt="Section A Capstone Award: Feature integration and platform evolution with AI, Team North4Studio."
                     width={1305}
                     height={1329}
                     className="h-auto w-full"
@@ -1040,17 +1040,17 @@ export default function LinerScholarCaseStudy() {
                 </figure>
                 <div className="space-y-3 text-[16px] leading-[1.65] text-textSecondary">
                   <p>
-                    We validated the flow through usability testing — and it also handed us the finding I didn’t want to
+                    We validated the flow through usability testing, and it also handed us the finding I didn’t want to
                     hear: once people shared a new idea into the group, they immediately asked how it gets back into the
                     paper, and who does it. Sharing wasn’t the finish line they’d assumed it was. That reframed a whole
                     future direction rather than a detail, and I’d rather show it than hide it.
                   </p>
                   <p>
                     Refinement was as much craft as concept. The team produced many separate options; my job was to fold
-                    them into one coherent system — which meant holding the whole thing in view at once (how Citation,
+                    them into one coherent system, which meant holding the whole thing in view at once (how Citation,
                     Comments, Authors, and Focus compose, and where they’d collide) while restoring each screen to the
-                    pixel. I connected Figma MCP and generated the prototype straight from Liner’s design system — the
-                    serif display, highlighter accents, the dotted-line citation motif — so it reads as part of the
+                    pixel. I connected Figma MCP and generated the prototype straight from Liner’s design system (the
+                    serif display, highlighter accents, the dotted-line citation motif) so it reads as part of the
                     product, not a mock beside it.
                   </p>
                   <p>It shipped as a working prototype with a feature-level specification.</p>
@@ -1087,8 +1087,8 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.02}>
             <dl className="grid gap-8 border-t border-black/[0.08] pt-8 sm:grid-cols-3 sm:gap-10">
               {([
-                ["Jul 2026", "On the roadmap", "Liner is taking the collaborative workflow into the product — launch expected July 2026."],
-                ["3 features", "Chosen to carry forward", "Focus mode, citations, and share-to-group — the collaboration-native ones stakeholders kept."],
+                ["Jul 2026", "On the roadmap", "Liner is taking the collaborative workflow into the product. Launch expected July 2026."],
+                ["3 features", "Chosen to carry forward", "Focus mode, citations, and share-to-group: the collaboration-native ones stakeholders kept."],
                 ["Capstone Award", "Section A", "Jury recognition for feature integration and platform evolution with AI."],
               ] as const).map(([v, label, text]) => (
                 <div key={label}>
@@ -1116,8 +1116,8 @@ export default function LinerScholarCaseStudy() {
               <Subhead>How we’d know it worked</Subhead>
               <p className="mt-3 max-w-2xl text-[15px] leading-[1.65] text-textSecondary/80">
                 It shipped as a prototype, so these are the metrics I’d instrument at launch rather than results. Each
-                maps back to a goal in the brief — a new interaction pattern, a new team audience, a broader reason to
-                stay — because the bet is only real if it moves them, not just demos well.
+                maps back to a goal in the brief (a new interaction pattern, a new team audience, a broader reason to
+                stay), because the bet is only real if it moves them, not just demos well.
               </p>
               <dl className="mt-6 grid gap-x-8 gap-y-6 border-t border-black/[0.08] pt-6 sm:grid-cols-2">
                 {METRICS.map(([label, goal, text]) => (

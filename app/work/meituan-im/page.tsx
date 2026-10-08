@@ -269,7 +269,7 @@ function LiveFlowPhone({
         >
           <iframe
             src={`/assets/meituan-im/interaction-flow-phone.html#flow=${flow}&rail=0`}
-            title={`${label} — live interactive flow`}
+            title={`${label}: live interactive flow`}
             loading="lazy"
             style={{
               width: NATURAL_W,
@@ -628,7 +628,7 @@ export default function MeituanImCaseStudyPage() {
             <PrototypeReveal>
               <ScaledPrototypeFrame
                 src="/assets/meituan-im/Revised%20Repair%20Flow.html"
-                title="Repair flow — interactive prototype"
+                title="Repair flow: interactive prototype"
                 naturalWidth={480}
                 naturalHeight={1080}
                 displayMaxWidth={480}
@@ -738,7 +738,7 @@ export default function MeituanImCaseStudyPage() {
           <FadeIn className="mt-10">
             <ScaledPrototypeFrame
               src="/assets/meituan-im/Revised%20Repair%20Flow.html#flow=merchant&rail=0"
-              title="Merchant quote desk — interactive prototype"
+              title="Merchant quote desk: interactive prototype"
               naturalWidth={1110}
               naturalHeight={820}
               displayMaxWidth={1000}
@@ -759,7 +759,7 @@ export default function MeituanImCaseStudyPage() {
               <figure>
                 <ScaledPrototypeFrame
                   src="/assets/meituan-im/Revised%20Repair%20Flow.html#flow=cat-litter&rail=0&seek=1"
-                  title="Self-serve path — live prototype"
+                  title="Self-serve path: live prototype"
                   naturalWidth={480}
                   naturalHeight={1000}
                   displayMaxWidth={360}
@@ -823,7 +823,7 @@ export default function MeituanImCaseStudyPage() {
                 <figure>
                   <ScaledPrototypeFrame
                     src="/assets/meituan-im/Revised%20Repair%20Flow.html#flow=ai-agent&rail=0&seek=1"
-                    title="AI-agent workflow — live prototype"
+                    title="AI-agent workflow: live prototype"
                     naturalWidth={480}
                     naturalHeight={1000}
                     displayMaxWidth={360}
