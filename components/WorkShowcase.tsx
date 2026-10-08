@@ -17,6 +17,8 @@ import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 
+import { revealProps } from "@/lib/motion";
+
 type Media = { kind: "video"; src: string; poster: string } | { kind: "image"; src: string };
 
 type Project = {
@@ -175,20 +177,10 @@ function BrandMark({ src }: { src: string }) {
   return <img src={src} alt="" aria-hidden className="h-4 w-4 object-contain brightness-0 invert" />;
 }
 
-const reveal = (reduced: boolean, delay = 0) =>
-  reduced
-    ? {}
-    : {
-        initial: { opacity: 0, y: 28 },
-        whileInView: { opacity: 1, y: 0 },
-        viewport: { once: true, margin: "-12% 0px" },
-        transition: { duration: 0.8, ease: [0.25, 0.1, 0.25, 1] as const, delay },
-      };
-
 function Feature({ project, reduced }: { project: Project; reduced: boolean }) {
   const { handlers, arrow } = useCursorArrow();
   return (
-    <motion.article {...reveal(reduced)} className="relative">
+    <motion.article {...revealProps(reduced)} className="relative">
       <Link
         href={`/work/${project.slug}`}
         className="group relative block rounded-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
@@ -226,7 +218,7 @@ function Feature({ project, reduced }: { project: Project; reduced: boolean }) {
 function Tile({ project, reduced, delay }: { project: Project; reduced: boolean; delay: number }) {
   const { handlers, arrow } = useCursorArrow();
   return (
-    <motion.article {...reveal(reduced, delay)} className="relative">
+    <motion.article {...revealProps(reduced, delay)} className="relative">
       <Link
         href={`/work/${project.slug}`}
         className="group relative block rounded-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
@@ -263,7 +255,7 @@ export function WorkShowcase() {
   const reduced = !!useReducedMotion();
   return (
     <section aria-label="Selected projects" className="relative mx-auto w-full max-w-[1160px] px-6 pb-28 pt-16 md:px-10 md:pt-16">
-      <motion.p {...reveal(reduced)} className="font-mono text-[12px] uppercase tracking-[0.18em] text-nltLime">
+      <motion.p {...revealProps(reduced)} className="font-mono text-[12px] uppercase tracking-[0.18em] text-nltLime">
         Selected work
       </motion.p>
 

@@ -2,7 +2,7 @@
 
 import { MacBookFrame } from "@/components/MacBookFrame";
 import { Footer } from "@/components/Footer";
-import { Nav } from "@/components/Nav";
+import { SideRail } from "@/components/bento/SideRail";
 import {
   AnimatePresence,
   motion,
@@ -10,18 +10,17 @@ import {
   useMotionTemplate,
   useMotionValue,
   useReducedMotion,
-  useScroll,
   useSpring,
-  useTransform,
 } from "framer-motion";
 import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
-import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
+import { CaseStudyToc } from "@/components/SectionRail";
+import { Reveal } from "@/components/Reveal";
+import { EASE, EMPHASIS, REVEAL } from "@/lib/motion";
 
-/** Hover / micro-interaction ease */
-const easePremium = [0.16, 1, 0.3, 1] as const;
-/** Section reveals — slower deceleration, more premium */
-const easeLux = [0.22, 1, 0.36, 1] as const;
+// one curve site-wide (lib/motion); the aliases keep the call sites readable
+const easePremium = EASE;
+const easeLux = EASE;
 
 const caseNavItems = [
   { id: "overview", label: "Overview" },
@@ -74,126 +73,6 @@ function CaseStudyAmbientGlow() {
       className="pointer-events-none fixed inset-0 z-[1]"
       style={{ background }}
     />
-  );
-}
-
-function CaseStudySectionNav() {
-  const [active, setActive] = useState("overview");
-
-  useEffect(() => {
-    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
-    if (hash && caseNavItems.some((i) => i.id === hash)) setActive(hash);
-  }, []);
-
-  useEffect(() => {
-    const els = caseNavItems.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const hit = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (hit?.target.id) setActive(hit.target.id);
-      },
-      { rootMargin: "-38% 0px -38% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <nav
-      aria-label="Case study sections"
-      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-full w-[12rem] lg:block"
-    >
-      <div className="pointer-events-auto sticky top-[calc(50vh-10rem)] px-5 pt-40">
-        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">
-          On this page
-        </p>
-        <ul className="mt-5 max-h-[min(60vh,28rem)] space-y-0 overflow-y-auto overscroll-contain pr-1">
-          {caseNavItems.map(({ id, label }) => (
-            <li key={id}>
-              <a
-                href={`#${id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  setActive(id);
-                }}
-                className={`block border-l-[1.5px] border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
-                  active === id
-                    ? "border-nltLime font-medium text-textPrimary"
-                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-nltLime/40 hover:text-textPrimary"
-                }`}
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
-  );
-}
-
-function Reveal({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-12% 0px" });
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={reduce ? false : { opacity: 0, y: 26 }}
-      animate={inView || reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 26 }}
-      transition={{
-        duration: reduce ? 0.01 : 1.28,
-        delay,
-        ease: easeLux,
-      }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function MediaReveal({
-  children,
-  className = "",
-  delay = 0,
-}: {
-  children: ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={reduce ? false : { opacity: 0, y: 20, scale: 0.992 }}
-      animate={
-        inView || reduce
-          ? { opacity: 1, y: 0, scale: 1 }
-          : { opacity: 0, y: 20, scale: 0.992 }
-      }
-      transition={{
-        duration: reduce ? 0.01 : 1.42,
-        delay,
-        ease: easeLux,
-      }}
-    >
-      {children}
-    </motion.div>
   );
 }
 
@@ -646,7 +525,7 @@ function FlowMacBookPair({
   }
 
   return (
-    <MediaReveal delay={mediaRevealDelay}>
+    <Reveal delay={mediaRevealDelay}>
       {callout ? (
         <div className="mb-7 flex items-center gap-3">
           <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-1.5 font-mono text-[12px] tracking-[0.06em] text-textPrimary/70">
@@ -677,7 +556,7 @@ function FlowMacBookPair({
       {caption ? (
         <p className="mt-6 text-sm text-textSecondary md:text-[15px]">{caption}</p>
       ) : null}
-    </MediaReveal>
+    </Reveal>
   );
 }
 
@@ -849,26 +728,18 @@ function WorkflowComparisonV2() {
 
 export default function StudioEngineCaseStudy() {
   const reduce = useReducedMotion();
-  const heroRef = useRef<HTMLElement | null>(null);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const heroMediaY = useTransform(scrollYProgress, [0, 1], [0, reduce ? 0 : 56]);
-  const heroMediaScale = useTransform(scrollYProgress, [0, 1], [1, reduce ? 1 : 1.03]);
 
   return (
     <>
-      <Nav />
+      <SideRail active="work" tone="light" />
       <main className="relative min-h-screen overflow-x-hidden bg-white text-textPrimary">
-        <CaseStudySectionNav />
-        <CaseStudyMobileToc items={caseNavItems} />
-        <article className="relative z-10 mx-auto max-w-content px-6 pb-24 pt-24 md:px-12 md:pb-52 md:pt-40 lg:pl-[13.5rem] lg:pr-14 lg:pt-44 xl:pl-44">
-        <header id="overview" ref={heroRef} className="scroll-mt-32 max-w-4xl">
+        <CaseStudyToc items={caseNavItems} />
+        <article className="relative z-10 mx-auto max-w-content px-6 pb-24 pt-16 md:px-[84px] md:pb-52 md:pt-24">
+        <header id="overview" className="scroll-mt-32 max-w-4xl">
           <motion.div
-            initial={reduce ? false : { opacity: 0, y: 14 }}
+            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.0, ease: easeLux }}
+            transition={{ duration: REVEAL.duration, ease: easeLux }}
             className="flex items-center"
           >
             <Image
@@ -881,17 +752,17 @@ export default function StudioEngineCaseStudy() {
             />
           </motion.div>
           <motion.h1
-            initial={reduce ? false : { opacity: 0, y: 24 }}
+            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.18, delay: reduce ? 0 : 0.08, ease: easeLux }}
+            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.08, ease: easeLux }}
             className="mt-8 font-display text-[clamp(2rem,5vw,3rem)] font-light leading-[1.06] tracking-[-0.03em] text-textPrimary"
           >
             Designing Control Into AI Video Creation
           </motion.h1>
           <motion.p
-            initial={reduce ? false : { opacity: 0, y: 18 }}
+            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.12, delay: reduce ? 0 : 0.14, ease: easeLux }}
+            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.14, ease: easeLux }}
             className="mt-12 max-w-[40rem] text-[1.125rem] font-light leading-snug tracking-[-0.02em] text-textSecondary/95 md:text-[1.25rem]"
           >
             I restructured a one-shot Gen-2 text-to-video tool into a four-stage creative workspace —
@@ -900,9 +771,9 @@ export default function StudioEngineCaseStudy() {
           </motion.p>
 
           <motion.div
-            initial={reduce ? false : { opacity: 0, y: 14 }}
+            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.08, delay: reduce ? 0 : 0.19, ease: easeLux }}
+            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.19, ease: easeLux }}
             className="mt-10 flex flex-wrap gap-x-8 gap-y-3"
           >
             {[
@@ -917,9 +788,9 @@ export default function StudioEngineCaseStudy() {
           </motion.div>
 
           <motion.dl
-            initial={reduce ? false : { opacity: 0, y: 16 }}
+            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.08, delay: reduce ? 0 : 0.22, ease: easeLux }}
+            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.22, ease: easeLux }}
             className="mt-16 grid grid-cols-1 gap-6 border-t border-black/[0.07] pt-6 sm:flex sm:flex-wrap sm:items-start sm:gap-0 sm:divide-x sm:divide-black/[0.07] sm:border-0 sm:pt-0"
           >
             <div className="sm:pr-8 sm:pt-8">
@@ -938,19 +809,16 @@ export default function StudioEngineCaseStudy() {
 
         </header>
 
-        <motion.div
-          style={{ y: heroMediaY, scale: heroMediaScale }}
-          className="relative mt-20 origin-top will-change-transform md:mt-28 lg:mt-32"
-        >
+        <div className="relative mt-20 md:mt-28 lg:mt-32">
           <motion.div
-            initial={reduce ? false : { opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1.38, delay: reduce ? 0 : 0.26, ease: easeLux }}
+            initial={reduce ? false : { opacity: 0, y: EMPHASIS.y, scale: EMPHASIS.scale }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: EMPHASIS.duration, delay: reduce ? 0 : 0.26, ease: easeLux }}
             className="overflow-hidden"
           >
             <WorkflowComparisonV2 />
           </motion.div>
-        </motion.div>
+        </div>
 
         {/* Problem */}
         <section id="product" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
@@ -1173,7 +1041,7 @@ export default function StudioEngineCaseStudy() {
             </Prose>
           </Reveal>
 
-          <MediaReveal className="mt-16 md:mt-20" delay={0.08}>
+          <Reveal className="mt-16 md:mt-20" delay={0.08}>
             <div className="overflow-hidden">
               <iframe
                 title="Workflow comparison — before vs after"
@@ -1183,7 +1051,7 @@ export default function StudioEngineCaseStudy() {
                 loading="lazy"
               />
             </div>
-          </MediaReveal>
+          </Reveal>
 
           <Reveal className="mt-16 md:mt-20">
             {/* Stage pipeline */}
@@ -1309,22 +1177,22 @@ export default function StudioEngineCaseStudy() {
 
         </section>
 
-        <MediaReveal className="mt-32 md:mt-44 lg:mt-56">
+        <Reveal className="mt-32 md:mt-44 lg:mt-56">
           <SingleTabletFrame
             src="/assets/studio-engine/design-projects.jpg"
             alt="Updated visual design language"
             width={2000}
             height={1120}
           />
-        </MediaReveal>
-        <MediaReveal className="mt-10 md:mt-14" delay={0.06}>
+        </Reveal>
+        <Reveal className="mt-10 md:mt-14" delay={0.06}>
           <SingleTabletFrame
             src="/assets/studio-engine/visual.jpg"
             alt="Updated visual design language"
             width={2000}
             height={1120}
           />
-        </MediaReveal>
+        </Reveal>
 
         {/* Outcomes */}
         <section id="outcome" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">

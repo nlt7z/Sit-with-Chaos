@@ -1,5 +1,5 @@
 import { Footer } from "@/components/Footer";
-import { Nav } from "@/components/Nav";
+import { SideRail } from "@/components/bento/SideRail";
 import type { Metadata } from "next";
 import LinerScholarCaseStudy from "./LinerScholarCaseStudy";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
@@ -40,7 +40,7 @@ export default function LinerPage() {
         image={OG_IMAGE}
         datePublished="2026-05-01"
       />
-      <Nav variant="dark" />
+      <SideRail active="work" />
       <LinerScholarCaseStudy />
       <Footer variant="dark" />
     </>

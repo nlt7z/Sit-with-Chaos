@@ -1,16 +1,18 @@
 "use client";
 
 import { Footer } from "@/components/Footer";
-import { Nav } from "@/components/Nav";
+import { SideRail } from "@/components/bento/SideRail";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
+import { Reveal } from "@/components/Reveal";
+import { CaseStudyToc } from "@/components/SectionRail";
+import { EASE, REVEAL, STAGGER } from "@/lib/motion";
 
 // useLayoutEffect warns during SSR in React 18; both run pre-paint on the client.
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-const easePremium = [0.25, 0.1, 0.25, 1] as const;
+const easePremium = EASE;
 
 const navItems = [
   { id: "overview", label: "Overview" },
@@ -25,97 +27,12 @@ const navItems = [
   { id: "reflection", label: "Risk & Next" },
 ] as const;
 
-function FadeIn({
-  children,
-  className,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  className?: string;
-  delay?: number;
-}) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div className={className}>{children}</div>;
-  return (
-    <motion.div
-      className={className}
-      initial={{ opacity: 0, y: 28 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-12% 0px -8% 0px" }}
-      transition={{ duration: 0.85, delay, ease: easePremium }}
-    >
-      {children}
-    </motion.div>
-  );
-}
+// the site's shared scroll reveal (lib/motion); the prototype is this page's
+// one emphasis moment
+const FadeIn = Reveal;
 
-/**
- * Special reveal used once on the page — for the full interactive prototype.
- * Heavier than FadeIn (longer duration, blur clear, slight rotate-tilt) because
- * this is the case study's visual high point and deserves the announcement.
- */
 function PrototypeReveal({ children }: { children: React.ReactNode }) {
-  const reduce = useReducedMotion();
-  if (reduce) return <div>{children}</div>;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 48, scale: 0.965, rotate: -0.8, filter: "blur(8px)" }}
-      whileInView={{ opacity: 1, y: 0, scale: 1, rotate: 0, filter: "blur(0px)" }}
-      viewport={{ once: true, margin: "-20% 0px -12% 0px" }}
-      transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-      style={{ transformOrigin: "50% 100%" }}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
-function CaseNav() {
-  const [active, setActive] = useState("overview");
-
-  useEffect(() => {
-    const els = navItems.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const top = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (top?.target.id) setActive(top.target.id);
-      },
-      { rootMargin: "-42% 0px -42% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75] },
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <nav aria-label="Case study sections" className="pointer-events-none fixed left-0 top-0 z-20 hidden h-full w-[12rem] lg:block">
-      <div className="pointer-events-auto sticky top-[calc(50vh-12rem)] px-7 pt-32">
-        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">On this page</p>
-        <ul className="mt-5 space-y-0">
-          {navItems.map(({ id, label }) => (
-            <li key={id}>
-              <a
-                href={`#${id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  setActive(id);
-                }}
-                className={`block border-l-[1.5px] border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
-                  active === id
-                    ? "border-[#FFD100] font-medium text-textPrimary"
-                    : "text-textSecondary/90 hover:translate-x-0.5 hover:border-[#FFD100]/60 hover:text-textPrimary"
-                }`}
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
-  );
+  return <Reveal emphasis>{children}</Reveal>;
 }
 
 function Section({
@@ -466,21 +383,20 @@ export default function MeituanImCaseStudyPage() {
   const heroVariants = {
     hidden: {},
     show: {
-      transition: { staggerChildren: reduceMotion ? 0 : 0.09, delayChildren: reduceMotion ? 0 : 0.06 },
+      transition: { staggerChildren: reduceMotion ? 0 : STAGGER, delayChildren: reduceMotion ? 0 : 0.06 },
     },
   };
   const heroItem = {
-    hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 },
-    show: { opacity: 1, y: 0, transition: reduceMotion ? { duration: 0 } : { duration: 0.75, ease: easePremium } },
+    hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: REVEAL.y },
+    show: { opacity: 1, y: 0, transition: reduceMotion ? { duration: 0 } : { duration: REVEAL.duration, ease: easePremium } },
   };
 
   return (
     <>
-      <Nav />
+      <SideRail active="work" tone="light" />
       <div className="relative min-h-screen bg-white">
-        <CaseNav />
-        <CaseStudyMobileToc items={navItems} />
-        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-24 text-left md:px-12 md:pb-56 md:pt-40 lg:pl-36 lg:pr-14 lg:pb-80 lg:pt-44">
+        <CaseStudyToc items={navItems} />
+        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-16 text-left md:px-[84px] md:pb-56 md:pt-24 lg:pb-80">
           <main className="relative min-h-screen">
             <header id="overview" className="scroll-mt-28 pb-16 md:pb-24">
               <motion.div variants={heroVariants} initial="hidden" animate="show">

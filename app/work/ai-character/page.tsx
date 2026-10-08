@@ -1,5 +1,5 @@
 import { Footer } from "@/components/Footer";
-import { Nav } from "@/components/Nav";
+import { SideRail } from "@/components/bento/SideRail";
 import type { Metadata } from "next";
 import CaseStudyContent from "./CaseStudyContent";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
@@ -40,7 +40,7 @@ export default function AiCharacterPage() {
         image={OG_IMAGE}
         datePublished="2025-09-15"
       />
-      <Nav />
+      <SideRail active="work" tone="light" />
       <CaseStudyContent />
       <Footer showTopBorder={false} />
     </>

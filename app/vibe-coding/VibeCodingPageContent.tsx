@@ -8,11 +8,12 @@ import {
   useSpring,
   useTransform,
 } from "framer-motion";
-import { ArrowUpRight, ChevronDown, ChevronUp } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 import { RoseLoader } from "@/components/RoseLoader";
+import { SectionRail } from "@/components/SectionRail";
 import { SiteWindow } from "@/components/SiteWindow";
 import { TurntableWidget } from "@/components/TurntableWidget";
 
@@ -660,76 +661,6 @@ function CardCaption({
   );
 }
 
-/** Game-style segmented progress rail, pinned to the right edge — the vertical
- *  index for the scroll gallery. Segments fill top→active (lime), the current
- *  one glows, each is clickable to jump; up/down chevrons step through. */
-function VerticalRail({
-  active,
-  total,
-  onPrev,
-  onNext,
-  onJump,
-}: {
-  active: number;
-  total: number;
-  onPrev: () => void;
-  onNext: () => void;
-  onJump: (i: number) => void;
-}) {
-  return (
-    <div className="pointer-events-none fixed right-4 top-1/2 z-30 hidden -translate-y-1/2 flex-col items-center gap-3 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 md:flex lg:right-7">
-      <button
-        onClick={onPrev}
-        className="pointer-events-auto flex h-6 w-6 items-center justify-center text-white/40 transition-colors hover:text-nltLime"
-        aria-label="Previous"
-      >
-        <ChevronUp className="h-4 w-4" strokeWidth={2} />
-      </button>
-
-      {/* segmented column — fills top → active */}
-      <div className="flex flex-col items-center gap-[5px]">
-        {Array.from({ length: total }).map((_, i) => {
-          const filled = i <= active;
-          const isActive = i === active;
-          return (
-            <button
-              key={i}
-              onClick={() => onJump(i)}
-              className="group pointer-events-auto px-2 py-[1px]"
-              aria-label={`Go to item ${i + 1}`}
-            >
-              <span
-                className={`block h-[12px] w-[13px] -skew-x-[20deg] transition-all duration-300 ease-portfolio ${
-                  isActive
-                    ? "bg-nltLime shadow-[0_0_12px_rgba(210,255,0,0.85)]"
-                    : filled
-                      ? "bg-nltLime/65"
-                      : "bg-white/[0.12] group-hover:bg-white/30"
-                }`}
-              />
-            </button>
-          );
-        })}
-      </div>
-
-      <button
-        onClick={onNext}
-        className="pointer-events-auto flex h-6 w-6 items-center justify-center text-white/40 transition-colors hover:text-nltLime"
-        aria-label="Next"
-      >
-        <ChevronDown className="h-4 w-4" strokeWidth={2} />
-      </button>
-
-      {/* index counter — active / total, stacked to fit the vertical rail */}
-      <div className="flex flex-col items-center gap-0.5 tabular-nums leading-none">
-        <span className="text-nltLime">{String(active + 1).padStart(2, "0")}</span>
-        <span className="text-white/25">/</span>
-        <span className="text-white/35">{String(total).padStart(2, "0")}</span>
-      </div>
-    </div>
-  );
-}
-
 /** Mobile feed — a single most-visible row owns the live heavy embed.
  *  Three prototype cards sit adjacent, so mounting heavy iframes by a scroll
  *  margin could pin three live apps at once and OOM the phone. Heavy embeds
@@ -904,12 +835,13 @@ function DesktopFeed({
         })}
       </div>
 
-      <VerticalRail
-        active={active}
-        total={n}
-        onPrev={prev}
-        onNext={next}
-        onJump={setActive}
+      <SectionRail
+        items={entries.map((e) => ({ id: entryKey(e), label: e.title }))}
+        active={entryKey(entries[active])}
+        onJump={(id) => setActive(entries.findIndex((e) => entryKey(e) === id))}
+        counter
+        labels="hover"
+        ariaLabel="Prototypes"
       />
     </div>
   );

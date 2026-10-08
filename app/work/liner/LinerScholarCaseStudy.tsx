@@ -1,12 +1,13 @@
 "use client";
 
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
+import { Reveal } from "@/components/Reveal";
+import { EASE, EMPHASIS, REVEAL } from "@/lib/motion";
+import { CaseStudyToc } from "@/components/SectionRail";
 
-const easeOut = [0.25, 0.1, 0.25, 1] as const;
 
 const navItems = [
   { id: "overview", label: "Overview" },
@@ -19,79 +20,6 @@ const navItems = [
   { id: "prototype", label: "Final build" },
   { id: "impact", label: "Impact" },
 ] as const;
-
-function CaseNav() {
-  const [active, setActive] = useState("overview");
-
-  useEffect(() => {
-    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
-    if (hash && navItems.some((i) => i.id === hash)) setActive(hash);
-  }, []);
-
-  useEffect(() => {
-    const els = navItems.map((i) => document.getElementById(i.id)).filter(Boolean) as HTMLElement[];
-    const obs = new IntersectionObserver(
-      (entries) => {
-        const hit = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
-        if (hit?.target.id) setActive(hit.target.id);
-      },
-      { rootMargin: "-40% 0px -40% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] },
-    );
-    els.forEach((el) => obs.observe(el));
-    return () => obs.disconnect();
-  }, []);
-
-  return (
-    <nav
-      aria-label="Case study sections"
-      className="pointer-events-none fixed left-0 top-0 z-30 hidden h-full w-[11rem] lg:block"
-    >
-      <div className="pointer-events-auto sticky top-[calc(50vh-9rem)] px-6 pt-28">
-        <p className="font-mono text-[12px] uppercase tracking-[0.18em] text-nltLime">On this page</p>
-        <ul className="mt-5 space-y-0">
-          {navItems.map(({ id, label }) => (
-            <li key={id}>
-              <a
-                href={`#${id}`}
-                onClick={(e) => {
-                  e.preventDefault();
-                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
-                  setActive(id);
-                }}
-                className={`block border-l border-transparent py-2 pl-4 text-left text-[13px] leading-snug transition-[color,border-color] duration-500 ease-out ${
-                  active === id
-                    ? "border-nltLime font-medium text-nltLime"
-                    : "text-white/65 hover:border-nltLime/40 hover:text-white"
-                }`}
-              >
-                {label}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </nav>
-  );
-}
-
-function Reveal({ children, className = "", delay = 0 }: { children: ReactNode; className?: string; delay?: number }) {
-  const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-8% 0px" });
-  const reduce = useReducedMotion();
-  return (
-    <motion.div
-      ref={ref}
-      className={className}
-      initial={reduce ? false : { opacity: 0, y: 18 }}
-      animate={inView || reduce ? { opacity: 1, y: 0 } : { opacity: 0, y: 18 }}
-      transition={{ duration: reduce ? 0.01 : 0.85, delay, ease: easeOut }}
-    >
-      {children}
-    </motion.div>
-  );
-}
 
 /* in-view autoplay video (muted, looping), loads its source near the viewport */
 function AutoVideo({ src, poster, className = "" }: { src: string; poster?: string; className?: string }) {
@@ -710,15 +638,14 @@ export default function LinerScholarCaseStudy() {
         className="pointer-events-none fixed inset-0 z-0"
         style={{ background: "radial-gradient(48% 38% at 5% 0%, rgba(210,255,0,0.06), transparent 70%)" }}
       />
-      <CaseNav />
-      <CaseStudyMobileToc items={navItems} variant="dark" />
-      <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-20 text-left md:px-10 md:pb-36 md:pt-28 lg:pl-32 lg:pr-10 lg:pt-32">
+      <CaseStudyToc items={navItems} tone="dark" />
+      <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-16 text-left md:px-[84px] md:pb-36 md:pt-24">
         {/* 1 · Overview — hero */}
         <header id="overview" className="scroll-mt-28">
           <motion.div
-            initial={reduce ? false : { opacity: 0, y: 16 }}
+            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: easeOut }}
+            transition={{ duration: REVEAL.duration, ease: EASE }}
           >
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -755,9 +682,9 @@ export default function LinerScholarCaseStudy() {
 
           {/* the product, framed */}
           <motion.figure
-            initial={reduce ? false : { opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.85, delay: reduce ? 0 : 0.12, ease: easeOut }}
+            initial={reduce ? false : { opacity: 0, y: EMPHASIS.y, scale: EMPHASIS.scale }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: EMPHASIS.duration, delay: reduce ? 0 : 0.12, ease: EASE }}
             className="mt-12 md:mt-16"
           >
             <div className="overflow-hidden rounded-2xl bg-black ring-1 ring-white/10">

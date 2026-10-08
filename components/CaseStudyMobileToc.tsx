@@ -8,9 +8,8 @@ export type TocItem = { id: string; label: string };
 /**
  * Mobile / tablet section navigation for case-study pages.
  *
- * The desktop reading experience uses a `hidden lg:block` fixed sidebar, which
- * leaves phones and tablets with no way to jump between sections. This is the
- * `lg:hidden` counterpart: a floating "Sections" button that opens a sheet of
+ * From md up the right-edge SectionRail handles this; below md this is the
+ * counterpart: a floating "Sections" button that opens a sheet of
  * anchors. It is `fixed`-positioned and self-contained, so it never affects the
  * page's document flow — drop `<CaseStudyMobileToc items={navItems} />` anywhere
  * in a case study and it just works, regardless of that page's hero padding.
@@ -21,16 +20,23 @@ export type TocItem = { id: string; label: string };
 export function CaseStudyMobileToc({
   items,
   variant = "light",
+  active: controlledActive,
+  onJump,
 }: {
   items: readonly TocItem[];
   variant?: "light" | "dark";
+  /** Controlled mode, for sections the page can't find by id (e.g. inside an iframe). */
+  active?: string;
+  onJump?: (id: string) => void;
 }) {
   const isDark = variant === "dark";
   const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(items[0]?.id ?? "");
+  const [ownActive, setActive] = useState(items[0]?.id ?? "");
+  const active = controlledActive ?? ownActive;
   const reduce = useReducedMotion();
 
   useEffect(() => {
+    if (onJump) return;
     const els = items
       .map((i) => document.getElementById(i.id))
       .filter(Boolean) as HTMLElement[];
@@ -46,7 +52,7 @@ export function CaseStudyMobileToc({
     );
     els.forEach((el) => obs.observe(el));
     return () => obs.disconnect();
-  }, [items]);
+  }, [items, onJump]);
 
   // Lock body scroll while the sheet is open.
   useEffect(() => {
@@ -62,21 +68,23 @@ export function CaseStudyMobileToc({
   const go = (id: string) => {
     setActive(id);
     setOpen(false);
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
+    if (onJump) onJump(id);
+    else document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   return (
-    <div className="lg:hidden">
+    <div className="md:hidden">
       {/* Floating trigger */}
       <button
         type="button"
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className={`fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-5 z-40 flex max-w-[calc(100vw-2.5rem)] items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-medium shadow-[0_10px_30px_-10px_rgba(0,0,0,0.4)] backdrop-blur-md transition-colors ${
+        // sits just above the SideRail's bottom pill nav
+        className={`fixed bottom-[calc(max(0.75rem,env(safe-area-inset-bottom))+3.75rem)] right-4 z-40 flex max-w-[calc(100vw-2.5rem)] items-center gap-2 rounded-full px-4 py-2.5 text-[13px] font-medium shadow-[0_10px_30px_-10px_rgba(0,0,0,0.4)] backdrop-blur-md transition-colors ${
           isDark
-            ? "bg-white/12 text-zinc-100 ring-1 ring-white/15"
-            : "bg-textPrimary/92 text-white ring-1 ring-black/10"
+            ? "bg-white/10 text-zinc-100 ring-1 ring-white/15"
+            : "bg-textPrimary/90 text-white ring-1 ring-black/10"
         }`}
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden className="shrink-0">

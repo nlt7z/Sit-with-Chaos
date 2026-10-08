@@ -2,10 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
+import { SectionRail } from "@/components/SectionRail";
+
 type Region = { id: string; label: string };
 
-// Height of the fixed site Nav — clicks land the section just below it.
-const NAV_OFFSET = 68;
+// Breathing room above a section when the rail jumps to it.
+const NAV_OFFSET = 24;
 
 /**
  * The "Shared with You" case study lives as a self-contained static page under
@@ -134,36 +137,10 @@ export function TikTokCaseStudyFrame() {
       />
 
       {regions.length > 0 && (
-        <nav
-          aria-label="Case study sections"
-          className="pointer-events-none fixed left-0 top-0 z-40 hidden h-screen w-[11rem] select-none flex-col justify-center lg:flex"
-        >
-          <div className="pointer-events-auto px-6">
-            <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-nltLime">
-              On this page
-            </p>
-            <ul className="mt-5 space-y-0">
-              {regions.map((r) => {
-                const on = r.id === active;
-                return (
-                  <li key={r.id}>
-                    <button
-                      type="button"
-                      onClick={() => go(r.id)}
-                      className={`block border-l border-transparent py-2 pl-4 text-left text-[13px] leading-snug transition-[color,border-color] duration-500 ease-out ${
-                        on
-                          ? "border-nltLime font-medium text-nltLime"
-                          : "text-white/65 hover:border-nltLime/40 hover:text-white"
-                      }`}
-                    >
-                      {r.label}
-                    </button>
-                  </li>
-                );
-              })}
-            </ul>
-          </div>
-        </nav>
+        <>
+          <SectionRail items={regions} active={active} onJump={go} tone="dark" />
+          <CaseStudyMobileToc items={regions} active={active} onJump={go} variant="dark" />
+        </>
       )}
     </>
   );

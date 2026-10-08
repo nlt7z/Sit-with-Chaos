@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion, useInView, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import {
   createContext,
@@ -13,10 +13,10 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { CaseStudyMobileToc } from "@/components/CaseStudyMobileToc";
+import { CaseStudyToc } from "@/components/SectionRail";
+import { EASE, EMPHASIS, REVEAL, STAGGER } from "@/lib/motion";
 
 const mediaRound = "rounded-xl";
-const EMSK = [0.76, 0, 0.24, 1] as const;
 
 /* ── Image lightbox ─────────────────────────────────────────────────────────
  * One full-screen overlay shared by every static image on the page. Any image
@@ -282,84 +282,6 @@ const caseNavItems = [
   { id: "outcome", label: "Impact" },
   { id: "takeaway", label: "Takeaway" },
 ] as const;
-
-function CaseStudyNav() {
-  const [active, setActive] = useState<string>("problem");
-  const SECTION_SCROLL_OFFSET = 112;
-  const navItems = caseNavItems;
-
-  useEffect(() => {
-    const hash = typeof window !== "undefined" ? window.location.hash.slice(1) : "";
-    if (hash && navItems.some((i) => i.id === hash)) setActive(hash);
-  }, []);
-
-  useEffect(() => {
-    const ids = navItems.map((i) => i.id);
-    const elements = ids
-      .map((id) => document.getElementById(id))
-      .filter((el): el is HTMLElement => el !== null);
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((e) => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        const top = visible[0];
-        if (top?.target.id) setActive(top.target.id);
-      },
-      { root: null, rootMargin: "-38% 0px -38% 0px", threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] }
-    );
-
-    elements.forEach((el) => observer.observe(el));
-    return () => observer.disconnect();
-  }, []);
-
-  function scrollToSection(id: string, e: React.MouseEvent<HTMLAnchorElement>) {
-    e.preventDefault();
-    const el = document.getElementById(id);
-    if (!el) return;
-    const top = el.getBoundingClientRect().top + window.scrollY - SECTION_SCROLL_OFFSET;
-    window.scrollTo({ top: Math.max(top, 0), behavior: "smooth" });
-    if (typeof window !== "undefined") {
-      window.history.replaceState(null, "", `#${id}`);
-    }
-    setActive(id);
-  }
-
-  return (
-    <nav
-      aria-label="Case study sections"
-      // Center vertically with flex instead of `pt-40 + top-[calc(50vh-10rem)]`,
-      // which on shorter viewports pushed the bottom items past the fold and
-      // clipped them. Flex centering keeps the rail in view regardless of height.
-      className="pointer-events-none fixed left-0 top-0 z-40 hidden h-screen w-[11rem] select-none flex-col justify-center lg:flex"
-    >
-      <div className="pointer-events-auto px-6">
-        <p className="font-mono text-[10px] font-normal uppercase tracking-[0.18em] text-textSecondary/60">On this page</p>
-        <ul className="mt-5 max-h-[calc(100vh-12rem)] space-y-0 overflow-y-auto overscroll-contain pr-1">
-          {navItems.map(({ id, label }) => {
-            const isActive = active === id;
-            return (
-              <li key={id}>
-                <a
-                  href={`#${id}`}
-                  onClick={(e) => scrollToSection(id, e)}
-                  className={`block border-l-[1.5px] border-transparent py-1.5 pl-4 text-left text-[12px] leading-snug transition-[color,border-color,opacity,transform] duration-500 ease-out ${
-                    isActive
-                      ? "border-nltLime font-medium text-textPrimary"
-                      : "text-textSecondary/90 hover:translate-x-0.5 hover:border-nltLime/40 hover:text-textPrimary"
-                  }`}
-                >
-                  {label}
-                </a>
-              </li>
-            );
-          })}
-        </ul>
-      </div>
-    </nav>
-  );
-}
 
 type PlaceholderProps = { label: string; src: string; className?: string };
 
@@ -895,57 +817,25 @@ function D1BeforeAfter() {
   );
 }
 
-/** Calmer, Apple-adjacent motion (ease-out, minimal travel) */
-const easePremium = [0.22, 1, 0.36, 1] as const;
-
-/** Hero headline stack — slightly slower, softer deceleration */
-const easeHero = [0.19, 1, 0.22, 1] as const;
+// Motion comes from lib/motion: one fade-up reveal for everything, no blur.
+const easePremium = EASE;
 
 const heroStack = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.1, delayChildren: 0.12 } },
+  visible: { transition: { staggerChildren: STAGGER, delayChildren: 0.12 } },
 };
 
 const heroItem = {
-  hidden: { opacity: 0, y: 10, filter: "blur(3px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.98, ease: easeHero } },
-};
-
-
-const introBlockContainer = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.085, delayChildren: 0.06 } },
-};
-
-const introBlockItem = {
-  hidden: { opacity: 0, y: 14, filter: "blur(3px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.88, ease: easePremium } },
-};
-
-const introMetaBlock = {
-  hidden: { opacity: 0 },
-  visible: { opacity: 1, transition: { staggerChildren: 0.055, delayChildren: 0.02 } },
-};
-
-const introMetaRow = {
-  hidden: { opacity: 0, y: 10 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.65, ease: easePremium } },
+  hidden: { opacity: 0, y: REVEAL.y },
+  visible: { opacity: 1, y: 0, transition: { duration: REVEAL.duration, ease: EASE } },
 };
 
 const sectionRoot = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.08, delayChildren: 0.04 } },
+  visible: { transition: { staggerChildren: STAGGER, delayChildren: 0.04 } },
 };
 
-const sectionPiece = {
-  hidden: { opacity: 0, y: 14, filter: "blur(4px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 1.0, ease: easePremium } },
-};
-
-const sectionHeadInner = {
-  hidden: { y: "105%" },
-  visible: { y: "0%", transition: { duration: 0.88, ease: EMSK } },
-};
+const sectionPiece = heroItem;
 
 const metaFields = [
   { label: "Role", value: "Sole UX designer — research to production code" },
@@ -1157,10 +1047,10 @@ function Section({
           {eyebrow}
         </motion.p>
         {title?.trim() ? (
-          <div className="mt-5 overflow-hidden md:mt-6">
+          <div className="mt-5 md:mt-6">
             <motion.h2
               className="max-w-reading font-display text-[1.55rem] font-light leading-[1.14] tracking-[-0.02em] text-textPrimary md:text-[2rem] md:leading-[1.1]"
-              variants={reduced ? undefined : sectionHeadInner}
+              variants={reduced ? undefined : sectionPiece}
             >
               {title}
             </motion.h2>
@@ -1286,13 +1176,10 @@ const innovations: {
 
 const innovationContainer = {
   hidden: {},
-  visible: { transition: { staggerChildren: 0.11, delayChildren: 0.06 } },
+  visible: { transition: { staggerChildren: STAGGER, delayChildren: 0.06 } },
 };
 
-const innovationItem = {
-  hidden: { opacity: 0, y: 12, filter: "blur(3px)" },
-  visible: { opacity: 1, y: 0, filter: "blur(0px)", transition: { duration: 0.9, ease: easePremium } },
-};
+const innovationItem = heroItem;
 
 function InteractionInnovationList() {
   const [openId, setOpenId] = useState<string | null>(null);
@@ -1750,9 +1637,9 @@ function HeroPrototypeGallery() {
   return (
     <motion.div
       className="mt-12 md:mt-16"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.9, delay: 0.4, ease: easePremium }}
+      initial={{ opacity: 0, y: EMPHASIS.y, scale: EMPHASIS.scale }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ duration: EMPHASIS.duration, delay: 0.4, ease: EASE }}
     >
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
@@ -1821,20 +1708,13 @@ function HeroPrototypeGallery() {
 }
 
 function HeroSection({ reduced }: { reduced: boolean | null }) {
-  const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
-
-
-  const parallaxLead = useTransform(scrollYProgress, [0, 1], [0, reduced ? 0 : 28]);
-
   return (
     <section
       id="intro"
-      ref={heroRef}
       className="relative scroll-mt-24 overflow-x-hidden pb-32 pt-16 md:scroll-mt-28 md:pb-40 md:pt-24"
     >
       <div className="relative w-full">
-        <motion.div style={{ y: parallaxLead }}>
+        <div>
           <motion.div
             className="relative"
             initial={reduced ? false : "hidden"}
@@ -1857,10 +1737,10 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                 </span>
               </motion.div>
 
-              <div className="mt-7 overflow-hidden py-[0.18em] md:mt-8">
+              <div className="mt-7 py-[0.18em] md:mt-8">
                 <motion.h1
                   className="text-pretty font-display text-[2.2rem] font-light leading-[1.12] tracking-[-0.038em] text-textPrimary md:text-[clamp(2.35rem,4.5vw,2.85rem)] md:leading-[1.1]"
-                  variants={reduced ? undefined : { hidden: { y: "106%" }, visible: { y: "0%", transition: { duration: 0.92, ease: EMSK } } }}
+                  variants={reduced ? undefined : heroItem}
                 >
                   Interactive Showrooms — End-to-End Design
                 </motion.h1>
@@ -1875,17 +1755,15 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
 
             </div>
           </motion.div>
-        </motion.div>
-
-       
+        </div>
 
         <HeroPrototypeGallery />
 
         <motion.div
           className="mt-14 md:mt-20"
-          initial={reduced ? false : { opacity: 0, y: 16 }}
+          initial={reduced ? false : { opacity: 0, y: REVEAL.y }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: reduced ? 0 : 0.85, ease: easePremium }}
+          transition={{ duration: REVEAL.duration, delay: reduced ? 0 : 0.85, ease: EASE }}
         >
           <dl className="grid grid-cols-2 gap-x-8 gap-y-7 pt-8 sm:grid-cols-4 sm:gap-y-0 md:gap-x-10 md:pt-9">
             {metaFields.map(({ label, value }) => (
@@ -1993,11 +1871,10 @@ export default function CaseStudyContent() {
   return (
     <LightboxProvider>
     <MobileSlotProvider>
-    <div className="relative min-h-screen bg-white pt-24 md:pt-28">
-      <CaseStudyNav />
-      <CaseStudyMobileToc items={caseNavItems} />
+    <div className="relative min-h-screen bg-white">
+      <CaseStudyToc items={caseNavItems} />
       <main className="relative min-h-screen overflow-x-hidden pb-0">
-        <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-0 md:px-12 md:pb-24 lg:pl-36 lg:pr-14">
+        <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-0 md:px-[84px] md:pb-24">
           <HeroSection reduced={reduced} />
 
         {/* PROBLEM */}
@@ -2211,10 +2088,10 @@ export default function CaseStudyContent() {
               <motion.div
                 key={stat.n}
                 className="flex flex-col"
-                initial={{ opacity: 0, y: 16 }}
+                initial={{ opacity: 0, y: REVEAL.y }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.75, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+                transition={{ duration: REVEAL.duration, delay: i * STAGGER, ease: EASE }}
               >
                 <div className="flex min-h-[7.25rem] flex-col justify-end md:min-h-[7.5rem]">
                   <p className="font-display text-[2.5rem] font-light leading-[1.08] tracking-[-0.02em] text-textPrimary md:text-[2.75rem] md:leading-[1.06]">
