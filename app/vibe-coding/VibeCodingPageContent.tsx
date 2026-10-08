@@ -488,6 +488,7 @@ function PrototypeCard({
   // when such an entry has an href (e.g. the TikTok case study) we make the media
   // itself the link so clicking the video opens the case study.
   const selfLinked = entry.media.kind === "live" || entry.media.kind === "iframe";
+  const external = !!entry.href?.startsWith("http");
   const media =
     !selfLinked && entry.href ? (
       <Link
@@ -518,7 +519,7 @@ function PrototypeCard({
       {/* Desktop active card gets the tilt + cursor arrow; neighbours + mobile
           render flat. The caption block under it carries the title. */}
       {!fluid && isActive ? (
-        <ActiveCardFX hasLink={hasLink} external={!!entry.href?.startsWith("http")}>{media}</ActiveCardFX>
+        <ActiveCardFX hasLink={hasLink} external={external}>{media}</ActiveCardFX>
       ) : (
         <div>{media}</div>
       )}
