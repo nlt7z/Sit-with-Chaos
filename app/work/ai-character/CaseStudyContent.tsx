@@ -1,7 +1,6 @@
 "use client";
 
 import { AnimatePresence, motion, useInView, useReducedMotion } from "framer-motion";
-import Link from "next/link";
 import {
   createContext,
   useCallback,
@@ -13,10 +12,11 @@ import {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
+import { Action } from "@/components/Action";
 import { CaseStudyToc } from "@/components/SectionRail";
 import { EASE, EMPHASIS, REVEAL, STAGGER } from "@/lib/motion";
 
-const mediaRound = "rounded-xl";
+const mediaRound = "rounded-[14px]";
 
 /* ── Image lightbox ─────────────────────────────────────────────────────────
  * One full-screen overlay shared by every static image on the page. Any image
@@ -227,17 +227,12 @@ function SitePreviewFrame({
     <div className="mt-10 overflow-hidden rounded-2xl ring-1 ring-black/[0.08]">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] bg-surfaceAlt/45 px-4 py-3 md:px-5">
         <div>
-          <p className="font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary">{eyebrow}</p>
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">{eyebrow}</p>
           <p className="mt-2 font-sans text-[13px] font-medium text-textPrimary">{title}</p>
         </div>
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="shrink-0 font-sans text-[12px] font-medium tracking-wide text-textSecondary underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-textPrimary hover:decoration-textPrimary/35"
-        >
+        <Action href={href} variant="label" newTab className="shrink-0">
           Open in browser
-        </a>
+        </Action>
       </div>
       <iframe
         title={title}
@@ -294,7 +289,7 @@ function ImagePlaceholder({ label, src, className = "" }: PlaceholderProps) {
       aria-label={`${label} — view larger`}
       className={`group relative block w-full cursor-zoom-in overflow-hidden ${mediaRound} ${className} focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2`}
     >
-      <img src={src} alt={label} className={`h-auto w-full object-contain transition-transform duration-[800ms] ease-out group-hover:scale-[1.06] ${mediaRound}`} loading="lazy" />
+      <img src={src} alt={label} className={`h-auto w-full object-contain transition-transform duration-700 ease-portfolio group-hover:scale-[1.02] ${mediaRound}`} loading="lazy" />
       <span className={`pointer-events-none absolute inset-0 bg-black/0 transition-colors duration-300 group-hover:bg-black/[0.05] ${mediaRound}`} aria-hidden />
       <ZoomHint />
     </button>
@@ -491,7 +486,7 @@ function FeaturePrototypeEmbed({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/35">Loading prototype…</span>
           </div>
         )}
       </div>
@@ -749,7 +744,7 @@ function D1BeforeAfter() {
     <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
       {/* Before */}
       <div>
-        <p className="mb-3 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">
+        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
           Before — Generic chat
         </p>
         <div className="overflow-hidden rounded-xl bg-black">
@@ -770,7 +765,7 @@ function D1BeforeAfter() {
       {/* After — auto-cycling prototype */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <p className="font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-textSecondary/70">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
             After —{" "}
             <span className="text-textSecondary/70">{activeRoom.tab} room</span>
           </p>
@@ -951,16 +946,9 @@ function VibeCodingPrototypeGallery() {
               {item.caption}
             </p>
           </div>
-          <Link
-            href={item.href}
-            className={`shrink-0 font-sans text-[12px] font-medium tracking-wide underline underline-offset-[5px] transition-colors duration-300 ${
-              item.id === "romance"
-                ? "text-amber-200/90 decoration-amber-200/35 hover:text-amber-100 hover:decoration-amber-100/55"
-                : "text-textSecondary decoration-black/[0.12] hover:text-textPrimary hover:decoration-textPrimary/35"
-            }`}
-          >
+          <Action href={item.href} variant="label" tone={item.id === "romance" ? "dark" : "light"} className="shrink-0">
             Open full page
-          </Link>
+          </Action>
         </div>
         <div ref={frameRef} className="overflow-hidden rounded-b-xl">
           {near ? (
@@ -976,7 +964,7 @@ function VibeCodingPrototypeGallery() {
               aria-hidden
               className={`flex h-[min(56vh,820px)] min-h-[320px] w-full items-center justify-center md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
             >
-              <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/35">Loading prototype…</span>
             </div>
           )}
         </div>
@@ -1041,7 +1029,7 @@ function Section({
         variants={reduced ? undefined : sectionRoot}
       >
         <motion.p
-          className="max-w-reading font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary"
+          className="max-w-reading font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary"
           variants={reduced ? undefined : sectionPiece}
         >
           {eyebrow}
@@ -1218,7 +1206,7 @@ function InteractionInnovationList() {
               aria-labelledby={`innovation-trigger-${item.id}`}
               className={`mt-6 overflow-hidden ${mediaRound}`}
             >
-              <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-sans text-[11px] font-medium uppercase tracking-[0.18em] text-textSecondary md:px-6">LLM workflow</p>
+              <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary md:px-6">LLM workflow</p>
               <button
                 type="button"
                 onClick={() => openLightbox({ src: item.workflowSrc, alt: `${item.name} — LLM workflow` })}
@@ -1228,7 +1216,7 @@ function InteractionInnovationList() {
                 <img
                   src={item.workflowSrc}
                   alt={`${item.name} — LLM workflow`}
-                  className="h-auto w-full transition-transform duration-[800ms] ease-out group-hover:scale-[1.04]"
+                  className="h-auto w-full transition-transform duration-700 ease-portfolio group-hover:scale-[1.02]"
                   loading="lazy"
                   decoding="async"
                 />
@@ -1260,7 +1248,7 @@ function InteractionInnovationList() {
                     {item.name}
                   </span>
                   {item.notShipped && (
-                    <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/60">
+                    <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
                       Not shipped
                     </span>
                   )}
@@ -1408,7 +1396,7 @@ function ShowroomStrategyCard({
         <img
           src={proofSrc}
           alt={proofAlt}
-          className="h-full w-full object-cover object-left-top transition-transform duration-[800ms] ease-out group-hover:scale-[1.06]"
+          className="h-full w-full object-cover object-left-top transition-transform duration-700 ease-portfolio group-hover:scale-[1.02]"
           loading="lazy"
           decoding="async"
         />
@@ -1434,7 +1422,7 @@ function ShowroomStrategyCard({
 function UxStrategyShowroomTable() {
   return (
     <div className="w-full pt-3">
-      <p className="mt-8 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-textSecondary/70">
+      <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
         Showroom → One proof → In-product behavior
       </p>
 
@@ -1504,11 +1492,11 @@ function HowIWorkedDiagram() {
               <span className="text-[15px] font-medium leading-snug" style={{ color: s.accentName }}>{s.phase}</span>
             </div>
             <div className="px-4 py-3.5">
-              <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/70">Tools</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Tools</p>
               <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-textPrimary">
                 {(s.toolLines as readonly string[]).join(" · ")}
               </p>
-              <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/70">Output</p>
+              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Output</p>
               <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-textSecondary">{s.body}</p>
             </div>
           </div>
@@ -1668,12 +1656,9 @@ function HeroPrototypeGallery() {
             </svg>
           </button>
         </div>
-        <Link
-          href={active.href}
-          className="font-sans text-[12px] font-medium tracking-wide text-textSecondary underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-textPrimary hover:decoration-textPrimary/35"
-        >
+        <Action href={active.href} variant="label">
           Open full page
-        </Link>
+        </Action>
       </div>
 
       <div
@@ -1697,7 +1682,7 @@ function HeroPrototypeGallery() {
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-[#0b0b10]" aria-hidden>
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">Loading prototype…</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/35">Loading prototype…</span>
           </div>
         )}
       </div>
@@ -1732,7 +1717,7 @@ function HeroSection({ reduced }: { reduced: boolean | null }) {
                   decoding="async"
                 />
                 <span className="h-4 w-px bg-black/15" aria-hidden />
-                <span className="font-sans text-[11px] font-medium uppercase tracking-[0.2em] text-textSecondary">
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">
                   Qwen Character
                 </span>
               </motion.div>
@@ -1813,7 +1798,7 @@ function CollapsibleMetricTable() {
         aria-expanded={open}
         className="flex w-full items-center justify-between bg-surfaceAlt/40 px-5 py-4 text-left transition-colors duration-200 hover:bg-surfaceAlt/60"
       >
-        <p className="font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-textSecondary">How the numbers are defined</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">How the numbers are defined</p>
         <motion.svg
           width="12" height="12" viewBox="0 0 12 12" fill="none"
           stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
@@ -1836,7 +1821,7 @@ function CollapsibleMetricTable() {
           >
             <div className="hidden grid-cols-[6rem_1fr_1fr_1fr] gap-x-6 border-t border-black/[0.06] bg-surfaceAlt/20 px-5 py-3 md:grid">
               {["Metric", "Baseline", "Result", "Note"].map((h) => (
-                <p key={h} className="font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">{h}</p>
+                <p key={h} className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">{h}</p>
               ))}
             </div>
             <div className="divide-y divide-black/[0.06] border-t border-black/[0.06]">
@@ -1844,14 +1829,14 @@ function CollapsibleMetricTable() {
                 <div key={row.stat} className="grid grid-cols-1 gap-1 px-5 py-4 md:grid-cols-[6rem_1fr_1fr_1fr] md:items-center md:gap-x-6">
                   <div className="flex items-baseline gap-2 md:block">
                     <p className="font-display text-[1.4rem] font-light tracking-tight text-textPrimary">{row.stat}</p>
-                    <p className="font-mono text-[10px] uppercase tracking-[0.12em] text-textSecondary/60 md:mt-0.5">{row.label}</p>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60 md:mt-0.5">{row.label}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/70 md:hidden">Before</p>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70 md:hidden">Before</p>
                     <p className="font-sans text-[13px] leading-snug text-textSecondary">{row.before}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[10px] font-medium uppercase tracking-[0.12em] text-textSecondary/70 md:hidden">After</p>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70 md:hidden">After</p>
                     <p className="font-sans text-[13px] font-normal leading-snug text-textPrimary/80">{row.after}</p>
                   </div>
                   <p className="font-sans text-[12px] italic leading-snug text-textSecondary/60">{row.note}</p>
@@ -1889,7 +1874,7 @@ export default function CaseStudyContent() {
           </p>
 
           <blockquote className="my-16 w-full !max-w-none border-l-2 border-nltLime pl-7 not-italic md:my-20 md:pl-8">
-            <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-nltLime-ink">How might we</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">How might we</p>
             <p className="mt-4 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
               Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em> — within minutes?
             </p>
@@ -2100,7 +2085,7 @@ export default function CaseStudyContent() {
                 </div>
                 <div className="mt-4 flex min-h-[2.75rem] items-start gap-2 md:min-h-[3rem]">
                   <span className="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-nltLime" aria-hidden="true" />
-                  <p className="font-sans text-[12px] font-medium uppercase leading-snug tracking-[0.12em] text-textPrimary/70">
+                  <p className="font-mono text-[11px] uppercase leading-snug tracking-[0.16em] text-textPrimary/70">
                     {stat.label}
                   </p>
                 </div>
@@ -2111,16 +2096,11 @@ export default function CaseStudyContent() {
 
           <CollapsibleMetricTable />
 
-          <p className="mt-10 border-l-2 border-nltLime pl-6 font-sans text-[15px] leading-relaxed text-textSecondary md:mt-12 md:pl-7">
-            <a
-              href="https://tongyi.aliyun.com/character"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium text-textPrimary underline decoration-nltLime decoration-2 underline-offset-[6px] transition-colors duration-300 hover:decoration-nltLime-ink"
-            >
-              View the live showrooms →
-            </a>
-          </p>
+          <div className="mt-10 md:mt-12">
+            <Action href="https://tongyi.aliyun.com/character" variant="text">
+              View the live showrooms
+            </Action>
+          </div>
         </Section>
 
         <Section id="takeaway" eyebrow="Takeaway" title="What I learned" bordered={false}>
@@ -2134,31 +2114,16 @@ export default function CaseStudyContent() {
               on the full narrative, then offers it as a guided walkthrough. */}
           <div className="mt-16 flex flex-col items-start gap-5 border-t border-black/[0.06] pt-10 md:mt-20 md:flex-row md:items-center md:justify-between md:pt-12">
             <div>
-              <p className="font-mono text-[10px] font-medium uppercase tracking-[0.2em] text-textSecondary/60">Presentation</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">Presentation</p>
               <p className="mt-2.5 font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
                 Walk the whole story as a deck.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-5">
-              <motion.div
-                whileHover={reduced ? undefined : { y: -2 }}
-                whileTap={reduced ? undefined : { y: 1 }}
-                transition={{ type: "spring", stiffness: 480, damping: 28 }}
-                className="inline-block"
-              >
-                <Link
-                  href="/work/ai-character/deck-present"
-                  className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-                >
-                  View Presentation Deck
-                </Link>
-              </motion.div>
-              <Link
-                href="/work/ai-character/deck-present-zh"
-                className="font-sans text-[13px] font-medium tracking-wide text-textSecondary underline decoration-black/[0.12] underline-offset-[5px] transition-colors hover:text-textPrimary hover:decoration-textPrimary/35"
-              >
-                中文演示文稿 →
-              </Link>
+              <Action href="/work/ai-character/deck-present">View Presentation Deck</Action>
+              <Action href="/work/ai-character/deck-present-zh" variant="text">
+                中文演示文稿
+              </Action>
             </div>
           </div>
         </Section>

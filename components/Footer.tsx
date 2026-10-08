@@ -77,11 +77,11 @@ export function Footer({ variant = "light", showTopBorder = true, blendBackgroun
 
   const darkShell = blendBackground
     ? `${showTopBorder ? "border-t border-white/[0.08]" : ""} relative z-10 bg-transparent`
-    : `${showTopBorder ? "border-t border-white/[0.08]" : ""} bg-[#060608]`;
+    : `${showTopBorder ? "border-t border-white/[0.08]" : ""} bg-[#0a0b0c]`;
 
   return (
     <footer ref={footerRef} className={isDark ? darkShell : lightShell}>
-      <div className="mx-auto max-w-content px-6 py-12 md:py-16">
+      <div className="mx-auto max-w-content px-6 py-12 md:px-[84px] md:py-16">
         <div className="flex flex-col gap-10 md:flex-row md:items-end md:justify-between md:gap-12">
           {/* Left — halftone decoration, then copyright */}
           <div className="flex min-w-0 flex-col gap-6 md:gap-7">
@@ -106,8 +106,8 @@ export function Footer({ variant = "light", showTopBorder = true, blendBackgroun
           <div className={`flex shrink-0 flex-col gap-2 md:items-end`}>
             <a
               href="mailto:fangyuanzero7@gmail.com"
-              className={`font-mono text-xs transition-opacity hover:opacity-60 ${
-                isDark ? "text-zinc-400" : "text-textSecondary"
+              className={`font-mono text-xs underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-150 ${
+                isDark ? "text-zinc-400 hover:text-white hover:decoration-white/40" : "text-textSecondary hover:text-textPrimary hover:decoration-black/20"
               }`}
             >
               fangyuanzero7@gmail.com

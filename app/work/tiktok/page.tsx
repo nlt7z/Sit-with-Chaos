@@ -22,7 +22,7 @@ export const metadata: Metadata = {
  */
 export default function TikTokCaseStudyPage() {
   return (
-    <div style={{ background: "#050507", minHeight: "100vh" }}>
+    <div style={{ background: "#0a0b0c", minHeight: "100vh" }}>
       <SideRail active="work" />
       <TikTokCaseStudyFrame />
       <Footer variant="dark" />

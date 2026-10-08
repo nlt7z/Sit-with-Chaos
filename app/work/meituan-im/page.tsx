@@ -5,6 +5,7 @@ import { SideRail } from "@/components/bento/SideRail";
 import Image from "next/image";
 import { motion, useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { Action } from "@/components/Action";
 import { Reveal } from "@/components/Reveal";
 import { CaseStudyToc } from "@/components/SectionRail";
 import { EASE, REVEAL, STAGGER } from "@/lib/motion";
@@ -49,7 +50,7 @@ function Section({
   return (
     <section id={id} className="scroll-mt-28 border-t border-black/[0.06] py-14 md:py-28 lg:py-36">
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-[0.24em] text-textSecondary/75">{eyebrow}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">{eyebrow}</p>
         <h2 className="mt-5 max-w-4xl font-display text-[2rem] font-light leading-[1.08] tracking-tight text-textPrimary md:text-[2.6rem] md:leading-[1.06] lg:text-[2.95rem]">
           {title}
         </h2>
@@ -169,16 +170,11 @@ function PhoneFrame({
   return (
     <figure className="space-y-4">
       <div className="flex items-baseline justify-between">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">{label}</p>
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/85">{label}</p>
         {isLong ? (
-          <a
-            href={src}
-            target="_blank"
-            rel="noreferrer"
-            className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70 transition-colors hover:text-[#8A6A00]"
-          >
-            View full →
-          </a>
+          <Action href={src} variant="label">
+            View full
+          </Action>
         ) : null}
       </div>
 
@@ -252,8 +248,8 @@ function LiveFlowPhone({
   return (
     <figure className="space-y-4">
       <div className="flex items-baseline justify-between">
-        <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/85">{label}</p>
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
+        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/85">{label}</p>
+        <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
           Live
         </span>
       </div>
@@ -371,7 +367,7 @@ function SubsectionHeader({ label, hint }: { label?: string; hint?: string }) {
   }
   return (
     <div className="mb-8 flex flex-col gap-3 sm:mb-10 sm:flex-row sm:items-end sm:justify-between sm:gap-6">
-      <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/85">{label}</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/85">{label}</p>
       {hint ? <p className="max-w-lg text-[16px] leading-relaxed text-textSecondary">{hint}</p> : null}
     </div>
   );
@@ -409,7 +405,7 @@ export default function MeituanImCaseStudyPage() {
                     className="h-7 w-auto object-contain object-left md:h-8"
                   />
                 </motion.div>
-                <motion.p variants={heroItem} className="font-mono text-[11px] uppercase tracking-[0.24em] text-textSecondary/85">
+                <motion.p variants={heroItem} className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/85">
                   Meituan · Local Services · IM Consultation
                 </motion.p>
                 <motion.h1
@@ -437,20 +433,10 @@ export default function MeituanImCaseStudyPage() {
                 </motion.p>
 
                 <motion.div variants={heroItem} className="mt-8 flex flex-wrap items-center gap-3">
-                  <a
-                    href="/work/meituan-im/deck-story-en"
-                    className="inline-flex rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,0.35)] ring-1 ring-black/[0.06] transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-                  >
-                    View Presentation Deck
-                  </a>
-                  <a
-                    href="/work/meituan-im/prototype"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex rounded-full bg-white px-8 py-3 text-sm font-medium text-textPrimary ring-1 ring-black/[0.12] transition-transform duration-300 hover:-translate-y-0.5 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
-                  >
-                    Try Prototype ↗
-                  </a>
+                  <Action href="/work/meituan-im/deck-story-en">View Presentation Deck</Action>
+                  <Action href="/work/meituan-im/prototype" variant="secondary" newTab>
+                    Try Prototype
+                  </Action>
                 </motion.div>
 
                 <motion.div
@@ -483,7 +469,7 @@ export default function MeituanImCaseStudyPage() {
                       displayMaxWidth={400}
                       fitViewport={0.78}
                     />
-                    <p className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
+                    <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">
                       Live prototype · tap the suggested replies
                     </p>
                   </div>
@@ -502,7 +488,7 @@ export default function MeituanImCaseStudyPage() {
                 certain price. They all said &ldquo;we have to see it first&rdquo;. And once the guy
                 shows up, the price only goes up.
               </blockquote>
-              <figcaption className="mt-5 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
+              <figcaption className="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
                 A pattern we heard again and again in user research
               </figcaption>
             </figure>
@@ -524,7 +510,7 @@ export default function MeituanImCaseStudyPage() {
                 &ldquo;The page said $50. On site he added $200 for a &lsquo;special case&rsquo;. A
                 total rip-off!&rdquo;
               </blockquote>
-              <figcaption className="mt-3 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
+              <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
                 A real user review behind the PRD · reviews like this were everywhere
               </figcaption>
             </figure>
@@ -535,7 +521,7 @@ export default function MeituanImCaseStudyPage() {
               {/* BEFORE — old workflow, muted */}
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Before · Today&apos;s linear journey</p>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">Before · Today&apos;s linear journey</p>
                 </div>
                 <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
@@ -560,7 +546,7 @@ export default function MeituanImCaseStudyPage() {
               {/* AFTER — redesigned, warm accent */}
               <div className="flex flex-col">
                 <div className="mb-4 flex items-baseline justify-between">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8A6A00]">After · Five steps, diagnosis moves into the chat</p>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8A6A00]">After · Five steps, diagnosis moves into the chat</p>
                 </div>
                 <ol className="flex-1 divide-y divide-black/[0.06]">
                   {[
@@ -587,7 +573,7 @@ export default function MeituanImCaseStudyPage() {
           <FadeIn>
             <div className="max-w-3xl divide-y divide-black/[0.06]">
               <div className="pb-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Option A · A priced diagnosis visit</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">Option A · A priced diagnosis visit</p>
                 <p className="mt-3 text-[15.5px] leading-[1.7] tracking-tight text-textPrimary">
                   The user pays a visit fee. A pro comes, diagnoses, then they decide whether to repair.
                 </p>
@@ -598,7 +584,7 @@ export default function MeituanImCaseStudyPage() {
                 </p>
               </div>
               <div className="pt-8">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Option B · Protect the user&apos;s exit</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">Option B · Protect the user&apos;s exit</p>
                 <p className="mt-3 text-[15.5px] leading-[1.7] tracking-tight text-textPrimary">
                   The user can cancel any time after the visit. Every add-on charge needs online approval.
                 </p>
@@ -610,7 +596,7 @@ export default function MeituanImCaseStudyPage() {
           </FadeIn>
 
           <FadeIn className="mt-14">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8A6A00]">Option C · What we built</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8A6A00]">Option C · What we built</p>
             <p className="mt-4 max-w-3xl text-[19px] leading-[1.55] tracking-tight text-textPrimary">
               Keep the chat habit. Move the on-site diagnosis up front, as a platform-level{" "}
               <span className="rounded-[3px] bg-[#FFD100] px-1 text-[#3D2E00]">standard diagnosis</span>. One
@@ -625,7 +611,7 @@ export default function MeituanImCaseStudyPage() {
 
         <Section id="solution" eyebrow="System Design" title="One end-to-end flow. Trust compounds across every stage.">
           <FadeIn className="mt-2">
-            <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
+            <div className="overflow-hidden rounded-[14px] ring-1 ring-black/[0.06]">
               <div className="relative w-full aspect-[17/23]">
                 <iframe
                   src="/assets/meituan-im/im_consultation_flow_redesign.html"
@@ -642,7 +628,7 @@ export default function MeituanImCaseStudyPage() {
               hint="How a quote request becomes a booking, a visit, and a paid order, across platform, user and merchant."
             />
             <FadeIn>
-              <div className="overflow-hidden rounded-2xl ring-1 ring-black/[0.06]">
+              <div className="overflow-hidden rounded-[14px] ring-1 ring-black/[0.06]">
                 <div className="relative w-full aspect-[3/2] sm:aspect-[12/5]">
                   <iframe
                     src="/assets/meituan-im/quote-to-service-flow-en.html"
@@ -654,14 +640,9 @@ export default function MeituanImCaseStudyPage() {
               </div>
             </FadeIn>
             <p className="mt-3 text-right">
-              <a
-                href="/assets/meituan-im/quote-to-service-flow-en.html"
-                target="_blank"
-                rel="noreferrer"
-                className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80 underline-offset-4 hover:underline"
-              >
-                Open full diagram ↗
-              </a>
+              <Action href="/assets/meituan-im/quote-to-service-flow-en.html" variant="label">
+                Open full diagram
+              </Action>
             </p>
           </div>
 
@@ -672,14 +653,9 @@ export default function MeituanImCaseStudyPage() {
               hint="The whole system is playable. Switch scenarios from the rail, or tap the suggested replies to play a flow through. Re-skinned in English with USD placeholders; shipped in Chinese with RMB."
             />
             <div className="mb-10 flex items-center justify-end">
-              <a
-                href="/work/meituan-im/prototype"
-                target="_blank"
-                rel="noreferrer"
-                className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/60 transition-colors hover:text-[#8A6A00]"
-              >
-                Open in new window ↗
-              </a>
+              <Action href="/work/meituan-im/prototype" variant="label" newTab>
+                Open in new window
+              </Action>
             </div>
             <PrototypeReveal>
               <ScaledPrototypeFrame
@@ -820,7 +796,7 @@ export default function MeituanImCaseStudyPage() {
                   naturalHeight={1000}
                   displayMaxWidth={360}
                 />
-                <figcaption className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
+                <figcaption className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">
                   Live prototype · self-serve path
                 </figcaption>
               </figure>
@@ -840,7 +816,7 @@ export default function MeituanImCaseStudyPage() {
           <FadeIn className="mt-12">
             <div className="grid gap-10 md:grid-cols-2 md:gap-8">
               <figure>
-                <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Early version · Live</p>
+                <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">Early version · Live</p>
                 <ScaledPrototypeFrame
                   src="/assets/meituan-im/interaction-flow-phone.html#flow=default&rail=0"
                   title="Early prototype version"
@@ -850,7 +826,7 @@ export default function MeituanImCaseStudyPage() {
                 />
               </figure>
               <figure>
-                <p className="mb-4 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Repair Flow v1 · Live</p>
+                <p className="mb-4 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">Repair Flow v1 · Live</p>
                 <ScaledPrototypeFrame
                   src="/assets/meituan-im/Repair%20Flow.html#flow=default&rail=0&seek=1"
                   title="Repair Flow v1"
@@ -884,7 +860,7 @@ export default function MeituanImCaseStudyPage() {
                     naturalHeight={1000}
                     displayMaxWidth={360}
                   />
-                  <figcaption className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">
+                  <figcaption className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">
                     Current version · AI-agent workflow · Live
                   </figcaption>
                 </figure>
@@ -896,15 +872,15 @@ export default function MeituanImCaseStudyPage() {
             <div className="grid max-w-3xl gap-10 sm:grid-cols-3">
               <div>
                 <p className="font-display text-[1.75rem] font-light leading-none tracking-tight tabular-nums text-textPrimary">44×44<span className="text-[0.55em] text-textPrimary/70">pt</span></p>
-                <p className="mt-2.5 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Minimum touch target</p>
+                <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/80">Minimum touch target</p>
               </div>
               <div>
                 <p className="font-display text-[1.75rem] font-light leading-none tracking-tight tabular-nums text-textPrimary">≥12<span className="text-[0.55em] text-textPrimary/70">px</span></p>
-                <p className="mt-2.5 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">Minimum type size</p>
+                <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/80">Minimum type size</p>
               </div>
               <div>
                 <p className="font-display text-[1.75rem] font-light leading-none tracking-tight tabular-nums text-textPrimary">MM/DD</p>
-                <p className="mt-2.5 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/80">US formats · imperial · native copy</p>
+                <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/80">US formats · imperial · native copy</p>
               </div>
             </div>
           </FadeIn>
@@ -943,7 +919,7 @@ export default function MeituanImCaseStudyPage() {
               </p>
               <div className="max-w-md">
                 <div className="flex items-center gap-2">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-[#8A6A00]">Conversion lift · diagnostic channel</p>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8A6A00]">Conversion lift · diagnostic channel</p>
                   <span className="rounded-full border border-[#8A6A00]/40 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-[#8A6A00]">Measured</span>
                 </div>
                 <p className="mt-2 text-[15px] leading-relaxed text-textSecondary">
@@ -961,7 +937,7 @@ export default function MeituanImCaseStudyPage() {
                 ~<CountUp to={2000} format={(n) => Math.round(n / 1000).toString() + "k"} />
               </p>
               <div className="mt-3 flex items-center gap-2">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Additional daily orders</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/80">Additional daily orders</p>
                 <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Projected</span>
               </div>
             </div>
@@ -971,7 +947,7 @@ export default function MeituanImCaseStudyPage() {
                 <span className="text-[0.55em] text-textPrimary/70">%</span>
               </p>
               <div className="mt-3 flex items-center gap-2">
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/80">Pricing disputes</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/80">Pricing disputes</p>
                 <span className="rounded-full border border-black/15 px-1.5 py-[1px] font-mono text-[8.5px] font-medium uppercase tracking-[0.14em] text-textSecondary/70">Projected</span>
               </div>
             </div>
@@ -988,7 +964,7 @@ export default function MeituanImCaseStudyPage() {
 
         <Section id="reflection" eyebrow="Risk & Next" title="Users shouldn't compare price. They should compare price divided by trust.">
           <FadeIn>
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">The mechanism&apos;s adverse selection</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">The mechanism&apos;s adverse selection</p>
             <p className="mt-4 max-w-3xl text-[16px] leading-[1.7] tracking-tight text-textPrimary">
               Left alone, this mechanism systematically selects three kinds of merchants: the
               desperate, the bad estimators, and the lowball-then-upsell players. Lowballing is
@@ -1000,7 +976,7 @@ export default function MeituanImCaseStudyPage() {
           </FadeIn>
 
           <FadeIn className="mt-14">
-            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/75">Next · Multimodal AI diagnosis</p>
+            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">Next · Multimodal AI diagnosis</p>
             <p className="mt-4 max-w-3xl text-[16px] leading-[1.7] text-textSecondary">
               The platform holds a huge corpus of real consultations and real fulfilment records,
               training data no one else has. To break the expert bottleneck, the next step is a
@@ -1018,7 +994,7 @@ export default function MeituanImCaseStudyPage() {
                 Rebuilding the black box: from &ldquo;price transparency&rdquo; to{" "}
                 <span className="rounded-[3px] bg-[#FFD100] px-1.5 text-[#3D2E00]">&ldquo;trusted diagnosis&rdquo;</span>.
               </p>
-              <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
+              <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
                 Meituan local services · 2025
               </p>
             </div>

@@ -6,14 +6,15 @@ import {
   useMotionValue,
   useReducedMotion,
   useSpring,
-  useTransform,
 } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 
+import { Action } from "@/components/Action";
 import { RoseLoader } from "@/components/RoseLoader";
 import { SectionRail } from "@/components/SectionRail";
+import { EASE } from "@/lib/motion";
 import { SiteWindow } from "@/components/SiteWindow";
 import { TurntableWidget } from "@/components/TurntableWidget";
 
@@ -50,7 +51,7 @@ const entries: Entry[] = [
     description: "Studio website for a creative agency: brand expression, work showcase, and inquiry flow.",
     tags: ["web"],
     href: "https://qbix.space",
-    hrefLabel: "open site ↗",
+    hrefLabel: "open site",
     media: {
       kind: "live",
       href: "https://qbix.space",
@@ -65,7 +66,7 @@ const entries: Entry[] = [
     description: "Self-initiated concept redesigning how friends' shared videos surface on TikTok: a Shared Feed tab, Smart Reactions, and reply-value ranking.",
     tags: ["app", "interaction"],
     href: "/work/tiktok",
-    hrefLabel: "case study →",
+    hrefLabel: "case study",
     media: { kind: "video", src: "/assets/TikTok/showcase.mp4" },
   },
   {
@@ -74,7 +75,7 @@ const entries: Entry[] = [
     description: "Conversational prototype for a romance AI character: chat interface, persona pacing, and scene atmosphere.",
     tags: ["ai", "interaction"],
     href: "/work/ai-character",
-    hrefLabel: "case study →",
+    hrefLabel: "case study",
     media: {
       kind: "iframe",
       src: "/work/ai-character/prototype?muted=1",
@@ -89,7 +90,7 @@ const entries: Entry[] = [
     description: "Conversational prototype for an emotional-support AI character: ambient room interface as a listening space.",
     tags: ["ai", "interaction"],
     href: "/work/ai-character/prototype-psych",
-    hrefLabel: "open →",
+    hrefLabel: "open",
     media: {
       kind: "iframe",
       src: "/work/ai-character/prototype-psych?embed=1",
@@ -104,7 +105,7 @@ const entries: Entry[] = [
     description: "Conversational prototype for an astrology AI character: zodiac persona system and fortune-dialogue flow.",
     tags: ["ai", "interaction"],
     href: "/work/ai-character/prototype-astro",
-    hrefLabel: "open →",
+    hrefLabel: "open",
     media: {
       kind: "iframe",
       src: "/work/ai-character/prototype-astro?embed=1",
@@ -119,7 +120,7 @@ const entries: Entry[] = [
     description: "End-to-end brand refresh and site redesign: identity system, information architecture, and interactions.",
     tags: ["web"],
     href: "https://hancao.space",
-    hrefLabel: "open site ↗",
+    hrefLabel: "open site",
     media: {
       kind: "live",
       href: "https://hancao.space",
@@ -140,7 +141,7 @@ const entries: Entry[] = [
     description: "Interactive cabinet for digital fortune-drawing: slip-pull interaction with reveal sequence.",
     tags: ["interaction"],
     href: "/code/playground/omikuji",
-    hrefLabel: "open →",
+    hrefLabel: "open",
     media: {
       kind: "iframe",
       src: "/code/playground/omikuji?embed=1",
@@ -162,7 +163,7 @@ const entries: Entry[] = [
     description: "Portfolio navigation built as a gacha experience: randomized reveal as a project-discovery interface.",
     tags: ["interaction"],
     href: "/code/playground/gacha",
-    hrefLabel: "open →",
+    hrefLabel: "open",
     media: {
       kind: "iframe",
       src: "/code/playground/gacha?embed=1",
@@ -210,7 +211,7 @@ function LazyVideo({
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-md">
+    <div className="relative aspect-video overflow-hidden rounded-[22px]">
       {/* shimmer — fades out once video can play */}
       <div
         className={`absolute inset-0 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
@@ -257,7 +258,7 @@ function LazyImage({
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-md">
+    <div className="relative aspect-video overflow-hidden rounded-[22px]">
       <div
         className={`absolute inset-0 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
           loaded ? "pointer-events-none opacity-0" : "opacity-100"
@@ -319,7 +320,7 @@ function ScaledIframe({
   return (
     <div
       ref={wrapperRef}
-      className={`relative overflow-hidden rounded-md ${bg}`}
+      className={`relative overflow-hidden rounded-[22px] ${bg}`}
       style={{ height: natural.h * scale }}
     >
       {/* shimmer overlay */}
@@ -386,7 +387,7 @@ function MediaSlot({
     return (
       <Link
         href={media.href}
-        className="group block transition-opacity hover:opacity-95"
+        className="group block"
         aria-label={`Open ${media.title}`}
       >
         <ScaledIframe
@@ -403,38 +404,32 @@ function MediaSlot({
     return shouldLoad ? (
       <TurntableWidget />
     ) : (
-      <div className="aspect-square w-full rounded-md bg-white/[0.035]" />
+      <div className="aspect-square w-full rounded-[22px] bg-white/[0.035]" />
     );
   }
   return null;
 }
 
 // ─── Active card FX (desktop) ──────────────────────────────────────────────
-// Pointer-tracked 3D tilt — rotation ONLY, never scale — plus a lime radial
-// glare and a cursor-following lime arrow button (the same affordance as the
-// /work ProjectCard). The arrow only shows when the card has a destination.
-// Honours prefers-reduced-motion (renders flat, no spring).
+// The cursor-following lime arrow, the same affordance as the /work cards: →
+// for a page on this site, ↗ for another site. Only when the card has a
+// destination. Reduced motion: the arrow tracks without the spring.
 
-const TILT_SPRING = { stiffness: 150, damping: 18, mass: 0.4 } as const;
 const ARROW_SPRING = { stiffness: 400, damping: 30, mass: 0.5 } as const;
 
 function ActiveCardFX({
   hasLink,
+  external,
   children,
 }: {
   hasLink: boolean;
+  external: boolean;
   children: React.ReactNode;
 }) {
   const reduced = useReducedMotion();
   const [hovered, setHovered] = useState(false);
 
-  // 0..1 pointer position within the card → tilt.
-  const mx = useMotionValue(0.5);
-  const my = useMotionValue(0.5);
-  const rotX = useSpring(useTransform(my, [0, 1], [6.5, -6.5]), TILT_SPRING);
-  const rotY = useSpring(useTransform(mx, [0, 1], [-8.5, 8.5]), TILT_SPRING);
-
-  // Pixel pointer position → cursor-following arrow (offset to centre the 56px button).
+  // Pixel pointer position → arrow (offset to centre the 56px button).
   const ax = useMotionValue(0);
   const ay = useMotionValue(0);
   const axs = useSpring(ax, ARROW_SPRING);
@@ -442,8 +437,6 @@ function ActiveCardFX({
 
   const onMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect();
-    mx.set((e.clientX - r.left) / r.width);
-    my.set((e.clientY - r.top) / r.height);
     ax.set(e.clientX - r.left - 28);
     ay.set(e.clientY - r.top - 28);
   };
@@ -451,42 +444,20 @@ function ActiveCardFX({
     onMove(e);
     setHovered(true);
   };
-  const leave = () => {
-    mx.set(0.5);
-    my.set(0.5);
-    setHovered(false);
-  };
 
   return (
-    <div className="relative" onMouseEnter={enter} onMouseMove={onMove} onMouseLeave={leave}>
-      <motion.div
-        style={
-          reduced
-            ? undefined
-            : {
-                rotateX: rotX,
-                rotateY: rotY,
-                transformPerspective: 1100,
-                transformStyle: "preserve-3d",
-              }
-        }
-        className="relative will-change-transform"
-      >
-        {children}
-      </motion.div>
-
-      {/* Cursor-following lime arrow — visual affordance only (the media itself
-          is the link). Shown on hover when the card has a destination. */}
+    <div className="relative" onMouseEnter={enter} onMouseMove={onMove} onMouseLeave={() => setHovered(false)}>
+      {children}
       {hasLink && (
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.4)]"
+          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)]"
           style={{ x: reduced ? ax : axs, y: reduced ? ay : ays }}
           initial={false}
           animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.4 }}
-          transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+          transition={{ duration: 0.2, ease: EASE }}
         >
-          <ArrowUpRight className="h-6 w-6" strokeWidth={2.25} />
+          {external ? <ArrowUpRight className="h-6 w-6" strokeWidth={2.25} /> : <ArrowRight className="h-6 w-6" strokeWidth={2.25} />}
         </motion.div>
       )}
     </div>
@@ -517,7 +488,6 @@ function PrototypeCard({
   // when such an entry has an href (e.g. the TikTok case study) we make the media
   // itself the link so clicking the video opens the case study.
   const selfLinked = entry.media.kind === "live" || entry.media.kind === "iframe";
-  const external = !!entry.href?.startsWith("http");
   const media =
     !selfLinked && entry.href ? (
       <Link
@@ -525,7 +495,7 @@ function PrototypeCard({
         target={external ? "_blank" : undefined}
         rel={external ? "noopener noreferrer" : undefined}
         aria-label={`Open ${entry.title}`}
-        className="group block transition-opacity hover:opacity-95"
+        className="group block"
       >
         {inner}
       </Link>
@@ -548,7 +518,7 @@ function PrototypeCard({
       {/* Desktop active card gets the tilt + cursor arrow; neighbours + mobile
           render flat. The caption block under it carries the title. */}
       {!fluid && isActive ? (
-        <ActiveCardFX hasLink={hasLink}>{media}</ActiveCardFX>
+        <ActiveCardFX hasLink={hasLink} external={!!entry.href?.startsWith("http")}>{media}</ActiveCardFX>
       ) : (
         <div>{media}</div>
       )}
@@ -561,14 +531,9 @@ function PrototypeCard({
             {entry.title}
           </h3>
           {entry.href && entry.hrefLabel && (
-            <Link
-              href={entry.href}
-              className="ml-auto font-mono text-[10px] uppercase tracking-[0.12em] text-white/40 transition-opacity hover:opacity-60"
-              target={entry.href.startsWith("http") ? "_blank" : undefined}
-              rel={entry.href.startsWith("http") ? "noopener noreferrer" : undefined}
-            >
+            <Action href={entry.href} variant="label" tone="dark" className="ml-auto">
               {entry.hrefLabel}
-            </Link>
+            </Action>
           )}
         </header>
       )}
@@ -625,7 +590,6 @@ function CardCaption({
   active: boolean;
 }) {
   const reduced = useReducedMotion();
-  const external = !!entry.href?.startsWith("http");
   return (
     <motion.div
       className="mt-3 flex items-center justify-center gap-4"
@@ -647,15 +611,9 @@ function CardCaption({
         </h2>
       </motion.div>
       {entry.href && entry.hrefLabel ? (
-        <Link
-          href={entry.href}
-          target={external ? "_blank" : undefined}
-          rel={external ? "noopener noreferrer" : undefined}
-          tabIndex={active ? 0 : -1}
-          className="shrink-0 font-mono text-[11px] uppercase tracking-[0.14em] text-white/60 transition-colors hover:text-nltLime"
-        >
+        <Action href={entry.href} variant="label" tone="dark" tabIndex={active ? 0 : -1} className="shrink-0">
           {entry.hrefLabel}
-        </Link>
+        </Action>
       ) : null}
     </motion.div>
   );
@@ -968,7 +926,7 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
               }}
             />
           </div>
-          <div className="mt-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.22em] text-white/45">
+          <div className="mt-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
             <span>{ready ? "Ready" : "Loading"}</span>
             <span className="tabular-nums text-nltLime/90">
               {String(Math.min(percent, 100)).padStart(3, "0")}

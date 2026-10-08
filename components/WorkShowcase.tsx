@@ -13,7 +13,7 @@
  */
 
 import { motion, useMotionValue, useReducedMotion, useSpring } from "framer-motion";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 
@@ -113,7 +113,7 @@ function ProjectMedia({ media, focus, reduced }: { media: Media; focus?: string;
   }, [media, reduced]);
 
   const cls =
-    "absolute inset-0 h-full w-full object-cover transition-transform duration-[1400ms] ease-portfolio motion-safe:group-hover:scale-[1.025]";
+    "absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-portfolio motion-safe:group-hover:scale-[1.02]";
   if (media.kind === "image") {
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={media.src} alt="" loading="lazy" decoding="async" className={cls} style={{ objectPosition: focus }} />;
@@ -133,7 +133,7 @@ function ProjectMedia({ media, focus, reduced }: { media: Media; focus?: string;
   );
 }
 
-/* the signature lime ↗ that springs after the cursor while a project is hovered */
+/* the signature lime → (every card opens a case study on this site) that springs after the cursor while a project is hovered */
 function useCursorArrow() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -165,7 +165,7 @@ function useCursorArrow() {
         animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.4 }}
         transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
       >
-        <ArrowUpRight className="h-6 w-6" strokeWidth={2.25} />
+        <ArrowRight className="h-6 w-6" strokeWidth={2.25} />
       </motion.span>
     ),
   };
@@ -183,11 +183,11 @@ function Feature({ project, reduced }: { project: Project; reduced: boolean }) {
     <motion.article {...revealProps(reduced)} className="relative">
       <Link
         href={`/work/${project.slug}`}
-        className="group relative block rounded-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
+        className="group relative block rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
         {...(reduced ? {} : handlers)}
       >
         <div
-          className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[20px] md:aspect-[2.3/1]"
+          className="relative aspect-[4/3] w-full overflow-hidden rounded-t-[22px] md:aspect-[2.3/1]"
           style={{ WebkitMaskImage: FADE, maskImage: FADE }}
         >
           <ProjectMedia media={project.media} focus={project.focus} reduced={reduced} />
@@ -200,7 +200,7 @@ function Feature({ project, reduced }: { project: Project; reduced: boolean }) {
             className="pointer-events-none absolute inset-x-0 -bottom-6 -top-8 -z-10"
             style={{ background: "radial-gradient(55% 75% at 20% 70%, rgba(10,11,12,0.6), transparent 75%)" }}
           />
-          <p className="flex items-center gap-2.5 font-mono text-[12px] uppercase tracking-[0.18em] text-white/70">
+          <p className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">
             <BrandMark src={project.logo} />
             {project.company}
           </p>
@@ -221,11 +221,11 @@ function Tile({ project, reduced, delay }: { project: Project; reduced: boolean;
     <motion.article {...revealProps(reduced, delay)} className="relative">
       <Link
         href={`/work/${project.slug}`}
-        className="group relative block rounded-[20px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
+        className="group relative block rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
         {...(reduced ? {} : handlers)}
       >
         <div
-          className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[18px]"
+          className="relative aspect-[16/10] w-full overflow-hidden rounded-t-[22px]"
           style={{ WebkitMaskImage: FADE, maskImage: FADE }}
         >
           <ProjectMedia media={project.media} focus={project.focus} reduced={reduced} />
@@ -236,7 +236,7 @@ function Tile({ project, reduced, delay }: { project: Project; reduced: boolean;
             className="pointer-events-none absolute inset-x-0 -bottom-6 -top-8 -z-10"
             style={{ background: "radial-gradient(70% 70% at 25% 70%, rgba(10,11,12,0.75), transparent 72%)" }}
           />
-          <p className="flex items-center gap-2.5 font-mono text-[12px] uppercase tracking-[0.18em] text-white/70">
+          <p className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">
             <BrandMark src={project.logo} />
             {project.company}
           </p>
@@ -255,7 +255,7 @@ export function WorkShowcase() {
   const reduced = !!useReducedMotion();
   return (
     <section aria-label="Selected projects" className="relative mx-auto w-full max-w-[1160px] px-6 pb-28 pt-16 md:px-10 md:pt-16">
-      <motion.p {...revealProps(reduced)} className="font-mono text-[12px] uppercase tracking-[0.18em] text-nltLime">
+      <motion.p {...revealProps(reduced)} className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">
         Selected work
       </motion.p>
 

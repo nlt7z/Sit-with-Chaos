@@ -2,9 +2,9 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Reveal } from "@/components/Reveal";
+import { Action } from "@/components/Action";
 import { EASE, EMPHASIS, REVEAL } from "@/lib/motion";
 import { CaseStudyToc } from "@/components/SectionRail";
 
@@ -173,7 +173,7 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
         <div className="w-full">
           <div
             ref={frameWrapRef}
-            className="relative w-full overflow-hidden rounded-xl bg-[#141416] ring-1 ring-white/10"
+            className="relative w-full overflow-hidden rounded-[14px] bg-[#141416] ring-1 ring-white/10"
             style={{ aspectRatio: `${NW} / ${NH}` }}
           >
             {mounted ? (
@@ -199,26 +199,21 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
                 rel="noopener noreferrer"
                 className="absolute inset-0 grid place-items-center bg-[#141416] px-4 text-center"
               >
-                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-mono text-[11px] font-medium uppercase tracking-[0.12em] text-[#141416]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[#141416]">
                   Open prototype ↗
                 </span>
               </a>
             ) : (
               <div className="absolute inset-0 grid place-items-center">
-                <span className="font-mono text-[12px] uppercase tracking-[0.16em] text-white/40">Loading…</span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">Loading…</span>
               </div>
             )}
           </div>
-          <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">
+          <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
             {isMobile ? "Interactive prototype" : "Live · follows the text as you scroll"} ·{" "}
-            <a
-              href={src}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-nltLime underline decoration-nltLime/40 underline-offset-4 hover:decoration-nltLime"
-            >
-              open full-screen ↗
-            </a>
+            <Action href={src} variant="label" tone="dark" newTab>
+              open full-screen
+            </Action>
           </p>
         </div>
       </div>
@@ -235,7 +230,7 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
             <div key={`${s.scene}-${i}`}>
               {opensStage ? (
                 <div className="flex items-center gap-3 pt-10 lg:pt-24">
-                  <span className="font-mono text-[12px] uppercase tracking-[0.2em] text-nltLime">{s.stage}</span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">{s.stage}</span>
                   <span className="h-px flex-1 bg-nltLime/25" />
                 </div>
               ) : null}
@@ -252,7 +247,7 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
 
 // ── Type scale — serif on titles only, everything else sans ─────────────────────
 function Kicker({ children }: { children: ReactNode }) {
-  return <p className="font-mono text-[12px] uppercase tracking-[0.2em] text-nltLime">{children}</p>;
+  return <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">{children}</p>;
 }
 function Title({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
@@ -650,7 +645,7 @@ export default function LinerScholarCaseStudy() {
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/assets/liner/linerlogo.png" alt="" className="h-6 w-auto" />
-              <span className="font-mono text-[13px] uppercase tracking-[0.2em] text-white/70">Liner AI</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">Liner AI</span>
             </div>
 
             <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.3rem,6vw,4rem)] font-light leading-[1.03] tracking-[-0.03em] text-white">
@@ -687,14 +682,14 @@ export default function LinerScholarCaseStudy() {
             transition={{ duration: EMPHASIS.duration, delay: reduce ? 0 : 0.12, ease: EASE }}
             className="mt-12 md:mt-16"
           >
-            <div className="overflow-hidden rounded-2xl bg-black ring-1 ring-white/10">
+            <div className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
               <AutoVideo
                 src="/assets/liner/liner-product-video.mp4"
                 poster="/assets/work/liner-hero-v2.png"
                 className="aspect-video h-auto w-full object-cover"
               />
             </div>
-            <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">
+            <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
               Product showcase
             </figcaption>
           </motion.figure>
@@ -709,7 +704,7 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.04}>
             <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
               {/* image left */}
-              <figure className="overflow-hidden rounded-xl bg-white ring-1 ring-white/10">
+              <figure className="overflow-hidden rounded-[14px] bg-white ring-1 ring-white/10">
                 <Image
                   src="/assets/liner/liner introduction.png"
                   alt="Liner AI, an AI-powered research tool for discovering, analyzing, and organizing scholarly content."
@@ -738,7 +733,7 @@ export default function LinerScholarCaseStudy() {
           {/* competitive analysis — image left, text right */}
           <Reveal delay={0.04}>
             <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-              <figure className="overflow-hidden rounded-xl bg-white ring-1 ring-white/10">
+              <figure className="overflow-hidden rounded-[14px] bg-white ring-1 ring-white/10">
                 <Image
                   src="/assets/liner/competitiveanalysis.jpg"
                   alt="Competitive scan across the research lifecycle: Research Rabbit, Google Scholar, Granola, and Elicit"
@@ -814,7 +809,7 @@ export default function LinerScholarCaseStudy() {
                       {f.quote ? (
                         <p className="mt-2.5 text-[15px] leading-[1.6] text-white/80">
                           “{f.quote}”{" "}
-                          <span className="ml-1 font-mono text-[12px] uppercase tracking-[0.08em] text-white/40">
+                          <span className="ml-1 font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">
                             {f.cite}
                           </span>
                         </p>
@@ -824,7 +819,7 @@ export default function LinerScholarCaseStudy() {
                       <figure className="mt-1 lg:mt-0">
                         {/* Uniform plate for all five findings: same aspect box + faint surface + corners,
                          * no ring and no shadow, so the mismatched transparent PNGs share one edge rhythm. */}
-                        <div className="mx-auto flex aspect-[4/3] w-full max-w-[20rem] items-center justify-center overflow-hidden rounded-2xl bg-white/[0.03] p-5 lg:max-w-[26rem]">
+                        <div className="mx-auto flex aspect-[4/3] w-full max-w-[20rem] items-center justify-center overflow-hidden rounded-[14px] bg-white/[0.03] p-5 lg:max-w-[26rem]">
                           <Image
                             src={f.img}
                             alt={f.alt}
@@ -883,7 +878,7 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.05}>
             <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {CONCEPT_STAGES.map(([n, name, text]) => (
-                <li key={name} className="rounded-xl border border-white/10 bg-white/[0.02] p-5">
+                <li key={name} className="rounded-[14px] border border-white/10 bg-white/[0.02] p-5">
                   <span className="font-mono text-[12px] tabular-nums text-nltLime">{n}</span>
                   <p className="mt-2 font-display text-[1.15rem] font-normal text-white">{name}</p>
                   <p className="mt-2 text-[14px] leading-[1.55] text-white/65">{text}</p>
@@ -909,7 +904,7 @@ export default function LinerScholarCaseStudy() {
               <Reveal>
                 {/* intro to the version */}
                 <div className="max-w-2xl">
-                  <span className="font-mono text-[12px] font-medium uppercase tracking-[0.16em] text-white/55">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/55">
                     {it.tag}
                   </span>
                   <Subhead className="mt-1.5">{it.title}</Subhead>
@@ -921,14 +916,9 @@ export default function LinerScholarCaseStudy() {
               {/* feature-by-feature walkthrough of this version */}
               <div className="mt-8">
                 <PrototypeWalkthrough src={it.frame} scenes={WALKS[it.id]} title={`${it.tag} · ${it.title}`} />
-                <a
-                  href={it.frame}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-3 inline-flex items-center gap-1.5 font-mono text-[12px] uppercase tracking-[0.12em] text-nltLime underline decoration-nltLime/40 underline-offset-4 transition-colors hover:decoration-nltLime"
-                >
-                  Open {it.tag} full-screen ↗
-                </a>
+                <Action href={it.frame} variant="label" tone="dark" className="mt-3">
+                  Open {it.tag} full-screen
+                </Action>
               </div>
 
               {/* v3 · the 3 chat layouts — why we explored them, labelled, and the final pick */}
@@ -944,8 +934,8 @@ export default function LinerScholarCaseStudy() {
                     <div className="mt-6 space-y-6">
                       {CHAT_PLANS.map((p) => (
                         <div key={p.tag} className="grid items-center gap-4 sm:grid-cols-[2fr_1fr] sm:gap-8">
-                          <div className="relative overflow-hidden rounded-lg ring-1 ring-white/10">
-                            <span className="absolute left-3 top-3 z-10 rounded-md bg-black/70 px-2.5 py-1 font-mono text-[11px] font-medium uppercase tracking-[0.14em] text-white backdrop-blur">
+                          <div className="relative overflow-hidden rounded-[14px] ring-1 ring-white/10">
+                            <span className="absolute left-3 top-3 z-10 rounded-md bg-black/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-white backdrop-blur">
                               {p.tag}
                             </span>
                             <Image src={p.img} alt={p.tag} width={1400} height={980} className="h-auto w-full" />
@@ -970,7 +960,7 @@ export default function LinerScholarCaseStudy() {
                       </dl>
                     </div>
                     <div className="mt-8 max-w-2xl">
-                      <p className="font-mono text-[12px] uppercase tracking-[0.14em] text-nltLime">Final pick · Plan B + C</p>
+                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">Final pick · Plan B + C</p>
                       <p className="mt-2 text-[15px] leading-[1.65] text-white/70">
                         The AI-and-Group Chat was mine to own, and I designed it by carrying the editor’s own gesture
                         across: the same select-to-reveal from v3’s Focus and Citation modes now drives the chat — you
@@ -1013,7 +1003,7 @@ export default function LinerScholarCaseStudy() {
 
           {/* ask #1 · the small map — every research pain, and the move that answers it */}
           <Reveal delay={0.02}>
-            <div className="overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]">
+            <div className="overflow-hidden rounded-[14px] border border-white/10 bg-white/[0.02]">
               <div className="hidden border-b border-white/10 px-5 py-3 sm:grid sm:grid-cols-[1fr_1.4fr] sm:gap-8">
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">What broke (research)</p>
                 <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">How the build answers it</p>
@@ -1036,7 +1026,7 @@ export default function LinerScholarCaseStudy() {
           {/* the money shot — the whole system in one frame, before we walk it stage by stage */}
           <Reveal delay={0.03}>
             <figure className="mt-2">
-              <div className="overflow-hidden rounded-2xl bg-white ring-1 ring-white/10 shadow-[0_40px_120px_-40px_rgba(210,255,0,0.18)]">
+              <div className="overflow-hidden rounded-[14px] bg-white ring-1 ring-white/10 shadow-[0_40px_120px_-40px_rgba(210,255,0,0.18)]">
                 <Image
                   src="/assets/liner/ideation/v4-final.png"
                   alt="The final build in one screen: the editor with live citations and margin comments, an author tag on the text, and the private AI chat beside the Group Chat of reviewed knowledge cards."
@@ -1046,7 +1036,7 @@ export default function LinerScholarCaseStudy() {
                   className="h-auto w-full"
                 />
               </div>
-              <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[11px] uppercase tracking-[0.12em] text-white/45">
+              <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
                 <span className="text-white/55">Everything composed —</span>
                 {["Citation", "Comments", "Authors", "Focus", "Share-to-group"].map((t) => (
                   <span
@@ -1075,7 +1065,7 @@ export default function LinerScholarCaseStudy() {
             <div className={`pt-10 ${HAIR}`}>
               <Subhead>Validated, then refined</Subhead>
               <div className="mt-5 grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
-                <figure className="overflow-hidden rounded-xl ring-1 ring-white/10">
+                <figure className="overflow-hidden rounded-[14px] ring-1 ring-white/10">
                   <Image
                     src="/assets/liner/Screenshot 2026-07-05 at 01.57.00.png"
                     alt="Section A Capstone Award — Feature integration and platform evolution with AI, Team North4Studio."
@@ -1149,7 +1139,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
 
           <Reveal delay={0.04}>
-            <figure className="overflow-hidden rounded-2xl bg-black ring-1 ring-white/10">
+            <figure className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
               <AutoVideo
                 src="/assets/liner/liner-product-video.mp4"
                 poster="/assets/work/liner-hero-v2.png"
@@ -1169,8 +1159,8 @@ export default function LinerScholarCaseStudy() {
                 {METRICS.map(([label, goal, text]) => (
                   <div key={label}>
                     <dt className="flex flex-wrap items-baseline gap-x-2.5">
-                      <span className="font-mono text-[12px] uppercase tracking-[0.12em] text-nltLime">{label}</span>
-                      <span className="font-mono text-[10px] uppercase tracking-[0.1em] text-white/40">↳ {goal}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">{label}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">↳ {goal}</span>
                     </dt>
                     <dd className="mt-2 text-[15px] leading-[1.55] text-white/70">{text}</dd>
                   </div>
@@ -1180,23 +1170,14 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
           <Reveal delay={0.05}>
             <div className={`pt-10 ${HAIR}`}>
-              <Link
-                href="/work/liner/deck-mono-zh"
-                className="group inline-flex items-center gap-2 rounded-full border border-nltLime/40 bg-nltLime/[0.06] px-6 py-3 text-[14px] font-medium text-nltLime transition-colors hover:border-nltLime/70 hover:bg-nltLime/[0.12]"
-              >
-                View the deck
-                <span className="transition-transform group-hover:translate-x-0.5">↗</span>
-              </Link>
+              <Action href="/work/liner/deck-mono-zh" tone="dark">View the deck</Action>
             </div>
           </Reveal>
           <Reveal delay={0.06}>
             <div className={`pt-8 ${HAIR}`}>
-              <Link
-                href="/work"
-                className="inline-block text-[16px] text-white/70 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white"
-              >
-                ← Back to selected work
-              </Link>
+              <Action href="/work" variant="text" tone="dark" back>
+                Back to selected work
+              </Action>
             </div>
           </Reveal>
         </section>

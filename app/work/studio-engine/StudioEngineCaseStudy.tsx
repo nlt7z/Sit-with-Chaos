@@ -94,7 +94,7 @@ function HoverPanel({ children, className }: { children: ReactNode; className: s
 
 function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/70">
+    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
       {children}
     </p>
   );
@@ -183,7 +183,7 @@ function Figure({
             width={width}
             height={height}
             sizes={gridSizes}
-            className="h-auto w-full object-contain transition-transform duration-[560ms] ease-out group-hover:scale-[1.012]"
+            className="h-auto w-full object-contain transition-transform duration-700 ease-portfolio group-hover:scale-[1.02]"
             priority={priority}
           />
         </div>
@@ -210,7 +210,7 @@ function Figure({
           width={width}
           height={height}
           sizes="(max-width: 1024px) 100vw, min(1152px, 90vw)"
-          className="h-auto w-full object-contain transition-transform duration-[560ms] ease-out group-hover:scale-[1.006]"
+          className="h-auto w-full object-contain transition-transform duration-700 ease-portfolio group-hover:scale-[1.02]"
           priority={priority}
         />
       </div>
@@ -249,11 +249,11 @@ function ParticipantQuote({ quote, attr }: { quote: string; attr: string }) {
       transition={{ duration: 0.4, ease: easePremium }}
       aria-label="Participant feedback"
     >
-      <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime-800/65">Participant signal</p>
+      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-800/65">Participant signal</p>
       <p className="mt-2 text-[15px] leading-relaxed text-textPrimary">
         {quote}
       </p>
-      <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.12em] text-textSecondary/75">
+      <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">
         {attr}
       </p>
     </motion.aside>
@@ -316,7 +316,7 @@ function TaskSuccessEvaluation() {
               className="overflow-hidden border-t border-black/[0.05]"
             >
               <div className="bg-white px-4 pb-4 pt-1 md:px-5 md:pb-5">
-                <p className="py-2 font-mono text-[10px] font-normal uppercase tracking-[0.16em] text-nltLime-600/55">
+                <p className="py-2 font-mono text-[11px] font-normal uppercase tracking-[0.16em] text-nltLime-600/55">
                   By task · success vs error share
                 </p>
                 <div className="divide-y divide-nltLime-200/[0.35]">
@@ -515,7 +515,7 @@ function FlowMacBookPair({
             width={imageWidth}
             height={imageHeight}
             sizes={STUDIO_ENGINE_GRID_2COL_SIZES}
-            className="h-auto w-full object-contain transition-transform duration-[560ms] ease-out group-hover:scale-[1.012]"
+            className="h-auto w-full object-contain transition-transform duration-700 ease-portfolio group-hover:scale-[1.02]"
             onLoadingComplete={remeasure}
           />
         </div>
@@ -596,7 +596,7 @@ function SingleTabletFrame({
             width={width}
             height={height}
             sizes={sizes}
-            className="h-auto w-full object-contain transition-transform duration-[560ms] ease-out group-hover:scale-[1.006]"
+            className="h-auto w-full object-contain transition-transform duration-700 ease-portfolio group-hover:scale-[1.02]"
           />
         </div>
       </MacBookFrame>
@@ -623,7 +623,7 @@ function WorkflowComparisonV2() {
 
         {/* LEFT — Before */}
         <div className="flex flex-col">
-          <span className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/45">Before</span>
+          <span className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/45">Before</span>
           <p className="mb-1.5 font-display text-[1.125rem] font-light leading-snug tracking-[-0.018em] text-textPrimary">
             One pass, no checkpoints
           </p>
@@ -633,7 +633,7 @@ function WorkflowComparisonV2() {
           <div className="flex min-h-[340px] flex-1 flex-col gap-0">
             {/* Prompt node */}
             <div className="shrink-0 border border-black/[0.08] px-5 py-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/70">Prompt</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Prompt</span>
             </div>
             {/* Arrow */}
             <div className="flex shrink-0 items-center justify-center py-2">
@@ -665,14 +665,14 @@ function WorkflowComparisonV2() {
             </div>
             {/* Output node */}
             <div className="shrink-0 border border-black/[0.08] px-5 py-3">
-              <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-textSecondary/70">Output</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Output</span>
             </div>
           </div>
         </div>
 
         {/* RIGHT — After */}
         <div className="flex flex-col">
-          <span className="mb-2 font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/45">After</span>
+          <span className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/45">After</span>
           <p className="mb-1.5 font-display text-[1.125rem] font-light leading-snug tracking-[-0.018em] text-textPrimary">
             Staged, with checkpoints
           </p>
@@ -794,15 +794,15 @@ export default function StudioEngineCaseStudy() {
             className="mt-16 grid grid-cols-1 gap-6 border-t border-black/[0.07] pt-6 sm:flex sm:flex-wrap sm:items-start sm:gap-0 sm:divide-x sm:divide-black/[0.07] sm:border-0 sm:pt-0"
           >
             <div className="sm:pr-8 sm:pt-8">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Product</dt>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Product</dt>
               <dd className="mt-2 text-[15px] text-textPrimary">VP Genie</dd>
             </div>
             <div className="sm:px-8 sm:pt-8">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Role</dt>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Role</dt>
               <dd className="mt-2 text-[15px] leading-relaxed text-textPrimary">Design · Information Architecture · Usability Test</dd>
             </div>
             <div className="sm:pl-8 sm:pt-8">
-              <dt className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Timeline</dt>
+              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Timeline</dt>
               <dd className="mt-2 text-[15px] text-textPrimary">January – April 2025</dd>
             </div>
           </motion.dl>
@@ -839,7 +839,7 @@ export default function StudioEngineCaseStudy() {
             </Prose>
             <div className="mt-16 md:mt-20">
               <div className="max-w-[42rem]">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-textSecondary/65">HMW</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/65">HMW</p>
                 <p className="mt-4 font-display text-[clamp(1.5rem,3.6vw,2.125rem)] font-light leading-[1.1] tracking-[-0.03em] text-textPrimary">
                   How might Studio Engine.ai Gen-2 serve both professionals and emerging creators — and
                   convert free users to paid?
@@ -875,7 +875,7 @@ export default function StudioEngineCaseStudy() {
                   />
                 </div>
                 <div className="px-4 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/70">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
                     Task 01 · Script
                   </p>
                   <p className="mt-2 text-[13px] leading-snug text-textSecondary">
@@ -888,7 +888,7 @@ export default function StudioEngineCaseStudy() {
               {/* Task 02 — featured */}
               <div className="flex flex-col overflow-hidden bg-white">
                 <div className="relative">
-                  <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-3 py-1 font-mono text-[10px] uppercase tracking-[0.1em] text-nltLime-600/80">
+                  <span className="absolute left-3 top-3 z-10 rounded-full bg-white/90 px-3 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-600/80">
                     Where it broke
                   </span>
                   <div className="aspect-video overflow-hidden bg-white">
@@ -903,7 +903,7 @@ export default function StudioEngineCaseStudy() {
                   </div>
                 </div>
                 <div className="px-5 py-5">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-nltLime-600/70">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-600/70">
                     Task 02 · Visual editing
                   </p>
                   <p className="mt-2 text-[15px] font-light leading-snug tracking-[-0.01em] text-textPrimary">
@@ -953,7 +953,7 @@ export default function StudioEngineCaseStudy() {
                   />
                 </div>
                 <div className="px-4 py-4">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-textSecondary/70">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
                     Task 03 · Storyboard
                   </p>
                   <p className="mt-2 text-[13px] leading-snug text-textSecondary">
@@ -973,7 +973,7 @@ export default function StudioEngineCaseStudy() {
         {/* Design principle */}
         <section id="design-principle" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">
           <Reveal>
-          <p className="font-mono text-[10px] uppercase tracking-[0.26em] text-textSecondary/70">
+          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
             AI-native principle
           </p>
           <p className="mt-6 max-w-lg font-display text-[clamp(1.5rem,3.6vw,2.125rem)] font-light leading-[1.1] tracking-[-0.03em] text-textPrimary">
@@ -983,7 +983,7 @@ export default function StudioEngineCaseStudy() {
           <div className="mt-12 border-t border-black/[0.06] pt-10">
             <div className="grid items-start gap-10 md:grid-cols-2 md:gap-16">
               <div>
-                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
+                <p className="mb-8 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
                   What makes text-to-video UX different
                 </p>
                 <div className="space-y-3 text-[15px] leading-[1.68] tracking-[-0.011em] text-textSecondary/90">
@@ -992,7 +992,7 @@ export default function StudioEngineCaseStudy() {
                 </div>
               </div>
               <div>
-                <p className="mb-8 font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
+                <p className="mb-8 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
                   New control patterns needed
                 </p>
                 <ul className="space-y-0 divide-y divide-black/[0.05]">

@@ -13,14 +13,14 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 import { BentoCard } from "@/components/bento/BentoCard";
+import { EMAIL } from "@/lib/site";
 import { HalftoneGlobe } from "@/components/bento/HalftoneGlobe";
 import { QuoteStamp } from "@/components/bento/QuoteStamp";
 import { RAIL_CLEARANCE } from "@/components/bento/railClearance";
 import { SideRail } from "@/components/bento/SideRail";
 import { RoseLoader } from "@/components/RoseLoader";
-import { SplitTextChars } from "@/components/SplitBtn";
+import { Action, isExternal } from "@/components/Action";
 
-const EMAIL = "fangyuanzero7@gmail.com";
 const POSITIONING = { role: "Product Designer", rest: " who makes AI work people can see, check, and steer" };
 const BRAND_TAGS = ["Product Thinking", "Visual Craft", "Curiosity"];
 const INTRO =
@@ -232,7 +232,7 @@ function InViewVideo({ src, poster, className = "" }: { src: string; poster?: st
    so a click navigates instead of starting a header drag. Site rule: ↗ and a
    new tab for other sites, → and the same tab for pages on this site. */
 function CornerArrow({ href, label }: { href: string; label: string }) {
-  const external = /^https?:/.test(href);
+  const external = isExternal(href);
   return (
     <a
       href={href}
@@ -314,7 +314,7 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
 
       {/* name + slogan (+ intro on hover) */}
       <div className="relative shrink-0 leading-none">
-        <p className="mb-2 font-mono text-[12px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
+        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
         <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
         <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
         <div className="relative mt-4">
@@ -342,20 +342,9 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
 
       {/* CTA */}
       <div className="relative mt-auto shrink-0">
-        <a
-          href={`mailto:${EMAIL}`}
-          className="group inline-flex h-11 items-center gap-2 rounded-full bg-nltLime px-5 text-[14px] font-medium text-[#0a0b0c] shadow-[0_0_0_rgba(210,255,0,0)] transition-[box-shadow,transform] duration-300 ease-portfolio hover:shadow-[0_8px_28px_-6px_rgba(210,255,0,0.55)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 focus-visible:ring-offset-2 focus-visible:ring-offset-[#1a1b1d] active:scale-[0.98]"
-        >
-          <span className="sr-only">Say Hello</span>
-          {/* flex + a line box the size of the glyph boxes, so the rolling
-              letters centre on the arrow instead of riding 3px high */}
-          <span aria-hidden className="flex items-center leading-[1.1]">
-            <SplitTextChars text="Say Hello" />
-          </span>
-          <span aria-hidden className="leading-none transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-0.5">
-            ↗
-          </span>
-        </a>
+        <Action href={`mailto:${EMAIL}`} tone="dark" className="focus-visible:ring-offset-[#1a1b1d]">
+          Say Hello
+        </Action>
       </div>
     </div>
   );
@@ -461,7 +450,7 @@ function JourneyCarousel({ reduced }: { reduced: boolean }) {
             <p className="mt-6 font-display text-[clamp(1.3rem,1.8vw,1.7rem)] font-light leading-[1.15] text-white">{j.org}</p>
             {/* the " · year" stays glued to the last word, so a narrow column wraps
                 the title, never the date */}
-            <p className="mt-2 font-mono text-[11px] uppercase leading-[1.5] tracking-[0.06em] text-nltLime">{j.role.replace(/ · /g, "\u00a0·\u00a0")}</p>
+            <p className="mt-2 font-mono text-[11px] uppercase leading-[1.5] tracking-[0.16em] text-nltLime">{j.role.replace(/ · /g, "\u00a0·\u00a0")}</p>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -547,7 +536,7 @@ export function BentoHome() {
                   <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nltLime" />
                 </span>
                 <span className="text-[13px] leading-snug text-white/80">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-nltLime">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
+                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
                 </span>
               </div>
               <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#141416] md:aspect-auto md:min-h-0 md:flex-1">

@@ -6,8 +6,14 @@
  *               film): longer travel and a slight scale, still no blur.
  *   stagger   — siblings revealed as a group.
  *
- * Hover timing lives in Tailwind: colour changes `duration-150`, transform /
- * shadow `duration-300`, both `ease-portfolio` (the same curve as EASE).
+ * Hover timing lives in Tailwind, all on `ease-portfolio` (the same curve as
+ * EASE): colour `duration-150`; control transform / shadow `duration-300`;
+ * media push on a hovered card or image `group-hover:scale-[1.02]
+ * duration-700`.
+ *
+ * Shape: page-level cards and media blocks 22px; media set inside a card or a
+ * reading column 14px; pills and buttons fully round. Labels: mono, uppercase,
+ * 11px, tracking 0.16em.
  */
 
 /** cubic-bezier(0.25, 0.1, 0.25, 1) — Tailwind's `ease-portfolio`. */

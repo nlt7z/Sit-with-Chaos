@@ -102,7 +102,7 @@ export function BentoCard({
           {/* every block names itself top-left (company, project, or widget);
               an unlabeled card keeps an empty strip as its drag handle */}
           {label ? (
-            <span className="font-mono text-[11px] uppercase tracking-[0.08em] text-[#8a8f98]">{label}</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8a8f98]">{label}</span>
           ) : (
             <span aria-hidden className="h-3" />
           )}
