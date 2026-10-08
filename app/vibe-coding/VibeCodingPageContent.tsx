@@ -675,13 +675,16 @@ function MobileFeed({ enabled }: { enabled: boolean }) {
   );
 }
 
-/** Desktop gallery — a vertical, infinitely-looping carousel. The active card
- *  sits centred at full scale with the previous card peeking above and the next
- *  peeking below (dimmed + scaled down); wrapping the offset makes it circular,
- *  so the first item still shows the last above it and the second below. Scroll
- *  wheel / arrows / rail advance one card at a time. Heavy embeds (full-app
- *  iframes + live sites) mount ONLY while active; lightweight video/image
- *  preload one card either side — same memory guard as the mobile feed. */
+/** Desktop gallery — native vertical scroll with CSS scroll-snap: one card per
+ *  snap stop (scroll-snap-stop: always, so a flick still lands one card on),
+ *  the active card centred at full scale, its neighbours peeking above and
+ *  below, dimmed and scaled down. Wheel, trackpad and the scrollbar-less
+ *  gesture are the browser's own; arrows, the right rail and clicking a
+ *  neighbour scroll a card to centre. Heavy embeds (full-app iframes + live
+ *  sites) mount ONLY while active; lightweight video/image preload one card
+ *  either side, the same memory guard as the mobile feed. */
+const SLIDE_VH = 58;
+
 function DesktopFeed({
   enabled,
   onReady,
@@ -689,115 +692,137 @@ function DesktopFeed({
   enabled: boolean;
   onReady: (key: string) => void;
 }) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const wheelLock = useRef(false);
-  const wheelIdle = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState(0);
+  // mirrors `active` for the wheel listener; written where it is measured
+  const activeRef = useRef(0);
   const n = entries.length;
 
-  const go = useCallback((dir: number) => setActive((i) => (i + dir + n) % n), [n]);
-  const prev = useCallback(() => go(-1), [go]);
-  const next = useCallback(() => go(1), [go]);
+  const scrollTo = useCallback((i: number) => {
+    const el = scrollerRef.current?.querySelector<HTMLElement>(`[data-slide="${i}"]`);
+    el?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, []);
 
-  // Keyboard nav — arrows step one card (and preempt native page scroll).
+  // The active card is the slide nearest the scroller's centre.
+  useEffect(() => {
+    const sc = scrollerRef.current;
+    if (!sc) return;
+    let raf = 0;
+    const measure = () => {
+      raf = 0;
+      const slide = (window.innerHeight * SLIDE_VH) / 100;
+      const idx = Math.max(0, Math.min(n - 1, Math.round(sc.scrollTop / slide)));
+      activeRef.current = idx;
+      setActive(idx);
+    };
+    const onScroll = () => {
+      if (!raf) raf = requestAnimationFrame(measure);
+    };
+    measure();
+    sc.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      cancelAnimationFrame(raf);
+      sc.removeEventListener("scroll", onScroll);
+    };
+  }, [n]);
+
+  // A single mouse-wheel notch (~100px) is less than half a card, so mandatory
+  // snapping would pull it straight back. When a wheel gesture with clear
+  // intent settles on the card it started from, finish the step. Trackpad
+  // flicks already land on the next card and pass through untouched.
+  useEffect(() => {
+    const sc = scrollerRef.current;
+    if (!sc || !enabled) return;
+    let accum = 0;
+    let from = -1;
+    let idle: ReturnType<typeof setTimeout> | undefined;
+    const onWheel = (e: WheelEvent) => {
+      if (from < 0) from = activeRef.current;
+      accum += Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      if (idle) clearTimeout(idle);
+      idle = setTimeout(() => {
+        if (activeRef.current === from && Math.abs(accum) >= 60) {
+          scrollTo(Math.max(0, Math.min(n - 1, from + Math.sign(accum))));
+        }
+        accum = 0;
+        from = -1;
+      }, 220);
+    };
+    sc.addEventListener("wheel", onWheel, { passive: true });
+    return () => {
+      sc.removeEventListener("wheel", onWheel);
+      if (idle) clearTimeout(idle);
+    };
+  }, [enabled, n, scrollTo]);
+
+  // Arrow keys step one card (the scroller isn't focused by default).
   useEffect(() => {
     if (!enabled) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         e.preventDefault();
-        next();
+        scrollTo(Math.min(n - 1, active + 1));
       } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
         e.preventDefault();
-        prev();
+        scrollTo(Math.max(0, active - 1));
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [enabled, prev, next]);
-
-  // Scroll-to-advance — exactly one card per gesture. A trackpad flick emits a
-  // long burst of momentum events, so instead of a fixed cooldown we lock on the
-  // first event and only release once the wheel has been quiet for ~180ms (i.e.
-  // the whole gesture, momentum included, has ended). Down = next.
-  useEffect(() => {
-    if (!enabled) return;
-    const el = containerRef.current;
-    if (!el) return;
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      // Reset the idle timer on every event so the lock only lifts after the
-      // burst stops — this is what prevents one flick from skipping a card.
-      if (wheelIdle.current) clearTimeout(wheelIdle.current);
-      wheelIdle.current = setTimeout(() => {
-        wheelLock.current = false;
-      }, 180);
-
-      if (wheelLock.current) return;
-      const dominant = Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-      if (Math.abs(dominant) < 2) return;
-      wheelLock.current = true;
-      if (dominant > 0) next();
-      else prev();
-    };
-    el.addEventListener("wheel", onWheel, { passive: false });
-    return () => {
-      el.removeEventListener("wheel", onWheel);
-      if (wheelIdle.current) clearTimeout(wheelIdle.current);
-    };
-  }, [enabled, prev, next]);
+  }, [enabled, active, n, scrollTo]);
 
   return (
-    <div ref={containerRef} className="relative hidden h-full overflow-hidden md:block">
+    <div className="relative hidden h-full md:block">
       <GhostIndex index={active} />
 
-      {/* Card stack — active centred, neighbours peek above / below. */}
-      <div className="absolute inset-0 z-10 flex items-center justify-center">
+      <div
+        ref={scrollerRef}
+        className="absolute inset-0 z-10 snap-y snap-mandatory overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+      >
+        {/* half a screen of runway above and below, so the first and last
+            cards can snap to centre too */}
+        <div aria-hidden style={{ height: `calc(50% - ${SLIDE_VH / 2}vh)` }} />
         {entries.map((entry, i) => {
-          const halfN = n / 2;
-          let offset = i - active;
-          if (offset > halfN) offset -= n;
-          if (offset < -halfN) offset += n;
-          const dist = Math.abs(offset);
+          const dist = Math.abs(i - active);
           const isActive = dist === 0;
           const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
           const shouldLoad = enabled && (heavy ? isActive : dist <= 1);
           return (
             <div
               key={entryKey(entry)}
-              onClick={() => !isActive && setActive(i)}
-              className="absolute transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.25,0.1,0.25,1)]"
-              style={{
-                transformOrigin: "center center",
-                // neighbours sit far enough out that the caption under the
-                // active card clears them; the -2vh keeps card + caption centred
-                transform: `translateY(calc(${offset} * 58vh - 2vh)) scale(${isActive ? 1 : 0.66})`,
-                opacity: isActive ? 1 : dist === 1 ? 0.4 : 0,
-                // grayscale only — animating blur on a card-sized layer was the
-                // main switch-jank cost; static desaturation is free.
-                filter: isActive ? "none" : "grayscale(1) brightness(0.7)",
-                cursor: isActive ? "default" : "pointer",
-                zIndex: isActive ? 10 : 5 - dist,
-                willChange: dist <= 1 ? "transform, opacity" : undefined,
-                visibility: dist > 1 ? "hidden" : "visible",
-                pointerEvents: dist > 1 ? "none" : undefined,
-              }}
+              data-slide={i}
+              className="flex snap-center snap-always items-center justify-center"
+              style={{ height: `${SLIDE_VH}vh` }}
             >
-              <PrototypeCard
-                entry={entry}
-                shouldLoad={shouldLoad}
-                isActive={isActive}
-                caption={{ index: i, total: n }}
-                onReady={() => onReady(entryKey(entry))}
-              />
+              <div
+                onClick={() => !isActive && scrollTo(i)}
+                className="transition-[transform,opacity,filter] duration-500 ease-portfolio"
+                style={{
+                  transform: `scale(${isActive ? 1 : 0.66})`,
+                  opacity: isActive ? 1 : dist === 1 ? 0.4 : 0,
+                  // grayscale only: static desaturation is free, blur was jank
+                  filter: isActive ? "none" : "grayscale(1) brightness(0.7)",
+                  cursor: isActive ? "default" : "pointer",
+                }}
+              >
+                <PrototypeCard
+                  entry={entry}
+                  shouldLoad={shouldLoad}
+                  isActive={isActive}
+                  caption={{ index: i, total: n }}
+                  onReady={() => onReady(entryKey(entry))}
+                />
+              </div>
             </div>
           );
         })}
+        <div aria-hidden style={{ height: `calc(50% - ${SLIDE_VH / 2}vh)` }} />
       </div>
 
       <SectionRail
         items={entries.map((e) => ({ id: entryKey(e), label: e.title }))}
         active={entryKey(entries[active])}
-        onJump={(id) => setActive(entries.findIndex((e) => entryKey(e) === id))}
+        onJump={(id) => scrollTo(entries.findIndex((e) => entryKey(e) === id))}
         counter
         labels="hover"
         ariaLabel="Prototypes"
