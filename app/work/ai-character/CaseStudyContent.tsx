@@ -13,8 +13,9 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { Action } from "@/components/Action";
+import { CaseHero } from "@/components/CaseHero";
 import { CaseStudyToc } from "@/components/SectionRail";
-import { EASE, EMPHASIS, REVEAL, STAGGER } from "@/lib/motion";
+import { EASE, REVEAL, STAGGER } from "@/lib/motion";
 
 const mediaRound = "rounded-[14px]";
 
@@ -814,11 +815,6 @@ function D1BeforeAfter() {
 
 // Motion comes from lib/motion: one fade-up reveal for everything, no blur.
 const easePremium = EASE;
-
-const heroStack = {
-  hidden: {},
-  visible: { transition: { staggerChildren: STAGGER, delayChildren: 0.12 } },
-};
 
 const heroItem = {
   hidden: { opacity: 0, y: REVEAL.y },
@@ -1623,40 +1619,35 @@ function HeroPrototypeGallery() {
   }
 
   return (
-    <motion.div
-      className="mt-12 md:mt-16"
-      initial={{ opacity: 0, y: EMPHASIS.y, scale: EMPHASIS.scale }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      transition={{ duration: EMPHASIS.duration, delay: 0.4, ease: EASE }}
-    >
+    <div>
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3">
           <button
             type="button"
             aria-label="Previous showroom"
             onClick={() => go(-1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.1] bg-white text-textSecondary transition-colors duration-200 hover:border-black/25 hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 transition-colors duration-150 hover:border-white/30 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M15 18l-6-6 6-6" />
             </svg>
           </button>
-          <p className="min-w-[8.75rem] text-center font-sans text-[13px] font-medium tracking-wide text-textPrimary">
+          <p className="min-w-[8.75rem] text-center font-sans text-[13px] font-medium tracking-wide text-white">
             {active.tab} showroom
-            <span className="ml-2 font-mono text-[11px] font-normal text-textSecondary/55">{idx + 1} / {vibeCodingShowrooms.length}</span>
+            <span className="ml-2 font-mono text-[11px] font-normal text-white/45">{idx + 1} / {vibeCodingShowrooms.length}</span>
           </p>
           <button
             type="button"
             aria-label="Next showroom"
             onClick={() => go(1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-black/[0.1] bg-white text-textSecondary transition-colors duration-200 hover:border-black/25 hover:text-textPrimary focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 transition-colors duration-150 hover:border-white/30 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M9 18l6-6-6-6" />
             </svg>
           </button>
         </div>
-        <Action href={active.href} variant="label">
+        <Action href={active.href} variant="label" tone="dark">
           Open full page
         </Action>
       </div>
@@ -1687,80 +1678,40 @@ function HeroPrototypeGallery() {
         )}
       </div>
 
-      <p className="mt-3 font-sans text-[12px] leading-relaxed text-textSecondary/90">{active.caption}</p>
-    </motion.div>
+      <p className="mt-3 font-sans text-[12px] leading-relaxed text-white/45">{active.caption}</p>
+    </div>
   );
 }
 
-function HeroSection({ reduced }: { reduced: boolean | null }) {
+/** <Em> for the dark hero band. */
+function Hi({ children }: { children: ReactNode }) {
+  return <span className="text-white">{children}</span>;
+}
+
+function HeroSection() {
   return (
-    <section
+    <CaseHero
       id="intro"
-      className="relative scroll-mt-24 overflow-x-hidden pb-32 pt-16 md:scroll-mt-28 md:pb-40 md:pt-24"
+      logo="/assets/logos/alibaba.svg"
+      company="Alibaba Cloud"
+      kicker="Qwen Character"
+      title="Interactive Showrooms: End-to-End Design"
+      intro={
+        <p>
+          Led and shipped the <Hi>end-to-end design</Hi> of Interactive Showrooms, the MVP for the Qwen Character LLM, cutting time-to-first-value from <Hi>hours</Hi> of docs to <Hi>minutes</Hi>, and driving a <Hi>200% lift</Hi> in model API calls.
+        </p>
+      }
     >
-      <div className="relative w-full">
-        <div>
-          <motion.div
-            className="relative"
-            initial={reduced ? false : "hidden"}
-            animate={reduced ? undefined : "visible"}
-            variants={reduced ? undefined : heroStack}
-          >
-            <div className="max-w-4xl">
-              <motion.div className="flex items-center gap-4 sm:gap-5" variants={reduced ? undefined : heroItem}>
-                <img
-                  src="/assets/ai-character/alibaba-cloud-logo.png"
-                  alt="Alibaba Cloud"
-                  width={200}
-                  height={48}
-                  className="h-7 w-auto max-w-[11rem] object-contain object-left opacity-[0.92] md:h-8"
-                  decoding="async"
-                />
-                <span className="h-4 w-px bg-black/15" aria-hidden />
-                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">
-                  Qwen Character
-                </span>
-              </motion.div>
-
-              <div className="mt-7 py-[0.18em] md:mt-8">
-                <motion.h1
-                  className="text-pretty font-display text-[2.2rem] font-light leading-[1.12] tracking-[-0.038em] text-textPrimary md:text-[clamp(2.35rem,4.5vw,2.85rem)] md:leading-[1.1]"
-                  variants={reduced ? undefined : heroItem}
-                >
-                  Interactive Showrooms — End-to-End Design
-                </motion.h1>
-              </div>
-
-              <motion.p
-                className="mt-6 max-w-[40rem] font-sans text-[1.0625rem] font-normal leading-[1.66] tracking-[-0.012em] text-textSecondary md:mt-7 md:text-[1.15rem]"
-                variants={reduced ? undefined : heroItem}
-              >
-                Led and shipped the <Em>end-to-end design</Em> of Interactive Showrooms, the MVP for the Qwen Character LLM — cutting time-to-first-value from <Em>hours</Em> of docs to <Em>minutes</Em>, and driving a <Em>200% lift</Em> in model API calls.
-              </motion.p>
-
-            </div>
-          </motion.div>
-        </div>
-
-        <HeroPrototypeGallery />
-
-        <motion.div
-          className="mt-14 md:mt-20"
-          initial={reduced ? false : { opacity: 0, y: REVEAL.y }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: REVEAL.duration, delay: reduced ? 0 : 0.85, ease: EASE }}
-        >
-          <dl className="grid grid-cols-2 gap-x-8 gap-y-7 pt-8 sm:grid-cols-4 sm:gap-y-0 md:gap-x-10 md:pt-9">
-            {metaFields.map(({ label, value }) => (
-              <div key={label} className="min-w-0 border-l border-black/[0.1] pl-3">
-                <dt className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">{label}</dt>
-                <dd className="mt-2 font-sans text-[13px] leading-snug text-textSecondary/80">{value}</dd>
-              </div>
-            ))}
-          </dl>
-        </motion.div>
-      </div>
-    </section>
+      <HeroPrototypeGallery />
+      <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-7 sm:grid-cols-4 sm:gap-y-0 md:mt-16 md:gap-x-10">
+        {metaFields.map(({ label, value }) => (
+          <div key={label} className="min-w-0 border-l border-white/15 pl-3">
+            <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</dt>
+            <dd className="mt-2 font-sans text-[13px] leading-snug text-white/70">{value}</dd>
+          </div>
+        ))}
+      </dl>
+    </CaseHero>
   );
 }
 
@@ -1858,13 +1809,14 @@ export default function CaseStudyContent() {
     <MobileSlotProvider>
     <div className="relative min-h-screen bg-white">
       <CaseStudyToc items={caseNavItems} />
+      <HeroSection />
       <main className="relative min-h-screen overflow-x-hidden pb-0">
-        <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-0 md:px-[84px] md:pb-24">
-          <HeroSection reduced={reduced} />
+        <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-8 md:px-[84px] md:pb-24 md:pt-12">
 
         {/* PROBLEM */}
         <Section
           id="problem"
+          bordered={false}
           eyebrow="The Problem"
           title="The first hour was killing trial conversion"
         >

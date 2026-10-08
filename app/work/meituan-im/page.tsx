@@ -3,17 +3,16 @@
 import { Footer } from "@/components/Footer";
 import { SideRail } from "@/components/bento/SideRail";
 import Image from "next/image";
-import { motion, useInView, useReducedMotion } from "framer-motion";
+import { useInView, useReducedMotion } from "framer-motion";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Action } from "@/components/Action";
+import { CaseHero } from "@/components/CaseHero";
 import { Reveal } from "@/components/Reveal";
 import { CaseStudyToc } from "@/components/SectionRail";
-import { EASE, REVEAL, STAGGER } from "@/lib/motion";
 
 // useLayoutEffect warns during SSR in React 18; both run pre-paint on the client.
 const useIsomorphicLayoutEffect = typeof window !== "undefined" ? useLayoutEffect : useEffect;
 
-const easePremium = EASE;
 
 const navItems = [
   { id: "overview", label: "Overview" },
@@ -76,6 +75,7 @@ function ScaledPrototypeFrame({
   naturalHeight = 1180,
   displayMaxWidth,
   fitViewport,
+  clip,
 }: {
   src: string;
   title: string;
@@ -86,8 +86,13 @@ function ScaledPrototypeFrame({
   // of the viewport height — the whole prototype stays within one screen
   // instead of overflowing and forcing a page scroll.
   fitViewport?: number;
+  /** Show only this box of the canvas (natural px), e.g. the phone bezel, so
+   *  the canvas's white margin never shows on a dark band. */
+  clip?: { x: number; y: number; w: number; h: number; r: number };
 }) {
   const measureRef = useRef<HTMLDivElement>(null);
+  const boxW = clip ? clip.w : naturalWidth;
+  const boxH = clip ? clip.h : naturalHeight;
   const [scale, setScale] = useState(1);
   const effectiveMax = displayMaxWidth ?? naturalWidth;
 
@@ -97,9 +102,9 @@ function ScaledPrototypeFrame({
     const apply = () => {
       const w = el.clientWidth;
       if (w <= 0) return;
-      let s = Math.min(1, w / naturalWidth);
+      let s = Math.min(1, w / boxW);
       if (fitViewport && typeof window !== "undefined") {
-        s = Math.min(s, (window.innerHeight * fitViewport) / naturalHeight);
+        s = Math.min(s, (window.innerHeight * fitViewport) / boxH);
       }
       setScale(s);
     };
@@ -114,7 +119,7 @@ function ScaledPrototypeFrame({
       ro?.disconnect();
       if (typeof window !== "undefined") window.removeEventListener("resize", apply);
     };
-  }, [naturalWidth, naturalHeight, fitViewport]);
+  }, [boxW, boxH, fitViewport]);
 
   return (
     // measureRef reports the column width (bounded by effectiveMax); the inner
@@ -123,7 +128,7 @@ function ScaledPrototypeFrame({
     <div ref={measureRef} className="mx-auto w-full" style={{ maxWidth: effectiveMax }}>
       <div
         className="relative mx-auto overflow-hidden"
-        style={{ width: naturalWidth * scale, height: naturalHeight * scale }}
+        style={{ width: boxW * scale, height: boxH * scale, borderRadius: clip ? clip.r * scale : undefined }}
       >
         <iframe
           src={src}
@@ -133,10 +138,12 @@ function ScaledPrototypeFrame({
             width: naturalWidth,
             height: naturalHeight,
             border: 0,
+            left: clip ? -clip.x * scale : 0,
+            top: clip ? -clip.y * scale : 0,
             transform: `scale(${scale})`,
             transformOrigin: "top left",
           }}
-          className="absolute left-0 top-0 block"
+          className="absolute block"
         />
       </div>
     </div>
@@ -374,108 +381,69 @@ function SubsectionHeader({ label, hint }: { label?: string; hint?: string }) {
 }
 
 export default function MeituanImCaseStudyPage() {
-  const reduceMotion = useReducedMotion();
-
-  const heroVariants = {
-    hidden: {},
-    show: {
-      transition: { staggerChildren: reduceMotion ? 0 : STAGGER, delayChildren: reduceMotion ? 0 : 0.06 },
-    },
-  };
-  const heroItem = {
-    hidden: reduceMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: REVEAL.y },
-    show: { opacity: 1, y: 0, transition: reduceMotion ? { duration: 0 } : { duration: REVEAL.duration, ease: easePremium } },
-  };
 
   return (
     <>
-      <SideRail active="work" tone="light" />
+      <SideRail active="work" tone="auto" />
       <div className="relative min-h-screen bg-white">
         <CaseStudyToc items={navItems} />
-        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-16 text-left md:px-[84px] md:pb-56 md:pt-24 lg:pb-80">
-          <main className="relative min-h-screen">
-            <header id="overview" className="scroll-mt-28 pb-16 md:pb-24">
-              <motion.div variants={heroVariants} initial="hidden" animate="show">
-                <motion.div variants={heroItem} className="mb-7 flex items-center">
-                  <Image
-                    src="/assets/meituan-im/meituan-logo.png"
-                    alt="Meituan"
-                    width={200}
-                    height={48}
-                    className="h-7 w-auto object-contain object-left md:h-8"
-                  />
-                </motion.div>
-                <motion.p variants={heroItem} className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/85">
-                  Meituan · Local Services · IM Consultation
-                </motion.p>
-                <motion.h1
-                  variants={heroItem}
-                  className="mt-8 max-w-[18ch] font-display text-[2rem] font-light leading-[1.05] tracking-tight text-textPrimary sm:max-w-4xl sm:text-[2.65rem] md:text-[4rem] md:leading-[1.02]"
-                >
-                  Rebuilding the Black Box
-                </motion.h1>
-                <motion.p
-                  variants={heroItem}
-                  className="mt-6 max-w-xl text-[17px] leading-[1.55] tracking-tight text-textPrimary"
-                >
-                  From &ldquo;price transparency&rdquo; to{" "}
-                  <span className="rounded-[3px] bg-[#FFD100] px-1 text-[#3D2E00]">&ldquo;trusted diagnosis&rdquo;</span>{" "}
-                  in local home services.
-                </motion.p>
-                <motion.p
-                  variants={heroItem}
-                  className="mt-5 max-w-xl text-[16px] leading-[1.6] text-textSecondary"
-                >
-                  A 0-to-1 in-chat quotation system for Meituan, a super-app (Uber, Yelp and
-                  TaskRabbit in one) with 770M+ users and 14.5M merchants. Two goals. For users:
-                  make high-stakes services feel less uncertain and less stressful. For the
-                  platform: standardize the conversation, cut friction, and lift order conversion.
-                </motion.p>
-
-                <motion.div variants={heroItem} className="mt-8 flex flex-wrap items-center gap-3">
-                  <Action href="/work/meituan-im/deck-story-en">View Presentation Deck</Action>
-                  <Action href="/work/meituan-im/prototype" variant="secondary" newTab>
-                    Try Prototype
-                  </Action>
-                </motion.div>
-
-                <motion.div
-                  variants={heroItem}
-                  className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-start lg:gap-20 md:mt-14 md:gap-14"
-                  aria-label="Project summary"
-                >
-                  {/* Left — hero metric + shared meta */}
-                  <div className="space-y-10">
-                    {/* Hero metric — slightly smaller so the prototype on the right
-                        can carry equal visual weight. */}
-                    <div>
-                      <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-textPrimary md:text-[3.75rem] lg:text-[5rem]">
-                        +30<span className="text-[0.5em] text-textPrimary/70">%</span>
-                      </p>
-                      <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-textSecondary">
-                        Intent→order conversion in the new channel, about 1.3× the old path. It also lifted overall search conversion <span className="text-textPrimary">+0.5pp</span>.
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Right — the live prototype itself, playing through the default
-                      flow so the hero opens on the real product, not a recording. */}
-                  <div className="flex flex-col items-start">
-                    <ScaledPrototypeFrame
-                      src="/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0"
-                      title="Repair flow — live prototype"
-                      naturalWidth={480}
-                      naturalHeight={1000}
-                      displayMaxWidth={400}
-                      fitViewport={0.78}
-                    />
-                    <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/75">
-                      Live prototype · tap the suggested replies
-                    </p>
-                  </div>
-                </motion.div>
-              </motion.div>
-            </header>
+        <CaseHero
+          logo="/assets/work/logos/meituan.png"
+          company="Meituan"
+          kicker="Local Services · IM Consultation"
+          title="Rebuilding the Black Box"
+          lead={
+            <>
+              From &ldquo;price transparency&rdquo; to{" "}
+              <span className="rounded-[3px] bg-[#FFD100] px-1 text-[#3D2E00]">&ldquo;trusted diagnosis&rdquo;</span>{" "}
+              in local home services.
+            </>
+          }
+          intro={
+            <p>
+              A 0-to-1 in-chat quotation system for Meituan, a super-app (Uber, Yelp and
+              TaskRabbit in one) with 770M+ users and 14.5M merchants. Two goals. For users:
+              make high-stakes services feel less uncertain and less stressful. For the
+              platform: standardize the conversation, cut friction, and lift order conversion.
+            </p>
+          }
+          aside={
+            // the live prototype, clipped to the phone, so the hero opens on
+            // the real product
+            <div className="flex flex-col items-start">
+              <ScaledPrototypeFrame
+                src="/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0"
+                title="Repair flow, live prototype"
+                naturalWidth={480}
+                naturalHeight={1000}
+                displayMaxWidth={340}
+                fitViewport={0.7}
+                clip={{ x: 24, y: 70, w: 432, h: 924, r: 56 }}
+              />
+              <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
+                Live prototype · tap the suggested replies
+              </p>
+            </div>
+          }
+          actions={
+            <>
+              <Action href="/work/meituan-im/deck-story-en" tone="dark">View Presentation Deck</Action>
+              <Action href="/work/meituan-im/prototype" variant="secondary" tone="dark" newTab>
+                Try Prototype
+              </Action>
+            </>
+          }
+        >
+          {/* the headline metric */}
+          <p className="font-display text-[2.5rem] font-light leading-[0.95] tracking-[-0.02em] tabular-nums text-white md:text-[3.75rem]">
+            +30<span className="text-[0.5em] text-white/70">%</span>
+          </p>
+          <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-white/65">
+            Intent→order conversion in the new channel, about 1.3× the old path. It also lifted overall search conversion <span className="text-white">+0.5pp</span>.
+          </p>
+        </CaseHero>
+        <article className="relative z-[1] mx-auto max-w-content bg-white px-6 pb-24 pt-4 text-left md:px-[84px] md:pb-56 lg:pb-80">
+          <main className="relative min-h-screen [&>section:first-of-type]:border-t-0">
 
         <Section id="turning-point" eyebrow="Context · Signal" title="The brief asked for price visibility. The evidence pointed deeper.">
           <FadeIn>

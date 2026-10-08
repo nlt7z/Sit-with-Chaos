@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { CaseStudyMobileToc, type TocItem } from "@/components/CaseStudyMobileToc";
+import { type Tone, type ToneSetting, useSurfaceTone } from "@/lib/useSurfaceTone";
 
 /**
  * SectionRail — "where am I on this page", always on the right edge.
@@ -17,8 +18,6 @@ import { CaseStudyMobileToc, type TocItem } from "@/components/CaseStudyMobileTo
  * legible on top of content. Hidden below md, where CaseStudyMobileToc (or the
  * page's own mobile layout) takes over.
  */
-
-type Tone = "dark" | "light";
 
 const TONE: Record<Tone, { backing: string; label: string; labelOn: string; tick: string; tickOn: string; counter: string; counterOn: string }> = {
   dark: {
@@ -53,7 +52,7 @@ export function SectionRail({
   items: readonly TocItem[];
   active: string;
   onJump: (id: string) => void;
-  tone?: Tone;
+  tone?: ToneSetting;
   /** Show "03 / 12" under the ticks (for carousels with no scrollbar). */
   counter?: boolean;
   /** "auto": labels always shown from 1440px, on hover below. "hover": only on
@@ -61,7 +60,7 @@ export function SectionRail({
   labels?: "auto" | "hover";
   ariaLabel?: string;
 }) {
-  const t = TONE[tone];
+  const t = TONE[useSurfaceTone(tone, 0.5)];
   // Tailwind needs the literal class names, so the wide-screen variants are
   // switched off wholesale for "hover".
   const wide = labels === "auto";
@@ -159,7 +158,7 @@ export function useActiveSection(items: readonly TocItem[]) {
 
 /** Case-study table of contents: the right-edge rail on md+, the floating
  *  "sections" sheet below md. Sections scroll to their own scroll-margin. */
-export function CaseStudyToc({ items, tone = "light" }: { items: readonly TocItem[]; tone?: Tone }) {
+export function CaseStudyToc({ items, tone = "auto" }: { items: readonly TocItem[]; tone?: ToneSetting }) {
   const [active, setActive] = useActiveSection(items);
   const jump = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -169,7 +168,7 @@ export function CaseStudyToc({ items, tone = "light" }: { items: readonly TocIte
   return (
     <>
       <SectionRail items={items} active={active} onJump={jump} tone={tone} />
-      <CaseStudyMobileToc items={items} variant={tone} />
+      <CaseStudyMobileToc items={items} variant={tone === "dark" ? "dark" : "light"} />
     </>
   );
 }

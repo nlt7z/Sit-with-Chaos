@@ -130,7 +130,7 @@ export function TikTokCaseStudyFrame() {
     <>
       <iframe
         ref={ref}
-        src="/assets/TikTok/case-study-en.html"
+        src="/assets/TikTok/case-study-en.html?embed=1"
         title="TikTok · Shared with You — Feed Design case study"
         scrolling="no"
         style={{ width: "100%", height, border: 0, display: "block" }}
@@ -138,8 +138,8 @@ export function TikTokCaseStudyFrame() {
 
       {regions.length > 0 && (
         <>
-          <SectionRail items={regions} active={active} onJump={go} tone="dark" />
-          <CaseStudyMobileToc items={regions} active={active} onJump={go} variant="dark" />
+          <SectionRail items={regions} active={active} onJump={go} tone="auto" />
+          <CaseStudyMobileToc items={regions} active={active} onJump={go} />
         </>
       )}
     </>

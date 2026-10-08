@@ -6,7 +6,6 @@ import { SideRail } from "@/components/bento/SideRail";
 import {
   AnimatePresence,
   motion,
-  useInView,
   useMotionTemplate,
   useMotionValue,
   useReducedMotion,
@@ -15,8 +14,9 @@ import {
 import Image from "next/image";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState, type ReactNode } from "react";
 import { CaseStudyToc } from "@/components/SectionRail";
+import { CaseHero } from "@/components/CaseHero";
 import { Reveal } from "@/components/Reveal";
-import { EASE, EMPHASIS, REVEAL } from "@/lib/motion";
+import { EASE } from "@/lib/motion";
 
 // one curve site-wide (lib/motion); the aliases keep the call sites readable
 const easePremium = EASE;
@@ -727,98 +727,54 @@ function WorkflowComparisonV2() {
 }
 
 export default function StudioEngineCaseStudy() {
-  const reduce = useReducedMotion();
 
   return (
     <>
-      <SideRail active="work" tone="light" />
-      <main className="relative min-h-screen overflow-x-hidden bg-white text-textPrimary">
-        <CaseStudyToc items={caseNavItems} />
-        <article className="relative z-10 mx-auto max-w-content px-6 pb-24 pt-16 md:px-[84px] md:pb-52 md:pt-24">
-        <header id="overview" className="scroll-mt-32 max-w-4xl">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: REVEAL.duration, ease: easeLux }}
-            className="flex items-center"
-          >
-            <Image
-              src="/assets/studio-engine/studioengine-logo.png"
-              alt="StudioEngine AI"
-              width={320}
-              height={68}
-              priority
-              className="h-8 w-auto object-contain object-left md:h-9"
-            />
-          </motion.div>
-          <motion.h1
-            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.08, ease: easeLux }}
-            className="mt-8 font-display text-[clamp(2rem,5vw,3rem)] font-light leading-[1.06] tracking-[-0.03em] text-textPrimary"
-          >
-            Designing Control Into AI Video Creation
-          </motion.h1>
-          <motion.p
-            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.14, ease: easeLux }}
-            className="mt-12 max-w-[40rem] text-[1.125rem] font-light leading-snug tracking-[-0.02em] text-textSecondary/95 md:text-[1.25rem]"
-          >
-            I restructured a one-shot Gen-2 text-to-video tool into a four-stage creative workspace —
-            basics, outline, script, visuals — with checkpoints and version history so creators iterate
+      <SideRail active="work" tone="auto" />
+      <CaseStudyToc items={caseNavItems} />
+      <CaseHero
+        logo="/assets/work/logos/studioengine.png"
+        company="StudioEngine"
+        kicker="VP Genie"
+        title="Designing Control Into AI Video Creation"
+        intro={
+          <p>
+            I restructured a one-shot Gen-2 text-to-video tool into a four-stage creative workspace
+            (basics, outline, script, visuals) with checkpoints and version history so creators iterate
             instead of re-generating.
-          </motion.p>
-
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.19, ease: easeLux }}
-            className="mt-10 flex flex-wrap gap-x-8 gap-y-3"
-          >
-            {[
-              "6 moderated usability tests",
-              "6/6 users struggled with visual editing",
-              "One-shot generation → staged creative control",
-            ].map((s) => (
-              <span key={s} className="text-[13px] leading-snug text-textSecondary/80">
-                {s}
-              </span>
-            ))}
-          </motion.div>
-
-          <motion.dl
-            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: REVEAL.duration, delay: reduce ? 0 : 0.22, ease: easeLux }}
-            className="mt-16 grid grid-cols-1 gap-6 border-t border-black/[0.07] pt-6 sm:flex sm:flex-wrap sm:items-start sm:gap-0 sm:divide-x sm:divide-black/[0.07] sm:border-0 sm:pt-0"
-          >
-            <div className="sm:pr-8 sm:pt-8">
-              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Product</dt>
-              <dd className="mt-2 text-[15px] text-textPrimary">VP Genie</dd>
+          </p>
+        }
+      >
+        <ul className="flex flex-wrap gap-x-8 gap-y-3">
+          {[
+            "6 moderated usability tests",
+            "6/6 users struggled with visual editing",
+            "One-shot generation → staged creative control",
+          ].map((t) => (
+            <li key={t} className="text-[13px] leading-snug text-white/60">
+              {t}
+            </li>
+          ))}
+        </ul>
+        <dl className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-10">
+          {[
+            ["Product", "VP Genie"],
+            ["Role", "Design · Information Architecture · Usability Test"],
+            ["Timeline", "January – April 2025"],
+          ].map(([k, v]) => (
+            <div key={k} className="min-w-0 border-l border-white/15 pl-3">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">{k}</dt>
+              <dd className="mt-2 text-[15px] leading-relaxed text-white/80">{v}</dd>
             </div>
-            <div className="sm:px-8 sm:pt-8">
-              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Role</dt>
-              <dd className="mt-2 text-[15px] leading-relaxed text-textPrimary">Design · Information Architecture · Usability Test</dd>
-            </div>
-            <div className="sm:pl-8 sm:pt-8">
-              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Timeline</dt>
-              <dd className="mt-2 text-[15px] text-textPrimary">January – April 2025</dd>
-            </div>
-          </motion.dl>
-
-        </header>
-
-        <div className="relative mt-20 md:mt-28 lg:mt-32">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: EMPHASIS.y, scale: EMPHASIS.scale }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: EMPHASIS.duration, delay: reduce ? 0 : 0.26, ease: easeLux }}
-            className="overflow-hidden"
-          >
-            <WorkflowComparisonV2 />
-          </motion.div>
-        </div>
+          ))}
+        </dl>
+      </CaseHero>
+      <main className="relative min-h-screen overflow-x-hidden bg-white text-textPrimary">
+        <article className="relative z-10 mx-auto max-w-content px-6 pb-24 pt-8 md:px-[84px] md:pb-52 md:pt-12">
+        {/* the before / after, the first thing the article shows */}
+        <Reveal emphasis className="relative mt-8 overflow-hidden md:mt-12">
+          <WorkflowComparisonV2 />
+        </Reveal>
 
         {/* Problem */}
         <section id="product" className="scroll-mt-32 mt-20 md:mt-44 lg:mt-56">

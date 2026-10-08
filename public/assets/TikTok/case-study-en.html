@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<script>if(/[?&]embed\b/.test(location.search))document.documentElement.classList.add("embed")</script>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Shared with You · TikTok Friend-Sharing Case Study</title>
@@ -360,6 +361,13 @@ footer .brand{font-family:var(--mono);font-size:12px;letter-spacing:0.08em;text-
   .ib-name{font-size:19px;} .ib-frame{height:420px;} .final-frame{height:520px;}
   .about-photo img{max-width:100%;}
 }
+
+/* Embedded in the portfolio (/work/tiktok?embed): the page supplies the dark
+   hero, so this build hides its own and reads light, like every case study. */
+html.embed .hero{display:none}
+html.embed .grain{display:none}
+@media (min-width:768px){html.embed .wrap{max-width:1152px;padding:0 84px}}
+html.embed{--bg:#ffffff;--line:rgba(0,0,0,0.08);--line-soft:rgba(0,0,0,0.06);--t-1:#1d1d1f;--t-2:#45474e;--t-3:#6e6e73;--t-4:#9a9ca3}
 </style>
 </head>
 <body>

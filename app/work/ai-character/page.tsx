@@ -40,7 +40,7 @@ export default function AiCharacterPage() {
         image={OG_IMAGE}
         datePublished="2025-09-15"
       />
-      <SideRail active="work" tone="light" />
+      <SideRail active="work" tone="auto" />
       <CaseStudyContent />
       <Footer showTopBorder={false} />
     </>

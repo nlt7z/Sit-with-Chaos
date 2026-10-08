@@ -40,9 +40,9 @@ export default function LinerPage() {
         image={OG_IMAGE}
         datePublished="2026-05-01"
       />
-      <SideRail active="work" />
+      <SideRail active="work" tone="auto" />
       <LinerScholarCaseStudy />
-      <Footer variant="dark" />
+      <Footer />
     </>
   );
 }

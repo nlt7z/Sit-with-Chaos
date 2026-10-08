@@ -1,11 +1,10 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Reveal } from "@/components/Reveal";
 import { Action } from "@/components/Action";
-import { EASE, EMPHASIS, REVEAL } from "@/lib/motion";
+import { CaseHero } from "@/components/CaseHero";
 import { CaseStudyToc } from "@/components/SectionRail";
 
 
@@ -81,14 +80,14 @@ function SceneBlock({
       }`}
     >
       <div className="flex items-baseline gap-2.5">
-        <span className="font-mono text-[12px] tabular-nums text-nltLime">{String(index + 1).padStart(2, "0")}</span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">{s.label}</span>
+        <span className="font-mono text-[12px] tabular-nums text-nltLime-ink">{String(index + 1).padStart(2, "0")}</span>
+        <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">{s.label}</span>
       </div>
-      <h3 className="mt-2.5 font-display text-[1.3rem] font-normal leading-snug text-white">{s.title}</h3>
-      <p className="mt-3 text-[16px] leading-[1.65] text-white/75">{s.body}</p>
+      <h3 className="mt-2.5 font-display text-[1.3rem] font-normal leading-snug text-textPrimary">{s.title}</h3>
+      <p className="mt-3 text-[16px] leading-[1.65] text-textSecondary">{s.body}</p>
       {s.why ? (
-        <p className="mt-3 text-[16px] leading-[1.65] text-white/50">
-          <span className="text-nltLime">Why · </span>
+        <p className="mt-3 text-[16px] leading-[1.65] text-textSecondary/80">
+          <span className="text-nltLime-ink">Why · </span>
           {s.why}
         </p>
       ) : null}
@@ -173,7 +172,7 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
         <div className="w-full">
           <div
             ref={frameWrapRef}
-            className="relative w-full overflow-hidden rounded-[14px] bg-[#141416] ring-1 ring-white/10"
+            className="relative w-full overflow-hidden rounded-[14px] bg-[#141416] ring-1 ring-black/[0.08]"
             style={{ aspectRatio: `${NW} / ${NH}` }}
           >
             {mounted ? (
@@ -205,13 +204,13 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
               </a>
             ) : (
               <div className="absolute inset-0 grid place-items-center">
-                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">Loading…</span>
+                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">Loading…</span>
               </div>
             )}
           </div>
-          <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
+          <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
             {isMobile ? "Interactive prototype" : "Live · follows the text as you scroll"} ·{" "}
-            <Action href={src} variant="label" tone="dark" newTab>
+            <Action href={src} variant="label" newTab>
               open full-screen
             </Action>
           </p>
@@ -230,8 +229,8 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
             <div key={`${s.scene}-${i}`}>
               {opensStage ? (
                 <div className="flex items-center gap-3 pt-10 lg:pt-24">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">{s.stage}</span>
-                  <span className="h-px flex-1 bg-nltLime/25" />
+                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">{s.stage}</span>
+                  <span className="h-px flex-1 bg-black/[0.08]" />
                 </div>
               ) : null}
               <SceneBlock s={s} index={i} isActive={active === i} onActivate={setActive} />
@@ -247,27 +246,27 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
 
 // ── Type scale — serif on titles only, everything else sans ─────────────────────
 function Kicker({ children }: { children: ReactNode }) {
-  return <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">{children}</p>;
+  return <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">{children}</p>;
 }
 function Title({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
-    <h2 className={`max-w-3xl font-display text-[1.9rem] font-light leading-[1.15] tracking-[-0.02em] text-white ${className}`}>
+    <h2 className={`max-w-3xl font-display text-[1.9rem] font-light leading-[1.15] tracking-[-0.02em] text-textPrimary ${className}`}>
       {children}
     </h2>
   );
 }
 function Subhead({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <h3 className={`font-display text-[1.2rem] font-normal leading-snug text-white ${className}`}>{children}</h3>;
+  return <h3 className={`font-display text-[1.2rem] font-normal leading-snug text-textPrimary ${className}`}>{children}</h3>;
 }
 function Lead({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`max-w-2xl space-y-3 text-[16px] leading-[1.7] text-white/70 ${className}`}>{children}</div>;
+  return <div className={`max-w-2xl space-y-3 text-[16px] leading-[1.7] text-textSecondary ${className}`}>{children}</div>;
 }
 function Body({ children, className = "" }: { children: ReactNode; className?: string }) {
-  return <div className={`max-w-2xl space-y-3 text-[16px] leading-[1.65] text-white/70 ${className}`}>{children}</div>;
+  return <div className={`max-w-2xl space-y-3 text-[16px] leading-[1.65] text-textSecondary ${className}`}>{children}</div>;
 }
 
 const SECTION = "scroll-mt-28 pt-16 md:pt-24 lg:pt-28";
-const HAIR = "border-t border-white/10";
+const HAIR = "border-t border-black/[0.08]";
 
 // ── Content data ────────────────────────────────────────────────────────────────
 
@@ -613,88 +612,53 @@ const FUTURE = [
 ] as const;
 
 export default function LinerScholarCaseStudy() {
-  const reduce = useReducedMotion();
 
   return (
-    <div className="relative min-h-screen bg-[#0a0b0c] text-white">
-      {/* dot-matrix + lime wash — mirrors the homepage's dark canvas */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{
-          backgroundImage: "radial-gradient(rgba(210,255,0,0.10) 1px, transparent 1.5px)",
-          backgroundSize: "13px 13px",
-          WebkitMaskImage: "radial-gradient(120% 90% at 88% 1%, black 0%, transparent 58%)",
-          maskImage: "radial-gradient(120% 90% at 88% 1%, black 0%, transparent 58%)",
-        }}
-      />
-      <div
-        aria-hidden
-        className="pointer-events-none fixed inset-0 z-0"
-        style={{ background: "radial-gradient(48% 38% at 5% 0%, rgba(210,255,0,0.06), transparent 70%)" }}
-      />
-      <CaseStudyToc items={navItems} tone="dark" />
-      <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-16 text-left md:px-[84px] md:pb-36 md:pt-24">
-        {/* 1 · Overview — hero */}
-        <header id="overview" className="scroll-mt-28">
-          <motion.div
-            initial={reduce ? false : { opacity: 0, y: REVEAL.y }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: REVEAL.duration, ease: EASE }}
-          >
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/assets/liner/linerlogo.png" alt="" className="h-6 w-auto" />
-              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">Liner AI</span>
+    <div className="relative min-h-screen bg-white text-textPrimary">
+      <CaseStudyToc items={navItems} />
+      <CaseHero
+        logo="/assets/logos/liner.png"
+        company="Liner AI"
+        title="Collaborative deep-research workflow"
+        intro={
+          <>
+            <p>
+              Liner’s AI is built for one person, but deep research is a team effort. Papers, reviews, whole studies
+              are run by groups, so shared work is where the product is headed.
+            </p>
+            <p>
+              The catch: AI today is mostly private, while a team needs a{" "}
+              <span className="text-white">shared intelligence</span> where every source stays traceable, a higher
+              bar than solo use. This project designs how to keep the two in balance.
+            </p>
+          </>
+        }
+      >
+        {/* the shape of the project up front */}
+        <dl className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-10">
+          {FACTS.map(([label, value]) => (
+            <div key={label} className="min-w-0 border-l border-white/15 pl-3">
+              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</dt>
+              <dd className="mt-2 text-[14px] leading-[1.5] text-white/80">{value}</dd>
             </div>
+          ))}
+        </dl>
 
-            <h1 className="mt-6 max-w-4xl font-display text-[clamp(2.3rem,6vw,4rem)] font-light leading-[1.03] tracking-[-0.03em] text-white">
-              Collaborative deep-research workflow
-            </h1>
-
-            <div className="mt-7 max-w-2xl space-y-3.5 text-[17px] leading-[1.6] text-white/70">
-              <p>
-                Liner’s AI is built for one person, but deep research is a team effort. Papers, reviews, whole studies
-                are run by groups, so shared work is where the product is headed.
-              </p>
-              <p>
-                The catch: AI today is mostly private, while a team needs a{" "}
-                <span className="text-white">shared intelligence</span> where every source stays traceable, a higher
-                bar than solo use. This project designs how to keep the two in balance.
-              </p>
-            </div>
-
-            {/* the shape of the project up front */}
-            <dl className="mt-10 grid grid-cols-1 gap-x-8 gap-y-6 border-t border-white/10 pt-7 sm:grid-cols-3 sm:gap-y-0">
-              {FACTS.map(([label, value]) => (
-                <div key={label}>
-                  <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">{label}</dt>
-                  <dd className="mt-2 text-[14px] leading-[1.5] text-white/75">{value}</dd>
-                </div>
-              ))}
-            </dl>
-          </motion.div>
-
-          {/* the product, framed */}
-          <motion.figure
-            initial={reduce ? false : { opacity: 0, y: EMPHASIS.y, scale: EMPHASIS.scale }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            transition={{ duration: EMPHASIS.duration, delay: reduce ? 0 : 0.12, ease: EASE }}
-            className="mt-12 md:mt-16"
-          >
-            <div className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
-              <AutoVideo
-                src="/assets/liner/liner-product-video.mp4"
-                poster="/assets/work/liner-hero-v2.png"
-                className="aspect-video h-auto w-full object-cover"
-              />
-            </div>
-            <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
-              Product showcase
-            </figcaption>
-          </motion.figure>
-        </header>
-
+        {/* the product, framed */}
+        <figure className="mt-12 md:mt-16">
+          <div className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
+            <AutoVideo
+              src="/assets/liner/liner-product-video.mp4"
+              poster="/assets/work/liner-hero-v2.png"
+              className="aspect-video h-auto w-full object-cover"
+            />
+          </div>
+          <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
+            Product showcase
+          </figcaption>
+        </figure>
+      </CaseHero>
+      <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-4 text-left md:px-[84px] md:pb-36">
         {/* 2 · The brief */}
         <section id="background" className={`${SECTION} space-y-8`}>
           <Reveal>
@@ -704,7 +668,7 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.04}>
             <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
               {/* image left */}
-              <figure className="overflow-hidden rounded-[14px] bg-white ring-1 ring-white/10">
+              <figure className="overflow-hidden rounded-[14px] bg-white ring-1 ring-black/[0.08]">
                 <Image
                   src="/assets/liner/liner introduction.png"
                   alt="Liner AI, an AI-powered research tool for discovering, analyzing, and organizing scholarly content."
@@ -714,7 +678,7 @@ export default function LinerScholarCaseStudy() {
                 />
               </figure>
               {/* text right */}
-              <div className="space-y-3 text-[16px] leading-[1.65] text-white/70">
+              <div className="space-y-3 text-[16px] leading-[1.65] text-textSecondary">
                 {BRIEF.map((p, i) => (
                   <p key={i}>{p}</p>
                 ))}
@@ -733,7 +697,7 @@ export default function LinerScholarCaseStudy() {
           {/* competitive analysis — image left, text right */}
           <Reveal delay={0.04}>
             <div className="grid items-center gap-8 lg:grid-cols-2 lg:gap-12">
-              <figure className="overflow-hidden rounded-[14px] bg-white ring-1 ring-white/10">
+              <figure className="overflow-hidden rounded-[14px] bg-white ring-1 ring-black/[0.08]">
                 <Image
                   src="/assets/liner/competitiveanalysis.jpg"
                   alt="Competitive scan across the research lifecycle: Research Rabbit, Google Scholar, Granola, and Elicit"
@@ -744,14 +708,14 @@ export default function LinerScholarCaseStudy() {
               </figure>
               <div>
                 <Subhead>Competitive analysis</Subhead>
-                <div className="mt-3 space-y-3 text-[16px] leading-[1.65] text-white/70">
+                <div className="mt-3 space-y-3 text-[16px] leading-[1.65] text-textSecondary">
                   <p>
                     Academic collaboration isn’t co-editing a document. It moves through stages: discovering
                     literature, interpreting it together, drafting arguments, revising on feedback. So I mapped tools
                     across that lifecycle to see how collaboration and AI support actually work.
                   </p>
                   <p>
-                    <span className="text-white">Collaboration is most active in writing and review</span>, and turns
+                    <span className="text-textPrimary">Collaboration is most active in writing and review</span>, and turns
                     individual at interpretation and AI-assisted revision. That gap is where we saw a possible design
                     opportunity for Liner’s future collaboration workflow.
                   </p>
@@ -764,12 +728,12 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.06}>
             <div className="max-w-2xl">
               <Subhead>Expert &amp; user interviews</Subhead>
-              <div className="mt-3 space-y-3 text-[16px] leading-[1.65] text-white/70">
+              <div className="mt-3 space-y-3 text-[16px] leading-[1.65] text-textSecondary">
                 <p>
                   We interviewed 11 researchers in 2 waves. The first 7, recruited through our own networks, showed
-                  us <span className="text-white">how researchers actually work and where collaboration breaks</span>.
+                  us <span className="text-textPrimary">how researchers actually work and where collaboration breaks</span>.
                   The next 4, active Liner users, told us{" "}
-                  <span className="text-white">what still breaks once you’re fluent</span> and helped us rank what to
+                  <span className="text-textPrimary">what still breaks once you’re fluent</span> and helped us rank what to
                   build next.
                 </p>
               </div>
@@ -794,22 +758,22 @@ export default function LinerScholarCaseStudy() {
                   >
                     <div className="max-w-2xl">
                       <div className="flex items-baseline gap-3">
-                        <span className="font-mono text-[13px] tabular-nums text-nltLime">
+                        <span className="font-mono text-[13px] tabular-nums text-nltLime-ink">
                           {String(i + 1).padStart(2, "0")}
                         </span>
-                        <h3 className="text-[18px] font-medium leading-snug text-white">{f.title}</h3>
+                        <h3 className="text-[18px] font-medium leading-snug text-textPrimary">{f.title}</h3>
                       </div>
-                      <p className="mt-3 text-[16px] leading-[1.65] text-white/70">{f.body}</p>
+                      <p className="mt-3 text-[16px] leading-[1.65] text-textSecondary">{f.body}</p>
                       {f.pain ? (
-                        <p className="mt-2.5 text-[15px] leading-[1.6] text-white/55">
-                          <span className="text-nltLime">Pain · </span>
+                        <p className="mt-2.5 text-[15px] leading-[1.6] text-textSecondary/80">
+                          <span className="text-nltLime-ink">Pain · </span>
                           {f.pain}
                         </p>
                       ) : null}
                       {f.quote ? (
-                        <p className="mt-2.5 text-[15px] leading-[1.6] text-white/80">
+                        <p className="mt-2.5 text-[15px] leading-[1.6] text-textPrimary/85">
                           “{f.quote}”{" "}
-                          <span className="ml-1 font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">
+                          <span className="ml-1 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
                             {f.cite}
                           </span>
                         </p>
@@ -819,7 +783,7 @@ export default function LinerScholarCaseStudy() {
                       <figure className="mt-1 lg:mt-0">
                         {/* Uniform plate for all five findings: same aspect box + faint surface + corners,
                          * no ring and no shadow, so the mismatched transparent PNGs share one edge rhythm. */}
-                        <div className="mx-auto flex aspect-[4/3] w-full max-w-[20rem] items-center justify-center overflow-hidden rounded-[14px] bg-white/[0.03] p-5 lg:max-w-[26rem]">
+                        <div className="mx-auto flex aspect-[4/3] w-full max-w-[20rem] items-center justify-center overflow-hidden rounded-[14px] bg-black/[0.02] p-5 lg:max-w-[26rem]">
                           <Image
                             src={f.img}
                             alt={f.alt}
@@ -841,7 +805,7 @@ export default function LinerScholarCaseStudy() {
         <section id="goal" className={`${SECTION} pb-4`}>
           <Reveal>
             <Kicker>The question</Kicker>
-            <p className="mt-6 max-w-4xl border-l-2 border-nltLime pl-5 font-display text-[1.7rem] font-light leading-[1.3] text-white md:text-[2.1rem]">
+            <p className="mt-6 max-w-4xl border-l-2 border-nltLime pl-5 font-display text-[1.7rem] font-light leading-[1.3] text-textPrimary md:text-[2.1rem]">
               How might AI research tools support private, exploratory thinking while enabling transparent, accountable
               team collaboration?
             </p>
@@ -868,7 +832,7 @@ export default function LinerScholarCaseStudy() {
                 This reframe was mine to make, and it came straight from the research: the real friction in a team
                 isn’t the work itself — it’s that one person always ends up doing the glue work, the invisible
                 coordination labour that holds the group together. So in the team context, I recast AI’s role: it’s no
-                longer a chat partner or a teammate persona — it’s a <span className="text-white">background</span>. It
+                longer a chat partner or a teammate persona — it’s a <span className="text-textPrimary">background</span>. It
                 posts the group digest, keeps every citation checked, and takes over the coordination that used to fall
                 on one person. It never drafts or decides in your place; it absorbs the busywork so the humans can do
                 the judgment.
@@ -878,10 +842,10 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.05}>
             <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {CONCEPT_STAGES.map(([n, name, text]) => (
-                <li key={name} className="rounded-[14px] border border-white/10 bg-white/[0.02] p-5">
-                  <span className="font-mono text-[12px] tabular-nums text-nltLime">{n}</span>
-                  <p className="mt-2 font-display text-[1.15rem] font-normal text-white">{name}</p>
-                  <p className="mt-2 text-[14px] leading-[1.55] text-white/65">{text}</p>
+                <li key={name} className="rounded-[14px] border border-black/[0.08] bg-black/[0.02] p-5">
+                  <span className="font-mono text-[12px] tabular-nums text-nltLime-ink">{n}</span>
+                  <p className="mt-2 font-display text-[1.15rem] font-normal text-textPrimary">{name}</p>
+                  <p className="mt-2 text-[14px] leading-[1.55] text-textSecondary">{text}</p>
                 </li>
               ))}
             </ol>
@@ -893,7 +857,7 @@ export default function LinerScholarCaseStudy() {
           <Reveal>
             <Kicker>Ideation &amp; the decision</Kicker>
             <Title className="mt-5">From a personal tool to a team workflow</Title>
-            <p className="mt-6 max-w-2xl text-[13px] leading-relaxed text-white/50">
+            <p className="mt-6 max-w-2xl text-[13px] leading-relaxed text-textSecondary/80">
               Each version is the real, running prototype, walked feature by feature. As you scroll, the live window
               jumps to the feature the text is describing.
             </p>
@@ -904,19 +868,19 @@ export default function LinerScholarCaseStudy() {
               <Reveal>
                 {/* intro to the version */}
                 <div className="max-w-2xl">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/55">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/80">
                     {it.tag}
                   </span>
                   <Subhead className="mt-1.5">{it.title}</Subhead>
-                  <p className="mt-3 text-[16px] leading-[1.65] text-white/70">{it.body}</p>
-                  <p className="mt-4 text-[15px] leading-[1.6] text-white">{it.call}</p>
+                  <p className="mt-3 text-[16px] leading-[1.65] text-textSecondary">{it.body}</p>
+                  <p className="mt-4 text-[15px] leading-[1.6] text-textPrimary">{it.call}</p>
                 </div>
               </Reveal>
 
               {/* feature-by-feature walkthrough of this version */}
               <div className="mt-8">
                 <PrototypeWalkthrough src={it.frame} scenes={WALKS[it.id]} title={`${it.tag} · ${it.title}`} />
-                <Action href={it.frame} variant="label" tone="dark" className="mt-3">
+                <Action href={it.frame} variant="label" className="mt-3">
                   Open {it.tag} full-screen
                 </Action>
               </div>
@@ -926,7 +890,7 @@ export default function LinerScholarCaseStudy() {
                 {it.id === "v3" ? (
                   <div className="mt-12">
                     <Subhead>Why 3 chat layouts?</Subhead>
-                    <p className="mt-3 max-w-2xl text-[15px] leading-[1.65] text-white/70">
+                    <p className="mt-3 max-w-2xl text-[15px] leading-[1.65] text-textSecondary">
                       The chat is where private and shared meet, so its arrangement decides how easily an idea crosses
                       over. Each option trades simplicity against continuity. I built all 3 to see which one kept the
                       share-to-group move fluid.
@@ -934,15 +898,15 @@ export default function LinerScholarCaseStudy() {
                     <div className="mt-6 space-y-6">
                       {CHAT_PLANS.map((p) => (
                         <div key={p.tag} className="grid items-center gap-4 sm:grid-cols-[2fr_1fr] sm:gap-8">
-                          <div className="relative overflow-hidden rounded-[14px] ring-1 ring-white/10">
+                          <div className="relative overflow-hidden rounded-[14px] ring-1 ring-black/[0.08]">
                             <span className="absolute left-3 top-3 z-10 rounded-md bg-black/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-white backdrop-blur">
                               {p.tag}
                             </span>
                             <Image src={p.img} alt={p.tag} width={1400} height={980} className="h-auto w-full" />
                           </div>
                           <div>
-                            <p className="font-medium text-white">{p.tag}</p>
-                            <p className="mt-1.5 text-[15px] leading-[1.55] text-white/70">{p.text}</p>
+                            <p className="font-medium text-textPrimary">{p.tag}</p>
+                            <p className="mt-1.5 text-[15px] leading-[1.55] text-textSecondary">{p.text}</p>
                           </div>
                         </div>
                       ))}
@@ -950,18 +914,18 @@ export default function LinerScholarCaseStudy() {
                     {/* usability testing — who we validated with */}
                     <div className="mt-10">
                       <Subhead>Usability testing</Subhead>
-                      <dl className="mt-4 grid gap-6 border-t border-white/10 pt-6 sm:grid-cols-3 sm:gap-8">
+                      <dl className="mt-4 grid gap-6 border-t border-black/[0.08] pt-6 sm:grid-cols-3 sm:gap-8">
                         {USABILITY_STATS.map(([n, t]) => (
                           <div key={n}>
-                            <dt className="font-display text-[1.9rem] font-light leading-none text-nltLime">{n}</dt>
-                            <dd className="mt-2 text-[14px] leading-[1.5] text-white/65">{t}</dd>
+                            <dt className="font-display text-[1.9rem] font-light leading-none text-nltLime-ink">{n}</dt>
+                            <dd className="mt-2 text-[14px] leading-[1.5] text-textSecondary">{t}</dd>
                           </div>
                         ))}
                       </dl>
                     </div>
                     <div className="mt-8 max-w-2xl">
-                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">Final pick · Plan B + C</p>
-                      <p className="mt-2 text-[15px] leading-[1.65] text-white/70">
+                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">Final pick · Plan B + C</p>
+                      <p className="mt-2 text-[15px] leading-[1.65] text-textSecondary">
                         The AI-and-Group Chat was mine to own, and I designed it by carrying the editor’s own gesture
                         across: the same select-to-reveal from v3’s Focus and Citation modes now drives the chat — you
                         select one panel or both. Testing settled it. People wanted both threads readable at once, since
@@ -996,28 +960,28 @@ export default function LinerScholarCaseStudy() {
               <p>
                 The editor is the part I owned. We refused to build “Google Docs with comments” — the industry default
                 answers none of the pains researchers named. So every pain got a direct move, and the build runs them in
-                the order the journey does: <span className="text-white">set up, explore, curate, align</span>.
+                the order the journey does: <span className="text-textPrimary">set up, explore, curate, align</span>.
               </p>
             </Lead>
           </Reveal>
 
           {/* ask #1 · the small map — every research pain, and the move that answers it */}
           <Reveal delay={0.02}>
-            <div className="overflow-hidden rounded-[14px] border border-white/10 bg-white/[0.02]">
-              <div className="hidden border-b border-white/10 px-5 py-3 sm:grid sm:grid-cols-[1fr_1.4fr] sm:gap-8">
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">What broke (research)</p>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">How the build answers it</p>
+            <div className="overflow-hidden rounded-[14px] border border-black/[0.08] bg-black/[0.02]">
+              <div className="hidden border-b border-black/[0.08] px-5 py-3 sm:grid sm:grid-cols-[1fr_1.4fr] sm:gap-8">
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">What broke (research)</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">How the build answers it</p>
               </div>
               {FINDING_ANSWERS.map(([pain, answer], i) => (
                 <div
                   key={pain}
-                  className={`grid gap-1 px-5 py-4 sm:grid-cols-[1fr_1.4fr] sm:gap-8 ${i > 0 ? "border-t border-white/10" : ""}`}
+                  className={`grid gap-1 px-5 py-4 sm:grid-cols-[1fr_1.4fr] sm:gap-8 ${i > 0 ? "border-t border-black/[0.08]" : ""}`}
                 >
-                  <p className="text-[14px] leading-[1.5] text-white/55">
-                    <span className="text-nltLime sm:hidden">Pain · </span>
+                  <p className="text-[14px] leading-[1.5] text-textSecondary/80">
+                    <span className="text-nltLime-ink sm:hidden">Pain · </span>
                     {pain}
                   </p>
-                  <p className="text-[15px] leading-[1.55] text-white/85">{answer}</p>
+                  <p className="text-[15px] leading-[1.55] text-textPrimary/85">{answer}</p>
                 </div>
               ))}
             </div>
@@ -1026,7 +990,7 @@ export default function LinerScholarCaseStudy() {
           {/* the money shot — the whole system in one frame, before we walk it stage by stage */}
           <Reveal delay={0.03}>
             <figure className="mt-2">
-              <div className="overflow-hidden rounded-[14px] bg-white ring-1 ring-white/10 shadow-[0_40px_120px_-40px_rgba(210,255,0,0.18)]">
+              <div className="overflow-hidden rounded-[14px] bg-white ring-1 ring-black/[0.08] shadow-[0_40px_100px_-50px_rgba(0,0,0,0.25)]">
                 <Image
                   src="/assets/liner/ideation/v4-final.png"
                   alt="The final build in one screen: the editor with live citations and margin comments, an author tag on the text, and the private AI chat beside the Group Chat of reviewed knowledge cards."
@@ -1036,12 +1000,12 @@ export default function LinerScholarCaseStudy() {
                   className="h-auto w-full"
                 />
               </div>
-              <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
-                <span className="text-white/55">Everything composed —</span>
+              <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
+                <span className="text-textSecondary/80">Everything composed —</span>
                 {["Citation", "Comments", "Authors", "Focus", "Share-to-group"].map((t) => (
                   <span
                     key={t}
-                    className="rounded-full border border-nltLime/25 bg-nltLime/[0.06] px-2.5 py-1 tracking-[0.1em] text-nltLime"
+                    className="rounded-full border border-nltLime-ink/20 bg-nltLime-soft px-2.5 py-1 tracking-[0.1em] text-nltLime-ink"
                   >
                     {t}
                   </span>
@@ -1051,7 +1015,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
 
           <Reveal delay={0.04}>
-            <p className="mt-10 max-w-2xl text-[13px] leading-relaxed text-white/50">
+            <p className="mt-10 max-w-2xl text-[13px] leading-relaxed text-textSecondary/80">
               Walked along the four journey stages, not as a feature list. As you scroll each stage, the live window
               jumps to the feature the text is describing.
             </p>
@@ -1065,7 +1029,7 @@ export default function LinerScholarCaseStudy() {
             <div className={`pt-10 ${HAIR}`}>
               <Subhead>Validated, then refined</Subhead>
               <div className="mt-5 grid items-start gap-8 lg:grid-cols-2 lg:gap-12">
-                <figure className="overflow-hidden rounded-[14px] ring-1 ring-white/10">
+                <figure className="overflow-hidden rounded-[14px] ring-1 ring-black/[0.08]">
                   <Image
                     src="/assets/liner/Screenshot 2026-07-05 at 01.57.00.png"
                     alt="Section A Capstone Award — Feature integration and platform evolution with AI, Team North4Studio."
@@ -1074,7 +1038,7 @@ export default function LinerScholarCaseStudy() {
                     className="h-auto w-full"
                   />
                 </figure>
-                <div className="space-y-3 text-[16px] leading-[1.65] text-white/70">
+                <div className="space-y-3 text-[16px] leading-[1.65] text-textSecondary">
                   <p>
                     We validated the flow through usability testing — and it also handed us the finding I didn’t want to
                     hear: once people shared a new idea into the group, they immediately asked how it gets back into the
@@ -1102,8 +1066,8 @@ export default function LinerScholarCaseStudy() {
               <div className="mt-4 max-w-3xl">
                 {FUTURE.map(([h, b]) => (
                   <div key={h} className={`flex flex-col gap-1 py-3.5 sm:flex-row sm:gap-8 ${HAIR} first:border-t-0`}>
-                    <p className="font-medium text-white sm:w-[26%] sm:shrink-0">{h}</p>
-                    <p className="text-[15px] leading-[1.6] text-white/70 sm:flex-1">{b}</p>
+                    <p className="font-medium text-textPrimary sm:w-[26%] sm:shrink-0">{h}</p>
+                    <p className="text-[15px] leading-[1.6] text-textSecondary sm:flex-1">{b}</p>
                   </div>
                 ))}
               </div>
@@ -1121,17 +1085,17 @@ export default function LinerScholarCaseStudy() {
 
           {/* results first — the three signals stated big, before any caveat */}
           <Reveal delay={0.02}>
-            <dl className="grid gap-8 border-t border-white/10 pt-8 sm:grid-cols-3 sm:gap-10">
+            <dl className="grid gap-8 border-t border-black/[0.08] pt-8 sm:grid-cols-3 sm:gap-10">
               {([
                 ["Jul 2026", "On the roadmap", "Liner is taking the collaborative workflow into the product — launch expected July 2026."],
                 ["3 features", "Chosen to carry forward", "Focus mode, citations, and share-to-group — the collaboration-native ones stakeholders kept."],
                 ["Capstone Award", "Section A", "Jury recognition for feature integration and platform evolution with AI."],
               ] as const).map(([v, label, text]) => (
                 <div key={label}>
-                  <dt className="font-display text-[1.7rem] font-light leading-[1.05] tracking-[-0.01em] text-nltLime">{v}</dt>
+                  <dt className="font-display text-[1.7rem] font-light leading-[1.05] tracking-[-0.01em] text-nltLime-ink">{v}</dt>
                   <dd className="mt-2.5">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">{label}</p>
-                    <p className="mt-1.5 text-[14px] leading-[1.5] text-white/60">{text}</p>
+                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">{label}</p>
+                    <p className="mt-1.5 text-[14px] leading-[1.5] text-textSecondary/80">{text}</p>
                   </dd>
                 </div>
               ))}
@@ -1139,7 +1103,7 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
 
           <Reveal delay={0.04}>
-            <figure className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
+            <figure className="overflow-hidden rounded-[14px] bg-black ring-1 ring-black/[0.08]">
               <AutoVideo
                 src="/assets/liner/liner-product-video.mp4"
                 poster="/assets/work/liner-hero-v2.png"
@@ -1150,19 +1114,19 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.045}>
             <div className={`pt-10 ${HAIR}`}>
               <Subhead>How we’d know it worked</Subhead>
-              <p className="mt-3 max-w-2xl text-[15px] leading-[1.65] text-white/60">
+              <p className="mt-3 max-w-2xl text-[15px] leading-[1.65] text-textSecondary/80">
                 It shipped as a prototype, so these are the metrics I’d instrument at launch rather than results. Each
                 maps back to a goal in the brief — a new interaction pattern, a new team audience, a broader reason to
                 stay — because the bet is only real if it moves them, not just demos well.
               </p>
-              <dl className="mt-6 grid gap-x-8 gap-y-6 border-t border-white/10 pt-6 sm:grid-cols-2">
+              <dl className="mt-6 grid gap-x-8 gap-y-6 border-t border-black/[0.08] pt-6 sm:grid-cols-2">
                 {METRICS.map(([label, goal, text]) => (
                   <div key={label}>
                     <dt className="flex flex-wrap items-baseline gap-x-2.5">
-                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">{label}</span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/40">↳ {goal}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">{label}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">↳ {goal}</span>
                     </dt>
-                    <dd className="mt-2 text-[15px] leading-[1.55] text-white/70">{text}</dd>
+                    <dd className="mt-2 text-[15px] leading-[1.55] text-textSecondary">{text}</dd>
                   </div>
                 ))}
               </dl>
@@ -1170,12 +1134,12 @@ export default function LinerScholarCaseStudy() {
           </Reveal>
           <Reveal delay={0.05}>
             <div className={`pt-10 ${HAIR}`}>
-              <Action href="/work/liner/deck-mono-zh" tone="dark">View the deck</Action>
+              <Action href="/work/liner/deck-mono-zh">View the deck</Action>
             </div>
           </Reveal>
           <Reveal delay={0.06}>
             <div className={`pt-8 ${HAIR}`}>
-              <Action href="/work" variant="text" tone="dark" back>
+              <Action href="/work" variant="text" back>
                 Back to selected work
               </Action>
             </div>

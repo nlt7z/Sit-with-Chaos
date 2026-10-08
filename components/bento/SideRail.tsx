@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { RESUME_HREF } from "@/lib/site";
+import { type ToneSetting, useSurfaceTone } from "@/lib/useSurfaceTone";
 
 /**
  * SideRail — the one global nav, on every page: Home, Work, Lab, plus the
@@ -16,8 +17,9 @@ import { RESUME_HREF } from "@/lib/site";
  * a lime segment with dark text; a quiet highlight glides after the pointer
  * between segments (the segmented-control slide).
  * Mobile: a floating pill nav along the bottom edge.
- * Tone: the capsule is dark by default; `light` frosts it white for the
- * white-canvas case studies (same shape, place and behaviour).
+ * Tone: the capsule is dark by default; `light` frosts it white; `auto` (case
+ * studies) is light and turns dark while a `data-surface="dark"` band (the
+ * hero) passes under it. Same shape, place and behaviour in every tone.
  */
 
 const ITEMS: { key: "home" | "work" | "lab"; label: string; href: string }[] = [
@@ -43,16 +45,17 @@ const TONE = {
   },
 } as const;
 
-export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | "lab"; tone?: "dark" | "light" }) {
+export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | "lab"; tone?: ToneSetting }) {
   const reduced = useReducedMotion();
   const [hovered, setHovered] = useState<string | null>(null);
-  const t = TONE[tone];
+  const t = TONE[useSurfaceTone(tone, 0.5)];
+  const tm = TONE[useSurfaceTone(tone, 0.95)];
 
   return (
     <>
       <nav aria-label="Sections" className="fixed left-4 top-1/2 z-50 hidden -translate-y-1/2 md:block">
         <div
-          className={`flex w-10 flex-col gap-1 rounded-full border p-1 backdrop-blur-md ${t.shell}`}
+          className={`flex w-10 flex-col gap-1 rounded-full border p-1 backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300 ${t.shell}`}
           style={{ boxShadow: t.shadow }}
           onMouseLeave={() => setHovered(null)}
         >
@@ -128,8 +131,8 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
         className="fixed inset-x-0 bottom-[max(0.75rem,env(safe-area-inset-bottom))] z-50 flex justify-center px-4 md:hidden"
       >
         <div
-          className={`flex items-center gap-1 rounded-full border p-1.5 backdrop-blur-md ${t.shell}`}
-          style={{ boxShadow: t.shadow }}
+          className={`flex items-center gap-1 rounded-full border p-1.5 backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300 ${tm.shell}`}
+          style={{ boxShadow: tm.shadow }}
         >
           {ITEMS.map(({ key, label, href }) => {
             const on = key === active;
@@ -139,7 +142,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
                 href={href}
                 aria-current={on ? "page" : undefined}
                 className={`relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${
-                  on ? "bg-nltLime text-[#0a0b0c]" : t.mobileIdle
+                  on ? "bg-nltLime text-[#0a0b0c]" : tm.mobileIdle
                 }`}
               >
                 {label}
@@ -151,7 +154,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Resume (PDF, opens in a new tab)"
-            className={`relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${t.mobileIdle}`}
+            className={`relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${tm.mobileIdle}`}
           >
             Resume ↗
           </a>
