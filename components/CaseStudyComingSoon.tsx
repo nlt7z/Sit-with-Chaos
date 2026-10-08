@@ -27,7 +27,7 @@ export function CaseStudyComingSoon({ eyebrow, title }: CaseStudyComingSoonProps
             Case study in progress. Full write-up coming soon.
           </p>
           <Link
-            href="/#work"
+            href="/work"
             className="group mt-12 inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary transition-colors duration-500 hover:text-textPrimary"
           >
             <span className="transition-transform duration-500 ease-out group-hover:-translate-x-0.5" aria-hidden>

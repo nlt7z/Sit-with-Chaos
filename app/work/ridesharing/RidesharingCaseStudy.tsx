@@ -1021,7 +1021,7 @@ export default function RidesharingCaseStudy() {
 
           <Reveal className="pt-8 md:pt-12">
             <Link
-              href="/#work"
+              href="/work"
               className="group inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary transition-colors duration-500 hover:text-textPrimary"
             >
               <span className="transition-transform duration-500 ease-out group-hover:-translate-x-0.5">←</span>

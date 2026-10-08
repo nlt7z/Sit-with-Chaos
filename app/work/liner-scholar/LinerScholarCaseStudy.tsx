@@ -537,7 +537,7 @@ export default function LinerScholarCaseStudy() {
               UW HCDE Capstone · Spring 2025
             </p>
             <Link
-              href="/#work"
+              href="/work"
               className="mt-10 inline-block text-sm text-textSecondary underline decoration-black/15 underline-offset-4 transition-colors hover:text-textPrimary"
             >
               ← Back to selected work

@@ -78,7 +78,7 @@ export default function ResumePage() {
             </div>
 
             <Link
-              href="/#work"
+              href="/work"
               className="mx-auto mt-8 block w-fit text-sm text-textSecondary underline decoration-[rgba(0,0,0,0.12)] underline-offset-4 transition-colors hover:text-textPrimary md:mt-10"
             >
               ← Back to selected work

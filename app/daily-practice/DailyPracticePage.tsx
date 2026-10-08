@@ -170,7 +170,7 @@ export default function DailyPracticePage() {
         </Link>
         <nav className="flex items-center gap-5">
           <Link
-            href="/#work"
+            href="/work"
             className="font-mono text-[11px] tracking-[0.07em] uppercase text-black/40 hover:text-black transition-colors"
           >
             Work

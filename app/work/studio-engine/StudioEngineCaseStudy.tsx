@@ -1,6 +1,7 @@
 "use client";
 
 import { MacBookFrame } from "@/components/MacBookFrame";
+import { Footer } from "@/components/Footer";
 import { Nav } from "@/components/Nav";
 import {
   AnimatePresence,
@@ -201,7 +202,7 @@ function HoverPanel({ children, className }: { children: ReactNode; className: s
   const reduce = useReducedMotion();
   return (
     <motion.div
-      className={`transition-[box-shadow,border-color] duration-[520ms] ease-out hover:border-nltLime-300/40 hover:shadow-[0_28px_56px_-32px_rgba(210, 255, 0,0.09)] ${className}`}
+      className={`transition-[box-shadow,border-color] duration-[520ms] ease-out hover:border-nltLime-300/40 hover:shadow-[0_28px_56px_-32px_rgba(210,255,0,0.09)] ${className}`}
       initial={false}
       whileHover={reduce ? undefined : { y: -2 }}
       transition={{ duration: 0.52, ease: easePremium }}
@@ -1459,6 +1460,7 @@ export default function StudioEngineCaseStudy() {
 
         </article>
       </main>
+      <Footer />
     </>
   );
 }

@@ -26,7 +26,7 @@ function DotPulse() {
 
 function AnimatedReturnLink({
   className = "",
-  href = "/#work",
+  href = "/work",
   label = "Return to selected work",
 }: {
   className?: string;
@@ -250,7 +250,7 @@ export function WorkPasswordGate({
   storageKey,
   children,
   workTitle,
-  returnHref = "/#work",
+  returnHref = "/work",
   returnLabel = "Return to selected work",
   serverUnlockAction,
 }: {

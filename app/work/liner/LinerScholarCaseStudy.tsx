@@ -1265,7 +1265,7 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.06}>
             <div className={`pt-8 ${HAIR}`}>
               <Link
-                href="/#work"
+                href="/work"
                 className="inline-block text-[16px] text-white/70 underline decoration-white/25 underline-offset-4 transition-colors hover:text-white"
               >
                 ← Back to selected work

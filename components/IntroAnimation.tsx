@@ -9,14 +9,13 @@ const STORAGE_KEY = "yf-intro-played-v1";
 
 // Critical above-the-fold homepage media. The intro doubles as a real
 // preloader: it holds the reveal until these are decoded into the browser
-// cache, so the hero never flashes white waiting on its lime backdrop and the
-// first work cards never pop in unloaded. Order is roughly by visual priority.
+// cache, so the bento's media blocks never pop in unloaded. These are the raw
+// URLs the bento paints first (poster frames + the first Journey logo); keep
+// them in sync with components/bento/BentoHome.tsx.
 const CRITICAL_ASSETS: readonly { src: string; kind: "image" | "video" }[] = [
-  { src: "/assets/hero-decor.png", kind: "image" },
-  { src: "/assets/ai-character/figma-h264.mp4", kind: "video" },
-  { src: "/assets/work/meituan.mp4", kind: "video" },
-  { src: "/assets/work/vp-genie.jpg", kind: "image" },
-  { src: "/assets/liner/liner.jpg", kind: "image" },
+  { src: "/assets/work/qbix-scroll-poster.webp", kind: "image" },
+  { src: "/assets/o2/o2-bom-film-poster.webp", kind: "image" },
+  { src: "/assets/logos/liner.png", kind: "image" },
 ];
 
 const BAR_DELAY = 120;

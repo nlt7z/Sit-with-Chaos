@@ -40,7 +40,7 @@ export default function CaseStudyPage({ params }: PageProps) {
         <h1 className="mb-8 max-w-lg text-3xl font-light text-neutral-900">{title}</h1>
         <p className="mb-8 text-sm text-neutral-400">Full case study coming soon.</p>
         <Link
-          href="/#work"
+          href="/work"
           className="text-sm text-neutral-500 underline decoration-neutral-300 underline-offset-4 transition-colors hover:text-neutral-800 focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
         >
           ← Back to work

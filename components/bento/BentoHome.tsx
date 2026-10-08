@@ -227,20 +227,21 @@ function InViewVideo({ src, poster, className = "" }: { src: string; poster?: st
   return <video ref={vref} muted loop playsInline preload="none" poster={poster} aria-hidden className={`absolute inset-0 h-full w-full object-cover ${className}`} />;
 }
 
-/* corner ↗ link in the card header — neutral grey at rest, warms to lime when
+/* corner link in the card header — neutral grey at rest, warms to lime when
    the card is hovered (the whole BentoCard is the `group`). Stops pointerdown
-   so a click navigates instead of starting a header drag. */
+   so a click navigates instead of starting a header drag. Site rule: ↗ and a
+   new tab for other sites, → and the same tab for pages on this site. */
 function CornerArrow({ href, label }: { href: string; label: string }) {
+  const external = /^https?:/.test(href);
   return (
     <a
       href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label={`${label} (opens in a new tab)`}
+      {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      aria-label={external ? `${label} (opens in a new tab)` : label}
       onPointerDown={(e) => e.stopPropagation()}
       className="relative z-40 -mr-1.5 grid h-7 w-7 place-items-center rounded-full bg-white/[0.06] text-[13px] text-[#8a8f98] transition-colors duration-150 hover:bg-nltLime hover:text-[#1d1d1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 group-hover:bg-white/[0.1] group-hover:text-[#f7f8f8]"
     >
-      <span aria-hidden>↗</span>
+      <span aria-hidden>{external ? "↗" : "→"}</span>
     </a>
   );
 }
@@ -560,8 +561,6 @@ export function BentoHome() {
             <BentoCard label="Meituan" headerRight={<CornerArrow href="/work/meituan-im" label="Meituan case study" />} surface="dark" drag={drag} accent="#FFC300" index={6} className="order-2 col-span-2 h-[600px] min-h-0 flex-1 md:order-none md:h-auto">
               <Link
                 href="/work/meituan-im"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="relative z-20 flex shrink-0 items-end gap-3 px-4 pb-1 pt-1"
               >
                 <span className="font-display text-[clamp(2rem,2.8vw,2.6rem)] font-light leading-[0.9] tracking-[-0.02em] text-nltLime">+30%</span>

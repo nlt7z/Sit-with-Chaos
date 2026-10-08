@@ -46,7 +46,7 @@ const entries: Entry[] = [
   {
     date: "2026.05",
     title: "design agency website",
-    description: "Studio website for a creative agency — brand expression, work showcase, and inquiry flow.",
+    description: "Studio website for a creative agency: brand expression, work showcase, and inquiry flow.",
     tags: ["web"],
     href: "https://qbix.space",
     hrefLabel: "open site ↗",
@@ -54,14 +54,14 @@ const entries: Entry[] = [
       kind: "live",
       href: "https://qbix.space",
       url: "qbix.space",
-      label: "Design agency — live site preview",
+      label: "Design agency: live site preview",
       poster: "/assets/work/qbix-fullpage.webp",
     },
   },
   {
     date: "2026.06",
     title: "tiktok shared feed",
-    description: "Self-initiated concept redesigning how friends' shared videos surface on TikTok — a Shared Feed tab, Smart Reactions, and reply-value ranking.",
+    description: "Self-initiated concept redesigning how friends' shared videos surface on TikTok: a Shared Feed tab, Smart Reactions, and reply-value ranking.",
     tags: ["app", "interaction"],
     href: "/work/tiktok",
     hrefLabel: "case study →",
@@ -70,7 +70,7 @@ const entries: Entry[] = [
   {
     date: "2025.12",
     title: "ai romance character chat",
-    description: "Conversational prototype for a romance AI character — chat interface, persona pacing, and scene atmosphere.",
+    description: "Conversational prototype for a romance AI character: chat interface, persona pacing, and scene atmosphere.",
     tags: ["ai", "interaction"],
     href: "/work/ai-character",
     hrefLabel: "case study →",
@@ -85,7 +85,7 @@ const entries: Entry[] = [
   {
     date: "2025.09",
     title: "ai therapy companion",
-    description: "Conversational prototype for an emotional-support AI character — ambient room interface as a listening space.",
+    description: "Conversational prototype for an emotional-support AI character: ambient room interface as a listening space.",
     tags: ["ai", "interaction"],
     href: "/work/ai-character/prototype-psych",
     hrefLabel: "open →",
@@ -100,7 +100,7 @@ const entries: Entry[] = [
   {
     date: "2025.08",
     title: "ai astrology character",
-    description: "Conversational prototype for an astrology AI character — zodiac persona system and fortune-dialogue flow.",
+    description: "Conversational prototype for an astrology AI character: zodiac persona system and fortune-dialogue flow.",
     tags: ["ai", "interaction"],
     href: "/work/ai-character/prototype-astro",
     hrefLabel: "open →",
@@ -115,7 +115,7 @@ const entries: Entry[] = [
   {
     date: "2026.05",
     title: "portfolio rebrand",
-    description: "End-to-end brand refresh and site redesign — identity system, information architecture, and interactions.",
+    description: "End-to-end brand refresh and site redesign: identity system, information architecture, and interactions.",
     tags: ["web"],
     href: "https://hancao.space",
     hrefLabel: "open site ↗",
@@ -123,7 +123,7 @@ const entries: Entry[] = [
       kind: "live",
       href: "https://hancao.space",
       url: "hancao.space",
-      label: "Personal portfolio — live site preview",
+      label: "Personal portfolio: live site preview",
     },
   },
   {
@@ -136,7 +136,7 @@ const entries: Entry[] = [
   {
     date: "2026.04",
     title: "digital fortune cabinet",
-    description: "Interactive cabinet for digital fortune-drawing — slip-pull interaction with reveal sequence.",
+    description: "Interactive cabinet for digital fortune-drawing: slip-pull interaction with reveal sequence.",
     tags: ["interaction"],
     href: "/code/playground/omikuji",
     hrefLabel: "open →",
@@ -151,14 +151,14 @@ const entries: Entry[] = [
   {
     date: "2026.01",
     title: "lo-fi vinyl player",
-    description: "Ambient audio player — vinyl visual surface with generative lo-fi background music.",
+    description: "Ambient audio player: vinyl visual surface with generative lo-fi background music.",
     tags: ["interaction"],
     media: { kind: "custom", node: "turntable" },
   },
   {
     date: "2025.10",
     title: "gacha portfolio navigation",
-    description: "Portfolio navigation built as a gacha experience — randomized reveal as a project-discovery interface.",
+    description: "Portfolio navigation built as a gacha experience: randomized reveal as a project-discovery interface.",
     tags: ["interaction"],
     href: "/code/playground/gacha",
     hrefLabel: "open →",
@@ -181,9 +181,9 @@ const entries: Entry[] = [
   {
     date: "2025.05",
     title: "tts reading workflow",
-    description: "Workflow redesign for a Chinese long-form text-to-speech reader — voice playback, sentence highlighting, and an immersive dark reading surface.",
+    description: "Workflow redesign for a Chinese long-form text-to-speech reader: voice playback, sentence highlighting, and an immersive dark reading surface.",
     tags: ["ai", "interaction"],
-    media: { kind: "image", src: "/assets/lab/tts-workflow.jpg", alt: "TTS reading workflow redesign — moody hero composition" },
+    media: { kind: "image", src: "/assets/lab/tts-workflow.jpg", alt: "TTS reading workflow redesign: moody hero composition" },
   },
 ];
 
@@ -1002,7 +1002,7 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
             className="absolute inset-0 -m-20 rounded-full"
             style={{
               background:
-                "radial-gradient(circle, rgba(184,229,50,0.35) 0%, rgba(184,229,50,0.08) 38%, transparent 68%)",
+                "radial-gradient(circle, rgba(210,255,0,0.35) 0%, rgba(210,255,0,0.08) 38%, transparent 68%)",
               filter: "blur(18px)",
             }}
             initial={{ opacity: 0, scale: 0.6 }}
@@ -1031,7 +1031,7 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
               className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-nltLime/60 via-nltLime to-nltLime"
               style={{
                 width: `${percent}%`,
-                boxShadow: "0 0 14px rgba(184,229,50,0.6)",
+                boxShadow: "0 0 14px rgba(210,255,0,0.6)",
                 transition: "width 90ms linear",
               }}
             />

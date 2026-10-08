@@ -601,7 +601,7 @@ export default function AboutPage() {
               </h2>
               <div className="mt-10 flex flex-wrap items-center justify-center gap-4">
                 <Link
-                  href="/#work"
+                  href="/work"
                   className="group inline-flex items-center rounded-full bg-textPrimary px-8 py-3 text-sm font-medium text-white shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2"
                 >
                   <SplitTextChars text="View Projects ↗" />

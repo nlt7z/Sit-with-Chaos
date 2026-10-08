@@ -157,7 +157,7 @@ export default function QoderPresentation() {
             concise walkthrough after access.
           </p>
           <Link
-            href="/#work"
+            href="/work"
             className="group mt-10 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.18em] text-textSecondary transition-colors hover:text-textPrimary"
           >
             <span className="transition-transform duration-300 group-hover:-translate-x-1">←</span>
