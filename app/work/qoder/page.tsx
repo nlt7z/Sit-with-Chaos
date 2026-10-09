@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 import QoderPresentation from "./QoderPresentation";
 
 export const metadata: Metadata = {
-  title: "Qoder — Agentic Coding Platform for Real Software — Yuan Fang",
+  title: "Qoder: Agentic Coding Platform for Real Software · Yuan Fang",
   description:
     "Product design for Alibaba Qoder: context engineering, autonomous agents, and IDE experiences for shipping real software.",
 };

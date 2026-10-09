@@ -5,9 +5,9 @@ import { Footer } from "@/components/Footer";
 import { TikTokCaseStudyFrame } from "./TikTokCaseStudyFrame";
 
 export const metadata: Metadata = {
-  title: "TikTok · Shared with You — Feed Design — Yuan Fang",
+  title: "TikTok · Shared with You: Feed Design · Yuan Fang",
   description:
-    "A product case study reimagining how content friends share with you surfaces on TikTok — Smart Reactions, a Shared Feed tab, and reply-value ranking, with an interactive prototype.",
+    "A product case study reimagining how content friends share with you surfaces on TikTok: Smart Reactions, a Shared Feed tab, and reply-value ranking, with an interactive prototype.",
 };
 
 /**

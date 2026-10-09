@@ -259,7 +259,7 @@ export function BentoHomeFocus() {
                     <span aria-hidden className="absolute inset-x-[-0.12em] bottom-[0.04em] -z-0 h-[0.66em] -rotate-[2deg] rounded-[2px] bg-nltLime" />
                     <span className="relative z-10 text-[#1d1d1f]">AI-native products</span>
                   </span>{" "}
-                  end-to-end — from research to a crafted, shipped interface.
+                  end-to-end, from research to a crafted, shipped interface.
                 </p>
 
                 <div className="flex flex-col gap-3">

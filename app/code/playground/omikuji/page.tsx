@@ -3,9 +3,9 @@ import type { Metadata } from "next";
 import { OmikujiCabinetClient } from "./OmikujiCabinetClient";
 
 export const metadata: Metadata = {
-  title: "Omikuji Cabinet — Interactive demo — Yuan Fang",
+  title: "Omikuji Cabinet: Interactive demo · Yuan Fang",
   description:
-    "Handcrafted omikuji cabinet: up to three draws per day with gentle reminders, candlelit walnut aesthetic, particle omens, and a parchment fortune card — English UI.",
+    "Handcrafted omikuji cabinet: up to three draws per day with gentle reminders, candlelit walnut aesthetic, particle omens, and a parchment fortune card. English UI.",
 };
 
 export default async function OmikujiCabinetPage({

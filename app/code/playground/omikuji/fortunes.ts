@@ -54,7 +54,7 @@ export function drawerKanjiFromIndex(indexZeroBased: number): string {
 
 const POEMS: Record<FortuneLevel, [string, string][]> = {
   daikichi: [
-    ["Mountains rise — travelers still find a road", "Rivers run deep — boats still find a ford"],
+    ["Mountains rise; travelers still find a road", "Rivers run deep; boats still find a ford"],
     ["Spring wind returns; buds remember the light", "Quiet work ripens where patience is kept"],
     ["A guest arrives bearing one honest word", "The door you open becomes a wider room"],
     ["Ink dries slowly; the hand stays steady", "What you tend with care will not betray you"],
@@ -63,11 +63,11 @@ const POEMS: Record<FortuneLevel, [string, string][]> = {
   ],
   chukichi: [
     ["Warm rain softens the hardened path", "Small gains stack when you refuse to rush"],
-    ["A letter arrives — not loud, but sure", "Trust the rhythm that favors preparation"],
+    ["A letter arrives, not loud, but sure", "Trust the rhythm that favors preparation"],
     ["The market hums; your place is steady", "Keep promises small and finish them well"],
     ["Two roads meet; neither is wrong", "Choose with clarity, then walk without looking back"],
     ["Wood seasons slowly in the shed", "Your craft improves while others chase noise"],
-    ["Tea steams; the room listens better", "Speak less, mean more — doors will open"],
+    ["Tea steams; the room listens better", "Speak less, mean more; doors will open"],
     ["A map creases where thumbs have traveled", "Experience is the compass you already own"],
     ["Stars are faint but countable tonight", "Progress prefers honest accounting"],
     ["The bridge holds because stones were fitted", "Systems reward the patient assembler"],
@@ -78,7 +78,7 @@ const POEMS: Record<FortuneLevel, [string, string][]> = {
     ["The kettle sings; the day agrees", "Routine is a friend when ambition needs rest"],
     ["Footprints overlap on the riverbank", "Community appears where you show up twice"],
     ["Paper folds into a useful shape", "Constraints can teach a clever design"],
-    ["Wind turns the weather vane slowly", "Signals arrive — read them without panic"],
+    ["Wind turns the weather vane slowly", "Signals arrive; read them without panic"],
     ["Seeds sleep under last year's leaves", "Rest is not absence; it is preparation"],
     ["A lantern swings in a patient arc", "Timing rewards the watcher, not the gambler"],
     ["The path bends; the view improves", "Detours sometimes correct the destination"],
@@ -96,7 +96,7 @@ const POEMS: Record<FortuneLevel, [string, string][]> = {
     ["Pages stick in the damp season", "Some delays are environmental, not personal"],
     ["The bell is distant but still true", "Listen for guidance outside your echo"],
     ["Footprints fade in afternoon heat", "Not every sign must be permanent"],
-    ["The boat drifts; the oar is near", "You are not helpless — only paused"],
+    ["The boat drifts; the oar is near", "You are not helpless, only paused"],
     ["Clouds return; the roof still holds", "Weather changes; foundations remain"],
   ],
 };
@@ -138,12 +138,12 @@ function buildFortunes(): Fortune[] {
       poem: `${a}\n${b}`,
       summary:
         level === "daikichi"
-          ? "Momentum and goodwill align — act with grace and generosity."
+          ? "Momentum and goodwill align; act with grace and generosity."
           : level === "chukichi"
             ? "Steady progress; refine details and keep your promises modest."
             : level === "shokichi"
               ? "Small openings favor patient work and gentle persistence."
-              : "Mixed signals — verify facts, shorten commitments, and rest.",
+              : "Mixed signals: verify facts, shorten commitments, and rest.",
       lucky: ["Travel short distances", "Meet a mentor", "Finish one small task"],
       unlucky:
         level === "daikichi"

@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://www.nltstudio7.space"),
   title: "Yuan Fang Creative Builder",
   description:
-    "A UX designer pairing AI-native speed with a fine-art command of craft and a relentless drive to build — turning ambiguity into clear product direction and working prototypes.",
+    "A UX designer pairing AI-native speed with a fine-art command of craft and a relentless drive to build, turning ambiguity into clear product direction and working prototypes.",
   openGraph: {
     title: "Yuan Fang Creative Builder",
     description: "Portfolio of Yuan Fang, MS HCDE @ UW",

@@ -49,7 +49,7 @@ function SitePreviewFrame({
         className="h-[min(72vh,780px)] min-h-[420px] w-full border-0 bg-white md:h-[min(68vh,860px)] md:min-h-[560px]"
       />
       <p className="border-t border-black/[0.05] bg-surfaceAlt/30 px-4 py-2.5 font-sans text-[11px] leading-relaxed text-textSecondary md:px-5">
-        If the frame is empty, the host blocks embedding — use Open in browser.
+        If the frame is empty, the host blocks embedding. Use Open in browser.
       </p>
     </div>
   );
@@ -325,19 +325,19 @@ const showcaseGallerySlides = [
     label: "Romance showroom",
     src: "/assets/ai-character/new-cover.mp4",
     poster: "/assets/ai-character/showcase.jpg",
-    caption: "Romance Room — memory callbacks and emotional escalation",
+    caption: "Romance Room: memory callbacks and emotional escalation",
   },
   {
     tab: "Astrology",
     label: "Astrology showroom",
     src: "/assets/ai-character/taobaibai-1.mp4",
-    caption: "Astrology Room — constellation profile updates live",
+    caption: "Astrology Room: constellation profile updates live",
   },
   {
     tab: "Therapy",
     label: "Therapy showroom",
     src: "/assets/ai-character/therapy-1.mp4",
-    caption: "Therapy Room — visible analysis alongside chat",
+    caption: "Therapy Room: visible analysis alongside chat",
   },
 ] as const;
 
@@ -462,21 +462,21 @@ const additionalShowroomGalleryItems: {
     id: "astrology",
     room: "Astrology Room",
     capability: "Real-time memory updates",
-    body: "A personal constellation file updates during conversation — memory becomes transparent and inspectable.",
+    body: "A personal constellation file updates during conversation: memory becomes transparent and inspectable.",
     detail:
-      "Design focus: one persistent surface that mirrors live memory writes — readable at a glance without opening secondary panels.",
+      "Design focus: one persistent surface that mirrors live memory writes, readable at a glance without opening secondary panels.",
     videoSrc: "/assets/ai-character/interactions/other%20showrooms/astro%20profile/astro%20profile-1.mp4",
-    videoCaption: "Screen recording — constellation profile and live memory file in the astrology showroom",
+    videoCaption: "Screen recording: constellation profile and live memory file in the astrology showroom",
   },
   {
     id: "therapy",
     room: "Therapy Room",
     capability: "Real-time analysis",
-    body: "A live panel surfaces conversation themes — users see what the system understood, not just what it said.",
+    body: "A live panel surfaces conversation themes: users see what the system understood, not just what it said.",
     detail:
       "Design focus: parallel transcript + analysis rail so legibility stays high without relying on static screenshots.",
     videoSrc: "/assets/ai-character/interactions/other%20showrooms/therapy%20analysis/therapy%20analysis-1.mp4",
-    videoCaption: "Screen recording — therapy analysis rail alongside the conversation",
+    videoCaption: "Screen recording: therapy analysis rail alongside the conversation",
   },
 ];
 
@@ -499,7 +499,7 @@ function AdditionalShowroomsGallery() {
           className="block overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] transition-[box-shadow] duration-700 ease-out hover:shadow-[0_24px_64px_-28px_rgba(0,0,0,0.09)]"
         >
           <ShowcaseVideo
-            label={`${item.room} — screen recording`}
+            label={`${item.room}: screen recording`}
             src={item.videoSrc}
             caption={item.videoCaption}
             className={videoInCardClass}
@@ -576,7 +576,7 @@ const sectionHeadInner = {
 
 const metaFields = [
   { label: "Company", value: "Alibaba Cloud" },
-  { label: "Role", value: "UX Designer — End-to-End, research to production code" },
+  { label: "Role", value: "UX Designer, End-to-End, research to production code" },
   { label: "Timeline", value: "4 weeks · July–August 2025" },
   { label: "Team", value: "1 supervisor · 2 UX · 2 PM · 4 Engineers" },
   {
@@ -789,10 +789,10 @@ const innovations: {
     capability: "Long-term memory + generative storytelling",
     workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
     videoSrc: "/assets/ai-character/interactions/alternative%20universe/alternative%20universe-1.mp4",
-    videoCaption: "Alternate universe event — memory-driven scene shift",
+    videoCaption: "Alternate universe event: memory-driven scene shift",
     detail: (
       <>
-        Scenes triggered by <Em>personal history</Em> recontextualize the relationship — variable rewards from real shared context.
+        Scenes triggered by <Em>personal history</Em> recontextualize the relationship: variable rewards from real shared context.
       </>
     ),
   },
@@ -802,10 +802,10 @@ const innovations: {
     capability: "Real-time generation + character depth modeling",
     workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow.svg",
     videoSrc: "/assets/ai-character/interactions/heartbeat/heartbeat-1.mp4",
-    videoCaption: "Heartbeat — inner-monologue reveal",
+    videoCaption: "Heartbeat: inner-monologue reveal",
     detail: (
       <>
-        A tap-to-reveal <Em>inner-monologue card</Em> creates <Em>emotional privilege</Em> — users glimpse the
+        A tap-to-reveal <Em>inner-monologue card</Em> creates <Em>emotional privilege</Em>: users glimpse the
         character&apos;s subtext without breaking the surface illusion.
       </>
     ),
@@ -816,10 +816,10 @@ const innovations: {
     capability: "Progressive memory building",
     workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow.svg",
     videoSrc: "/assets/ai-character/interactions/story%20unlocked/story%20unlocked-1.mp4",
-    videoCaption: "Story unlock — milestone progression in chat",
+    videoCaption: "Story unlock: milestone progression in chat",
     detail: (
       <>
-        <Em>Backstory milestones</Em> unlock through conversation depth — one knowledge base revealing progressively
+        <Em>Backstory milestones</Em> unlock through conversation depth: one knowledge base revealing progressively
         across two interaction layers.
       </>
     ),
@@ -830,10 +830,10 @@ const innovations: {
     capability: "Generation from memory history",
     workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow.svg",
     videoSrc: "/assets/ai-character/interactions/moments/moments-1.mp4",
-    videoCaption: "Moments feed — posts from memory history",
+    videoCaption: "Moments feed: posts from memory history",
     detail: (
       <>
-        <Em>Instagram-style posts</Em> generated from interaction history sustain <Em>off-session presence</Em> — the
+        <Em>Instagram-style posts</Em> generated from interaction history sustain <Em>off-session presence</Em>: the
         character keeps existing between conversations.
       </>
     ),
@@ -872,7 +872,7 @@ function InteractionInnovationList() {
             className="block overflow-hidden rounded-2xl bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.06] transition-[box-shadow] duration-700 ease-out hover:shadow-[0_24px_64px_-28px_rgba(0,0,0,0.09)]"
           >
             <ShowcaseVideo
-              label={`${item.name} — interaction preview`}
+              label={`${item.name}: interaction preview`}
               src={item.videoSrc}
               caption={item.videoCaption}
               className={videoInCardClass}
@@ -910,7 +910,7 @@ function InteractionInnovationList() {
                 <div className={`relative overflow-hidden bg-black/[0.02] ring-1 ring-black/[0.06] ${mediaRound}`}>
                   <img
                     src={item.workflowSrc}
-                    alt={`${item.name} — LLM workflow`}
+                    alt={`${item.name}: LLM workflow`}
                     className={`h-auto w-full ${mediaRound}`}
                     loading="lazy"
                     decoding="async"
@@ -932,7 +932,7 @@ const uxStrategyShowrooms = [
     capability: "Long-term memory",
     feel: "Character recalls conversation specifics across sessions",
     proofSrc: "/assets/ai-character/ux-strategy-romance-proof.png",
-    proofAlt: "Romance showroom — character moment feed referencing shared history",
+    proofAlt: "Romance showroom: character moment feed referencing shared history",
   },
   {
     id: "astrology",
@@ -940,7 +940,7 @@ const uxStrategyShowrooms = [
     capability: "Real-time memory updates",
     feel: "Live constellation profile updates mid-conversation",
     proofSrc: "/assets/ai-character/ux-strategy-astrology-proof.png",
-    proofAlt: "Astrology showroom — zodiac profile field updating as memory writes in chat",
+    proofAlt: "Astrology showroom: zodiac profile field updating as memory writes in chat",
   },
   {
     id: "therapy",
@@ -948,7 +948,7 @@ const uxStrategyShowrooms = [
     capability: "Real-time analysis",
     feel: "Expert panel surfaces conversation themes as you chat",
     proofSrc: "/assets/ai-character/ux-strategy-therapy-proof.png",
-    proofAlt: "Therapy showroom — expert analysis panel beside the conversation",
+    proofAlt: "Therapy showroom: expert analysis panel beside the conversation",
   },
 ] as const;
 
@@ -1194,23 +1194,23 @@ const metricRows = [
   {
     stat: "~2×",
     label: "Model tokens & calls",
-    before: "Four-week rolling average before showroom launch — generic chat and documentation-led trials (internal product analytics).",
-    after: "Four-week rolling average after go-live — showroom-led sessions, same metrics and org scope on the dashboard.",
+    before: "Four-week rolling average before showroom launch: generic chat and documentation-led trials (internal product analytics).",
+    after: "Four-week rolling average after go-live: showroom-led sessions, same metrics and org scope on the dashboard.",
     note: "Pre vs post launch on one pipeline, not a third-party benchmark: compares the same internal reporting window immediately before and after the showroom release.",
   },
   {
     stat: "87%",
     label: "Clone-to-try setup",
-    before: "~7 enumerated steps for B2B evaluators to take the published character template from reading the repo/spec through local install, keys, model endpoint, prompt wiring, and a first runnable session — before opening the showroom chat thread.",
-    after: "Collapsed path: template entry with pre-seeded scenario context plus copy-ready YAML/prompt — external setup becomes a short checklist. The in-room proof moment still requires normal conversation after entry.",
-    note: "Internal clone-to-try checklist only — counts setup actions from code review to local configure/run, not taps inside the live demo or a single-click “instant wow.”",
+    before: "~7 enumerated steps for B2B evaluators to take the published character template from reading the repo/spec through local install, keys, model endpoint, prompt wiring, and a first runnable session, before opening the showroom chat thread.",
+    after: "Collapsed path: template entry with pre-seeded scenario context plus copy-ready YAML/prompt. External setup becomes a short checklist. The in-room proof moment still requires normal conversation after entry.",
+    note: "Internal clone-to-try checklist only: counts setup actions from code review to local configure/run, not taps inside the live demo or a single-click “instant wow.”",
   },
   {
     stat: "60%",
     label: "Faster delivery",
     before: "Spec-only handoff",
     after: "Code + spec together",
-    note: "Verbal engineering estimate — spec + code delivered together across 3 showroom releases. Not from ticket or cycle-time dashboards.",
+    note: "Verbal engineering estimate: spec + code delivered together across 3 showroom releases. Not from ticket or cycle-time dashboards.",
   },
 ];
 
@@ -1294,19 +1294,19 @@ export default function CaseStudyContent() {
         >
           
           <p>
-            Pages explained the stack. Docs walked through the API. But to <Em>feel</Em> what the model could do, users had to configure, run samples, and interpret output alone — a loop that <Em>routinely stretched past an hour</Em>. Most trial users left before reaching the moment of value. Enterprise decks hit the same wall: they could describe the model, but nothing created belief.
+            Pages explained the stack. Docs walked through the API. But to <Em>feel</Em> what the model could do, users had to configure, run samples, and interpret output alone, a loop that <Em>routinely stretched past an hour</Em>. Most trial users left before reaching the moment of value. Enterprise decks hit the same wall: they could describe the model, but nothing created belief.
           </p>
 
           <SiteVideoPreviewFrame
             eyebrow="Before"
-            title="Static documentation and generic chat — previous experience (screen recording)"
+            title="Static documentation and generic chat: previous experience (screen recording)"
             src="/assets/ai-character/before.mp4"
           />
 
           <blockquote className="my-16 w-full !max-w-none rounded-2xl border border-black/[0.07] bg-surfaceAlt/50 px-8 py-12 text-left not-italic md:my-20 md:px-12 md:py-16">
             <p className="font-sans text-[11px] font-medium uppercase tracking-[0.22em] text-textSecondary">How might we</p>
             <p className="mt-8 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
-              Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em> — within minutes? let a customer feel their future product before they write a line of code?
+              Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em>, within minutes? let a customer feel their future product before they write a line of code?
             </p>
           </blockquote>
         </Section>
@@ -1330,7 +1330,7 @@ export default function CaseStudyContent() {
               {
                 n: "01",
                 title: "Market-back character definition",
-                body: "Triangulated internal analytics with desk research. 4 verticals — companionship, therapy, persona replication, licensed IP — each a distinct entry point.",
+                body: "Triangulated internal analytics with desk research. 4 verticals (companionship, therapy, persona replication, licensed IP), each a distinct entry point.",
               },
               {
                 n: "02",
@@ -1340,7 +1340,7 @@ export default function CaseStudyContent() {
               {
                 n: "03",
                 title: "Reusable template for customers",
-                body: "Showrooms customers could clone, configure, and launch — not one-time pitch artifacts.",
+                body: "Showrooms customers could clone, configure, and launch, not one-time pitch artifacts.",
               },
             ].map((card, i) => (
               <div
@@ -1370,13 +1370,13 @@ export default function CaseStudyContent() {
           title="Users want to feel AI, not read about it"
         >
           <p>
-            I skipped B2B competitors and studied consumer products directly — 6 apps, 40+ comments. The pattern: <Em>most felt like another ChatGPT window</Em>. Users wanted two-layer immersion: conversation depth and sensory environment.
+            I skipped B2B competitors and studied consumer products directly: 6 apps, 40+ comments. The pattern: <Em>most felt like another ChatGPT window</Em>. Users wanted two-layer immersion: conversation depth and sensory environment.
           </p>
           <p>
             Our own customers confirmed it: <Em>show the capability, don&apos;t describe it</Em>. The task became turning a black box into tangible, inspectable proof.
           </p>
           <ImagePlaceholder
-            label="Character.AI — reference UI from competitor research (April 2026)"
+            label="Character.AI: reference UI from competitor research (April 2026)"
             src="/assets/ai-character/research-character-ai-screenshot.png"
             className="mx-auto max-w-5xl"
           />
@@ -1472,11 +1472,11 @@ export default function CaseStudyContent() {
         >
           <p>
             Engagement depth competes with time-to-value. I resolved this by{" "}
-            <Em>accelerating the interaction loop</Em> — making capability legible within minutes.
+            <Em>accelerating the interaction loop</Em>, making capability legible within minutes.
           </p>
 
           <ShowcaseVideo
-            label="Experience loop — inspiration and continuation"
+            label="Experience loop: inspiration and continuation"
             src="/assets/ai-character/conversation engine.mp4"
             caption="Option generation, narrative continuation, and multimodal response cues"
           />
@@ -1486,20 +1486,20 @@ export default function CaseStudyContent() {
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 01</p>
               <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Inspiration Response</p>
               <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-                Three <Em>context-grounded reply options</Em> with action, emotion, and expression cues. Guides the next move without breaking flow — feels like gameplay, not messaging.
+                Three <Em>context-grounded reply options</Em> with action, emotion, and expression cues. Guides the next move without breaking flow: feels like gameplay, not messaging.
               </p>
             </div>
             <div className="rounded-2xl bg-white px-6 py-8 shadow-[0_1px_0_rgba(0,0,0,0.04)] ring-1 ring-black/[0.05] md:px-7">
               <p className="font-sans text-[11px] font-medium uppercase tracking-[0.16em] text-textSecondary">Feature 02</p>
               <p className="mt-4 font-display text-[1.15rem] font-light tracking-tight text-textPrimary">Continue Response</p>
               <p className="mt-3 font-sans text-[15px] leading-relaxed text-textSecondary">
-                One tap <Em>extends the active storyline</Em> from context — revealing long-context reasoning without user effort.
+                One tap <Em>extends the active storyline</Em> from context, revealing long-context reasoning without user effort.
               </p>
             </div>
           </div>
 
           <ShowcaseVideo
-            label="Experience loop — inspiration and continue response in flow"
+            label="Experience loop: inspiration and continue response in flow"
             src="/assets/ai-character/inspire-continue-response/inspire-continue-response-1.mp4"
             caption="Screen recording: inspiration reply options and continue response in the romance showroom"
             className="mt-10"
@@ -1509,13 +1509,13 @@ export default function CaseStudyContent() {
           <RevealLine className="mt-12" />
 
           <h3 className="mt-12 font-display text-[1.25rem] font-light tracking-tight text-textPrimary md:text-[1.35rem]">
-            Developer tools — code drawer
+            Developer tools: code drawer
           </h3>
           <p className="mt-4">
-            A <Em>slide-out code drawer</Em> keeps YAML specs, prompts, and constraints beside the live experience — inspect and iterate without leaving the showroom. Shifted conversations from &ldquo;Can your model do this?&rdquo; to <Em>&ldquo;How fast can we ship?&rdquo;</Em>
+            A <Em>slide-out code drawer</Em> keeps YAML specs, prompts, and constraints beside the live experience: inspect and iterate without leaving the showroom. Shifted conversations from &ldquo;Can your model do this?&rdquo; to <Em>&ldquo;How fast can we ship?&rdquo;</Em>
           </p>
           <ShowcaseVideo
-            label="Developer tools — in-product code side panel"
+            label="Developer tools: in-product code side panel"
             src="/assets/ai-character/code/code%20tool.mp4"
             caption="Screen recording: code drawer with spec and prompt context alongside the demo"
             className="mt-8"
@@ -1547,7 +1547,7 @@ export default function CaseStudyContent() {
             Craft moment: 3D → AI video loops
           </h3>
           <p className="mt-4">
-            The 3D avatar crashed mid-interaction. I replaced it with an <Em>AI-generated looping video</Em> — lighter,
+            The 3D avatar crashed mid-interaction. I replaced it with an <Em>AI-generated looping video</Em>: lighter,
             more stable, and subtly present. Small motion (blink, smile, nod) felt more alive than complex animation.
           </p>
         </Section>
@@ -1565,7 +1565,7 @@ export default function CaseStudyContent() {
                 decision: "Showroom over optimizing chat window",
                 angle: "Product strategy",
                 rejected: "Better chat window",
-                chosen: "Pre-seeded showroom — memory, arc, proof from msg 1",
+                chosen: "Pre-seeded showroom: memory, arc, proof from msg 1",
                 tradeoff: "Constrained entry · guaranteed first impression",
               },
               {
@@ -1574,7 +1574,7 @@ export default function CaseStudyContent() {
                 angle: "Market fit",
                 rejected: "Generic demo scenarios",
                 chosen:
-                  "Three B2C-facing rooms, each exercising one capability — sourced from the same mix as the Market-back pillar above: internal dashboards plus desk research on Character.AI (romance-heavy persona demand) and B2B signals on real-person digital replicas, not genre guessing.",
+                  "Three B2C-facing rooms, each exercising one capability: sourced from the same mix as the Market-back pillar above: internal dashboards plus desk research on Character.AI (romance-heavy persona demand) and B2B signals on real-person digital replicas, not genre guessing.",
                 tradeoff: "Narrower scope · stronger, traceable market signal",
               },
               {
@@ -1590,7 +1590,7 @@ export default function CaseStudyContent() {
                 decision: "AI video loop over 3D avatar",
                 angle: "Production stability",
                 rejected: "3D avatar (crashed mid-demo in webview)",
-                chosen: "AI-generated loop — blink, nod, smile · 1/10th load time",
+                chosen: "AI-generated loop: blink, nod, smile · 1/10th load time",
                 tradeoff: "Less interactivity · higher reliability + warmer feel",
               },
               {
@@ -1662,7 +1662,7 @@ export default function CaseStudyContent() {
           title="Three showrooms, designed and built end-to-end."
         >
           <p>
-            Each showroom was designed, prototyped, and shipped end-to-end — research through production code. Three vibe-coded builds below; open full page for best fidelity.
+            Each showroom was designed, prototyped, and shipped end-to-end, research through production code. Three vibe-coded builds below; open full page for best fidelity.
           </p>
           <VibeCodingPrototypeGallery />
         </Section>
@@ -1729,7 +1729,7 @@ export default function CaseStudyContent() {
           </p>
           <SitePreviewFrame
             eyebrow="Adoption"
-            title="Spark Design templates — adopted B2B design system page"
+            title="Spark Design templates: adopted B2B design system page"
             src="https://sparkdesign.agentscope.io/#/templates"
             href="https://sparkdesign.agentscope.io/#/templates"
           />
@@ -1796,11 +1796,11 @@ export default function CaseStudyContent() {
           </h3>
           <div className="mt-6 space-y-7 font-sans text-[16px] leading-relaxed text-textSecondary md:text-[17px] md:leading-[1.65]">
             <p>
-              <Em>Design is the translation layer.</Em> The hardest problem in AI products isn&apos;t model quality —
+              <Em>Design is the translation layer.</Em> The hardest problem in AI products isn&apos;t model quality;
               it&apos;s helping customers imagine what they can build.
             </p>
             <p>
-              <Em>The strongest demo is future-self proof.</Em> Show a working version of their own future product — then let them clone it.
+              <Em>The strongest demo is future-self proof.</Em> Show a working version of their own future product, then let them clone it.
             </p>
           </div>
         </Section>

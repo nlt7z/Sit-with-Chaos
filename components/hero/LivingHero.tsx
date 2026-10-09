@@ -146,7 +146,7 @@ export function MotionDemo({ reduced }: { reduced: boolean }) {
                 transition={{ duration: 0.3, delay: reduced ? 0 : 0.1 }}
               >
                 <div className="font-display text-base font-light leading-snug text-textPrimary md:text-lg">
-                  The last 5% — where craft lives.
+                  The last 5%: where craft lives.
                 </div>
                 <div className="mt-2 space-y-1.5">
                   <div className="h-1.5 w-[86%] rounded-full bg-black/[0.06]" />
@@ -182,7 +182,7 @@ export function ResearchDemo({ reduced }: { reduced: boolean }) {
   return (
     <div className="flex h-full flex-col justify-center gap-6 px-8 py-7 md:px-10">
       <p className="max-w-[32ch] font-display text-[18px] font-light leading-relaxed text-textPrimary md:text-xl">
-        The price looked like the problem. Curiosity said dig deeper —{" "}
+        The price looked like the problem. Curiosity said dig deeper: {" "}
         <span className="relative inline">
           <motion.span
             aria-hidden
@@ -388,7 +388,7 @@ export function CodeDemo({ reduced }: { reduced: boolean }) {
             animate={{ opacity: 1 }}
             className="font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/60"
           >
-            live — keep tapping
+            live: keep tapping
           </motion.span>
         ) : null}
       </div>
@@ -460,7 +460,7 @@ export function LivingHero() {
             <Keyword label="motion" active={active === "motion"} reduced={reduced} onActivate={() => pick("motion")} />
             , and{" "}
             <Keyword label="code" active={active === "code"} reduced={reduced} onActivate={() => pick("code")} />
-            <br className="hidden sm:block" /> — in one head.
+            <br className="hidden sm:block" /> in one head.
           </motion.h1>
 
           <motion.p
@@ -542,7 +542,7 @@ export function LivingHero() {
                   exit={{ opacity: 0 }}
                   className="hidden font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/55 sm:inline"
                 >
-                  ↑ hover the words — each proves itself →
+                  ↑ hover the words: each proves itself →
                 </motion.span>
               ) : null}
             </AnimatePresence>

@@ -501,7 +501,7 @@ export function VendingMachineClient() {
         >
           <Image
             src="/assets/mainpage-vending machine/music.png"
-            alt={isPlaying ? "Now playing — tap to pause" : "Tap to play music"}
+            alt={isPlaying ? "Now playing: tap to pause" : "Tap to play music"}
             width={72} height={55}
             style={{ imageRendering: "pixelated", opacity: isPlaying ? 1 : 0.6, display: "block" }}
           />
@@ -545,7 +545,7 @@ export function VendingMachineClient() {
 
           <Image
             src="/assets/mainpage-vending machine/music.png"
-            alt={isPlaying ? "Now playing — click to pause" : "Click to play music"}
+            alt={isPlaying ? "Now playing: click to pause" : "Click to play music"}
             width={200} height={152}
             style={{ imageRendering: "pixelated", opacity: isPlaying ? 1 : 0.7, display: "block" }}
           />

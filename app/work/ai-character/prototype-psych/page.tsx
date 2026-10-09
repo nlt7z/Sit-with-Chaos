@@ -3,7 +3,7 @@ import { DesktopExperienceGate } from "@/components/DesktopExperienceGate";
 import PsychShowroomPrototypeClient from "./PsychShowroomPrototypeClient";
 
 export const metadata: Metadata = {
-  title: "Psychology Expert Showroom Prototype — Yuan Fang",
+  title: "Psychology Expert Showroom Prototype · Yuan Fang",
   description:
     "Interactive psychology consultation showroom with visible analysis steps before response.",
 };
@@ -22,7 +22,7 @@ export default async function PsychShowroomPrototypePage({
       disabled={embed}
       embedPath="/work/ai-character/prototype-psych"
       title="Therapy companion prototype"
-      description="An ambient room interface — chat with the analysis steps made visible before each reply."
+      description="An ambient room interface: chat with the analysis steps made visible before each reply."
       backHref="/work/ai-character"
     >
       <PsychShowroomPrototypeClient embed={embed} focus={focus} />

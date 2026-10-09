@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 const projects: Record<string, string> = {
-  "liner-scholar": "Liner AI Scholar — Collaborative Deep-Research Workflow",
+  "liner-scholar": "Liner AI Scholar: Collaborative Deep-Research Workflow",
   "ai-character": "New Experience for Qwen AI Character",
-  "apsara-conference": "Apsara Conference — Alibaba AI on Cloud",
+  "apsara-conference": "Apsara Conference: Alibaba AI on Cloud",
   qoder: "Agentic Coding Platform for Real Software",
   "meituan-im": "Expert Analysis and Multi-round Quotation for IM System",
-  "studio-engine": "Studio Engine.ai — GenAI Filmmaking Solution",
-  ridesharing: "AI Ride — Autonomous Ridesharing Experience",
+  "studio-engine": "Studio Engine.ai: GenAI Filmmaking Solution",
+  ridesharing: "AI Ride: Autonomous Ridesharing Experience",
 };
 
 type PageProps = {
@@ -22,8 +22,8 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: PageProps): Metadata {
   const title = projects[params.slug] ?? "Project";
   return {
-    title: `${title} — Yuan Fang`,
-    description: "Case study — full content coming soon.",
+    title: `${title} · Yuan Fang`,
+    description: "Case study. Full content coming soon.",
   };
 }
 

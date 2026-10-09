@@ -106,7 +106,7 @@ export function LimeSignature() {
           The lime should be the thing you remember.
         </h2>
         <p className="mt-5 text-base leading-relaxed text-textSecondary md:text-lg">
-          Scroll — the line at the very top fills with lime as you go. It&apos;s the one element
+          Scroll: the line at the very top fills with lime as you go. It&apos;s the one element
           present on every screen, so the brand colour is felt continuously instead of just winking
           in a status dot.
         </p>
@@ -115,13 +115,13 @@ export function LimeSignature() {
       <Block>
         <p className="font-mono text-xs uppercase tracking-widest text-textSecondary">B · highlighter</p>
         <p className="mt-6 font-display text-2xl font-light leading-relaxed text-textPrimary md:text-3xl">
-          As you read, the sentences that matter get <Mark reduced={reduced}>marked in lime</Mark> —
+          As you read, the sentences that matter get <Mark reduced={reduced}>marked in lime</Mark>:
           the highlighter motif borrowed from research, now a brand behaviour. It turns reading into{" "}
           <Mark reduced={reduced}>an active, remembered moment</Mark>, and ties straight back to the
           Liner work.
         </p>
         <p className="mt-8 text-base leading-relaxed text-textSecondary md:text-lg">
-          The swipe fires once, on scroll-in, so it feels deliberate — a hand drawing the marker —
+          The swipe fires once, on scroll-in, so it feels deliberate (a hand drawing the marker),
           not decorative. Used sparingly it becomes <Mark reduced={reduced}>a signature</Mark>.
         </p>
       </Block>
@@ -146,7 +146,7 @@ export function LimeSignature() {
           Hover me
         </button>
         <p className="mt-16 font-mono text-xs uppercase tracking-[0.16em] text-textSecondary/60">
-          Pick one to ship — stacking all three would be noise.
+          Pick one to ship: stacking all three would be noise.
         </p>
       </Block>
     </>

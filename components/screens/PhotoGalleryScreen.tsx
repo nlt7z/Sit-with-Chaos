@@ -243,11 +243,11 @@ export function PhotoGalleryScreen({
           </div>
           <p style={{ fontSize: 13, color: C.ink600, margin: 0, lineHeight: "18px" }}>
             {active === 0
-              ? "Shows condition of the toilet flange. Wax residue visible — confirms old seal needs full replacement."
+              ? "Shows condition of the toilet flange. Wax residue visible: confirms old seal needs full replacement."
               : active === 1
               ? "Close-up of the wax ring. Cracked and compressed, causing odor leak around the base."
               : active === 2
-              ? "Mounting bolts — one is corroded. Needs replacement before reinstalling the toilet."
+              ? "Mounting bolts: one is corroded. Needs replacement before reinstalling the toilet."
               : "Video walkthrough of the installation area and existing plumbing connections."}
           </p>
         </div>

@@ -5,13 +5,13 @@ import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 // metadata + JSON-LD live here in the server-rendered layout instead.
 
 const PATH = "/work/meituan-im";
-const TITLE = "Meituan — Rebuilding the Black Box";
+const TITLE = "Meituan: Rebuilding the Black Box";
 const DESCRIPTION =
-  "A 0-to-1 in-message quotation system across Meituan's 770M+ annual users and 14.5M merchants — a diagnose→quote→order entry that converted ~1.3× the old path and lifted overall search conversion +0.5pp, with projected ~2k extra daily orders and 50% fewer pricing disputes.";
+  "A 0-to-1 in-message quotation system across Meituan's 770M+ annual users and 14.5M merchants: a diagnose→quote→order entry that converted ~1.3× the old path and lifted overall search conversion +0.5pp, with projected ~2k extra daily orders and 50% fewer pricing disputes.";
 const OG_IMAGE = "/assets/og/meituan-im.jpg";
 
 export const metadata: Metadata = {
-  title: `${TITLE} — Yuan Fang`,
+  title: `${TITLE} · Yuan Fang`,
   description: DESCRIPTION,
   alternates: { canonical: PATH },
   openGraph: {

@@ -13,13 +13,13 @@ const sitePreviews = [
   {
     href: "https://qbix.space",
     url: "qbix.space",
-    label: "Qbix — live site preview",
+    label: "Qbix: live site preview",
     meta: "Solo · designed + shipped",
   },
   {
     href: "https://hancao.space",
     url: "hancao.space",
-    label: "Hancao — live site preview",
+    label: "Hancao: live site preview",
     meta: "Solo · designed + shipped",
   },
 ] as const;
@@ -73,7 +73,7 @@ export function HomeMagicGallery() {
             One person, <LimeMark>one throughline</LimeMark>.
           </h2>
           <p className="mt-4 max-w-2xl text-sm leading-relaxed text-textSecondary md:text-[15px]">
-            Concept, logic, visuals, code, ship — end-to-end ownership with the creative instinct behind every decision.
+            Concept, logic, visuals, code, ship: end-to-end ownership with the creative instinct behind every decision.
           </p>
         </motion.div>
 

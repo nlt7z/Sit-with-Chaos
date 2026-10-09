@@ -10,9 +10,9 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "Rebuilding the Black Box — Presentation Deck",
+  title: "Rebuilding the Black Box: Presentation Deck",
   description:
-    "From price transparency to trusted diagnosis: a service design case for Meituan local home services — platform-first diagnosis, one structured order, live merchant quotes, told through a live prototype.",
+    "From price transparency to trusted diagnosis: a service design case for Meituan local home services: platform-first diagnosis, one structured order, live merchant quotes, told through a live prototype.",
 };
 
 function Fallback() {

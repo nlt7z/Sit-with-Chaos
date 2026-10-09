@@ -3,7 +3,7 @@ import { DesktopExperienceGate } from "@/components/DesktopExperienceGate";
 import AstroShowroomPrototypeClient from "./AstroShowroomPrototypeClient";
 
 export const metadata: Metadata = {
-  title: "Astro Showroom Prototype — Yuan Fang",
+  title: "Astro Showroom Prototype · Yuan Fang",
   description: "Interactive astrology consultation showroom prototype.",
 };
 
@@ -21,7 +21,7 @@ export default async function AstroShowroomPrototypePage({
       disabled={embed}
       embedPath="/work/ai-character/prototype-astro"
       title="Astrology character prototype"
-      description="A consultation showroom — chat, card draw, and a memory archive."
+      description="A consultation showroom: chat, card draw, and a memory archive."
       backHref="/work/ai-character"
     >
       <AstroShowroomPrototypeClient embed={embed} focus={focus} />

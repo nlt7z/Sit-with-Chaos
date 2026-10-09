@@ -117,7 +117,7 @@ function MobilePreview({
             <p className="text-[14px] leading-relaxed text-textSecondary">{description}</p>
           ) : null}
           <p className="text-[13px] leading-relaxed text-textSecondary/80">
-            This interactive piece was designed for a desktop canvas — open the page on a wider screen for the full
+            This interactive piece was designed for a desktop canvas. Open the page on a wider screen for the full
             experience. A scaled preview is below.
           </p>
         </header>
@@ -130,7 +130,7 @@ function MobilePreview({
           >
             <iframe
               src={embedPath.includes("?") ? `${embedPath}&embed=1` : `${embedPath}?embed=1`}
-              title={`${title} — scaled preview`}
+              title={`${title}: scaled preview`}
               loading="lazy"
               referrerPolicy="no-referrer"
               tabIndex={-1}

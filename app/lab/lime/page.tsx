@@ -2,7 +2,7 @@ import { LimeSignature } from "@/components/lab/LimeSignature";
 import { Nav } from "@/components/Nav";
 
 export const metadata = {
-  title: "Lab — lime as signature (idea ③)",
+  title: "Lab: lime as signature (idea ③)",
   robots: { index: false, follow: false },
 };
 

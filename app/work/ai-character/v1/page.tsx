@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import CaseStudyContent from "./CaseStudyContentOriginal";
 
 export const metadata: Metadata = {
-  title: "Xingchen: Case Study v1 — Yuan Fang",
+  title: "Xingchen: Case Study v1 · Yuan Fang",
   description: "Original version of the Xingchen case study before restructuring.",
 };
 

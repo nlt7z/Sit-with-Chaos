@@ -132,14 +132,14 @@ export const merchantDetails: Record<string, MerchantDetail> = {
       { label: "Labor", value: "$45–$85 / hr" },
       { label: "Parts", value: "Quoted on-site" },
       { label: "Weekend rate", value: "+$20 surcharge" },
-      { label: "Warranty", value: "90 days — parts & labor" },
+      { label: "Warranty", value: "90 days, parts & labor" },
     ],
     coverageArea: "All SF neighborhoods · Daly City · South SF",
     reviews: [
       {
         name: "Laura M.", initials: "LM", date: "May 8",
         rating: 5,
-        text: "Super fast response. Fixed the wax ring in under an hour. Price matched the estimate exactly — no surprise charges.",
+        text: "Super fast response. Fixed the wax ring in under an hour. Price matched the estimate exactly, no surprise charges.",
       },
       {
         name: "James T.", initials: "JT", date: "Apr 30",

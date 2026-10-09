@@ -128,7 +128,7 @@ export function Contact() {
           className="mx-auto mt-6 max-w-2xl text-sm leading-relaxed text-textPrimary md:mt-8 md:text-base"
         >
           I&apos;m looking for teams building products where interaction, trust, and system
-          thinking matter — and where <LimeMark>one person can take an idea to shipped</LimeMark>.
+          thinking matter, and where <LimeMark>one person can take an idea to shipped</LimeMark>.
         </motion.p>
 
         <motion.div

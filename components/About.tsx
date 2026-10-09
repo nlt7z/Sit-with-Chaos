@@ -11,7 +11,7 @@ const capabilities = [
   {
     title: "AI-Native Velocity",
     description:
-      "Interview insights in hours, not days — and a loose idea coded into a working prototype the same day.",
+      "Interview insights in hours, not days, and a loose idea coded into a working prototype the same day.",
     evidence: { href: "/work/ai-character", label: "See Qwen Character" },
   },
   {
@@ -23,7 +23,7 @@ const capabilities = [
   {
     title: "Relentless Builder",
     description:
-      "No technical wall stops me — I learn through it until I can ship it myself, web and mobile.",
+      "No technical wall stops me: I learn through it until I can ship it myself, web and mobile.",
     evidence: { href: "/vibe-coding", label: "See the builds" },
   },
 ] as const;

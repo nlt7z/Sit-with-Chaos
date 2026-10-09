@@ -86,7 +86,7 @@ export function Nav({ variant = "light", floating = false }: NavProps) {
     <>
           <Link
             href="/"
-            aria-label="Yuan Fang — Home"
+            aria-label="Yuan Fang: Home"
             className={`flex items-center gap-2 rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 ${
               isDark
                 ? "focus-visible:ring-white/50 focus-visible:ring-offset-[#060608]"

@@ -16,12 +16,12 @@ const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
 const tiktok: Project = {
   slug: "tiktok",
-  title: "TikTok — Redesigned how friends' shared videos surface in a Shared with You feed",
+  title: "TikTok: Redesigned how friends' shared videos surface in a Shared with You feed",
   description:
     "Self-initiated product case study: turning the DM inbox of friend-shared videos into a scrollable Shared Feed with one-tap Smart Reactions and reply-value ranking.",
   media: {
     src: "/assets/TikTok/showcase.mp4",
-    alt: "TikTok Shared with You — feed design walkthrough",
+    alt: "TikTok Shared with You: feed design walkthrough",
     type: "video",
   },
   flowSteps: ["smart reactions", "shared feed", "reply-value ranking"],
@@ -37,11 +37,11 @@ const tiktok: Project = {
 
 const aiCharacter: Project = {
   slug: "ai-character",
-  title: "Alibaba Cloud — Shipped Qwen Character's Interactive Showrooms MVP",
+  title: "Alibaba Cloud: Shipped Qwen Character's Interactive Showrooms MVP",
   description: "0→1 MVP feature for Qwen Character LLM, serving millions of enterprise customers.",
   media: {
     src: "/assets/ai-character/figma-h264.mp4",
-    alt: "Alibaba Qwen AI Character — interactive showrooms",
+    alt: "Alibaba Qwen AI Character: interactive showrooms",
     type: "showroom",
     showrooms: [
       "/work/ai-character/prototype-astro?embed=1&muted=1",
@@ -64,7 +64,7 @@ const aiCharacter: Project = {
 
 const studioEngine: Project = {
   slug: "studio-engine",
-  title: "StudioEngine — Rebuilt a GenAI video app into a 4-stage creative workspace",
+  title: "StudioEngine: Rebuilt a GenAI video app into a 4-stage creative workspace",
   description: "Restructured a Gen-2 web app from a single-step generator into a four-stage creative workspace creators actually iterate in.",
   media: {
     src: "/assets/work/vp-genie.jpg",
@@ -84,11 +84,11 @@ const studioEngine: Project = {
 
 const meituanIm: Project = {
   slug: "meituan-im",
-  title: "Meituan — 0→1 in-message quotation system on a 770M-user platform",
+  title: "Meituan: 0→1 in-message quotation system on a 770M-user platform",
   description: "Led the 0-to-1 design of an in-message quotation system on a platform with 770M+ annual transacting users and 14.5M active merchants.",
   media: {
     src: "/assets/meituan-im/meituan-present/meituan-present-1.mp4",
-    alt: "Meituan repair flow — product walkthrough",
+    alt: "Meituan repair flow: product walkthrough",
     type: "video",
   },
   flowSteps: ["diagnose", "quote compare", "confirm"],
@@ -104,11 +104,11 @@ const meituanIm: Project = {
 
 const qbix: Project = {
   slug: "qbix",
-  title: "Qbix Studio — Design agency, 0→1 brand · design, code, build",
-  description: "Full-stack solo build for a creative agency — 0→1 brand identity, work showcase, and inquiry flow, from concept to production.",
+  title: "Qbix Studio: Design agency, 0→1 brand · design, code, build",
+  description: "Full-stack solo build for a creative agency: 0→1 brand identity, work showcase, and inquiry flow, from concept to production.",
   media: {
     src: "/assets/work/Area.mp4",
-    alt: "Qbix Studio design agency website — full-page walkthrough",
+    alt: "Qbix Studio design agency website: full-page walkthrough",
     type: "video",
   },
   flowSteps: ["concept", "design", "code", "ship"],
@@ -125,11 +125,11 @@ const qbix: Project = {
 
 const liner: Project = {
   slug: "liner",
-  title: "Liner — Research + designed AI-native co-research for 10M+ academic users",
-  description: "Led end-to-end research and design for an AI-native collaborative research experience — where people collect sources, discuss, and co-write together.",
+  title: "Liner: Research + designed AI-native co-research for 10M+ academic users",
+  description: "Led end-to-end research and design for an AI-native collaborative research experience, where people collect sources, discuss, and co-write together.",
   media: {
     src: "/assets/liner/liner-product-video.mp4",
-    alt: "Liner AI collaboration feature — research and design preview",
+    alt: "Liner AI collaboration feature: research and design preview",
     type: "video",
   },
   flowSteps: ["ai/group chat", "shared library", "co-write editor"],

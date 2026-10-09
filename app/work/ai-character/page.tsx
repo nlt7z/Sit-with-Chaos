@@ -5,13 +5,13 @@ import CaseStudyContent from "./CaseStudyContent";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
 const PATH = "/work/ai-character";
-const TITLE = "Qwen Character — Interactive Showrooms, End-to-End Design";
+const TITLE = "Qwen Character: Interactive Showrooms, End-to-End Design";
 const DESCRIPTION =
-  "Shipped Interactive Showrooms, the MVP for Qwen Character — cut time-to-first-value from hours of docs to minutes and drove a 200% lift in model API call volume across enterprise users.";
+  "Shipped Interactive Showrooms, the MVP for Qwen Character, cut time-to-first-value from hours of docs to minutes and drove a 200% lift in model API call volume across enterprise users.";
 const OG_IMAGE = "/assets/og/ai-character.jpg";
 
 export const metadata: Metadata = {
-  title: `${TITLE} — Yuan Fang`,
+  title: `${TITLE} · Yuan Fang`,
   description: DESCRIPTION,
   alternates: { canonical: PATH },
   openGraph: {

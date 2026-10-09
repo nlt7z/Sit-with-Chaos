@@ -122,7 +122,7 @@ export function MerchantDetailScreen({
             transition: "background 0.3s",
           }}
         >
-          {booked ? "✓  Booking confirmed" : `Book — $${quote.priceLow}–$${quote.priceHigh}`}
+          {booked ? "✓  Booking confirmed" : `Book: $${quote.priceLow}–$${quote.priceHigh}`}
         </motion.button>
       }
     >

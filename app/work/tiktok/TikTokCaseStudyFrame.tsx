@@ -131,7 +131,7 @@ export function TikTokCaseStudyFrame() {
       <iframe
         ref={ref}
         src="/assets/TikTok/case-study-en.html?embed=1"
-        title="TikTok · Shared with You — Feed Design case study"
+        title="TikTok · Shared with You: Feed Design case study"
         scrolling="no"
         style={{ width: "100%", height, border: 0, display: "block" }}
       />

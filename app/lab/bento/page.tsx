@@ -1,7 +1,7 @@
 import { BentoHome } from "@/components/bento/BentoHome";
 
 export const metadata = {
-  title: "Bento — Yuan Fang",
+  title: "Bento · Yuan Fang",
   robots: { index: false, follow: false },
 };
 

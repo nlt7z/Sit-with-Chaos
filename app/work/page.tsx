@@ -3,7 +3,7 @@ import { SideRail } from "@/components/bento/SideRail";
 import { WorkShowcase } from "@/components/WorkShowcase";
 
 export const metadata = {
-  title: "Work — Yuan Fang",
+  title: "Work · Yuan Fang",
   description: "Selected product design work by Yuan Fang.",
 };
 

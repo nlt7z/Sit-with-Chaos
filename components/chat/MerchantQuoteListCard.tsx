@@ -98,7 +98,7 @@ export function MerchantQuoteListCard({
               <SpinningRing expired={data.expired} />
               <span style={{ fontSize: 14, fontWeight: 500, color: C.ink900, lineHeight: "20px" }}>
                 {data.expired ? (
-                  "Quote expired — please re-submit."
+                  "Quote expired. Please re-submit."
                 ) : (
                   <>
                     Reaching out to nearby pros,{" "}

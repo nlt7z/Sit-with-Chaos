@@ -3,7 +3,7 @@ import { DemoNavBar } from "@/components/prototype/DemoNavBar";
 import { DeviceFrame } from "@/components/prototype/DeviceFrame";
 
 export const metadata: Metadata = {
-  title: "美团 IM 报价 — 原型演示",
+  title: "美团 IM 报价: 原型演示",
 };
 
 export default function PrototypeLayout({ children }: { children: React.ReactNode }) {

@@ -9,7 +9,7 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "TikTok · Shared with You — Deck — Yuan Fang",
+  title: "TikTok · Shared with You: Deck · Yuan Fang",
   description:
     "Presentation deck for the TikTok “Shared with You” friend-sharing case study, in the Uber Base design language.",
 };

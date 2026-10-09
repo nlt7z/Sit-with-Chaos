@@ -11,7 +11,7 @@ const sans = Inter({
 });
 
 export const metadata = {
-  title: "Liner · 协作深度研究工作流 — 演示文稿(黑白深绿)",
+  title: "Liner · 协作深度研究工作流: 演示文稿(黑白深绿)",
   description:
     "Liner AI Scholar 作品集演示的极简黑白版本:严格依照案例研究的顺序与节奏,一页一条线地讲清楚从研究综合到产品决策的全过程。",
 };

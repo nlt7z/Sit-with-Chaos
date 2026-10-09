@@ -284,7 +284,7 @@ export default function MuseCaseStudyPage() {
                   variants={heroItem}
                   className="mt-6 max-w-xl text-[16px] leading-[1.6] text-textSecondary"
                 >
-                  A sensor glove and a generative engine that let hearing aid users and their friends share music through different sensory channels — neither has to listen the way the other does.
+                  A sensor glove and a generative engine that let hearing aid users and their friends share music through different sensory channels: neither has to listen the way the other does.
                 </motion.p>
 
                 <motion.div
@@ -303,7 +303,7 @@ export default function MuseCaseStudyPage() {
                         </p>
                       </div>
                       <p className="mt-4 max-w-md text-[15px] leading-[1.55] text-textSecondary">
-                        Four bend + one pressure channel from the glove modulate color, motion, and scene. Audio analysis drives the base signal — gesture shapes it.
+                        Four bend + one pressure channel from the glove modulate color, motion, and scene. Audio analysis drives the base signal; gesture shapes it.
                       </p>
                     </div>
 
@@ -351,7 +351,7 @@ export default function MuseCaseStudyPage() {
             <Section id="thesis" eyebrow="Thesis" title="Most assistive audio assumes the wrong target experience.">
               <FadeIn>
                 <p className="text-[17px] leading-[1.6] tracking-tight text-textPrimary/90">
-                  Hearing aids are built to make music sound the way it sounds to hearing people. After nine interviews — hearing aid and cochlear implant users, family members, an ENT specialist — that assumption did not hold. The users I spoke with did not want a clearer copy of someone else&apos;s experience. They wanted music inside their own sensory vocabulary, and a way to share it with people whose taste differs from theirs.
+                  Hearing aids are built to make music sound the way it sounds to hearing people. After nine interviews (hearing aid and cochlear implant users, family members, an ENT specialist), that assumption did not hold. The users I spoke with did not want a clearer copy of someone else&apos;s experience. They wanted music inside their own sensory vocabulary, and a way to share it with people whose taste differs from theirs.
                 </p>
               </FadeIn>
               <FadeIn delay={0.08} className="mt-8 border-l-2 border-nltLime-ink/40 pl-5 sm:pl-6">
@@ -369,7 +369,7 @@ export default function MuseCaseStudyPage() {
             <Section id="gap" eyebrow="Perception Gap" title="Two failure modes stack on top of each other.">
               <FadeIn>
                 <p className="text-[16px] leading-[1.7] text-textSecondary">
-                  My friend wears hearing aids. She told me music sounds like noise to her, and she has stopped trying to understand why anyone enjoys it. I assumed this was a hardware problem. It is not — or at least not only. From the interview with Dr. L, an otolaryngologist specializing in deafness and tinnitus, the gap pieces together from two sides.
+                  My friend wears hearing aids. She told me music sounds like noise to her, and she has stopped trying to understand why anyone enjoys it. I assumed this was a hardware problem. It is not, or at least not only. From the interview with Dr. L, an otolaryngologist specializing in deafness and tinnitus, the gap pieces together from two sides.
                 </p>
               </FadeIn>
 
@@ -379,7 +379,7 @@ export default function MuseCaseStudyPage() {
                   {[
                     ["No music education", "Cost-restricted access · piano / violin lessons are clinically recommended but not subsidized."],
                     ["Grow up", "Adult user has a channel that handles speech but has no framework for music."],
-                    ["Music registers as noise", "Not a hardware artifact — a missing perceptual schema."],
+                    ["Music registers as noise", "Not a hardware artifact, a missing perceptual schema."],
                   ].map(([head, body], i) => (
                     <div key={i} className="bg-white px-5 py-5">
                       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-nltLime-ink">
@@ -414,7 +414,7 @@ export default function MuseCaseStudyPage() {
                     {
                       n: "Failure 04",
                       name: "Anti-feedback suppression",
-                      body: "Suppresses sustained tones — which is exactly what melody is made of.",
+                      body: "Suppresses sustained tones, which is exactly what melody is made of.",
                     },
                   ].map(({ n, name, body }) => (
                     <div key={n} className="bg-white px-5 py-6">
@@ -439,7 +439,7 @@ export default function MuseCaseStudyPage() {
             <Section id="reframe" eyebrow="Reframe" title="Stop translating. Start meeting in the middle.">
               <FadeIn>
                 <p className="text-[16px] leading-[1.7] text-textSecondary">
-                  I ran nine semi-structured interviews across three groups: hearing aid and cochlear implant users, their family and partners, and hearing peers with strong music preferences. The deep dive was with Wendy, 25 — cochlear implants since childhood. Three findings from her reshaped the project.
+                  I ran nine semi-structured interviews across three groups: hearing aid and cochlear implant users, their family and partners, and hearing peers with strong music preferences. The deep dive was with Wendy, 25, cochlear implants since childhood. Three findings from her reshaped the project.
                 </p>
               </FadeIn>
 
@@ -447,7 +447,7 @@ export default function MuseCaseStudyPage() {
                 {[
                   {
                     head: "Music is not binary",
-                    body: "Wendy loves the guzheng. Hearing aids distort it, but the association is intact — the sound triggers a memory of mountains in childhood. Fidelity is not what makes music meaningful to her.",
+                    body: "Wendy loves the guzheng. Hearing aids distort it, but the association is intact: the sound triggers a memory of mountains in childhood. Fidelity is not what makes music meaningful to her.",
                   },
                   {
                     head: "The hand is already an interface",
@@ -455,7 +455,7 @@ export default function MuseCaseStudyPage() {
                   },
                   {
                     head: "The goal is not normalization",
-                    body: "After implant surgery the world became unfilterable — insect sounds especially. She has stopped trying to suppress them. She does not want to be normal. She wants tools that respect how she experiences the world.",
+                    body: "After implant surgery the world became unfilterable: insect sounds especially. She has stopped trying to suppress them. She does not want to be normal. She wants tools that respect how she experiences the world.",
                   },
                 ].map(({ head, body }, i) => (
                   <div key={i} className="rounded-xl border border-black/[0.08] bg-white px-5 py-5">
@@ -496,7 +496,7 @@ export default function MuseCaseStudyPage() {
             <Section id="system" eyebrow="System Architecture" title="Four components. Each solves one part of the problem.">
               <FadeIn>
                 <p className="text-[16px] leading-[1.7] text-textSecondary">
-                  The system splits into an input layer, a processing layer, an OSC bridge, and a dual-display output. Audio drives the base signal; gesture modulates it. The bridge is what makes the share mode possible — both surfaces render from the same parameter stream, not from a mirrored frame.
+                  The system splits into an input layer, a processing layer, an OSC bridge, and a dual-display output. Audio drives the base signal; gesture modulates it. The bridge is what makes the share mode possible: both surfaces render from the same parameter stream, not from a mirrored frame.
                 </p>
               </FadeIn>
 
@@ -580,22 +580,22 @@ export default function MuseCaseStudyPage() {
                   <Callout
                     index={1}
                     title="Glove, not controller."
-                    body="Wendy&apos;s hands already carry meaning — sign, speech-to-text. The glove extends an existing vocabulary, and keeps both hands free so it feels like playing, not operating a device."
+                    body="Wendy&apos;s hands already carry meaning: sign, speech-to-text. The glove extends an existing vocabulary, and keeps both hands free so it feels like playing, not operating a device."
                   />
                   <Callout
                     index={2}
                     title="TouchDesigner, not a custom shader pipeline."
-                    body="The interesting work is not the renderer. It is the mapping. TD lets me iterate the mapping layer fast — which is where the project lives or dies."
+                    body="The interesting work is not the renderer. It is the mapping. TD lets me iterate the mapping layer fast, which is where the project lives or dies."
                   />
                   <Callout
                     index={3}
                     title="OSC, not screen mirroring."
-                    body="Mirroring locks both viewers into one frame. OSC sends parameters — so the phone can render a simpler or different view of the same gesture. This is what the share mode requires."
+                    body="Mirroring locks both viewers into one frame. OSC sends parameters, so the phone can render a simpler or different view of the same gesture. This is what the share mode requires."
                   />
                   <Callout
                     index={4}
                     title="Two sensor types, not one."
-                    body="FSR captures pressure — continuous but coarse. Bend sensors capture articulated flexion. Together: five independent channels plus a binary mode-switch from the thumb FSR."
+                    body="FSR captures pressure: continuous but coarse. Bend sensors capture articulated flexion. Together: five independent channels plus a binary mode-switch from the thumb FSR."
                   />
                 </div>
               </FadeIn>
@@ -750,9 +750,9 @@ export default function MuseCaseStudyPage() {
                       ["Palm sensor", "Interlink FSR 402", "Continuous pressure → discrete-feel switch. Capacitive can only give binary, and binary would not give the wearer headroom to feel the threshold approaching."],
                       ["Finger sensor × 4", "Spectra Symbol 2.2\" bend", "2.2\" length matches the MCP→PIP joint span on an adult hand. The 4.5\" version overshoots the finger and reads forearm motion as gesture."],
                       ["MCU", "Arduino Nano · ATmega328P", "8 ADCs, hardware UART, USB programming. Teensy LC was overkill at 100Hz; ESP32 added a power problem I didn't need yet."],
-                      ["Wireless", "HC-05 · Bluetooth Classic SPP", "On-hand, serial-byte protocol, no pairing UX work needed. Known bottleneck — V4 should be BLE / nRF52 for the latency win."],
+                      ["Wireless", "HC-05 · Bluetooth Classic SPP", "On-hand, serial-byte protocol, no pairing UX work needed. Known bottleneck: V4 should be BLE / nRF52 for the latency win."],
                       ["Power", "USB tethered · 5V / ~180mA", "V3 is a bench prototype. Battery + 3.3V LDO + power-path is V4 work; current draw measured to size that."],
-                      ["Divider × 5", "10kΩ 1/4W carbon", "Sensor neutral resistance sits near 10k — divider centers the ADC sweep around mid-rail for max sensitivity."],
+                      ["Divider × 5", "10kΩ 1/4W carbon", "Sensor neutral resistance sits near 10k; divider centers the ADC sweep around mid-rail for max sensitivity."],
                       ["Level shift", "1kΩ + 2kΩ on TX → HC-05 RX", "Cheap resistor divider over a logic-level IC. One-way TX path; HC-05 TX is 3.3V into a 5V-tolerant Nano D0, so no shift needed coming back."],
                     ].map(([role, part, why], i) => (
                       <div key={i} className="grid min-w-[34rem] grid-cols-[120px_1.3fr_2fr] border-t border-black/[0.06] bg-white">
@@ -769,7 +769,7 @@ export default function MuseCaseStudyPage() {
               <div className="mt-20 md:mt-24">
                 <SubsectionHeader
                   label="06.2 · Mechanical"
-                  hint="Three builds. V2 → V3 was a strain-relief problem, not a styling change — and the structural fix became part of the interaction language."
+                  hint="Three builds. V2 → V3 was a strain-relief problem, not a styling change, and the structural fix became part of the interaction language."
                 />
 
                 <FadeIn>
@@ -837,7 +837,7 @@ export default function MuseCaseStudyPage() {
                       {[
                         { k: "Symptom", v: "Bend sensor reads frozen after ~200 flex cycles. Continuity check shows open circuit at proximal lead." },
                         { k: "Root cause", v: "Solid-core lead wire fatigues at a single bend point right at the solder fillet. Classic stress-concentration failure." },
-                        { k: "V3 fix", v: "Stranded 26AWG pigtails with heat-shrink boots. Solder joint relocated 4mm into the rigid finger guide — outside the flex zone." },
+                        { k: "V3 fix", v: "Stranded 26AWG pigtails with heat-shrink boots. Solder joint relocated 4mm into the rigid finger guide, outside the flex zone." },
                         { k: "Side effect", v: "Rigid guide constrained bend-sensor travel to a repeatable range. Gesture became more reproducible across hand sizes." },
                       ].map(({ k, v }) => (
                         <div key={k}>
@@ -848,7 +848,7 @@ export default function MuseCaseStudyPage() {
                     </div>
                     <p className="mt-7 border-t border-black/[0.08] pt-5 text-[13px] leading-relaxed text-textSecondary">
                       <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Lesson · </span>
-                      The mechanical fix did not just keep the sensors alive. By constraining travel, it made the gesture vocabulary inter-user repeatable — which only then made the mapping work for someone other than me.
+                      The mechanical fix did not just keep the sensors alive. By constraining travel, it made the gesture vocabulary inter-user repeatable, which only then made the mapping work for someone other than me.
                     </p>
                   </div>
                 </FadeIn>
@@ -900,12 +900,12 @@ void loop() {
                     <Callout
                       index={1}
                       title="EMA over Kalman."
-                      body="Kalman is the textbook answer for noisy 1D sensors, but a 328P at 16MHz running five channels at 100Hz has no headroom for matrix math. EMA with α = 0.25 gives a 30ms settle — perceptually live, plus immune to single-sample spikes."
+                      body="Kalman is the textbook answer for noisy 1D sensors, but a 328P at 16MHz running five channels at 100Hz has no headroom for matrix math. EMA with α = 0.25 gives a 30ms settle: perceptually live, plus immune to single-sample spikes."
                     />
                     <Callout
                       index={2}
                       title="Per-channel deadband, not min=0/max=1023."
-                      body="FSR and bend sensors never reach rail-to-rail in the gesture range that's actually achievable on a hand. Measured the working window per channel and locked the map() bounds to that — gives the full 0–100 over the part of the curve the wearer can actually reach."
+                      body="FSR and bend sensors never reach rail-to-rail in the gesture range that's actually achievable on a hand. Measured the working window per channel and locked the map() bounds to that; gives the full 0–100 over the part of the curve the wearer can actually reach."
                     />
                     <Callout
                       index={3}
@@ -915,7 +915,7 @@ void loop() {
                     <Callout
                       index={4}
                       title="Busy-wait over Timer1."
-                      body="100Hz with no other work happening doesn't justify the interrupt setup. Busy-wait keeps loop ordering deterministic — every frame's ADC samples are taken at the same offset from frame-start, which simplifies any downstream cross-channel analysis."
+                      body="100Hz with no other work happening doesn't justify the interrupt setup. Busy-wait keeps loop ordering deterministic: every frame's ADC samples are taken at the same offset from frame-start, which simplifies any downstream cross-channel analysis."
                     />
                   </div>
                 </FadeIn>
@@ -925,7 +925,7 @@ void loop() {
               <div className="mt-20 md:mt-24">
                 <SubsectionHeader
                   label="06.4 · Latency budget"
-                  hint="Target was <100ms gesture-to-pixel — the threshold where interaction stops feeling live. HC-05 baud rate was the bottleneck, and the reason V4 would move to BLE."
+                  hint="Target was <100ms gesture-to-pixel: the threshold where interaction stops feeling live. HC-05 baud rate was the bottleneck, and the reason V4 would move to BLE."
                 />
 
                 <FadeIn>
@@ -937,7 +937,7 @@ void loop() {
                     </div>
                     {[
                       ["ADC sample · 5ch sequential", "~0.5 ms", "analogRead() at 9.6kHz ADC clock"],
-                      ["Loop pacing @ 100Hz", "10 ms", "Busy-wait — locks frame interval"],
+                      ["Loop pacing @ 100Hz", "10 ms", "Busy-wait: locks frame interval"],
                       ["HC-05 SPP serial @ 9600 baud", "20–60 ms", "Bottleneck. CSV frame is ~20 bytes; latency varies with BT scheduling"],
                       ["Python parse + OSC dispatch", "1–5 ms", "Local-network UDP, single hop"],
                       ["TouchDesigner frame @ 60fps", "16 ms", "One frame of render lag"],
@@ -951,7 +951,7 @@ void loop() {
                     <div className="grid min-w-[34rem] grid-cols-[1.6fr_120px_2fr] border-t-2 border-nltLime-ink/40 bg-nltLime-soft/60">
                       <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[11px] uppercase tracking-[0.18em] text-nltLime-ink">Gesture → pixel · total</div>
                       <div className="border-r border-black/[0.06] px-4 py-4 font-mono text-[13px] tabular-nums text-nltLime-ink">~50–90 ms</div>
-                      <div className="px-4 py-4 text-[13px] leading-relaxed text-nltLime-ink">Under the 100ms feels-live ceiling — but only because TD is local. Adding 30ms of BLE in V4 would still leave headroom.</div>
+                      <div className="px-4 py-4 text-[13px] leading-relaxed text-nltLime-ink">Under the 100ms feels-live ceiling, but only because TD is local. Adding 30ms of BLE in V4 would still leave headroom.</div>
                     </div>
                   </div>
                 </FadeIn>
@@ -959,7 +959,7 @@ void loop() {
                 <FadeIn delay={0.1} className="mt-8">
                   <p className="max-w-3xl text-[14px] leading-relaxed text-textSecondary">
                     <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">Note · </span>
-                    9600 baud is HC-05&apos;s default and the most stable rate I measured. 38400 worked in bursts but dropped a frame roughly every 30 seconds — unusable for a musical interface where consistency matters more than peak speed.
+                    9600 baud is HC-05&apos;s default and the most stable rate I measured. 38400 worked in bursts but dropped a frame roughly every 30 seconds, unusable for a musical interface where consistency matters more than peak speed.
                   </p>
                 </FadeIn>
               </div>
@@ -968,7 +968,7 @@ void loop() {
             <Section id="mapping" eyebrow="Mapping · The Design Centerpiece" title="Five channels, one rule: dominant finger drives the dominant property.">
               <FadeIn>
                 <p className="text-[16px] leading-[1.7] text-textSecondary">
-                  A naive mapping assigns each finger to a visual property in order — thumb to hue, index to saturation, and so on. I built this. It felt like operating five sliders at once. Nothing about it was musical. The mapping that worked treats the hand as an instrument with a single primary action and four modifiers.
+                  A naive mapping assigns each finger to a visual property in order: thumb to hue, index to saturation, and so on. I built this. It felt like operating five sliders at once. Nothing about it was musical. The mapping that worked treats the hand as an instrument with a single primary action and four modifiers.
                 </p>
               </FadeIn>
 
@@ -1021,14 +1021,14 @@ void loop() {
                     <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Principle 01</p>
                     <p className="mt-3 text-[16px] tracking-tight text-textPrimary">Discrete for big changes, continuous for small ones.</p>
                     <p className="mt-3 text-[14px] leading-relaxed text-textSecondary">
-                      The palm FSR is binary in feel, even though its signal is analog. Pressing the palm switches scenes — a category change. Bend sensors are articulated, so they shape color properties — a magnitude change.
+                      The palm FSR is binary in feel, even though its signal is analog. Pressing the palm switches scenes: a category change. Bend sensors are articulated, so they shape color properties: a magnitude change.
                     </p>
                   </div>
                   <div className="rounded-xl border border-black/[0.08] bg-white px-6 py-6">
                     <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Principle 02</p>
                     <p className="mt-3 text-[16px] tracking-tight text-textPrimary">Dominant finger drives the dominant property.</p>
                     <p className="mt-3 text-[14px] leading-relaxed text-textSecondary">
-                      The index finger has the most articulation in everyday gesture and controls the most expressive property — palette. The little finger has the smallest range and controls saturation, which stays perceptually safe within a smaller window.
+                      The index finger has the most articulation in everyday gesture and controls the most expressive property: palette. The little finger has the smallest range and controls saturation, which stays perceptually safe within a smaller window.
                     </p>
                   </div>
                 </div>
@@ -1038,7 +1038,7 @@ void loop() {
                 <div className="border-l-2 border-nltLime-ink/40 pl-5 sm:pl-6">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">Underneath all of this</p>
                   <p className="mt-3 max-w-3xl text-[15px] leading-relaxed text-textPrimary/85">
-                    A low-pass / high-pass split runs underneath the gesture layer. The bass band drives the size and density of visual elements; treble band drives motion. Gestures modulate this base signal — so the wearer is never generating the visual from nothing. They are <span className="text-nltLime-ink">shaping the music&apos;s own visual signature</span>.
+                    A low-pass / high-pass split runs underneath the gesture layer. The bass band drives the size and density of visual elements; treble band drives motion. Gestures modulate this base signal, so the wearer is never generating the visual from nothing. They are <span className="text-nltLime-ink">shaping the music&apos;s own visual signature</span>.
                   </p>
                 </div>
               </FadeIn>
@@ -1047,7 +1047,7 @@ void loop() {
             <Section id="scenes" eyebrow="Generative Grammar" title="Ten scenes, one composition pipeline.">
               <FadeIn>
                 <p className="text-[16px] leading-[1.7] text-textSecondary">
-                  Each scene shares the same four-layer pipeline. Audio and gesture are common infrastructure; only the final visual grammar differentiates. The mood pulled from generative art with two constraints — organic over geometric, nature-derived color over screen-native — so the visuals would feel like part of the wearer&apos;s physical world, not a separate digital layer.
+                  Each scene shares the same four-layer pipeline. Audio and gesture are common infrastructure; only the final visual grammar differentiates. The mood pulled from generative art with two constraints (organic over geometric, nature-derived color over screen-native), so the visuals would feel like part of the wearer&apos;s physical world, not a separate digital layer.
                 </p>
               </FadeIn>
 
@@ -1096,7 +1096,7 @@ void loop() {
                     <MediaCard
                       key={name}
                       src={src}
-                      alt={`${name} — generative scene driven by glove gesture`}
+                      alt={`${name}: generative scene driven by glove gesture`}
                       label={`Scene ${(i + 1).toString().padStart(2, "0")}`}
                       caption={name}
                       kind="video"
@@ -1110,7 +1110,7 @@ void loop() {
             <Section id="modes" eyebrow="Operational Modes" title="See, Interact, Share.">
               <FadeIn>
                 <p className="text-[16px] leading-[1.7] text-textSecondary">
-                  The final system runs in three modes that map back to the three research questions. The first two are about building a personal visual vocabulary. The third — Share — is the answer to the reframed problem.
+                  The final system runs in three modes that map back to the three research questions. The first two are about building a personal visual vocabulary. The third (Share) is the answer to the reframed problem.
                 </p>
               </FadeIn>
 
@@ -1204,7 +1204,7 @@ void loop() {
                 <FadeIn delay={0.12} className="border-l-2 border-black/[0.12] pl-5 sm:pl-6">
                   <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-nltLime-ink">03 · Mechanical structure <em className="not-italic underline decoration-nltLime-ink/40 underline-offset-4">is</em> the gesture vocabulary.</p>
                   <p className="mt-3 text-[15.5px] leading-relaxed text-textPrimary/90">
-                    V2&apos;s solder-joint failure forced a mechanical redesign. The rigid finger guides in V3 didn&apos;t just keep the sensors alive — they constrained bend travel to a repeatable window, which is what made the mapping work for a hand that wasn&apos;t mine. The strain-relief problem turned out to be the inter-user reproducibility problem in disguise. Every layer of a wearable is downstream of the one below it; the mechanical layer was the hardest to see and the most consequential.
+                    V2&apos;s solder-joint failure forced a mechanical redesign. The rigid finger guides in V3 didn&apos;t just keep the sensors alive: they constrained bend travel to a repeatable window, which is what made the mapping work for a hand that wasn&apos;t mine. The strain-relief problem turned out to be the inter-user reproducibility problem in disguise. Every layer of a wearable is downstream of the one below it; the mechanical layer was the hardest to see and the most consequential.
                   </p>
                 </FadeIn>
               </div>
@@ -1218,7 +1218,7 @@ void loop() {
                     Stop treating sensory difference as a deficit. Treat it as a <span className="text-nltLime-ink">design opportunity</span>.
                   </p>
                   <p className="mt-8 max-w-3xl text-[14px] leading-relaxed text-textSecondary/85">
-                    Muse is a research artifact, not a shipped product. The hardware is rough; the mapping is what matters. The work is about what becomes possible when you stop assuming everyone&apos;s sensory channel is the same one — and design from that opening.
+                    Muse is a research artifact, not a shipped product. The hardware is rough; the mapping is what matters. The work is about what becomes possible when you stop assuming everyone&apos;s sensory channel is the same one, and design from that opening.
                   </p>
                   <p className="mt-8 font-mono text-[10px] uppercase tracking-[0.22em] text-textSecondary/70">
                     Muse · independent research · 2022 / 2023
@@ -1263,7 +1263,7 @@ void loop() {
                     <div>
                       <dt className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-textSecondary/65">Repo</dt>
                       <dd className="mt-1.5 text-[13.5px] leading-relaxed text-textPrimary/85">
-                        Firmware · schematic · TouchDesigner project · Python bridge — available on request.
+                        Firmware · schematic · TouchDesigner project · Python bridge: available on request.
                       </dd>
                     </div>
                   </dl>

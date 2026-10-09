@@ -2,7 +2,7 @@ import { LivingHero } from "@/components/hero/LivingHero";
 import { Nav } from "@/components/Nav";
 
 export const metadata = {
-  title: "Hero Lab — living hero prototype",
+  title: "Hero Lab: living hero prototype",
   robots: { index: false, follow: false },
 };
 

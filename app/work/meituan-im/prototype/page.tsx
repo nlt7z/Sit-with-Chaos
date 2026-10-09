@@ -42,7 +42,7 @@ export default function PrototypeFullscreenPage() {
       >
         <iframe
           src="/assets/meituan-im/Revised%20Repair%20Flow.html"
-          title="Repair flow — interactive prototype"
+          title="Repair flow: interactive prototype"
           style={{
             width: NATURAL_W,
             height: NATURAL_H,

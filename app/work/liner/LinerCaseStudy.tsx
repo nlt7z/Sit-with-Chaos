@@ -174,7 +174,7 @@ export default function LinerCaseStudy() {
                 </h1>
                 <p className="mt-8 max-w-[44rem] text-[16px] leading-[1.65] text-textSecondary md:mt-10 md:text-[18px] md:leading-[1.6]">
                   Led end-to-end research and design for AI-native collaborative research on
-                  Liner — reframing AI from a feature add into a collaborative-trust layer through
+                  Liner, reframing AI from a feature add into a collaborative-trust layer through
                   three core interaction patterns.
                 </p>
 
@@ -221,7 +221,7 @@ export default function LinerCaseStudy() {
               <FadeIn>
                 <ScaledPrototypeFrame
                   src="/assets/liner/liner-ai-yuan.html"
-                  title="Liner AI capstone — interactive editor prototype"
+                  title="Liner AI capstone: interactive editor prototype"
                 />
                 <p className="mt-6 font-mono text-[10px] uppercase tracking-[0.22em] text-nltLime-ink">
                   Built with Claude Code + Figma MCP

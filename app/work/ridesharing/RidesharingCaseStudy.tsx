@@ -278,14 +278,14 @@ function DesignQuestionCallout() {
       <blockquote className="mt-8 max-w-3xl">
         <p className="font-display text-[1.4rem] font-light italic leading-[1.3] tracking-[-0.03em] text-textPrimary md:text-[1.85rem] md:leading-snug">
           “In a driverless context, how do passengers regain a sense of control and emotional connection through the
-          HMI — and turn the cabin into a space worth being in?”
+          HMI, and turn the cabin into a space worth being in?”
         </p>
       </blockquote>
       <p className="mt-8 max-w-2xl text-[15px] leading-relaxed tracking-[-0.01em] text-textSecondary md:text-[1.0625rem] md:leading-relaxed">
         <span className="font-medium text-textPrimary">Control</span> and{" "}
         <span className="font-medium text-textPrimary">emotional connection</span> were deliberate: control because
         unfamiliar vehicles in unfamiliar cities feel exposing, and trust is built through small moments of agency.
-        Emotional connection because transportation without presence is only transit — and transit is a commodity.
+        Emotional connection because transportation without presence is only transit, and transit is a commodity.
       </p>
     </motion.figure>
   );
@@ -427,7 +427,7 @@ export default function RidesharingCaseStudy() {
             <SectionTitle className="mt-8">A moving private room</SectionTitle>
             <Prose className="mt-12 !max-w-2xl">
               <ProseP>
-                Picture landing in a city you have never been to. You get into a car — and there is no one there. No
+                Picture landing in a city you have never been to. You get into a car, and there is no one there. No
                 driver glancing in the mirror, no obligation to make conversation, no one else&apos;s music. For a
                 moment, before most people catch themselves, that can feel surprisingly good.
               </ProseP>
@@ -451,7 +451,7 @@ export default function RidesharingCaseStudy() {
             <SectionTitle className="mt-8">Built in 2024, read with 2026 in mind</SectionTitle>
             <Prose className="mt-12 !max-w-2xl">
               <ProseP>
-                Since this project, the landscape has shifted — Waymo at scale in multiple U.S. cities, Zoox testing
+                Since this project, the landscape has shifted: Waymo at scale in multiple U.S. cities, Zoox testing
                 inward-facing cabins, in-cabin AI moving from research to live product. Some of what we sketched has
                 already shipped; some of it was ahead of what hardware could support at the time.
               </ProseP>
@@ -478,22 +478,22 @@ export default function RidesharingCaseStudy() {
             <SectionTitle className="mt-8">The &ldquo;during&rdquo; barely existed</SectionTitle>
             <Prose className="mt-12">
               <ProseP>
-                Before touching a design tool, we mapped the full ride-sharing experience across Uber, Lyft — every touchpoint from app open to walk-away. The pattern was consistent: almost all product
+                Before touching a design tool, we mapped the full ride-sharing experience across Uber, Lyft: every touchpoint from app open to walk-away. The pattern was consistent: almost all product
                 effort goes into the <span className="text-textPrimary">before</span> (booking, pickup) and a
                 meaningful amount into the <span className="text-textPrimary">after</span> (receipts, ratings,
-                support). The <span className="text-textPrimary">during</span> — the minutes inside the vehicle —
+                support). The <span className="text-textPrimary">during</span> (the minutes inside the vehicle)
                 barely existed as a designed experience, because the driver fills that space by default.
               </ProseP>
               <ProseP>
                 Drivers fill it inconsistently. We surveyed fifty-plus frequent riders: about half enjoy spontaneous
                 conversation, a third prefer none, and the rest only when necessary. That looked impossible to design
-                for — until we reframed it. Passengers were not choosing &ldquo;chatty vs. quiet.&rdquo; They wanted{" "}
+                for, until we reframed it. Passengers were not choosing &ldquo;chatty vs. quiet.&rdquo; They wanted{" "}
                 <span className="font-medium text-textPrimary">choice</span>: engagement on their own terms, without
                 asking permission.
               </ProseP>
               <ProseP>
-                In deeper interviews, travel — not the commute, but the{" "}
-                <span className="text-textPrimary">arrival</span> — kept surfacing: landing somewhere new and wanting
+                In deeper interviews, travel (not the commute, but the{" "}
+                <span className="text-textPrimary">arrival</span>) kept surfacing: landing somewhere new and wanting
                 to feel oriented, not just transported. The best drivers offer local intelligence; most do not. A
                 driverless vehicle with a well-designed AI could reliably offer what great drivers offer only
                 sometimes.
@@ -510,7 +510,7 @@ export default function RidesharingCaseStudy() {
             <SectionTitle className="mt-8">Willing skeptics, not true believers</SectionTitle>
             <Prose className="mt-12">
               <ProseP>
-                We chose to design for people curious enough to try autonomy once — where a single ride either earns
+                We chose to design for people curious enough to try autonomy once, where a single ride either earns
                 trust or loses it. Our anchor persona was Michelle: twenty-five, marketing, Seattle, a frequent
                 traveler who uses rides as transition time between meetings and hotels. She likes good conversation when
                 it happens, but she has had enough awkward or silent rides to know it is not guaranteed. She wants to
@@ -531,7 +531,7 @@ export default function RidesharingCaseStudy() {
               <ProseP>
                 That sentence reframed the problem. We had treated the driverless car as a space{" "}
                 <span className="text-textPrimary">missing a person</span>. Michelle described a space with{" "}
-                <span className="text-textPrimary">untapped potential</span> — one that could be more knowledgeable,
+                <span className="text-textPrimary">untapped potential</span>: one that could be more knowledgeable,
                 more curious, and more reliably present than any single human driver. Designed well, it could be better,
                 not worse, than having a driver.
               </ProseP>
@@ -550,9 +550,9 @@ export default function RidesharingCaseStudy() {
             <SectionTitle className="mt-8">Three emotional layers</SectionTitle>
             <Prose className="mt-12">
               <ProseP>
-                I mapped how features should function emotionally — not only what they do, but what they are for —
+                I mapped how features should function emotionally (not only what they do, but what they are for),
                 before opening a design tool. Everything sorted into three layers, with a hard rule: lower layers are
-                never sacrificed for higher ones. The joy layer is what riders talk about afterward — the delta
+                never sacrificed for higher ones. The joy layer is what riders talk about afterward: the delta
                 between acceptable and memorable.
               </ProseP>
             </Prose>
@@ -568,18 +568,18 @@ export default function RidesharingCaseStudy() {
               {[
                 {
                   layer: "Safety + Control",
-                  goal: "Foundation — navigation, climate, emergency support.",
+                  goal: "Foundation: navigation, climate, emergency support.",
                   ans: "Can I change something if I need to? Without that, passengers never relax enough to enjoy anything else.",
                 },
                 {
                   layer: "Comfort + Trust",
-                  goal: "Middle layer — AI assistant, feedback, seat, vehicle information.",
+                  goal: "Middle layer: AI assistant, feedback, seat, vehicle information.",
                   ans: "Does this system know I am here? Awareness of the individual, not the passenger as a category.",
                 },
                 {
                   layer: "Joy + Personalization",
-                  goal: "Surface — Ride & Discover, Zen modes, entertainment, memory.",
-                  ans: "Is this ride worth having? Not only safe and comfortable — actually good.",
+                  goal: "Surface: Ride & Discover, Zen modes, entertainment, memory.",
+                  ans: "Is this ride worth having? Not only safe and comfortable, actually good.",
                 },
               ].map((row) => (
                 <div
@@ -607,32 +607,32 @@ export default function RidesharingCaseStudy() {
             </Prose>
             <ul className="mt-10 max-w-2xl space-y-6 text-[17px] leading-[1.65] text-textSecondary md:text-lg md:leading-[1.7]">
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P1 — Core</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P1: Core</p>
                 <p className="mt-2 text-textSecondary">
                   <span className="text-textPrimary">Landing and onboarding, map and navigation, personalized voice AI.</span>{" "}
-                  The trust floor — without these, the product does not function.
+                  The trust floor: without these, the product does not function.
                 </p>
               </li>
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P2 — Usability</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P2: Usability</p>
                 <p className="mt-2 text-textSecondary">
                   <span className="text-textPrimary">Climate (AC/HVAC), Ride & Discover.</span> Makes the experience
                   tolerable and differentiated.
                 </p>
               </li>
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P3 — Enhancement</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P3: Enhancement</p>
                 <p className="mt-2 text-textSecondary">
                   <span className="text-textPrimary">
                     Entertainment, seat adjustments, contact support and emergency features.
                   </span>{" "}
-                  High safety significance but lower frequency — visible enough to reassure, not loud enough to alarm.
+                  High safety significance but lower frequency: visible enough to reassure, not loud enough to alarm.
                 </p>
               </li>
               <li>
-                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P4 — Depth</p>
+                <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-nltLime-ink">P4: Depth</p>
                 <p className="mt-2 text-textSecondary">
-                  <span className="text-textPrimary">Vehicle information, extended AI conversation</span> — for
+                  <span className="text-textPrimary">Vehicle information, extended AI conversation</span>: for
                   passengers who want more, without burdening those who do not.
                 </p>
               </li>
@@ -649,7 +649,7 @@ export default function RidesharingCaseStudy() {
             <SectionTitle className="mt-8">Three rounds of RITE in ten weeks</SectionTitle>
             <Prose className="mt-12">
               <ProseP>
-                Rapid Iterative Testing and Evaluation — each round with a more refined prototype and a different user
+                Rapid Iterative Testing and Evaluation: each round with a more refined prototype and a different user
                 segment. What follows is what broke, what surprised us, and what we changed.
               </ProseP>
             </Prose>
@@ -700,7 +700,7 @@ export default function RidesharingCaseStudy() {
               />
               <MediaFigure
                 src="/assets/ridesharing/first-prototype-2.svg"
-                alt="Low-fi wireframe variant — tab and card relationships"
+                alt="Low-fi wireframe variant: tab and card relationships"
                 width={1040}
                 height={415}
                 caption="Reducing cognitive load before visual polish."
@@ -716,7 +716,7 @@ export default function RidesharingCaseStudy() {
             </p>
             <Prose className="mt-8">
               <ProseP>
-                The AI became a persistent floating presence — avatar plus chat bubble, tappable or voice-activated. The
+                The AI became a persistent floating presence: avatar plus chat bubble, tappable or voice-activated. The
                 direction felt right; execution created new problems.
               </ProseP>
             </Prose>
@@ -727,7 +727,7 @@ export default function RidesharingCaseStudy() {
                 One participant said it felt like &ldquo;a lot of things trying to talk to me at once.&rdquo;
               </ProseP>
               <ProseP>
-                The character was the same visual weight as a climate card, so people treated it like any other card —
+                The character was the same visual weight as a climate card, so people treated it like any other card:
                 tap when you want a chatbot, ignore it otherwise. That is the wrong behavior for an assistant.
               </ProseP>
               
@@ -746,7 +746,7 @@ export default function RidesharingCaseStudy() {
                 alt="Onboarding flow for first-time versus returning riders"
                 width={1920}
                 height={1080}
-                caption="Onboarding — orienting riders before they hit the main dashboard."
+                caption="Onboarding: orienting riders before they hit the main dashboard."
               />
               <MediaFigure
                 src="/assets/ridesharing/ai-assistant-prototype.png"
@@ -766,14 +766,14 @@ export default function RidesharingCaseStudy() {
             </p>
             <Prose className="mt-8">
               <ProseP>
-                This group had the sharpest eye and the most useful feedback — a concrete reference for what felt
+                This group had the sharpest eye and the most useful feedback: a concrete reference for what felt
                 missing in commercial experiences.
               </ProseP>
             </Prose>
             <Subheading className="!mt-10">What broke (and what surprised us)</Subheading>
             <Prose className="mt-6">
               <ProseP>
-                A participant talked to Brooklyn mid-ride while the full dashboard was visible — map in motion, status
+                A participant talked to Brooklyn mid-ride while the full dashboard was visible: map in motion, status
                 bar, all cards. They struggled to stay in the conversation. We had not designed active voice as its own mode.
               </ProseP>
               <ProseP>
@@ -783,9 +783,9 @@ export default function RidesharingCaseStudy() {
                 the moment the AI felt &ldquo;real.&rdquo;
               </ProseP>
               <ProseP>
-                Preset modes were not optional. A heavy user said they wanted the car to know they were in work mode —
+                Preset modes were not optional. A heavy user said they wanted the car to know they were in work mode,
                 to match their energy. We had deprioritized Zen modes as complex; we built four in two days: Default,
-                Calm, Work, Party — coordinated lighting, audio, seat, and AI tone. They became the most-mentioned feature
+                Calm, Work, Party: coordinated lighting, audio, seat, and AI tone. They became the most-mentioned feature
                 in debriefs.
               </ProseP>
               <ProseP>
@@ -796,7 +796,7 @@ export default function RidesharingCaseStudy() {
               </ProseP>
               <ProseP>
                 Contact support was redesigned so emergency pull-over and call support are available through layered
-                disclosure &mdash; prominent when needed, not anxiety-inducing by default.
+                disclosure: prominent when needed, not anxiety-inducing by default.
               </ProseP>
             </Prose>
             
@@ -817,7 +817,7 @@ export default function RidesharingCaseStudy() {
                 alt="Support and emergency flows with layered disclosure"
                 width={1440}
                 height={1044}
-                caption="Support & safety — reachable escalation without ambient anxiety."
+                caption="Support & safety: reachable escalation without ambient anxiety."
               />
               </div>
             <div className="mt-16 border-t border-black/[0.06] pt-12">
@@ -828,7 +828,7 @@ export default function RidesharingCaseStudy() {
               <MediaFigure
                 className="mt-7"
                 src="/assets/ridesharing/final-feature-1.png"
-                alt="High-fidelity cabin UI — ride-explore module"
+                alt="High-fidelity cabin UI: ride-explore module"
                 width={1500}
                 height={719}
                 caption="Ride-explore: interactive map, city guide, add stops, and share route context."
@@ -871,7 +871,7 @@ export default function RidesharingCaseStudy() {
           </div>
               <ProseP>
                 The technical prototype paired ChatGPT for dialogue with ElevenLabs for voice. The goal was not to demo
-                technology — it was to test whether a designed persona could make the cabin feel inhabited: local
+                technology; it was to test whether a designed persona could make the cabin feel inhabited: local
                 knowledge, curiosity, unhurried presence.
               </ProseP>
               <ProseP>In every session, Brooklyn was the only thing participants wanted to talk about afterward.</ProseP>
@@ -884,14 +884,14 @@ export default function RidesharingCaseStudy() {
               alt="Brooklyn AI assistant in conversation with animated presence"
               width={600}
               height={338}
-              caption="Motion study — Brooklyn as a present, conversational layer in the cabin."
+              caption="Motion study: Brooklyn as a present, conversational layer in the cabin."
             />
           </Reveal>
 
           
 
           <PullQuote>
-            Let&apos;s turn up the NYC vibes with Jay-Z and Alicia Keys &mdash; &lsquo;Empire State of Mind.&rsquo; A
+            Let&apos;s turn up the NYC vibes with Jay-Z and Alicia Keys: &lsquo;Empire State of Mind.&rsquo; A
             perfect anthem for the city that never sleeps.
           </PullQuote>
         </section>
@@ -913,11 +913,11 @@ export default function RidesharingCaseStudy() {
             {[
               {
                 title: "Voice is the interaction",
-                body: "In motion, riders do not want to hunt menus. The AI is not a feature inside the product — it is the product. Cards and controls exist in service of a voice-first passenger who should reach anything by speaking.",
+                body: "In motion, riders do not want to hunt menus. The AI is not a feature inside the product; it is the product. Cards and controls exist in service of a voice-first passenger who should reach anything by speaking.",
               },
               {
                 title: "Agency builds trust",
-                body: "Everyone who changed even one thing — temperature, a Zen mode, a question to Brooklyn — reported feeling more comfortable with autonomy. Changing something makes the environment feel yours.",
+                body: "Everyone who changed even one thing (temperature, a Zen mode, a question to Brooklyn) reported feeling more comfortable with autonomy. Changing something makes the environment feel yours.",
               },
               {
                 title: "Emotional moments are remembered",
@@ -943,15 +943,15 @@ export default function RidesharingCaseStudy() {
             <Prose className="mt-12 !max-w-2xl">
               <ProseP>
                 I went in thinking about drivers and what happens when you remove them. I came out thinking about
-                something else: the driverless cabin is the first form of transportation that is structurally private —
+                something else: the driverless cabin is the first form of transportation that is structurally private:
                 no one else&apos;s agenda, no social performance. That is less a problem to fix than an opportunity
                 barely touched.
               </ProseP>
               <ProseP>
-                Brooklyn, Zen modes, Create Memories, voice-first layout, full-screen AI state — each decision returned
+                Brooklyn, Zen modes, Create Memories, voice-first layout, full-screen AI state: each decision returned
                 to one question:{" "}
                 <span className="text-textPrimary">
-                  does this help the passenger actually be somewhere — not only transported, but present and oriented?
+                  does this help the passenger actually be somewhere, not only transported, but present and oriented?
                 </span>
               </ProseP>
             </Prose>
@@ -967,13 +967,13 @@ export default function RidesharingCaseStudy() {
             <Prose className="mt-12">
               <ProseP>
                 Waymo is in cities I did not expect this quickly. Navigation transparency, real-time awareness, calm
-                signaling of vehicle behavior — much of what we imagined at the interaction layer is now product. The
+                signaling of vehicle behavior: much of what we imagined at the interaction layer is now product. The
                 gap between the 2024 concept and today feels smaller than I expected.
               </ProseP>
               <ProseP>
                 What has not closed: the cabin. The screen is still a center-console layer on a body not designed for
                 it; the passenger experience is still downstream of the driving stack. The next phase opens when
-                inward-facing interiors, integrated ambient systems, and AI with memory across rides are standard — when
+                inward-facing interiors, integrated ambient systems, and AI with memory across rides are standard, when
                 cabin and AI are conceived together from the start.
               </ProseP>
             </Prose>
@@ -986,11 +986,11 @@ export default function RidesharingCaseStudy() {
               {[
                 {
                   title: "Memory that accumulates meaning",
-                  text: "Saving a temperature is a feature. An AI that learns you prefer quiet on Monday mornings, that you ask for local food over tourist traps, that you got anxious on an unusual route — that edges toward a relationship. The space between settings and knowing you as a passenger is still barely explored.",
+                  text: "Saving a temperature is a feature. An AI that learns you prefer quiet on Monday mornings, that you ask for local food over tourist traps, that you got anxious on an unusual route. That edges toward a relationship. The space between settings and knowing you as a passenger is still barely explored.",
                 },
                 {
                   title: "Accessibility as first-class",
-                  text: "Voice-first helped motion-sensitive riders look at the screen less — but voice-first also excludes. Speech- and hearing-diverse passengers need a touch layer that is equally capable and equally considered, not a degraded fallback.",
+                  text: "Voice-first helped motion-sensitive riders look at the screen less, but voice-first also excludes. Speech- and hearing-diverse passengers need a touch layer that is equally capable and equally considered, not a degraded fallback.",
                 },
                 {
                   title: "Designing for uncertain moments",

@@ -60,7 +60,7 @@ export default function QoderPresentation() {
             transition={{ duration: 0.7, delay: reduce ? 0 : 0.12, ease }}
             className="mt-8 max-w-3xl text-lg leading-relaxed text-textSecondary md:text-xl"
           >
-            Product design for an AI-native IDE where autonomous agents ship production code — with context
+            Product design for an AI-native IDE where autonomous agents ship production code, with context
             engineering, traceable decisions, and flows that stay legible when the machine moves fast.
           </motion.p>
           <motion.div
@@ -105,7 +105,7 @@ export default function QoderPresentation() {
             <h2 className="font-display text-2xl font-light text-textPrimary md:text-3xl">Why this product matters</h2>
             <p className="mt-6 max-w-3xl text-base leading-[1.75] text-textSecondary md:text-lg">
               Developers are asked to trust agents with repo-wide changes. The interface has to make{" "}
-              <strong className="font-medium text-textPrimary">intent, scope, and rollback</strong> obvious — not
+              <strong className="font-medium text-textPrimary">intent, scope, and rollback</strong> obvious, not
               only model output. Qoder sits at that intersection: agentic power with product-grade clarity.
             </p>
           </Reveal>
@@ -116,10 +116,10 @@ export default function QoderPresentation() {
             <h2 className="font-display text-2xl font-light text-textPrimary md:text-3xl">Design focus</h2>
             <ul className="mt-8 max-w-3xl space-y-5 text-base leading-[1.75] text-textSecondary md:text-lg">
               {[
-                "Context surfaces — what the agent sees, edits, and proposes, without burying the user in tokens.",
+                "Context surfaces: what the agent sees, edits, and proposes, without burying the user in tokens.",
                 "Progressive disclosure for multi-file refactors: summaries first, diffs on demand, actions reversible.",
-                "Trust cues for autonomous runs — run boundaries, affected paths, and stop / refine affordances.",
-                "Coherence with engineering mental models — terminals, branches, and reviews stay one gesture away.",
+                "Trust cues for autonomous runs: run boundaries, affected paths, and stop / refine affordances.",
+                "Coherence with engineering mental models: terminals, branches, and reviews stay one gesture away.",
               ].map((line) => (
                 <li key={line} className="flex gap-4">
                   <span className="mt-2.5 h-px w-8 shrink-0 bg-textPrimary/20" aria-hidden />
@@ -153,7 +153,7 @@ export default function QoderPresentation() {
 
         <Reveal className="mt-20 md:mt-24" delay={0.08}>
           <p className="max-w-3xl text-base leading-[1.75] text-textSecondary md:text-lg">
-            Full write-up, research artifacts, and detailed flows can extend this page later — this deck is a
+            Full write-up, research artifacts, and detailed flows can extend this page later; this deck is a
             concise walkthrough after access.
           </p>
           <Link

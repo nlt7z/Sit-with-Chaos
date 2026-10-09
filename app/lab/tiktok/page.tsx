@@ -92,7 +92,7 @@ const SLIDES: Slide[] = [
   },
   {
     company: "Qbix Studio",
-    title: "Design agency — 0→1 brand, design, code, build",
+    title: "Design agency: 0→1 brand, design, code, build",
     media: { type: "video", src: "/assets/work/Area.mp4" },
     meta: { year: "2026", role: "Solo Build", status: "Shipped" },
     metric: { static: "Solo build · brand → design → code → ship" },

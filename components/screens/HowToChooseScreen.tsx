@@ -42,7 +42,7 @@ const criteria = [
     ),
     title: "Response Time",
     desc: "Under 30 min means a tech is nearby. Longer wait times often signal the provider is overbooked.",
-    tip: "Aim for < 30 min — urgent repairs can't wait.",
+    tip: "Aim for < 30 min: urgent repairs can't wait.",
     tipColor: C.priceOrange,
   },
   {
@@ -78,7 +78,7 @@ const criteria = [
       </svg>
     ),
     title: "Service Area",
-    desc: "Check that your neighborhood is within their primary zone — not a surcharge zone. Outer areas often cost $15–$30 more.",
+    desc: "Check that your neighborhood is within their primary zone, not a surcharge zone. Outer areas often cost $15–$30 more.",
     tip: "Type your zip code to filter by area.",
     tipColor: C.trustBlue,
   },

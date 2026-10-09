@@ -177,7 +177,7 @@ function ServerUnlockForm({
           />
           {error ? (
             <p id="gate-server-deck-err" className="mt-3 text-sm leading-relaxed text-amber-800/90" role="alert">
-              Not quite—please double-check the code you were given.
+              Not quite. Please double-check the code you were given.
             </p>
           ) : null}
 
@@ -404,7 +404,7 @@ function SessionUnlockGate({
                   className="mt-3 text-sm leading-relaxed text-amber-800/90"
                   role="alert"
                 >
-                  Not quite—please double-check the code you were given.
+                  Not quite. Please double-check the code you were given.
                 </p>
               ) : null}
 

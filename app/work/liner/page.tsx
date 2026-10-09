@@ -5,13 +5,13 @@ import LinerScholarCaseStudy from "./LinerScholarCaseStudy";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
 const PATH = "/work/liner";
-const TITLE = "Liner AI Scholar — Collaborative Deep-Research Workflow";
+const TITLE = "Liner AI Scholar: Collaborative Deep-Research Workflow";
 const DESCRIPTION =
   "A collaborative deep-research workflow for Liner AI: research strategy, 11 researcher interviews, synthesis findings, and the product decisions that shaped a team-based scholarly research workflow.";
 const OG_IMAGE = "/assets/og/liner.jpg";
 
 export const metadata: Metadata = {
-  title: `${TITLE} — Yuan Fang`,
+  title: `${TITLE} · Yuan Fang`,
   description: DESCRIPTION,
   alternates: { canonical: PATH },
   openGraph: {

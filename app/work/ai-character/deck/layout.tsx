@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Slides — Xingchen AI Character",
+  title: "Slides: Xingchen AI Character",
   description:
     "Case-study deck: memory, showroom craft, and a reusable framing for enterprise character experiences.",
 };

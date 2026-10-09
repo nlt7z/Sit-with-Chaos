@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import RidesharingCaseStudy from "./RidesharingCaseStudy";
 
 export const metadata: Metadata = {
-  title: "AI Ride — In-Cabin Experience for Autonomous Ride-Sharing — Yuan Fang",
+  title: "AI Ride: In-Cabin Experience for Autonomous Ride-Sharing · Yuan Fang",
   description:
     "Case study: a moving private room, three emotional layers, RITE iterations, Brooklyn as city-aware AI, and voice-first trust in the cabin.",
 };

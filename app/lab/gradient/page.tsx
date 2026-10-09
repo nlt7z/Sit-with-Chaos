@@ -1,6 +1,6 @@
 import BlueGradientBackground from "@/components/BlueGradientBackground";
 
-export const metadata = { title: "Gradient — Lab" };
+export const metadata = { title: "Gradient: Lab" };
 
 export default function GradientLab() {
   return (

@@ -70,7 +70,7 @@ export function TimePickerScreen({
             letterSpacing: "-0.1px",
           }}
         >
-          Confirm — {dayLabel}, {selectedSlot}
+          Confirm: {dayLabel}, {selectedSlot}
         </motion.button>
       }
     >

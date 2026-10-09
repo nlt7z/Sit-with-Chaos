@@ -141,10 +141,10 @@ export default function ApsaraConferenceShowcase() {
             <Eyebrow>Alibaba Cloud · Event visual design</Eyebrow>
             <CaseStudyMeta className="mt-5" {...CASE_STUDY_META["apsara-conference"]} />
             <h1 className="mt-8 max-w-4xl font-display text-[clamp(2rem,5.5vw,3.5rem)] font-light leading-[1.08] tracking-[-0.03em] text-textPrimary">
-              Apsara Conference — Alibaba AI on Cloud
+              Apsara Conference: Alibaba AI on Cloud
             </h1>
             <p className="mt-6 max-w-2xl text-xl font-light leading-snug tracking-[-0.02em] text-textPrimary/80 md:text-2xl">
-              Visual design for Alibaba&apos;s flagship technology summit—crafting a cohesive look and feel for AI and
+              Visual design for Alibaba&apos;s flagship technology summit, crafting a cohesive look and feel for AI and
               cloud storytelling on stage and across digital surfaces.
             </p>
             
@@ -174,7 +174,7 @@ export default function ApsaraConferenceShowcase() {
               <video
                 className="h-full w-full object-cover"
                 src="/assets/work/apsara.mp4"
-                aria-label="Apsara Conference — Alibaba AI on Cloud visual design"
+                aria-label="Apsara Conference: Alibaba AI on Cloud visual design"
                 muted
                 loop
                 playsInline
@@ -199,7 +199,7 @@ export default function ApsaraConferenceShowcase() {
               </p>
               <p>
                 It attracts industry experts and academic scholars from around the globe to discuss the future of the
-                cloud computing landscape—and, increasingly, how AI and cloud work together as foundational
+                cloud computing landscape, and, increasingly, how AI and cloud work together as foundational
                 infrastructure for the next decade of products and services.
               </p>
             </Prose>
@@ -228,7 +228,7 @@ export default function ApsaraConferenceShowcase() {
             <SectionTitle className="mt-6">One thread from opening keynotes to partner halls</SectionTitle>
             <Prose className="mt-10">
               <p>
-                The system extends across large-format stage graphics, session titles, and digital collateral—so the
+                The system extends across large-format stage graphics, session titles, and digital collateral, so the
                 event feels like one continuous story. 
               </p>
               

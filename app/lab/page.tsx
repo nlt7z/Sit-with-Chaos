@@ -2,7 +2,7 @@ import Link from "next/link";
 import { Nav } from "@/components/Nav";
 
 export const metadata = {
-  title: "Lab — wow-moment prototypes",
+  title: "Lab: wow-moment prototypes",
   robots: { index: false, follow: false },
 };
 
@@ -12,7 +12,7 @@ const EXPERIMENTS = [
     href: "/lab/bento",
     title: "Bento desktop homepage",
     blurb:
-      "Homepage reimagined as a single-screen draggable bento desktop (xiangyidesign.com style). Curiosity / Craft / Code each become a widget; current work (Liner), Qbix, a live clock, now-playing, a skill radar and a Seattle map fill the wall. Drag a window — it stretches on an elastic tether and snaps back.",
+      "Homepage reimagined as a single-screen draggable bento desktop (xiangyidesign.com style). Curiosity / Craft / Code each become a widget; current work (Liner), Qbix, a live clock, now-playing, a skill radar and a Seattle map fill the wall. Drag a window: it stretches on an elastic tether and snaps back.",
     proves: "the whole homepage as one playful surface",
   },
   {
@@ -20,7 +20,7 @@ const EXPERIMENTS = [
     href: "/lab/tiktok",
     title: "FYP work feed",
     blurb:
-      "“If I were TikTok’s design lead.” The 5-card white Work list reimagined as a full-screen, scroll-snap feed — near-black canvas, video bleeding edge-to-edge, a count-up metric in signature lime, giant ghost index numerals.",
+      "“If I were TikTok’s design lead.” The 5-card white Work list reimagined as a full-screen, scroll-snap feed: near-black canvas, video bleeding edge-to-edge, a count-up metric in signature lime, giant ghost index numerals.",
     proves: "full-bleed, video-first impact",
   },
   {
@@ -28,7 +28,7 @@ const EXPERIMENTS = [
     href: "/hero-lab",
     title: "Living hero",
     blurb:
-      "The headline's three words — research / motion / code — are channel switches. Each one proves itself in a live demo. Auto-cycles at rest.",
+      "The headline's three words (research / motion / code) are channel switches. Each one proves itself in a live demo. Auto-cycles at rest.",
     proves: "the whole pitch, in 5 seconds",
   },
   {
@@ -36,7 +36,7 @@ const EXPERIMENTS = [
     href: "/lab/gallery",
     title: "Dark gallery scroll",
     blurb:
-      "Full-screen sticky horizontal gallery — scroll vertically to drive the track sideways. Five work cards, each with a unique abstract SVG visual and lime accents.",
+      "Full-screen sticky horizontal gallery: scroll vertically to drive the track sideways. Five work cards, each with a unique abstract SVG visual and lime accents.",
     proves: "dark editorial UI",
   },
   {
@@ -44,7 +44,7 @@ const EXPERIMENTS = [
     href: "/lab/lime",
     title: "Lime as signature",
     blurb:
-      "Three candidate treatments — scroll line, reading highlighter, cursor companion. The highlighter (B) shipped to the live site.",
+      "Three candidate treatments: scroll line, reading highlighter, cursor companion. The highlighter (B) shipped to the live site.",
     proves: "an ownable brand colour",
   },
   {
@@ -52,7 +52,7 @@ const EXPERIMENTS = [
     href: "/lab/glass",
     title: "Lime glass field",
     blurb:
-      "An interactive 3D still life in the signature lime — glass spheres, discs and arcs under a real lens. Hover racks the depth-of-field focus; drag orbits; scroll dollies.",
+      "An interactive 3D still life in the signature lime: glass spheres, discs and arcs under a real lens. Hover racks the depth-of-field focus; drag orbits; scroll dollies.",
     proves: "the palette can hold a whole 3D world",
   },
 ];
@@ -71,7 +71,7 @@ export default function LabIndexPage() {
           </h1>
           <p className="mt-4 max-w-xl text-sm leading-relaxed text-textSecondary">
             Each is isolated from the live homepage. Idea ⑤ (kill the dark preloader, pour that
-            energy into the entrance) is folded into ① — the headline + stage now play a staggered
+            energy into the entrance) is folded into ①: the headline + stage now play a staggered
             spring reveal on load, no gate.
           </p>
 

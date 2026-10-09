@@ -3,13 +3,13 @@ import StudioEngineCaseStudy from "./StudioEngineCaseStudy";
 import { ArticleJsonLd } from "@/components/seo/ArticleJsonLd";
 
 const PATH = "/work/studio-engine";
-const TITLE = "StudioEngine — Designing Control Into AI Video Creation";
+const TITLE = "StudioEngine: Designing Control Into AI Video Creation";
 const DESCRIPTION =
-  "Restructured a one-shot Gen-2 text-to-video tool into a four-stage creative workspace — basics, outline, script, visuals — with checkpoints and version history so creators iterate instead of re-generating.";
+  "Restructured a one-shot Gen-2 text-to-video tool into a four-stage creative workspace (basics, outline, script, visuals) with checkpoints and version history so creators iterate instead of re-generating.";
 const OG_IMAGE = "/assets/og/studio-engine.jpg";
 
 export const metadata: Metadata = {
-  title: `${TITLE} — Yuan Fang`,
+  title: `${TITLE} · Yuan Fang`,
   description: DESCRIPTION,
   alternates: { canonical: PATH },
   openGraph: {

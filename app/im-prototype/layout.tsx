@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 export const metadata = {
-  title: "Repair Expert · Rapid Diagnosis — Prototype",
+  title: "Repair Expert · Rapid Diagnosis: Prototype",
 };
 
 export default function ChatLayout({ children }: { children: ReactNode }) {

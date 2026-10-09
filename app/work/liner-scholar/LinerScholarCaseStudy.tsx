@@ -274,7 +274,7 @@ export default function LinerScholarCaseStudy() {
           >
             <Image
               src="/assets/work/liner-hero-v2.png"
-              alt="Liner AI Scholar capstone — research collaboration"
+              alt="Liner AI Scholar capstone: research collaboration"
               width={1600}
               height={900}
               className="h-auto w-full"
@@ -339,18 +339,18 @@ export default function LinerScholarCaseStudy() {
             </Prose>
             <ol className="mt-10 max-w-2xl list-decimal space-y-6 pl-5 text-[17px] leading-[1.65] text-textSecondary marker:text-textPrimary/40 md:text-lg">
               <li>
-                <span className="font-medium text-textPrimary">Phase 1 — Industry framing.</span> Expert interview
+                <span className="font-medium text-textPrimary">Phase 1: Industry framing.</span> Expert interview
                 with Liner&apos;s PM plus competitive landscape analysis across the full academic research lifecycle
                 (discovery to annotation to writing to revision).
               </li>
               <li>
-                <span className="font-medium text-textPrimary">Phase 2 — User discovery.</span> Six semi-structured
+                <span className="font-medium text-textPrimary">Phase 2: User discovery.</span> Six semi-structured
                 60-minute interviews with academic researchers (2 PostDocs, 2 PhDs, 2 Master&apos;s students) across
                 Biology, Health Data Science, Protein Design, Environmental Health, and HCDE. Each session included a
                 workflow walkthrough to reconstruct real collaboration moments.
               </li>
               <li>
-                <span className="font-medium text-textPrimary">Phase 3 — Concept validation (upcoming).</span>{" "}
+                <span className="font-medium text-textPrimary">Phase 3: Concept validation (upcoming).</span>{" "}
                 Low-fidelity evaluative sessions and usability testing against early design directions.
               </li>
             </ol>
@@ -532,7 +532,7 @@ export default function LinerScholarCaseStudy() {
               </p>
             </Prose>
             <p className="mt-14 max-w-2xl font-mono text-[11px] leading-relaxed text-textSecondary/80">
-              North4 Studio — Monica Zhang, Jenn Koh, Jen Zhang, Yuan Fang
+              North4 Studio: Monica Zhang, Jenn Koh, Jen Zhang, Yuan Fang
               <br />
               UW HCDE Capstone · Spring 2025
             </p>

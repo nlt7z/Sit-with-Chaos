@@ -2,7 +2,7 @@ import Link from "next/link";
 import { LimeGlassField } from "@/components/LimeGlassField";
 
 export const metadata = {
-  title: "Lab — lime glass field",
+  title: "Lab: lime glass field",
   robots: { index: false, follow: false },
 };
 
@@ -34,7 +34,7 @@ export default function LimeGlassPage() {
               Lime glass field
             </h1>
             <p className="mt-1 max-w-xs text-sm leading-relaxed text-textSecondary">
-              A 3D still life in the signature lime — with a real lens: shallow depth of field
+              A 3D still life in the signature lime, with a real lens: shallow depth of field
               that racks focus to whatever you point at.
             </p>
           </div>
@@ -45,7 +45,7 @@ export default function LimeGlassPage() {
 
         <footer className="flex items-end justify-between">
           <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">
-            drag — orbit&ensp;·&ensp;hover — refocus&ensp;·&ensp;scroll — dolly
+            drag: orbit&ensp;·&ensp;hover: refocus&ensp;·&ensp;scroll: dolly
           </p>
           <span className="h-2.5 w-2.5 rounded-full bg-nltLime" aria-hidden />
         </footer>

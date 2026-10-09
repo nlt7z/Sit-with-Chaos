@@ -11,7 +11,7 @@ const manrope = Manrope({
 });
 
 export const metadata = {
-  title: "重构黑盒 — 演示文稿",
+  title: "重构黑盒: 演示文稿",
   description:
     "从“价格透明”到“诊断可信”的本地生活服务体验设计:平台前置诊断、结构化需求单、商家实时竞价的信任对话架构,以真实可交互原型逐页讲述。",
 };

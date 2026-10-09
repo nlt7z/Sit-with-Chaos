@@ -3,7 +3,7 @@ import { DesktopExperienceGate } from "@/components/DesktopExperienceGate";
 import AiCharacterPrototypeClient from "./AiCharacterPrototypeClient";
 
 export const metadata: Metadata = {
-  title: "AI-Character Interactive Prototype — Yuan Fang",
+  title: "AI-Character Interactive Prototype · Yuan Fang",
   description:
     "Interactive desktop prototype for AI-Character with one-round chat and centered character presence.",
 };

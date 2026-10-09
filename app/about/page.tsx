@@ -31,13 +31,13 @@ type StoryBeat = {
 const storyBeats: StoryBeat[] = [
   {
     title: "It started with drawing.",
-    body: "My first sketch was a character from Code Geass, done in primary school. By junior high I had a tablet. By high school I was experimenting with portraits, landscapes, and mixed-media installations. Making things — figuring out what they meant — was always the point.",
+    body: "My first sketch was a character from Code Geass, done in primary school. By junior high I had a tablet. By high school I was experimenting with portraits, landscapes, and mixed-media installations. Making things (figuring out what they meant) was always the point.",
     image: "/assets/about/journey/school.jpg",
     period: "Primary school to high school",
   },
   {
     title: "Then it became something bigger.",
-    body: "At Pratt in New York, the medium expanded: 3D rendering, Unity VR, TouchDesigner, physical computing. I built installations for New York Fashion Week. The real shift came when I worked on a mobile classroom for a Brooklyn environmental organization — taking something from a pencil sketch to a physical structure. That was the first time I felt what design actually does.",
+    body: "At Pratt in New York, the medium expanded: 3D rendering, Unity VR, TouchDesigner, physical computing. I built installations for New York Fashion Week. The real shift came when I worked on a mobile classroom for a Brooklyn environmental organization, taking something from a pencil sketch to a physical structure. That was the first time I felt what design actually does.",
     image: "/assets/about/journey/uni.jpg",
     period: "Pratt, New York",
   },
@@ -49,7 +49,7 @@ const storyBeats: StoryBeat[] = [
   },
   {
     title: "So I followed it to Seattle.",
-    body: "I graduated with four years on the president's list, moved from New York to LA to Seattle, and enrolled at UW HCDE — building the vocabulary to do this work precisely: qualitative research, usability testing, accessibility, service design, visual communication.",
+    body: "I graduated with four years on the president's list, moved from New York to LA to Seattle, and enrolled at UW HCDE, building the vocabulary to do this work precisely: qualitative research, usability testing, accessibility, service design, visual communication.",
     visualGallery: visualExperimentImages,
     period: "UW HCDE",
     hideImage: true,
@@ -75,7 +75,7 @@ const workPrinciples = [
   {
     number: "01",
     title: "AI as a velocity multiplier.",
-    body: "After user interviews, I synthesize insights in hours rather than days, and move a loose idea into a working, coded prototype within the same day — so decisions rest on something real, sooner.",
+    body: "After user interviews, I synthesize insights in hours rather than days, and move a loose idea into a working, coded prototype within the same day, so decisions rest on something real, sooner.",
     stack: "Synthesis · Prototype · Velocity",
   },
   {
@@ -87,7 +87,7 @@ const workPrinciples = [
   {
     number: "03",
     title: "Whatever it takes to ship.",
-    body: "When I hit a technical wall, I learn my way through it — often with AI as a tutor — until I can build it myself. That path took me from non-coder to shipping full web and mobile apps, and keeps me ahead on new tools.",
+    body: "When I hit a technical wall, I learn my way through it (often with AI as a tutor) until I can build it myself. That path took me from non-coder to shipping full web and mobile apps, and keeps me ahead on new tools.",
     stack: "Relentless · Curious by default · Ship",
   },
 ];
@@ -235,7 +235,7 @@ export default function AboutPage() {
                       className="overflow-hidden"
                     >
                       <p className="mt-6 max-w-2xl text-base leading-[1.72] text-textSecondary md:leading-[1.7]">
-                        My name literally means &ldquo;Square and Circle.&rdquo; In Chinese culture it represents balance —
+                        My name literally means &ldquo;Square and Circle.&rdquo; In Chinese culture it represents balance:
                         the square is logic, systems, and structure; the circle is empathy, flow, and the human experience.
                         I bridge the gap between rigid technology and soft human needs.
                       </p>
@@ -464,7 +464,7 @@ export default function AboutPage() {
                             <div className="flex min-h-[min(46vh,500px)] w-full items-center justify-start md:min-h-[min(52vh,560px)]">
                               <Image
                                 src={beat.image}
-                                alt={`${beat.title} — visual`}
+                                alt={`${beat.title}: visual`}
                                 width={1920}
                                 height={1080}
                                 className="max-h-[min(46vh,500px)] w-auto max-w-full object-contain md:max-h-[min(52vh,560px)]"
