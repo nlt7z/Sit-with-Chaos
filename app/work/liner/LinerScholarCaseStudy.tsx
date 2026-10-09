@@ -21,7 +21,17 @@ const navItems = [
 ] as const;
 
 /* in-view autoplay video (muted, looping), loads its source near the viewport */
-function AutoVideo({ src, poster, className = "" }: { src: string; poster?: string; className?: string }) {
+function AutoVideo({
+  src,
+  poster,
+  className = "",
+  controls = true,
+}: {
+  src: string;
+  poster?: string;
+  className?: string;
+  controls?: boolean;
+}) {
   const vref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = vref.current;
@@ -43,7 +53,7 @@ function AutoVideo({ src, poster, className = "" }: { src: string; poster?: stri
     io.observe(v);
     return () => io.disconnect();
   }, [src]);
-  return <video ref={vref} muted loop playsInline controls preload="none" poster={poster} className={className} />;
+  return <video ref={vref} muted loop playsInline controls={controls} preload="none" poster={poster} className={className} />;
 }
 
 /* Scrollytelling: a sticky live prototype on the left that deep-links to the
@@ -80,14 +90,14 @@ function SceneBlock({
       }`}
     >
       <div className="flex items-baseline gap-2.5">
-        <span className="font-mono text-[12px] tabular-nums text-nltLime-ink">{String(index + 1).padStart(2, "0")}</span>
-        <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">{s.label}</span>
+        <span className="text-[13px] font-medium tabular-nums text-textPrimary">{String(index + 1).padStart(2, "0")}</span>
+        <span className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{s.label}</span>
       </div>
       <h3 className="mt-2.5 font-display text-[1.3rem] font-normal leading-snug text-textPrimary">{s.title}</h3>
       <p className="mt-3 text-[16px] leading-[1.65] text-textSecondary">{s.body}</p>
       {s.why ? (
         <p className="mt-3 text-[16px] leading-[1.65] text-textSecondary/80">
-          <span className="text-nltLime-ink">Why · </span>
+          <span className="text-textPrimary">Why · </span>
           {s.why}
         </p>
       ) : null}
@@ -198,17 +208,17 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
                 rel="noopener noreferrer"
                 className="absolute inset-0 grid place-items-center bg-[#141416] px-4 text-center"
               >
-                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 font-mono text-[11px] uppercase tracking-[0.16em] text-[#141416]">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-[13px] font-medium tracking-[-0.005em] text-[#141416]">
                   Open prototype ↗
                 </span>
               </a>
             ) : (
               <div className="absolute inset-0 grid place-items-center">
-                <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">Loading…</span>
+                <span className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Loading…</span>
               </div>
             )}
           </div>
-          <p className="mt-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
+          <p className="mt-2.5 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
             {isMobile ? "Interactive prototype" : "Live · follows the text as you scroll"} ·{" "}
             <Action href={src} variant="label" newTab>
               open full-screen
@@ -229,7 +239,7 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
             <div key={`${s.scene}-${i}`}>
               {opensStage ? (
                 <div className="flex items-center gap-3 pt-10 lg:pt-24">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">{s.stage}</span>
+                  <span className="text-[13px] font-medium tracking-[-0.005em] text-textPrimary">{s.stage}</span>
                   <span className="h-px flex-1 bg-black/[0.08]" />
                 </div>
               ) : null}
@@ -246,7 +256,7 @@ function PrototypeWalkthrough({ src, scenes, title = "Liner prototype" }: { src:
 
 // ── Type scale — serif on titles only, everything else sans ─────────────────────
 function Kicker({ children }: { children: ReactNode }) {
-  return <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">{children}</p>;
+  return <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{children}</p>;
 }
 function Title({ children, className = "" }: { children: ReactNode; className?: string }) {
   return (
@@ -638,24 +648,22 @@ export default function LinerScholarCaseStudy() {
         <dl className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-10">
           {FACTS.map(([label, value]) => (
             <div key={label} className="min-w-0 border-l border-white/15 pl-3">
-              <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</dt>
+              <dt className="text-[13px] font-medium tracking-[-0.005em] text-white/60">{label}</dt>
               <dd className="mt-2 text-[14px] leading-[1.5] text-white/80">{value}</dd>
             </div>
           ))}
         </dl>
 
-        {/* the product, framed */}
+        {/* the prototype, running */}
         <figure className="mt-12 md:mt-16">
-          <div className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
+          <div className="overflow-hidden rounded-[14px] bg-white ring-1 ring-white/10">
             <AutoVideo
-              src="/assets/liner/liner-product-video.mp4"
-              poster="/assets/work/liner-hero-v2.png"
-              className="aspect-video h-auto w-full object-cover"
+              src="/assets/liner/liner-cover.mp4"
+              poster="/assets/work/posters/liner.webp"
+              controls={false}
+              className="aspect-[2102/1080] h-auto w-full object-cover"
             />
           </div>
-          <figcaption className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
-            Product showcase
-          </figcaption>
         </figure>
       </CaseHero>
       <article className="relative z-10 mx-auto max-w-content px-6 pb-20 pt-4 text-left md:px-[84px] md:pb-36">
@@ -758,7 +766,7 @@ export default function LinerScholarCaseStudy() {
                   >
                     <div className="max-w-2xl">
                       <div className="flex items-baseline gap-3">
-                        <span className="font-mono text-[13px] tabular-nums text-nltLime-ink">
+                        <span className="text-[13px] font-medium tabular-nums text-textPrimary">
                           {String(i + 1).padStart(2, "0")}
                         </span>
                         <h3 className="text-[18px] font-medium leading-snug text-textPrimary">{f.title}</h3>
@@ -766,14 +774,14 @@ export default function LinerScholarCaseStudy() {
                       <p className="mt-3 text-[16px] leading-[1.65] text-textSecondary">{f.body}</p>
                       {f.pain ? (
                         <p className="mt-2.5 text-[15px] leading-[1.6] text-textSecondary/80">
-                          <span className="text-nltLime-ink">Pain · </span>
+                          <span className="text-textPrimary">Pain · </span>
                           {f.pain}
                         </p>
                       ) : null}
                       {f.quote ? (
                         <p className="mt-2.5 text-[15px] leading-[1.6] text-textPrimary/85">
                           “{f.quote}”{" "}
-                          <span className="ml-1 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
+                          <span className="ml-1 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
                             {f.cite}
                           </span>
                         </p>
@@ -805,7 +813,7 @@ export default function LinerScholarCaseStudy() {
         <section id="goal" className={`${SECTION} pb-4`}>
           <Reveal>
             <Kicker>The question</Kicker>
-            <p className="mt-6 max-w-4xl border-l-2 border-nltLime pl-5 font-display text-[1.7rem] font-light leading-[1.3] text-textPrimary md:text-[2.1rem]">
+            <p className="mt-6 max-w-4xl border-l-2 border-black/15 pl-5 font-display text-[1.7rem] font-light leading-[1.3] text-textPrimary md:text-[2.1rem]">
               How might AI research tools support private, exploratory thinking while enabling transparent, accountable
               team collaboration?
             </p>
@@ -843,7 +851,7 @@ export default function LinerScholarCaseStudy() {
             <ol className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               {CONCEPT_STAGES.map(([n, name, text]) => (
                 <li key={name} className="rounded-[14px] border border-black/[0.08] bg-black/[0.02] p-5">
-                  <span className="font-mono text-[12px] tabular-nums text-nltLime-ink">{n}</span>
+                  <span className="text-[13px] font-medium tabular-nums text-textPrimary">{n}</span>
                   <p className="mt-2 font-display text-[1.15rem] font-normal text-textPrimary">{name}</p>
                   <p className="mt-2 text-[14px] leading-[1.55] text-textSecondary">{text}</p>
                 </li>
@@ -868,7 +876,7 @@ export default function LinerScholarCaseStudy() {
               <Reveal>
                 {/* intro to the version */}
                 <div className="max-w-2xl">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/80">
+                  <span className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
                     {it.tag}
                   </span>
                   <Subhead className="mt-1.5">{it.title}</Subhead>
@@ -899,7 +907,7 @@ export default function LinerScholarCaseStudy() {
                       {CHAT_PLANS.map((p) => (
                         <div key={p.tag} className="grid items-center gap-4 sm:grid-cols-[2fr_1fr] sm:gap-8">
                           <div className="relative overflow-hidden rounded-[14px] ring-1 ring-black/[0.08]">
-                            <span className="absolute left-3 top-3 z-10 rounded-md bg-black/70 px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-white backdrop-blur">
+                            <span className="absolute left-3 top-3 z-10 rounded-md bg-black/70 px-2.5 py-1 text-[12px] font-medium tracking-[-0.005em] text-white backdrop-blur">
                               {p.tag}
                             </span>
                             <Image src={p.img} alt={p.tag} width={1400} height={980} className="h-auto w-full" />
@@ -917,14 +925,14 @@ export default function LinerScholarCaseStudy() {
                       <dl className="mt-4 grid gap-6 border-t border-black/[0.08] pt-6 sm:grid-cols-3 sm:gap-8">
                         {USABILITY_STATS.map(([n, t]) => (
                           <div key={n}>
-                            <dt className="font-display text-[1.9rem] font-light leading-none text-nltLime-ink">{n}</dt>
+                            <dt className="font-display text-[1.9rem] font-light leading-none text-textPrimary">{n}</dt>
                             <dd className="mt-2 text-[14px] leading-[1.5] text-textSecondary">{t}</dd>
                           </div>
                         ))}
                       </dl>
                     </div>
                     <div className="mt-8 max-w-2xl">
-                      <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">Final pick · Plan B + C</p>
+                      <p className="text-[13px] font-medium tracking-[-0.005em] text-textPrimary">Final pick · Plan B + C</p>
                       <p className="mt-2 text-[15px] leading-[1.65] text-textSecondary">
                         The AI-and-Group Chat was mine to own, and I designed it by carrying the editor’s own gesture
                         across: the same select-to-reveal from v3’s Focus and Citation modes now drives the chat: you
@@ -969,8 +977,8 @@ export default function LinerScholarCaseStudy() {
           <Reveal delay={0.02}>
             <div className="overflow-hidden rounded-[14px] border border-black/[0.08] bg-black/[0.02]">
               <div className="hidden border-b border-black/[0.08] px-5 py-3 sm:grid sm:grid-cols-[1fr_1.4fr] sm:gap-8">
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">What broke (research)</p>
-                <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">How the build answers it</p>
+                <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">What broke (research)</p>
+                <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">How the build answers it</p>
               </div>
               {FINDING_ANSWERS.map(([pain, answer], i) => (
                 <div
@@ -978,7 +986,7 @@ export default function LinerScholarCaseStudy() {
                   className={`grid gap-1 px-5 py-4 sm:grid-cols-[1fr_1.4fr] sm:gap-8 ${i > 0 ? "border-t border-black/[0.08]" : ""}`}
                 >
                   <p className="text-[14px] leading-[1.5] text-textSecondary/80">
-                    <span className="text-nltLime-ink sm:hidden">Pain · </span>
+                    <span className="text-textPrimary sm:hidden">Pain · </span>
                     {pain}
                   </p>
                   <p className="text-[15px] leading-[1.55] text-textPrimary/85">{answer}</p>
@@ -1000,12 +1008,12 @@ export default function LinerScholarCaseStudy() {
                   className="h-auto w-full"
                 />
               </div>
-              <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
-                <span className="text-textSecondary/80">Everything composed:</span>
+              <figcaption className="mt-3 flex flex-wrap items-center gap-x-2 gap-y-2 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
+                <span className="text-textPrimary">Everything composed:</span>
                 {["Citation", "Comments", "Authors", "Focus", "Share-to-group"].map((t) => (
                   <span
                     key={t}
-                    className="rounded-full border border-nltLime-ink/20 bg-nltLime-soft px-2.5 py-1 tracking-[0.1em] text-nltLime-ink"
+                    className="rounded-full border border-black/10 bg-black/[0.03] px-2.5 py-1 text-textPrimary"
                   >
                     {t}
                   </span>
@@ -1092,9 +1100,9 @@ export default function LinerScholarCaseStudy() {
                 ["Capstone Award", "Section A", "Jury recognition for feature integration and platform evolution with AI."],
               ] as const).map(([v, label, text]) => (
                 <div key={label}>
-                  <dt className="font-display text-[1.7rem] font-light leading-[1.05] tracking-[-0.01em] text-nltLime-ink">{v}</dt>
+                  <dt className="font-display text-[1.7rem] font-light leading-[1.05] tracking-[-0.01em] text-textPrimary">{v}</dt>
                   <dd className="mt-2.5">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">{label}</p>
+                    <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{label}</p>
                     <p className="mt-1.5 text-[14px] leading-[1.5] text-textSecondary/80">{text}</p>
                   </dd>
                 </div>
@@ -1102,15 +1110,6 @@ export default function LinerScholarCaseStudy() {
             </dl>
           </Reveal>
 
-          <Reveal delay={0.04}>
-            <figure className="overflow-hidden rounded-[14px] bg-black ring-1 ring-black/[0.08]">
-              <AutoVideo
-                src="/assets/liner/liner-product-video.mp4"
-                poster="/assets/work/liner-hero-v2.png"
-                className="aspect-video h-auto w-full object-cover"
-              />
-            </figure>
-          </Reveal>
           <Reveal delay={0.045}>
             <div className={`pt-10 ${HAIR}`}>
               <Subhead>How we’d know it worked</Subhead>
@@ -1123,8 +1122,8 @@ export default function LinerScholarCaseStudy() {
                 {METRICS.map(([label, goal, text]) => (
                   <div key={label}>
                     <dt className="flex flex-wrap items-baseline gap-x-2.5">
-                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">{label}</span>
-                      <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">↳ {goal}</span>
+                      <span className="text-[13px] font-medium tracking-[-0.005em] text-textPrimary">{label}</span>
+                      <span className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">↳ {goal}</span>
                     </dt>
                     <dd className="mt-2 text-[15px] leading-[1.55] text-textSecondary">{text}</dd>
                   </div>

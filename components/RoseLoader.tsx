@@ -8,7 +8,7 @@ import { useEffect, useRef } from "react";
  * A rose curve (r = a·cos(3θ)) traced by a comet of fading particles, slowly
  * rotating and "breathing" (a detailScale pulse swells the petals) so the
  * loader reads as alive rather than a static mark. Ported from the
- * math-curve-loaders "Rose Three" demo and recoloured to the nltLime brand.
+ * math-curve-loaders "Rose Three" demo and recoloured to a neutral white.
  *
  * Rendered imperatively against refs: the rAF loop mutates 76 particle nodes +
  * one guide path every frame, which would be wasteful as React state. The svg
@@ -55,7 +55,7 @@ function buildPath(detailScale: number) {
 }
 
 export function RoseLoader({
-  color = "#d2ff00",
+  color = "#ffffff",
   reduced = false,
   className = "h-full w-full",
 }: {
@@ -138,7 +138,7 @@ export function RoseLoader({
       style={{
         color,
         overflow: "visible",
-        filter: "drop-shadow(0 0 8px rgba(210,255,0,0.45))",
+        filter: "drop-shadow(0 0 8px rgba(255,255,255,0.25))",
       }}
     >
       <g ref={groupRef}>

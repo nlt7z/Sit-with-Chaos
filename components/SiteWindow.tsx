@@ -92,7 +92,7 @@ export function SiteWindow({
           ? undefined
           : { y: -4, transition: { duration: 0.4, ease: easePortfolio } }
       }
-      className={`group relative flex flex-col overflow-hidden rounded-[22px] transition-[border-color,box-shadow] duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary/45 focus-visible:ring-offset-nltLime focus-visible:ring-offset-2 ${
+      className={`group relative flex flex-col overflow-hidden rounded-[22px] transition-[border-color,box-shadow] duration-500 ease-portfolio focus:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary focus-visible:ring-offset-2 ${
         bare
           ? ""
           : "border border-black/[0.08] bg-white shadow-[0_1px_0_rgba(0,0,0,0.04)] hover:border-black/[0.22] hover:shadow-[0_28px_60px_-22px_rgba(0,0,0,0.28)]"
@@ -198,14 +198,14 @@ export function SiteWindow({
             draggable={false}
             className="relative h-7 w-auto select-none opacity-80"
           />
-          <span className="relative font-mono text-[10px] uppercase tracking-[0.18em] text-textSecondary/70">
+          <span className="relative text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
             {url}
           </span>
         </div>
 
         {meta ? (
           <div className="pointer-events-none absolute right-3 top-3 z-[2]">
-            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/45 px-2 py-1 font-mono text-[9px] uppercase tracking-[0.16em] text-white/80 backdrop-blur-sm md:text-[10px]">
+            <span className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-black/45 px-2 py-1 text-[12px] font-medium tracking-[-0.005em] text-white/80 backdrop-blur-sm">
               <span aria-hidden className="inline-block h-1 w-1 rounded-full bg-white/60" />
               {meta}
             </span>

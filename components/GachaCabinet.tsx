@@ -91,7 +91,7 @@ function pickOmikujiSlug(stepInCycle: number): string {
   if (i === 0) return "ai-character";
   if (i === 1) return Math.random() < 0.5 ? "studio-engine" : "meituan-im";
   if (i === 2) return "apsara-conference";
-  return Math.random() < 0.5 ? "about" : "playground";
+  return "playground";
 }
 
 function mulberry32(seed: number) {

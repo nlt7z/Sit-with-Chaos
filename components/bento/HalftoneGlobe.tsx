@@ -5,7 +5,7 @@
  * canvas: every land dot is sized by a fixed key light, so the sphere reads as
  * a halftone print with real volume. Arcs carry comets from the places on the
  * journey (Seoul, Hangzhou, Beijing, Seattle, New York) to Foster City; each
- * arrival sends a lime ripple across the land around the pin and deepens its
+ * arrival sends a white ripple across the land around the pin and deepens its
  * glow a little, which then relaxes back.
  *
  *   • drag to spin (with inertia), arrow keys when focused; after a few idle
@@ -98,13 +98,13 @@ function buildGeometry() {
 
 let GEO: ReturnType<typeof buildGeometry> | null = null;
 
-// 5 heat levels, from paper-white ink to full lime
+// 5 heat levels, from a quiet grey ink to full white
 const HEAT_RGB = [
-  [226, 230, 220],
-  [220, 238, 170],
-  [214, 246, 110],
-  [211, 252, 50],
-  [210, 255, 0],
+  [150, 154, 160],
+  [176, 180, 186],
+  [202, 205, 210],
+  [228, 230, 233],
+  [250, 250, 251],
 ];
 const ALPHAS = [0.55, 0.78, 0.96];
 
@@ -215,8 +215,8 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
 
       // atmosphere + body
       const atm = ctx.createRadialGradient(cx, cy, R * 0.92, cx, cy, R * 1.22);
-      atm.addColorStop(0, `rgba(210,255,0,${0.05 + glow * 0.04})`);
-      atm.addColorStop(1, "rgba(210,255,0,0)");
+      atm.addColorStop(0, `rgba(255,255,255,${0.05 + glow * 0.04})`);
+      atm.addColorStop(1, "rgba(255,255,255,0)");
       ctx.fillStyle = atm;
       ctx.beginPath();
       ctx.arc(cx, cy, R * 1.22, 0, Math.PI * 2);
@@ -305,7 +305,7 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
           arcVis[s] = tmp[2] > 0 || tmp[0] * tmp[0] + tmp[1] * tmp[1] > 1 ? 1 : 0;
         }
         // faint rail
-        ctx.strokeStyle = "rgba(210,255,0,0.2)";
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
         ctx.lineWidth = 1;
         ctx.beginPath();
         for (let s = 1; s <= ARC_STEPS; s++) {
@@ -318,7 +318,7 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
         // origin dot
         project(arc.origin[0], arc.origin[1], arc.origin[2], tmp);
         if (tmp[2] > 0) {
-          ctx.fillStyle = "rgba(210,255,0,0.85)";
+          ctx.fillStyle = "rgba(255,255,255,0.85)";
           ctx.beginPath();
           ctx.arc(cx + tmp[0] * R, cy - tmp[1] * R, 1.9, 0, Math.PI * 2);
           ctx.fill();
@@ -341,7 +341,7 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
         for (let s = s0 + 1; s <= s1; s++) {
           if (!arcVis[s] || !arcVis[s - 1]) continue;
           const f = (s - tail) / Math.max(1, head - tail);
-          ctx.strokeStyle = `rgba(210,255,0,${Math.min(1, f) * 0.95})`;
+          ctx.strokeStyle = `rgba(255,255,255,${Math.min(1, f) * 0.95})`;
           ctx.lineWidth = 0.6 + 1.6 * f;
           ctx.beginPath();
           ctx.moveTo(arcXY[s * 2 - 2], arcXY[s * 2 - 1]);
@@ -353,13 +353,13 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
           const hx = arcXY[hs * 2];
           const hy = arcXY[hs * 2 + 1];
           const g = ctx.createRadialGradient(hx, hy, 0, hx, hy, 9);
-          g.addColorStop(0, "rgba(210,255,0,0.55)");
-          g.addColorStop(1, "rgba(210,255,0,0)");
+          g.addColorStop(0, "rgba(255,255,255,0.55)");
+          g.addColorStop(1, "rgba(255,255,255,0)");
           ctx.fillStyle = g;
           ctx.beginPath();
           ctx.arc(hx, hy, 9, 0, Math.PI * 2);
           ctx.fill();
-          ctx.fillStyle = "#f4ffd0";
+          ctx.fillStyle = "#ffffff";
           ctx.beginPath();
           ctx.arc(hx, hy, 1.8, 0, Math.PI * 2);
           ctx.fill();
@@ -377,8 +377,8 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
       if (facing > 0) {
         const gr = 14 + 12 * glow;
         const g = ctx.createRadialGradient(px, py, 0, px, py, gr);
-        g.addColorStop(0, `rgba(210,255,0,${0.35 + 0.35 * glow})`);
-        g.addColorStop(1, "rgba(210,255,0,0)");
+        g.addColorStop(0, `rgba(255,255,255,${0.35 + 0.35 * glow})`);
+        g.addColorStop(1, "rgba(255,255,255,0)");
         ctx.fillStyle = g;
         ctx.beginPath();
         ctx.arc(px, py, gr, 0, Math.PI * 2);
@@ -386,7 +386,7 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
         for (const p0 of pulses) {
           const age = t - p0;
           if (age > 1.6) continue;
-          ctx.strokeStyle = `rgba(210,255,0,${0.7 * (1 - age / 1.6)})`;
+          ctx.strokeStyle = `rgba(255,255,255,${0.7 * (1 - age / 1.6)})`;
           ctx.lineWidth = 1.2;
           ctx.beginPath();
           ctx.arc(px, py, 4 + 26 * (age / 1.6), 0, Math.PI * 2);
@@ -400,7 +400,7 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
         ctx.lineTo(px + 16 * side, py - 22);
         ctx.lineTo(px + 26 * side, py - 22);
         ctx.stroke();
-        ctx.fillStyle = "#d2ff00";
+        ctx.fillStyle = "#ffffff";
         ctx.beginPath();
         ctx.arc(px, py, 3.4, 0, Math.PI * 2);
         ctx.fill();
@@ -574,7 +574,7 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
         tabIndex={0}
         role="img"
         aria-label="Globe with a pin on Foster City, California, and arcs from Seoul, Hangzhou, Beijing, Seattle and New York. Drag or use the arrow keys to spin it."
-        className="absolute inset-0 h-full w-full cursor-grab rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-nltLime/60"
+        className="absolute inset-0 h-full w-full cursor-grab rounded-[inherit] outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-white/60"
         style={{ touchAction: "pan-y" }}
       />
       {/* pin label — positioned every frame from the projected pin */}

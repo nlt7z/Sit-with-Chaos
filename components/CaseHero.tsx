@@ -48,17 +48,12 @@ export function CaseHero({
 
   return (
     <header id={id} data-surface="dark" className="relative scroll-mt-0 overflow-hidden bg-[#0a0b0c] text-white">
-      {/* the /work canvas: lime wash + dot matrix from the top-right corner */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(50% 45% at 85% 0%, rgba(210,255,0,0.08), rgba(10,11,12,0) 65%)" }}
-      />
+      {/* the /work canvas: dot matrix from the top-right corner */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
-          backgroundImage: "radial-gradient(rgba(210,255,0,0.13) 1px, transparent 1.5px)",
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1.5px)",
           backgroundSize: "13px 13px",
           WebkitMaskImage: "radial-gradient(110% 80% at 88% 0%, black 0%, transparent 60%)",
           maskImage: "radial-gradient(110% 80% at 88% 0%, black 0%, transparent 60%)",
@@ -73,12 +68,12 @@ export function CaseHero({
         >
           <div className={aside ? "lg:grid lg:grid-cols-[minmax(0,1fr)_auto] lg:items-center lg:gap-16" : ""}>
             <div>
-            <motion.p variants={item} className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">
+            <motion.p variants={item} className="flex items-center gap-2.5 text-[13px] font-medium tracking-[-0.005em] text-white/70">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={logo} alt="" aria-hidden className="h-4 w-4 object-contain brightness-0 invert" />
               <span>
                 {company}
-                {kicker ? <span className="text-white/45"> · {kicker}</span> : null}
+                {kicker ? <span className="text-white/60"> · {kicker}</span> : null}
               </span>
             </motion.p>
 

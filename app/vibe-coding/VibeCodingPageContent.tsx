@@ -430,7 +430,7 @@ function MediaSlot({
 }
 
 // ─── Active card FX (desktop) ──────────────────────────────────────────────
-// The cursor-following lime arrow, the same affordance as the /work cards: →
+// The cursor-following arrow, the same affordance as the /work cards: →
 // for a page on this site, ↗ for another site. Only when the card has a
 // destination. Reduced motion: the arrow tracks without the spring.
 
@@ -470,7 +470,7 @@ function ActiveCardFX({
       {hasLink && (
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)]"
+          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)]"
           style={{ x: reduced ? ax : axs, y: reduced ? ay : ays }}
           initial={false}
           animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.4 }}
@@ -579,7 +579,7 @@ function GhostIndex({ index }: { index: number }) {
           style={{
             fontSize: "min(74vh, 40vw)",
             color: "transparent",
-            WebkitTextStroke: "1.6px rgba(210,255,0,0.22)",
+            WebkitTextStroke: "1.6px rgba(255,255,255,0.15)",
             willChange: "transform, opacity",
           }}
           initial={{ opacity: 0, y: 50 }}
@@ -594,8 +594,8 @@ function GhostIndex({ index }: { index: number }) {
   );
 }
 
-/** Caption centred under the active card: a lime block carrying the index and title,
- *  wiped in left → right (the LimeMark gesture) each time the card becomes
+/** Caption centred under the active card: plain text carrying the index and title,
+ *  wiped in left → right each time the card becomes
  *  active, plus the entry's link on the right. It rides inside the card's
  *  transformed wrapper, so it switches with the card. */
 function CardCaption({
@@ -618,12 +618,12 @@ function CardCaption({
       transition={{ duration: 0.3 }}
     >
       <motion.div
-        className="inline-flex min-w-0 items-baseline gap-3 bg-nltLime px-3 py-1.5 text-[#0a0b0c]"
+        className="inline-flex min-w-0 items-baseline gap-3 px-3 py-1.5 text-white"
         initial={false}
         animate={{ clipPath: active || reduced ? "inset(0 0% 0 0)" : "inset(0 100% 0 0)" }}
         transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1], delay: active ? 0.15 : 0 }}
       >
-        <span className="shrink-0 font-mono text-[11px] tabular-nums tracking-[0.12em]">
+        <span className="shrink-0 font-mono text-[13px] tabular-nums text-white/60">
           {String(index + 1).padStart(2, "0")}/{String(total).padStart(2, "0")}
         </span>
         <h2 className="truncate font-display text-[clamp(16px,1.35vw,20px)] lowercase leading-[1.2] tracking-[-0.01em]">
@@ -863,7 +863,7 @@ function DesktopFeed({
 }
 
 // ─── Entry loading gate (desktop-only) ─────────────────────────────────────
-// Matches the homepage IntroAnimation visual: RoseLoader + lime halo + progress bar.
+// Matches the homepage IntroAnimation visual: RoseLoader + progress bar.
 // Only shown on md+ (the carousel). Mobile uses a plain scroll list — no gate needed.
 
 const GATE_TARGET = 2; // wait for 2 actual media loads (the first cards near the active slide)
@@ -943,26 +943,15 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
       />
 
       <div className="pointer-events-none relative flex flex-col items-center">
-        {/* Rose curve + lime halo */}
+        {/* Rose curve */}
         <div className="relative flex h-[180px] w-[180px] items-center justify-center md:h-[200px] md:w-[200px]">
-          <motion.div
-            className="absolute inset-0 -m-20 rounded-full"
-            style={{
-              background:
-                "radial-gradient(circle, rgba(210,255,0,0.35) 0%, rgba(210,255,0,0.08) 38%, transparent 68%)",
-              filter: "blur(18px)",
-            }}
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={phase === "exit" ? { opacity: 0, scale: 0.9 } : { opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          />
           <motion.div
             className="relative z-10 h-[150px] w-[150px] md:h-[170px] md:w-[170px]"
             initial={{ opacity: 0, scale: 0.9 }}
             animate={phase === "exit" ? { opacity: 0, scale: 1.06 } : { opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
           >
-            <RoseLoader reduced={!!reduced} />
+            <RoseLoader color="#ffffff" reduced={!!reduced} />
           </motion.div>
         </div>
 
@@ -975,17 +964,16 @@ function EntryGate({ ready, readyCount }: { ready: boolean; readyCount: number }
         >
           <div className="relative h-[2px] w-full overflow-hidden rounded-full bg-white/[0.08]">
             <div
-              className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-nltLime/60 via-nltLime to-nltLime"
+              className="absolute inset-y-0 left-0 rounded-full bg-white"
               style={{
                 width: `${percent}%`,
-                boxShadow: "0 0 14px rgba(210,255,0,0.6)",
                 transition: "width 90ms linear",
               }}
             />
           </div>
-          <div className="mt-3 flex items-center justify-between font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">
+          <div className="mt-3 flex items-center justify-between text-[13px] font-medium tracking-[-0.005em] text-white/60">
             <span>{ready ? "Ready" : "Loading"}</span>
-            <span className="tabular-nums text-nltLime/90">
+            <span className="font-mono tabular-nums text-white">
               {String(Math.min(percent, 100)).padStart(3, "0")}
             </span>
           </div>

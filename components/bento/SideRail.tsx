@@ -108,7 +108,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
                 </AnimatePresence>
                 <RotatedLabel text={label} />
                 {/* focus ring drawn inside the segment */}
-                <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full opacity-0 ring-1 ring-inset ring-nltLime/60 group-focus-visible:opacity-100" />
+                <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full opacity-0 ring-1 ring-inset ring-white/60 group-focus-visible:opacity-100" />
               </Link>
             );
           })}
@@ -137,7 +137,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
               ) : null}
             </AnimatePresence>
             <RotatedLabel text="Resume ↗" />
-            <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full opacity-0 ring-1 ring-inset ring-nltLime/60 group-focus-visible:opacity-100" />
+            <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full opacity-0 ring-1 ring-inset ring-white/60 group-focus-visible:opacity-100" />
           </a>
         </div>
       </nav>

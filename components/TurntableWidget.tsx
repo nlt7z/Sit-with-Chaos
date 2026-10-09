@@ -241,7 +241,7 @@ export function TurntableWidget() {
             playing ? "opacity-0" : "opacity-0 group-hover:opacity-100"
           }`}
         >
-          <span className="rounded-full bg-black/55 px-4 py-1.5 text-[11px] tracking-[0.06em] text-white/80 backdrop-blur-sm">
+          <span className="rounded-full bg-black/55 px-4 py-1.5 text-[12px] font-medium tracking-[-0.005em] text-white/80 backdrop-blur-sm">
             click to play
           </span>
         </div>

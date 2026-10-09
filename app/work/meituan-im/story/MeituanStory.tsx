@@ -34,7 +34,7 @@ export const STORY_TOC = [
 const WRAP = "mx-auto w-full max-w-content px-6 md:px-[84px]";
 
 function Eye({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
-  return <p className={`font-mono text-[11px] uppercase tracking-[0.16em] ${dark ? "text-white/50" : "text-textSecondary/80"}`}>{children}</p>;
+  return <p className={`text-[13px] font-medium tracking-[-0.005em] ${dark ? "text-white/60" : "text-textSecondary"}`}>{children}</p>;
 }
 
 function Title({ text, dark = false, size = "md" }: { text: string; dark?: boolean; size?: "md" | "lg" }) {
@@ -117,7 +117,7 @@ const Tint = ({ children, className = "" }: { children: ReactNode; className?: s
 );
 
 const PanelLabel = ({ children }: { children: ReactNode }) => (
-  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">{children}</p>
+  <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{children}</p>
 );
 
 /** Shipped (Chinese) next to rebuilt (English): the deck's side-by-side pair. */
@@ -159,13 +159,13 @@ function Context() {
               <p className="font-display text-[2rem] font-light leading-none tabular-nums text-textPrimary">
                 <CountUp to={770} suffix="M+" />
               </p>
-              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Annual users</p>
+              <p className="mt-2 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Annual users</p>
             </div>
             <div>
               <p className="font-display text-[2rem] font-light leading-none tabular-nums text-textPrimary">
                 <CountUp to={14.5} format={(n) => n.toFixed(1)} suffix="M" />
               </p>
-              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Merchants</p>
+              <p className="mt-2 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Merchants</p>
             </div>
           </Tint>
         </div>
@@ -196,7 +196,7 @@ function Voice() {
               </p>
             ))}
           </div>
-          <p className="mt-10 font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">{c.src}</p>
+          <p className="mt-10 text-[13px] font-medium tracking-[-0.005em] text-white/60">{c.src}</p>
         </Reveal>
       </div>
     </section>
@@ -217,12 +217,12 @@ function Broken() {
           <ol className="mt-4">
             {c.steps.split("\n").map((s, i) => (
               <li key={s} className="flex items-baseline gap-4 py-2.5">
-                <span className="font-mono text-[10px] tabular-nums text-textSecondary/50">0{i + 1}</span>
+                <span className="text-[13px] font-medium tabular-nums text-textSecondary">0{i + 1}</span>
                 <span className="text-[15px] text-textSecondary">{s}</span>
               </li>
             ))}
           </ol>
-          <p className="mt-5 font-mono text-[11px] uppercase tracking-[0.16em] text-textPrimary">{c.breakT}</p>
+          <p className="mt-5 text-[13px] font-medium tracking-[-0.005em] text-textPrimary">{c.breakT}</p>
           <p className="mt-2 text-[14px] leading-relaxed text-textSecondary/80">{c.breakN}</p>
         </Tint>
       }
@@ -273,7 +273,7 @@ function OptionsAB() {
         <div className="mt-10 grid max-w-[60rem] gap-10 md:grid-cols-2 md:gap-12">
           {options.map((o) => (
             <div key={o.tag}>
-              <span className="rounded-full px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary" style={{ background: MT.tint }}>
+              <span className="rounded-full px-2.5 py-1 text-[12px] font-medium tracking-[-0.005em] text-textSecondary" style={{ background: MT.tint }}>
                 {o.tag}
               </span>
               <p className="mt-4 text-[17px] font-medium tracking-tight text-textPrimary">{plain(o.t)}</p>
@@ -318,7 +318,7 @@ function Blueprint() {
         <ol className="mt-8 max-w-[26rem]">
           {steps.map((s, i) => (
             <li key={s} className="flex items-baseline gap-4 py-2">
-              <span className="font-mono text-[10px] tabular-nums text-textPrimary">0{i + 1}</span>
+              <span className="text-[13px] font-medium tabular-nums text-textPrimary">0{i + 1}</span>
               <span className="text-[16px] text-textPrimary">
                 <Rich text={s} />
               </span>
@@ -346,7 +346,7 @@ function Txn() {
         </Reveal>
         <Reveal delay={0.1} className="mt-10">
           <Swimlane heads={TXN.phases} lanes={TXN.lanes} flow={TXN.flow} id="mt-txn-arrow" minW={960} />
-          <p className="mt-6 flex items-center gap-2 text-[12px] text-white/45">
+          <p className="mt-6 flex items-center gap-2 text-[13px] text-white/60">
             <span aria-hidden className="inline-block h-2 w-2 rounded-[3px]" style={{ background: MT.accent }} />
             {c.note}
           </p>
@@ -541,7 +541,7 @@ function Ada2() {
                 {s.n}
                 <span className="text-[0.45em] text-textSecondary/60"> {s.unit}</span>
               </p>
-              <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">{s.d}</p>
+              <p className="mt-2 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{s.d}</p>
             </div>
           ))}
         </Tint>
@@ -567,7 +567,7 @@ function Ada3() {
         <Tint className="space-y-7 !py-9">
           {rows.map((r) => (
             <div key={r.k}>
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">{r.k}</p>
+              <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{r.k}</p>
               <p className="mt-2 flex items-center gap-3">
                 <span className="text-[15px] text-textSecondary/50 line-through">{r.a}</span>
                 <span aria-hidden className="text-[13px]" style={{ color: MT.accentInk }}>
@@ -609,7 +609,7 @@ function Impact() {
         </Reveal>
         <Reveal delay={0.1} className="mt-10 max-w-[56rem]">
           <div className="overflow-x-auto rounded-[14px] bg-white/[0.05]">
-            <div className="grid min-w-[30rem] grid-cols-4 px-6 py-3 font-mono text-[10px] uppercase tracking-[0.16em] text-white/50">
+            <div className="grid min-w-[30rem] grid-cols-4 px-6 py-3 text-[13px] font-medium tracking-[-0.005em] text-white/60">
               {["Category", "Before", "After", "Lift"].map((h) => (
                 <span key={h}>{h}</span>
               ))}
@@ -635,7 +635,7 @@ function Impact() {
               </div>
             ))}
           </div>
-          <p className="mt-8 text-[13px] text-white/45">{c.note}</p>
+          <p className="mt-8 text-[13px] text-white/60">{c.note}</p>
         </Reveal>
       </div>
     </section>
@@ -687,7 +687,7 @@ function Risk() {
       body={c.body}
       extras={
         <Note>
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textPrimary">{c.noteT}</p>
+          <p className="text-[13px] font-medium tracking-[-0.005em] text-textPrimary">{c.noteT}</p>
           <p className="mt-2">{c.noteB}</p>
         </Note>
       }

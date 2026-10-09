@@ -8,7 +8,7 @@
  * sit side by side as smaller features. No tags, no dates.
  *
  * Videos carry a poster frame, load only near the viewport, and play only
- * while on screen. Hover: a cursor-following lime arrow and a slow media push.
+ * while on screen. Hover: a cursor-following arrow and a slow media push.
  * Reduced motion: no reveal, no push, no follower; videos stay on the poster.
  */
 
@@ -58,7 +58,7 @@ const FEATURES: Project[] = [
     logo: "/assets/logos/alibaba.svg",
     name: "Shipped Qwen Character's Interactive Showrooms MVP",
     intro: "0→1 MVP feature for Qwen Character LLM, serving millions of enterprise customers.",
-    media: { kind: "video", src: "/assets/ai-character/figma-h264.mp4", poster: "/assets/work/posters/alibaba.webp" },
+    media: { kind: "video", src: "/assets/ai-character/showroom-light-loop.mp4", poster: "/assets/work/posters/alibaba.webp" },
     focus: "50% 30%",
   },
 ];
@@ -133,7 +133,7 @@ function ProjectMedia({ media, focus, reduced }: { media: Media; focus?: string;
   );
 }
 
-/* the signature lime → (every card opens a case study on this site) that springs after the cursor while a project is hovered */
+/* the → (every card opens a case study on this site) that springs after the cursor while a project is hovered */
 function useCursorArrow() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -159,7 +159,7 @@ function useCursorArrow() {
     arrow: (
       <motion.span
         aria-hidden
-        className="pointer-events-none absolute left-0 top-0 z-30 hidden h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)] md:flex"
+        className="pointer-events-none absolute left-0 top-0 z-30 hidden h-14 w-14 items-center justify-center rounded-full bg-white text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)] md:flex"
         style={{ x: sx, y: sy }}
         initial={false}
         animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.4 }}
@@ -183,7 +183,7 @@ function Feature({ project, reduced }: { project: Project; reduced: boolean }) {
     <motion.article {...revealProps(reduced)} className="relative">
       <Link
         href={`/work/${project.slug}`}
-        className="group relative block rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
+        className="group relative block rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
         {...(reduced ? {} : handlers)}
       >
         <div
@@ -200,7 +200,7 @@ function Feature({ project, reduced }: { project: Project; reduced: boolean }) {
             className="pointer-events-none absolute inset-x-0 -bottom-6 -top-8 -z-10"
             style={{ background: "radial-gradient(55% 75% at 20% 70%, rgba(10,11,12,0.6), transparent 75%)" }}
           />
-          <p className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">
+          <p className="flex items-center gap-2.5 text-[13px] font-medium tracking-[-0.005em] text-white/70">
             <BrandMark src={project.logo} />
             {project.company}
           </p>
@@ -221,7 +221,7 @@ function Tile({ project, reduced, delay }: { project: Project; reduced: boolean;
     <motion.article {...revealProps(reduced, delay)} className="relative">
       <Link
         href={`/work/${project.slug}`}
-        className="group relative block rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
+        className="group relative block rounded-[22px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/60 focus-visible:ring-offset-8 focus-visible:ring-offset-[#0a0b0c]"
         {...(reduced ? {} : handlers)}
       >
         <div
@@ -236,7 +236,7 @@ function Tile({ project, reduced, delay }: { project: Project; reduced: boolean;
             className="pointer-events-none absolute inset-x-0 -bottom-6 -top-8 -z-10"
             style={{ background: "radial-gradient(70% 70% at 25% 70%, rgba(10,11,12,0.75), transparent 72%)" }}
           />
-          <p className="flex items-center gap-2.5 font-mono text-[11px] uppercase tracking-[0.16em] text-white/70">
+          <p className="flex items-center gap-2.5 text-[13px] font-medium tracking-[-0.005em] text-white/70">
             <BrandMark src={project.logo} />
             {project.company}
           </p>
@@ -255,7 +255,7 @@ export function WorkShowcase() {
   const reduced = !!useReducedMotion();
   return (
     <section aria-label="Selected projects" className="relative mx-auto w-full max-w-[1160px] px-6 pb-28 pt-16 md:px-10 md:pt-16">
-      <motion.p {...revealProps(reduced)} className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">
+      <motion.p {...revealProps(reduced)} className="text-[13px] font-medium tracking-[-0.005em] text-white/60">
         Selected work
       </motion.p>
 

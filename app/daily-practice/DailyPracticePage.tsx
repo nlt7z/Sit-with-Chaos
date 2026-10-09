@@ -175,12 +175,6 @@ export default function DailyPracticePage() {
           >
             Work
           </Link>
-          <Link
-            href="/about"
-            className="font-mono text-[11px] tracking-[0.07em] uppercase text-black/40 hover:text-black transition-colors"
-          >
-            About
-          </Link>
           <span
             className="font-mono text-[10px] tracking-[0.07em] uppercase px-[9px] py-[4px]"
             style={{ border: "1px solid #1d1d1f" }}

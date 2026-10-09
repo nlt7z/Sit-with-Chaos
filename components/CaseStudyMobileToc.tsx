@@ -121,8 +121,8 @@ export function CaseStudyMobileToc({
             >
               <div className={`mx-auto mb-3 h-1 w-9 rounded-full ${isDark ? "bg-white/20" : "bg-black/15"}`} />
               <p
-                className={`font-mono text-[10px] uppercase tracking-[0.2em] ${
-                  isDark ? "text-zinc-400" : "text-textSecondary/70"
+                className={`text-[13px] font-medium tracking-[-0.005em] ${
+                  isDark ? "text-white/60" : "text-textSecondary"
                 }`}
               >
                 On this page
@@ -139,7 +139,7 @@ export function CaseStudyMobileToc({
                           on
                             ? isDark
                               ? "bg-white/10 font-medium text-white"
-                              : "bg-nltLime-soft font-medium text-textPrimary"
+                              : "bg-black/[0.04] font-medium text-textPrimary"
                             : isDark
                               ? "text-zinc-300 active:bg-white/5"
                               : "text-textSecondary active:bg-black/[0.04]"
@@ -147,7 +147,7 @@ export function CaseStudyMobileToc({
                       >
                         <span
                           className={`h-1.5 w-1.5 shrink-0 rounded-full ${
-                            on ? "bg-nltLime" : isDark ? "bg-white/20" : "bg-black/15"
+                            on ? (isDark ? "bg-white" : "bg-textPrimary") : isDark ? "bg-white/20" : "bg-black/15"
                           }`}
                         />
                         {label}

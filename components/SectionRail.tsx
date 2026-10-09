@@ -25,9 +25,9 @@ const TONE: Record<Tone, { backing: string; label: string; labelOn: string; tick
     label: "text-white/45 group-hover/item:text-white/85",
     labelOn: "text-white",
     tick: "bg-white/25 group-hover/item:bg-white/60",
-    tickOn: "bg-nltLime",
+    tickOn: "bg-white",
     counter: "text-white/35",
-    counterOn: "text-nltLime",
+    counterOn: "text-white",
   },
   light: {
     backing: "bg-white/90 border border-black/[0.06] shadow-[0_8px_24px_-12px_rgba(0,0,0,0.18)]",

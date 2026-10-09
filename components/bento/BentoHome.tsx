@@ -2,7 +2,7 @@
 
 /**
  * BentoHome — the homepage: a single-screen, NO-SCROLL puzzle of draggable
- * widget windows on a dark canvas with a lime accent. Four columns; each
+ * widget windows on a dark canvas. Lime is kept for the CTA and the rail. Four columns; each
  * card's flex-[N] is its share of the column height. Every block names itself
  * top-left (company, project, or widget) except the identity card.
  */
@@ -15,7 +15,6 @@ import { useEffect, useRef, useState } from "react";
 import { BentoCard } from "@/components/bento/BentoCard";
 import { EMAIL } from "@/lib/site";
 import { HalftoneGlobe } from "@/components/bento/HalftoneGlobe";
-import { QuoteStamp } from "@/components/bento/QuoteStamp";
 import { RAIL_CLEARANCE } from "@/components/bento/railClearance";
 import { SideRail } from "@/components/bento/SideRail";
 import { RoseLoader } from "@/components/RoseLoader";
@@ -227,7 +226,7 @@ function InViewVideo({ src, poster, className = "" }: { src: string; poster?: st
   return <video ref={vref} muted loop playsInline preload="none" poster={poster} aria-hidden className={`absolute inset-0 h-full w-full object-cover ${className}`} />;
 }
 
-/* corner link in the card header — neutral grey at rest, warms to lime when
+/* corner link in the card header — neutral grey at rest, brightens when
    the card is hovered (the whole BentoCard is the `group`). Stops pointerdown
    so a click navigates instead of starting a header drag. Site rule: ↗ and a
    new tab for other sites, → and the same tab for pages on this site. */
@@ -239,7 +238,7 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       aria-label={external ? `${label} (opens in a new tab)` : label}
       onPointerDown={(e) => e.stopPropagation()}
-      className="relative z-40 -mr-1.5 grid h-7 w-7 place-items-center rounded-full bg-white/[0.06] text-[13px] text-[#8a8f98] transition-colors duration-150 hover:bg-nltLime hover:text-[#1d1d1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 group-hover:bg-white/[0.1] group-hover:text-[#f7f8f8]"
+      className="relative z-40 -mr-1.5 grid h-7 w-7 place-items-center rounded-full bg-white/[0.06] text-[13px] text-[#8a8f98] transition-colors duration-150 hover:bg-white hover:text-[#0a0b0c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 group-hover:bg-white/[0.1] group-hover:text-[#f7f8f8]"
     >
       <span aria-hidden>{external ? "↗" : "→"}</span>
     </a>
@@ -253,9 +252,8 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
 const SLOGAN_P = "text-[15px] leading-[1.45] text-white/70";
 
 function Slogan() {
-  // shown as if selected: the site's ::selection lime behind each wrapped line, dark text
   return (
-    <span className="box-decoration-clone bg-nltLime py-[0.12em] text-[#1d1d1f] [-webkit-box-decoration-break:clone]">
+    <span className="font-medium text-white">
       {POSITIONING.role}
       {POSITIONING.rest}
     </span>
@@ -314,9 +312,9 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
 
       {/* name + slogan (+ intro on hover) */}
       <div className="relative shrink-0 leading-none">
-        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
-        <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
-        <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
+        <p className="mb-2 text-[13px] font-medium tracking-[-0.005em] text-white/60">Hi, I&apos;m 👋</p>
+        <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-white">yuan</p>
+        <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-white/60">Fang</p>
         {/* the slogan, then the intro one blank line below it; the intro is
             folded away until hover. The two hidden copies measure both heights. */}
         <div className="relative mt-4">
@@ -363,8 +361,7 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
 }
 
 /* photo — the portrait at 1:1, centred in the block (hover: cross-fades
-   through the artwork), the quote pressed onto its corner, focus tags along
-   the bottom. */
+   through the artwork), focus tags along the bottom. */
 function PhotoCard({ reduced }: { reduced: boolean }) {
   const [hover, setHover] = useState(false);
   const [i, setI] = useState(0);
@@ -399,7 +396,6 @@ function PhotoCard({ reduced }: { reduced: boolean }) {
             />
           ))}
         </div>
-        <QuoteStamp reduced={reduced} className="absolute -left-1 -top-4 z-10 w-[52px]" />
         </div>
       </div>
       <ul className="flex shrink-0 flex-wrap gap-1.5 px-2" aria-label="Focus">
@@ -462,7 +458,7 @@ function JourneyCarousel({ reduced }: { reduced: boolean }) {
             <p className="mt-6 font-display text-[clamp(1.3rem,1.8vw,1.7rem)] font-light leading-[1.15] text-white">{j.org}</p>
             {/* the " · year" stays glued to the last word, so a narrow column wraps
                 the title, never the date */}
-            <p className="mt-2 font-mono text-[11px] uppercase leading-[1.5] tracking-[0.16em] text-nltLime">{j.role.replace(/ · /g, "\u00a0·\u00a0")}</p>
+            <p className="mt-2 text-[13px] font-medium leading-[1.5] tracking-[-0.005em] text-white/60">{j.role.replace(/ · /g, "\u00a0·\u00a0")}</p>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -485,23 +481,18 @@ export function BentoHome() {
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0"
         style={{
-          backgroundImage: "radial-gradient(rgba(210,255,0,0.13) 1px, transparent 1.5px)",
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1.5px)",
           backgroundSize: "13px 13px",
           WebkitMaskImage: "radial-gradient(120% 90% at 85% 4%, black 0%, transparent 62%)",
           maskImage: "radial-gradient(120% 90% at 85% 4%, black 0%, transparent 62%)",
         }}
       />
-      {/* mirrored corner — faint lime wash + dot-matrix anchored bottom-left */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 z-0"
-        style={{ background: "radial-gradient(58% 48% at 6% 100%, rgba(210,255,0,0.06), transparent 70%)" }}
-      />
+      {/* mirrored corner — dot-matrix anchored bottom-left */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0 z-0"
         style={{
-          backgroundImage: "radial-gradient(rgba(210,255,0,0.13) 1px, transparent 1.5px)",
+          backgroundImage: "radial-gradient(rgba(255,255,255,0.07) 1px, transparent 1.5px)",
           backgroundSize: "13px 13px",
           WebkitMaskImage: "radial-gradient(110% 85% at 8% 97%, black 0%, transparent 60%)",
           maskImage: "radial-gradient(110% 85% at 8% 97%, black 0%, transparent 60%)",
@@ -532,7 +523,7 @@ export function BentoHome() {
               mobile shows them at their own 16:9) ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[2.05] md:flex-col md:gap-2.5">
             {/* qbix — the live homepage; the block opens the site */}
-            <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} accent="#c8e06c" index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
+            <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
               <a href="https://qbix.space" target="_blank" rel="noopener noreferrer" aria-label="Open qbix.space in a new tab" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#0b0b0b] md:aspect-auto md:min-h-0 md:flex-1">
                 <LiveSite src={QBIX.href} poster={QBIX.poster} title="qbix.space homepage" />
@@ -544,11 +535,11 @@ export function BentoHome() {
             <BentoCard label="O2 Tech AI" surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-1">
               <div className="pointer-events-none relative z-20 flex shrink-0 items-baseline gap-2 px-4 pb-2">
                 <span className="relative flex h-1.5 w-1.5 shrink-0 -translate-y-px">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nltLime opacity-80" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nltLime" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-60" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
                 </span>
                 <span className="text-[13px] leading-snug text-white/80">
-                  <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
+                  <span className="font-medium text-white">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
                 </span>
               </div>
               <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#141416] md:aspect-auto md:min-h-0 md:flex-1">
@@ -559,12 +550,12 @@ export function BentoHome() {
 
           {/* ===== col 3 — meituan, the live prototype ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[1.02] md:flex-col md:gap-2.5">
-            <BentoCard label="Meituan" headerRight={<CornerArrow href="/work/meituan-im" label="Meituan case study" />} surface="dark" drag={drag} accent="#FFC300" index={6} className="order-2 col-span-2 h-[600px] min-h-0 flex-1 md:order-none md:h-auto">
+            <BentoCard label="Meituan" headerRight={<CornerArrow href="/work/meituan-im" label="Meituan case study" />} surface="dark" drag={drag} index={6} className="order-2 col-span-2 h-[600px] min-h-0 flex-1 md:order-none md:h-auto">
               <Link
                 href="/work/meituan-im"
                 className="relative z-20 flex shrink-0 items-end gap-3 px-4 pb-1 pt-1"
               >
-                <span className="font-display text-[clamp(2rem,2.8vw,2.6rem)] font-light leading-[0.9] tracking-[-0.02em] text-nltLime">+30%</span>
+                <span className="font-display text-[clamp(2rem,2.8vw,2.6rem)] font-light leading-[0.9] tracking-[-0.02em] text-white">+30%</span>
                 <span className="pb-0.5 text-[12.5px] leading-[1.35] text-white/75">
                   channel conversion
                   <br />
@@ -572,7 +563,7 @@ export function BentoHome() {
                 </span>
               </Link>
               <div className="relative z-20 shrink-0 px-4 pt-3">
-                <p className="text-[13.5px] leading-[1.45]"><span className="box-decoration-clone bg-nltLime py-[0.12em] text-[#1d1d1f] [-webkit-box-decoration-break:clone]">0→1 in-message quotation system on a 770M-user platform</span></p>
+                <p className="text-[13.5px] leading-[1.45] text-white/80">0→1 in-message quotation system on a 770M-user platform</p>
                 <div aria-hidden className="mt-2 h-[16.5px]" />
                 <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Flow">
                   {["diagnose", "quote compare", "confirm"].map((step) => (
@@ -583,11 +574,6 @@ export function BentoHome() {
                 </ul>
               </div>
               <div className="relative min-h-0 flex-1">
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute inset-0"
-                  style={{ background: "radial-gradient(60% 45% at 50% 70%, rgba(210,255,0,0.14), transparent 72%)" }}
-                />
                 {/* phone sits on the block's bottom inset, like the media in every other block */}
                 <div className="absolute inset-x-2 bottom-2 top-4">
                   <PhonePrototype src={MEITUAN_PROTOTYPE} title="Meituan repair flow, live prototype" reduced={reduced} interactive={!isMobile} align="bottom" />

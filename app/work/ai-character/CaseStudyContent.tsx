@@ -228,7 +228,7 @@ function SitePreviewFrame({
     <div className="mt-10 overflow-hidden rounded-2xl ring-1 ring-black/[0.08]">
       <div className="flex flex-wrap items-center justify-between gap-3 border-b border-black/[0.06] bg-surfaceAlt/45 px-4 py-3 md:px-5">
         <div>
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">{eyebrow}</p>
+          <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{eyebrow}</p>
           <p className="mt-2 font-sans text-[13px] font-medium text-textPrimary">{title}</p>
         </div>
         <Action href={href} variant="label" newTab className="shrink-0">
@@ -487,7 +487,7 @@ function FeaturePrototypeEmbed({
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center" aria-hidden>
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/35">Loading prototype…</span>
+            <span className="text-[13px] font-medium tracking-[-0.005em] text-white/60">Loading prototype…</span>
           </div>
         )}
       </div>
@@ -745,7 +745,7 @@ function D1BeforeAfter() {
     <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
       {/* Before */}
       <div>
-        <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
+        <p className="mb-3 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
           Before: Generic chat
         </p>
         <div className="overflow-hidden rounded-xl bg-black">
@@ -766,7 +766,7 @@ function D1BeforeAfter() {
       {/* After — auto-cycling prototype */}
       <div>
         <div className="mb-3 flex items-center justify-between">
-          <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
+          <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
             After:{" "}
             <span className="text-textSecondary/70">{activeRoom.tab} room</span>
           </p>
@@ -928,8 +928,8 @@ function VibeCodingPrototypeGallery() {
         >
           <div className="min-w-0">
             <p
-              className={`font-sans text-[11px] font-medium uppercase tracking-[0.16em] ${
-                item.id === "romance" ? "text-stone-500" : "text-textSecondary"
+              className={`text-[13px] font-medium tracking-[-0.005em] ${
+                item.id === "romance" ? "text-white/60" : "text-textSecondary"
               }`}
             >
               {item.label}
@@ -960,7 +960,7 @@ function VibeCodingPrototypeGallery() {
               aria-hidden
               className={`flex h-[min(56vh,820px)] min-h-[320px] w-full items-center justify-center md:h-[min(72vh,820px)] md:min-h-[560px] ${vibeIframeBg[item.id]}`}
             >
-              <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/35">Loading prototype…</span>
+              <span className="text-[13px] font-medium tracking-[-0.005em] text-white/60">Loading prototype…</span>
             </div>
           )}
         </div>
@@ -1025,7 +1025,7 @@ function Section({
         variants={reduced ? undefined : sectionRoot}
       >
         <motion.p
-          className="max-w-reading font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary"
+          className="max-w-reading text-[13px] font-medium tracking-[-0.005em] text-textSecondary"
           variants={reduced ? undefined : sectionPiece}
         >
           {eyebrow}
@@ -1094,7 +1094,7 @@ const innovations: {
     name: "Heartbeat Power",
     capability: "Real-time generation + character depth modeling",
     psychology: "Intimacy|Being let into the character's hidden thoughts.",
-    workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow_lime.svg",
+    workflowSrc: "/assets/ai-character/interaction/heartbeat_power_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.heartbeat,
     videoCaption: "One tap. What it was actually thinking.",
     detail: (
@@ -1113,7 +1113,7 @@ const innovations: {
     name: "Story Unlock",
     capability: "Progressive memory building",
     psychology: "Progression|An open loop pulls you forward.",
-    workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow_lime.svg",
+    workflowSrc: "/assets/ai-character/interaction/story_unlock_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.story,
     videoCaption: "Go deeper. The character opens up.",
     detail: (
@@ -1128,7 +1128,7 @@ const innovations: {
     name: "Moments Feed",
     capability: "Generation from memory history",
     psychology: "Off-session presence|A reason to return.",
-    workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow_lime.svg",
+    workflowSrc: "/assets/ai-character/interaction/moments_feed_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.moments,
     videoCaption: "It keeps living between sessions.",
     detail: (
@@ -1144,7 +1144,7 @@ const innovations: {
     name: "Alternate Universe Events",
     capability: "Long-term memory + generative storytelling",
     psychology: "Variable reward|The strongest habit driver.",
-    workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow_lime.svg",
+    workflowSrc: "/assets/ai-character/interaction/alternate_universe_events_workflow.svg",
     prototypeSrc: FEATURE_PROTOTYPES.altUniverse,
     videoCaption: "A scene only your history could trigger.",
     notShipped: true,
@@ -1202,7 +1202,7 @@ function InteractionInnovationList() {
               aria-labelledby={`innovation-trigger-${item.id}`}
               className={`mt-6 overflow-hidden ${mediaRound}`}
             >
-              <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary md:px-6">LLM workflow</p>
+              <p className="border-b border-black/[0.06] bg-surfaceAlt/30 px-5 py-3 text-[13px] font-medium tracking-[-0.005em] text-textSecondary md:px-6">LLM workflow</p>
               <button
                 type="button"
                 onClick={() => openLightbox({ src: item.workflowSrc, alt: `${item.name}: LLM workflow` })}
@@ -1244,7 +1244,7 @@ function InteractionInnovationList() {
                     {item.name}
                   </span>
                   {item.notShipped && (
-                    <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">
+                    <span className="rounded-full border border-black/[0.08] bg-black/[0.03] px-2.5 py-1 text-[12px] font-medium tracking-[-0.005em] text-textSecondary">
                       Not shipped
                     </span>
                   )}
@@ -1400,14 +1400,14 @@ function ShowroomStrategyCard({
         <ZoomHint />
       </button>
       <div className="flex flex-1 flex-col pt-4">
-        <p className="font-sans text-[11px] font-medium leading-snug tracking-[0.06em] text-textSecondary/65">
+        <p className="text-[13px] font-medium leading-snug tracking-[-0.005em] text-textSecondary">
           {tab} Room
         </p>
         <p className="mt-2 font-display text-[0.98rem] font-light leading-snug tracking-tight text-textPrimary md:text-[1.05rem]">
           {capability}
         </p>
         <div className="mt-3">
-          <p className="font-mono text-[9px] font-medium uppercase tracking-[0.2em] text-textSecondary/70">In experience</p>
+          <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">In experience</p>
           <p className="mt-2 font-sans text-[13px] leading-relaxed text-textSecondary/90 md:text-[13.5px] md:leading-[1.5]">{feel}</p>
         </div>
       </div>
@@ -1418,7 +1418,7 @@ function ShowroomStrategyCard({
 function UxStrategyShowroomTable() {
   return (
     <div className="w-full pt-3">
-      <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">
+      <p className="mt-8 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
         Showroom → One proof → In-product behavior
       </p>
 
@@ -1488,11 +1488,11 @@ function HowIWorkedDiagram() {
               <span className="text-[15px] font-medium leading-snug" style={{ color: s.accentName }}>{s.phase}</span>
             </div>
             <div className="px-4 py-3.5">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Tools</p>
+              <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Tools</p>
               <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-textPrimary">
                 {(s.toolLines as readonly string[]).join(" · ")}
               </p>
-              <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">Output</p>
+              <p className="mt-4 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Output</p>
               <p className="mt-1.5 font-sans text-[13px] leading-[1.6] text-textSecondary">{s.body}</p>
             </div>
           </div>
@@ -1506,7 +1506,7 @@ function HowIWorkedDiagram() {
           style={{ display: "grid", gridTemplateColumns: "88px repeat(4, minmax(0, 1fr))", gap: "12px", alignItems: "stretch" }}
         >
         {/* Phase label */}
-        <div className="flex items-center font-mono text-[12px] tracking-[0.04em] text-textSecondary/40">Phase</div>
+        <div className="flex items-center text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Phase</div>
 
         {/* Phase cards */}
         {aiWorkflowStages.map((s, i) => (
@@ -1529,7 +1529,7 @@ function HowIWorkedDiagram() {
         ))}
 
         {/* Tools label */}
-        <div className="flex items-center font-mono text-[12px] tracking-[0.04em] text-textSecondary/40">Tools</div>
+        <div className="flex items-center text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Tools</div>
 
         {/* Tools cells */}
         {aiWorkflowStages.map((s) => (
@@ -1544,7 +1544,7 @@ function HowIWorkedDiagram() {
         ))}
 
         {/* Output label */}
-        <div className="flex items-start pt-3 font-mono text-[12px] tracking-[0.04em] text-textSecondary/40">Output</div>
+        <div className="flex items-start pt-3 text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Output</div>
 
         {/* Output cells */}
         {aiWorkflowStages.map((s) => (
@@ -1626,7 +1626,7 @@ function HeroPrototypeGallery() {
             type="button"
             aria-label="Previous showroom"
             onClick={() => go(-1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 transition-colors duration-150 hover:border-white/30 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 transition-colors duration-150 hover:border-white/30 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M15 18l-6-6 6-6" />
@@ -1634,13 +1634,13 @@ function HeroPrototypeGallery() {
           </button>
           <p className="min-w-[8.75rem] text-center font-sans text-[13px] font-medium tracking-wide text-white">
             {active.tab} showroom
-            <span className="ml-2 font-mono text-[11px] font-normal text-white/45">{idx + 1} / {vibeCodingShowrooms.length}</span>
+            <span className="ml-2 text-[13px] font-medium tabular-nums tracking-[-0.005em] text-white/60">{idx + 1} / {vibeCodingShowrooms.length}</span>
           </p>
           <button
             type="button"
             aria-label="Next showroom"
             onClick={() => go(1)}
-            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 transition-colors duration-150 hover:border-white/30 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70"
+            className="flex h-8 w-8 items-center justify-center rounded-full border border-white/15 bg-white/[0.04] text-white/70 transition-colors duration-150 hover:border-white/30 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
           >
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M9 18l6-6-6-6" />
@@ -1673,7 +1673,7 @@ function HeroPrototypeGallery() {
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center bg-[#0b0b10]" aria-hidden>
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/35">Loading prototype…</span>
+            <span className="text-[13px] font-medium tracking-[-0.005em] text-white/60">Loading prototype…</span>
           </div>
         )}
       </div>
@@ -1706,7 +1706,7 @@ function HeroSection() {
       <dl className="mt-14 grid grid-cols-2 gap-x-8 gap-y-7 sm:grid-cols-4 sm:gap-y-0 md:mt-16 md:gap-x-10">
         {metaFields.map(({ label, value }) => (
           <div key={label} className="min-w-0 border-l border-white/15 pl-3">
-            <dt className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/45">{label}</dt>
+            <dt className="text-[13px] font-medium tracking-[-0.005em] text-white/60">{label}</dt>
             <dd className="mt-2 font-sans text-[13px] leading-snug text-white/70">{value}</dd>
           </div>
         ))}
@@ -1749,7 +1749,7 @@ function CollapsibleMetricTable() {
         aria-expanded={open}
         className="flex w-full items-center justify-between bg-surfaceAlt/40 px-5 py-4 text-left transition-colors duration-200 hover:bg-surfaceAlt/60"
       >
-        <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary">How the numbers are defined</p>
+        <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">How the numbers are defined</p>
         <motion.svg
           width="12" height="12" viewBox="0 0 12 12" fill="none"
           stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"
@@ -1772,7 +1772,7 @@ function CollapsibleMetricTable() {
           >
             <div className="hidden grid-cols-[6rem_1fr_1fr_1fr] gap-x-6 border-t border-black/[0.06] bg-surfaceAlt/20 px-5 py-3 md:grid">
               {["Metric", "Baseline", "Result", "Note"].map((h) => (
-                <p key={h} className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">{h}</p>
+                <p key={h} className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">{h}</p>
               ))}
             </div>
             <div className="divide-y divide-black/[0.06] border-t border-black/[0.06]">
@@ -1780,14 +1780,14 @@ function CollapsibleMetricTable() {
                 <div key={row.stat} className="grid grid-cols-1 gap-1 px-5 py-4 md:grid-cols-[6rem_1fr_1fr_1fr] md:items-center md:gap-x-6">
                   <div className="flex items-baseline gap-2 md:block">
                     <p className="font-display text-[1.4rem] font-light tracking-tight text-textPrimary">{row.stat}</p>
-                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60 md:mt-0.5">{row.label}</p>
+                    <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary md:mt-0.5">{row.label}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70 md:hidden">Before</p>
+                    <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary md:hidden">Before</p>
                     <p className="font-sans text-[13px] leading-snug text-textSecondary">{row.before}</p>
                   </div>
                   <div className="flex items-center gap-2 md:block">
-                    <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70 md:hidden">After</p>
+                    <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary md:hidden">After</p>
                     <p className="font-sans text-[13px] font-normal leading-snug text-textPrimary/80">{row.after}</p>
                   </div>
                   <p className="font-sans text-[12px] italic leading-snug text-textSecondary/60">{row.note}</p>
@@ -1825,8 +1825,8 @@ export default function CaseStudyContent() {
             <Em>Qwen Character is an LLM API</Em>: teams build their own character products on it, the way they build on Claude. But feeling the model meant configuring, running samples, and reading output alone, a loop that <Em>routinely stretched into hours</Em>, and most trial users left before the moment of value. So I redesigned its site into a <Em>storefront</Em>: a shift from documentation to <Em>proof</Em>.
           </p>
 
-          <blockquote className="my-16 w-full !max-w-none border-l-2 border-nltLime pl-7 not-italic md:my-20 md:pl-8">
-            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime-ink">How might we</p>
+          <blockquote className="my-16 w-full !max-w-none border-l-2 border-textPrimary pl-7 not-italic md:my-20 md:pl-8">
+            <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">How might we</p>
             <p className="mt-4 font-display text-[1.35rem] font-light leading-[1.45] tracking-[-0.02em] text-textPrimary md:text-[1.55rem] md:leading-[1.42]">
               Make model capabilities <Em>visible</Em>, <Em>testable</Em>, and <Em>trustworthy</Em>, within minutes?
             </p>
@@ -2036,8 +2036,8 @@ export default function CaseStudyContent() {
                   </p>
                 </div>
                 <div className="mt-4 flex min-h-[2.75rem] items-start gap-2 md:min-h-[3rem]">
-                  <span className="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-nltLime" aria-hidden="true" />
-                  <p className="font-mono text-[11px] uppercase leading-snug tracking-[0.16em] text-textPrimary/70">
+                  <span className="mt-[7px] inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-textPrimary" aria-hidden="true" />
+                  <p className="text-[13px] font-medium leading-snug tracking-[-0.005em] text-textSecondary">
                     {stat.label}
                   </p>
                 </div>
@@ -2066,7 +2066,7 @@ export default function CaseStudyContent() {
               on the full narrative, then offers it as a guided walkthrough. */}
           <div className="mt-16 flex flex-col items-start gap-5 border-t border-black/[0.06] pt-10 md:mt-20 md:flex-row md:items-center md:justify-between md:pt-12">
             <div>
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/60">Presentation</p>
+              <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Presentation</p>
               <p className="mt-2.5 font-display text-[1.15rem] font-light tracking-tight text-textPrimary md:text-[1.28rem]">
                 Walk the whole story as a deck.
               </p>

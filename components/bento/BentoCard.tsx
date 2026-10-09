@@ -5,8 +5,8 @@
  *
  *   • drag — grab the window header and pull; the card is tethered to its home
  *     cell and springs back (dragListener off so the body stays interactive).
- *   • hover glow — a cursor-tracked lime bloom blooms OUTSIDE the border + a
- *     lime border ring (the homepage work-card effect); the interior stays calm.
+ *   • hover glow — a cursor-tracked white bloom blooms OUTSIDE the border + a
+ *     faint border ring (the homepage work-card effect); the interior stays calm.
  *   • entrance — a spring scale-in as the board mounts (staggered by index).
  *
  * Structure: a non-clipping outer (drag + glow that bleeds past the edge) wraps
@@ -102,7 +102,7 @@ export function BentoCard({
           {/* every block names itself top-left (company, project, or widget);
               an unlabeled card keeps an empty strip as its drag handle */}
           {label ? (
-            <span className="font-mono text-[11px] uppercase tracking-[0.16em] text-[#8a8f98]">{label}</span>
+            <span className="text-[13px] font-medium tracking-[-0.005em] text-white/60">{label}</span>
           ) : (
             <span aria-hidden className="h-3" />
           )}
@@ -112,7 +112,7 @@ export function BentoCard({
         <div className={`relative flex min-h-0 flex-1 flex-col ${bodyClassName}`}>{children}</div>
       </div>
 
-      {/* hover glow — a lime gradient that lights only the rim NEAR the cursor
+      {/* hover glow — a soft white gradient that lights only the rim NEAR the cursor
           (mask punches out the interior, so the block itself never fills). */}
       <div
         aria-hidden
@@ -120,7 +120,7 @@ export function BentoCard({
         style={{
           opacity: glow && !reduced ? 1 : 0,
           padding: "1.5px",
-          background: `radial-gradient(150px circle at ${pos.x}px ${pos.y}px, rgba(210,255,0,0.75) 0%, rgba(210,255,0,0.18) 38%, transparent 68%)`,
+          background: `radial-gradient(150px circle at ${pos.x}px ${pos.y}px, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.08) 38%, transparent 68%)`,
           WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
           maskComposite: "exclude",

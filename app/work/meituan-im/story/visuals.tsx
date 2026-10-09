@@ -56,7 +56,7 @@ export const plain = (t: string) => t.replace(/==|\*\*/g, "");
 
 export function Caption({ children, dark = false }: { children: ReactNode; dark?: boolean }) {
   return (
-    <p className={`mt-4 flex items-center justify-center gap-2 font-mono text-[11px] uppercase tracking-[0.16em] ${dark ? "text-white/45" : "text-textSecondary/70"}`}>
+    <p className={`mt-4 flex items-center justify-center gap-2 text-[13px] font-medium tracking-[-0.005em] ${dark ? "text-white/60" : "text-textSecondary"}`}>
       <span aria-hidden className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: MT.accent }} />
       {children}
     </p>
@@ -149,7 +149,7 @@ export function Phone({
           />
         ) : null}
         {!loaded ? (
-          <span aria-hidden className="absolute inset-0 grid place-items-center font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/50">
+          <span aria-hidden className="absolute inset-0 grid place-items-center text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
             Loading prototype
           </span>
         ) : null}
@@ -250,7 +250,7 @@ export function Embed({
           />
         ) : null}
         {!loaded ? (
-          <span aria-hidden className="absolute inset-0 grid place-items-center font-mono text-[10px] uppercase tracking-[0.16em] text-textSecondary/50">
+          <span aria-hidden className="absolute inset-0 grid place-items-center text-[13px] font-medium tracking-[-0.005em] text-textSecondary">
             Loading prototype
           </span>
         ) : null}
@@ -359,7 +359,7 @@ export function Swimlane({
         <div className="grid gap-5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
           {heads.map((h, i) => (
             <p key={h} className="flex items-baseline gap-1.5">
-              <span className="font-mono text-[10px] tabular-nums" style={{ color: MT.accent }}>
+              <span className="text-[12px] font-medium tabular-nums" style={{ color: MT.accent }}>
                 0{i + 1}
               </span>
               <span className="text-[12px] font-medium tracking-tight text-white">{h}</span>
@@ -369,7 +369,7 @@ export function Swimlane({
         <div ref={wrapRef} className="relative">
           {lanes.map((lane, li) => (
             <div key={lane.name} className="mt-6">
-              <p className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">{lane.name}</p>
+              <p className="mb-2.5 text-[13px] font-medium tracking-[-0.005em] text-white/60">{lane.name}</p>
               <div className="grid gap-5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
                 {lane.cells.map((cell, ci) => {
                   const decision = lane.decision === ci;
