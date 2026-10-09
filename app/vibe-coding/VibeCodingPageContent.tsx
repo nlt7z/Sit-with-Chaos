@@ -9,7 +9,7 @@ import {
 } from "framer-motion";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { Action } from "@/components/Action";
 import { RoseLoader } from "@/components/RoseLoader";
@@ -21,10 +21,10 @@ import { TurntableWidget } from "@/components/TurntableWidget";
 type Tag = "app" | "web" | "interaction" | "ai";
 
 type Media =
-  | { kind: "video"; src: string }
+  | { kind: "video"; src: string; poster?: string }
   | { kind: "image"; src: string; alt: string }
   | { kind: "live"; href: string; url: string; label: string; poster?: string }
-  | { kind: "iframe"; src: string; href: string; bg: string; title: string }
+  | { kind: "iframe"; src: string; href: string; bg: string; title: string; poster?: string }
   | { kind: "custom"; node: "turntable" };
 
 type Entry = {
@@ -43,7 +43,7 @@ const entries: Entry[] = [
     title: "bom feature film",
     description: "Short feature film for O2 Tech AI's BOM sourcing product.",
     tags: ["ai"],
-    media: { kind: "video", src: "/assets/lab/o2-bom-short.mp4" },
+    media: { kind: "video", src: "/assets/lab/o2-bom-short.mp4", poster: "/assets/lab/posters/o2-bom.webp" },
   },
   {
     date: "2026.05",
@@ -67,7 +67,7 @@ const entries: Entry[] = [
     tags: ["app", "interaction"],
     href: "/work/tiktok",
     hrefLabel: "case study",
-    media: { kind: "video", src: "/assets/TikTok/showcase.mp4" },
+    media: { kind: "video", src: "/assets/TikTok/showcase.mp4", poster: "/assets/work/posters/tiktok.webp" },
   },
   {
     date: "2025.12",
@@ -82,6 +82,7 @@ const entries: Entry[] = [
       href: "/work/ai-character/prototype",
       bg: "bg-[#060608]",
       title: "Romance companion interactive prototype",
+      poster: "/assets/lab/posters/romance.webp",
     },
   },
   {
@@ -97,6 +98,7 @@ const entries: Entry[] = [
       href: "/work/ai-character/prototype-psych",
       bg: "bg-[#f8fcff]",
       title: "Therapy companion interactive prototype",
+      poster: "/assets/lab/posters/therapy.webp",
     },
   },
   {
@@ -112,6 +114,7 @@ const entries: Entry[] = [
       href: "/work/ai-character/prototype-astro",
       bg: "bg-[#fdfaf5]",
       title: "Astrology character interactive prototype",
+      poster: "/assets/lab/posters/astrology.webp",
     },
   },
   {
@@ -126,6 +129,7 @@ const entries: Entry[] = [
       href: "https://hancao.space",
       url: "hancao.space",
       label: "Personal portfolio: live site preview",
+      poster: "/assets/lab/posters/hancao.webp",
     },
   },
   {
@@ -133,7 +137,7 @@ const entries: Entry[] = [
     title: "auction × gacha mobile game",
     description: "Mobile game prototype combining a real-time bidding mechanic with a blind-box reward system.",
     tags: ["app"],
-    media: { kind: "video", src: "/assets/app-design/bidking.mp4" },
+    media: { kind: "video", src: "/assets/app-design/bidking.mp4", poster: "/assets/lab/posters/bidking.webp" },
   },
   {
     date: "2026.04",
@@ -148,6 +152,7 @@ const entries: Entry[] = [
       href: "/code/playground/omikuji",
       bg: "bg-[#060608]",
       title: "Fortune cabinet interactive prototype",
+      poster: "/assets/lab/posters/omikuji.webp",
     },
   },
   {
@@ -170,6 +175,7 @@ const entries: Entry[] = [
       href: "/code/playground/gacha",
       bg: "bg-[#070605]",
       title: "Gacha portfolio interactive prototype",
+      poster: "/assets/lab/posters/gacha.webp",
     },
   },
   // Hidden for now (not deleted) — restore by uncommenting.
@@ -193,43 +199,47 @@ const entries: Entry[] = [
 
 function LazyVideo({
   src,
+  poster,
   shouldLoad,
   onReady,
 }: {
   src: string;
+  poster?: string;
   shouldLoad: boolean;
   onReady?: () => void;
 }) {
   const [loaded, setLoaded] = useState(false);
   const firedRef = useRef(false);
-
-  const handleCanPlay = useCallback(() => {
+  // the card counts as ready once something real is on screen: the poster,
+  // or the first video frame when there is no poster
+  const ready = useCallback(() => {
     if (firedRef.current) return;
     firedRef.current = true;
-    setLoaded(true);
     onReady?.();
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-[22px]">
-      {/* shimmer — fades out once video can play */}
-      <div
-        className={`absolute inset-0 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
-          loaded ? "pointer-events-none opacity-0" : "opacity-100"
-        }`}
-      />
+    <div className="relative aspect-video overflow-hidden rounded-[22px] bg-white/[0.035]">
+      {poster ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={poster} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover" onLoad={ready} />
+      ) : null}
       {shouldLoad && (
         <video
-          className={`block h-full w-full object-cover transition-opacity duration-500 ${
+          className={`relative block h-full w-full object-cover transition-opacity duration-500 ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
           src={src}
+          poster={poster}
           autoPlay
           muted
           loop
           playsInline
           preload="auto"
-          onCanPlay={handleCanPlay}
+          onCanPlay={() => {
+            setLoaded(true);
+            ready();
+          }}
         />
       )}
     </div>
@@ -284,6 +294,7 @@ function ScaledIframe({
   src,
   title,
   bg,
+  poster,
   shouldLoad,
   natural = { w: 1280, h: 860 },
   onReady,
@@ -291,6 +302,7 @@ function ScaledIframe({
   src: string;
   title: string;
   bg: string;
+  poster?: string;
   shouldLoad: boolean;
   natural?: { w: number; h: number };
   onReady?: () => void;
@@ -299,6 +311,11 @@ function ScaledIframe({
   const [scale, setScale] = useState(0.35);
   const [loaded, setLoaded] = useState(false);
   const firedRef = useRef(false);
+  const ready = useCallback(() => {
+    if (firedRef.current) return;
+    firedRef.current = true;
+    onReady?.();
+  }, [onReady]);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -310,12 +327,10 @@ function ScaledIframe({
     return () => ro.disconnect();
   }, [natural.w]);
 
-  const handleLoad = useCallback(() => {
-    if (firedRef.current) return;
-    firedRef.current = true;
-    setLoaded(true);
-    onReady?.();
-  }, [onReady]);
+  // a fresh mount starts hidden again until it paints
+  useEffect(() => {
+    if (!shouldLoad) setLoaded(false);
+  }, [shouldLoad]);
 
   return (
     <div
@@ -323,17 +338,17 @@ function ScaledIframe({
       className={`relative overflow-hidden rounded-[22px] ${bg}`}
       style={{ height: natural.h * scale }}
     >
-      {/* shimmer overlay */}
-      <div
-        className={`absolute inset-0 z-10 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
-          loaded ? "pointer-events-none opacity-0" : "opacity-100"
-        }`}
-      />
+      {/* the poster (a capture of the prototype) shows at once; the live app
+          mounts behind it once the card has settled and fades in when loaded */}
+      {poster ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={poster} alt="" aria-hidden className="absolute inset-0 h-full w-full object-cover object-top" onLoad={ready} />
+      ) : null}
       {shouldLoad && (
         <iframe
           title={title}
           src={src}
-          className={`block border-0 ${bg}`}
+          className={`relative block border-0 transition-opacity duration-500 ${bg} ${loaded ? "opacity-100" : "opacity-0"}`}
           style={{
             width: natural.w,
             height: natural.h,
@@ -341,8 +356,11 @@ function ScaledIframe({
             transformOrigin: "top left",
             pointerEvents: "none",
           }}
-          loading="lazy"
-          onLoad={handleLoad}
+          onLoad={() => {
+            // give the app a beat to paint its first frame before revealing
+            window.setTimeout(() => setLoaded(true), 250);
+            ready();
+          }}
         />
       )}
     </div>
@@ -364,7 +382,7 @@ function MediaSlot({
   // iframe, live site). Only TurntableWidget (a self-managed canvas) is left
   // unwired — it never gates the entry, which only waits on the first card.
   if (media.kind === "video") {
-    return <LazyVideo src={media.src} shouldLoad={shouldLoad} onReady={onReady} />;
+    return <LazyVideo src={media.src} poster={media.poster} shouldLoad={shouldLoad} onReady={onReady} />;
   }
   if (media.kind === "image") {
     return <LazyImage src={media.src} alt={media.alt} shouldLoad={shouldLoad} onReady={onReady} />;
@@ -394,6 +412,7 @@ function MediaSlot({
           src={media.src}
           title={media.title}
           bg={media.bg}
+          poster={media.poster}
           shouldLoad={shouldLoad}
           onReady={onReady}
         />
@@ -675,19 +694,26 @@ function MobileFeed({ enabled }: { enabled: boolean }) {
   );
 }
 
-/** Desktop gallery — a looping vertical gallery on native scroll + CSS
- *  scroll-snap. One card per snap stop (scroll-snap-stop: always, so a flick
- *  lands one card on), the active card centred at full scale, its neighbours
- *  peeking above and below, dimmed and scaled down.
+/** Desktop gallery — a looping vertical carousel: the active card centred at
+ *  full scale, the previous one peeking above and the next below (dimmed,
+ *  scaled down). Nothing moves on its own: one deliberate gesture (a wheel
+ *  notch, a trackpad swipe, an arrow key, the rail, a click on a neighbour)
+ *  moves exactly one card, and the card then stays put.
  *
- *  Looping: the list is rendered three times. Scrolling starts in the middle
- *  copy; whenever the scroll settles in the first or last copy it jumps,
- *  without animation, to the same card in the middle copy, so there is always
- *  a card above and below. Heavy embeds (full-app iframes + live sites) mount
- *  ONLY on the active slide; lightweight video/image preload one slide either
- *  side, the same memory guard as the mobile feed. */
+ *  Wheel handling: deltas add up per gesture; a gesture must travel
+ *  WHEEL_STEP px before it moves a card, and after a move the wheel is locked
+ *  until it has been quiet for WHEEL_QUIET ms, so a trackpad's momentum tail
+ *  can never trigger a second move.
+ *
+ *  Speed: only the active card and its neighbours render. Every card shows its
+ *  poster at once; video loads for the active card and its neighbours, while
+ *  a heavy embed (a full prototype app or a live site) mounts only once the
+ *  active card has settled for SETTLE_MS, so flicking past cards never starts
+ *  loading them. */
 const SLIDE_VH = 58;
-const COPIES = 3;
+const WHEEL_STEP = 40;
+const WHEEL_QUIET = 260;
+const SETTLE_MS = 450;
 
 function DesktopFeed({
   enabled,
@@ -696,171 +722,138 @@ function DesktopFeed({
   enabled: boolean;
   onReady: (key: string) => void;
 }) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState(0);
+  const [settled, setSettled] = useState(false);
   const n = entries.length;
-  // `slot` indexes the rendered slides (0 … 3n-1); the entry is slot % n
-  const [slot, setSlot] = useState(n);
-  // mirrors `slot` for the listeners; written where it is measured
-  const slotRef = useRef(n);
-  // where a programmatic scroll is heading; steps chain from it, so a second
-  // press during a slow animation still moves one more card
-  const targetRef = useRef<number | null>(null);
-  const active = slot % n;
 
-  const slideH = () => (window.innerHeight * SLIDE_VH) / 100;
+  const go = useCallback((dir: number) => setActive((i) => (i + dir + n) % n), [n]);
 
-  const scrollToSlot = useCallback((target: number, smooth = true) => {
-    const sc = scrollerRef.current;
-    if (!sc) return;
-    target = Math.max(0, Math.min(COPIES * n - 1, target));
-    targetRef.current = target;
-    sc.scrollTo({ top: target * ((window.innerHeight * SLIDE_VH) / 100), behavior: smooth ? "smooth" : "auto" });
-  }, [n]);
-
-  // Step from the pending target if one is in flight, else from the centre.
-  const step = useCallback((dir: number) => scrollToSlot((targetRef.current ?? slotRef.current) + dir), [scrollToSlot]);
-
-  // Start on the first card of the middle copy, before the first paint.
-  useLayoutEffect(() => {
-    const sc = scrollerRef.current;
-    if (sc) sc.scrollTop = n * slideH();
-  }, [n]);
-
-  // Track the centred slide. When scrolling settles:
-  //  • a mouse-wheel notch (~100px) is less than half a card, so mandatory
-  //    snapping pulls it straight back; if a wheel gesture with clear intent
-  //    settled on the card it started from, finish the step (trackpad flicks
-  //    already land one card on and pass through);
-  //  • in an outer copy, hop to the same card in the middle copy (same pixels,
-  //    nothing visibly moves).
+  // the active card has to rest before its heavy embed mounts
   useEffect(() => {
-    const sc = scrollerRef.current;
-    if (!sc) return;
-    let raf = 0;
-    let settle: ReturnType<typeof setTimeout> | undefined;
-    let wheelFrom = -1;
-    let wheelSum = 0;
-    const measure = () => {
-      raf = 0;
-      const s = Math.max(0, Math.min(COPIES * n - 1, Math.round(sc.scrollTop / slideH())));
-      slotRef.current = s;
-      setSlot(s);
-    };
-    const settled = () => {
-      measure();
-      targetRef.current = null;
-      const back = wheelFrom >= 0 && slotRef.current === wheelFrom && Math.abs(wheelSum) >= 60;
-      const dir = Math.sign(wheelSum);
-      wheelFrom = -1;
-      wheelSum = 0;
-      if (back && enabled) {
-        step(dir);
-        return;
-      }
-      const s = slotRef.current;
-      if (s < n || s >= 2 * n) {
-        const mid = n + (s % n);
-        sc.scrollTop += (mid - s) * slideH();
-        slotRef.current = mid;
-        setSlot(mid);
-      }
-    };
-    const onScroll = () => {
-      if (!raf) raf = requestAnimationFrame(measure);
-      if (settle) clearTimeout(settle);
-      settle = setTimeout(settled, 160);
-    };
-    const onWheel = (e: WheelEvent) => {
-      if (wheelFrom < 0) wheelFrom = slotRef.current;
-      wheelSum += Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
-    };
-    sc.addEventListener("scroll", onScroll, { passive: true });
-    sc.addEventListener("wheel", onWheel, { passive: true });
-    return () => {
-      cancelAnimationFrame(raf);
-      if (settle) clearTimeout(settle);
-      sc.removeEventListener("scroll", onScroll);
-      sc.removeEventListener("wheel", onWheel);
-    };
-  }, [n, enabled, step]);
+    setSettled(false);
+    const t = window.setTimeout(() => setSettled(true), SETTLE_MS);
+    return () => window.clearTimeout(t);
+  }, [active]);
 
-  // Arrow keys step one card (the scroller isn't focused by default).
+  // Arrow keys step one card.
   useEffect(() => {
     if (!enabled) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "ArrowDown" || e.key === "ArrowRight") {
         e.preventDefault();
-        step(1);
+        go(1);
       } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
         e.preventDefault();
-        step(-1);
+        go(-1);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [enabled, step]);
+  }, [enabled, go]);
 
-  // The rail jumps to the nearest copy of the chosen card.
-  const jumpToEntry = (i: number) => {
-    const cur = slotRef.current;
-    const base = cur - (cur % n);
-    const options = [base - n + i, base + i, base + n + i].filter((t) => t >= 0 && t < COPIES * n);
-    scrollToSlot(options.reduce((a, b) => (Math.abs(b - cur) < Math.abs(a - cur) ? b : a)));
-  };
+  // One gesture, one card (see the note above).
+  useEffect(() => {
+    if (!enabled) return;
+    const el = containerRef.current;
+    if (!el) return;
+    let sum = 0;
+    let locked = false;
+    let lastTs = -Infinity;
+    // After a move, a trackpad's momentum tail keeps arriving with shrinking
+    // deltas. Until a fresh push (deltas that grow again after shrinking, or a
+    // full wheel notch), the tail is ignored.
+    let tail = false;
+    let decayed = false;
+    let lastAbs = 0;
+    const onWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const unit = e.deltaMode === 1 ? 32 : e.deltaMode === 2 ? window.innerHeight : 1;
+      const d = (Math.abs(e.deltaY) >= Math.abs(e.deltaX) ? e.deltaY : e.deltaX) * unit;
+      const abs = Math.abs(d);
+      // gaps are measured on the input timestamps, so a busy main thread
+      // (a new card rendering) can't fake a pause between events
+      const gap = e.timeStamp - lastTs;
+      lastTs = e.timeStamp;
+      if (gap > WHEEL_QUIET) {
+        locked = false;
+        sum = 0;
+      }
+      if (tail) {
+        if (abs < lastAbs) decayed = true;
+        const fresh = abs >= 2 * WHEEL_STEP ? gap > WHEEL_QUIET || decayed : decayed && abs > lastAbs + 2;
+        lastAbs = abs;
+        if (!fresh) return;
+        tail = false;
+        locked = false;
+        sum = 0;
+      }
+      lastAbs = abs;
+      if (locked) return;
+      sum += d;
+      if (Math.abs(sum) >= WHEEL_STEP) {
+        go(sum > 0 ? 1 : -1);
+        locked = true;
+        tail = true;
+        decayed = false;
+        sum = 0;
+      }
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [enabled, go]);
 
   return (
-    <div className="relative hidden h-full md:block">
+    <div ref={containerRef} className="relative hidden h-full overflow-hidden md:block">
       <GhostIndex index={active} />
 
-      <div
-        ref={scrollerRef}
-        className="absolute inset-0 z-10 snap-y snap-mandatory overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-      >
-        {/* half a screen of runway above and below, so every slide can
-            snap to centre */}
-        <div aria-hidden style={{ height: `calc(50% - ${SLIDE_VH / 2}vh)` }} />
-        {Array.from({ length: COPIES * n }, (_, s) => {
-          const entry = entries[s % n];
-          const dist = Math.abs(s - slot);
+      {/* Card stack: active centred, neighbours peek above / below. Cards two
+          away stay mounted but invisible, so they can glide in. */}
+      <div className="absolute inset-0 z-10 flex items-center justify-center">
+        {entries.map((entry, i) => {
+          let offset = i - active;
+          if (offset > n / 2) offset -= n;
+          if (offset < -n / 2) offset += n;
+          const dist = Math.abs(offset);
+          if (dist > 2) return null;
           const isActive = dist === 0;
           const heavy = entry.media.kind === "iframe" || entry.media.kind === "live";
-          const shouldLoad = enabled && (heavy ? isActive : dist <= 1);
+          const shouldLoad = enabled && (heavy ? isActive && settled : dist <= 1);
           return (
             <div
-              key={`${Math.floor(s / n)}:${entryKey(entry)}`}
-              className="flex snap-center snap-always items-center justify-center"
-              style={{ height: `${SLIDE_VH}vh` }}
+              key={entryKey(entry)}
+              onClick={() => !isActive && setActive(i)}
+              className="absolute transition-[transform,opacity] duration-500 ease-portfolio"
+              style={{
+                // neighbours sit far enough out that the caption under the
+                // active card clears them; the -2vh keeps card + caption centred
+                transform: `translateY(calc(${offset} * ${SLIDE_VH}vh - 2vh)) scale(${isActive ? 1 : 0.66})`,
+                opacity: isActive ? 1 : dist === 1 ? 0.4 : 0,
+                // grayscale only: static desaturation is free, blur was jank
+                filter: isActive ? "none" : "grayscale(1) brightness(0.7)",
+                cursor: isActive ? "default" : "pointer",
+                zIndex: isActive ? 10 : 5 - dist,
+                visibility: dist > 1 ? "hidden" : "visible",
+                pointerEvents: dist > 1 ? "none" : undefined,
+              }}
               aria-hidden={isActive ? undefined : true}
             >
-              <div
-                onClick={() => !isActive && scrollToSlot(s)}
-                className="transition-[transform,opacity,filter] duration-500 ease-portfolio"
-                style={{
-                  transform: `scale(${isActive ? 1 : 0.66})`,
-                  opacity: isActive ? 1 : dist === 1 ? 0.4 : 0,
-                  // grayscale only: static desaturation is free, blur was jank
-                  filter: isActive ? "none" : "grayscale(1) brightness(0.7)",
-                  cursor: isActive ? "default" : "pointer",
-                }}
-              >
-                <PrototypeCard
-                  entry={entry}
-                  shouldLoad={shouldLoad}
-                  isActive={isActive}
-                  caption={{ index: s % n, total: n }}
-                  onReady={() => onReady(entryKey(entry))}
-                />
-              </div>
+              <PrototypeCard
+                entry={entry}
+                shouldLoad={shouldLoad}
+                isActive={isActive}
+                caption={{ index: i, total: n }}
+                onReady={() => onReady(entryKey(entry))}
+              />
             </div>
           );
         })}
-        <div aria-hidden style={{ height: `calc(50% - ${SLIDE_VH / 2}vh)` }} />
       </div>
 
       <SectionRail
         items={entries.map((e) => ({ id: entryKey(e), label: e.title }))}
         active={entryKey(entries[active])}
-        onJump={(id) => jumpToEntry(entries.findIndex((e) => entryKey(e) === id))}
+        onJump={(id) => setActive(entries.findIndex((e) => entryKey(e) === id))}
         counter
         labels="hover"
         ariaLabel="Prototypes"

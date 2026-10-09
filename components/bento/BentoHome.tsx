@@ -267,8 +267,8 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
   const [canHover, setCanHover] = useState(true);
   const [h, setH] = useState<{ short: number; full: number } | null>(null);
   const [animate, setAnimate] = useState(false);
-  const shortRef = useRef<HTMLParagraphElement>(null);
-  const fullRef = useRef<HTMLParagraphElement>(null);
+  const shortRef = useRef<HTMLDivElement>(null);
+  const fullRef = useRef<HTMLDivElement>(null);
   const open = hover || !canHover;
 
   useEffect(() => {
@@ -317,13 +317,20 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
         <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.16em] text-nltLime">Hi, I&apos;m 👋</p>
         <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
         <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
+        {/* the slogan, then the intro one blank line below it; the intro is
+            folded away until hover. The two hidden copies measure both heights. */}
         <div className="relative mt-4">
-          <p ref={shortRef} aria-hidden className={`${SLOGAN_P} pointer-events-none invisible absolute inset-x-0 top-0`}>
-            <Slogan />
-          </p>
-          <p ref={fullRef} aria-hidden className={`${SLOGAN_P} pointer-events-none invisible absolute inset-x-0 top-0`}>
-            <Slogan />. {INTRO}
-          </p>
+          <div ref={shortRef} aria-hidden className="pointer-events-none invisible absolute inset-x-0 top-0">
+            <p className={SLOGAN_P}>
+              <Slogan />
+            </p>
+          </div>
+          <div ref={fullRef} aria-hidden className="pointer-events-none invisible absolute inset-x-0 top-0">
+            <p className={SLOGAN_P}>
+              <Slogan />
+            </p>
+            <p className={`${SLOGAN_P} mt-[1.45em]`}>{INTRO}</p>
+          </div>
           <motion.div
             className="overflow-hidden"
             initial={false}
@@ -332,10 +339,15 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
           >
             <p className={SLOGAN_P}>
               <Slogan />
-              <motion.span initial={false} animate={{ opacity: open ? 1 : 0 }} transition={transition}>
-                . {INTRO}
-              </motion.span>
             </p>
+            <motion.p
+              className={`${SLOGAN_P} mt-[1.45em]`}
+              initial={false}
+              animate={{ opacity: open ? 1 : 0 }}
+              transition={transition}
+            >
+              {INTRO}
+            </motion.p>
           </motion.div>
         </div>
       </div>

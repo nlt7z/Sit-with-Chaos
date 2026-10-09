@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
 
+import { SplitTextChars } from "@/components/SplitBtn";
 import { RESUME_HREF } from "@/lib/site";
 import { type ToneSetting, useSurfaceTone } from "@/lib/useSurfaceTone";
 
@@ -27,6 +28,23 @@ const ITEMS: { key: "home" | "work" | "lab"; label: string; href: string }[] = [
   { key: "work", label: "Work", href: "/work" },
   { key: "lab", label: "Lab", href: "/vibe-coding" },
 ];
+
+/* A spine label: set horizontally and turned -90°, so it reads bottom to top.
+   The letter roll then runs in the label's own frame and rolls "up" for a
+   reader tilting their head, like on the buttons; the ↗ on Resume turns with
+   the text. An invisible vertical copy gives the segment its height. */
+function RotatedLabel({ text }: { text: string }) {
+  return (
+    <span className="relative flex items-center justify-center">
+      <span aria-hidden className="invisible whitespace-nowrap leading-none [writing-mode:vertical-rl]">
+        {text}
+      </span>
+      <span className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 -rotate-90 items-center whitespace-nowrap leading-none">
+        <SplitTextChars text={text} />
+      </span>
+    </span>
+  );
+}
 
 const TONE = {
   dark: {
@@ -88,13 +106,13 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
                     />
                   ) : null}
                 </AnimatePresence>
-                <span className="relative rotate-180 whitespace-nowrap leading-none [writing-mode:vertical-rl]">{label}</span>
+                <RotatedLabel text={label} />
                 {/* focus ring drawn inside the segment */}
                 <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full opacity-0 ring-1 ring-inset ring-nltLime/60 group-focus-visible:opacity-100" />
               </Link>
             );
           })}
-          {/* résumé — the PDF, so ↗ (the arrow stays upright above the spine) */}
+          {/* résumé, the PDF: ↗. The arrow turns with the spine, so it reads ↗ when the label is read bottom to top. */}
           <a
             href={RESUME_HREF}
             target="_blank"
@@ -103,7 +121,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
             onMouseEnter={() => setHovered("resume")}
             onFocus={() => setHovered("resume")}
             onBlur={() => setHovered(null)}
-            className={`group relative flex flex-col items-center justify-center gap-1.5 rounded-full py-4 text-[12.5px] font-medium tracking-[0.02em] transition-[color,transform] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline-none active:scale-[0.97] ${t.idle}`}
+            className={`group relative flex flex-col items-center justify-center rounded-full py-4 text-[12.5px] font-medium tracking-[0.02em] transition-[color,transform] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline-none active:scale-[0.97] ${t.idle}`}
           >
             <AnimatePresence>
               {hovered === "resume" ? (
@@ -118,8 +136,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
                 />
               ) : null}
             </AnimatePresence>
-            <span aria-hidden className="relative leading-none">↗</span>
-            <span className="relative rotate-180 whitespace-nowrap leading-none [writing-mode:vertical-rl]">Resume</span>
+            <RotatedLabel text="Resume ↗" />
             <span aria-hidden className="pointer-events-none absolute inset-0 rounded-full opacity-0 ring-1 ring-inset ring-nltLime/60 group-focus-visible:opacity-100" />
           </a>
         </div>
@@ -141,11 +158,11 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
                 key={key}
                 href={href}
                 aria-current={on ? "page" : undefined}
-                className={`relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${
+                className={`group relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${
                   on ? "bg-nltLime text-[#0a0b0c]" : tm.mobileIdle
                 }`}
               >
-                {label}
+                <SplitTextChars text={label} />
               </Link>
             );
           })}
@@ -154,9 +171,9 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
             target="_blank"
             rel="noopener noreferrer"
             aria-label="Resume (PDF, opens in a new tab)"
-            className={`relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${tm.mobileIdle}`}
+            className={`group relative flex h-9 items-center rounded-full px-4 text-[13px] font-medium tracking-[-0.01em] transition-colors duration-150 ${tm.mobileIdle}`}
           >
-            Resume ↗
+            <SplitTextChars text="Resume ↗" />
           </a>
         </div>
       </nav>

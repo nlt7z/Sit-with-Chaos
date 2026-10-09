@@ -8,7 +8,7 @@ import { SplitTextChars } from "@/components/SplitBtn";
  *
  *   primary    solid pill (lime on dark, ink on light); hover: the letter roll,
  *              a soft shadow and the arrow nudging out. One per view.
- *   secondary  same pill, outlined; hover fills it faintly.
+ *   secondary  same pill, outlined; hover: the letter roll and a faint fill.
  *   text       a standalone underlined link; hover darkens the underline.
  *   label      the small mono utility link ("open full diagram"); hover
  *              brightens it and draws the underline.
@@ -60,7 +60,7 @@ export function Action({
   className = "",
 }: {
   href: string;
-  /** A plain string gets the letter roll on primary. */
+  /** A plain string gets the letter roll on primary and secondary. */
   children: ReactNode;
   variant?: Variant;
   tone?: Tone;
@@ -81,7 +81,7 @@ export function Action({
       : "group-hover:translate-x-0.5";
   const mark = <span aria-hidden className={`leading-none transition-transform duration-300 ease-portfolio ${nudge}`}>{glyph}</span>;
   const label =
-    variant === "primary" && typeof children === "string" ? (
+    (variant === "primary" || variant === "secondary") && typeof children === "string" ? (
       <>
         <span className="sr-only">{children}</span>
         <span aria-hidden className="flex items-center leading-[1.1]">
