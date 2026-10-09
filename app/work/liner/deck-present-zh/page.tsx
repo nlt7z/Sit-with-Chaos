@@ -1,24 +1,13 @@
 import { Suspense } from "react";
-import { Source_Serif_4, Inter } from "next/font/google";
+import { inter, sourceSerif } from "@/lib/fonts";
 import DeckPresentClientZh from "./DeckPresentClientZh";
 
 // Liner 品牌的排版根基:衬线承担展示标题(英文字形 + CJK 走系统衬线回退),
 // Inter 承担正文与 UI chrome。中文标题落到 Songti / Noto Serif 系统衬线,
 // 与拉丁衬线一同营造「读论文」的研究质感。
-const serif = Source_Serif_4({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
-  variable: "--font-source-serif",
-  display: "swap",
-});
+const serif = sourceSerif;
 
-const sans = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-inter",
-  display: "swap",
-});
+const sans = inter;
 
 export const metadata = {
   title: "让 AI 研究协作可被信任: Liner 演示文稿",

@@ -1,14 +1,9 @@
-import { Inter } from "next/font/google";
+import { inter } from "@/lib/fonts";
 import DeckMonoClientZh from "./DeckMonoClientZh";
 
 // Uber-Base 极简的排版根基:单一无衬线,拉丁走 Inter、CJK 落 PingFang 系统字,
 // 黑白为主、Liner 深绿仅作 accent/eyebrow。刻意不用衬线,与暖白衬线版区分开。
-const sans = Inter({
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  variable: "--font-inter",
-  display: "swap",
-});
+const sans = inter;
 
 export const metadata = {
   title: "Liner · 协作深度研究工作流: 演示文稿(黑白深绿)",

@@ -1,11 +1,11 @@
 "use client";
 
 import { useEffect, useId, useRef, useState, type ReactNode } from "react";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { cormorant, inter } from "@/lib/fonts";
 
 // Two families only: one serif (display + body) + one sans (UI). Cinzel dropped.
-const romanticSerif = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600", "700"] });
-const uiFont = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600"] });
+const romanticSerif = cormorant;
+const uiFont = inter;
 const F = { display: romanticSerif.style.fontFamily, body: romanticSerif.style.fontFamily, ui: uiFont.style.fontFamily };
 
 /** Alternate-universe card hero — dedicated portrait for the “new world” timeline */
@@ -1015,7 +1015,6 @@ function MomentsPane({ onBack, liked, setLiked }: {
     </div>
   );
 }
-
 
 /* ─── Character Pane (default right panel) ───────────────────────────────── */
 function CharacterPane() {

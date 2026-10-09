@@ -1,14 +1,8 @@
 import { Suspense } from "react";
-import { Manrope } from "next/font/google";
+import { manrope } from "@/lib/fonts";
 import DeckPresentClientZh from "./DeckPresentClientZh";
 
 // 与英文版一致:Manrope 承担拉丁字形(品牌名、数字、IM 等),中文走系统字体回退。
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
-  variable: "--font-manrope",
-  display: "swap",
-});
 
 export const metadata = {
   title: "账单之前,先建信任: 演示文稿",

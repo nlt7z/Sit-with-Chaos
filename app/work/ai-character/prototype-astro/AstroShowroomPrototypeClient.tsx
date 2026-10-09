@@ -1,13 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { cormorant, inter } from "@/lib/fonts";
 import { memo, useCallback, useEffect, useRef, useState, useMemo } from "react";
 
 // Display + UI both Inter (Cinzel cut — its Trajan caps fought the soft tone); serif stays Cormorant.
-const displayFont = Inter({ subsets: ["latin"], weight: ["400", "500", "600"] });
-const serifFont   = Cormorant_Garamond({ subsets: ["latin"], weight: ["400", "500", "600"] });
-const uiFont      = Inter({ subsets: ["latin"], weight: ["300", "400", "500"] });
+const displayFont = inter;
+const serifFont = cormorant;
+const uiFont = inter;
 
 // ─── Motion tokens — one easing, three durations (fast / base / slow) ──────────
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
@@ -563,7 +563,6 @@ function ProfileHoverCard({ memory }: { memory: MemoryItem[] }) {
     </div>
   );
 }
-
 
 // ─── Share modal (single step: copy link) ─────────────────────────────────────
 function AstroShareModal({ onClose }: { onClose: () => void }) {

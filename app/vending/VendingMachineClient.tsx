@@ -1,13 +1,13 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Press_Start_2P } from "next/font/google";
+import { pressStart } from "@/lib/fonts";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 
-const pixel = Press_Start_2P({ weight: "400", subsets: ["latin"], display: "swap" });
+const pixel = pressStart;
 
 const KEYS: Record<number, { label: string; href: string; lines: string[] }> = {
   1: { label: "AI Character",  href: "/work/ai-character",      lines: ["AI NPC",   "ROLEPLAY"] },

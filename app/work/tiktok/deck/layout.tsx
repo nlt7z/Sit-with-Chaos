@@ -1,12 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
-
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
-  display: "swap",
-  variable: "--font-manrope",
-});
+import { manrope } from "@/lib/fonts";
 
 export const metadata: Metadata = {
   title: "TikTok · Shared with You: Deck · Yuan Fang",

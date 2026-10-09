@@ -1,14 +1,8 @@
 import { Suspense } from "react";
-import { Manrope } from "next/font/google";
+import { manrope } from "@/lib/fonts";
 import DeckStoryClient from "./DeckStoryClient";
 
 // 与其他 deck 一致:Manrope 承担拉丁字形与数字,中文走系统字体回退。
-const manrope = Manrope({
-  subsets: ["latin"],
-  weight: ["200", "300", "400", "500", "600", "700", "800"],
-  variable: "--font-manrope",
-  display: "swap",
-});
 
 export const metadata = {
   title: "重构黑盒: 演示文稿",

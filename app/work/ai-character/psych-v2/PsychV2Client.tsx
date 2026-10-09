@@ -8,13 +8,13 @@ import {
   useReducedMotion,
   type Transition,
 } from "framer-motion";
-import { DM_Sans, Inter, JetBrains_Mono } from "next/font/google";
+import { dmSans, inter, jetbrainsMono } from "@/lib/fonts";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // ── Fonts ──────────────────────────────────────────────────────────────────────
-const displayFont = DM_Sans({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"] });
-const uiFont = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600"] });
-const monoFont = JetBrains_Mono({ subsets: ["latin"], weight: ["400", "500"] });
+const displayFont = dmSans;
+const uiFont = inter;
+const monoFont = jetbrainsMono;
 
 // ── Spring presets ─────────────────────────────────────────────────────────────
 const spring = {

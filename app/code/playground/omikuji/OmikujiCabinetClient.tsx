@@ -1,14 +1,14 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Noto_Serif_JP, Shippori_Mincho } from "next/font/google";
+import { notoSerifJP, shipporiMincho } from "@/lib/fonts";
 import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { drawerKanjiFromIndex, FORTUNES, shuffleDrawerOrder, type Fortune, type ParticleKind } from "./fortunes";
 import { ParticleCanvas } from "./ParticleCanvas";
 import { MAX_DAILY, useDailyLimit } from "./useDailyLimit";
 
-const notoSerif = Noto_Serif_JP({ subsets: ["latin"], weight: ["300", "400", "700"], display: "swap" });
-const shippori  = Shippori_Mincho({ subsets: ["latin"], weight: ["400", "700", "800"], display: "swap" });
+const notoSerif = notoSerifJP;
+const shippori = shipporiMincho;
 
 // ── Palette (black lacquer + gold) ────────────────────────────────────────────
 const C = {
