@@ -7,7 +7,7 @@ import { Action } from "@/components/Action";
 import { Reveal } from "@/components/Reveal";
 import { EASE } from "@/lib/motion";
 
-import { BLUEPRINT, COPY, EXPIRED_IDX, STATE_FLOWS, TXN } from "./copy";
+import { COPY, EXPIRED_IDX, STATE_FLOWS, TXN } from "./copy";
 import { CountUp, Embed, MT, Phone, Rich, Shot, Swimlane, plain } from "./visuals";
 
 /**
@@ -331,16 +331,6 @@ function Blueprint() {
           ))}
         </ol>
       }
-      mediaW={620}
-      media={
-        <div className="rounded-[14px] bg-[#0a0b0c] p-6 md:p-7">
-          <div className="mb-5 flex items-baseline justify-between">
-            <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-white/55">Service blueprint</p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.14em] text-white/35">5 stages · 3 lanes</p>
-          </div>
-          <Swimlane heads={BLUEPRINT.stages} lanes={BLUEPRINT.lanes} flow={BLUEPRINT.flow} id="mt-bp-arrow" minW={520} />
-        </div>
-      }
     />
   );
 }
@@ -355,7 +345,7 @@ function Txn() {
           <Title text={c.title} dark />
         </Reveal>
         <Reveal delay={0.1} className="mt-10">
-          <Swimlane heads={TXN.phases} lanes={TXN.lanes} flow={TXN.flow} id="mt-txn-arrow" minW={860} />
+          <Swimlane heads={TXN.phases} lanes={TXN.lanes} flow={TXN.flow} id="mt-txn-arrow" minW={960} />
           <p className="mt-6 flex items-center gap-2 text-[12px] text-white/45">
             <span aria-hidden className="inline-block h-2 w-2 rounded-[3px]" style={{ background: MT.accent }} />
             {c.note}
@@ -719,32 +709,8 @@ function Proto() {
           </div>
         </Reveal>
         <Reveal emphasis className="mt-6">
-          <Embed src="/assets/meituan-im/Revised%20Repair%20Flow.html" title="Full interactive prototype" natW={1200} natH={1080} maxH={760} />
+          <Embed src="/assets/meituan-im/Revised%20Repair%20Flow.html" title="Full interactive prototype" natW={1200} natH={1200} maxH={820} />
           <p className="mx-auto mt-5 max-w-[44rem] text-center text-[14px] leading-relaxed text-textSecondary">{c.note}</p>
-        </Reveal>
-      </div>
-    </section>
-  );
-}
-
-function Closing() {
-  const c = COPY.closing;
-  return (
-    <section className="py-24 md:py-32">
-      <div className={WRAP}>
-        <Reveal>
-          <h2 className="max-w-[48rem] font-display text-[clamp(1.9rem,3.6vw,3rem)] font-light leading-[1.3] tracking-[-0.02em] text-textPrimary">
-            <Rich text={c.title} />
-          </h2>
-          <p className="mt-8 font-mono text-[11px] uppercase tracking-[0.16em] text-textSecondary/70">{c.credit}</p>
-          <div className="mt-10 flex flex-wrap items-center gap-3">
-            <Action href="/work/meituan-im/prototype" newTab>
-              Try the prototype
-            </Action>
-            <Action href="/work/meituan-im/deck-story-en" variant="secondary">
-              View Presentation Deck
-            </Action>
-          </div>
         </Reveal>
       </div>
     </section>
@@ -789,9 +755,8 @@ export function MeituanStory() {
       {/* Next */}
       <Ai />
       <Risk />
-      {/* Close */}
+      {/* Prototype */}
       <Proto />
-      <Closing />
     </>
   );
 }

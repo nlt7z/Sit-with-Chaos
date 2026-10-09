@@ -317,21 +317,29 @@ export function Swimlane({
     const measure = () => {
       const box = (p: [number, number]) => {
         const el = cells.current[`${p[0]}-${p[1]}`];
-        return el ? { l: el.offsetLeft, r: el.offsetLeft + el.offsetWidth, cy: el.offsetTop + el.offsetHeight / 2 } : null;
+        return el
+          ? { l: el.offsetLeft, r: el.offsetLeft + el.offsetWidth, t: el.offsetTop, b: el.offsetTop + el.offsetHeight, cy: el.offsetTop + el.offsetHeight / 2 }
+          : null;
       };
       const d: string[] = [];
       for (let i = 0; i < flow.length - 1; i++) {
         const a = box(flow[i]);
         const b = box(flow[i + 1]);
         if (!a || !b) continue;
-        if (flow[i][1] === flow[i + 1][1]) {
-          // same column: run down the gutter on its left
-          const gx = Math.min(a.l, b.l) - 6 - (i % 2) * 4;
-          d.push(`M ${a.l} ${a.cy} L ${gx} ${a.cy} L ${gx} ${b.cy} L ${b.l - 3} ${b.cy}`);
+        if (flow[i][1] === flow[i + 1][1] && Math.abs(flow[i][0] - flow[i + 1][0]) === 1) {
+          // neighbouring lanes, same column: straight down (or up) from card to
+          // card through the space between the lanes
+          const x = (a.l + a.r) / 2;
+          d.push(b.t > a.t ? `M ${x} ${a.b} L ${x} ${b.t - 2}` : `M ${x} ${a.t} L ${x} ${b.b + 2}`);
+        } else if (flow[i][1] === flow[i + 1][1]) {
+          // same column, skipping a lane: go round through the gutter on the
+          // right, so the line never crosses the card in between
+          const gx = Math.max(a.r, b.r) + 10;
+          d.push(`M ${a.r} ${a.cy} L ${gx} ${a.cy} L ${gx} ${b.cy} L ${b.r + 2} ${b.cy}`);
         } else {
           // next column: the vertical sits in the gap between the columns
           const mx = (a.r + b.l) / 2;
-          d.push(`M ${a.r} ${a.cy} L ${mx} ${a.cy} L ${mx} ${b.cy} L ${b.l - 3} ${b.cy}`);
+          d.push(`M ${a.r} ${a.cy} L ${mx} ${a.cy} L ${mx} ${b.cy} L ${b.l - 2} ${b.cy}`);
         }
       }
       setPaths({ w: wrap.offsetWidth, h: wrap.offsetHeight, d });
@@ -345,8 +353,10 @@ export function Swimlane({
   const cols = heads.length;
   return (
     <div className="overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <div style={{ minWidth: minW }}>
-        <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+      {/* right padding keeps a lane-skipping arrow (drawn in the gutter past
+          the last column) inside the scroll area */}
+      <div className="pr-5" style={{ minWidth: minW }}>
+        <div className="grid gap-5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
           {heads.map((h, i) => (
             <p key={h} className="flex items-baseline gap-1.5">
               <span className="font-mono text-[10px] tabular-nums" style={{ color: MT.accent }}>
@@ -358,9 +368,9 @@ export function Swimlane({
         </div>
         <div ref={wrapRef} className="relative">
           {lanes.map((lane, li) => (
-            <div key={lane.name} className="mt-4">
-              <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">{lane.name}</p>
-              <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
+            <div key={lane.name} className="mt-6">
+              <p className="mb-2.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/40">{lane.name}</p>
+              <div className="grid gap-5" style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))` }}>
                 {lane.cells.map((cell, ci) => {
                   const decision = lane.decision === ci;
                   return (
@@ -395,12 +405,12 @@ export function Swimlane({
               transition={{ duration: 0.8, ease: EASE, delay: 0.4 }}
             >
               <defs>
-                <marker id={id} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="6.5" markerHeight="6.5" orient="auto">
+                <marker id={id} viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" markerUnits="strokeWidth" orient="auto">
                   <path d="M0,0 L8,4 L0,8 z" fill={MT.accent} />
                 </marker>
               </defs>
               {paths.d.map((d, i) => (
-                <path key={i} d={d} fill="none" stroke={MT.accent} strokeWidth={1.5} strokeOpacity={0.85} strokeLinejoin="round" markerEnd={`url(#${id})`} />
+                <path key={i} d={d} fill="none" stroke={MT.accent} strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" markerEnd={`url(#${id})`} />
               ))}
             </motion.svg>
           ) : null}

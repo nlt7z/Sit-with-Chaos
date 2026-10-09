@@ -79,12 +79,14 @@ export function Action({
     : external
       ? "group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
       : "group-hover:translate-x-0.5";
-  const mark = <span aria-hidden className={`leading-none transition-transform duration-300 ease-portfolio ${nudge}`}>{glyph}</span>;
+  const mark = <span aria-hidden className={`select-none leading-none transition-transform duration-300 ease-portfolio ${nudge}`}>{glyph}</span>;
   const label =
     (variant === "primary" || variant === "secondary") && typeof children === "string" ? (
       <>
         <span className="sr-only">{children}</span>
-        <span aria-hidden className="flex items-center leading-[1.1]">
+        {/* the rolling letters are decoration; the sr-only label is the text
+            a screen reader reads and a copy picks up */}
+        <span aria-hidden className="flex select-none items-center leading-[1.1]">
           <SplitTextChars text={children} />
         </span>
       </>

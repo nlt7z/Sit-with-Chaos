@@ -179,23 +179,7 @@ export const COPY = {
     eye: "Full Interactive Prototype · Switch Any Scene",
     note: "Switch flows from the rail under the phone, or tap the suggested replies. English / USD is the US rebuild; the shipped product is Chinese with RMB.",
   },
-  closing: {
-    title: "Rebuilding the black box: from “price transparency” to ==“trusted diagnosis”==.",
-    credit: "Yuan Fang · Product Designer · Pratt Institute",
-  },
 } as const;
-
-/** Service blueprint: 5 stages × 3 lanes; `decision` marks the user's choice. */
-export const BLUEPRINT = {
-  stages: ["Discovery", "Diagnose", "Bidding", "Fulfilment", "Feedback"],
-  lanes: [
-    { name: "User", cells: ["Search repair intent", "Describe the problem", "Compare and pick", "Pay after service", "Rate and tag"], decision: 2 },
-    { name: "Platform · Frontstage", cells: ["", "Expert diagnoses in chat", "Merchants bid live", "On-site service done", ""] },
-    { name: "Platform · Backstage", cells: ["Surface the entry", "Generate the order", "Rank and stream bids", "Bind deposit and balance", "Update the ranking model"] },
-  ],
-  // hand-off order as [lane, column]
-  flow: [[0, 0], [2, 0], [0, 1], [1, 1], [2, 1], [1, 2], [2, 2], [0, 2], [2, 3], [1, 3], [0, 3], [0, 4], [2, 4]] as [number, number][],
-};
 
 /** Quote-to-Service transaction: 6 phases × 3 lanes. */
 export const TXN = {

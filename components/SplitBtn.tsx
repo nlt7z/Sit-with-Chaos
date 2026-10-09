@@ -27,7 +27,7 @@ export function SplitTextChars({
           </span>
           <span
             aria-hidden
-            className={`absolute inset-0 transition-transform duration-300 ease-portfolio ${inFrom}`}
+            className={`absolute inset-0 select-none transition-transform duration-300 ease-portfolio ${inFrom}`}
             style={{ transitionDelay: `${i * stagger}ms` }}
           >
             {ch === " " ? "\u00a0" : ch}
