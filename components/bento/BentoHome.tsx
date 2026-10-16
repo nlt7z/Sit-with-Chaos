@@ -126,7 +126,9 @@ function LiveSite({ src, poster, title, width = 1440, minViewport = 0 }: { src: 
           src={src}
           title={title}
           tabIndex={-1}
-          onLoad={() => window.setTimeout(() => setLoaded(true), 1200)}
+          // qbix.space plays a ~2.5s dark intro after load; hold the poster
+          // until its hero is up, so the block never flashes black
+          onLoad={() => window.setTimeout(() => setLoaded(true), 3000)}
           className="pointer-events-none absolute left-0 top-0 border-0"
           style={{ width: vw, height: Math.round(box.h / scale), transform: `scale(${scale})`, transformOrigin: "top left" }}
         />

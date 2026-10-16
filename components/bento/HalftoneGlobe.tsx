@@ -581,7 +581,7 @@ export function HalftoneGlobe({ reduced }: { reduced: boolean }) {
       <div
         ref={labelRef}
         aria-hidden
-        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap rounded-lg bg-[#0a0b0c]/70 px-2.5 py-1.5 leading-tight backdrop-blur-[3px]"
+        className="pointer-events-none absolute left-0 top-0 whitespace-nowrap rounded-lg bg-[#0a0b0c]/85 px-2.5 py-1.5 leading-tight"
         style={{ opacity: 0 }}
       >
         <p className="text-[13px] font-medium text-white">Foster City, CA</p>

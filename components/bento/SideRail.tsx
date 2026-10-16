@@ -73,7 +73,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
     <>
       <nav aria-label="Sections" className="fixed left-4 top-1/2 z-50 hidden -translate-y-1/2 md:block">
         <div
-          className={`flex w-10 flex-col gap-1 rounded-full border p-1 backdrop-blur-md transition-[background-color,border-color,box-shadow] duration-300 ${t.shell}`}
+          className={`flex w-10 flex-col gap-1 rounded-full border p-1 transition-[background-color,border-color,box-shadow] duration-300 ${t.shell}`}
           style={{ boxShadow: t.shadow }}
           onMouseLeave={() => setHovered(null)}
         >

@@ -14,7 +14,7 @@
  */
 
 import { motion, useDragControls, useReducedMotion } from "framer-motion";
-import { type CSSProperties, type PointerEvent, type ReactNode, useState } from "react";
+import { type CSSProperties, type PointerEvent, type ReactNode, useRef, useState } from "react";
 
 // Pin the drag to the card's home position; dragElastic supplies the stretch.
 const TETHER = { left: 0, right: 0, top: 0, bottom: 0 } as const;
@@ -23,7 +23,9 @@ type Surface = "dark" | "glass" | "light" | "lime";
 
 const SURFACE: Record<Surface, string> = {
   dark: "bg-white/[0.035] border border-white/10 text-white",
-  glass: "bg-white/[0.07] border border-white/15 text-white backdrop-blur-xl",
+  // opaque on purpose: a backdrop blur here made Chrome redraw the whole
+  // screen every frame while the film, globe and Qbix site animate
+  glass: "bg-[#1b1c1d] border border-white/15 text-white",
   light: "bg-[#f3f2ea] border border-black/[0.06] text-[#1d1d1f]",
   lime: "bg-nltLime border border-[#bfe21f] text-[#1d1d1f]",
 };
@@ -57,8 +59,9 @@ export function BentoCard({
 }) {
   const reduced = useReducedMotion();
   const controls = useDragControls();
-  const [pos, setPos] = useState({ x: 0, y: 0 });
   const [glow, setGlow] = useState(false);
+  // the glow layer has no children, so updating its variables restyles nothing else
+  const glowRef = useRef<HTMLDivElement>(null);
 
   const startDrag = (e: PointerEvent<HTMLDivElement>) => {
     if (drag && !reduced) controls.start(e);
@@ -78,9 +81,14 @@ export function BentoCard({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{ type: "spring", stiffness: 130, damping: 18, delay: reduced ? 0 : index * 0.035 }}
+      // the rim glow follows the cursor through CSS variables, so moving the
+      // mouse never re-renders the card
       onMouseMove={(e) => {
+        const g = glowRef.current;
+        if (!g) return;
         const r = e.currentTarget.getBoundingClientRect();
-        setPos({ x: e.clientX - r.left, y: e.clientY - r.top });
+        g.style.setProperty("--gx", `${e.clientX - r.left}px`);
+        g.style.setProperty("--gy", `${e.clientY - r.top}px`);
       }}
       onMouseEnter={() => setGlow(true)}
       onMouseLeave={() => setGlow(false)}
@@ -115,12 +123,13 @@ export function BentoCard({
       {/* hover glow — a lime gradient that lights only the rim NEAR the cursor
           (mask punches out the interior, so the block itself never fills). */}
       <div
+        ref={glowRef}
         aria-hidden
         className="pointer-events-none absolute inset-0 z-20 rounded-[1.4rem] transition-opacity duration-300"
         style={{
           opacity: glow && !reduced ? 1 : 0,
           padding: "1.5px",
-          background: `radial-gradient(150px circle at ${pos.x}px ${pos.y}px, rgba(210,255,0,0.75) 0%, rgba(210,255,0,0.18) 38%, transparent 68%)`,
+          background: `radial-gradient(150px circle at var(--gx, 0px) var(--gy, 0px), rgba(210,255,0,0.75) 0%, rgba(210,255,0,0.18) 38%, transparent 68%)`,
           WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
           WebkitMaskComposite: "xor",
           maskComposite: "exclude",
