@@ -28,6 +28,9 @@ export function playInView(v: HTMLVideoElement, src: string, threshold = 0.2): (
       clearTimeout(retry);
       if (visible) {
         if (!v.src) {
+          // the browser's own autoplay as well as play(): Safari can start a
+          // muted autoplay video by itself once it counts as visible
+          v.autoplay = true;
           v.src = src;
           v.load();
         }

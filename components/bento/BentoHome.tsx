@@ -28,7 +28,7 @@ const INTRO =
 
 // the "now" block: O2 Tech AI's full product film, v6 (muted, subtitles burned
 // in, loops while on screen); the block opens the O2 case study
-const NOW_FILM = { src: "/assets/o2/o2-full-film.mp4", poster: "/assets/o2/o2-full-film-poster.webp" };
+const NOW_FILM = { src: "/assets/o2/o2-film-v6.mp4", poster: "/assets/o2/o2-film-still.jpg" };
 const O2_CASE = "/work/o2";
 
 // Meituan block hidden from the homepage for now (2026-10-16); flip to restore
@@ -37,7 +37,7 @@ const SHOW_MEITUAN = false;
 const MEITUAN_PROTOTYPE = "/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0&autoplay=1";
 
 // qbix.space's homepage, live; the hero still covers the block until it paints
-const QBIX = { href: "https://qbix.space", poster: "/assets/work/qbix-live-poster.webp" };
+const QBIX = { href: "https://qbix.space", poster: "/assets/work/qbix-still.jpg" };
 
 
 /* True below the `md` breakpoint. Layout is handled in CSS; this only gates
@@ -211,15 +211,41 @@ function PhonePrototype({ src, title, reduced, interactive, align = "center" }: 
 }
 
 /* in-view autoplay video for a bento media slot (muted, looping). Loads its
-   source only once the card scrolls near the viewport. */
+   source only once the card scrolls near the viewport. The poster sits on top
+   as an image until the film is really playing: Safari swaps the poster for
+   the (white) first frame as soon as data loads, even if play() was refused. */
 function InViewVideo({ src, poster, className = "" }: { src: string; poster?: string; className?: string }) {
   const vref = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
   useEffect(() => {
     const v = vref.current;
     if (!v) return;
     return playInView(v, src, 0.2);
   }, [src]);
-  return <video ref={vref} muted loop playsInline preload="none" poster={poster} aria-hidden className={`absolute inset-0 h-full w-full object-cover ${className}`} />;
+  return (
+    <>
+      <video
+        ref={vref}
+        muted
+        loop
+        playsInline
+        preload="none"
+        poster={poster}
+        aria-hidden
+        onPlaying={() => setPlaying(true)}
+        className={`absolute inset-0 h-full w-full object-cover ${className}`}
+      />
+      {poster ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+          src={poster}
+          alt=""
+          aria-hidden
+          className={`pointer-events-none absolute inset-0 h-full w-full object-cover transition-opacity duration-300 ${className} ${playing ? "opacity-0" : "opacity-100"}`}
+        />
+      ) : null}
+    </>
+  );
 }
 
 /* corner ↗ in the card header — neutral grey at rest, fills lime while the

@@ -80,7 +80,7 @@ export default function O2CaseStudyPage() {
           <div className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
             <video
               src="/assets/o2/o2-full-film-sound.mp4"
-              poster="/assets/o2/o2-full-film-poster.webp"
+              poster="/assets/o2/o2-film-still.jpg"
               controls
               playsInline
               preload="metadata"

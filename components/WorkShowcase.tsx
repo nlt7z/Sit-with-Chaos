@@ -92,6 +92,7 @@ const FADE =
 
 function ProjectMedia({ media, focus, reduced }: { media: Media; focus?: string; reduced: boolean }) {
   const ref = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
   useEffect(() => {
     const v = ref.current;
     if (!v || media.kind !== "video" || reduced) return;
@@ -104,18 +105,31 @@ function ProjectMedia({ media, focus, reduced }: { media: Media; focus?: string;
     // eslint-disable-next-line @next/next/no-img-element
     return <img src={media.src} alt="" loading="lazy" decoding="async" className={cls} style={{ objectPosition: focus }} />;
   }
+  // the poster stays on top until the video really plays (Safari otherwise
+  // shows the paused first frame once data loads)
   return (
-    <video
-      ref={ref}
-      muted
-      loop
-      playsInline
-      preload="none"
-      poster={media.poster}
-      aria-hidden
-      className={cls}
-      style={{ objectPosition: focus }}
-    />
+    <>
+      <video
+        ref={ref}
+        muted
+        loop
+        playsInline
+        preload="none"
+        poster={media.poster}
+        aria-hidden
+        onPlaying={() => setPlaying(true)}
+        className={cls}
+        style={{ objectPosition: focus }}
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={media.poster}
+        alt=""
+        aria-hidden
+        className={`${cls} pointer-events-none transition-[opacity,transform] ${playing ? "opacity-0" : "opacity-100"}`}
+        style={{ objectPosition: focus }}
+      />
+    </>
   );
 }
 

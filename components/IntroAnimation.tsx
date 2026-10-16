@@ -13,8 +13,8 @@ const STORAGE_KEY = "yf-intro-played-v1";
 // URLs the bento paints first (poster frames + the first Journey logo); keep
 // them in sync with components/bento/BentoHome.tsx.
 const CRITICAL_ASSETS: readonly { src: string; kind: "image" | "video" }[] = [
-  { src: "/assets/work/qbix-live-poster.webp", kind: "image" },
-  { src: "/assets/o2/o2-full-film-poster.webp", kind: "image" },
+  { src: "/assets/work/qbix-still.jpg", kind: "image" },
+  { src: "/assets/o2/o2-film-still.jpg", kind: "image" },
   { src: "/assets/logos/liner.png", kind: "image" },
 ];
 
