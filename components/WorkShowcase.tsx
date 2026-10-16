@@ -18,6 +18,7 @@ import Link from "next/link";
 import { type MouseEvent, useEffect, useRef, useState } from "react";
 
 import { revealProps } from "@/lib/motion";
+import { playInView } from "@/lib/playInView";
 
 type Media = { kind: "video"; src: string; poster: string } | { kind: "image"; src: string };
 
@@ -94,22 +95,7 @@ function ProjectMedia({ media, focus, reduced }: { media: Media; focus?: string;
   useEffect(() => {
     const v = ref.current;
     if (!v || media.kind !== "video" || reduced) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          if (!v.src) {
-            v.src = media.src;
-            v.load();
-          }
-          v.play().catch(() => {});
-        } else {
-          v.pause();
-        }
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
+    return playInView(v, media.src, 0.35);
   }, [media, reduced]);
 
   const cls =

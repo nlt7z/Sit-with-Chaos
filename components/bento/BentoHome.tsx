@@ -19,6 +19,7 @@ import { RAIL_CLEARANCE } from "@/components/bento/railClearance";
 import { SideRail } from "@/components/bento/SideRail";
 import { RoseLoader } from "@/components/RoseLoader";
 import { Action, isExternal } from "@/components/Action";
+import { playInView } from "@/lib/playInView";
 
 const POSITIONING = { role: "Product Designer", rest: " who makes AI work people can see, check, and steer" };
 const BRAND_TAGS = ["Product Thinking", "Visual Craft", "Curiosity"];
@@ -216,30 +217,15 @@ function InViewVideo({ src, poster, className = "" }: { src: string; poster?: st
   useEffect(() => {
     const v = vref.current;
     if (!v) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.isIntersecting) {
-          if (!v.src) {
-            v.src = src;
-            v.load();
-          }
-          v.play().catch(() => {});
-        } else {
-          v.pause();
-        }
-      },
-      { threshold: 0.2 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
+    return playInView(v, src, 0.2);
   }, [src]);
   return <video ref={vref} muted loop playsInline preload="none" poster={poster} aria-hidden className={`absolute inset-0 h-full w-full object-cover ${className}`} />;
 }
 
-/* corner link in the card header — neutral grey at rest, brightens when
-   the card is hovered (the whole BentoCard is the `group`). Stops pointerdown
-   so a click navigates instead of starting a header drag. Site rule: ↗ and a
-   new tab for other sites, → and the same tab for pages on this site. */
+/* corner ↗ in the card header — neutral grey at rest, fills lime while the
+   card is hovered (the whole BentoCard is the `group`). Both homepage blocks
+   use ↗, as the original bento did; only external links open a new tab.
+   Stops pointerdown so a click navigates instead of starting a header drag. */
 function CornerArrow({ href, label }: { href: string; label: string }) {
   const external = isExternal(href);
   return (
@@ -248,9 +234,9 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       aria-label={external ? `${label} (opens in a new tab)` : label}
       onPointerDown={(e) => e.stopPropagation()}
-      className="relative z-40 -mr-1.5 grid h-7 w-7 place-items-center rounded-full bg-white/[0.06] text-[13px] text-[#8a8f98] transition-colors duration-150 hover:bg-nltLime hover:text-[#1d1d1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 group-hover:bg-white/[0.1] group-hover:text-[#f7f8f8]"
+      className="relative z-40 -mr-1.5 grid h-7 w-7 place-items-center rounded-full bg-white/[0.06] text-[13px] text-[#8a8f98] transition-colors duration-150 group-hover:bg-nltLime group-hover:text-[#1d1d1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70"
     >
-      <span aria-hidden>{external ? "↗" : "→"}</span>
+      <span aria-hidden>↗</span>
     </a>
   );
 }
