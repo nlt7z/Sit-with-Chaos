@@ -2,7 +2,7 @@
 
 /**
  * BentoHome — the homepage: a single-screen, NO-SCROLL puzzle of draggable
- * widget windows on a dark canvas. Lime is kept for the CTA and the rail. Four columns; each
+ * widget windows on a dark canvas. Lime marks the CTA, the rail, card glows, corner arrows, the name, the Now dot and the globe arcs. Four columns; each
  * card's flex-[N] is its share of the column height. Every block names itself
  * top-left (company, project, or widget) except the identity card.
  */
@@ -36,7 +36,7 @@ const SHOW_MEITUAN = false;
 const MEITUAN_PROTOTYPE = "/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0&autoplay=1";
 
 // qbix.space's homepage, live; the hero still covers the block until it paints
-const QBIX = { href: "https://qbix.space", poster: "/assets/work/qbix-scroll-poster.webp" };
+const QBIX = { href: "https://qbix.space", poster: "/assets/work/qbix-live-poster.webp" };
 
 
 /* True below the `md` breakpoint. Layout is handled in CSS; this only gates
@@ -104,7 +104,7 @@ function useDeferredMount<T extends HTMLElement>(delay = 700) {
 /* A live website rendered at a desktop width and scaled into the block; its
    viewport height follows the block's aspect, so the page fills edge to edge.
    Presentational (no pointer events); a poster covers it until it loads. */
-function LiveSite({ src, poster, title, width = 1440 }: { src: string; poster: string; title: string; width?: number }) {
+function LiveSite({ src, poster, title, width = 1440, minViewport = 0 }: { src: string; poster: string; title: string; width?: number; minViewport?: number }) {
   const { ref, mount } = useDeferredMount<HTMLDivElement>(600);
   const [box, setBox] = useState({ w: 0, h: 0 });
   const [loaded, setLoaded] = useState(false);
@@ -115,7 +115,10 @@ function LiveSite({ src, poster, title, width = 1440 }: { src: string; poster: s
     ro.observe(el);
     return () => ro.disconnect();
   }, [ref]);
-  const scale = box.w ? box.w / width : 0;
+  // a short, wide block widens the virtual viewport instead of squashing the
+  // page below `minViewport` px tall, so its layout never collapses
+  const vw = box.h && minViewport ? Math.max(width, Math.round((box.w / box.h) * minViewport)) : width;
+  const scale = box.w ? box.w / vw : 0;
   return (
     <div ref={ref} className="absolute inset-0 overflow-hidden">
       {mount && scale ? (
@@ -125,7 +128,7 @@ function LiveSite({ src, poster, title, width = 1440 }: { src: string; poster: s
           tabIndex={-1}
           onLoad={() => window.setTimeout(() => setLoaded(true), 1200)}
           className="pointer-events-none absolute left-0 top-0 border-0"
-          style={{ width, height: Math.round(box.h / scale), transform: `scale(${scale})`, transformOrigin: "top left" }}
+          style={{ width: vw, height: Math.round(box.h / scale), transform: `scale(${scale})`, transformOrigin: "top left" }}
         />
       ) : null}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -243,7 +246,7 @@ function CornerArrow({ href, label }: { href: string; label: string }) {
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
       aria-label={external ? `${label} (opens in a new tab)` : label}
       onPointerDown={(e) => e.stopPropagation()}
-      className="relative z-40 -mr-1.5 grid h-7 w-7 place-items-center rounded-full bg-white/[0.06] text-[13px] text-[#8a8f98] transition-colors duration-150 hover:bg-white hover:text-[#0a0b0c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70 group-hover:bg-white/[0.1] group-hover:text-[#f7f8f8]"
+      className="relative z-40 -mr-1.5 grid h-7 w-7 place-items-center rounded-full bg-white/[0.06] text-[13px] text-[#8a8f98] transition-colors duration-150 hover:bg-nltLime hover:text-[#1d1d1f] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70 group-hover:bg-white/[0.1] group-hover:text-[#f7f8f8]"
     >
       <span aria-hidden>{external ? "↗" : "→"}</span>
     </a>
@@ -318,8 +321,8 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
       {/* name + slogan (+ intro on hover) */}
       <div className="relative shrink-0 leading-none">
         <p className="mb-2 text-[13px] font-medium tracking-[-0.005em] text-white/60">Hi, I&apos;m 👋</p>
-        <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-white">yuan</p>
-        <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-white/60">Fang</p>
+        <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
+        <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
         {/* the slogan, then the intro one blank line below it; the intro is
             folded away until hover. The two hidden copies measure both heights. */}
         <div className="relative mt-4">
@@ -523,15 +526,15 @@ export function BentoHome() {
             </BentoCard>
           </div>
 
-          {/* ===== col 2 — the O2 film holds an exact 16:9 frame (its
-              subtitles are burned in, so it is never cropped); Qbix takes the
-              rest of the column height ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[2.05] md:flex-col md:gap-2.5">
+          {/* ===== col 2 — the O2 film holds a 16:9 frame, capped at half the
+              column on short screens (it then crops from the top, so the
+              burned-in subtitles stay); Qbix takes the rest ===== */}
+          <div className="contents md:flex md:min-h-0 md:flex-[2.05] md:flex-col md:gap-2.5 md:[container-type:size]">
             {/* qbix — the live homepage; the block opens the site */}
             <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
               <a href="https://qbix.space" target="_blank" rel="noopener noreferrer" aria-label="Open qbix.space in a new tab" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#0b0b0b] md:aspect-auto md:min-h-0 md:flex-1">
-                <LiveSite src={QBIX.href} poster={QBIX.poster} title="qbix.space homepage" />
+                <LiveSite src={QBIX.href} poster={QBIX.poster} title="qbix.space homepage" width={1200} minViewport={640} />
               </div>
             </BentoCard>
 
@@ -541,15 +544,15 @@ export function BentoHome() {
               <Link href={O2_CASE} aria-label="O2 Tech AI case study" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative z-20 flex shrink-0 items-baseline gap-2 px-4 pb-2">
                 <span className="relative flex h-1.5 w-1.5 shrink-0 -translate-y-px">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-60" />
-                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-white" />
+                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-nltLime opacity-80" />
+                  <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-nltLime" />
                 </span>
                 <span className="text-[13px] leading-snug text-white/80">
                   <span className="font-medium text-white">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
                 </span>
               </div>
-              <div className="pointer-events-none relative mx-2 mb-2 aspect-video shrink-0 overflow-hidden rounded-[14px] bg-[#141416]">
-                <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} />
+              <div className="pointer-events-none relative mx-2 mb-2 aspect-video shrink-0 overflow-hidden rounded-[14px] bg-[#141416] md:aspect-auto md:h-[min(calc((100cqw_-_16px)_*_0.5625),calc(50cqh_-_75px))]">
+                <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} className="object-bottom" />
               </div>
             </BentoCard>
           </div>

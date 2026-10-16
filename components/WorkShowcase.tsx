@@ -8,7 +8,7 @@
  * sit side by side as smaller features. No tags, no dates.
  *
  * Videos carry a poster frame, load only near the viewport, and play only
- * while on screen. Hover: a cursor-following arrow and a slow media push.
+ * while on screen. Hover: a cursor-following lime arrow and a slow media push.
  * Reduced motion: no reveal, no push, no follower; videos stay on the poster.
  */
 
@@ -133,7 +133,7 @@ function ProjectMedia({ media, focus, reduced }: { media: Media; focus?: string;
   );
 }
 
-/* the → (every card opens a case study on this site) that springs after the cursor while a project is hovered */
+/* the signature lime → (every card opens a case study on this site) that springs after the cursor while a project is hovered */
 function useCursorArrow() {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -159,7 +159,7 @@ function useCursorArrow() {
     arrow: (
       <motion.span
         aria-hidden
-        className="pointer-events-none absolute left-0 top-0 z-30 hidden h-14 w-14 items-center justify-center rounded-full bg-white text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)] md:flex"
+        className="pointer-events-none absolute left-0 top-0 z-30 hidden h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)] md:flex"
         style={{ x: sx, y: sy }}
         initial={false}
         animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.4 }}

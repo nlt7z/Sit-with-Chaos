@@ -423,7 +423,7 @@ function MediaSlot({
 }
 
 // ─── Active card FX (desktop) ──────────────────────────────────────────────
-// The cursor-following arrow, the same affordance as the /work cards: →
+// The cursor-following lime arrow, the same affordance as the /work cards: →
 // for a page on this site, ↗ for another site. Only when the card has a
 // destination. Reduced motion: the arrow tracks without the spring.
 
@@ -463,7 +463,7 @@ function ActiveCardFX({
       {hasLink && (
         <motion.div
           aria-hidden
-          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-white text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)]"
+          className="pointer-events-none absolute left-0 top-0 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-nltLime text-[#0a0b0c] shadow-[0_8px_20px_-6px_rgba(0,0,0,0.45)]"
           style={{ x: reduced ? ax : axs, y: reduced ? ay : ays }}
           initial={false}
           animate={{ opacity: hovered ? 1 : 0, scale: hovered ? 1 : 0.4 }}

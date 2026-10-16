@@ -31,15 +31,15 @@ const STYLE: Record<Variant, Record<Tone, string>> = {
     light: `${PILL} bg-textPrimary text-white hover:shadow-[0_10px_28px_-10px_rgba(0,0,0,0.45)] focus-visible:ring-textPrimary`,
   },
   secondary: {
-    dark: `${PILL} text-white ring-1 ring-inset ring-white/20 hover:bg-white/[0.06] focus-visible:ring-white/70 focus-visible:ring-offset-[#0a0b0c]`,
+    dark: `${PILL} text-white ring-1 ring-inset ring-white/20 hover:bg-white/[0.06] focus-visible:ring-nltLime/70 focus-visible:ring-offset-[#0a0b0c]`,
     light: `${PILL} text-textPrimary ring-1 ring-inset ring-black/15 hover:bg-black/[0.04] focus-visible:ring-textPrimary`,
   },
   text: {
-    dark: "group inline-flex items-center gap-1.5 text-[14px] text-white/80 underline decoration-white/25 underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:text-white hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
+    dark: "group inline-flex items-center gap-1.5 text-[14px] text-white/80 underline decoration-white/25 underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:text-white hover:decoration-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70",
     light: "group inline-flex items-center gap-1.5 text-[14px] text-textPrimary underline decoration-black/20 underline-offset-4 transition-[text-decoration-color] duration-150 hover:decoration-textPrimary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary",
   },
   label: {
-    dark: "group inline-flex items-center gap-1.5 text-[13px] font-medium tracking-[-0.005em] text-white/70 underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:text-white hover:decoration-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70",
+    dark: "group inline-flex items-center gap-1.5 text-[13px] font-medium tracking-[-0.005em] text-white/70 underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:text-white hover:decoration-white/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-nltLime/70",
     light: "group inline-flex items-center gap-1.5 text-[13px] font-medium tracking-[-0.005em] text-textSecondary underline decoration-transparent underline-offset-4 transition-[color,text-decoration-color] duration-150 hover:text-textPrimary hover:decoration-black/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-textPrimary",
   },
 };
