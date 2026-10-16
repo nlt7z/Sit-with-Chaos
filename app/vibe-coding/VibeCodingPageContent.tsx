@@ -39,13 +39,6 @@ type Entry = {
 
 const entries: Entry[] = [
   {
-    date: "2026.09",
-    title: "bom feature film",
-    description: "Short feature film for O2 Tech AI's BOM sourcing product.",
-    tags: ["ai"],
-    media: { kind: "video", src: "/assets/lab/o2-bom-short.mp4", poster: "/assets/lab/posters/o2-bom.webp" },
-  },
-  {
     date: "2026.05",
     title: "design agency website",
     description: "Studio website for a creative agency: brand expression, work showcase, and inquiry flow.",

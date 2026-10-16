@@ -25,8 +25,13 @@ const BRAND_TAGS = ["Product Thinking", "Visual Craft", "Curiosity"];
 const INTRO =
   "Painting taught me to see what a system wants to become before it knows itself. Ten years across canvas, spatial design, and digital products turned that instinct into a method.";
 
-// the "now" block: O2 Tech AI's BOM feature film (muted, loops while on screen)
-const NOW_FILM = { src: "/assets/o2/o2-bom-film.mp4", poster: "/assets/o2/o2-bom-film-poster.webp" };
+// the "now" block: O2 Tech AI's full product film, v6 (muted, subtitles burned
+// in, loops while on screen); the block opens the O2 case study
+const NOW_FILM = { src: "/assets/o2/o2-full-film.mp4", poster: "/assets/o2/o2-full-film-poster.webp" };
+const O2_CASE = "/work/o2";
+
+// Meituan block hidden from the homepage for now (2026-10-16); flip to restore
+const SHOW_MEITUAN = false;
 
 const MEITUAN_PROTOTYPE = "/assets/meituan-im/Revised%20Repair%20Flow.html#flow=default&rail=0&autoplay=1";
 
@@ -518,9 +523,9 @@ export function BentoHome() {
             </BentoCard>
           </div>
 
-          {/* ===== col 2 — the two films share the column height (a light
-              side crop on desktop keeps every column's bottom edge aligned;
-              mobile shows them at their own 16:9) ===== */}
+          {/* ===== col 2 — the O2 film holds an exact 16:9 frame (its
+              subtitles are burned in, so it is never cropped); Qbix takes the
+              rest of the column height ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[2.05] md:flex-col md:gap-2.5">
             {/* qbix — the live homepage; the block opens the site */}
             <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
@@ -531,8 +536,9 @@ export function BentoHome() {
             </BentoCard>
 
 
-            {/* O2 Tech AI — "right now"; the film only (its case study is offline for now) */}
-            <BentoCard label="O2 Tech AI" surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-1">
+            {/* O2 Tech AI — "right now"; the block opens the brief case study */}
+            <BentoCard label="O2 Tech AI" headerRight={<CornerArrow href={O2_CASE} label="O2 Tech AI case study" />} surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-none">
+              <Link href={O2_CASE} aria-label="O2 Tech AI case study" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative z-20 flex shrink-0 items-baseline gap-2 px-4 pb-2">
                 <span className="relative flex h-1.5 w-1.5 shrink-0 -translate-y-px">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-white opacity-60" />
@@ -542,13 +548,14 @@ export function BentoHome() {
                   <span className="font-medium text-white">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
                 </span>
               </div>
-              <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#141416] md:aspect-auto md:min-h-0 md:flex-1">
+              <div className="pointer-events-none relative mx-2 mb-2 aspect-video shrink-0 overflow-hidden rounded-[14px] bg-[#141416]">
                 <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} />
               </div>
             </BentoCard>
           </div>
 
-          {/* ===== col 3 — meituan, the live prototype ===== */}
+          {/* ===== col 3 — meituan, the live prototype (hidden for now) ===== */}
+          {SHOW_MEITUAN ? (
           <div className="contents md:flex md:min-h-0 md:flex-[1.02] md:flex-col md:gap-2.5">
             <BentoCard label="Meituan" headerRight={<CornerArrow href="/work/meituan-im" label="Meituan case study" />} surface="dark" drag={drag} index={6} className="order-2 col-span-2 h-[600px] min-h-0 flex-1 md:order-none md:h-auto">
               <Link
@@ -584,6 +591,7 @@ export function BentoHome() {
               </div>
             </BentoCard>
           </div>
+          ) : null}
 
           {/* ===== col 4 — location globe(4) · journey(3) ===== */}
           <div className="contents md:flex md:min-h-0 md:flex-[0.9] md:flex-col md:gap-2.5">
