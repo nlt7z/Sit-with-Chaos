@@ -15,7 +15,6 @@ import { useEffect, useRef, useState } from "react";
 import { BentoCard } from "@/components/bento/BentoCard";
 import { EMAIL } from "@/lib/site";
 import { HalftoneGlobe } from "@/components/bento/HalftoneGlobe";
-import { RAIL_CLEARANCE } from "@/components/bento/railClearance";
 import { SideRail } from "@/components/bento/SideRail";
 import { RoseLoader } from "@/components/RoseLoader";
 import { Action, isExternal } from "@/components/Action";
@@ -74,6 +73,15 @@ const JOURNEY = [
   { org: "Pratt Institute", role: "BFA · Interactive Arts", logo: "/assets/logos/pratt.svg" },
 ];
 const JOURNEY_DWELL = 4000; // ms per stop
+
+// the art card: landscape pieces from the About gallery, cross-fading slowly
+const ART = [
+  "/assets/about/gallery/hang.jpg",
+  "/assets/about/gallery/ice.jpg",
+  "/assets/about/gallery/read.jpg",
+  "/assets/about/gallery/echo.jpg",
+];
+const ART_DWELL = 4200;
 
 /* Mount a heavy embed only once its box is on screen and the page has had a
    beat to paint. Client-only on purpose: a server-rendered iframe can finish
@@ -340,8 +348,8 @@ function IdentityCard({ reduced }: { reduced: boolean }) {
       {/* name + slogan (+ intro on hover) */}
       <div className="relative shrink-0 leading-none">
         <p className="mb-2 text-[13px] font-medium tracking-[-0.005em] text-white/60">Hi, I&apos;m 👋</p>
-        <p className="font-display text-[clamp(2.1rem,3.6vw,3rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
-        <p className="mt-1 font-sans text-[clamp(1.35rem,2.2vw,1.8rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
+        <p className="font-display text-[clamp(1.9rem,3vw,2.6rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
+        <p className="mt-1 font-sans text-[clamp(1.2rem,1.9vw,1.55rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">Fang</p>
         {/* the slogan, then the intro one blank line below it; the intro is
             folded away until hover. The two hidden copies measure both heights. */}
         <div className="relative mt-4">
@@ -401,9 +409,10 @@ function PhotoCard({ reduced }: { reduced: boolean }) {
 
   return (
     <div className="relative flex min-h-0 flex-1 flex-col gap-3 px-2 pb-3" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)}>
-      {/* the photo stays 1:1, as large as the free space allows, centred */}
-      <div className="relative flex min-h-0 flex-1 items-center justify-center [container-type:size]">
-        <div className="relative aspect-square w-[min(100cqw,100cqh)]">
+      {/* the photo stays 1:1, centred, and deliberately smaller than the block
+          (at most 78% of its width) so the side column stays quiet */}
+      <div className="relative flex min-h-0 flex-1 items-center justify-center py-2 [container-type:size]">
+        <div className="relative aspect-square w-[min(78cqw,100cqh)]">
         <div className="absolute inset-0 overflow-hidden rounded-[14px] bg-[#1a1c17]">
           <Image
             src="/assets/about/yuan-portrait.jpg"
@@ -432,6 +441,31 @@ function PhotoCard({ reduced }: { reduced: boolean }) {
           </li>
         ))}
       </ul>
+    </div>
+  );
+}
+
+/* art — a quiet, slow cross-fade through the art practice. A side card, so it
+   sits a little dimmed and only comes to full strength on hover. */
+function ArtCard({ reduced }: { reduced: boolean }) {
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduced) return;
+    const id = setInterval(() => setI((v) => (v + 1) % ART.length), ART_DWELL);
+    return () => clearInterval(id);
+  }, [reduced]);
+  return (
+    <div className="relative mx-2 mb-2 min-h-0 flex-1 overflow-hidden rounded-[14px] bg-[#1a1c17] opacity-60 saturate-[0.55] transition-[opacity,filter] duration-300 group-hover:opacity-100 group-hover:saturate-100">
+      {ART.map((src, idx) => (
+        <Image
+          key={src}
+          src={src}
+          alt=""
+          fill
+          sizes="(max-width: 767px) 100vw, 380px"
+          className={`object-cover transition-opacity duration-1000 ${idx === i ? "opacity-100" : "opacity-0"}`}
+        />
+      ))}
     </div>
   );
 }
@@ -480,12 +514,12 @@ function JourneyCarousel({ reduced }: { reduced: boolean }) {
             <img
               src={j.logo}
               alt=""
-              className={`h-8 w-auto max-w-[160px] self-start object-contain object-left opacity-90 ${"knockout" in j ? "" : "brightness-0 invert"}`}
+              className={`h-7 w-auto max-w-[150px] self-start object-contain object-left opacity-55 ${"knockout" in j ? "" : "brightness-0 invert"}`}
             />
-            <p className="mt-6 font-display text-[clamp(1.3rem,1.8vw,1.7rem)] font-light leading-[1.15] text-white">{j.org}</p>
+            <p className="mt-5 font-display text-[clamp(1.15rem,1.5vw,1.45rem)] font-light leading-[1.15] text-white/70">{j.org}</p>
             {/* the " · year" stays glued to the last word, so a narrow column wraps
                 the title, never the date */}
-            <p className="mt-2 text-[13px] font-medium leading-[1.5] tracking-[-0.005em] text-white/60">{j.role.replace(/ · /g, "\u00a0·\u00a0")}</p>
+            <p className="mt-2 text-[13px] font-medium leading-[1.5] tracking-[-0.005em] text-white/45">{j.role.replace(/ · /g, "\u00a0·\u00a0")}</p>
           </motion.div>
         </AnimatePresence>
       </div>
@@ -528,20 +562,30 @@ export function BentoHome() {
 
       <SideRail active="home" />
 
-      <div className={`relative z-10 mx-auto w-full px-3 pb-24 pt-3 md:flex md:h-full md:gap-2.5 md:py-3 md:pb-3 md:pr-4 ${RAIL_CLEARANCE}`}>
+      {/* a wider gap after the rail than other pages (RAIL_CLEARANCE is 84px),
+          so the bento reads as one centred bundle */}
+      <div className={`relative z-10 mx-auto w-full px-3 pb-24 pt-3 md:flex md:h-full md:gap-2.5 md:py-3 md:pb-3 md:pl-[100px] md:pr-5`}>
         {/* On mobile each column wrapper becomes `display:contents`, so every card
             flows directly into the grid below; CSS `order-*` then sequences them
             into a single intentional feed. On md+ the wrappers reassert as the
             four flex columns of the no-scroll desktop puzzle. */}
-        <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:gap-2.5 md:overflow-hidden">
-          {/* ===== col 1 — identity (its own height) · photo (the rest) ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[1.03] md:flex-col md:gap-2.5">
+        {/* the side columns are capped, so spare width becomes margin around
+            the bundle instead of a bigger photo and globe: the two middle
+            blocks (Qbix, the O2 film) are the focus */}
+        <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:justify-center md:gap-2.5 md:overflow-hidden">
+          {/* ===== col 1 — identity (its own height) · photo · art (the art
+              card only where the column is tall and wide enough) ===== */}
+          <div className="contents md:flex md:min-h-0 md:max-w-[clamp(300px,21vw,400px)] md:flex-[1.03] md:flex-col md:gap-2.5">
             <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 md:order-none md:flex-none">
               <IdentityCard reduced={reduced} />
             </BentoCard>
 
-            <BentoCard surface="dark" drag={drag} index={1} className="order-1 col-span-2 h-[420px] min-h-0 md:order-none md:h-auto md:flex-1">
+            <BentoCard surface="dark" drag={drag} index={1} className="order-1 col-span-2 h-[420px] min-h-0 md:order-none md:h-auto md:flex-[1.35]">
               <PhotoCard reduced={reduced} />
+            </BentoCard>
+
+            <BentoCard label="Art" surface="dark" drag={drag} index={5} className="hidden min-h-0 md:order-none md:flex-1 [@media(min-width:1180px)_and_(min-height:780px)]:block">
+              <ArtCard reduced={reduced} />
             </BentoCard>
           </div>
 
@@ -620,9 +664,10 @@ export function BentoHome() {
           ) : null}
 
           {/* ===== col 4 — location globe(4) · journey(3) ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[0.9] md:flex-col md:gap-2.5">
+          <div className="contents md:flex md:min-h-0 md:max-w-[clamp(280px,19vw,370px)] md:flex-[0.9] md:flex-col md:gap-2.5">
             <BentoCard label="Location" surface="dark" drag={drag} index={2} className="order-7 col-span-2 h-[280px] min-h-0 flex-[4] md:order-none md:h-auto">
-              <div className="relative min-h-0 flex-1">
+              {/* a side card: the globe sits back a little, full strength on hover */}
+              <div className="relative min-h-0 flex-1 opacity-70 transition-opacity duration-300 group-hover:opacity-100">
                 <HalftoneGlobe reduced={reduced} />
               </div>
             </BentoCard>
