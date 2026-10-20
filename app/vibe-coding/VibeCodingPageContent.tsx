@@ -18,11 +18,12 @@ import { EASE } from "@/lib/motion";
 import { SiteWindow } from "@/components/SiteWindow";
 import { TurntableWidget } from "@/components/TurntableWidget";
 
-type Tag = "app" | "web" | "interaction" | "ai";
+type Tag = "app" | "web" | "interaction" | "ai" | "art";
 
 type Media =
   | { kind: "video"; src: string; poster?: string }
-  | { kind: "image"; src: string; alt: string }
+  // fit "contain": show the whole image on a dark ground (wide strips of art)
+  | { kind: "image"; src: string; alt: string; fit?: "contain" }
   | { kind: "live"; href: string; url: string; label: string; poster?: string }
   | { kind: "iframe"; src: string; href: string; bg: string; title: string; poster?: string }
   | { kind: "custom"; node: "turntable" };
@@ -186,6 +187,59 @@ const entries: Entry[] = [
     tags: ["ai", "interaction"],
     media: { kind: "image", src: "/assets/lab/tts-workflow.jpg", alt: "TTS reading workflow redesign: moody hero composition" },
   },
+
+  // ── art practice: installations, then paintings. Titles and captions are the
+  //    About gallery's own (components/AboutArtGallery.tsx); `date` is only the
+  //    entry key here, never shown.
+  {
+    date: "art.1",
+    title: "echo of ruins",
+    description: "VR experience with hands; Mixed media installation",
+    tags: ["art"],
+    media: { kind: "image", src: "/assets/lab/art/echo.jpg", alt: "Echo of Ruins: VR experience with hands, mixed media installation" },
+  },
+  {
+    date: "art.2",
+    title: "suo memory",
+    description: "Gear Design, Acrylic, Physical Computing",
+    tags: ["art"],
+    media: { kind: "video", src: "/assets/lab/art/suo-memory.mp4", poster: "/assets/lab/art/suo-memory-poster.jpg" },
+  },
+  {
+    date: "art.3",
+    title: "print on texture",
+    description: "Transfer print with mixed media",
+    tags: ["art"],
+    media: { kind: "image", src: "/assets/lab/art/hang.jpg", alt: "Print on Texture: transfer print with mixed media" },
+  },
+  {
+    date: "art.4",
+    title: "substance",
+    description: "Transfer print with ice",
+    tags: ["art"],
+    media: { kind: "image", src: "/assets/lab/art/ice.jpg", alt: "Substance: transfer print with ice" },
+  },
+  {
+    date: "art.5",
+    title: "new york fashion week build",
+    description: "Installation design for Fey Official Showroom",
+    tags: ["art"],
+    media: { kind: "image", src: "/assets/lab/art/nyfw.jpg", alt: "New York Fashion Week build: installation design for Fey Official Showroom", fit: "contain" },
+  },
+  {
+    date: "art.6",
+    title: "mixed media: acrylic painting, transfer print",
+    description: "Acrylic painting, Transfer print",
+    tags: ["art"],
+    media: { kind: "image", src: "/assets/lab/art/print.jpg", alt: "Mixed media: acrylic painting, transfer print", fit: "contain" },
+  },
+  {
+    date: "art.7",
+    title: "mixed media: pencil, charcoal, acrylic, watercolor",
+    description: "Pencil, Charcoal, Acrylic, Watercolor",
+    tags: ["art"],
+    media: { kind: "image", src: "/assets/lab/art/sketch1.jpg", alt: "Mixed media: pencil, charcoal, acrylic, watercolor", fit: "contain" },
+  },
 ];
 
 // ─── Media components ──────────────────────────────────────────────────────
@@ -242,11 +296,13 @@ function LazyVideo({
 function LazyImage({
   src,
   alt,
+  fit,
   shouldLoad,
   onReady,
 }: {
   src: string;
   alt: string;
+  fit?: "contain";
   shouldLoad: boolean;
   onReady?: () => void;
 }) {
@@ -261,7 +317,7 @@ function LazyImage({
   }, [onReady]);
 
   return (
-    <div className="relative aspect-video overflow-hidden rounded-[22px]">
+    <div className={`relative aspect-video overflow-hidden rounded-[22px] ${fit === "contain" ? "bg-[#111214]" : ""}`}>
       <div
         className={`absolute inset-0 animate-pulse bg-white/[0.035] transition-opacity duration-500 ${
           loaded ? "pointer-events-none opacity-0" : "opacity-100"
@@ -270,7 +326,7 @@ function LazyImage({
       {shouldLoad && (
         // eslint-disable-next-line @next/next/no-img-element
         <img
-          className={`block h-full w-full object-cover transition-opacity duration-500 ${
+          className={`block h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"} transition-opacity duration-500 ${
             loaded ? "opacity-100" : "opacity-0"
           }`}
           src={src}
@@ -378,7 +434,7 @@ function MediaSlot({
     return <LazyVideo src={media.src} poster={media.poster} shouldLoad={shouldLoad} onReady={onReady} />;
   }
   if (media.kind === "image") {
-    return <LazyImage src={media.src} alt={media.alt} shouldLoad={shouldLoad} onReady={onReady} />;
+    return <LazyImage src={media.src} alt={media.alt} fit={media.fit} shouldLoad={shouldLoad} onReady={onReady} />;
   }
   if (media.kind === "live") {
     return (
