@@ -105,7 +105,7 @@ function useDeferredMount<T extends HTMLElement>(delay = 700) {
 /* A live website rendered at a desktop width and scaled into the block; its
    viewport height follows the block's aspect, so the page fills edge to edge.
    Presentational (no pointer events); a poster covers it until it loads. */
-function LiveSite({ src, poster, title, width = 1440, minViewport = 0 }: { src: string; poster: string; title: string; width?: number; minViewport?: number }) {
+function LiveSite({ src, poster, title, width = 1440, minViewport = 0, maxViewport = 0 }: { src: string; poster: string; title: string; width?: number; minViewport?: number; maxViewport?: number }) {
   const { ref, mount } = useDeferredMount<HTMLDivElement>(600);
   const [box, setBox] = useState({ w: 0, h: 0 });
   const [loaded, setLoaded] = useState(false);
@@ -117,8 +117,13 @@ function LiveSite({ src, poster, title, width = 1440, minViewport = 0 }: { src: 
     return () => ro.disconnect();
   }, [ref]);
   // a short, wide block widens the virtual viewport instead of squashing the
-  // page below `minViewport` px tall, so its layout never collapses
-  const vw = box.h && minViewport ? Math.max(width, Math.round((box.w / box.h) * minViewport)) : width;
+  // page below `minViewport` px tall, so its layout never collapses; a tall,
+  // narrow block narrows it instead (down to a phone width), so the page is
+  // never stretched past `maxViewport` px tall
+  const aspect = box.h ? box.w / box.h : 0;
+  let vw = width;
+  if (aspect && minViewport) vw = Math.max(vw, Math.round(aspect * minViewport));
+  if (aspect && maxViewport) vw = Math.min(vw, Math.max(390, Math.round(aspect * maxViewport)));
   const scale = box.w ? box.w / vw : 0;
   return (
     <div ref={ref} className="absolute inset-0 overflow-hidden">
@@ -540,15 +545,19 @@ export function BentoHome() {
             </BentoCard>
           </div>
 
-          {/* ===== col 2 — the O2 film holds a 16:9 frame, capped at half the
-              column on short screens (it then crops from the top, so the
-              burned-in subtitles stay); Qbix takes the rest ===== */}
-          <div className="contents md:flex md:min-h-0 md:flex-[2.05] md:flex-col md:gap-2.5 md:[container-type:size]">
+          {/* ===== col 2 — the O2 film is always shown whole at 16:9: full
+              width normally; on a short screen it shrinks (centred) instead of
+              cropping, so Qbix keeps at least ~200px. Qbix takes the rest.
+              The column is never wider than two 16:9 frames stacked in the
+              screen height allow (158px = headers, gaps, padding), so on a
+              wide, short screen Qbix stays near 16:9 too and the left and
+              right columns take the spare width ===== */}
+          <div className="contents md:flex md:min-h-0 md:max-w-[calc((100svh_-_158px)_/_1.125_+_16px)] md:flex-[2.05] md:flex-col md:gap-2.5 md:[container-type:size]">
             {/* qbix — the live homepage; the block opens the site */}
             <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
               <a href="https://qbix.space" target="_blank" rel="noopener noreferrer" aria-label="Open qbix.space in a new tab" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#0b0b0b] md:aspect-auto md:min-h-0 md:flex-1">
-                <LiveSite src={QBIX.href} poster={QBIX.poster} title="qbix.space homepage" width={1200} minViewport={640} />
+                <LiveSite src={QBIX.href} poster={QBIX.poster} title="qbix.space homepage" width={1200} minViewport={640} maxViewport={880} />
               </div>
             </BentoCard>
 
@@ -565,8 +574,8 @@ export function BentoHome() {
                   <span className="font-medium text-white">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
                 </span>
               </div>
-              <div className="pointer-events-none relative mx-2 mb-2 aspect-video shrink-0 overflow-hidden rounded-[14px] bg-[#141416] md:aspect-auto md:h-[min(calc((100cqw_-_16px)_*_0.5625),calc(50cqh_-_75px))]">
-                <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} className="object-bottom" />
+              <div className="pointer-events-none relative mx-2 mb-2 aspect-video shrink-0 overflow-hidden rounded-[14px] bg-[#141416] md:mx-auto md:w-[min(calc(100cqw_-_16px),calc((100cqh_-_290px)_*_16_/_9))]">
+                <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} />
               </div>
             </BentoCard>
           </div>

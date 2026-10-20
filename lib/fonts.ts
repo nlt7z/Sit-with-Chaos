@@ -78,3 +78,11 @@ export const pressStart = localFont({
   weight: "400",
   display: "swap",
 });
+
+/* Gloock, the display face of /home-v2 (latin 400, from @fontsource/gloock). */
+export const gloock = localFont({
+  src: "./fonts/gloock-latin-400-normal.woff2",
+  weight: "400",
+  variable: "--font-gloock",
+  display: "swap",
+});
