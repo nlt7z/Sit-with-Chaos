@@ -16,7 +16,10 @@ const LENGTH = 4;
 const FIELD =
   "w-full rounded-[14px] bg-[#191a1b] px-4 text-[16px] text-white outline-none transition-[background-color,box-shadow] duration-150 ease-portfolio placeholder:text-white/35 focus:bg-[#1e1f20] focus:shadow-[inset_0_0_0_1px_rgba(210,255,0,0.7)] md:text-[15px]";
 
-const NOTE = "text-[13px] font-medium tracking-[-0.005em] text-white/60";
+// small text keeps a soft halo of the page colour, so the strand passing behind never cuts through it
+const HALO = "[text-shadow:0_0_6px_#0a0b0c,0_0_14px_#0a0b0c,0_0_24px_#0a0b0c]";
+
+const NOTE = `text-[13px] font-medium tracking-[-0.005em] text-white/60 ${HALO}`;
 
 type State = "idle" | "checking" | "wrong" | "open";
 
@@ -168,7 +171,7 @@ export function UnlockGate({ next }: { next: string }) {
         <motion.div {...enter(2)} className="mt-8 flex flex-col items-center">
           <AnimatePresence mode="wait" initial={false}>
             {ask === "closed" ? (
-              <motion.button key="ask" {...swap} type="button" onClick={() => setAsk("open")} className={actionClass("label", "dark")}>
+              <motion.button key="ask" {...swap} type="button" onClick={() => setAsk("open")} className={`${actionClass("label", "dark")} ${HALO}`}>
                 Request access
               </motion.button>
             ) : ask === "sent" ? (
@@ -243,7 +246,7 @@ function RequestForm({ next, onSent, onCancel }: { next: string; onSent: () => v
       />
 
       <div className="mt-2 flex items-center justify-between">
-        <button type="button" onClick={onCancel} className={actionClass("label", "dark")}>
+        <button type="button" onClick={onCancel} className={`${actionClass("label", "dark")} ${HALO}`}>
           Cancel
         </button>
         <button
