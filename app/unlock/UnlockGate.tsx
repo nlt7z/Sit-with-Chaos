@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { actionClass } from "@/components/Action";
+import { FlowField } from "@/components/FlowField";
 import { SplitTextChars } from "@/components/SplitBtn";
 import { EASE, REVEAL, STAGGER } from "@/lib/motion";
 
@@ -11,8 +12,9 @@ import { requestAccess, unlockSite } from "./actions";
 
 const LENGTH = 4;
 
+// opaque (white 6% / 8% over #0a0b0c) so the flow behind never runs under the text
 const FIELD =
-  "w-full rounded-[14px] bg-white/[0.06] px-4 text-[16px] text-white outline-none transition-[background-color,box-shadow] duration-150 ease-portfolio placeholder:text-white/35 focus:bg-white/[0.08] focus:shadow-[inset_0_0_0_1px_rgba(210,255,0,0.7)] md:text-[15px]";
+  "w-full rounded-[14px] bg-[#191a1b] px-4 text-[16px] text-white outline-none transition-[background-color,box-shadow] duration-150 ease-portfolio placeholder:text-white/35 focus:bg-[#1e1f20] focus:shadow-[inset_0_0_0_1px_rgba(210,255,0,0.7)] md:text-[15px]";
 
 const NOTE = "text-[13px] font-medium tracking-[-0.005em] text-white/60";
 
@@ -88,89 +90,101 @@ export function UnlockGate({ next }: { next: string }) {
   const caretAt = focused && !busy ? Math.min(code.length, LENGTH - 1) : -1;
 
   return (
-    // top-anchored (not centred) so the note opening below never moves the code
-    <main className="flex min-h-[100svh] flex-col items-center bg-[#0a0b0c] px-6 pb-16 pt-[clamp(6rem,30svh,17rem)] text-white">
-      <motion.div {...enter(0)} className="text-center">
-        <p className="font-display text-[clamp(2.4rem,5vw,3.2rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
-        <p className="mt-1 font-sans text-[clamp(1.4rem,2.8vw,1.85rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">
-          Fang
-        </p>
+    <main className="relative min-h-[100svh] bg-[#0a0b0c] text-white">
+      <motion.div
+        aria-hidden
+        className="pointer-events-none fixed inset-0"
+        {...(reduced ? {} : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 1.6, ease: EASE } })}
+      >
+        <FlowField className="h-full w-full" />
+        {/* the middle is dimmed so the name, the code and the note read cleanly */}
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_46%_at_50%_45%,rgba(10,11,12,0.72)_0%,rgba(10,11,12,0.3)_55%,rgba(10,11,12,0)_100%)]" />
       </motion.div>
 
-      <motion.form {...enter(1)} onSubmit={onSubmit} className="mt-16 flex flex-col items-center" autoComplete="off">
-        <label htmlFor="site-password" className={NOTE}>
-          Password
-        </label>
-
-        <motion.div animate={row} className="relative mt-4 flex gap-3">
-          {Array.from({ length: LENGTH }, (_, i) => {
-            const filled = i < code.length;
-            return (
-              <div
-                key={i}
-                aria-hidden
-                className={`flex h-16 w-14 items-center justify-center rounded-[14px] transition-[background-color,box-shadow] duration-150 ease-portfolio ${
-                  state === "open"
-                    ? "bg-nltLime"
-                    : i === caretAt
-                      ? "bg-white/[0.08] shadow-[inset_0_0_0_1px_rgba(210,255,0,0.7)]"
-                      : "bg-white/[0.06]"
-                }`}
-              >
-                {filled ? (
-                  <span className={`h-2.5 w-2.5 rounded-full ${state === "open" ? "bg-[#0a0b0c]" : "bg-white"}`} />
-                ) : i === caretAt ? (
-                  <motion.span
-                    className="h-6 w-px bg-nltLime"
-                    animate={reduced ? undefined : { opacity: [1, 1, 0, 0] }}
-                    transition={{ duration: 1.06, repeat: Infinity, times: [0, 0.5, 0.5, 1], ease: "linear" }}
-                  />
-                ) : null}
-              </div>
-            );
-          })}
-          <input
-            ref={inputRef}
-            id="site-password"
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={LENGTH}
-            autoComplete="off"
-            spellCheck={false}
-            value={code}
-            onChange={(e) => onChange(e.target.value)}
-            onFocus={() => setFocused(true)}
-            onBlur={() => setFocused(false)}
-            readOnly={busy}
-            aria-invalid={state === "wrong"}
-            aria-describedby="site-password-status"
-            className="absolute inset-0 h-full w-full cursor-text bg-transparent text-[16px] text-transparent caret-transparent outline-none selection:bg-transparent"
-          />
+      {/* top-anchored (not centred) so the note opening below never moves the code */}
+      <div className="relative flex min-h-[100svh] flex-col items-center px-6 pb-16 pt-[clamp(6rem,30svh,17rem)]">
+        <motion.div {...enter(0)} className="text-center">
+          <p className="font-display text-[clamp(2.4rem,5vw,3.2rem)] font-light italic leading-[0.85] text-nltLime">yuan</p>
+          <p className="mt-1 font-sans text-[clamp(1.4rem,2.8vw,1.85rem)] font-light uppercase tracking-[0.12em] text-nltLime/60">
+            Fang
+          </p>
         </motion.div>
 
-        <p id="site-password-status" role="status" className={`mt-5 h-5 ${NOTE}`}>
-          {state === "wrong" ? "Wrong password" : ""}
-        </p>
-      </motion.form>
+        <motion.form {...enter(1)} onSubmit={onSubmit} className="mt-16 flex flex-col items-center" autoComplete="off">
+          <label htmlFor="site-password" className={NOTE}>
+            Password
+          </label>
 
-      <motion.div {...enter(2)} className="mt-8 flex flex-col items-center">
-        <AnimatePresence mode="wait" initial={false}>
-          {ask === "closed" ? (
-            <motion.button key="ask" {...swap} type="button" onClick={() => setAsk("open")} className={actionClass("label", "dark")}>
-              Request access
-            </motion.button>
-          ) : ask === "sent" ? (
-            <motion.p key="sent" {...swap} role="status" className={NOTE}>
-              Message sent
-            </motion.p>
-          ) : (
-            <motion.div key="form" {...swap}>
-              <RequestForm next={next} onSent={() => setAsk("sent")} onCancel={() => setAsk("closed")} />
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+          <motion.div animate={row} className="relative mt-4 flex gap-3">
+            {Array.from({ length: LENGTH }, (_, i) => {
+              const filled = i < code.length;
+              return (
+                <div
+                  key={i}
+                  aria-hidden
+                  className={`flex h-16 w-14 items-center justify-center rounded-[14px] transition-[background-color,box-shadow] duration-150 ease-portfolio ${
+                    state === "open"
+                      ? "bg-nltLime"
+                      : i === caretAt
+                        ? "bg-[#1e1f20] shadow-[inset_0_0_0_1px_rgba(210,255,0,0.7)]"
+                        : "bg-[#191a1b]"
+                  }`}
+                >
+                  {filled ? (
+                    <span className={`h-2.5 w-2.5 rounded-full ${state === "open" ? "bg-[#0a0b0c]" : "bg-white"}`} />
+                  ) : i === caretAt ? (
+                    <motion.span
+                      className="h-6 w-px bg-nltLime"
+                      animate={reduced ? undefined : { opacity: [1, 1, 0, 0] }}
+                      transition={{ duration: 1.06, repeat: Infinity, times: [0, 0.5, 0.5, 1], ease: "linear" }}
+                    />
+                  ) : null}
+                </div>
+              );
+            })}
+            <input
+              ref={inputRef}
+              id="site-password"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={LENGTH}
+              autoComplete="off"
+              spellCheck={false}
+              value={code}
+              onChange={(e) => onChange(e.target.value)}
+              onFocus={() => setFocused(true)}
+              onBlur={() => setFocused(false)}
+              readOnly={busy}
+              aria-invalid={state === "wrong"}
+              aria-describedby="site-password-status"
+              className="absolute inset-0 h-full w-full cursor-text bg-transparent text-[16px] text-transparent caret-transparent outline-none selection:bg-transparent"
+            />
+          </motion.div>
+
+          <p id="site-password-status" role="status" className={`mt-5 h-5 ${NOTE}`}>
+            {state === "wrong" ? "Wrong password" : ""}
+          </p>
+        </motion.form>
+
+        <motion.div {...enter(2)} className="mt-8 flex flex-col items-center">
+          <AnimatePresence mode="wait" initial={false}>
+            {ask === "closed" ? (
+              <motion.button key="ask" {...swap} type="button" onClick={() => setAsk("open")} className={actionClass("label", "dark")}>
+                Request access
+              </motion.button>
+            ) : ask === "sent" ? (
+              <motion.p key="sent" {...swap} role="status" className={NOTE}>
+                Message sent
+              </motion.p>
+            ) : (
+              <motion.div key="form" {...swap}>
+                <RequestForm next={next} onSent={() => setAsk("sent")} onCancel={() => setAsk("closed")} />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </motion.div>
+      </div>
     </main>
   );
 }
