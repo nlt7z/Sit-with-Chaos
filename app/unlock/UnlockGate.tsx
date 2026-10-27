@@ -4,7 +4,7 @@ import { AnimatePresence, motion, useAnimationControls, useReducedMotion } from 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 
 import { actionClass } from "@/components/Action";
-import { FlowField } from "@/components/FlowField";
+import { FlowStrand } from "@/components/FlowStrand";
 import { SplitTextChars } from "@/components/SplitBtn";
 import { EASE, REVEAL, STAGGER } from "@/lib/motion";
 
@@ -96,9 +96,7 @@ export function UnlockGate({ next }: { next: string }) {
         className="pointer-events-none fixed inset-0"
         {...(reduced ? {} : { initial: { opacity: 0 }, animate: { opacity: 1 }, transition: { duration: 1.6, ease: EASE } })}
       >
-        <FlowField className="h-full w-full" />
-        {/* the middle is dimmed so the name, the code and the note read cleanly */}
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_40%_46%_at_50%_45%,rgba(10,11,12,0.72)_0%,rgba(10,11,12,0.3)_55%,rgba(10,11,12,0)_100%)]" />
+        <FlowStrand className="h-full w-full" />
       </motion.div>
 
       {/* top-anchored (not centred) so the note opening below never moves the code */}
