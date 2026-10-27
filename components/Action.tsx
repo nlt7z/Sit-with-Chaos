@@ -44,6 +44,11 @@ const STYLE: Record<Variant, Record<Tone, string>> = {
   },
 };
 
+/** The same looks for a <button> (form submits, in-place toggles). */
+export function actionClass(variant: Variant, tone: Tone = "light") {
+  return STYLE[variant][tone];
+}
+
 export function isExternal(href: string) {
   return /^(https?:|mailto:|\/assets\/)/.test(href) || /\.pdf($|[?#])/i.test(href);
 }

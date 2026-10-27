@@ -41,3 +41,4 @@ public/assets/liner/Liner Product Video.mp4
 # large unreferenced case-study PDFs (keep local, host externally if needed)
 public/assets/liner/Processbook.pdf
 public/assets/liner/Liner-stakeholder-report_north4%20studio.pdf
+.env*
