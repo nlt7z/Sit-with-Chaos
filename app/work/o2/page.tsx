@@ -17,9 +17,10 @@ export const metadata: Metadata = {
 
 // the working products, live; names are the products' own
 const PRODUCTS = [
-  { name: "BOM V2", href: "https://test1.ui.o2tech.ai/welcome", url: "test1.ui.o2tech.ai", poster: "/assets/o2/live/bom-still.jpg" },
+  { name: "BOM V2", href: "https://bom.o2tech.ai/welcome", url: "bom.o2tech.ai", poster: "/assets/o2/live/bom-o2tech-still.jpg" },
   { name: "Electronics Innovation Network", href: "https://net.ui.o2tech.ai/", url: "net.ui.o2tech.ai", poster: "/assets/o2/live/network-still.jpg" },
   { name: "PCB DFM Workbench", href: "https://dfm.ui.o2tech.ai/#/", url: "dfm.ui.o2tech.ai", poster: "/assets/o2/live/dfm-still.jpg" },
+  { name: "BesTek", href: "https://bestek.ui.o2tech.ai/client/#workbench", url: "bestek.ui.o2tech.ai", poster: "/assets/o2/live/bestek-still.jpg" },
 ] as const;
 
 /**
@@ -49,7 +50,7 @@ export default function O2CaseStudyPage() {
           <Reveal>
             <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Live products</p>
           </Reveal>
-          <div className="mt-6 grid gap-10 lg:grid-cols-3 lg:gap-8">
+          <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-8">
             {PRODUCTS.map((p, i) => (
               <Reveal key={p.href} delay={i * 0.06}>
                 <SiteWindow href={p.href} url={p.url} label={p.name} poster={p.poster} />
