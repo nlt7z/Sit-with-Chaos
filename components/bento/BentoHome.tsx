@@ -27,7 +27,7 @@ const INTRO =
 
 // the "now" block: O2 Tech AI's product demo film (O2AI Demo New) (muted, subtitles burned
 // in, loops while on screen); the block opens the O2 case study
-const NOW_FILM = { src: "/assets/o2/o2-demo.mp4", poster: "/assets/o2/o2-demo-still.jpg" };
+const NOW_FILM = { src: "/assets/o2/o2-film-v8.mp4", poster: "/assets/o2/o2-film-v8-still.jpg" };
 const O2_CASE = "/work/o2";
 
 // Meituan block hidden from the homepage for now (2026-10-16); flip to restore
