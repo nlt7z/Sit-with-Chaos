@@ -23,8 +23,8 @@ const PRODUCTS = [
 ] as const;
 
 /**
- * /work/o2 — the product film (with sound) in the dark hero, then the two
- * working products as live preview windows. No narrative copy on purpose.
+ * /work/o2 — the product film (original quality, with sound) in the dark hero,
+ * then the working products as live preview windows. No narrative copy on purpose.
  */
 export default function O2CaseStudyPage() {
   return (
@@ -33,8 +33,8 @@ export default function O2CaseStudyPage() {
       <CaseHero logo="/assets/logos/o2.svg" company="O2 Tech AI" kicker="Product Designer · 2026" title={TAGLINE}>
         <div className="overflow-hidden rounded-[14px] bg-black ring-1 ring-white/10">
           <video
-            src="/assets/o2/o2-demo-sound.mp4"
-            poster="/assets/o2/o2-demo-still.jpg"
+            src="/assets/o2/o2-full-film-v8.mp4"
+            poster="/assets/o2/o2-full-film-v8-still.jpg"
             controls
             playsInline
             preload="metadata"
