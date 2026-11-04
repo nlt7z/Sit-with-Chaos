@@ -21,11 +21,14 @@ const PRODUCTS = [
   { name: "Electronics Innovation Network", href: "https://net.ui.o2tech.ai/", url: "net.ui.o2tech.ai", poster: "/assets/o2/live/network-still.jpg" },
   { name: "PCB DFM Workbench", href: "https://dfm.ui.o2tech.ai/#/", url: "dfm.ui.o2tech.ai", poster: "/assets/o2/live/dfm-still.jpg" },
   { name: "BesTek", href: "https://bestek.ui.o2tech.ai/client/#workbench", url: "bestek.ui.o2tech.ai", poster: "/assets/o2/live/bestek-still.jpg" },
+  { name: "CRM", href: "https://crm.o2tech.ai/", url: "crm.o2tech.ai", poster: "/assets/o2/live/crm-still.jpg" },
+  { name: "ERP", href: "https://erp.ui.o2tech.ai/", url: "erp.ui.o2tech.ai", poster: "/assets/o2/live/erp-still.jpg" },
 ] as const;
 
 /**
  * /work/o2 — the product film (original quality, with sound) in the dark hero,
- * then the working products as live preview windows. No narrative copy on purpose.
+ * then the working products as live preview windows, then the BOM playbook
+ * tutorial (original quality; its captions are in the picture). No narrative copy on purpose.
  */
 export default function O2CaseStudyPage() {
   return (
@@ -58,6 +61,26 @@ export default function O2CaseStudyPage() {
               </Reveal>
             ))}
           </div>
+        </section>
+
+        <section id="tutorial" className="scroll-mt-28 pt-16 md:pt-24">
+          <Reveal>
+            <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Tutorial</p>
+          </Reveal>
+          <Reveal className="mt-6">
+            <div className="overflow-hidden rounded-[22px] bg-[#ecf0f3]">
+              <video
+                src="/assets/o2/o2-bom-playbook-v5.8.mp4"
+                poster="/assets/o2/o2-bom-playbook-v5.8-still.jpg"
+                controls
+                playsInline
+                preload="metadata"
+                aria-label="O2 BOM Playbook tutorial"
+                className="aspect-video h-auto w-full bg-[#ecf0f3] object-cover"
+              />
+            </div>
+            <p className="mt-4 font-display text-[1.2rem] font-normal leading-snug text-textPrimary">BOM Playbook</p>
+          </Reveal>
         </section>
       </main>
       <Footer />
