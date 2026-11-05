@@ -1,9 +1,10 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { AnimatePresence, animate, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import { type RefObject, useLayoutEffect, useRef, useState } from "react";
 
+import { BentoCard } from "@/components/bento/BentoCard";
 import { SplitTextChars } from "@/components/SplitBtn";
 import { RESUME_HREF } from "@/lib/site";
 import { type ToneSetting, useSurfaceTone } from "@/lib/useSurfaceTone";
@@ -21,9 +22,14 @@ import { type ToneSetting, useSurfaceTone } from "@/lib/useSurfaceTone";
  * Tone: the capsule is dark by default; `light` frosts it white; `auto` (case
  * studies) is light and turns dark while a `data-surface="dark"` band (the
  * hero) passes under it. Same shape, place and behaviour in every tone.
+ * On the homepage the switch is a block in the bento instead (SwitchTile,
+ * with `desktop={false}` here); following a link hands the next page's switch
+ * this one's place, and it glides from there to its own.
  */
 
-const ITEMS: { key: "home" | "work" | "lab"; label: string; href: string }[] = [
+type Key = "home" | "work" | "lab";
+
+const ITEMS: { key: Key; label: string; href: string }[] = [
   { key: "home", label: "Home", href: "/" },
   { key: "work", label: "Work", href: "/work" },
   { key: "lab", label: "Lab", href: "/vibe-coding" },
@@ -46,6 +52,40 @@ function RotatedLabel({ text }: { text: string }) {
   );
 }
 
+// where the switch was when one of its links was followed (its centre, in the viewport)
+const HANDOFF = "yf-switch-from";
+
+function rememberSwitch(el: HTMLElement | null) {
+  if (!el) return;
+  const r = el.getBoundingClientRect();
+  try {
+    sessionStorage.setItem(HANDOFF, JSON.stringify({ x: r.left + r.width / 2, y: r.top + r.height / 2, t: Date.now() }));
+  } catch {}
+}
+
+/* Arriving from another page's switch: start where it was and glide into
+   place. Only a handoff from the last few seconds counts. */
+function useArrival(ref: RefObject<HTMLElement | null>, on: boolean) {
+  useLayoutEffect(() => {
+    // only a switch that is on screen takes the handoff (the homepage also
+    // mounts the rail, for its phone pill)
+    const el = ref.current;
+    const r = el?.getBoundingClientRect();
+    if (!on || !el || !r?.width) return;
+    let from: { x: number; y: number; t: number } | null = null;
+    try {
+      from = JSON.parse(sessionStorage.getItem(HANDOFF) || "null");
+      sessionStorage.removeItem(HANDOFF);
+    } catch {}
+    if (!from || Date.now() - from.t > 4000) return;
+    const dx = from.x - (r.left + r.width / 2);
+    const dy = from.y - (r.top + r.height / 2);
+    if (Math.hypot(dx, dy) < 4) return;
+    animate(el, { x: [dx, 0], y: [dy, 0] }, { type: "spring", stiffness: 220, damping: 28 });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+}
+
 const TONE = {
   dark: {
     shell: "border-white/[0.08] bg-[#0f1011]/85",
@@ -63,16 +103,20 @@ const TONE = {
   },
 } as const;
 
-export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | "lab"; tone?: ToneSetting }) {
+export function SideRail({ active, tone = "dark", desktop = true }: { active: Key; tone?: ToneSetting; desktop?: boolean }) {
   const reduced = useReducedMotion();
   const [hovered, setHovered] = useState<string | null>(null);
   const t = TONE[useSurfaceTone(tone, 0.5)];
   const tm = TONE[useSurfaceTone(tone, 0.95)];
+  const capsule = useRef<HTMLDivElement>(null);
+  useArrival(capsule, desktop && !reduced);
 
   return (
     <>
+      {desktop ? (
       <nav aria-label="Sections" className="fixed left-4 top-1/2 z-50 hidden -translate-y-1/2 md:block">
         <div
+          ref={capsule}
           className={`flex w-10 flex-col gap-1 rounded-full border p-1 transition-[background-color,border-color,box-shadow] duration-300 ${t.shell}`}
           style={{ boxShadow: t.shadow }}
           onMouseLeave={() => setHovered(null)}
@@ -84,6 +128,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
                 key={key}
                 href={href}
                 aria-current={on ? "page" : undefined}
+                onClick={() => rememberSwitch(capsule.current)}
                 onMouseEnter={() => setHovered(key)}
                 onFocus={() => setHovered(key)}
                 onBlur={() => setHovered(null)}
@@ -141,6 +186,7 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
           </a>
         </div>
       </nav>
+      ) : null}
 
       {/* Mobile — a floating pill nav centered along the bottom edge. */}
       <nav
@@ -178,5 +224,85 @@ export function SideRail({ active, tone = "dark" }: { active: "home" | "work" | 
         </div>
       </nav>
     </>
+  );
+}
+
+/* The switch as a block in the homepage bento: the same four links side by
+   side, the current page lime, the same highlight gliding after the pointer.
+   It holds the board still while pointed at (live="hold"), so the links never
+   move under the cursor; its column never narrows below what the four labels
+   need (data-floor in BentoHome). Under 1024px the résumé link drops out. */
+export function SwitchTile({ active, className = "" }: { active: Key; className?: string }) {
+  const reduced = useReducedMotion();
+  const [hovered, setHovered] = useState<string | null>(null);
+  const tile = useRef<HTMLDivElement>(null);
+  useArrival(tile, !reduced);
+  const t = TONE.dark;
+  const segment =
+    "group relative flex h-11 flex-auto items-center justify-center rounded-[16px] px-[clamp(6px,0.7vw,10px)] text-[13px] font-medium tracking-[-0.005em] transition-[color,transform] duration-150 ease-[cubic-bezier(0.4,0,0.2,1)] focus-visible:outline-none active:scale-[0.97]";
+  const glide = (key: string) => (
+    <AnimatePresence>
+      {hovered === key ? (
+        <motion.span
+          aria-hidden
+          layoutId="switch-hover"
+          className={`absolute inset-0 rounded-[16px] ${t.glide}`}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={reduced ? { duration: 0 } : { type: "spring", stiffness: 500, damping: 38 }}
+        />
+      ) : null}
+    </AnimatePresence>
+  );
+  const ring = <span aria-hidden className="pointer-events-none absolute inset-0 rounded-[16px] opacity-0 ring-1 ring-inset ring-white/60 group-focus-visible:opacity-100" />;
+
+  return (
+    <div ref={tile} className={className}>
+      <BentoCard header={false} live="hold" surface="dark" index={0}>
+        <nav aria-label="Sections" className="flex gap-1 p-1.5" onMouseLeave={() => setHovered(null)}>
+          {ITEMS.map(({ key, label, href }) => {
+            const on = key === active;
+            return (
+              <Link
+                key={key}
+                href={href}
+                aria-current={on ? "page" : undefined}
+                onClick={() => {
+                  if (!on) rememberSwitch(tile.current);
+                }}
+                onMouseEnter={() => setHovered(on ? null : key)}
+                onFocus={() => setHovered(on ? null : key)}
+                onBlur={() => setHovered(null)}
+                className={`${segment} ${on ? "text-[#0a0b0c]" : t.idle}`}
+              >
+                {on ? <span aria-hidden className="absolute inset-0 rounded-[16px] bg-nltLime" /> : null}
+                {glide(key)}
+                <span className="relative flex items-center whitespace-nowrap leading-none">
+                  <SplitTextChars text={label} />
+                </span>
+                {ring}
+              </Link>
+            );
+          })}
+          <a
+            href={RESUME_HREF}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Resume (PDF, opens in a new tab)"
+            onMouseEnter={() => setHovered("resume")}
+            onFocus={() => setHovered("resume")}
+            onBlur={() => setHovered(null)}
+            className={`${segment} ${t.idle} hidden lg:flex`}
+          >
+            {glide("resume")}
+            <span className="relative flex items-center whitespace-nowrap leading-none">
+              <SplitTextChars text="Resume ↗" />
+            </span>
+            {ring}
+          </a>
+        </nav>
+      </BentoCard>
+    </div>
   );
 }

@@ -2,9 +2,10 @@
 
 /**
  * BentoHome — the homepage: a single-screen, NO-SCROLL puzzle of draggable
- * widget windows on a dark canvas. Lime marks the CTA, the rail, card glows, corner arrows, the name, the Now dot and the globe arcs. Four columns; each
+ * widget windows on a dark canvas. Lime marks the CTA, the switch, card glows, corner arrows, the name, the Now dot and the globe arcs. Four columns; each
  * card's flex-[N] is its share of the column height. Every block names itself
- * top-left (company, project, or widget) except the identity card.
+ * top-left (company, project, or widget) except the identity card and the
+ * switch. Pointing at a block reflows the board around it (useLiveBento).
  */
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -15,7 +16,8 @@ import { useEffect, useRef, useState } from "react";
 import { BentoCard } from "@/components/bento/BentoCard";
 import { EMAIL } from "@/lib/site";
 import { HalftoneGlobe } from "@/components/bento/HalftoneGlobe";
-import { SideRail } from "@/components/bento/SideRail";
+import { SideRail, SwitchTile } from "@/components/bento/SideRail";
+import { useLiveBento } from "@/components/bento/useLiveBento";
 import { RoseLoader } from "@/components/RoseLoader";
 import { Action, isExternal } from "@/components/Action";
 import { playInView } from "@/lib/playInView";
@@ -37,6 +39,10 @@ const MEITUAN_PROTOTYPE = "/assets/meituan-im/Revised%20Repair%20Flow.html#flow=
 
 // qbix.space's homepage, live; the hero still covers the block until it paints
 const QBIX = { href: "https://qbix.space", poster: "/assets/work/qbix-still.jpg" };
+
+// O2's landing page can't be framed (it sends X-Frame-Options), so the block
+// plays a recording of its hero: the camera flying along the production line
+const LANDING = { href: "https://landing.ui.o2tech.ai/", src: "/assets/o2/o2-landing-loop.mp4", poster: "/assets/o2/o2-landing-still.jpg" };
 
 
 /* True below the `md` breakpoint. Layout is handled in CSS; this only gates
@@ -112,27 +118,47 @@ function useDeferredMount<T extends HTMLElement>(delay = 700) {
 
 /* A live website rendered at a desktop width and scaled into the block; its
    viewport height follows the block's aspect, so the page fills edge to edge.
-   Presentational (no pointer events); a poster covers it until it loads. */
+   Presentational (no pointer events); a poster covers it until it loads.
+   While the block is resizing (the board's reflow) the page keeps its
+   viewport and is only scaled to cover; it is re-fitted once the block
+   settles, so the site never re-lays out every frame. */
 function LiveSite({ src, poster, title, width = 1440, minViewport = 0, maxViewport = 0 }: { src: string; poster: string; title: string; width?: number; minViewport?: number; maxViewport?: number }) {
   const { ref, mount } = useDeferredMount<HTMLDivElement>(600);
   const [box, setBox] = useState({ w: 0, h: 0 });
+  const [view, setView] = useState({ w: 0, h: 0 });
   const [loaded, setLoaded] = useState(false);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const ro = new ResizeObserver(([e]) => setBox({ w: e.contentRect.width, h: e.contentRect.height }));
+    // a short, wide block widens the virtual viewport instead of squashing the
+    // page below `minViewport` px tall, so its layout never collapses; a tall,
+    // narrow block narrows it instead (down to a phone width), so the page is
+    // never stretched past `maxViewport` px tall
+    const fit = (w: number, h: number) => {
+      const aspect = w / h;
+      let vw = width;
+      if (minViewport) vw = Math.max(vw, Math.round(aspect * minViewport));
+      if (maxViewport) vw = Math.min(vw, Math.max(390, Math.round(aspect * maxViewport)));
+      return { w: vw, h: Math.round((h * vw) / w) };
+    };
+    let settle = 0;
+    let first = true;
+    const ro = new ResizeObserver(([e]) => {
+      const { width: w, height: h } = e.contentRect;
+      if (!w || !h) return;
+      setBox({ w, h });
+      clearTimeout(settle);
+      if (first) setView(fit(w, h));
+      else settle = window.setTimeout(() => setView(fit(w, h)), 220);
+      first = false;
+    });
     ro.observe(el);
-    return () => ro.disconnect();
-  }, [ref]);
-  // a short, wide block widens the virtual viewport instead of squashing the
-  // page below `minViewport` px tall, so its layout never collapses; a tall,
-  // narrow block narrows it instead (down to a phone width), so the page is
-  // never stretched past `maxViewport` px tall
-  const aspect = box.h ? box.w / box.h : 0;
-  let vw = width;
-  if (aspect && minViewport) vw = Math.max(vw, Math.round(aspect * minViewport));
-  if (aspect && maxViewport) vw = Math.min(vw, Math.max(390, Math.round(aspect * maxViewport)));
-  const scale = box.w ? box.w / vw : 0;
+    return () => {
+      ro.disconnect();
+      clearTimeout(settle);
+    };
+  }, [ref, width, minViewport, maxViewport]);
+  const scale = view.w ? Math.max(box.w / view.w, box.h / view.h) : 0;
   return (
     <div ref={ref} className="absolute inset-0 overflow-hidden">
       {mount && scale ? (
@@ -144,7 +170,7 @@ function LiveSite({ src, poster, title, width = 1440, minViewport = 0, maxViewpo
           // until its hero is up, so the block never flashes black
           onLoad={() => window.setTimeout(() => setLoaded(true), 3000)}
           className="pointer-events-none absolute left-0 top-0 border-0"
-          style={{ width: vw, height: Math.round(box.h / scale), transform: `scale(${scale})`, transformOrigin: "top left" }}
+          style={{ width: view.w, height: view.h, transform: `scale(${scale})`, transformOrigin: "top left" }}
         />
       ) : null}
       {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -535,6 +561,8 @@ export function BentoHome() {
   const reduced = !!useReducedMotion();
   const isMobile = useIsMobile();
   const drag = !isMobile; // dragging fights vertical scroll on touch devices
+  const board = useRef<HTMLDivElement>(null);
+  useLiveBento(board);
 
   return (
     <div className="relative min-h-[100svh] bg-[#0a0b0c] text-white md:h-[100svh] md:overflow-hidden">
@@ -560,11 +588,10 @@ export function BentoHome() {
         }}
       />
 
-      <SideRail active="home" />
+      {/* on a desktop the switch is a block in the bento (col 1); phones keep the bottom pill */}
+      <SideRail active="home" desktop={false} />
 
-      {/* a wider gap after the rail than other pages (RAIL_CLEARANCE is 84px),
-          so the bento reads as one centred bundle */}
-      <div className={`relative z-10 mx-auto w-full px-3 pb-24 pt-3 md:flex md:h-full md:gap-2.5 md:py-3 md:pb-3 md:pl-[100px] md:pr-5`}>
+      <div className={`relative z-10 mx-auto w-full px-3 pb-24 pt-3 md:flex md:h-full md:gap-2.5 md:px-5 md:py-3`}>
         {/* On mobile each column wrapper becomes `display:contents`, so every card
             flows directly into the grid below; CSS `order-*` then sequences them
             into a single intentional feed. On md+ the wrappers reassert as the
@@ -572,19 +599,25 @@ export function BentoHome() {
         {/* the side columns are capped, so spare width becomes margin around
             the bundle instead of a bigger photo and globe: the two middle
             blocks (Qbix, the O2 film) are the focus */}
-        <div className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:justify-center md:gap-2.5 md:overflow-hidden">
-          {/* ===== col 1 — identity (its own height) · photo · art (the art
-              card only where the column is tall and wide enough) ===== */}
-          <div className="contents md:flex md:min-h-0 md:max-w-[clamp(300px,21vw,400px)] md:flex-[1.03] md:flex-col md:gap-2.5">
-            <BentoCard surface="glass" drag={drag} index={0} className="order-1 col-span-2 md:order-none md:flex-none">
+        {/* data-col / live mark how each column and block takes part in the
+            reflow: the pointed-at block's column widens and its row grows,
+            the rest give way (see useLiveBento) */}
+        <div ref={board} className="grid grid-cols-2 content-start gap-2.5 md:flex md:min-h-0 md:flex-1 md:justify-center md:gap-2.5 md:overflow-hidden">
+          {/* ===== col 1 — the switch · identity (both their own height) ·
+              photo · art (the art card only where the column is tall and
+              wide enough). The column never gets narrower than the switch. ===== */}
+          <div data-col data-grow="1.35" data-floor="262" className="contents md:flex md:min-h-0 md:max-w-[clamp(300px,21vw,400px)] md:flex-[1.03] md:flex-col md:gap-2.5">
+            <SwitchTile active="home" className="hidden md:block md:flex-none" />
+
+            <BentoCard live="fixed" surface="glass" drag={drag} index={0} className="order-1 col-span-2 md:order-none md:flex-none">
               <IdentityCard reduced={reduced} />
             </BentoCard>
 
-            <BentoCard surface="dark" drag={drag} index={1} className="order-1 col-span-2 h-[420px] min-h-0 md:order-none md:h-auto md:flex-[1.35]">
+            <BentoCard live="grow" surface="dark" drag={drag} index={1} className="order-1 col-span-2 h-[420px] min-h-0 md:order-none md:h-auto md:flex-[1.35]">
               <PhotoCard reduced={reduced} />
             </BentoCard>
 
-            <BentoCard label="Art" surface="dark" drag={drag} index={5} className="hidden min-h-0 md:order-none md:flex-1 [@media(min-width:1180px)_and_(min-height:780px)]:block">
+            <BentoCard live="grow" label="Art" surface="dark" drag={drag} index={5} className="hidden min-h-0 md:order-none md:flex-1 [@media(min-width:1180px)_and_(min-height:780px)]:block">
               <ArtCard reduced={reduced} />
             </BentoCard>
           </div>
@@ -595,10 +628,11 @@ export function BentoHome() {
               The column is never wider than two 16:9 frames stacked in the
               screen height allow (158px = headers, gaps, padding), so on a
               wide, short screen Qbix stays near 16:9 too and the left and
-              right columns take the spare width ===== */}
-          <div className="contents md:flex md:min-h-0 md:max-w-[calc((100svh_-_158px)_/_1.125_+_16px)] md:flex-[2.05] md:flex-col md:gap-2.5 md:[container-type:size]">
+              right columns take the spare width. Pointing at Qbix presses
+              the film to 72% (--press) so Qbix gets the height ===== */}
+          <div data-col data-grow="1.25" className="contents md:flex md:min-h-0 md:max-w-[calc((100svh_-_158px)_/_1.125_+_16px)] md:flex-[2.05] md:flex-col md:gap-2.5 md:[container-type:size]">
             {/* qbix — the live homepage; the block opens the site */}
-            <BentoCard label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
+            <BentoCard live="grow" press={0.72} label="Qbix Studio" headerRight={<CornerArrow href="https://qbix.space" label="Open qbix.space" />} surface="dark" drag={drag} index={3} className="order-4 col-span-2 min-h-0 md:order-none md:flex-1">
               <a href="https://qbix.space" target="_blank" rel="noopener noreferrer" aria-label="Open qbix.space in a new tab" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative mx-2 mb-2 aspect-video overflow-hidden rounded-[14px] bg-[#0b0b0b] md:aspect-auto md:min-h-0 md:flex-1">
                 <LiveSite src={QBIX.href} poster={QBIX.poster} title="qbix.space homepage" width={1200} minViewport={640} maxViewport={880} />
@@ -607,7 +641,7 @@ export function BentoHome() {
 
 
             {/* O2 Tech AI — "right now"; the block opens the brief case study */}
-            <BentoCard label="O2 Tech AI" headerRight={<CornerArrow href={O2_CASE} label="O2 Tech AI case study" />} surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-none">
+            <BentoCard live="fixed" label="O2 Tech AI" headerRight={<CornerArrow href={O2_CASE} label="O2 Tech AI case study" />} surface="dark" drag={drag} index={4} className="order-3 col-span-2 min-h-0 md:order-none md:flex-none">
               <Link href={O2_CASE} aria-label="O2 Tech AI case study" className="absolute inset-0 z-30 block" />
               <div className="pointer-events-none relative z-20 flex shrink-0 items-baseline gap-2 px-4 pb-2">
                 <span className="relative flex h-1.5 w-1.5 shrink-0 -translate-y-px">
@@ -618,7 +652,7 @@ export function BentoHome() {
                   <span className="font-medium text-white">Now</span> · shaping O2 Tech AI&apos;s human-in-the-loop sourcing product
                 </span>
               </div>
-              <div className="pointer-events-none relative mx-2 mb-2 aspect-video shrink-0 overflow-hidden rounded-[14px] bg-[#141416] md:mx-auto md:w-[min(calc(100cqw_-_16px),calc((100cqh_-_290px)_*_16_/_9))]">
+              <div className="pointer-events-none relative mx-2 mb-2 aspect-video shrink-0 overflow-hidden rounded-[14px] bg-[#141416] md:mx-auto md:w-[calc(min(calc(100cqw_-_16px),calc((100cqh_-_290px)_*_16_/_9))_*_var(--press,1))]">
                 <InViewVideo src={NOW_FILM.src} poster={NOW_FILM.poster} />
               </div>
             </BentoCard>
@@ -663,16 +697,25 @@ export function BentoHome() {
           </div>
           ) : null}
 
-          {/* ===== col 4 — location globe(4) · journey(3) ===== */}
-          <div className="contents md:flex md:min-h-0 md:max-w-[clamp(280px,19vw,370px)] md:flex-[0.9] md:flex-col md:gap-2.5">
-            <BentoCard label="Location" surface="dark" drag={drag} index={2} className="order-7 col-span-2 h-[280px] min-h-0 flex-[4] md:order-none md:h-auto">
+          {/* ===== col 4 — O2 landing(2.2, about 16:10 at rest) · location
+              globe(4) · journey(3) ===== */}
+          <div data-col data-grow="1.5" className="contents md:flex md:min-h-0 md:max-w-[clamp(280px,19vw,370px)] md:flex-[0.9] md:flex-col md:gap-2.5">
+            {/* O2's landing page, recorded; the block opens the live page */}
+            <BentoCard live="grow" label="O2 Landing" headerRight={<CornerArrow href={LANDING.href} label="Open O2's landing page" />} surface="dark" drag={drag} index={7} className="order-5 col-span-2 min-h-0 md:order-none md:flex-[2.2]">
+              <a href={LANDING.href} target="_blank" rel="noopener noreferrer" aria-label="Open landing.ui.o2tech.ai in a new tab" className="absolute inset-0 z-30 block" />
+              <div className="pointer-events-none relative mx-2 mb-2 aspect-[16/10] overflow-hidden rounded-[14px] bg-[#eeefec] md:aspect-auto md:min-h-0 md:flex-1">
+                <InViewVideo src={LANDING.src} poster={LANDING.poster} />
+              </div>
+            </BentoCard>
+
+            <BentoCard live="grow" label="Location" surface="dark" drag={drag} index={2} className="order-7 col-span-2 h-[280px] min-h-0 flex-[4] md:order-none md:h-auto">
               {/* a side card: the globe sits back a little, full strength on hover */}
               <div className="relative min-h-0 flex-1 opacity-70 transition-opacity duration-300 group-hover:opacity-100">
                 <HalftoneGlobe reduced={reduced} />
               </div>
             </BentoCard>
 
-            <BentoCard label="Journey" surface="dark" drag={drag} index={9} className="order-8 col-span-2 h-[260px] min-h-0 flex-[3] md:order-none md:h-auto">
+            <BentoCard live="grow" label="Journey" surface="dark" drag={drag} index={9} className="order-8 col-span-2 h-[260px] min-h-0 flex-[3] md:order-none md:h-auto">
               <JourneyCarousel reduced={reduced} />
             </BentoCard>
           </div>

@@ -3,6 +3,8 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 
+import { playInView } from "@/lib/playInView";
+
 const easePortfolio = [0.25, 0.1, 0.25, 1] as const;
 
 /** Iframe is rendered at this fixed pixel size and CSS-scaled down to fit the
@@ -36,6 +38,9 @@ type SiteWindowProps = {
   /** Still shown until the live iframe paints (and whenever it isn't mounted),
    *  so an inactive preview reads as the site instead of a blank panel. */
   poster?: string;
+  /** A recording of the site, played muted and looping while on screen in
+   *  place of the live page (for sites that refuse to be framed). */
+  video?: string;
 };
 
 export function SiteWindow({
@@ -49,6 +54,7 @@ export function SiteWindow({
   bare = false,
   onReady,
   poster,
+  video,
 }: SiteWindowProps) {
   const frameRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.4);
@@ -62,6 +68,13 @@ export function SiteWindow({
   // skeleton entirely instead of flashing it for a frame.
   const [showSkeleton, setShowSkeleton] = useState(false);
   const reduced = !!useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v || !video) return;
+    return playInView(v, video, 0.2);
+  }, [video]);
 
   useEffect(() => {
     const el = frameRef.current;
@@ -77,10 +90,10 @@ export function SiteWindow({
   useEffect(() => {
     // Don't arm the timer until the iframe is actually mounting and still
     // unloaded; if it loads first the cleanup clears it and nothing shows.
-    if (!active || loaded) return;
+    if (!active || loaded || video) return;
     const t = window.setTimeout(() => setShowSkeleton(true), 180);
     return () => clearTimeout(t);
-  }, [active, loaded]);
+  }, [active, loaded, video]);
 
   return (
     <motion.a
@@ -156,7 +169,21 @@ export function SiteWindow({
             }`}
           />
         ) : null}
-        {active ? (
+        {video ? (
+          <video
+            ref={videoRef}
+            muted
+            loop
+            playsInline
+            preload="none"
+            aria-label={label}
+            onPlaying={() => {
+              setLoaded(true);
+              onReady?.();
+            }}
+            className="absolute inset-0 h-full w-full object-cover object-top"
+          />
+        ) : active ? (
           <iframe
             src={href}
             title={label}

@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/work/o2" },
 };
 
+// O2's landing page refuses to be framed, so its window plays a recording of
+// the page (the hero's production line, then the rest of the page)
+const LANDING = { name: "Landing", href: "https://landing.ui.o2tech.ai/", url: "landing.ui.o2tech.ai", poster: "/assets/o2/o2-landing-still.jpg", video: "/assets/o2/o2-landing.mp4" };
+
 // the working products, live; names are the products' own
 const PRODUCTS = [
   { name: "BOM V2", href: "https://bom.o2tech.ai/welcome", url: "bom.o2tech.ai", poster: "/assets/o2/live/bom-o2tech-still.jpg" },
@@ -27,7 +31,8 @@ const PRODUCTS = [
 
 /**
  * /work/o2 — the product film (original quality, with sound) in the dark hero,
- * then the working products as live preview windows, then the BOM playbook
+ * then the landing page (recorded, full width) and the working products as
+ * live preview windows, then the BOM playbook
  * tutorial (original quality; its captions are in the picture). No narrative copy on purpose.
  */
 export default function O2CaseStudyPage() {
@@ -54,8 +59,12 @@ export default function O2CaseStudyPage() {
             <p className="text-[13px] font-medium tracking-[-0.005em] text-textSecondary">Live products</p>
           </Reveal>
           <div className="mt-6 grid gap-10 lg:grid-cols-2 lg:gap-8">
+            <Reveal className="lg:col-span-2">
+              <SiteWindow href={LANDING.href} url={LANDING.url} label={LANDING.name} poster={LANDING.poster} video={LANDING.video} />
+              <p className="mt-4 font-display text-[1.2rem] font-normal leading-snug text-textPrimary">{LANDING.name}</p>
+            </Reveal>
             {PRODUCTS.map((p, i) => (
-              <Reveal key={p.href} delay={i * 0.06}>
+              <Reveal key={p.href} delay={(i + 1) * 0.06}>
                 <SiteWindow href={p.href} url={p.url} label={p.name} poster={p.poster} />
                 <p className="mt-4 font-display text-[1.2rem] font-normal leading-snug text-textPrimary">{p.name}</p>
               </Reveal>

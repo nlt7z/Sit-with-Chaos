@@ -8,6 +8,7 @@
  *   • hover glow — a cursor-tracked lime bloom blooms OUTSIDE the border + a
  *     lime border ring (the homepage work-card effect); the interior stays calm.
  *   • entrance — a spring scale-in as the board mounts (staggered by index).
+ *   • live — how the block takes part in the board's reflow (useLiveBento).
  *
  * Structure: a non-clipping outer (drag + glow that bleeds past the edge) wraps
  * a clipped inner (surface, rounding, header + body).
@@ -41,6 +42,9 @@ export function BentoCard({
   accent = "#d2ff00",
   light = false,
   headerRight,
+  header = true,
+  live,
+  press,
   style,
 }: {
   children: ReactNode;
@@ -55,6 +59,13 @@ export function BentoCard({
   light?: boolean;
   /** Right side of the header row (e.g. the ↗ affordance). */
   headerRight?: ReactNode;
+  /** false drops the header strip (and with it the drag handle). */
+  header?: boolean;
+  /** In the board's reflow: "grow" (its height grows when pointed at), "fixed"
+   *  (keeps its own height, only widens its column) or "hold" (changes nothing). */
+  live?: "grow" | "fixed" | "hold";
+  /** While pointed at, its column's --press eases to this. */
+  press?: number;
   style?: CSSProperties;
 }) {
   const reduced = useReducedMotion();
@@ -92,30 +103,34 @@ export function BentoCard({
       }}
       onMouseEnter={() => setGlow(true)}
       onMouseLeave={() => setGlow(false)}
+      data-live={live}
+      data-press={press}
       style={style}
     >
       {/* clipped inner card — surface + content */}
       <div
         className={`relative z-10 flex h-full w-full flex-col overflow-hidden rounded-[1.4rem] ${light ? "" : "shadow-[0_18px_50px_-30px_rgba(0,0,0,0.6)]"} ${SURFACE[surface]}`}
       >
-        <div
-          onPointerDown={startDrag}
-          className={`flex shrink-0 select-none items-center justify-between min-h-[34px] px-4 pb-1 pt-2.5 ${
-            drag ? "cursor-grab active:cursor-grabbing" : ""
-          }`}
-          // Only claim the touch gesture when the card is actually draggable;
-          // otherwise the header would swallow vertical scroll on mobile.
-          style={{ touchAction: drag ? "none" : "pan-y" }}
-        >
-          {/* every block names itself top-left (company, project, or widget);
-              an unlabeled card keeps an empty strip as its drag handle */}
-          {label ? (
-            <span className="text-[13px] font-medium tracking-[-0.005em] text-white/60">{label}</span>
-          ) : (
-            <span aria-hidden className="h-3" />
-          )}
-          {headerRight}
-        </div>
+        {header ? (
+          <div
+            onPointerDown={startDrag}
+            className={`flex shrink-0 select-none items-center justify-between min-h-[34px] px-4 pb-1 pt-2.5 ${
+              drag ? "cursor-grab active:cursor-grabbing" : ""
+            }`}
+            // Only claim the touch gesture when the card is actually draggable;
+            // otherwise the header would swallow vertical scroll on mobile.
+            style={{ touchAction: drag ? "none" : "pan-y" }}
+          >
+            {/* every block names itself top-left (company, project, or widget);
+                an unlabeled card keeps an empty strip as its drag handle */}
+            {label ? (
+              <span className="text-[13px] font-medium tracking-[-0.005em] text-white/60">{label}</span>
+            ) : (
+              <span aria-hidden className="h-3" />
+            )}
+            {headerRight}
+          </div>
+        ) : null}
 
         <div className={`relative flex min-h-0 flex-1 flex-col ${bodyClassName}`}>{children}</div>
       </div>
